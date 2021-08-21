@@ -211,7 +211,7 @@ no-use-no-name-tag-on-item-spawn-string-worlds:
   - world_3,10~10,-10~-10,10~10
 
 #플러그인의 닉네임 변경 기능을 사용할 것인가? - boolean
-use-nickname-feature: false
+use-nickname-feature: true
 
 #아이템의 내구도가 다 닳았을때 알림 타이틀을 띄울 것인가? - boolean
 send-title-on-item-break: true

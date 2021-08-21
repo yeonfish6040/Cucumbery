@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.storage.ColorCode;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;
@@ -10,6 +11,8 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -36,7 +39,9 @@ public class ItemLoreUtil
   {
     Material type = itemStack.getType();
     if (type == Material.AIR || !type.isItem())
+    {
       return false;
+    }
     // 아이템의 메타 데이터
     ItemMeta itemMeta = itemStack.getItemMeta();
     // 메타 데이터가 없으면 true
@@ -56,6 +61,18 @@ public class ItemLoreUtil
     if (hasOnlyNbtTagLore(itemStack))
     {
       return true;
+    }
+
+    Component lastLor = lore.get(lore.size() - 1);
+
+    // 마지막 설명이 [NBT 태그 복사됨] 이면 x
+    if (lastLor instanceof TranslatableComponent)
+    {
+      TranslatableComponent translatableLor = (TranslatableComponent) lastLor;
+      if (translatableLor.key().equals(Constant.TMI_LORE_NBT_TAG_COPIED))
+      {
+        return false;
+      }
     }
 
     // 아이템의 설명이 있고 설명의 개수가 1개 이상
@@ -83,18 +100,6 @@ public class ItemLoreUtil
         if (firstLorSerial.equals("") && secondLorSerial.startsWith("아이템 종류"))
         {
           return true;
-        }
-      }
-
-      Component lastLor = lore.get(lore.size() - 1);
-
-      // 마지막 설명이 [NBT 태그 복사됨] 이면 x
-      if (lastLor instanceof TranslatableComponent)
-      {
-        TranslatableComponent translatableLor = (TranslatableComponent) lastLor;
-        if (translatableLor.key().equals(Constant.TMI_LORE_NBT_TAG_COPIED))
-        {
-          return false;
         }
       }
     }
@@ -166,7 +171,8 @@ public class ItemLoreUtil
 
   /**
    * 아이템의 등급을 변경합니다.
-   * @param lore 아이템의 설명
+   *
+   * @param lore  아이템의 설명
    * @param value 변경할 등급 수치
    */
   public static void setItemRarityValue(@NotNull List<Component> lore, long value)
@@ -176,8 +182,9 @@ public class ItemLoreUtil
 
   /**
    * 아이템의 등급을 설정합니다.
-   * @param lore 아이템의 설명
-   * @param value 설정할 등급
+   *
+   * @param lore   아이템의 설명
+   * @param value  설정할 등급
    * @param change true일 경우, 원래 아이템 등급에 해당 값을 더합니다.
    */
   public static void setItemRarityValue(@NotNull List<Component> lore, long value, boolean change)
@@ -207,7 +214,7 @@ public class ItemLoreUtil
     if (object instanceof Enchantment enchant)
     {
       component = Component.translatable(
-              "enchantment.minecraft." + enchant.getKey().value())
+                      "enchantment.minecraft." + enchant.getKey().value())
               .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
               .color((Enchantment.BINDING_CURSE.equals(enchant) || Enchantment.VANISHING_CURSE.equals(enchant)) ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
       component = component.append(Component.text((enchant.getMaxLevel() == 1 ? "" : " " + enchantLevel)));
@@ -259,8 +266,8 @@ public class ItemLoreUtil
           lore.add(ComponentUtil.createTranslate(msg, "&a" + Constant.Sosu2.format(2.5 * enchantLevel)));
           lore.add(ComponentUtil.createTranslate("&7및 %s 확률로 %s %s (%s) 적용",
                   ComponentUtil.create("&e100%"), ComponentUtil.createTranslate("rgb255,97,144;effect.minecraft.slowness"),
-                          ComponentUtil.createTranslate("rgb255,97,144;%s단계", "4"),
-                          ComponentUtil.create("&a1~").append(ComponentUtil.createTranslate("%s초", Constant.Sosu2.format(1 + 0.5 * enchantLevel)))));
+                  ComponentUtil.createTranslate("rgb255,97,144;%s단계", "4"),
+                  ComponentUtil.create("&a1~").append(ComponentUtil.createTranslate("%s초", Constant.Sosu2.format(1 + 0.5 * enchantLevel)))));
         }
         if (enchant.equals(Enchantment.DAMAGE_UNDEAD))
         {
@@ -291,7 +298,7 @@ public class ItemLoreUtil
             {
               lore.add(ComponentUtil.createTranslate(msg, ComponentUtil.createTranslate("%s(갑옷의 경우 %s)",
                       ComponentUtil.create("&a" + Constant.Sosu2.format(100d - 100d / (enchantLevel + 1)) + "%"),
-                              ComponentUtil.create("&a" + Constant.Sosu2.format(100d - (60d + (40d / (enchantLevel + 1)))) + "%"))));
+                      ComponentUtil.create("&a" + Constant.Sosu2.format(100d - (60d + (40d / (enchantLevel + 1)))) + "%"))));
             }
             else
             {
@@ -627,4 +634,96 @@ public class ItemLoreUtil
               default -> 0;
             };
   }
+
+  public static void addFireworkEffectLore(@NotNull List<Component> lore, @NotNull FireworkEffect fireworkEffect)
+  {
+    String effectTypeString = switch (fireworkEffect.getType())
+            {
+              case BALL -> "small_ball";
+              case BALL_LARGE -> "large_ball";
+              case STAR, BURST, CREEPER -> fireworkEffect.getType().toString().toLowerCase();
+            };
+    lore.add(ComponentUtil.createTranslate("&b폭죽 모양 : %s", ComponentUtil.createTranslate("&eitem.minecraft.firework_star.shape." + effectTypeString)));
+    // -- 아이템 등급 상승 --
+    ItemLoreUtil.setItemRarityValue(lore, +30);
+    switch (fireworkEffect.getType())
+    {
+      case BALL_LARGE:
+        ItemLoreUtil.setItemRarityValue(lore, +20);
+        break;
+      case BURST:
+        ItemLoreUtil.setItemRarityValue(lore, +30);
+        break;
+      case CREEPER:
+        ItemLoreUtil.setItemRarityValue(lore, +100);
+        break;
+      case STAR:
+        ItemLoreUtil.setItemRarityValue(lore, +15);
+        break;
+      default:
+        break;
+    }
+
+    Component colorComponent = ComponentUtil.createTranslate("&a폭죽 색상 : ");
+    for (int j = 0; j < fireworkEffect.getColors().size(); j++)
+    {
+      Color fireworkColor = fireworkEffect.getColors().get(j);
+      String colorName = ColorCode.getColorName(fireworkColor, "item.minecraft.firework_star.");
+      if (colorName.endsWith("custom_color"))
+      {
+        colorComponent = colorComponent.append(ComponentUtil.create(ColorCode.getColorCode(fireworkColor) + "#" + Integer.toHexString(0x100 | fireworkColor.getRed()).substring(1)
+                + Integer.toHexString(0x100 | fireworkColor.getGreen()).substring(1) + Integer.toHexString(0x100 | fireworkColor.getBlue()).substring(1)));
+      }
+      else
+      {
+        colorComponent = colorComponent.append(ComponentUtil.createTranslate("&e" + colorName));
+      }
+      if (j != fireworkEffect.getColors().size() - 1)
+      {
+        colorComponent = colorComponent.append(ComponentUtil.create("&8, "));
+      }
+    }
+    lore.add(colorComponent);
+    colorComponent = ComponentUtil.createTranslate("&6사라지는 효과 색상 : ");
+    if (fireworkEffect.getFadeColors().size() > 0)
+    {
+      for (int j = 0; j < fireworkEffect.getFadeColors().size(); j++)
+      {
+        Color fireworkColor = fireworkEffect.getFadeColors().get(j);
+        String colorName = ColorCode.getColorName(fireworkColor, "item.minecraft.firework_star.");
+        if (colorName.endsWith("custom_color"))
+        {
+          colorComponent = colorComponent.append(ComponentUtil.create(ColorCode.getColorCode(fireworkColor) + "#" + Integer.toHexString(0x100 | fireworkColor.getRed()).substring(1)
+                  + Integer.toHexString(0x100 | fireworkColor.getGreen()).substring(1) + Integer.toHexString(0x100 | fireworkColor.getBlue()).substring(1)));
+        }
+        else
+        {
+          colorComponent = colorComponent.append(ComponentUtil.createTranslate("&e" + colorName));
+        }
+        if (j != fireworkEffect.getFadeColors().size() - 1)
+        {
+          colorComponent = colorComponent.append(ComponentUtil.create("&8, "));
+        }
+      }
+      lore.add(colorComponent);
+    }
+    if (fireworkEffect.hasTrail())
+    {
+      lore.add(ComponentUtil.createTranslate("&citem.minecraft.firework_star.trail"));
+    }
+    if (fireworkEffect.hasFlicker())
+    {
+      lore.add(ComponentUtil.createTranslate("&citem.minecraft.firework_star.flicker"));
+    }
+  }
 }
+
+
+
+
+
+
+
+
+
+

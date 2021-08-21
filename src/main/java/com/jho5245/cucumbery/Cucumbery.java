@@ -512,7 +512,6 @@ public class Cucumbery extends JavaPlugin
 
   private void registerCustomConfig()
   {
-
     Initializer.loadCustomConfigs();
   }
 }

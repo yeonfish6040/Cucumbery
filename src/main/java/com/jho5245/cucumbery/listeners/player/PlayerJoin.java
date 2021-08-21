@@ -74,20 +74,26 @@ public class PlayerJoin implements Listener
       player.setHealthScale(healthbar);
     }
     YamlConfiguration cfg = Cucumbery.config;
+    String displayname = null;
+    String playerListName = null;
     if (cfg.getBoolean("use-nickname-feature"))
     {
-      Component senderComponent = ComponentUtil.senderComponent(player);
-      String displayname = UserData.DISPLAY_NAME.getString(uuid);
-      String playerListName = UserData.PLAYER_LIST_NAME.getString(uuid);
-      if (displayname == null)
-        displayname = player.getName();
-        Component finalDislay = ComponentUtil.create(displayname).append(Component.text("§f")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
-        player.displayName(finalDislay);
-      if (playerListName == null)
-        playerListName = player.getName();
-        finalDislay = ComponentUtil.create(playerListName).append(Component.text("§f")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
-        player.playerListName(finalDislay);
+      displayname = UserData.DISPLAY_NAME.getString(uuid);
+      playerListName = UserData.PLAYER_LIST_NAME.getString(uuid);
     }
+    Component senderComponent = ComponentUtil.senderComponent(player);
+    if (displayname == null)
+    {
+      displayname = player.getName();
+    }
+    Component finalDislay = ComponentUtil.create(displayname).append(Component.text("§f")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    player.displayName(finalDislay);
+    if (playerListName == null)
+    {
+      playerListName = player.getName();
+    }
+    finalDislay = ComponentUtil.create(playerListName).append(Component.text("§f")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    player.playerListName(finalDislay);
     Component displayName = ComponentUtil.senderComponent(player);
     String displayNameString = ComponentUtil.serialize(displayName);
     Location location = player.getLocation();

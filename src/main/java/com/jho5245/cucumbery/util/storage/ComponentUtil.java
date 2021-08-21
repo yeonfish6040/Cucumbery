@@ -355,7 +355,10 @@ public class ComponentUtil
         click = "/socialmenu " + name;
       }
       nameComponent = nameComponent.hoverEvent(HoverEvent.showText(hover));
+      if (object instanceof Player)
       nameComponent = nameComponent.clickEvent(ClickEvent.runCommand(click));
+      else
+        nameComponent = nameComponent.clickEvent(ClickEvent.suggestCommand(click));
       return nameComponent;
     }
     else if (object instanceof OfflinePlayer offlinePlayer)
@@ -444,6 +447,10 @@ public class ComponentUtil
       {
         String worldName = Method.getWorldDisplayName(world);
         Component concat = ComponentUtil.create(worldName);
+        if (concat.color() == null)
+        {
+          concat = concat.color(Constant.THE_COLOR);
+        }
         concat = concat.clickEvent(ClickEvent.suggestCommand("/whatis " + world.getName()));
         int playerCount = world.getPlayerCount();
         Component hover = ComponentUtil.createTranslate("플레이어 수 : %s", playerCount);

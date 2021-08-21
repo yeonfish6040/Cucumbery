@@ -3,7 +3,6 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
@@ -144,7 +143,7 @@ public class BroadcastAndMessageItem implements CommandExecutor
           }
         }
         String itemString = ComponentUtil.itemName(item) + ((amount == 1) ? "" : " " + amount + "개") + "§r";
-        Component txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE, player, " : ", ComponentUtil.createTranslate(msg.replace("[i]", "%s"), item));
+        Component txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE, player, " : ", ComponentUtil.createTranslate(msg.replace("[i]", "%s"), false, item));
         for (Player online : Bukkit.getServer().getOnlinePlayers())
         {
           MessageUtil.sendMessage(online, false, txt);
@@ -258,7 +257,7 @@ public class BroadcastAndMessageItem implements CommandExecutor
             }
             if (builder.length() > 0)
             {
-              txt.add(ComponentUtil.create(builder.toString()));
+              txt.add(ComponentUtil.create(false, builder.toString()));
               builder = new StringBuilder();
             }
             if (i + 2 < msg.length())
@@ -288,14 +287,14 @@ public class BroadcastAndMessageItem implements CommandExecutor
             builder.append(c);
           }
         }
-        txt.add(ComponentUtil.create(builder.toString()));
+        txt.add(ComponentUtil.create(false, builder.toString()));
         for (Player online : Bukkit.getServer().getOnlinePlayers())
         {
-          MessageUtil.sendMessage(online, txt);
+          MessageUtil.sendMessage(online, false, txt);
         }
       }
     }
-    else if (cmd.getName().equalsIgnoreCase("messageitem"))
+/*    else if (cmd.getName().equalsIgnoreCase("messageitem"))
     {
       if (!Method.hasPermission(sender, Permission.CMD_MESSAGEITEM, true))
       {
@@ -344,7 +343,7 @@ public class BroadcastAndMessageItem implements CommandExecutor
       txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE + "§e" + target.getDisplayName() + "§r에게 " + itemString + " 보여주었습니다.", item);
       player.sendMessage(txt);
       return true;
-    }
+    }*/
     return true;
   }
 }

@@ -103,11 +103,13 @@ public class DeathManager
       World world = location.getWorld();
       String worldName = world.getName();
       if (!(entity instanceof Player))
-      entityComponent = entityComponent.clickEvent(ClickEvent.suggestCommand("/atp @s " + worldName + " "
-              + location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getYaw() + " " + location.getPitch()));
+      {
+        entityComponent = entityComponent.clickEvent(ClickEvent.suggestCommand("/atp @s " + worldName + " "
+                + location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getYaw() + " " + location.getPitch()));
+      }
       args.add(entityComponent);
       List<Component> extraArgs = new ArrayList<>();
-      String key = "death.";
+      String key = "";
       Object damager = getDamager(event);
       ItemStack weapon = getWeapon(event);
       ItemStack lastTrampledBlock = getLastTrampledBlock(entity.getUniqueId());
@@ -141,11 +143,11 @@ public class DeathManager
                 }
                 if (type == Material.SWEET_BERRY_BUSH)
                 {
-                  key += "attack.sweetBerryBush";
+                  key = "sweet_berry_bush";
                 }
                 else
                 {
-                  key += "attack.cactus";
+                  key = "cactus";
                 }
               }
             }
@@ -156,68 +158,68 @@ public class DeathManager
               Entity damagerEntity = damageByEntityEvent.getDamager();
               if (damagerEntity instanceof AreaEffectCloud)
               {
-                key += "attack.magic";
+                key = "magic";
               }
               else
               {
-                key += "attack.mob";
+                key = "melee";
               }
             }
             else
             {
-              key += "attack.mob";
+              key = "melee";
             }
           }
-          case ENTITY_SWEEP_ATTACK -> key += "attack.mob";
-          case MAGIC -> key += "attack.magic";
+          case ENTITY_SWEEP_ATTACK -> key = "melee_sweep";
+          case MAGIC -> key = "magic";
           case PROJECTILE -> {
             if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent)
             {
               Entity damagerEntity = damageByEntityEvent.getDamager();
               if (damagerEntity instanceof Trident)
               {
-                key += "attack.trident";
+                key = "trident";
               }
               else if (damagerEntity instanceof Fireball)
               {
-                key += "attack.fireball";
+                key = "fireball";
               }
               else
               {
-                key += "attack.arrow";
+                key = "arrow";
               }
             }
             else
             {
-              key += "attack.arrow";
+              key = "arrow";
             }
           }
-          case SUFFOCATION -> key += "attack.inWall";
+          case SUFFOCATION -> key = "suffocation";
           case FALL -> {
             if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.getDamager() instanceof EnderPearl enderPearl && entity.equals(enderPearl.getShooter()))
             {
-              key += "attack.enderPearl";
+              key = "ender_pearl";
               extraArgs.add(ComponentUtil.create(enderPearl.getItem()));
             }
             else
             {
-              key += "attack.fall";
+              key = "fall";
               if (lastTrampledBlock != null)
               {
-                key += ".block";
+                key += "_block";
                 extraArgs.add(ComponentUtil.create(lastTrampledBlock));
               }
               if (fallDistance >= 6)
               {
-                key += ".high";
+                key += "_high";
               }
             }
           }
-          case FIRE -> key += "attack.inFire";
-          case FIRE_TICK -> key += "attack.onFire";
-          case MELTING -> key += "attack.melting";
-          case LAVA -> key += "attack.lava";
-          case DROWNING -> key += "attack.drown";
+          case FIRE -> key = "fire_block";
+          case FIRE_TICK -> key += "fire";
+          case MELTING -> key = "melting";
+          case LAVA -> key = "lava";
+          case DROWNING -> key = "drown";
           case BLOCK_EXPLOSION -> {
             if (damageCause instanceof EntityDamageByBlockEvent damageByBlockEvent)
             {
@@ -227,7 +229,7 @@ public class DeathManager
                 Material type = block.getType();
               }
             }
-            key += "attack.badRespawnPoint.message";
+            key += "bad_respawn";
             args.add(BAD_RESPAWM_POINT);
           }
           case ENTITY_EXPLOSION -> {
@@ -236,34 +238,34 @@ public class DeathManager
               Entity damagerEntity = damageByEntityEvent.getDamager();
               if (damagerEntity instanceof Firework)
               {
-                key += "attack.fireworks";
+                key = "fireworks_crossbow";
                 if (ItemStackUtil.itemExists(weapon) && weapon.getType() == Material.FIREWORK_ROCKET)
                 {
-                  key += "Rocket";
+                  key = "fireworks";
                 }
               }
               else
               {
-                key += "attack.explosion";
+                key = "explosion";
               }
             }
           }
           case VOID -> {
-            key += "attack.outOfWorld";
+            key = "void";
             if (lastTrampledBlock != null)
             {
-              key += ".block";
+              key += "_block";
             }
             if (fallDistance > 350)
             {
-              key += ".high";
+              key += "_high";
             }
           }
-          case LIGHTNING -> key += "attack.lightningBolt";
-          case SUICIDE -> key += "attack.suicide";
-          case STARVATION -> key += "attack.starve";
-          case POISON -> key += "attack.poison";
-          case WITHER -> key += "attack.wither";
+          case LIGHTNING -> key = "lightning_bolt";
+          case SUICIDE -> key = "suicide";
+          case STARVATION -> key = "starve";
+          case POISON -> key = "poison";
+          case WITHER -> key = "wither";
           case FALLING_BLOCK -> {
             if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent)
             {
@@ -273,20 +275,20 @@ public class DeathManager
                 Material material = fallingBlock.getBlockData().getMaterial();
                 switch (material)
                 {
-                  case ANVIL -> key += "attack.anvil";
-                  case POINTED_DRIPSTONE -> key += "attack.stalagmite";
+                  case ANVIL -> key = "anvil";
+                  case POINTED_DRIPSTONE -> key = "stalagmite";
                 }
               }
             }
           }
-          case THORNS -> key += "attack.thorns";
-          case DRAGON_BREATH -> key += "attack.dragonBreath";
-          case CUSTOM -> key += "attack.generic";
-          case FLY_INTO_WALL -> key += "attack.flyIntoWall";
-          case HOT_FLOOR -> key += "attack.hotFloor";
-          case CRAMMING -> key += "attack.cramming";
-          case DRYOUT -> key += "attack.dryOut";
-          case FREEZE -> key += "attack.freeze";
+          case THORNS -> key = "thorns";
+          case DRAGON_BREATH -> key = "dragon_breath";
+          case CUSTOM -> key = "generic";
+          case FLY_INTO_WALL -> key = "elytra";
+          case HOT_FLOOR -> key = "magma_block";
+          case CRAMMING -> key = "cramming";
+          case DRYOUT -> key = "dryOut";
+          case FREEZE -> key = "freeze";
         }
 
         if (damager != null)
@@ -299,24 +301,32 @@ public class DeathManager
           {
             args.add(ComponentUtil.senderComponent(damager));
           }
-          key += ".player";
+          key += "_combat";
         }
 
         if (ItemStackUtil.itemExists(weapon))
         {
           args.add(ComponentUtil.create(weapon));
-          key += ".item";
+          key += "_item";
+        }
+        else
+        {
+          Projectile projectile = getDamagerProjectile(event);
+          if (projectile != null && projectile.getShooter() == null)
+          {
+            key += "_unknown";
+          }
         }
 
         MessageUtil.broadcastDebug(key);
         Messages deathMessages;
         try
         {
-          deathMessages = Messages.valueOf(key.substring(6).replace(".", "_"));
+          deathMessages = Messages.valueOf(key.toUpperCase());
         }
         catch (Exception e)
         {
-          deathMessages = Messages.attack_generic;
+          deathMessages = Messages.GENERIC;
         }
         List<String> keys = deathMessages.getKeys();
         // 조건부 데스 메시지가 있으면 데스 메시지 치환
@@ -335,9 +345,11 @@ public class DeathManager
           {
             Component component = args.get(i);
             if (component.hoverEvent() != null && Objects.requireNonNull(component.hoverEvent()).action() == HoverEvent.Action.SHOW_ITEM)
-            args.set(i, args.get(i).hoverEvent(null));
+            {
+              args.set(i, args.get(i).hoverEvent(null));
+            }
           }
-          deathMessage = ComponentUtil.createTranslate("death.attack.message_too_long",ComponentUtil.createTranslate(key, args));
+          deathMessage = ComponentUtil.createTranslate("death.attack.message_too_long", ComponentUtil.createTranslate(key, args));
         }
         if (usePrefix)
         {
@@ -426,7 +438,7 @@ public class DeathManager
             }
             return itemStack;
           }
-          return Bukkit.getServer().getConsoleSender();
+          return damager;
         }
         if (projectileSource instanceof LivingEntity)
         {
@@ -447,7 +459,7 @@ public class DeathManager
             }
             return itemStack;
           }
-          return Bukkit.getServer().getConsoleSender();
+          return damager;
         }
         if (projectileSource instanceof LivingEntity)
         {
@@ -462,7 +474,7 @@ public class DeathManager
           return tntPrimer;
         }
 
-        return Bukkit.getServer().getConsoleSender();
+        return damager;
       }
 
       return entity;
@@ -566,6 +578,10 @@ public class DeathManager
     else
     {
       Projectile projectile = getDamagerProjectile(event);
+      if (damagerObject != null && damagerObject.equals(projectile))
+      {
+        return null;
+      }
       if (projectile instanceof EnderPearl && event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.getCause() == EntityDamageEvent.DamageCause.FALL)
       {
         return null;

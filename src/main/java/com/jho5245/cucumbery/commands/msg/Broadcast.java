@@ -27,12 +27,12 @@ public class Broadcast implements CommandExecutor
     msg = Method.parseCommandString(sender, msg);
     if (msg.endsWith("--noconsole"))
     {
-      MessageUtil.broadcastPlayer(msg.substring(0, msg.length() - 11));
+      MessageUtil.broadcastPlayer(false, msg.substring(0, msg.length() - 11));
     }
     else
     {
-      MessageUtil.broadcastPlayer(msg);
-      MessageUtil.consoleSendMessage(msg);
+      MessageUtil.broadcastPlayer(false, msg);
+      MessageUtil.consoleSendMessage(false, msg);
     }
     return true;
   }

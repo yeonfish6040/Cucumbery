@@ -72,7 +72,7 @@ public class SocialMenu implements CommandExecutor
       adminPanel = adminPanel.append(
               ComponentUtil.createTranslate("&a[관전]")
                       .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s을(를) 즉시 관전합니다. %s", target, "&7 - /cspectate " + name)))
-                      .clickEvent(ClickEvent.runCommand("/cspectate " + name))
+                      .clickEvent(ClickEvent.runCommand("/cspectate @s " + name + " true true true"))
       );
       adminPanel = adminPanel.append(Component.text(" "));
       adminPanel = adminPanel.append(

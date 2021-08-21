@@ -2935,20 +2935,27 @@ public class Method extends SoundPlay
    */
   public static boolean inventoryEmpty(Inventory inventory)
   {
-    if (inventory == null)
+    try
+    {
+      if (inventory == null)
+      {
+        return true;
+      }
+      boolean itemExists = false;
+      for (int i = 0; i < inventory.getSize(); i++)
+      {
+        if (ItemStackUtil.itemExists(inventory.getItem(i)))
+        {
+          itemExists = true;
+          break;
+        }
+      }
+      return !itemExists;
+    }
+    catch (Exception e)
     {
       return true;
     }
-    boolean itemExists = false;
-    for (int i = 0; i < inventory.getSize(); i++)
-    {
-      if (ItemStackUtil.itemExists(inventory.getItem(i)))
-      {
-        itemExists = true;
-        break;
-      }
-    }
-    return !itemExists;
   }
 
 

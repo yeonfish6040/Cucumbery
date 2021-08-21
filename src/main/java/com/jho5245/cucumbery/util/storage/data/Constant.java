@@ -37,6 +37,8 @@ public class Constant
 
   public static double WARNING_SOUND_VOLUME, WARNING_SOUND_PITCH, ERROR_SOUND_VOLUME, ERROR_SOUND_PITCH;
 
+  public static final TextColor THE_COLOR = TextColor.color(255, 204, 0);
+
   static
   {
     try

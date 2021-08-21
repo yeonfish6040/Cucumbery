@@ -31,8 +31,7 @@ public class EntityShootBow implements Listener
     Entity projectile = event.getProjectile();
     if (ItemStackUtil.itemExists(item))
     {
-      item = item.clone();
-        ItemLore.setItemLore(item, event);
+      ItemLore.setItemLore(item, event);
       Variable.projectile.put(projectile.getUniqueId(), item);
       Variable.attackerAndWeapon.put(livingEntity.getUniqueId(), item);
       if (item.getType() == Material.CROSSBOW)

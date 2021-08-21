@@ -33,6 +33,8 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.loot.LootTable;
+import org.bukkit.loot.Lootable;
 import org.bukkit.map.MapView;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
@@ -1277,6 +1279,16 @@ public class ItemLore2
           }
         }
       }
+      case FIREWORK_STAR -> {
+        FireworkEffectMeta fireworkEffectMeta = (FireworkEffectMeta) itemMeta;
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        if (fireworkEffectMeta.hasEffect())
+        {
+          lore.add(Component.empty());
+          FireworkEffect fireworkEffect = fireworkEffectMeta.getEffect();
+          ItemLoreUtil.addFireworkEffectLore(lore, fireworkEffect);
+        }
+      }
       case FIREWORK_ROCKET -> {
         FireworkMeta fireworkMeta = (FireworkMeta) itemMeta;
         fireworkMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
@@ -1307,74 +1319,24 @@ public class ItemLore2
             lore.add(Component.empty());
             lore.add(ComponentUtil.createTranslate("&e[폭죽 효과 목록]"));
 
+            int effectSize = fireworkMeta.getEffectsSize();
             for (int i = 0; i < fireworkMeta.getEffectsSize(); i++)
             {
-              lore.add(ComponentUtil.createTranslate("&3--[").append(ComponentUtil.createTranslate("&9%s번째 ", "" + (i + 1)).append(ComponentUtil.createTranslate("&3폭죽]--"))));
-              FireworkEffect fireworkEffect = fireworkMeta.getEffects().get(i);
-              String effectTypeString = switch (fireworkEffect.getType())
-                      {
-                        case BALL -> "small_ball";
-                        case BALL_LARGE -> "large_ball";
-                        case STAR, BURST, CREEPER -> fireworkEffect.getType().toString().toLowerCase();
-                      };
-              lore.add(ComponentUtil.createTranslate("&b폭죽 모양 : %s", ComponentUtil.createTranslate("&eitem.minecraft.firework_star.shape." + effectTypeString)));
-              // -- 아이템 등급 상승 --
-              ItemLoreUtil.setItemRarityValue(lore, +30);
-              switch (fireworkEffect.getType())
+              if (effectSize > 5)
               {
-                case BALL_LARGE:
-                  ItemLoreUtil.setItemRarityValue(lore, +20);
-                  break;
-                case BURST:
-                  ItemLoreUtil.setItemRarityValue(lore, +30);
-                  break;
-                case CREEPER:
-                  ItemLoreUtil.setItemRarityValue(lore, +100);
-                  break;
-                case STAR:
-                  ItemLoreUtil.setItemRarityValue(lore, +15);
-                  break;
-                default:
-                  break;
-              }
-
-              Component colorComponent = ComponentUtil.createTranslate("&a폭죽 색상 : ");
-              for (int j = 0; j < fireworkEffect.getColors().size(); j++)
-              {
-                Color fireworkColor = fireworkEffect.getColors().get(j);
-                colorComponent = colorComponent.append(ComponentUtil.createTranslate("&e" + ColorCode.getColorName(fireworkColor, "item.minecraft.firework_star."))
-                        .append(ComponentUtil.create("(#" + Integer.toHexString(0x100 | fireworkColor.getRed()).substring(1)
-                                + Integer.toHexString(0x100 | fireworkColor.getGreen()).substring(1) + Integer.toHexString(0x100 | fireworkColor.getBlue()).substring(1) + ")")));
-                if (j != fireworkEffect.getColors().size() - 1)
+                int skipped = effectSize - 5;
+                if (i > 2 && i < effectSize - 2)
                 {
-                  colorComponent = colorComponent.append(ComponentUtil.create("&8, "));
-                }
-              }
-              lore.add(colorComponent);
-              colorComponent = ComponentUtil.createTranslate("&6사라지는 효과 색상 : ");
-              if (fireworkEffect.getFadeColors().size() > 0)
-              {
-                for (int j = 0; j < fireworkEffect.getFadeColors().size(); j++)
-                {
-                  Color fireworkColor = fireworkEffect.getFadeColors().get(j);
-                  colorComponent = colorComponent.append(ComponentUtil.createTranslate("&e" + ColorCode.getColorName(fireworkColor, "item.minecraft.firework_star."))
-                          .append(ComponentUtil.create("(#" + Integer.toHexString(0x100 | fireworkColor.getRed()).substring(1)
-                                  + Integer.toHexString(0x100 | fireworkColor.getGreen()).substring(1) + Integer.toHexString(0x100 | fireworkColor.getBlue()).substring(1) + ")")));
-                  if (j != fireworkEffect.getFadeColors().size() - 1)
+                  if (i == 3)
                   {
-                    colorComponent = colorComponent.append(ComponentUtil.create("&8, "));
+                    lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", skipped));
                   }
+                  continue;
                 }
-                lore.add(colorComponent);
               }
-              if (fireworkEffect.hasTrail())
-              {
-                lore.add(ComponentUtil.createTranslate("&citem.minecraft.firework_star.trail"));
-              }
-              if (fireworkEffect.hasFlicker())
-              {
-                lore.add(ComponentUtil.createTranslate("&citem.minecraft.firework_star.flicker"));
-              }
+              lore.add(Component.empty().append(ComponentUtil.create2("&3&m   &3[").append(ComponentUtil.createTranslate("&9%s번째 ", i + 1).append(ComponentUtil.create2("&3폭죽]&m   ")))));
+              FireworkEffect fireworkEffect = fireworkMeta.getEffects().get(i);
+              ItemLoreUtil.addFireworkEffectLore(lore, fireworkEffect);
             }
           }
         }
@@ -1707,6 +1669,20 @@ public class ItemLore2
                     ComponentUtil.createTranslate("#b07c15;%s, %s, %s", "#e6ac6d;" + flowerPos.getInteger("X"), flowerPos.getInteger("Y"), flowerPos.getInteger("Z"))));
           }
         }
+        if (blockState instanceof Lootable lootable)
+        {
+          LootTable lootTable = lootable.getLootTable();
+          if (lootTable != null)
+          {
+            long seed = lootable.getSeed();
+            lore.add(Component.empty());
+            lore.add(ComponentUtil.createTranslate("&7&o루트테이블 : %s", lootTable.getKey()));
+            if (seed != 0)
+            {
+              lore.add(ComponentUtil.createTranslate("&7&o시드 : %s", seed));
+            }
+          }
+        }
       }
       else
       {
@@ -2000,13 +1976,13 @@ public class ItemLore2
     {
       itemMeta.removeItemFlags(ItemFlag.HIDE_UNBREAKABLE);
     }
-    final int size = lore.size();
+/*    final int size = lore.size();
     if (size > 40)
     {
       int skipped = size - 39;
       lore.subList(19, size - 20).clear();
       lore.add(19, ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", skipped));
-    }
+    }*/
     itemMeta.lore(lore);
     item.setItemMeta(itemMeta);
     return item;
