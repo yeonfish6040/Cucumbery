@@ -5,6 +5,8 @@ public class CucumberyTag
   public static final String MINECRAFT_BLOCK_STATE_TAG_KEY = "BlockStateTag";
   public static final String KEY_MAIN = "CucumberyItemTags";
   public static final String KEY_TMI = "CucumberyTMI";
+  public static final String TMI_VANILLA_TAGS = "VanillaTags";
+  public static final String TMI_CUSTOM_TAGS = "CustomTags";
   public static final String EXTRA_TAGS_KEY = "ExtraTags";
   public static final String CUSTOM_ITEM_TYPE_KEY = "CustomItemType";
   public static final String ITEM_USAGE_RESTRICTIONS_KEY = "ItemUsageRestrictions";

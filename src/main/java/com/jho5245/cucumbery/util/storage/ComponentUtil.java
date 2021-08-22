@@ -104,8 +104,8 @@ public class ComponentUtil
     // 아이템의 이름이 없을 경우 번역된 아이템 이름을 가져온다.
     else
     {
-      String id = material.getKey().value();
-      component = Component.translatable((material.isBlock() ? "block" : "item") + ".minecraft." + id);
+      String id = material.getTranslationKey();
+      component = Component.translatable(id);
       // 특정 아이템은 다른 번역 규칙을 가지고 있으므로 해당 규칙을 적용한다.
       switch (material)
       {
@@ -123,13 +123,14 @@ public class ComponentUtil
             String potionId = potionMeta.getBasePotionData().getType().toString().toLowerCase();
             switch (potionMeta.getBasePotionData().getType())
             {
-              case AWKWARD, FIRE_RESISTANCE, INVISIBILITY, LUCK, MUNDANE, NIGHT_VISION, POISON, SLOW_FALLING, SLOWNESS, STRENGTH, THICK, TURTLE_MASTER, WATER, WATER_BREATHING, WEAKNESS -> component = Component.translatable("item.minecraft." + id + ".effect." + potionId);
-              case UNCRAFTABLE -> component = Component.translatable("item.minecraft." + id + ".effect.empty");
-              case JUMP -> component = Component.translatable("item.minecraft." + id + ".effect.leaping");
-              case REGEN -> component = Component.translatable("item.minecraft." + id + ".effect.regeneration");
-              case SPEED -> component = Component.translatable("item.minecraft." + id + ".effect.swiftness");
-              case INSTANT_HEAL -> component = Component.translatable("item.minecraft." + id + ".effect.healing");
-              case INSTANT_DAMAGE -> component = Component.translatable("item.minecraft." + id + ".effect.harming");
+              case AWKWARD, FIRE_RESISTANCE, INVISIBILITY, LUCK, MUNDANE, NIGHT_VISION, POISON, SLOW_FALLING, SLOWNESS, STRENGTH, THICK, TURTLE_MASTER, WATER, WATER_BREATHING, WEAKNESS ->
+                      component = Component.translatable(id + ".effect." + potionId);
+              case UNCRAFTABLE -> component = Component.translatable(id + ".effect.empty");
+              case JUMP -> component = Component.translatable(id + ".effect.leaping");
+              case REGEN -> component = Component.translatable(id + ".effect.regeneration");
+              case SPEED -> component = Component.translatable(id + ".effect.swiftness");
+              case INSTANT_HEAL -> component = Component.translatable(id + ".effect.healing");
+              case INSTANT_DAMAGE -> component = Component.translatable(id + ".effect.harming");
             }
           }
         }
@@ -140,7 +141,7 @@ public class ComponentUtil
             component = bookMeta.title();
             if (component == null || ComponentUtil.serialize(component).length() == 0)
             {
-            component = Component.translatable("item.minecraft." + id);
+            component = Component.translatable(id);
             }
           }
         }
@@ -158,7 +159,7 @@ public class ComponentUtil
             BlockState blockState = blockStateMeta.getBlockState();
             Banner bannerState = (Banner) blockState;
             DyeColor baseColor = bannerState.getBaseColor();
-            component = Component.translatable("item.minecraft." + id + "." + baseColor.toString().toLowerCase());
+            component = Component.translatable(id + "." + baseColor.toString().toLowerCase());
           }
         }
       }
@@ -325,14 +326,6 @@ public class ComponentUtil
         if (animalTamer != null)
         {
           hover = hover.append(Component.text("\n"));
-          String tamerName = animalTamer.getName();
-          UUID tamerUUID = animalTamer.getUniqueId();
-          if (tamerName != null)
-          {
-            Player tamerPlayer = Method.getPlayer(null, tamerName, false);
-            Component component = ComponentUtil.createTranslate("주인 : %s", tamerPlayer != null ? tamerPlayer : tamerName);
-            hover = hover.append(component);
-          }
           Component component = ComponentUtil.createTranslate("주인 : %s", animalTamer);
           hover = hover.append(component);
         }
@@ -433,6 +426,15 @@ public class ComponentUtil
       }
       else if (object instanceof ItemStack itemStack)
       {
+        NBTItem nbtItem = new NBTItem(itemStack);
+        for (String key : nbtItem.getKeys())
+        {
+          if (!Method.equals(key, "display", "Enchantments", "Damage", "HideFlags", "Color", "CustomModelData", "StoredEnchantments"))
+          {
+            nbtItem.removeKey(key);
+          }
+        }
+        itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
         Component concat = ComponentUtil.itemName(itemStack, TextColor.color(255, 204, 0));
         concat = concat.hoverEvent(itemStack.asHoverEvent());
         component = component.append(concat);

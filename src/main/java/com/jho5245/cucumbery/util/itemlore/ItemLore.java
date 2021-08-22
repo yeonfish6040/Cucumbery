@@ -7,6 +7,7 @@ import com.jho5245.cucumbery.util.storage.ItemCategory;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -99,6 +100,7 @@ public class ItemLore
       }
     }
     itemStack.setItemMeta(itemMeta);
+    ItemLore4.setItemLore(itemStack);
     return itemStack;
   }
 
@@ -114,6 +116,9 @@ public class ItemLore
     itemMeta.lore(null);
     itemMeta.removeItemFlags(ItemFlag.values());
     itemStack.setItemMeta(itemMeta);
+    NBTItem nbtItem = new NBTItem(itemStack);
+    nbtItem.removeKey(CucumberyTag.KEY_TMI);
+    itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
     return itemStack;
   }
 }

@@ -11,7 +11,6 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,7 +20,6 @@ import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
@@ -129,18 +127,7 @@ public class DeathManager
               if (block != null)
               {
                 Material type = block.getType();
-                if (type.isItem())
-                {
                   extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(block)));
-                }
-                else if (type == Material.SWEET_BERRY_BUSH)
-                {
-                  ItemStack bush = ItemStackUtil.getItemStackFromBlock(Material.SWEET_BERRIES, block.getLocation());
-                  ItemMeta itemMeta = bush.getItemMeta();
-                  itemMeta.displayName(Component.translatable(Material.SWEET_BERRY_BUSH.getTranslationKey()).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE));
-                  bush.setItemMeta(itemMeta);
-                  extraArgs.add(ComponentUtil.create(bush));
-                }
                 if (type == Material.SWEET_BERRY_BUSH)
                 {
                   key = "sweet_berry_bush";
@@ -170,7 +157,7 @@ public class DeathManager
               key = "melee";
             }
           }
-          case ENTITY_SWEEP_ATTACK -> key = "melee_sweep";
+          case ENTITY_SWEEP_ATTACK -> key = "melee";
           case MAGIC -> key = "magic";
           case PROJECTILE -> {
             if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent)
@@ -254,6 +241,7 @@ public class DeathManager
             key = "void";
             if (lastTrampledBlock != null)
             {
+              extraArgs.add(ComponentUtil.create(lastTrampledBlock));
               key += "_block";
             }
             if (fallDistance > 350)

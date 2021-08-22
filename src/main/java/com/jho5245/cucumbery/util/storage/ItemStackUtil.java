@@ -10,7 +10,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Nameable;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
@@ -753,51 +755,40 @@ public class ItemStackUtil
   }
 
   @NotNull
-  public static ItemStack getItemStackFromBlock(@NotNull Material type, @NotNull Location location)
-  {
-    ItemStack itemStack = new ItemStack(type);
-    if (type == Material.AIR || !type.isItem())
-    {
-      return itemStack;
-    }
-    ItemMeta itemMeta = itemStack.getItemMeta();
-    if (Method.usingLoreFeature(location))
-    {
-      ItemLore.setItemLore(itemStack);
-      itemMeta = itemStack.getItemMeta();
-    }
-    List<Component> lore = itemMeta.lore();
-    if (lore == null)
-    {
-      lore = new ArrayList<>();
-    }
-    if (lore.size() > 0)
-    {
-      lore.add(ComponentUtil.create2(Constant.ITEM_LORE_SEPARATOR));
-    }
-    String worldName = location.getWorld().getName();
-    int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
-    lore.add(ComponentUtil.createTranslate("&e좌표 : %s",
-            ComponentUtil.createTranslate("&8%s, %s, %s, %s", "&6" + worldName, "&6" + x, "&6" + y, "&6" + z)));
-    itemMeta.lore(lore);
-    itemStack.setItemMeta(itemMeta);
-    return itemStack;
-  }
-
-  @NotNull
   public static ItemStack getItemStackFromBlock(@NotNull Block block)
   {
     Material type = block.getType();
-    ItemStack itemStack = new ItemStack(type);
+    Material newType = type;
     if (type == Material.AIR || !type.isItem())
     {
-      return itemStack;
+      switch (type)
+      {
+        case AIR, CAVE_AIR, VOID_AIR -> newType = Material.BARRIER;
+        case WATER -> newType = Material.WATER_BUCKET;
+        case LAVA -> newType = Material.LAVA_BUCKET;
+        case CAVE_VINES_PLANT -> newType = Material.CAVE_VINES;
+        case WEEPING_VINES_PLANT -> newType = Material.WEEPING_VINES;
+        case TWISTING_VINES_PLANT -> newType = Material.TWISTING_VINES;
+        case POWDER_SNOW -> newType = Material.POWDER_SNOW_BUCKET;
+        case SWEET_BERRY_BUSH -> newType = Material.SWEET_BERRIES;
+      }
     }
 
+    ItemStack itemStack = new ItemStack(newType);
     ItemMeta itemMeta = itemStack.getItemMeta();
+    if (type != newType)
+    {
+      itemMeta.displayName(ComponentUtil.itemName(type));
+      itemStack.setItemMeta(itemMeta);
+    }
     if (itemMeta instanceof BlockStateMeta blockStateMeta)
     {
-      blockStateMeta.setBlockState(block.getState());
+      BlockState blockState = block.getState();
+      blockStateMeta.setBlockState(blockState);
+      if (blockState instanceof Nameable nameable && nameable.customName() != null)
+      {
+        blockStateMeta.displayName(nameable.customName());
+      }
       itemStack.setItemMeta(blockStateMeta);
     }
     Location location = block.getLocation();
@@ -822,6 +813,11 @@ public class ItemStackUtil
     itemMeta.lore(lore);
     itemStack.setItemMeta(itemMeta);
     return itemStack;
+  }
+
+  public static boolean isBlockStateMetadatable(@NotNull Material type)
+  {
+    return new ItemStack(type).getItemMeta() instanceof BlockStateMeta;
   }
 
   public static boolean predicateItem(@NotNull ItemStack itemStack, @NotNull String nbt)
