@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.command.Command;
@@ -40,7 +41,7 @@ public class SwapHeldItem implements CommandExecutor
     }
     else if (args.length <= 2)
     {
-      Player target = Method.getPlayer(sender, args[0]);
+      Player target = SelectorUtil.getPlayer(sender, args[0]);
       if (target == null)
       {
         return true;

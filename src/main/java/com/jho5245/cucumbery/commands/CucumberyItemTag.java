@@ -128,7 +128,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setBoolean(key, b);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input += "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input += "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "byte":
@@ -144,7 +144,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setByte(key, (byte) i);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "byte-array":
@@ -167,7 +167,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setByteArray(key, byteArray);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = Arrays.toString(byteArray) + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = Arrays.toString(byteArray) + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "short":
@@ -183,7 +183,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setShort(key, (short) i);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "int":
@@ -195,7 +195,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setInteger(key, i);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "int-array":
@@ -214,7 +214,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setIntArray(key, intArray);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = Arrays.toString(intArray) + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = Arrays.toString(intArray) + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "int-list":
@@ -232,7 +232,7 @@ public class CucumberyItemTag implements CommandExecutor
                       }
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = nbtIntegerList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = nbtIntegerList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "long":
@@ -244,7 +244,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setLong(key, l);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = l + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = l + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "long-list":
@@ -262,7 +262,7 @@ public class CucumberyItemTag implements CommandExecutor
                       }
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = nbtLongList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = nbtLongList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "float":
@@ -278,7 +278,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setFloat(key, (float) d);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = d + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = d + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "float-list":
@@ -300,7 +300,7 @@ public class CucumberyItemTag implements CommandExecutor
                       }
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = nbtFloatList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = nbtFloatList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "double":
@@ -312,7 +312,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setDouble(key, d);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = d + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = d + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "double-list":
@@ -330,7 +330,7 @@ public class CucumberyItemTag implements CommandExecutor
                       }
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = nbtDoubleList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = nbtDoubleList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                     case "uuid":
@@ -343,7 +343,7 @@ public class CucumberyItemTag implements CommandExecutor
                       nbtItem.setUUID(key, uuid);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
                       Method.updateInventory(player);
-                      input = uuid + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                      input = uuid + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                       break;
                   }
@@ -353,7 +353,7 @@ public class CucumberyItemTag implements CommandExecutor
                   nbtItem.setString(key, input);
                   playerInventory.setItemInMainHand(nbtItem.getItem());
                   Method.updateInventory(player);
-                  input += "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                  input += "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                   MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                 }
                 case "string-list" -> {
@@ -364,7 +364,7 @@ public class CucumberyItemTag implements CommandExecutor
                   nbtStringList.addAll(Arrays.asList(split));
                   playerInventory.setItemInMainHand(nbtItem.getItem());
                   Method.updateInventory(player);
-                  input = nbtStringList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                  input = nbtStringList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                   MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                 }
                 case "compound" -> {
@@ -377,12 +377,12 @@ public class CucumberyItemTag implements CommandExecutor
                     nbtCompound.mergeCompound(nbtContainer);
                     playerInventory.setItemInMainHand(nbtItem.getItem());
                     Method.updateInventory(player);
-                    input = nbtContainer + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                    input = nbtContainer + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                     MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                   }
                   catch (Exception e)
                   {
-                    MessageUtil.sendError(sender, "&e" + input + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.은_는) + " 잘못된 nbt입니다.");
+                    MessageUtil.sendError(sender, "&e" + input + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.은는) + " 잘못된 nbt입니다.");
                     return true;
                   }
                 }
@@ -400,13 +400,13 @@ public class CucumberyItemTag implements CommandExecutor
                     }
                     catch (Exception e)
                     {
-                      MessageUtil.sendError(sender, "&e" + nbtString + "&r" + MessageUtil.getFinalConsonant(nbtString, ConsonantType.은_는) + " 잘못된 nbt입니다.");
+                      MessageUtil.sendError(sender, "&e" + nbtString + "&r" + MessageUtil.getFinalConsonant(nbtString, ConsonantType.은는) + " 잘못된 nbt입니다.");
                       return true;
                     }
                   }
                   playerInventory.setItemInMainHand(nbtItem.getItem());
                   Method.updateInventory(player);
-                  input = nbtCompoundList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로);
+                  input = nbtCompoundList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                   MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 &e" + key + "&r 태그의 &e" + type + "&r 값을 &e" + input + " 설정하였습니다.");
                 }
                 default -> {
@@ -484,7 +484,7 @@ public class CucumberyItemTag implements CommandExecutor
               }
               catch (Exception e)
               {
-                MessageUtil.sendError(sender, "&e" + input + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.은_는) + " 잘못된 nbt입니다.");
+                MessageUtil.sendError(sender, "&e" + input + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.은는) + " 잘못된 nbt입니다.");
                 return true;
               }
             }
@@ -767,7 +767,7 @@ public class CucumberyItemTag implements CommandExecutor
               if (!hideOutput)
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 &e" + customLoresTag.size() + "번째&r 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : ("&e" + inputLore + "&r" + MessageUtil.getFinalConsonant(
-                        MessageUtil.stripColor(inputLore), ConsonantType.이라_라) + "는")) + " 설명을 추가하였습니다.");
+                        MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 추가하였습니다.");
               }
               Method.updateInventory(player);
               break;
@@ -891,7 +891,7 @@ public class CucumberyItemTag implements CommandExecutor
               if (!hideOutput)
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 &e" + inputLoreLine + "번째&r 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : ("&e" + inputLore + "&r" + MessageUtil.getFinalConsonant(
-                        MessageUtil.stripColor(inputLore), ConsonantType.이라_라) + "는")) + " 설명을 들여썼습니다.");
+                        MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 들여썼습니다.");
               }
               Method.updateInventory(player);
               break;
@@ -934,7 +934,7 @@ public class CucumberyItemTag implements CommandExecutor
               if (!hideOutput)
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 &e" + inputLoreLine + "번째&r 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : ("&e" + inputLore + "&r" + MessageUtil.getFinalConsonant(
-                        MessageUtil.stripColor(inputLore), ConsonantType.이라_라) + "는")) + " 설명을 설정하였습니다.");
+                        MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 설정하였습니다.");
               }
               Method.updateInventory(player);
               break;
@@ -995,7 +995,7 @@ public class CucumberyItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(
                         player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 &e" + aboveCustomLoresTag.size() + "번째&r 상단 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : ("&e" + inputLore + "&r" + MessageUtil.getFinalConsonant(
-                                MessageUtil.stripColor(inputLore), ConsonantType.이라_라) + "는")) + " 설명을 추가하였습니다.");
+                                MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 추가하였습니다.");
               }
               Method.updateInventory(player);
               break;
@@ -1123,7 +1123,7 @@ public class CucumberyItemTag implements CommandExecutor
               if (!hideOutput)
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 &e" + inputLoreLine + "번째&r 상단 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : ("&e" + inputLore + "&r" + MessageUtil.getFinalConsonant(
-                        MessageUtil.stripColor(inputLore), ConsonantType.이라_라) + "는")) + " 설명을 들여썼습니다.");
+                        MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 들여썼습니다.");
               }
               Method.updateInventory(player);
               break;
@@ -1165,7 +1165,7 @@ public class CucumberyItemTag implements CommandExecutor
               if (!hideOutput)
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 &e" + inputLoreLine + "번째&r 상단 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : ("&e" + inputLore + "&r" + MessageUtil.getFinalConsonant(
-                        MessageUtil.stripColor(inputLore), ConsonantType.이라_라) + "는")) + " 설명을 설정하였습니다.");
+                        MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 설정하였습니다.");
               }
               Method.updateInventory(player);
               break;
@@ -1476,7 +1476,7 @@ public class CucumberyItemTag implements CommandExecutor
             if (!hideOutput)
             {
               MessageUtil.sendMessage(
-                      player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 사용자 지정 아이템 종류 태그 값을 &e" + customItemType + "&r" + MessageUtil.getFinalConsonant(customItemType, ConsonantType.으로_로) + " 지정하였습니다.");
+                      player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 사용자 지정 아이템 종류 태그 값을 &e" + customItemType + "&r" + MessageUtil.getFinalConsonant(customItemType, ConsonantType.으로) + " 지정하였습니다.");
             }
             return true;
           }
@@ -1923,7 +1923,7 @@ public class CucumberyItemTag implements CommandExecutor
             }
             catch (Exception e)
             {
-              MessageUtil.sendError(sender, "&e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.은_는) + " 알 수 없거나 잘못된 실행 유형입니다.");
+              MessageUtil.sendError(sender, "&e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.은는) + " 알 수 없거나 잘못된 실행 유형입니다.");
               return true;
             }
             usageTypeTag = NBTAPI.getCompound(usageTag, itemUsageType.getKey());
@@ -2222,7 +2222,7 @@ public class CucumberyItemTag implements CommandExecutor
                                     "번째&r에 &e/" +
                                     inputCommand +
                                     "&r" +
-                                    MessageUtil.getFinalConsonant(inputCommand, ConsonantType.이라_라) +
+                                    MessageUtil.getFinalConsonant(inputCommand, ConsonantType.이라) +
                                     "는 명령어를 들여썼습니다.");
                   }
                   break;
@@ -2276,7 +2276,7 @@ public class CucumberyItemTag implements CommandExecutor
                                     "번째&r 명령어를 &e/" +
                                     inputCommand +
                                     "&r" +
-                                    MessageUtil.getFinalConsonant(inputCommand, ConsonantType.으로_로) +
+                                    MessageUtil.getFinalConsonant(inputCommand, ConsonantType.으로) +
                                     " 설정하였습니다.");
                   }
                   Method.updateInventory(player);
@@ -2333,7 +2333,7 @@ public class CucumberyItemTag implements CommandExecutor
                   Method.updateInventory(player);
                   if (!hideOutput)
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 " + itemUsageType.getDisplay() + " 대기 시간 태그의 값을 &e" + inputTag + "&r" + MessageUtil.getFinalConsonant(inputTag, ConsonantType.으로_로) + " 설정하였습니다.");
+                    MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 " + itemUsageType.getDisplay() + " 대기 시간 태그의 값을 &e" + inputTag + "&r" + MessageUtil.getFinalConsonant(inputTag, ConsonantType.으로) + " 설정하였습니다.");
                   }
                   break;
                 case "time":
@@ -2401,7 +2401,7 @@ public class CucumberyItemTag implements CommandExecutor
                   if (!hideOutput)
                   {
                     MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 " + itemUsageType.getDisplay() + " 대기 시간 값을 &e" + (inputTime == 0 ? "&r제거하였습니다." : (inputTimeString + "&r" + MessageUtil.getFinalConsonant(
-                            inputTimeString, ConsonantType.으로_로) + " 설정하였습니다.")));
+                            inputTimeString, ConsonantType.으로) + " 설정하였습니다.")));
                   }
                   break;
                 default:
@@ -2502,7 +2502,7 @@ public class CucumberyItemTag implements CommandExecutor
           {
             MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 기간제 태그의 값을 &e" + (remove ? "&r제거하였습니다." : (inputDate +
                     "&r" +
-                    MessageUtil.getFinalConsonant(inputDate, ConsonantType.으로_로) +
+                    MessageUtil.getFinalConsonant(inputDate, ConsonantType.으로) +
                     " 설정하였습니다.")));
             if (!remove)
             {
@@ -2878,7 +2878,7 @@ public class CucumberyItemTag implements CommandExecutor
                   customItemTag.setString(CucumberyTag.ID_KEY, id);
                   if (!hideOutput)
                   {
-                    MessageUtil.info(player, "주로 사용하는 손에 들고 있는 아이템의 커스텀 아이탬 태그값을 &e" + id + "&r" + MessageUtil.getFinalConsonant(id, ConsonantType.으로_로) + " 설정하였습니다.");
+                    MessageUtil.info(player, "주로 사용하는 손에 들고 있는 아이템의 커스텀 아이탬 태그값을 &e" + id + "&r" + MessageUtil.getFinalConsonant(id, ConsonantType.으로) + " 설정하였습니다.");
                   }
                   playerInventory.setItemInMainHand(nbtItem.getItem());
                 }
@@ -3364,7 +3364,7 @@ public class CucumberyItemTag implements CommandExecutor
               foodTag.setString(CucumberyTag.NOURISHMENT_KEY, input);
               playerInventory.setItemInMainHand(nbtItem.getItem());
               Method.updateInventory(player);
-              MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템의 든든함 태그 값을 &e" + input + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로) + " 설정하였습니다.");
+              MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템의 든든함 태그 값을 &e" + input + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로) + " 설정하였습니다.");
             }
             default -> {
               MessageUtil.wrongArg(sender, 2, args);

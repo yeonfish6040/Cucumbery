@@ -255,7 +255,7 @@ public class InventoryClose implements Listener
 				customRecipeListConfig.saveConfig();
 				Variable.customRecipes.put(category, config);
 				MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + category.replace("__", " ") + "&r에 &e" + recipe.replace("__", " ") + "&r" + MessageUtil
-					.getFinalConsonant(recipe, MessageUtil.ConsonantType.이라_라) + "는 이름의 레시피를 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "하였습니다.");
+					.getFinalConsonant(recipe, MessageUtil.ConsonantType.이라) + "는 이름의 레시피를 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "하였습니다.");
 				// player.sendMessage(category.replace("§", "&") + ", " + recipe.replace("§", "&"));
 				player.updateInventory();
 			}

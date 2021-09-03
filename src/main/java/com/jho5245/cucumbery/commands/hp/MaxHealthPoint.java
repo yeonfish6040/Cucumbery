@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands.hp;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -34,7 +35,7 @@ public class MaxHealthPoint implements CommandExecutor
     }
     else if (args.length <= 5)
     {
-      Entity entity = Method.getEntity(sender, args[1]);
+      Entity entity = SelectorUtil.getEntity(sender, args[1]);
       if (entity == null)
       {
         return true;
@@ -42,7 +43,7 @@ public class MaxHealthPoint implements CommandExecutor
       String targetName = (entity).getName();
       if (!(entity instanceof Damageable target) || !(entity instanceof Attributable attributable))
       {
-        MessageUtil.sendError(sender, "&e" + targetName + "&r" + MessageUtil.getFinalConsonant(targetName, ConsonantType.은_는) + "&r HP 태그를 가지고 있지 않습니다.");
+        MessageUtil.sendError(sender, "&e" + targetName + "&r" + MessageUtil.getFinalConsonant(targetName, ConsonantType.은는) + "&r HP 태그를 가지고 있지 않습니다.");
         return true;
       }
       if (!MessageUtil.isDouble(sender, args[2], true))

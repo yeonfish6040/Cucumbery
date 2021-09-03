@@ -2,13 +2,17 @@ package com.jho5245.cucumbery.commands.teleport;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class Teleport implements CommandExecutor
 {
@@ -23,7 +27,7 @@ public class Teleport implements CommandExecutor
       if (sender instanceof Player)
       {
         MessageUtil.shortArg(sender, 2, args);
-        MessageUtil.commandInfo(sender, label, "<플레이어 ID> <다른 플레이어 ID>");
+        MessageUtil.commandInfo(sender, label, " <개체> <다른 개체>");
       }
       else
       {
@@ -34,36 +38,49 @@ public class Teleport implements CommandExecutor
     }
     else if (args.length <= 2)
     {
-      Player player, target;
+      Entity entity = null, target;
+      List<Entity> entities = null;
       if (args.length == 1)
       {
-        if (!(sender instanceof Player))
+        if (!(sender instanceof Entity entity1))
         {
           MessageUtil.shortArg(sender, 2, args);
-          MessageUtil.commandInfo(sender, label, "<플레이어 ID> <다른 플레이어 ID>");
+          MessageUtil.commandInfo(sender, label, "<개체> <다른 개체>");
           return true;
         }
-        player = (Player) sender;
-        target = Method.getPlayer(sender, args[0]);
+        entity = entity1;
+        target = SelectorUtil.getEntity(sender, args[0]);
       }
       else
       {
-        player = Method.getPlayer(sender, args[0]);
-        if (player == null)
+        entities = SelectorUtil.getEntities(sender, args[0]);
+        if (entities == null)
         {
           return true;
         }
-        target = Method.getPlayer(sender, args[1]);
+        target = SelectorUtil.getEntity(sender, args[1]);
       }
       if (target == null)
       {
         return true;
       }
-      if (player.getGameMode() == GameMode.SPECTATOR)
+      if (entity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR)
       {
         player.setSpectatorTarget(null);
       }
-      player.teleport(target);
+      if (entity != null)
+      entity.teleport(target);
+      if (entities != null)
+      {
+        for (Entity e : entities)
+        {
+          if (e instanceof Player player && player.getGameMode() == GameMode.SPECTATOR)
+          {
+            player.setSpectatorTarget(null);
+          }
+          e.teleport(target);
+        }
+      }
     }
     else
     {

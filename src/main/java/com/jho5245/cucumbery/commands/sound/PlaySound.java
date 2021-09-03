@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands.sound;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -100,9 +101,9 @@ public class PlaySound implements CommandExecutor
 						{
 							MessageUtil.broadcastPlayer(
 											Prefix.INFO_SOUND, ComponentUtil.senderComponent(sender), "이 모두에게 &e" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-															+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을_를) + " 재생하였습니다.");
+															+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다.");
 							MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "모든 플레이어에게 &e" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-											+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을_를) + " 재생하였습니다.");
+											+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다.");
 						}
 					}
 					catch (Exception e)
@@ -199,7 +200,7 @@ public class PlaySound implements CommandExecutor
 								if (!hideOutput)
 									MessageUtil.sendMessage(player,
 													Prefix.INFO_SOUND, ComponentUtil.senderComponent(sender), "이 당신에게 &e" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-																	+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을_를) + " 재생하였습니다.");
+																	+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다.");
 							}
 							catch (Exception e)
 							{
@@ -212,7 +213,7 @@ public class PlaySound implements CommandExecutor
 					if (!hideOutput)
 					{
 						MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "서버 라디오 들음을 활성화한 모든 플레이어에게 &e" + ((isCustomSound) ? customSound : sound.toString())
-										+ "&r" + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을_를) + " 재생하였습니다.");
+										+ "&r" + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다.");
 					}
 				}
 				else
@@ -233,7 +234,7 @@ public class PlaySound implements CommandExecutor
 				}
 				else if (args.length <= 6)
 				{
-					Player target = Method.getPlayer(sender, args[0]);
+					Player target = SelectorUtil.getPlayer(sender, args[0]);
 					if (target == null)
 						return true;
 					Sound sound = null;
@@ -311,10 +312,10 @@ public class PlaySound implements CommandExecutor
 					{
 						MessageUtil.sendMessage(target,
 										Prefix.INFO_SOUND, ComponentUtil.senderComponent(sender), "이 당신에게 &e" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-														+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을_를) + " 재생하였습니다.");
+														+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다.");
 						MessageUtil.sendMessage(sender,
 										Prefix.INFO_SOUND, ComponentUtil.senderComponent(target), "&r에게 &e" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-														+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을_를) + " 재생하였습니다.");
+														+ MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다.");
 					}
 				}
 				else

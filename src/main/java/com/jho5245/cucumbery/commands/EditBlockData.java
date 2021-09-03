@@ -63,15 +63,15 @@ public class EditBlockData implements CommandExecutor
 			{
 				if (!Method.equals(args[0], keys))
 				{
-					MessageUtil.sendError(sender, "&e"+args[0]+"&r"+ MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.은_는)+" 알 수 없는 속성입니다.");
+					MessageUtil.sendError(sender, "&e"+args[0]+"&r"+ MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.은는)+" 알 수 없는 속성입니다.");
 					return true;
 				}
-				MessageUtil.sendError(sender, "&e"+args[1]+"&r"+ MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는)+" 알 수 없는 값입니다.");
+				MessageUtil.sendError(sender, "&e"+args[1]+"&r"+ MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는)+" 알 수 없는 값입니다.");
 				return true;
 			}
 			if (!removal && !Method.equals(args[1], values))
 			{
-				MessageUtil.sendError(sender, "&e"+args[1]+"&r"+ MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는)+" 알 수 없는 값입니다.");
+				MessageUtil.sendError(sender, "&e"+args[1]+"&r"+ MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는)+" 알 수 없는 값입니다.");
 				return true;
 			}
 			NBTItem nbtItem = new NBTItem(item);

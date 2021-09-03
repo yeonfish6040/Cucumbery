@@ -93,7 +93,7 @@ public class SetItemMeta implements CommandExecutor
           {
             Component itemName = ComponentUtil.itemName(item);
             String itemNameSerial = ComponentUtil.serialize(itemName);
-            MessageUtil.sendMessage(player,Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 이름을 ", item, MessageUtil.getFinalConsonant(itemNameSerial, ConsonantType.으로_로) + " 설정하였습니다." );
+            MessageUtil.sendMessage(player,Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 이름을 ", item, MessageUtil.getFinalConsonant(itemNameSerial, ConsonantType.으로) + " 설정하였습니다." );
           }
         }
       }
@@ -147,7 +147,7 @@ public class SetItemMeta implements CommandExecutor
           itemMeta.displayName(itemMeta.displayName().append(ComponentUtil.create(name)));
           item.setItemMeta(itemMeta);
           player.getInventory().setItemInMainHand(item);
-          Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템에 §r" + name + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.이라_라) + "는 이름을 추가로 " +
+          Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템에 §r" + name + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.이라) + "는 이름을 추가로 " +
                           "입력하였습니다.",
                   item);
           MessageUtil.sendMessage(player, txt);
@@ -204,7 +204,7 @@ public class SetItemMeta implements CommandExecutor
           itemMeta.setLore(lore);
           item.setItemMeta(itemMeta);
           Component txt = ComponentUtil.create(
-                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄의 설명을 §e" + input + "§r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로_로) + " 설정하였습니다.", item);
+                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄의 설명을 §e" + input + "§r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로) + " 설정하였습니다.", item);
           MessageUtil.sendMessage(player, txt);
         }
         player.getInventory().setItemInMainHand(item);
@@ -289,7 +289,7 @@ public class SetItemMeta implements CommandExecutor
           item.setItemMeta(itemMeta);
           player.getInventory().setItemInMainHand(item);
           Component txt = ComponentUtil.create(
-                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄의 설명에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라_라) + "는 설명을 추가로 입력하였습니다.",
+                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄의 설명에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라) + "는 설명을 추가로 입력하였습니다.",
                   item);
           MessageUtil.sendMessage(player, txt);
         }
@@ -338,7 +338,7 @@ public class SetItemMeta implements CommandExecutor
             item.setItemMeta(itemMeta);
           }
           Component txt = ComponentUtil.create(
-                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + lore.size() + "번째§r 줄에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라_라) + "는 설명을 추가하였습니다.", item);
+                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + lore.size() + "번째§r 줄에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라) + "는 설명을 추가하였습니다.", item);
           MessageUtil.sendMessage(player, txt);
         }
         player.getInventory().setItemInMainHand(item);
@@ -447,7 +447,7 @@ public class SetItemMeta implements CommandExecutor
       }
       else
       {
-        txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라_라) + "는 설명을 " +
+        txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라) + "는 설명을 " +
                         "들여썼습니다.",
                 item);
       }

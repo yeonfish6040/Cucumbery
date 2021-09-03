@@ -1,10 +1,7 @@
 package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.ItemSerializer;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.Method2;
+import com.jho5245.cucumbery.util.*;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
@@ -149,7 +146,7 @@ public class VirtualChest implements CommandExecutor
         }
         customConfig.saveConfig();
         String display = ComponentUtil.itemName(handItem).toString();
-        MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "&e" + chestName + "&r 가상창고에 &e" + display + "&r" + MessageUtil.getFinalConsonant(display, MessageUtil.ConsonantType.을_를) + " 추가하였습니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "&e" + chestName + "&r 가상창고에 &e" + display + "&r" + MessageUtil.getFinalConsonant(display, MessageUtil.ConsonantType.을를) + " 추가하였습니다.");
       }
       break;
       case "virtualchestadmin":
@@ -170,7 +167,7 @@ public class VirtualChest implements CommandExecutor
           return true;
         }
         Player player = (Player) sender;
-        OfflinePlayer target = Method.getOfflinePlayer(sender, args[0], true);
+        OfflinePlayer target = SelectorUtil.getOfflinePlayer(sender, args[0], true);
         if (target == null)
         {
           return true;

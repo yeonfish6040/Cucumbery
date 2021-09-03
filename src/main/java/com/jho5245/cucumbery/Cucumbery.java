@@ -155,6 +155,10 @@ public class Cucumbery extends JavaPlugin
       MessageUtil.consoleSendMessage("&c플러그인을 비활성화하는 도중 오류가 발생하였습니다.");
       e.printStackTrace();
     }
+    if (Cucumbery.config.getBoolean("console-messages.plugin"))
+    {
+      MessageUtil.consoleSendMessage("&5[&d비활성화&5] &e" + pluginDescriptionFile.getName() + "&r version : &e" + pluginDescriptionFile.getVersion() + "&r 플러그인이 비활성화 되었습니다.");
+    }
   }
 
   // 플러그인 활성화 시 초기화 과정

@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.gui.GUI;
 import com.jho5245.cucumbery.gui.GUI.GUIType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Bukkit;
@@ -47,7 +48,7 @@ public class Menu implements CommandExecutor
 				MessageUtil.commandInfo(sender, label, "");
 				return true;
 			}
-			Player target = Method.getPlayer(sender, args[0]);
+			Player target = SelectorUtil.getPlayer(sender, args[0]);
 			if (target == null)
 			{
 				return true;

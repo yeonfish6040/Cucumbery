@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
@@ -123,7 +124,7 @@ public class NickName implements CommandExecutor
         else
         {
           MessageUtil.sendMessage(player, false, Prefix.INFO_NICK, "§e" + prefix + " 닉네임§r을 ", nickName, "§r" +
-                  MessageUtil.getFinalConsonant(ComponentUtil.serialize(nickName), ConsonantType.으로_로) + " 변경" + "하였습니다.");
+                  MessageUtil.getFinalConsonant(ComponentUtil.serialize(nickName), ConsonantType.으로) + " 변경" + "하였습니다.");
         }
         Variable.nickNames.remove(originDisplay);
         Variable.nickNames.remove(originList);
@@ -164,7 +165,7 @@ public class NickName implements CommandExecutor
         MessageUtil.commandInfo(sender, label, usage);
         return true;
       }
-      OfflinePlayer offlinePlayer = Method.getOfflinePlayer(sender, args[0]);
+      OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(sender, args[0]);
       if (offlinePlayer == null)
       {
         return true;
@@ -174,6 +175,7 @@ public class NickName implements CommandExecutor
       boolean isOnline = target != null && offlinePlayer.isOnline();
       boolean hideMessage = args[2].equals("true");
       String nickName = MessageUtil.listToString(" ", 3, args.length, args);
+      nickName = MessageUtil.listToString(MessageUtil.splitEscape(nickName, '+'));
       if (nickName.length() > 4096)
       {
         MessageUtil.sendError(sender, "너무 긴 닉네임입니다. 최대 &e4096자&r까지 입력할 수 있으나, &e" + nickName.length() + "자&r가 입력되었습니다.");
@@ -197,15 +199,15 @@ public class NickName implements CommandExecutor
         UserData.PLAYER_LIST_NAME.set(uuid, off ? null : inputName);
         Variable.nickNames.remove(originDisplay);
         Variable.cachedUUIDs.remove(originDisplay);
-        Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("__", ""));
+        Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("+", ""));
         Variable.nickNames.remove(originList);
         Variable.cachedUUIDs.remove(originList);
-        Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("__", ""));
+        Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("+", ""));
         if (!off)
         {
           Variable.nickNames.add(MessageUtil.stripColor(inputName));
           Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName), uuid);
-          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("__", ""), uuid);
+          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("+", ""), uuid);
         }
       }
       else if (args[1].equalsIgnoreCase("display"))
@@ -218,15 +220,15 @@ public class NickName implements CommandExecutor
         UserData.DISPLAY_NAME.set(uuid, off ? null : inputName);
         Variable.nickNames.remove(originDisplay);
         Variable.cachedUUIDs.remove(originDisplay);
-        Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("__", ""));
+        Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("+", ""));
         if (!off)
         {
           Variable.nickNames.add(MessageUtil.stripColor(inputName));
           Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName), uuid);
-          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("__", ""), uuid);
+          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("+", ""), uuid);
           Variable.nickNames.add(originList);
           Variable.cachedUUIDs.put(originList, uuid);
-          Variable.cachedUUIDs.put(originList.replace(" ", "").replace("__", ""), uuid);
+          Variable.cachedUUIDs.put(originList.replace(" ", "").replace("+", ""), uuid);
         }
       }
       else if (args[1].equalsIgnoreCase("list"))
@@ -239,15 +241,15 @@ public class NickName implements CommandExecutor
         UserData.PLAYER_LIST_NAME.set(uuid, off ? null : inputName);
         Variable.nickNames.remove(originList);
         Variable.cachedUUIDs.remove(originList);
-        Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("__", ""));
+        Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("+", ""));
         if (!off)
         {
           Variable.nickNames.add(MessageUtil.stripColor(inputName));
           Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName), uuid);
-          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("__", ""), uuid);
+          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("+", ""), uuid);
           Variable.nickNames.add(originDisplay);
           Variable.cachedUUIDs.put(originDisplay, uuid);
-          Variable.cachedUUIDs.put(originDisplay.replace(" ", "").replace("__", ""), uuid);
+          Variable.cachedUUIDs.put(originDisplay.replace(" ", "").replace("+", ""), uuid);
         }
       }
       else
@@ -261,11 +263,11 @@ public class NickName implements CommandExecutor
         if (target != null && !target.equals(sender))
         {
           MessageUtil.sendMessage(target, Prefix.INFO_NICK, sender, "이(가) 당신의 §e" + prefix + " 닉네임§r을 " +
-                  ((off) ? "초기화" : "§e" + inputName + "§r" + MessageUtil.getFinalConsonant(inputName, ConsonantType.으로_로) + " 변경") + "하였습니다.", false);
+                  ((off) ? "초기화" : "§e" + inputName + "§r" + MessageUtil.getFinalConsonant(inputName, ConsonantType.으로) + " 변경") + "하였습니다.", false);
         }
         MessageUtil.sendMessage(sender, Prefix.INFO_NICK, offlinePlayer, "§r의 §e" + prefix + " 닉네임§r을 " + ((off) ? "초기화" :
                 "§e" + inputName + "§r" + MessageUtil.getFinalConsonant(
-                        inputName, ConsonantType.으로_로) + " 변경") + "하였습니다.", false);
+                        inputName, ConsonantType.으로) + " 변경") + "하였습니다.", false);
       }
       File nickNamesFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/Nicknames.yml");
       if (!nickNamesFile.exists())

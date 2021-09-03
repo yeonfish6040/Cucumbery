@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
@@ -136,7 +137,7 @@ public class SetData implements CommandExecutor
             if (ItemStackUtil.itemExists(item))
             {
               txt = ComponentUtil.create(
-                      Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 종류를 &e" + ComponentUtil.itemName(type) + "&r" + MessageUtil.getFinalConsonant(ComponentUtil.itemName(type).toString(), ConsonantType.으로_로) + " 설정하였습니다.", item);
+                      Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 종류를 &e" + ComponentUtil.itemName(type) + "&r" + MessageUtil.getFinalConsonant(ComponentUtil.itemName(type).toString(), ConsonantType.으로) + " 설정하였습니다.", item);
               player.sendMessage(txt);
             }
             else
@@ -145,7 +146,7 @@ public class SetData implements CommandExecutor
                       "주로 사용하는 손에 들고 있는 아이템의 종류를 &e" +
                       ComponentUtil.itemName(type) +
                       "&r" +
-                      MessageUtil.getFinalConsonant(ComponentUtil.itemName(type).toString(), ConsonantType.으로_로) +
+                      MessageUtil.getFinalConsonant(ComponentUtil.itemName(type).toString(), ConsonantType.으로) +
                       " 설정하였습니다.");
             }
             return true;
@@ -157,7 +158,7 @@ public class SetData implements CommandExecutor
       }
       else
       {
-        Player target = Method.getPlayer(sender, args[2]);
+        Player target = SelectorUtil.getPlayer(sender, args[2]);
         if (target == null)
         {
           return true;

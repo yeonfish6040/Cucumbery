@@ -1348,8 +1348,7 @@ public class ItemLore2
           itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
           lore.add(Component.empty());
           ItemStack chargedProjectile = crossbowMeta.getChargedProjectiles().get(0).clone();
-          lore.addAll(ItemStackUtil.getItemInfoAsComponents(chargedProjectile, ComponentUtil.createTranslate("&e[발사체]")
-                  .append(Component.text(" " + chargedProjectile.getType().getKey()).color(NamedTextColor.DARK_GRAY)), true));
+          lore.addAll(ItemStackUtil.getItemInfoAsComponents(chargedProjectile, ComponentUtil.createTranslate("&e[발사체]"), true));
         }
         else
         {
@@ -1364,8 +1363,7 @@ public class ItemLore2
           {
             consumable = consumable.clone();
             lore.add(Component.empty());
-            lore.addAll(ItemStackUtil.getItemInfoAsComponents(consumable, ComponentUtil.createTranslate("&e[발사체]")
-                    .append(Component.text(" " + consumable.getType().getKey()).color(NamedTextColor.DARK_GRAY)), true));
+            lore.addAll(ItemStackUtil.getItemInfoAsComponents(consumable, ComponentUtil.createTranslate("&e[발사체]"), true));
           }
         }
       }
@@ -1619,41 +1617,48 @@ public class ItemLore2
             }
           }
         }
-        if (blockState instanceof Container container && !(blockState instanceof Furnace))
+        try
         {
-          Inventory inventory = container.getInventory();
-          if (!Method.inventoryEmpty(inventory))
+          if (blockState instanceof Container container && !(blockState instanceof Furnace))
           {
-            lore.add(Component.empty());
-            lore.add(customNameLore);
-            List<ItemStack> itemStackList = new ArrayList<>();
-            for (ItemStack itemStack : inventory.getContents())
+            Inventory inventory = container.getInventory();
+            if (!Method.inventoryEmpty(inventory))
             {
-              if (ItemStackUtil.itemExists(itemStack))
+              lore.add(Component.empty());
+              lore.add(customNameLore);
+              List<ItemStack> itemStackList = new ArrayList<>();
+              for (ItemStack itemStack : inventory.getContents())
               {
-                itemStackList.add(itemStack);
+                if (ItemStackUtil.itemExists(itemStack))
+                {
+                  itemStackList.add(itemStack);
+                }
               }
-            }
-            for (int i = 0; i < itemStackList.size(); i++)
-            {
-              if (i == 9)
+              for (int i = 0; i < itemStackList.size(); i++)
               {
-                lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", itemStackList.size() - i));
-                break;
-              }
-              ItemStack itemStack = itemStackList.get(i);
-              Component itemName = ComponentUtil.itemName(itemStack);
-              int amount = itemStack.getAmount();
-              if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
-              {
-                lore.add(ComponentUtil.createTranslate("&7%s", itemName));
-              }
-              else
-              {
-                lore.add(ComponentUtil.createTranslate("&7%s %s개", itemName, amount));
+                if (i == 9)
+                {
+                  lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", itemStackList.size() - i));
+                  break;
+                }
+                ItemStack itemStack = itemStackList.get(i);
+                Component itemName = ComponentUtil.itemName(itemStack);
+                int amount = itemStack.getAmount();
+                if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
+                {
+                  lore.add(ComponentUtil.createTranslate("&7%s", itemName));
+                }
+                else
+                {
+                  lore.add(ComponentUtil.createTranslate("&7%s %s개", itemName, amount));
+                }
               }
             }
           }
+        }
+        catch (Exception ignored)
+        {
+
         }
         if (blockState instanceof Beehive beehive)
         {
@@ -1677,10 +1682,19 @@ public class ItemLore2
             long seed = lootable.getSeed();
             lore.add(Component.empty());
             lore.add(ComponentUtil.createTranslate("&7&o루트테이블 : %s", lootTable.getKey()));
-            if (seed != 0)
+            if (blockEntityTag.getLong("LootTableSeed") != null)
             {
               lore.add(ComponentUtil.createTranslate("&7&o시드 : %s", seed));
             }
+          }
+        }
+        if (blockState instanceof Jukebox jukebox)
+        {
+          ItemStack record = jukebox.getRecord();
+          if (ItemStackUtil.itemExists(record))
+          {
+            lore.addAll(ItemStackUtil.getItemInfoAsComponents(record, ComponentUtil.createTranslate("&e[음반]")
+                    .append(Component.text(" " + record.getType().getKey()).color(NamedTextColor.DARK_GRAY)), true));
           }
         }
       }

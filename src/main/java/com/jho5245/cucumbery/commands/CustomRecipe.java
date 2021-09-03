@@ -5,10 +5,7 @@ import com.jho5245.cucumbery.customrecipe.CustomRecipeUtil;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryRecipe;
-import com.jho5245.cucumbery.util.ItemSerializer;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.Method2;
-import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.*;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
@@ -17,7 +14,9 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Statistic;
 import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,7 +30,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class CustomRecipe implements CommandExecutor
 {
@@ -68,7 +69,7 @@ public class CustomRecipe implements CommandExecutor
         }
         else
         {
-          player = Method.getPlayer(sender, args[3]);
+          player = SelectorUtil.getPlayer(sender, args[3]);
           if (player == null)
           {
             return true;
@@ -92,7 +93,7 @@ public class CustomRecipe implements CommandExecutor
         File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[1] + ".yml");
         if (!file.exists())
         {
-          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을_를) + " 찾을 수 없습니다.");
+          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다.");
           return true;
         }
         YamlConfiguration config = Variable.customRecipes.get(args[1]);
@@ -201,7 +202,7 @@ public class CustomRecipe implements CommandExecutor
         file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[1] + ".yml");
         if (!file.exists())
         {
-          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을_를) + " 찾을 수 없습니다.");
+          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다.");
           return true;
         }
         config = Variable.customRecipes.get(args[1]);
@@ -279,7 +280,7 @@ public class CustomRecipe implements CommandExecutor
             file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[2] + ".yml");
             if (!file.exists())
             {
-              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을_를) + " 찾을 수 없습니다.");
+              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을를) + " 찾을 수 없습니다.");
               return true;
             }
             customRecipeListConfig = CustomConfig.getCustomConfig("data/CustomRecipe/" + args[2] + ".yml");
@@ -379,7 +380,7 @@ public class CustomRecipe implements CommandExecutor
                                     "&r의 표시 아이템을 &e" +
                                     materialName +
                                     "&r" +
-                                    MessageUtil.getFinalConsonant(materialName, ConsonantType.으로_로) +
+                                    MessageUtil.getFinalConsonant(materialName, ConsonantType.으로) +
                                     " 설정하였습니다.");
                     break;
                   case "remove":
@@ -438,7 +439,7 @@ public class CustomRecipe implements CommandExecutor
                                     "&r의 접근 권한 요구 퍼미션 노드 기본값을 &e" +
                                     (inputBasePermission.equals("--remove") ? "&r삭제하였습니다." : (inputBasePermission +
                                             "&r" +
-                                            MessageUtil.getFinalConsonant(inputBasePermission, ConsonantType.으로_로) +
+                                            MessageUtil.getFinalConsonant(inputBasePermission, ConsonantType.으로) +
                                             " 지정하였습니다.")));
                     break;
                   case "bypass":
@@ -462,7 +463,7 @@ public class CustomRecipe implements CommandExecutor
                                     "커스텀 레시피 목록 §e" +
                                     args[2].replace("__", " ") +
                                     "&r의 비공개 우회 퍼미션 노드 값을 &e" +
-                                    (inputBypassPermission.equals("--remove") ? "&r삭제하였습니다." : (inputBypassPermission + "&r" + MessageUtil.getFinalConsonant(inputBypassPermission, ConsonantType.으로_로) + " 지정하였습니다.")));
+                                    (inputBypassPermission.equals("--remove") ? "&r삭제하였습니다." : (inputBypassPermission + "&r" + MessageUtil.getFinalConsonant(inputBypassPermission, ConsonantType.으로) + " 지정하였습니다.")));
                     break;
                   case "hide":
                     boolean hideIfNoPerm = false;
@@ -658,7 +659,7 @@ public class CustomRecipe implements CommandExecutor
                 }
                 if (!new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[5] + ".yml").exists())
                 {
-                  MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[5] + "&r" + MessageUtil.getFinalConsonant(args[5], ConsonantType.을_를) + " 찾을 수 없습니다.");
+                  MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[5] + "&r" + MessageUtil.getFinalConsonant(args[5], ConsonantType.을를) + " 찾을 수 없습니다.");
                   return true;
                 }
                 switch (args[4])
@@ -1393,7 +1394,7 @@ public class CustomRecipe implements CommandExecutor
                                 (inputDisplay.equals("--remove") ? ("&r의 표시 이름을 제거하였습니다.") : ("&r의 표시 이름을 &e" +
                                         inputDisplay +
                                         "&r" +
-                                        MessageUtil.getFinalConsonant(inputDisplay, ConsonantType.으로_로) +
+                                        MessageUtil.getFinalConsonant(inputDisplay, ConsonantType.으로) +
                                         " 지정하였습니다.")));
                 break;
               case "biome":
@@ -1443,7 +1444,7 @@ public class CustomRecipe implements CommandExecutor
                                 (inputDisplay.equals("--remove") ? ("&r의 생물 군계 조건을 제거하였습니다.") : ("&r의 생물 군계 조건을 &e" +
                                         biomeName +
                                         "&r" +
-                                        MessageUtil.getFinalConsonant(biomeName, ConsonantType.으로_로) +
+                                        MessageUtil.getFinalConsonant(biomeName, ConsonantType.으로) +
                                         " 지정하였습니다.")));
                 break;
               case "belowblock":
@@ -1502,7 +1503,7 @@ public class CustomRecipe implements CommandExecutor
                                 (inputDisplay.equals("--remove") ? ("&r의 밟고 있는 블록 조건을 제거하였습니다.") : ("&r의 밟고 있는 블록 조건을 &e" +
                                         blockTypeName +
                                         "&r" +
-                                        MessageUtil.getFinalConsonant(blockTypeName, ConsonantType.으로_로) +
+                                        MessageUtil.getFinalConsonant(blockTypeName, ConsonantType.으로) +
                                         " 지정하였습니다.")));
                 break;
               default:
@@ -1536,7 +1537,7 @@ public class CustomRecipe implements CommandExecutor
             file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[2] + ".yml");
             if (!file.exists())
             {
-              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을_를) + " 찾을 수 없습니다.");
+              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을를) + " 찾을 수 없습니다.");
               return true;
             }
             customRecipeListConfig = CustomConfig.getCustomConfig("data/CustomRecipe/" + args[2] + ".yml");
@@ -1616,7 +1617,7 @@ public class CustomRecipe implements CommandExecutor
                               "번째&r 줄에 &e/" +
                               command +
                               "&r" +
-                              MessageUtil.getFinalConsonant(command, ConsonantType.이라_라) +
+                              MessageUtil.getFinalConsonant(command, ConsonantType.이라) +
                               "는 명령어를 추가하였습니다.");
                       config.set("recipes." + args[3] + ".extra.commands." + args[5], commands);
                       Variable.customRecipes.put(args[2], config);
@@ -1734,7 +1735,7 @@ public class CustomRecipe implements CommandExecutor
                               "번째&r 줄에 &e/" +
                               command +
                               "&r" +
-                              MessageUtil.getFinalConsonant(command, ConsonantType.이라_라) +
+                              MessageUtil.getFinalConsonant(command, ConsonantType.이라) +
                               "는 명령어를 설정하였습니다.");
                       config.set("recipes." + args[3] + ".extra.commands." + args[5], commands);
                       Variable.customRecipes.put(args[2], config);
@@ -1785,7 +1786,7 @@ public class CustomRecipe implements CommandExecutor
                               "번째&r 줄에 &e/" +
                               command +
                               "&r" +
-                              MessageUtil.getFinalConsonant(command, ConsonantType.이라_라) +
+                              MessageUtil.getFinalConsonant(command, ConsonantType.이라) +
                               "는 명령어를 들여썼습니다.");
                       config.set("recipes." + args[3] + ".extra.commands." + args[5], commands);
                       Variable.customRecipes.put(args[2], config);
@@ -1851,7 +1852,7 @@ public class CustomRecipe implements CommandExecutor
                                     "&r의 제작 요구 퍼미션 노드 값을 &e" +
                                     (inputBasePermission.equals("--remove") ? "&r삭제하였습니다." : (inputBasePermission +
                                             "&r" +
-                                            MessageUtil.getFinalConsonant(inputBasePermission, ConsonantType.으로_로) +
+                                            MessageUtil.getFinalConsonant(inputBasePermission, ConsonantType.으로) +
                                             " 지정하였습니다.")));
                     break;
                   case "bypass":
@@ -1884,7 +1885,7 @@ public class CustomRecipe implements CommandExecutor
                                     "&r에 있는 레시피 &e" +
                                     args[3].replace("__", " ") +
                                     "&r의 비공개 우회 퍼미션 노드 값을 &e" +
-                                    (inputBypassPermission.equals("--remove") ? "&r삭제하였습니다." : (inputBypassPermission + "&r" + MessageUtil.getFinalConsonant(inputBypassPermission, ConsonantType.으로_로) + " 지정하였습니다.")));
+                                    (inputBypassPermission.equals("--remove") ? "&r삭제하였습니다." : (inputBypassPermission + "&r" + MessageUtil.getFinalConsonant(inputBypassPermission, ConsonantType.으로) + " 지정하였습니다.")));
                     break;
                   case "hide":
                     boolean hideIfNoPerm = false;
@@ -2028,7 +2029,7 @@ public class CustomRecipe implements CommandExecutor
                                     (inputCraftingInterval == 0d ? ("&r의 제작 주기를 제거하였습니다.") : ("&r의 제작 주기를 &e" +
                                             Method.timeFormatMilli(inputCraftingInterval, false) +
                                             "&r" +
-                                            MessageUtil.getFinalConsonant(Method.timeFormatMilli(inputCraftingInterval, false), ConsonantType.으로_로) +
+                                            MessageUtil.getFinalConsonant(Method.timeFormatMilli(inputCraftingInterval, false), ConsonantType.으로) +
                                             " 지정하였습니다.")));
                     break;
                   case "skip":
@@ -2136,7 +2137,7 @@ public class CustomRecipe implements CommandExecutor
                                         "&r에 있는 레시피 &e" +
                                         args[3].replace("__", " ") +
                                         "&r의 제작 시간 스킵 요구 퍼미션 노드 값을 &e" +
-                                        (inputSkipPermission.equals("--remove") ? "&r삭제하였습니다." : (inputSkipPermission + "&r" + MessageUtil.getFinalConsonant(inputSkipPermission, ConsonantType.으로_로) + " 지정하였습니다.")));
+                                        (inputSkipPermission.equals("--remove") ? "&r삭제하였습니다." : (inputSkipPermission + "&r" + MessageUtil.getFinalConsonant(inputSkipPermission, ConsonantType.으로) + " 지정하였습니다.")));
                         break;
                       case "relative":
                         if (args.length > 8)
@@ -2233,7 +2234,7 @@ public class CustomRecipe implements CommandExecutor
                                     (inputCraftingTime == 0d ? ("&r의 제작에 필요한 시간을 제거하였습니다.") : ("&r의 제작에 필요한 시간을 &e" +
                                             Method.timeFormatMilli(inputCraftingTime, false) +
                                             "&r" +
-                                            MessageUtil.getFinalConsonant(Method.timeFormatMilli(inputCraftingTime, false), ConsonantType.으로_로) +
+                                            MessageUtil.getFinalConsonant(Method.timeFormatMilli(inputCraftingTime, false), ConsonantType.으로) +
                                             " 지정하였습니다.")));
                     break;
                   default:
@@ -2674,7 +2675,7 @@ public class CustomRecipe implements CommandExecutor
                                 (inputDisplay.equals("--remove") ? ("&r의 레시피 표시 이름을 제거하였습니다.") : ("&r의 레시피 표시 이름을 &e" +
                                         inputDisplay +
                                         "&r" +
-                                        MessageUtil.getFinalConsonant(inputDisplay, ConsonantType.으로_로) +
+                                        MessageUtil.getFinalConsonant(inputDisplay, ConsonantType.으로) +
                                         " 지정하였습니다.")));
                 break;
               case "biome":
@@ -2726,7 +2727,7 @@ public class CustomRecipe implements CommandExecutor
                                 (inputDisplay.equals("--remove") ? ("&r의 생물 군계 조건을 제거하였습니다.") : ("&r의 생물 군계 조건을 &e" +
                                         biomeName +
                                         "&r" +
-                                        MessageUtil.getFinalConsonant(biomeName, ConsonantType.으로_로) +
+                                        MessageUtil.getFinalConsonant(biomeName, ConsonantType.으로) +
                                         " 지정하였습니다.")));
                 break;
               case "belowblock":
@@ -2785,7 +2786,7 @@ public class CustomRecipe implements CommandExecutor
                                 "&r에 있는 레시피 &e" +
                                 args[3].replace("__", " ") +
                                 (inputDisplay.equals("--remove") ? ("&r의 밟고 있는 블록 조건을 제거하였습니다.") : ("&r의 밟고 있는 블록 조건을 &e" + belowBlockTypeName + "&r" + MessageUtil.getFinalConsonant(
-                                        belowBlockTypeName, ConsonantType.으로_로) + " 지정하였습니다.")));
+                                        belowBlockTypeName, ConsonantType.으로) + " 지정하였습니다.")));
                 break;
               case "reusable":
                 if (args.length < 7)
@@ -2872,7 +2873,7 @@ public class CustomRecipe implements CommandExecutor
                 }
                 if (!new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[6] + ".yml").exists())
                 {
-                  MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[6] + "&r" + MessageUtil.getFinalConsonant(args[6], ConsonantType.을_를) + " 찾을 수 없습니다.");
+                  MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[6] + "&r" + MessageUtil.getFinalConsonant(args[6], ConsonantType.을를) + " 찾을 수 없습니다.");
                   return true;
                 }
                 switch (args[5])

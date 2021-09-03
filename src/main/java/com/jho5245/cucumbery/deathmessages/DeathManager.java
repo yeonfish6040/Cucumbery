@@ -201,6 +201,7 @@ public class DeathManager
                 key += "_high";
               }
             }
+            extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(entity.getFallDistance())).color(Constant.THE_COLOR));
           }
           case FIRE -> key = "fire_block";
           case FIRE_TICK -> key += "fire";
@@ -238,16 +239,24 @@ public class DeathManager
             }
           }
           case VOID -> {
-            key = "void";
-            if (lastTrampledBlock != null)
+            if (damageCause.getDamage() > Math.pow(2,127))
             {
-              extraArgs.add(ComponentUtil.create(lastTrampledBlock));
-              key += "_block";
+              key = "kill";
             }
-            if (fallDistance > 350)
+            else
             {
-              key += "_high";
+              key = "void";
+              if (lastTrampledBlock != null)
+              {
+                extraArgs.add(ComponentUtil.create(lastTrampledBlock));
+                key += "_block";
+              }
+              if (fallDistance > 350)
+              {
+                key += "_high";
+              }
             }
+            extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(entity.getFallDistance())).color(Constant.THE_COLOR));
           }
           case LIGHTNING -> key = "lightning_bolt";
           case SUICIDE -> key = "suicide";
@@ -288,6 +297,16 @@ public class DeathManager
           else
           {
             args.add(ComponentUtil.senderComponent(damager));
+            double distance = -1;
+            try
+            {
+              distance = ((Entity) damager).getLocation().distance(entity.getLocation());
+            }
+            catch (Exception ignored)
+            {
+
+            }
+            extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(distance)).color(Constant.THE_COLOR));
           }
           key += "_combat";
         }
@@ -464,6 +483,8 @@ public class DeathManager
 
         return damager;
       }
+      else
+        return damager;
 
       return entity;
     }

@@ -8,6 +8,7 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Nameable;
@@ -911,6 +912,13 @@ public class ItemStackUtil
           components.add(lore.get(i));
         }
       }
+    }
+    components.add(Component.text(itemStack.getType().getKey().toString()).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE));
+    NBTItem nbtItem = new NBTItem(itemStack);
+    int tags = nbtItem.getKeys().size();
+    if (tags > 0)
+    {
+      components.add(Component.translatable("item.nbt_tags").args(Component.text(tags)).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE));
     }
     if (separator)
     {

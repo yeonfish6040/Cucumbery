@@ -3,9 +3,11 @@ package com.jho5245.cucumbery.commands.sound;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
@@ -13,6 +15,8 @@ import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.model.SoundCategory;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -266,7 +270,10 @@ public class NoteBlockAPISong implements CommandExecutor
                     radioSongPlayer.addPlayer(player);
                     if (!silent && !sender.equals(player))
                     {
-                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, sender, "이(가) &e" + radioSongPlayer.getSong().getPath().getName() + "&r 파일을 재생합니다.");
+                      String display = radioSongPlayer.getSong().getPath().getName();
+                      display = display.substring(0, display.length() - 4);
+                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s이(가) %s을(를) 재생합니다.", sender, Component.text(display)
+                              .color(Constant.THE_COLOR).hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate(display)))));
                     }
                   }
                 }
@@ -293,7 +300,7 @@ public class NoteBlockAPISong implements CommandExecutor
           MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
           return true;
         }
-        Player player = Method.getPlayer(sender, args[0]);
+        Player player = SelectorUtil.getPlayer(sender, args[0]);
         if (player == null)
         {
           return true;

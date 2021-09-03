@@ -23,11 +23,10 @@ public class CommandItemData implements CommandExecutor
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
-    if (!(sender instanceof Player))
+    if (!(sender instanceof Player player))
     {
       return true;
     }
-    Player player = (Player) sender;
     ItemStack item = player.getInventory().getItemInMainHand();
     Component component = ComponentUtil.itemName(item).hoverEvent(item.asHoverEvent());
     MessageUtil.sendMessage(player, "아이템 미리보기 : ", component);

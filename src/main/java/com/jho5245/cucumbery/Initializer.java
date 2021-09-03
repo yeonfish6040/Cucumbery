@@ -1,8 +1,10 @@
 package com.jho5245.cucumbery;
 
+import com.jho5245.cucumbery.deathmessages.CustomDeathMessage;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.milkbowl.vault.economy.Economy;
@@ -73,14 +75,26 @@ public class Initializer
       Cucumbery.getPlugin().saveResource("DeathMessages.yml", false);
     }
     CustomConfig deathMessagesConfig = CustomConfig.getCustomConfig("DeathMessages.yml");
-    YamlConfiguration deathMessages = deathMessagesConfig.getConfig();
-    deathMessages.options().copyDefaults(true);
-    Variable.deathMessages = deathMessages;
+    Variable.deathMessages = deathMessagesConfig.getConfig();
+    CustomDeathMessage.register();
+  }
+
+  public static void loadLang()
+  {
+
+    File file = new File(Cucumbery.getPlugin().getDataFolder() + "/lang.yml");
+    if (!file.exists())
+    {
+      Cucumbery.getPlugin().saveResource("lang.yml", false);
+    }
+    CustomConfig deathMessagesConfig = CustomConfig.getCustomConfig("lang.yml");
+    Variable.lang = deathMessagesConfig.getConfig();
   }
 
   public static void loadCustomConfigs()
   {
     loadDeathMessagesConfig();
+    loadLang();
     Variable.customRecipes.clear();
     Variable.craftingTime.clear();
     Variable.craftsLog.clear();
@@ -288,9 +302,12 @@ public class Initializer
   {
     CustomConfig brigadierTabListCustomConfig = CustomConfig.getCustomConfig("data/brigadier_tab_list.yml");
     YamlConfiguration brigadierTabListConfig = brigadierTabListCustomConfig.getConfig();
-
-    String[] worldNamesAry = Bukkit.getWorlds().stream().map(World::getName).toArray(String[]::new);
-    brigadierTabListConfig.set("worldNames", Method.arrayToList(worldNamesAry));
+    List<String> worlds = new ArrayList<>();
+    for (World world : Bukkit.getWorlds())
+    {
+      worlds.add(world.getName());
+    }
+    brigadierTabListConfig.set("worldNames", worlds);
     List<String> commands = Method.getAllServerCommands();
     brigadierTabListConfig.set("commands", commands);
 
@@ -300,7 +317,6 @@ public class Initializer
   public static void loadNicknamesConfig()
   {
     Variable.nickNames.clear();
-    Variable.nickNames.addAll(Arrays.asList("@p", "@r", "@s"));
     File userDataFolder = new File(getPlugin().getDataFolder() + "/data/UserData");
     if (userDataFolder.exists())
     {
@@ -373,29 +389,21 @@ public class Initializer
       {
         continue;
       }
-      if (nickName.startsWith("@p"))
+      if (nickName.startsWith("@"))
       {
         continue;
       }
-      if (nickName.startsWith("@s"))
-      {
-        continue;
-      }
-      if (nickName.startsWith("@r"))
-      {
-        continue;
-      }
-      OfflinePlayer offlinePlayer = Method.getOfflinePlayer(null, nickName, false);
+      OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(null, nickName, false);
       if (offlinePlayer == null)
       {
         continue;
       }
       Variable.cachedUUIDs.put(nickName, offlinePlayer.getUniqueId());
       Variable.cachedUUIDs.put(nickName.replace(" ", ""), offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace(" ", "__"), offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace("__", ""), offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace("__", " "), offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace("__", "").replace(" ", ""), offlinePlayer.getUniqueId());
+      Variable.cachedUUIDs.put(nickName.replace(" ", "+"), offlinePlayer.getUniqueId());
+      Variable.cachedUUIDs.put(nickName.replace("+", ""), offlinePlayer.getUniqueId());
+      Variable.cachedUUIDs.put(nickName.replace("+", " "), offlinePlayer.getUniqueId());
+      Variable.cachedUUIDs.put(nickName.replace("+", "").replace(" ", ""), offlinePlayer.getUniqueId());
     }
   }
 
@@ -444,8 +452,8 @@ public class Initializer
       Variable.nickNames.add(displayname);
       Variable.cachedUUIDs.put(displayname, playerUUID);
       Variable.cachedUUIDs.put(displayname.replace(" ", ""), playerUUID);
-      Variable.cachedUUIDs.put(displayname.replace("__", ""), playerUUID);
-      Variable.cachedUUIDs.put(displayname.replace("__", "").replace(" ", ""), playerUUID);
+      Variable.cachedUUIDs.put(displayname.replace("+", ""), playerUUID);
+      Variable.cachedUUIDs.put(displayname.replace("+", "").replace(" ", ""), playerUUID);
     }
     if (playerListName != null)
     {
@@ -453,8 +461,8 @@ public class Initializer
       Variable.nickNames.add(playerListName);
       Variable.cachedUUIDs.put(playerListName, playerUUID);
       Variable.cachedUUIDs.put(playerListName.replace(" ", ""), playerUUID);
-      Variable.cachedUUIDs.put(playerListName.replace("__", ""), playerUUID);
-      Variable.cachedUUIDs.put(playerListName.replace("__", "").replace(" ", ""), playerUUID);
+      Variable.cachedUUIDs.put(playerListName.replace("+", ""), playerUUID);
+      Variable.cachedUUIDs.put(playerListName.replace("+", "").replace(" ", ""), playerUUID);
     }
   }
 

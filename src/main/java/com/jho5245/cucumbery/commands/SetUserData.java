@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.commands.sound.NoteBlockAPISong;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -34,7 +35,7 @@ public class SetUserData implements CommandExecutor
     else if (args.length <= 4)
     {
       boolean isOnline;
-      OfflinePlayer player = Method.getOfflinePlayer(sender, args[0], true);
+      OfflinePlayer player = SelectorUtil.getOfflinePlayer(sender, args[0], true);
       if (player == null)
       {
         return true;

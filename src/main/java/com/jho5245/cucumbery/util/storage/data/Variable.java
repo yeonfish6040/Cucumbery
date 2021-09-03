@@ -125,7 +125,9 @@ public class Variable
 
   public static YamlConfiguration allPlayerConfig = new YamlConfiguration();
 
-  public static YamlConfiguration deathMessages = new YamlConfiguration();
+  public static YamlConfiguration deathMessages = null;
+
+  public static YamlConfiguration lang = null;
 
   /**
    * @String 파일 경로와 이름

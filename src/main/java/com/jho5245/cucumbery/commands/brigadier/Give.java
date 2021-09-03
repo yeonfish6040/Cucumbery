@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -12,6 +13,7 @@ import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument.EntitySelector;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -71,47 +73,9 @@ public class Give extends CommandBase
         return;
       }
       ItemStack itemStack = (ItemStack) args[1];
+      ItemLore.setItemLore(itemStack);
       int amount = itemStack.getAmount();
-      for (Player player : players)
-      {
-        if (Method.usingLoreFeature(player))
-        {
-          ItemLore.setItemLore(itemStack, player);
-        }
-        else
-        {
-          ItemLore.removeItemLore(itemStack);
-        }
-        String itemName = itemStack.toString();
-        Collection<ItemStack> lostItemMap = player.getInventory().addItem(itemStack).values();
-        ItemStack lostItem = null;
-        int lostAmount = 0;
-        if (lostItemMap.size() != 0)
-        {
-          for (ItemStack lost : lostItemMap)
-          {
-            lostItem = lost;
-            lostAmount = lostItem.getAmount();
-          }
-        }
-        String targetName = "§e" + ComponentUtil.senderComponent(player);
-        if (lostItem != null)
-        {
-          lostAmount = lostItem.getAmount();
-          String lostDisplay = (lostAmount == amount ? "§c전부§r(§e총 " + lostAmount + "개§r)" : lostAmount + "개");
-          if (!player.equals(commandSender))
-          {
-            SoundPlay.playSound(player, Constant.WARNING_SOUND);
-          }
-          SoundPlay.playSound(commandSender, Constant.WARNING_SOUND);
-          amount -= lostAmount;
-        }
-        if (amount != 0)
-        {
-          String amountDisplay = (lostAmount == 0 ? amount + "" : amount + "§r(§e" + (amount + lostAmount) + "§r - §e" + lostAmount + "§r)§e");
-        }
-        amount = itemStack.getAmount();
-      }
+      AddItemUtil.addItemResult2(commandSender, (List<? extends InventoryHolder>) players, itemStack, amount).sendFeedback(false);
     });
     commandAPICommand.register();
 

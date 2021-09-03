@@ -1010,7 +1010,7 @@ public class PlayerInteract implements Listener
       String itemName = (item).toString();
       Method.playWarnSound(player);
       MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, item),
-              ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, ConsonantType.을_를) + " " + usageTypeString + " 사용할 권한이 없습니다.)"));
+              ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, ConsonantType.을를) + " " + usageTypeString + " 사용할 권한이 없습니다.)"));
       event.setCancelled(true);
       return false;
     }
@@ -1029,7 +1029,7 @@ public class PlayerInteract implements Listener
           String itemName = (item).toString();
           Method.playWarnSound(player);
           MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, item),
-                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, ConsonantType.을_를) + " " + usageTypeString + " 사용할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
+                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, ConsonantType.을를) + " " + usageTypeString + " 사용할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
           event.setCancelled(true);
           return false;
         }
@@ -1679,7 +1679,7 @@ public class PlayerInteract implements Listener
           if (!Method.configContainsLocation(player.getLocation(), Cucumbery.getPlugin().getConfig().getStringList("no-send-title-on-item-break-worlds")))
           {
             MessageUtil.sendTitle(player, "&c장비 파괴됨!",
-                    "&e인벤토리 아이템 중 &d" + (item) + "&e" + MessageUtil.getFinalConsonant(MessageUtil.stripColor((item).toString()), ConsonantType.이_가) + " 파괴되었습니다.", 5, 100, 15);
+                    "&e인벤토리 아이템 중 &d" + (item) + "&e" + MessageUtil.getFinalConsonant(MessageUtil.stripColor((item).toString()), ConsonantType.이가) + " 파괴되었습니다.", 5, 100, 15);
           }
         }
         Method.itemBreakParticle(player, item);

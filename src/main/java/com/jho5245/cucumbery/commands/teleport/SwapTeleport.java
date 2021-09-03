@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.teleport;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Location;
@@ -45,16 +46,16 @@ public class SwapTeleport implements CommandExecutor
       if (args.length == 1)
       {
         player = (Player) sender;
-        target = Method.getPlayer(sender, args[0]);
+        target = SelectorUtil.getPlayer(sender, args[0]);
       }
       else
       {
-        player = Method.getPlayer(sender, args[0]);
+        player = SelectorUtil.getPlayer(sender, args[0]);
         if (player == null)
         {
           return true;
         }
-        target = Method.getPlayer(sender, args[1]);
+        target = SelectorUtil.getPlayer(sender, args[1]);
       }
       if (target == null)
       {

@@ -53,6 +53,10 @@ public class EntityDamageByEntity implements Listener
     Entity victim = event.getEntity();
     Entity damager = event.getDamager();
     UUID victimUUID = victim.getUniqueId(), damagerUUID = damager.getUniqueId();
+    if (!(damager instanceof LivingEntity) && !(damager instanceof Projectile) && !(damager instanceof AreaEffectCloud))
+    {
+      Variable.victimAndDamager.put(victimUUID, damager);
+    }
     if (damager instanceof LivingEntity livingEntity)
     {
       Variable.victimAndDamager.put(victimUUID, damager);

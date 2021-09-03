@@ -65,7 +65,7 @@ public class EditCommandBlock implements CommandExecutor
 						playerInventory.setItemInMainHand(item);
 						Method.updateInventory(player);
 						MessageUtil.info(player, "주로 사용하는 손에 들고 있는 &e" + ComponentUtil.itemName(item) + "&r의 이름을 &e" + name + "&r" + MessageUtil.getFinalConsonant(name,
-							MessageUtil.ConsonantType.으로_로) + " 설정하였습니다.");
+							MessageUtil.ConsonantType.으로) + " 설정하였습니다.");
 						break;
 					}
 					case "command":
@@ -79,7 +79,7 @@ public class EditCommandBlock implements CommandExecutor
 						playerInventory.setItemInMainHand(item);
 						Method.updateInventory(player);
 						MessageUtil.info(player, "주로 사용하는 손에 들고 있는 &e" +ComponentUtil.itemName(item) + "&r의 명령어를 &e" + command + "&r" + MessageUtil.getFinalConsonant(command,
-							MessageUtil.ConsonantType.으로_로) + " 설정하였습니다.");
+							MessageUtil.ConsonantType.으로) + " 설정하였습니다.");
 						break;
 					}
 					case "auto":

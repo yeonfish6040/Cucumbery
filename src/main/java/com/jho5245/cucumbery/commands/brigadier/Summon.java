@@ -97,7 +97,7 @@ public class Summon extends CommandBase
       {
         String typeString = (entity).getCustomName();
         MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을_를) + " &e" + amount +
+                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
                         (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
       }
     });
@@ -134,7 +134,7 @@ public class Summon extends CommandBase
       {
         String typeString = (entity).getCustomName();
         MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을_를) + " &e" + amount +
+                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
                         (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
       }
     });
@@ -184,7 +184,7 @@ public class Summon extends CommandBase
       {
         String typeString = (entity).getCustomName();
         MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을_를) + " &e" + amount +
+                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
                         (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
       }
     });
@@ -222,7 +222,7 @@ public class Summon extends CommandBase
       {
         String typeString = (entity).getCustomName();
         MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을_를) + " &e" + amount +
+                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
                         (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
       }
     });
@@ -278,7 +278,7 @@ public class Summon extends CommandBase
       {
         String typeString = (entity).getCustomName();
         MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을_를) + " &e" + amount +
+                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
                         (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
       }
     });

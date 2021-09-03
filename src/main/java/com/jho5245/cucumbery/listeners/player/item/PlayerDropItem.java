@@ -127,6 +127,7 @@ public class PlayerDropItem implements Listener
       {
         Variable.itemDropAlertCooldown2.add(uuid);
         MessageUtil.sendTitle(player, "&c버리기 불가!", "&r캐릭터 귀속 아이템은 버릴 수 없습니다.", 5, 60, 15);
+        MessageUtil.info(player, ComponentUtil.create("이 메시지를 클릭하여 쓰레기통을 엽니다.").clickEvent(ClickEvent.runCommand("/trashcan")));
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemDropAlertCooldown2.remove(uuid), 100L);
       }

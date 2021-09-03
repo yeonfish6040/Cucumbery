@@ -1,13 +1,13 @@
 package com.jho5245.cucumbery.util;
 
-import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class TestCommand implements CommandExecutor
 {
@@ -18,11 +18,25 @@ public class TestCommand implements CommandExecutor
       return true;
     }
     Player player = (Player) sender;
-    ItemStack itemStack = player.getInventory().getItemInMainHand();
-    NBTContainer nbtContainer = new NBTContainer(MessageUtil.listToString(args));
-    NBTItem nbtItem = new NBTItem(itemStack);
-    nbtItem.mergeCompound(nbtContainer);
-    player.sendMessage(nbtItem.getItem().equals(itemStack) + "");
+    switch (args[0])
+    {
+      case "entities" -> {
+        List<Entity> entities = SelectorUtil.getEntities(sender, args[1], true);
+          MessageUtil.sendMessage(sender, entities != null ? entities : "null");
+      }
+      case "entity" -> {
+        Entity entity = SelectorUtil.getEntity(sender, args[1], true);
+        MessageUtil.sendMessage(sender, entity != null ? entity : "null");
+      }
+      case "players" -> {
+        List<Player> players = SelectorUtil.getPlayers(sender, args[1], true);
+        MessageUtil.sendMessage(sender, players != null ? players : "null");
+      }
+      case "player" -> {
+        Player p = SelectorUtil.getPlayer(sender, args[1], true);
+        MessageUtil.sendMessage(sender, p != null ? p : "null");
+      }
+    }
     return true;
   }
 }

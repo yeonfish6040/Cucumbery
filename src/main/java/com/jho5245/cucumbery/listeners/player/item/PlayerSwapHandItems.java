@@ -110,7 +110,7 @@ public class PlayerSwapHandItems implements Listener
           String itemName = ComponentUtil.itemName(item).toString();
           Method.playWarnSound(player);
           MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, item),
-                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을_를) + (isSneaking ? " 웅크리고" : "") + " 스와핑 사용할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
+                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + (isSneaking ? " 웅크리고" : "") + " 스와핑 사용할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
           event.setCancelled(true);
           return;
         }

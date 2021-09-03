@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -41,7 +42,7 @@ public class Spectate implements CommandExecutor
           MessageUtil.commandInfo(sender, label, consoleUsage);
           return true;
         }
-        Player target = Method.getPlayer(sender, args[0]);
+        Player target = SelectorUtil.getPlayer(sender, args[0]);
         if (target == null)
         {
           return true;
@@ -64,12 +65,12 @@ public class Spectate implements CommandExecutor
         MessageUtil.info(target, player, "이(가) 당신을 관전합니다.");
         return true;
       }
-      Player target = Method.getPlayer(sender, args[0]);
+      Player target = SelectorUtil.getPlayer(sender, args[0]);
       if (target == null)
       {
         return true;
       }
-      Player target2 = Method.getPlayer(sender, args[1]);
+      Player target2 = SelectorUtil.getPlayer(sender, args[1]);
       if (target2 == null)
       {
         return true;

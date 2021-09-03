@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -129,7 +130,7 @@ public class Warp implements CommandExecutor
             {
               return true;
             }
-            player = Method.getPlayer(sender, args[1]);
+            player = SelectorUtil.getPlayer(sender, args[1]);
             if (player == null)
             {
               return true;
@@ -168,7 +169,7 @@ public class Warp implements CommandExecutor
           YamlConfiguration config = Variable.warps.get(args[0]);
           if (config == null || config.getConfigurationSection("warp") == null || Objects.requireNonNull(config.getConfigurationSection("warp")).getKeys(false).size() == 0)
           {
-            MessageUtil.sendError(sender, "워프 &e" + args[0] + "&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을_를) + " 찾을 수 없습니다.");
+            MessageUtil.sendError(sender, "워프 &e" + args[0] + "&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을를) + " 찾을 수 없습니다.");
             return true;
           }
           String name = config.getString("warp.display");
@@ -217,7 +218,7 @@ public class Warp implements CommandExecutor
                             "\n&rPitch : &e" +
                             Constant.Sosu2.format(config.getDouble("warp.pitch")), ClickEvent.Action.SUGGEST_COMMAND,
                     "/cwarp " + args[0]);
-            Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.으로_로) + " 이동하였습니다.");
+            Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.으로) + " 이동하였습니다.");
             if (sender.equals(player))
             {
               MessageUtil.sendMessage(player, a, b, c);
@@ -225,13 +226,13 @@ public class Warp implements CommandExecutor
             else
             {
               a = ComponentUtil.create(MessageUtil.as(Prefix.INFO_WARP, sender, "이 당신을 "));
-              c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.으로_로) + " 이동시켰습니다.");
+              c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.으로) + " 이동시켰습니다.");
               if (!player.equals(sender))
               {
                 MessageUtil.sendMessage(player, a, b, c);
               }
               a = ComponentUtil.create(MessageUtil.as(Prefix.INFO_WARP, player + "을(를) "));
-              c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.으로_로) + " 이동시켰습니다.");
+              c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.으로) + " 이동시켰습니다.");
               MessageUtil.sendMessage(sender, a, b, c);
             }
           }
@@ -348,7 +349,7 @@ public class Warp implements CommandExecutor
                             "\n&rPitch : &e" +
                             Constant.Sosu2.format(config.getDouble("warp.pitch")), ClickEvent.Action.SUGGEST_COMMAND,
                     "/cwarp " + args[0]);
-            Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(MessageUtil.n2s(warpDisplayname)), MessageUtil.ConsonantType.이라_라) + "는 워프를 설정하였습니다.");
+            Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(MessageUtil.n2s(warpDisplayname)), MessageUtil.ConsonantType.이라) + "는 워프를 설정하였습니다.");
             MessageUtil.sendMessage(player, a, b, c);
           }
           warpConfig.saveConfig();
@@ -387,7 +388,7 @@ public class Warp implements CommandExecutor
           }
           if (!file.exists() || config == null)
           {
-            MessageUtil.sendError(sender, "워프 &e" + args[0] + "&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을_를) + " 찾을 수 없습니다.");
+            MessageUtil.sendError(sender, "워프 &e" + args[0] + "&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을를) + " 찾을 수 없습니다.");
             return true;
           }
           if (!hideOutput)
@@ -412,12 +413,12 @@ public class Warp implements CommandExecutor
                               Constant.Sosu2.format(config.getDouble("warp.yaw")) +
                               "\n&rPitch : &e" +
                               Constant.Sosu2.format(config.getDouble("warp.pitch")));
-              Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을_를) + " 제거하였습니다.");
+              Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을를) + " 제거하였습니다.");
               MessageUtil.sendMessage(player, a, b, c);
             }
             else
             {
-              MessageUtil.sendMessage(sender, Prefix.INFO_WARP, "워프 &e" + args[0] + "&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을_를) + " 제거하였습니다.");
+              MessageUtil.sendMessage(sender, Prefix.INFO_WARP, "워프 &e" + args[0] + "&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을를) + " 제거하였습니다.");
             }
           }
           if (file.exists())

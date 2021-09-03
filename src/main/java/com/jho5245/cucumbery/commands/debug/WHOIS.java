@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -54,7 +55,7 @@ public class WHOIS implements CommandExecutor
       }
       else
       {
-        if (Method.getPlayer(sender, args[0], false) == null)
+        if (SelectorUtil.getPlayer(sender, args[0], false) == null)
         {
           Bukkit.getServer().dispatchCommand(sender, "whois " + args[0] + " offline");
         }
@@ -79,12 +80,12 @@ public class WHOIS implements CommandExecutor
         MessageUtil.wrongArg(sender, 2, args);
         return true;
       }
-      OfflinePlayer offlinePlayer = Method.getOfflinePlayer(sender, args[0]);
-      Player player;
+      OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(sender, args[0]);
       if (offlinePlayer == null)
       {
         return true;
       }
+      Player player;
       player = offlinePlayer.getPlayer();
       if (player == null && !Method.equals(args[1], "name", "stats", "stats_general", "stats_entity", "stats_material", "offline"))
       {
@@ -559,7 +560,7 @@ public class WHOIS implements CommandExecutor
                                 "&e" +
                                 (entity) +
                                 "&r" +
-                                MessageUtil.getFinalConsonant((entity.name()), MessageUtil.ConsonantType.을_를) +
+                                MessageUtil.getFinalConsonant((entity.name()), MessageUtil.ConsonantType.을를) +
                                 " &e" +
                                 offlinePlayer.getStatistic(Statistic.KILL_ENTITY, entity) +
                                 "&e번 &r죽임");
@@ -684,7 +685,7 @@ public class WHOIS implements CommandExecutor
                             "&r이(가) &e" +
                             statisticName +
                             "&r" +
-                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은_는) +
+                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은는) +
                             " &e" +
                             offlinePlayer.getStatistic(stats) +
                             "&r" +
@@ -825,7 +826,7 @@ public class WHOIS implements CommandExecutor
                             "&r이(가) &e" +
                             statisticName +
                             "&r" +
-                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은_는) +
+                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은는) +
                             " &e" +
                             offlinePlayer.getStatistic(stats, type) +
                             "&r회입니다.");
@@ -959,7 +960,7 @@ public class WHOIS implements CommandExecutor
                             "&r이(가) &e" +
                             statisticName +
                             "&r" +
-                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은_는) +
+                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은는) +
                             " &e" +
                             offlinePlayer.getStatistic(stats, type) +
                             "&r회입니다.");

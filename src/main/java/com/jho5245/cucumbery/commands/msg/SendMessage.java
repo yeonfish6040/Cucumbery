@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.msg;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +23,7 @@ public class SendMessage implements CommandExecutor
 			MessageUtil.commandInfo(sender, label, usage);
 			return true;
 		}
-		Player target = Method.getPlayer(sender, args[0]); if (target == null) return true;
+		Player target = SelectorUtil.getPlayer(sender, args[0]); if (target == null) return true;
 		String msg = MessageUtil.listToString(" ", 1, args.length, args);
 		msg = Method.parseCommandString(target, msg);
 		target.sendMessage(msg);

@@ -47,7 +47,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -58,7 +58,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
     }
     else if (name.equals("setdata") && Method.hasPermission(sender, Permission.CMD_ITEMDATA, false))
@@ -89,7 +89,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (length == 3)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 4)
       {
@@ -102,9 +102,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         if (label.equals("sud"))
         {
-          return Method.tabCompleterPlayers(sender, args);
+          return Method.tabCompleterPlayer(sender, args);
         }
-        return Method.tabCompleterOfflinePlayers(sender, args);
+        return Method.tabCompleterOfflinePlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -126,7 +126,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         }
         catch (Exception e)
         {
-          return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는) + "잘못된 데이터 키입니다.");
+          return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + "잘못된 데이터 키입니다.");
         }
         switch (key)
         {
@@ -258,9 +258,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         if (label.equals("cnicks"))
         {
-          return Method.tabCompleterPlayers(sender, args);
+          return Method.tabCompleterPlayer(sender, args);
         }
-        return Method.tabCompleterOfflinePlayers(sender, args);
+        return Method.tabCompleterOfflinePlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -289,9 +289,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         if (label.equals("shp"))
         {
-          return Method.tabCompleterPlayers(sender, args);
+          return Method.tabCompleterPlayer(sender, args);
         }
-        return Method.tabCompleterOfflinePlayers(sender, args);
+        return Method.tabCompleterOfflinePlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -310,7 +310,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (length == 2 && (Method.equals(args[0], "<인수>", "set", "give", "take")))
       {
-        return Method.tabCompleterEntities(sender, args);
+        return Method.tabCompleterEntity(sender, args);
       }
       else if (length == 3)
       {
@@ -331,13 +331,13 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         if (label.equals("whois"))
         {
-          return Method.tabCompleterPlayers(sender, args);
+          return Method.tabCompleterPlayer(sender, args);
         }
-        return Method.tabCompleterOfflinePlayers(sender, args);
+        return Method.tabCompleterOfflinePlayer(sender, args);
       }
       else if (length == 2)
       {
-        Player player = Method.getPlayer(sender, args[0], false);
+        Player player = SelectorUtil.getPlayer(sender, args[0], false);
         OfflinePlayer offlinePlayer = null;
         if (Method.isUUID(args[0]))
         {
@@ -437,7 +437,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -458,7 +458,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -515,25 +515,25 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
     }
     else if (name.equals("call") && Method.hasPermission(sender, Permission.CMD_CALL, false))
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
     }
     else if (name.equals("enderchest") && Method.hasPermission(sender, Permission.CMD_ENDERCHEST, false))
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -544,7 +544,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -555,7 +555,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -574,11 +574,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -632,7 +632,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         }
         else if (Method.equals(args[0], "give", "checkamount", "setitem"))
         {
-          return Method.tabCompleterPlayers(sender, args);
+          return Method.tabCompleterPlayer(sender, args);
         }
       }
       else if (length == 3)
@@ -645,7 +645,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             FileConfiguration config = Variable.itemStorage.get(args[1]);
             if (config == null)
             {
-              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
+              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
             }
             ConfigurationSection itemList = config.getConfigurationSection("items");
             if (itemList == null)
@@ -660,7 +660,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             FileConfiguration config = Variable.itemStorage.get(args[1]);
             if (config == null)
             {
-              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
+              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
             }
             ConfigurationSection itemList = config.getConfigurationSection("items");
             if (itemList == null)
@@ -724,7 +724,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             FileConfiguration config = Variable.itemStorage.get(args[2]);
             if (config == null)
             {
-              return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
+              return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
             }
             ConfigurationSection itemList = config.getConfigurationSection("items");
             if (itemList == null)
@@ -738,7 +738,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             FileConfiguration config = Variable.itemStorage.get(args[2]);
             if (config == null)
             {
-              return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
+              return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
             }
             ConfigurationSection itemList = config.getConfigurationSection("items");
             if (itemList == null)
@@ -776,7 +776,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             FileConfiguration config = Variable.itemStorage.get(args[3]);
             if (config == null)
             {
-              return Collections.singletonList(args[3] + MessageUtil.getFinalConsonant(args[3], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
+              return Collections.singletonList(args[3] + MessageUtil.getFinalConsonant(args[3], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
             }
             ConfigurationSection itemList = config.getConfigurationSection("items");
             if (itemList == null)
@@ -840,7 +840,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -851,7 +851,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -866,7 +866,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -931,7 +931,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        List<String> list = new ArrayList<>(label.equals("uuid") ? Method.tabCompleterPlayers(sender, args) : Method.tabCompleterOfflinePlayers(sender, args));
+        List<String> list = new ArrayList<>(label.equals("uuid") ? Method.tabCompleterPlayer(sender, args) : Method.tabCompleterOfflinePlayer(sender, args));
         list.removeIf(Method::isUUID);
         return list;
       }
@@ -940,7 +940,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else
       {
@@ -951,7 +951,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -962,7 +962,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterEntities(sender, args);
+        return Method.tabCompleterEntity(sender, args);
       }
       else if (length == 2)
       {
@@ -1009,7 +1009,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -1085,7 +1085,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1116,7 +1116,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -1133,9 +1133,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         if (label.equals("gud"))
         {
-          return Method.tabCompleterPlayers(sender, args);
+          return Method.tabCompleterPlayer(sender, args);
         }
-        return Method.tabCompleterOfflinePlayers(sender, args);
+        return Method.tabCompleterOfflinePlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1153,7 +1153,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1176,7 +1176,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -1187,7 +1187,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1202,7 +1202,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
     }
     else if (name.equals("itemdata3") && Method.hasPermission(sender, Permission.CMD_ITEMDATA, false))
@@ -1213,7 +1213,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
     }
     else if (name.equals("getpositions") && Method.hasPermission(sender, Permission.CMD_GETPOSITIONS, false))
@@ -1227,7 +1227,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1261,7 +1261,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         switch (args[0])
         {
           case "execute":
-            return Method.tabCompleterList(args, Method.addAll(Method.tabCompleterPlayers(sender, args), "--console"), "[<플레이어>]", true);
+            return Method.tabCompleterList(args, Method.addAll(Method.tabCompleterPlayer(sender, args), "--console"), "[<플레이어>]", true);
           case "edit":
             if (Variable.commandPacks.size() == 0)
             {
@@ -1299,7 +1299,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
               YamlConfiguration config = Variable.commandPacks.get(args[2]);
               if (config == null)
               {
-                return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 명령어 팩 파일입니다.");
+                return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 명령어 팩 파일입니다.");
               }
               if (args.length == 4)
               {
@@ -1451,11 +1451,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -1474,11 +1474,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -1489,7 +1489,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1516,7 +1516,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1535,7 +1535,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1546,7 +1546,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1581,7 +1581,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -1929,7 +1929,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   catch (Exception e)
                   {
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
                   }
                   return Method.tabCompleterList(args, "<인수>", "add", "remove", "list", "set", "insert");
                 case "cooldown":
@@ -1939,7 +1939,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   catch (Exception e)
                   {
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
                   }
                   return Method.tabCompleterList(args, "<인수>", "tag", "time");
                 case "disposable":
@@ -1951,7 +1951,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   catch (Exception e)
                   {
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
                   }
                   if (args[2].contains("attack"))
                   {
@@ -1965,7 +1965,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   catch (Exception e)
                   {
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
                   }
                   return Method.tabCompleterList(args, "<퍼미션 노드>", true, "--remove", "<퍼미션 노드>");
               }
@@ -2001,7 +2001,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     }
                     return Method.tabCompleterList(args, Method.addAll(keys, "<키|변경할 키>"), "<키>", true);
                   default:
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 자료형입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 자료형입니다.");
                 }
               }
               break;
@@ -2035,7 +2035,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                 }
                 catch (Exception e)
                 {
-                  return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
+                  return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
                 }
                 switch (args[3])
                 {
@@ -2082,13 +2082,13 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                         if (j > Byte.MAX_VALUE)
                         {
                           String valueString = Constant.Sosu15.format(j);
-                          valueString += MessageUtil.getFinalConsonant(valueString, MessageUtil.ConsonantType.이_가);
+                          valueString += MessageUtil.getFinalConsonant(valueString, MessageUtil.ConsonantType.이가);
                           return Collections.singletonList("정수는 " + Constant.Sosu15.format(Byte.MAX_VALUE) + " 이하여야 하는데, " + valueString + " 있습니다.");
                         }
                         else if (j < Byte.MIN_VALUE)
                         {
                           String valueString = Constant.Sosu15.format(j);
-                          valueString += MessageUtil.getFinalConsonant(valueString, MessageUtil.ConsonantType.이_가);
+                          valueString += MessageUtil.getFinalConsonant(valueString, MessageUtil.ConsonantType.이가);
                           return Collections.singletonList("정수는 " + Constant.Sosu15.format(Byte.MIN_VALUE) + " 이상이여야 하는데, " + valueString + " 있습니다.");
                         }
                       }
@@ -2244,13 +2244,13 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                         if (j > Float.MAX_VALUE)
                         {
                           String valueString = Constant.Sosu15.format(j);
-                          valueString += MessageUtil.getFinalConsonant(valueString, MessageUtil.ConsonantType.이_가);
+                          valueString += MessageUtil.getFinalConsonant(valueString, MessageUtil.ConsonantType.이가);
                           return Collections.singletonList("숫자는 " + Constant.Sosu15.format(Byte.MAX_VALUE) + " 이하여야 하는데, " + valueString + " 있습니다.");
                         }
                         else if (j < -Float.MAX_VALUE)
                         {
                           String valueString = Constant.Sosu15.format(j);
-                          valueString += MessageUtil.getFinalConsonant(valueString, MessageUtil.ConsonantType.이_가);
+                          valueString += MessageUtil.getFinalConsonant(valueString, MessageUtil.ConsonantType.이가);
                           return Collections.singletonList("숫자는 " + Constant.Sosu15.format(Byte.MIN_VALUE) + " 이상이여야 하는데, " + valueString + " 있습니다.");
                         }
                       }
@@ -2336,7 +2336,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   case "compound-list":
                     break;
                   default:
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 자료형입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 자료형입니다.");
                 }
               }
               break;
@@ -2529,7 +2529,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             }
             catch (Exception e)
             {
-              return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
+              return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
             }
             NBTCompound usageTag = NBTAPI.getCompound(NBTAPI.getMainCompound(item), CucumberyTag.USAGE_KEY);
             NBTList<String> commands = NBTAPI.getStringList(NBTAPI.getCompound(usageTag, itemUsageType.getKey()), CucumberyTag.USAGE_COMMANDS_KEY);
@@ -2582,7 +2582,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
               }
               catch (Exception e)
               {
-                return Collections.singletonList(input + MessageUtil.getFinalConsonant(input, MessageUtil.ConsonantType.은_는) + " 잘못된 nbt입니다.");
+                return Collections.singletonList(input + MessageUtil.getFinalConsonant(input, MessageUtil.ConsonantType.은는) + " 잘못된 nbt입니다.");
               }
             }
             if (args.length == 3)
@@ -2608,7 +2608,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   catch (Exception e)
                   {
-                    return Collections.singletonList(input + MessageUtil.getFinalConsonant(input, MessageUtil.ConsonantType.은_는) + " 잘못된 nbt입니다.");
+                    return Collections.singletonList(input + MessageUtil.getFinalConsonant(input, MessageUtil.ConsonantType.은는) + " 잘못된 nbt입니다.");
                   }
                 }
                 String key = args[3];
@@ -2637,7 +2637,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     }
                     catch (Exception e)
                     {
-                      return Collections.singletonList(compoundString + MessageUtil.getFinalConsonant(compoundString, MessageUtil.ConsonantType.은_는) + " 잘못된 nbt입니다.");
+                      return Collections.singletonList(compoundString + MessageUtil.getFinalConsonant(compoundString, MessageUtil.ConsonantType.은는) + " 잘못된 nbt입니다.");
                     }
                   }
                 }
@@ -2687,11 +2687,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
           {
             if (!MessageUtil.isInteger(sender, args[4], false))
             {
-              return Collections.singletonList(args[4] + MessageUtil.getFinalConsonant(args[4], MessageUtil.ConsonantType.은_는) + " 정수가 아닙니다.");
+              return Collections.singletonList(args[4] + MessageUtil.getFinalConsonant(args[4], MessageUtil.ConsonantType.은는) + " 정수가 아닙니다.");
             }
             else if (!MessageUtil.checkNumberSize(sender, Integer.parseInt(args[4]), 1, Integer.MAX_VALUE, false))
             {
-              return Collections.singletonList("정수는 1 이상이여야 하는데, " + args[4] + MessageUtil.getFinalConsonant(args[4], MessageUtil.ConsonantType.이_가) + " 있습니다.");
+              return Collections.singletonList("정수는 1 이상이여야 하는데, " + args[4] + MessageUtil.getFinalConsonant(args[4], MessageUtil.ConsonantType.이가) + " 있습니다.");
             }
           }
           if (length == argLength)
@@ -2759,7 +2759,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
               YamlConfiguration config = Variable.commandPacks.get(cmdLabel);
               if (config == null)
               {
-                return Collections.singletonList(cmdLabel + MessageUtil.getFinalConsonant(cmdLabel, MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 명령어 팩 파일입니다.");
+                return Collections.singletonList(cmdLabel + MessageUtil.getFinalConsonant(cmdLabel, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 명령어 팩 파일입니다.");
               }
               return Method.tabCompleterList(args, config.getKeys(false), "<명령어 팩>");
             }
@@ -2826,7 +2826,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             case "create":
               if (Method2.isInvalidFileName(args[1]))
               {
-                return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는) + " 유효하지 않은 레시피 목록 이름입니다.");
+                return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 유효하지 않은 레시피 목록 이름입니다.");
               }
               if (Variable.customRecipes.size() == 0)
               {
@@ -2846,7 +2846,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
               YamlConfiguration config = Variable.customRecipes.get(args[1]);
               if (config == null)
               {
-                return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
               }
               ConfigurationSection recipes = config.getConfigurationSection("recipes");
               if (recipes == null)
@@ -2887,7 +2887,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
           switch (args[0])
           {
             case "open":
-              return Method.tabCompleterPlayers(sender, args);
+              return Method.tabCompleterPlayer(sender, args);
             case "edit":
               switch (args[1])
               {
@@ -2898,7 +2898,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[2]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                   }
                   ConfigurationSection recipes = config.getConfigurationSection("recipes");
                   if (recipes == null)
@@ -3128,7 +3128,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     YamlConfiguration config = Variable.customRecipes.get(args[2]);
                     if (config == null)
                     {
-                      return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                      return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
                     }
                     ConfigurationSection ingredients = config.getConfigurationSection("recipes." + args[3] + ".ingredients");
                     if (ingredients == null)
@@ -3351,7 +3351,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                       YamlConfiguration config = Variable.customRecipes.get(args[5]);
                       if (config == null)
                       {
-                        return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                        return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                       }
                       ConfigurationSection recipes = config.getConfigurationSection("recipes");
                       if (recipes == null)
@@ -3365,7 +3365,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                       YamlConfiguration config = Variable.customRecipes.get(args[5]);
                       if (config == null)
                       {
-                        return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                        return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                       }
                       String requireCategoryDisplay = config.getString("extra.display");
                       if (requireCategoryDisplay == null)
@@ -3480,15 +3480,15 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     switch (args[5])
                     {
                       case "break_item":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 망가뜨린 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 망가뜨린 최소 횟수 조건>", "-1");
                       case "craft_item":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 제작한 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 제작한 최소 횟수 조건>", "-1");
                       case "drop":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 떨어뜨린 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 떨어뜨린 최소 횟수 조건>", "-1");
                       case "pickup":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 주운 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 주운 최소 횟수 조건>", "-1");
                       case "mine_block":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 채굴한 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 채굴한 최소 횟수 조건>", "-1");
                       case "use_item":
                         String useType = "사용";
                         if (material.isBlock())
@@ -3500,7 +3500,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                           useType = "섭취";
                         }
                         return Method.tabCompleterIntegerRadius(
-                                args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " " + useType + "한 최소 횟수 조건>", "-1");
+                                args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " " + useType + "한 최소 횟수 조건>", "-1");
                     }
                     break;
                   case "entity":
@@ -3509,7 +3509,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                       case "entity_killed_by":
                         return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + "에게 죽은 최소 횟수 조건>", "-1");
                       case "kill_entity":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 죽인 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 죽인 최소 횟수 조건>", "-1");
                     }
                     break;
                   case "general":
@@ -3536,7 +3536,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[5]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                   }
                   String requireCategoryDisplay = config.getString("extra.display");
                   if (requireCategoryDisplay == null)
@@ -3556,7 +3556,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[5]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                   }
                   ConfigurationSection recipes = config.getConfigurationSection("recipes");
                   if (recipes == null)
@@ -3565,7 +3565,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   if (config.getConfigurationSection("recipes." + args[6]) == null)
                   {
-                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
                   }
                   String requireCategoryDisplay = config.getString("extra.display");
                   if (requireCategoryDisplay == null)
@@ -3593,7 +3593,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     FileConfiguration config = Variable.customRecipes.get(args[6]);
                     if (config == null)
                     {
-                      return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                      return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                     }
                     ConfigurationSection recipes = config.getConfigurationSection("recipes");
                     if (recipes == null)
@@ -3607,7 +3607,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     YamlConfiguration config = Variable.customRecipes.get(args[6]);
                     if (config == null)
                     {
-                      return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                      return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                     }
                     String requireCategoryDisplay = config.getString("extra.display");
                     if (requireCategoryDisplay == null)
@@ -3702,7 +3702,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     FileConfiguration config = Variable.customRecipes.get(args[2]);
                     if (config == null)
                     {
-                      return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                      return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                     }
                     List<String> commands = config == null ? null : config.getStringList("recipes." + args[3] + ".extra.commands." + args[5]);
                     switch (args[5])
@@ -3795,19 +3795,19 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     {
                       case "break_item":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 망가뜨린 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 망가뜨린 최대 횟수 조건]", "-1", min + "");
                       case "craft_item":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 제작한 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 제작한 최대 횟수 조건]", "-1", min + "");
                       case "drop":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 떨어뜨린 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 떨어뜨린 최대 횟수 조건]", "-1", min + "");
                       case "pickup":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 주운 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 주운 최대 횟수 조건]", "-1", min + "");
                       case "mine_block":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 채굴한 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 채굴한 최대 횟수 조건]", "-1", min + "");
                       case "use_item":
                         String useType = "사용";
                         if (material.isBlock())
@@ -3819,7 +3819,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                           useType = "섭취";
                         }
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " " + useType + "한 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " " + useType + "한 최대 횟수 조건]", "-1", min + "");
                     }
                     break;
                   case "entity":
@@ -3828,7 +3828,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                       case "entity_killed_by":
                         return Method.tabCompleterIntegerRadius(args, min, Integer.MAX_VALUE, "[" + typeValue + "에게 죽은 최대 횟수 조건]", "-1", min + "");
                       case "kill_entity":
-                        return Method.tabCompleterIntegerRadius(args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 죽인 최대 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 죽인 최대 횟수 조건>", "-1");
                     }
                     break;
                 }
@@ -3840,7 +3840,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[5]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                   }
                   ConfigurationSection recipes = config.getConfigurationSection("recipes");
                   if (recipes == null)
@@ -3849,7 +3849,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   if (config.getConfigurationSection("recipes." + args[6]) == null)
                   {
-                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
                   }
                   String requireCategoryDisplay = config.getString("extra.display");
                   if (requireCategoryDisplay == null)
@@ -3908,15 +3908,15 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     switch (args[6])
                     {
                       case "break_item":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 망가뜨린 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 망가뜨린 최소 횟수 조건>", "-1");
                       case "craft_item":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 제작한 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 제작한 최소 횟수 조건>", "-1");
                       case "drop":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 떨어뜨린 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 떨어뜨린 최소 횟수 조건>", "-1");
                       case "pickup":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 주운 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 주운 최소 횟수 조건>", "-1");
                       case "mine_block":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 채굴한 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 채굴한 최소 횟수 조건>", "-1");
                       case "use_item":
                         String useType = "사용";
                         if (material.isBlock())
@@ -3928,7 +3928,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                           useType = "섭취";
                         }
                         return Method.tabCompleterIntegerRadius(
-                                args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " " + useType + "한 최소 횟수 조건>", "-1");
+                                args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " " + useType + "한 최소 횟수 조건>", "-1");
                     }
                     break;
                   case "entity":
@@ -3937,7 +3937,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                       case "entity_killed_by":
                         return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + "에게 죽은 최소 횟수 조건>", "-1");
                       case "kill_entity":
-                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 죽인 최소 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 죽인 최소 횟수 조건>", "-1");
                     }
                     break;
                   case "general":
@@ -3964,7 +3964,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[6]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                   }
                   String requireCategoryDisplay = config.getString("extra.display");
                   if (requireCategoryDisplay == null)
@@ -3984,7 +3984,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[6]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                   }
                   ConfigurationSection recipes = config.getConfigurationSection("recipes");
                   if (recipes == null)
@@ -3993,7 +3993,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   if (config.getConfigurationSection("recipes." + args[7]) == null)
                   {
-                    return Collections.singletonList(args[7] + MessageUtil.getFinalConsonant(args[7], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                    return Collections.singletonList(args[7] + MessageUtil.getFinalConsonant(args[7], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
                   }
                   String requireCategoryDisplay = config.getString("extra.display");
                   if (requireCategoryDisplay == null)
@@ -4058,19 +4058,19 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     {
                       case "break_item":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 망가뜨린 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 망가뜨린 최대 횟수 조건]", "-1", min + "");
                       case "craft_item":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 제작한 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 제작한 최대 횟수 조건]", "-1", min + "");
                       case "drop":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 떨어뜨린 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 떨어뜨린 최대 횟수 조건]", "-1", min + "");
                       case "pickup":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 주운 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 주운 최대 횟수 조건]", "-1", min + "");
                       case "mine_block":
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 채굴한 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 채굴한 최대 횟수 조건]", "-1", min + "");
                       case "use_item":
                         String useType = "사용";
                         if (material.isBlock())
@@ -4082,7 +4082,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                           useType = "섭취";
                         }
                         return Method.tabCompleterIntegerRadius(
-                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " " + useType + "한 최대 횟수 조건]", "-1", min + "");
+                                args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " " + useType + "한 최대 횟수 조건]", "-1", min + "");
                     }
                     break;
                   case "entity":
@@ -4091,7 +4091,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                       case "entity_killed_by":
                         return Method.tabCompleterIntegerRadius(args, min, Integer.MAX_VALUE, "[" + typeValue + "에게 죽은 최대 횟수 조건]", "-1", min + "");
                       case "kill_entity":
-                        return Method.tabCompleterIntegerRadius(args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을_를) + " 죽인 최대 횟수 조건>", "-1");
+                        return Method.tabCompleterIntegerRadius(args, min, Integer.MAX_VALUE, "[" + typeValue + MessageUtil.getFinalConsonant(typeValue, MessageUtil.ConsonantType.을를) + " 죽인 최대 횟수 조건>", "-1");
                     }
                     break;
                 }
@@ -4103,7 +4103,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[6]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
                   }
                   ConfigurationSection recipes = config.getConfigurationSection("recipes");
                   if (recipes == null)
@@ -4112,7 +4112,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   if (config.getConfigurationSection("recipes." + args[7]) == null)
                   {
-                    return Collections.singletonList(args[7] + MessageUtil.getFinalConsonant(args[7], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                    return Collections.singletonList(args[7] + MessageUtil.getFinalConsonant(args[7], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
                   }
                   String requireCategoryDisplay = config.getString("extra.display");
                   if (requireCategoryDisplay == null)
@@ -4161,7 +4161,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         {
           if (Method2.isInvalidFileName(args[0]))
           {
-            return Collections.singletonList(args[0] + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.은_는) + " 유효하지 않은 상자 이름입니다.");
+            return Collections.singletonList(args[0] + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.은는) + " 유효하지 않은 상자 이름입니다.");
           }
           Player player = (Player) sender;
           File folder = new File(Cucumbery.getPlugin().getDataFolder() + "/data/VirtualChest/" + player.getUniqueId().toString());
@@ -4195,18 +4195,18 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         {
           if (label.equals("chestadmin"))
           {
-            return Method.tabCompleterPlayers(sender, args);
+            return Method.tabCompleterPlayer(sender, args);
           }
-          return Method.tabCompleterOfflinePlayers(sender, args);
+          return Method.tabCompleterOfflinePlayer(sender, args);
         }
         else if (length == 2)
         {
-          OfflinePlayer target = Method.getOfflinePlayer(sender, args[0], false);
+          OfflinePlayer target = SelectorUtil.getOfflinePlayer(sender, args[0], false);
           if (target != null)
           {
             if (Method2.isInvalidFileName(args[1]))
             {
-              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는) + " 유효하지 않은 상자 이름입니다.");
+              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 유효하지 않은 상자 이름입니다.");
             }
             File folder = new File(Cucumbery.getPlugin().getDataFolder() + "/data/VirtualChest/" + target.getUniqueId().toString());
             if (folder.exists())
@@ -4232,9 +4232,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         }
       }
     }
-    else if (name.equals("setrepaircost") && sender instanceof Player)
+    else if (name.equals("setrepaircost") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4263,9 +4262,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         if (label.equals("ceco"))
         {
-          return Method.tabCompleterPlayers(sender, args);
+          return Method.tabCompleterPlayer(sender, args);
         }
-        return Method.tabCompleterOfflinePlayers(sender, args);
+        return Method.tabCompleterOfflinePlayer(sender, args);
       }
       else if (length == 3)
       {
@@ -4287,7 +4286,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -4298,7 +4297,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
       }
       else if (length == 2)
       {
@@ -4324,16 +4323,15 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterEntity(sender, args, "(<개체>|<여러 개체> [다른 개체])", true);
       }
       else if (length == 2)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterEntity(sender, args, "<다른 개체>");
       }
     }
-    else if (name.equals("setname") && sender instanceof Player)
+    else if (name.equals("setname") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4345,9 +4343,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       return Method.tabCompleterList(args, "[아이템 이름]", true);
     }
-    else if (name.equals("setname2") && sender instanceof Player)
+    else if (name.equals("setname2") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4359,9 +4356,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       return Method.tabCompleterList(args, "[추가로 입력할 이름]", true);
     }
-    else if (name.equals("setlore") && sender instanceof Player)
+    else if (name.equals("setlore") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4391,9 +4387,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterList(args, "[설명]", true);
       }
     }
-    else if (name.equals("setlore2") && sender instanceof Player)
+    else if (name.equals("setlore2") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4412,9 +4407,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterList(args, "[추가로 입력할 설명]", true);
       }
     }
-    else if (name.equals("addlore") && sender instanceof Player)
+    else if (name.equals("addlore") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4444,9 +4438,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterIntegerRadius(args, 1, lore == null ? 1 : lore.size(), "[줄]", "--all");
       }
     }
-    else if (name.equals("insertlore") && sender instanceof Player)
+    else if (name.equals("insertlore") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4470,9 +4463,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterList(args, "[설명]", true);
       }
     }
-    else if (name.equals("editcommandblock") && sender instanceof Player)
+    else if (name.equals("editcommandblock") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4520,9 +4512,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       return Method.tabCompleterList(args, length == 1 ? "<메시지>" : "[메시지]", true);
     }
-    else if (name.equals("broadcastitem") && sender instanceof Player)
+    else if (name.equals("broadcastitem") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       List<String> list = new ArrayList<>();
       String arg = MessageUtil.listToString(args);
       if (arg.contains("[i1]"))
@@ -4655,9 +4646,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
       }
     }
-    else if (name.equals("editblockdata") && sender instanceof Player)
+    else if (name.equals("editblockdata") && sender instanceof Player player)
     {
-      Player player = (Player) sender;
       ItemStack item = player.getInventory().getItemInMainHand();
       if (!ItemStackUtil.itemExists(item))
       {
@@ -4680,9 +4670,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         {
           if (!Method.equals(args[0], keys))
           {
-            return Collections.singletonList(args[0] + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 속성입니다.");
+            return Collections.singletonList(args[0] + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 속성입니다.");
           }
-          return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 값입니다.");
+          return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 값입니다.");
         }
         return Method.tabCompleterList(args, Method.addAll(Method.arrayToList(values), "--remove"), "<값>");
       }
@@ -4695,10 +4685,10 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (args.length == 1)
       {
-        return Method.tabCompleterEntities(sender, args);
+        return Method.tabCompleterEntity(sender, args, "<개체>", true);
       }
 
-      Entity entity = Method.getEntity(sender, args[0], false);
+      Entity entity = SelectorUtil.getEntity(sender, args[0], false);
 
       String x = "~", y = "~", z = "~";
       if (entity != null)
@@ -4742,7 +4732,28 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (args.length == 1)
       {
-        return Method.tabCompleterPlayers(sender, args);
+        return Method.tabCompleterPlayer(sender, args);
+      }
+    }
+    else if (name.equals("testcommand"))
+    {
+      if (length == 1)
+      {
+        return Method.tabCompleterList(args, "asdfasdf", "entities", "entity", "players", "player");
+      }
+      else if (length == 2)
+      {
+        switch (args[0])
+        {
+          case "entities", "entity" ->
+                  {
+                    return Method.tabCompleterEntity(sender, args);
+                  }
+                  case "players", "player" ->
+                          {
+                            return Method.tabCompleterPlayer(sender, args);
+                          }
+        }
       }
     }
     return Collections.singletonList(Prefix.ARGS_LONG.toString());

@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.debug;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemInfo;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -40,7 +41,7 @@ public class ItemData implements CommandExecutor
 				{
 					if (!Permission.CMD_ITEMDATA_OTHERS.has(sender))
 						return true;
-					Player target = Method.getPlayer(sender, args[0]);
+					Player target = SelectorUtil.getPlayer(sender, args[0]);
 					if (target == null)
 						return true;
 					PlayerInventory targetInventory = target.getInventory();
@@ -93,7 +94,7 @@ public class ItemData implements CommandExecutor
 						if (! Permission.CMD_ITEMDATA_OTHERS.has(sender))
 							return true;
 						else
-							player = Method.getPlayer(sender, args[1]);
+							player = SelectorUtil.getPlayer(sender, args[1]);
 						if (player == null)
 							return true;
 					}
@@ -198,7 +199,7 @@ public class ItemData implements CommandExecutor
 						if (!Permission.CMD_ITEMDATA_OTHERS.has(sender))
 							return true;
 						else
-							player = Method.getPlayer(sender, args[1]);
+							player = SelectorUtil.getPlayer(sender, args[1]);
 						if (player == null)
 							return true;
 					}

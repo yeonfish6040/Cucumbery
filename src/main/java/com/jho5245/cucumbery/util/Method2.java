@@ -66,7 +66,7 @@ public class Method2 extends Method
 
   public static boolean isInvalidFileName(@NotNull String fileName)
   {
-    return containsIgnoreCase(fileName, "\\", "/", ":", "*", "?", "\"", "<", ">", "|") ||
+    return containsIgnoreCase(fileName, "\\", "/", ":", "*", "?", "\"", "<", ">", "|", "&", "§") ||
             equalsIgnoreCase(fileName, "con", "prn", "aux", "clock$", "nul",
                     "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9",
                     "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9") ||
@@ -74,5 +74,20 @@ public class Method2 extends Method
                     "com1.", "com2.", "com3.", "com4.", "com5.", "com6.", "com7.", "com8.", "com9.",
                     "lpt1.", "lpt2.", "lpt3.", "lpt4.", "lpt5.", "lpt6.", "lpt7.", "lpt8.", "lpt9.") ||
             fileName.length() > 255;
+  }
+
+  public static double distance(@NotNull Location from, @NotNull Location to)
+  {
+    return distance(from, to, false);
+  }
+
+  public static double distance(@NotNull Location from, @NotNull Location to, boolean ignoreWorld)
+  {
+    if (!ignoreWorld && from.getWorld().getName().equals(to.getWorld().getName()))
+    {
+      return -1d;
+    }
+    double fromX = from.getX(), fromY = from.getY(), fromZ = from.getZ(), toX = to.getX(), toY = to.getY(), toZ = to.getZ();
+    return Math.sqrt(Math.pow(fromX - toX, 2d) + Math.pow(fromY - toY, 2d) + Math.pow(fromZ - toZ, 2d));
   }
 }

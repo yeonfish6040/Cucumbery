@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -47,7 +48,7 @@ public class TrashCan implements CommandExecutor
         MessageUtil.commandInfo(sender, label, "");
         return true;
       }
-      Player target = Method.getPlayer(sender, args[0]);
+      Player target = SelectorUtil.getPlayer(sender, args[0]);
       if (target == null)
       {
         return true;

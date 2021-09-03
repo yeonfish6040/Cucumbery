@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.josautil.KoreanUtils;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -16,15 +17,45 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.Normalizer;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class MessageUtil
 {
+  @NotNull
+  public static String[] splitEscape(@NotNull String str, char token)
+  {
+    List<String> list = new ArrayList<>();
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < str.length(); i++)
+    {
+      char c = str.charAt(i);
+      if (c == token)
+      {
+        if (i + 1 < str.length() && str.charAt(i + 1) == token)
+        {
+          builder.append(token);
+          i++;
+          continue;
+        }
+        if (builder.length() > 0)
+        {
+          list.add(builder.toString());
+          builder = new StringBuilder();
+        }
+      }
+      else
+      {
+        builder.append(c);
+      }
+    }
+    list.add(builder.toString());
+    return Method.listToArray(list);
+  }
   /**
    * 문자열 배열을 하나의 문자열로 반환합니다.
    *
@@ -181,24 +212,24 @@ public class MessageUtil
     }
   }
 
-  public static void sendWarn(@NotNull Audience sender, @NotNull Object... objects)
+  public static void sendWarn(@NotNull Object audience, @NotNull Object... objects)
   {
     if (Cucumbery.config.getBoolean("sound-const.warning-sound.enable"))
     {
-      SoundPlay.playWarnSound(sender);
+      SoundPlay.playWarnSound(audience);
     }
     Object[] newObjects = new Object[objects.length + 1];
     newObjects[0] = Prefix.INFO_WARN;
     System.arraycopy(objects, 0, newObjects, 1, objects.length);
-    sendMessage(sender, newObjects);
+    sendMessage(audience, newObjects);
   }
 
-  public static void sendWarn(@NotNull Audience audience, @NotNull Prefix msg)
+  public static void sendWarn(@NotNull Object audience, @NotNull Prefix msg)
   {
     sendWarn(audience, msg.toString());
   }
 
-  public static void sendError(@NotNull Audience audience, @NotNull Object... objects)
+  public static void sendError(@NotNull Object audience, @NotNull Object... objects)
   {
     if (Cucumbery.config.getBoolean("sound-const.error-sound.enable"))
     {
@@ -210,12 +241,12 @@ public class MessageUtil
     sendMessage(audience, newObjects);
   }
 
-  public static void sendError(@NotNull Audience audience, @NotNull Prefix msg)
+  public static void sendError(@NotNull Object audience, @NotNull Prefix msg)
   {
     sendError(audience, msg.toString());
   }
 
-  public static void info(@NotNull Audience audience, @NotNull Object... objects)
+  public static void info(@NotNull Object audience, @NotNull Object... objects)
   {
     Object[] newObjects = new Object[objects.length + 1];
     newObjects[0] = Prefix.INFO;
@@ -223,7 +254,7 @@ public class MessageUtil
     sendMessage(audience, newObjects);
   }
 
-  public static void commandInfo(@NotNull Audience audience, @NotNull String label, @NotNull String usage)
+  public static void commandInfo(@NotNull Object audience, @NotNull String label, @NotNull String usage)
   {
     info(audience, "/" + label + " " + usage);
   }
@@ -422,40 +453,35 @@ public class MessageUtil
     return new String(chars);
   }
 
-  public static void noArg(@NotNull Audience audience, @NotNull Prefix reason, @NotNull String arg)
+  public static void noArg(@NotNull Object audience, @NotNull Prefix reason, @NotNull String arg)
   {
     sendError(audience, reason + " &r(&e" + arg + "&r)");
   }
 
-  public static void shortArg(@NotNull Audience audience, int input, @NotNull String[] args)
+  public static void shortArg(@NotNull Object audience, int input, @NotNull String[] args)
   {
     sendError(audience, Prefix.ARGS_SHORT + " (&e" + args.length + "개&r 입력, 최소 &e" + input + "개&r)");
   }
 
-  public static void longArg(@NotNull Audience audience, int input, @NotNull String[] args)
+  public static void longArg(@NotNull Object audience, int input, @NotNull String[] args)
   {
     sendError(audience, Prefix.ARGS_LONG + " (&e" + args.length + "개&r 입력, 최대 &e" + input + "개&r)");
   }
 
-  public static void wrongArg(@NotNull Audience audience, int input, @NotNull String[] args)
+  public static void wrongArg(@NotNull Object audience, int input, @NotNull String[] args)
   {
     sendError(audience, Prefix.ARGS_WRONG + " (&e" + input + "번째 &r인수 : &e" + args[input - 1] + "&r)");
   }
 
-  public static void wrongBool(@NotNull Audience audience, int input, @NotNull String[] args)
+  public static void wrongBool(@NotNull Object audience, int input, @NotNull String[] args)
   {
-    sendError(audience, "잘못된 불입니다. '&etrue&r' 또는 '&efalse&r'가 필요하지만 &e" + input + "번&r째 인수에 '&e" + args[input - 1] + "&r'" + getFinalConsonant(args[input - 1], ConsonantType.이_가) + " 입력되었습니다.");
+    sendError(audience, "잘못된 불입니다. '&etrue&r' 또는 '&efalse&r'가 필요하지만 &e" + input + "번&r째 인수에 '&e" + args[input - 1] + "&r'" + getFinalConsonant(args[input - 1], ConsonantType.이가) + " 입력되었습니다.");
   }
 
-  public static void sendTitle(@NotNull Player player, @Nullable String title, @Nullable String subTtitle, int fadeIn, int stay, int fadeOut)
-  {
-    sendTitle(player, ComponentUtil.createTranslate(title), ComponentUtil.createTranslate(subTtitle), fadeIn, stay, fadeOut);
-  }
-
-  public static void sendTitle(@NotNull Player player, @Nullable Component title, @Nullable Component subTitle, int fadeIn, int stay, int fadeOut)
+  public static void sendTitle(@NotNull Player player, @Nullable Object title, @Nullable Object subTitle, int fadeIn, int stay, int fadeOut)
   {
     @SuppressWarnings("all")
-    Title t = Title.title(title != null ? title : Component.empty(), subTitle != null ? subTitle : Component.empty(),
+    Title t = Title.title(title != null ? ComponentUtil.create(title) : Component.empty(), subTitle != null ? ComponentUtil.create(subTitle) : Component.empty(),
             Title.Times.of(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L)));
     player.showTitle(t);
   }
@@ -481,7 +507,7 @@ public class MessageUtil
   public static boolean checkNumberSize(CommandSender sender, long value, long min, long max, boolean excludesMin, boolean excludesMax, boolean notice)
   {
     String valueString = "&e" + Constant.Sosu15.format(value) + "&r";
-    valueString += getFinalConsonant(valueString, ConsonantType.이_가);
+    valueString += getFinalConsonant(valueString, ConsonantType.이가);
     if (excludesMin && value <= min)
     {
       if (notice)
@@ -536,7 +562,7 @@ public class MessageUtil
   public static boolean checkNumberSize(@Nullable CommandSender sender, double value, double min, double max, boolean excludessMin, boolean excludessMax, boolean notice)
   {
     String valueString = "&e" + Constant.Sosu15.format(value) + "&r";
-    valueString += getFinalConsonant(valueString, ConsonantType.이_가);
+    valueString += getFinalConsonant(valueString, ConsonantType.이가);
     if (excludessMin && value <= min)
     {
       if (notice)
@@ -587,12 +613,16 @@ public class MessageUtil
   @SuppressWarnings({"all"})
   public enum ConsonantType
   {
-    을_를("을(를)"),
-    은_는("은(는)"),
-    이_가("이(가)"),
-    과_와("과(와)"),
-    으로_로("(으)로"),
-    이라_라("(이)라");
+    을를("을(를)"),
+    를을("를(을)"),
+    은는("은(는)"),
+    는은("는(은)"),
+    이가("이(가)"),
+    가이("가(이)"),
+    와과("와(과)"),
+    과와("과(와)"),
+    으로("(으)로"),
+    이라("(이)라");
 
     private final String a;
 
@@ -619,17 +649,19 @@ public class MessageUtil
       }
       String wordClone = word;
       wordClone = stripColor(n2s(wordClone)).replace(" ", "");
-      wordClone = wordClone.replace("TNT", "티엔티");
+/*      wordClone = wordClone.replace("TNT", "티엔티");
       while (wordClone.matches("(.*)[^A-Za-z0-9가-힣]"))
       {
         wordClone = wordClone.substring(0, wordClone.length() - 1);
-      }
+      }*/
       char c = wordClone.charAt(wordClone.length() - 1);
-      switch (c)
+/*      switch (c)
       {
         case '0' -> c = '영';
         case '1' -> c = '일';
-        case '2' -> c = '이';
+        case '2', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+               'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' -> c = '이';
+        case  'l', 'm', 'n' , 'r'-> c = '익';
         case '3' -> c = '삼';
         case '4' -> c = '사';
         case '5' -> c = '오';
@@ -637,52 +669,67 @@ public class MessageUtil
         case '7' -> c = '칠';
         case '8' -> c = '팔';
         case '9' -> c = '구';
-      }
+      }*/
+      /*
       if (c < 44032 || c > 55203)
       {
         return type.toString();
+      }*/
+      //String nfd = Normalizer.normalize(c + "", Normalizer.Form.NFD);
+      boolean b = true; // nfd.length() != 2;
+      String test = KoreanUtils.format("%s는", c);
+      if (test.endsWith("은"))
+      {
+        test = KoreanUtils.format("%s로", c);
+        if (test.endsWith("으로"))
+        c = '각';
+        else
+          c = '갈';
       }
-      String nfd = Normalizer.normalize(c + "", Normalizer.Form.NFD);
-      boolean hasBottom = nfd.length() != 2;
+      else
+      {
+        c = '가';
+        b = false;
+      }
       switch (type)
       {
-        case 과_와 -> {
-          if (hasBottom)
+        case 와과, 과와 -> {
+          if (b)
           {
             return "과";
           }
           return "와";
         }
-        case 으로_로 -> {
-          if (hasBottom && ((c - 44032) % (21 * 28)) % 28 != 8)
+        case 으로 -> {
+          if (b && ((c - 44032) % (21 * 28)) % 28 != 8)
           {
             return "으로";
           }
           return "로";
         }
-        case 은_는 -> {
-          if (hasBottom)
+        case 은는, 는은 -> {
+          if (b)
           {
             return "은";
           }
           return "는";
         }
-        case 을_를 -> {
-          if (hasBottom)
+        case 을를, 를을 -> {
+          if (b)
           {
             return "을";
           }
           return "를";
         }
-        case 이_가 -> {
-          if (hasBottom)
+        case 이가, 가이 -> {
+          if (b)
           {
             return "이";
           }
           return "가";
         }
-        case 이라_라 -> {
-          if (hasBottom)
+        case 이라 -> {
+          if (b)
           {
             return "이라";
           }

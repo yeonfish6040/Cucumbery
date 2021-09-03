@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -48,7 +49,7 @@ public class CommandPack implements CommandExecutor
           File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CommandPacks/" + fileName + ".yml");
           if (!file.exists())
           {
-            MessageUtil.sendError(sender, "&e" + fileName + "&r" + MessageUtil.getFinalConsonant(fileName, MessageUtil.ConsonantType.은_는) + " 잘못되거나 알 수 없는 명령어 팩 파일 이름입니다.");
+            MessageUtil.sendError(sender, "&e" + fileName + "&r" + MessageUtil.getFinalConsonant(fileName, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 명령어 팩 파일 이름입니다.");
             return true;
           }
           if (!file.delete())
@@ -80,7 +81,7 @@ public class CommandPack implements CommandExecutor
           }
           else
           {
-            executor = Method.getPlayer(sender, args[1]);
+            executor = SelectorUtil.getPlayer(sender, args[1]);
             if (executor == null)
             {
               return true;

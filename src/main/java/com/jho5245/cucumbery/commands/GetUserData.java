@@ -2,12 +2,15 @@ package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,7 +35,7 @@ public class GetUserData implements CommandExecutor
     else if (args.length == 2)
     {
       boolean isOnline;
-      OfflinePlayer player = Method.getOfflinePlayer(sender, args[0]);
+      OfflinePlayer player = SelectorUtil.getOfflinePlayer(sender, args[0]);
 			if (player == null)
 			{
 				return true;
@@ -66,15 +69,21 @@ public class GetUserData implements CommandExecutor
 				}
 			}
       keyString += "(" + key.getKey().replace("-", " ") + ")";
-      String msg = Prefix.INFO_SETDATA + "&e" + Method.getDisplayName(player) + "&r의 &e" + keyString
-              + (value == null ? "&r 값이 없습니다." : "&r 값은 &e" + value + "&r입니다.");
 			if (key == UserData.UUID)
 			{
-				MessageUtil.sendMessage(sender, ComponentUtil.create(msg, "클릭하면 클립보드에 복사됩니다.", ClickEvent.Action.COPY_TO_CLIPBOARD, value != null ? value.toString() : ""));
-			}
+        if (value != null)
+        {
+          MessageUtil.sendMessage(sender, Prefix.INFO_SETDATA, player, "의 " + keyString + "&r 값은 "
+                  ,ComponentUtil.create(value)
+                          .hoverEvent(HoverEvent.showText(Component.translatable("chat.copy.click")))
+                          .clickEvent(ClickEvent.copyToClipboard(value.toString())),
+                  "입니다.");
+        }
+      }
 			else
 			{
-				MessageUtil.sendMessage(sender, msg);
+				MessageUtil.sendMessage(sender, Prefix.INFO_SETDATA, player, "의 " + keyString
+                + (value == null ? "&r 값이 없습니다." : "&r 값은 &e" + value + "&r입니다."));
 			}
     }
     else

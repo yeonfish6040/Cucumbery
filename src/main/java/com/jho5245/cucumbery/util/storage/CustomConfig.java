@@ -357,7 +357,7 @@ public class CustomConfig
   public static CustomConfig getPlayerConfig(UUID uuid)
   {
     OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(uuid);
-    CustomConfig customConfig = new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/data/UserData/" + uuid.toString() + ".yml");
+    CustomConfig customConfig = new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/data/UserData/" + uuid + ".yml");
     YamlConfiguration config = customConfig.getConfig();
     List<String> dataKeys = UserData.getKeys();
     for (String key : config.getKeys(false))
@@ -425,7 +425,7 @@ public class CustomConfig
     boolean hasLeak = false;
     if (configType == CustomConfigType.ALLPLAYER)
     {
-      customConfig = new CustomConfig(Cucumbery.dataFolder + "/data/AllPlayer.yml");
+      customConfig = new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/data/AllPlayer.yml");
       config = customConfig.getConfig();
       if (!config.contains(AllPlayer.CHAT.getKey()))
       {

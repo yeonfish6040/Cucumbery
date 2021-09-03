@@ -1,105 +1,100 @@
 package com.jho5245.cucumbery.util.storage;
 
 import com.jho5245.cucumbery.util.storage.data.Constant;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class SoundPlay
 {
-  public static void playSound(@NotNull Audience audience, @NotNull Sound sound)
+  public static void playSound(@NotNull Object audience, @NotNull Sound sound)
   {
     playSound(audience, sound, SoundCategory.MASTER, 1F, 1F);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull String sound)
+  public static void playSound(@NotNull Object audience, @NotNull String sound)
   {
     playSound(audience, sound, SoundCategory.MASTER, 1F, 1F);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull Sound sound, double pitch)
+  public static void playSound(@NotNull Object audience, @NotNull Sound sound, double pitch)
   {
     playSound(audience, sound, SoundCategory.MASTER, 1F, pitch);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull String sound, double pitch)
+  public static void playSound(@NotNull Object audience, @NotNull String sound, double pitch)
   {
     playSound(audience, sound, SoundCategory.MASTER, 1F, pitch);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull Sound sound, double volume, double pitch)
+  public static void playSound(@NotNull Object audience, @NotNull Sound sound, double volume, double pitch)
   {
     playSound(audience, sound, SoundCategory.MASTER, volume, pitch);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull String sound, double volume, double pitch)
+  public static void playSound(@NotNull Object audience, @NotNull String sound, double volume, double pitch)
   {
     playSound(audience, sound, SoundCategory.MASTER, volume, pitch);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull Sound sound, @NotNull SoundCategory category)
+  public static void playSound(@NotNull Object audience, @NotNull Sound sound, @NotNull SoundCategory category)
   {
     playSound(audience, sound, category, 1F, 1F);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull String sound, @NotNull SoundCategory category)
+  public static void playSound(@NotNull Object audience, @NotNull String sound, @NotNull SoundCategory category)
   {
     playSound(audience, sound, category, 1F, 1F);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull Sound sound, @NotNull SoundCategory category, double pitch)
+  public static void playSound(@NotNull Object audience, @NotNull Sound sound, @NotNull SoundCategory category, double pitch)
   {
     playSound(audience, sound, category, 1F, pitch);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull String sound, @NotNull SoundCategory category, double pitch)
+  public static void playSound(@NotNull Object audience, @NotNull String sound, @NotNull SoundCategory category, double pitch)
   {
     playSound(audience, sound, category, 1F, pitch);
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull Sound sound, @NotNull SoundCategory category, double volume, double pitch)
+  public static void playSound(@NotNull Object audience, @NotNull Sound sound, @NotNull SoundCategory category, double volume, double pitch)
   {
-    if (audience instanceof Player)
+    if (audience instanceof Player player)
     {
-      Player player = (Player) audience;
       player.playSound(player.getLocation(), sound, category, (float) volume, (float) pitch);
     }
   }
 
-  public static void playSound(@NotNull Audience audience, Location location, @NotNull Sound sound, @NotNull SoundCategory category, double volume, double pitch)
+  public static void playSound(@NotNull Object audience, Location location, @NotNull Sound sound, @NotNull SoundCategory category, double volume, double pitch)
   {
-    if (audience instanceof Player)
+    if (audience instanceof Player player)
     {
-      Player player = (Player) audience;
       player.playSound(location, sound, category, (float) volume, (float) pitch);
     }
   }
 
-  public static void playSound(@NotNull Audience audience, @NotNull String sound, @NotNull SoundCategory category, double volume, double pitch)
+  public static void playSound(@NotNull Object audience, @NotNull String sound, @NotNull SoundCategory category, double volume, double pitch)
   {
-    if (audience instanceof Player)
+    if (audience instanceof Player player)
     {
-      Player player = (Player) audience;
       player.playSound(player.getLocation(), sound, category, (float) volume, (float) pitch);
     }
   }
 
-  public static void playSound(@NotNull Audience audience, Location location, @NotNull String sound, @NotNull SoundCategory category, double volume, double pitch)
+  public static void playSound(@NotNull Object audience, Location location, @NotNull String sound, @NotNull SoundCategory category, double volume, double pitch)
   {
-    if (audience instanceof Player)
+    if (audience instanceof Player player)
     {
-      Player player = (Player) audience;
       player.playSound(location, sound, category, (float) volume, (float) pitch);
     }
   }
 
-  public static void playWarnSound(@NotNull Audience audience)
+  public static void playWarnSound(@NotNull Object audience)
   {
     playSound(audience, Constant.WARNING_SOUND, Constant.WARNING_SOUND_VOLUME, Constant.WARNING_SOUND_PITCH);
   }
 
-  public static void playErrorSound(@NotNull Audience audience)
+  public static void playErrorSound(@NotNull Object audience)
   {
     playSound(audience, Constant.ERROR_SOUND, Constant.ERROR_SOUND_VOLUME, Constant.ERROR_SOUND_PITCH);
   }

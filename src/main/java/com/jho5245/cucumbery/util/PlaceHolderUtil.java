@@ -461,12 +461,12 @@ public class PlaceHolderUtil
             String key = split[1];
             String parseValue = switch (key)
                     {
-                      case "을/를", "를/을" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.을_를);
-                      case "이/가", "가/이" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.이_가);
-                      case "은/는", "는/은" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.은_는);
-                      case "과/와", "와/과" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.과_와);
-                      case "으로/로", "로/으로" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.으로_로);
-                      case "이라/라", "라/이라" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.이라_라);
+                      case "을/를", "를/을" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.을를);
+                      case "이/가", "가/이" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.이가);
+                      case "은/는", "는/은" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.은는);
+                      case "과/와", "와/과" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.와과);
+                      case "으로/로", "로/으로" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.으로);
+                      case "이라/라", "라/이라" -> MessageUtil.getFinalConsonant(value, MessageUtil.ConsonantType.이라);
                       default -> key;
                     };
             cmd = cmd.replaceFirst("%consonant_" + params + "%", parseValue);
@@ -882,7 +882,7 @@ public class PlaceHolderUtil
         {
           otherPlayerName = otherPlayerName.split("_player_")[0];
         }
-        Player otherPlayer = Method.getPlayer(sender, otherPlayerName, false);
+        Player otherPlayer = SelectorUtil.getPlayer(sender, otherPlayerName, false);
         if (otherPlayer != null)
         {
           cmd = placeholder(cmd, otherPlayer);

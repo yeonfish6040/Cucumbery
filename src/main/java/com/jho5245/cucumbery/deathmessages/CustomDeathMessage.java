@@ -11,8 +11,9 @@ public class CustomDeathMessage
 {
   public static List<CustomDeathMessage> customMessages = new ArrayList<>();
 
-  static
+  public static void register()
   {
+    customMessages.clear();
     YamlConfiguration config = Variable.deathMessages;
     if (config.getBoolean("death-messages.enable"))
     {
@@ -51,37 +52,20 @@ public class CustomDeathMessage
               }
             }
             Condition[] conditionArray = new Condition[conditionList.size()];
-            customMessages.add(new CustomDeathMessage(new ArrayList<>(messages), conditionList.toArray(conditionArray)));
+            customMessages.add(new CustomDeathMessage("death-messages.custom-messages." + key + ".messages", conditionList.toArray(conditionArray)));
           }
         }
       }
     }
-//    customMessages.add(new CustomDeathMessage(
-//            new ArrayList<>(Arrays.asList(
-//                    "%1$s이(가) 세계 밖으로 오.",
-//                    "%1$s이(가) 세계 밖으로 샌즈피클."
-//            )),
-//            new Condition(ConditionType.DEATH_TYPE, "death.attack.outOfWorld"),
-//            new Condition(ConditionType.PLAYER_NAME, "(.*)5245")
-//    ));
-//
-//    customMessages.add(new CustomDeathMessage(
-//            new ArrayList<>(Arrays.asList(
-//                    "%1$s이(가) %3$s을(를) 사용한 %2$s에게 구센 당했습니다.",
-//                    "%1$s이(가) %3$s을(를) 사용한 %2$s에게 와구센 당했습니다."
-//            )),
-//            new Condition(ConditionType.DEATH_TYPE, "death.attack.arrow.item"),
-//            new Condition(ConditionType.PLAYER_NAME, "gusen1116")
-//    ));
   }
 
   private final Condition[] conditions;
 
-  private final List<String> keys;
+  private final String key;
 
-  CustomDeathMessage(List<String> keys, Condition... conditions)
+  CustomDeathMessage(String key, Condition... conditions)
   {
-    this.keys = new ArrayList<>(keys);
+    this.key = key;
     this.conditions = conditions;
   }
 
@@ -92,6 +76,6 @@ public class CustomDeathMessage
 
   public List<String> getKeys()
   {
-    return new ArrayList<>(keys);
+    return Variable.deathMessages.getStringList(key);
   }
 }

@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -12,6 +13,8 @@ import dev.jorel.commandapi.arguments.EntitySelectorArgument;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,27 +71,26 @@ public class Damage extends CommandBase
         commandSender = sender.getCaller();
       }
       Collection<Entity> entities = (Collection<Entity>) args[0];
+      List<Entity> successEntities = new ArrayList<>();
       double damage = (double) args[1];
-      int successCount = 0;
       for (Entity entity : entities)
       {
-        if (entity instanceof LivingEntity)
+        if (entity instanceof LivingEntity livingEntity)
         {
-          LivingEntity livingEntity = (LivingEntity) entity;
           if (!livingEntity.isDead())
           {
             double hp = livingEntity.getHealth();
             livingEntity.damage(damage);
             if (hp != livingEntity.getHealth())
             {
-              successCount++;
+              successEntities.add(livingEntity);
             }
           }
         }
       }
-      if (successCount > 0)
+      if (successEntities.size() > 0)
       {
-        MessageUtil.info(commandSender, "&e" + successCount + "개&r의 개체에게 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+        MessageUtil.info(commandSender, successEntities,  "에게 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
       }
       else
       {
@@ -111,30 +113,29 @@ public class Damage extends CommandBase
         commandSender = sender.getCaller();
       }
       Collection<Entity> entities = (Collection<Entity>) args[0];
+      List<Entity> successEntities = new ArrayList<>();
       double damage = (double) args[1];
       boolean hideOutput = (boolean) args[2];
-      int successCount = 0;
       for (Entity entity : entities)
       {
-        if (entity instanceof LivingEntity)
+        if (entity instanceof LivingEntity livingEntity)
         {
-          LivingEntity livingEntity = (LivingEntity) entity;
           if (!livingEntity.isDead())
           {
             double hp = livingEntity.getHealth();
             livingEntity.damage(damage);
             if (hp != livingEntity.getHealth())
             {
-              successCount++;
+              successEntities.add(livingEntity);
             }
           }
         }
       }
-      if (successCount > 0)
+      if (successEntities.size() > 0)
       {
         if (!hideOutput)
         {
-          MessageUtil.info(commandSender, "&e" + successCount + "개&r의 개체에게 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+          MessageUtil.info(commandSender, successEntities, "에게 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
         }
       }
       else
@@ -159,31 +160,33 @@ public class Damage extends CommandBase
         commandSender = sender.getCaller();
       }
       Collection<Entity> entities = (Collection<Entity>) args[0];
+      List<Entity> successEntities = new ArrayList<>();
       double damage = (double) args[1];
       Entity damager = (Entity) args[2];
-      String damagerDisplay = damager.getName();
-      int successCount = 0;
       for (Entity entity : entities)
       {
-        if (entity instanceof LivingEntity)
+        if (entity instanceof LivingEntity livingEntity)
         {
-          LivingEntity livingEntity = (LivingEntity) entity;
           if (!livingEntity.isDead())
           {
             double hp = livingEntity.getHealth();
+            if (!(damager instanceof LivingEntity))
+            {
+              EntityDamageByEntityEvent damageByEntityEvent = new EntityDamageByEntityEvent(damager, entity, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage);
+              Cucumbery.getPlugin().getPluginManager().callEvent(damageByEntityEvent);
+            }
             livingEntity.damage(damage, damager);
             if (hp != livingEntity.getHealth())
             {
-              successCount++;
+              successEntities.add(livingEntity);
             }
           }
         }
       }
-      if (successCount > 0)
+      if (successEntities.size() > 0)
       {
         MessageUtil.info(commandSender,
-                "&e" + successCount + "개&r의 개체에게 &e" + damagerDisplay + "&r"
-                        + " 가해 개체로 하는 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+                successEntities, "에게 ", damager, "을(를) 가해 개체로 하는 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
       }
       else
       {
@@ -206,33 +209,35 @@ public class Damage extends CommandBase
         commandSender = sender.getCaller();
       }
       Collection<Entity> entities = (Collection<Entity>) args[0];
+      List<Entity> successEntities = new ArrayList<>();
       double damage = (double) args[1];
       Entity damager = (Entity) args[2];
-      String damagerDisplay = damager.getName();
       boolean hideOutput = (boolean) args[3];
-      int successCount = 0;
       for (Entity entity : entities)
       {
-        if (entity instanceof LivingEntity)
+        if (entity instanceof LivingEntity livingEntity)
         {
-          LivingEntity livingEntity = (LivingEntity) entity;
           if (!livingEntity.isDead())
           {
             double hp = livingEntity.getHealth();
+            if (!(damager instanceof LivingEntity))
+            {
+              EntityDamageByEntityEvent damageByEntityEvent = new EntityDamageByEntityEvent(damager, entity, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage);
+              Cucumbery.getPlugin().getPluginManager().callEvent(damageByEntityEvent);
+            }
             livingEntity.damage(damage, damager);
             if (hp != livingEntity.getHealth())
             {
-              successCount++;
+              successEntities.add(livingEntity);
             }
           }
         }
       }
-      if (successCount > 0)
+      if (successEntities.size() > 0)
       {
         if (!hideOutput)
         {
-          MessageUtil.info(commandSender,
-                  "&e" + successCount + "개&r의 개체에게 &e" + damagerDisplay + "&r" + " 가해 개체로 하는 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+          MessageUtil.info(commandSender, successEntities, "에게 ", damager, "을(를) 가해 개체로 하는 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
         }
       }
       else

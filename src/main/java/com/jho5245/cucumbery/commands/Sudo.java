@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.PlaceHolderUtil;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.command.Command;
@@ -28,7 +29,7 @@ public class Sudo implements CommandExecutor
     }
     else
     {
-      Player target = Method.getPlayer(sender, args[0]);
+      Player target = SelectorUtil.getPlayer(sender, args[0]);
       if (target == null)
       {
         return true;

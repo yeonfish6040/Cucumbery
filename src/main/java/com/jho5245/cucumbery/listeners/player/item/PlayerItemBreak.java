@@ -26,7 +26,7 @@ public class PlayerItemBreak implements Listener
       {
         MessageUtil.sendTitle(player, MessageUtil.as(ComponentUtil.create("&c장비 파괴됨!")),
                 MessageUtil.as(ComponentUtil.create("&e인벤토리 아이템 중 "), (ComponentUtil.itemName(item, TextColor.fromHexString("#52ee52"))),
-                        (ComponentUtil.create("&e" + MessageUtil.getFinalConsonant(ComponentUtil.serialize(ComponentUtil.itemName(item)), ConsonantType.이_가) + " 파괴되었습니다.")))
+                        (ComponentUtil.create("&e" + MessageUtil.getFinalConsonant(ComponentUtil.serialize(ComponentUtil.itemName(item)), ConsonantType.이가) + " 파괴되었습니다.")))
                 , 5, 100, 15);
       }
     }

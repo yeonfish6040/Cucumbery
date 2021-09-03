@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -38,7 +39,7 @@ public class EnderChest implements CommandExecutor
 		}
 		else if (args.length == 1)
 		{
-			Player target = Method.getPlayer(sender, args[0]);
+			Player target = SelectorUtil.getPlayer(sender, args[0]);
 			if (target == null)
 			{
 				return true;
@@ -74,7 +75,7 @@ public class EnderChest implements CommandExecutor
 					hideOutput = true;
 				}
 			}
-			Player target = Method.getPlayer(sender, args[0]), target2 = Method.getPlayer(sender, args[1]);
+			Player target = SelectorUtil.getPlayer(sender, args[0]), target2 = SelectorUtil.getPlayer(sender, args[1]);
 			if (target == null || target2 == null)
 			{
 				return true;

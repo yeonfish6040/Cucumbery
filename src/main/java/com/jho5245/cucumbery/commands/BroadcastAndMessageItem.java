@@ -328,7 +328,7 @@ public class BroadcastAndMessageItem implements CommandExecutor
       nbtItem.removeKey("BlockEntityTag");
       nbtItem.removeKey("BlockStateTag");
       item = nbtItem.getItem();
-      Player target = Method.getPlayer(sender, args[0]);
+      Player target = SelectorUtil.getPlayer(sender, args[0]);
       if (target == null)
       {
         return true;

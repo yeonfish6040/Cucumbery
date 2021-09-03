@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -60,7 +61,7 @@ public class CucumberyEconomyCommand implements CommandExecutor
       {
         return true;
       }
-      OfflinePlayer offlinePlayer = Method.getOfflinePlayer(sender, args[1]);
+      OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(sender, args[1]);
       if (offlinePlayer == null)
       {
         return true;

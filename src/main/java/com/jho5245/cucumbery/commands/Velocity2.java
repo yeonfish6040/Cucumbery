@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class Velocity2 implements CommandExecutor
 {
@@ -26,79 +29,81 @@ public class Velocity2 implements CommandExecutor
     }
     else if (args.length == 4)
     {
-      Entity entity = Method.getEntity(sender, args[0]);
-
-      if (entity == null)
+      List<Entity> entities = SelectorUtil.getEntities(sender, args[0]);
+      if (entities == null)
       {
         return true;
       }
 
-      Vector vector = entity.getVelocity();
-      double x = vector.getX(), y = vector.getY(), z = vector.getZ();
+      for (Entity entity : entities)
+      {
+        Vector vector = entity.getVelocity();
+        double x = vector.getX(), y = vector.getY(), z = vector.getZ();
 
-      String xInput = args[1], yInput = args[2], zInput = args[3];
-      if (MessageUtil.isDouble(sender, xInput, false))
-      {
-        x = Double.parseDouble(xInput);
-      }
-      else
-      {
-        if (xInput.startsWith("~"))
+        String xInput = args[1], yInput = args[2], zInput = args[3];
+        if (MessageUtil.isDouble(sender, xInput, false))
         {
-          if (!xInput.equals("~"))
+          x = Double.parseDouble(xInput);
+        }
+        else
+        {
+          if (xInput.startsWith("~"))
           {
-            xInput = xInput.substring(1);
-            if (!MessageUtil.isDouble(sender, xInput, true))
+            if (!xInput.equals("~"))
             {
-              return true;
+              xInput = xInput.substring(1);
+              if (!MessageUtil.isDouble(sender, xInput, true))
+              {
+                return true;
+              }
+              x += Double.parseDouble(xInput);
             }
-            x += Double.parseDouble(xInput);
           }
         }
-      }
 
-      if (MessageUtil.isDouble(sender, yInput, false))
-      {
-        y = Double.parseDouble(yInput);
-      }
-      else
-      {
-        if (yInput.startsWith("~"))
+        if (MessageUtil.isDouble(sender, yInput, false))
         {
-          if (!yInput.equals("~"))
+          y = Double.parseDouble(yInput);
+        }
+        else
+        {
+          if (yInput.startsWith("~"))
           {
-            yInput = yInput.substring(1);
-            if (!MessageUtil.isDouble(sender, yInput, true))
+            if (!yInput.equals("~"))
             {
-              return true;
+              yInput = yInput.substring(1);
+              if (!MessageUtil.isDouble(sender, yInput, true))
+              {
+                return true;
+              }
+              y += Double.parseDouble(yInput);
             }
-            y += Double.parseDouble(yInput);
           }
         }
-      }
 
-      if (MessageUtil.isDouble(sender, zInput, false))
-      {
-        z = Double.parseDouble(zInput);
-      }
-      else
-      {
-        if (zInput.startsWith("~"))
+        if (MessageUtil.isDouble(sender, zInput, false))
         {
-          if (!zInput.equals("~"))
+          z = Double.parseDouble(zInput);
+        }
+        else
+        {
+          if (zInput.startsWith("~"))
           {
-            zInput = zInput.substring(1);
-            if (!MessageUtil.isDouble(sender, zInput, true))
+            if (!zInput.equals("~"))
             {
-              return true;
+              zInput = zInput.substring(1);
+              if (!MessageUtil.isDouble(sender, zInput, true))
+              {
+                return true;
+              }
+              z += Double.parseDouble(zInput);
             }
-            z += Double.parseDouble(zInput);
           }
         }
-      }
 
-      Vector result = new Vector(x, y, z);
-      entity.setVelocity(result);
+        Vector result = new Vector(x, y, z);
+        entity.setVelocity(result);
+      }
     }
     else
     {

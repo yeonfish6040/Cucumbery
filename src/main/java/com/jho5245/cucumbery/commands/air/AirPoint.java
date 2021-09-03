@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.air;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -28,7 +29,7 @@ public class AirPoint implements CommandExecutor
     }
     else if (args.length <= 4)
     {
-      Player target = Method.getPlayer(sender, args[1]);
+      Player target = SelectorUtil.getPlayer(sender, args[1]);
       if (target == null)
       {
         return true;

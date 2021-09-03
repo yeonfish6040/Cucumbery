@@ -47,7 +47,7 @@ public class RecipeInventoryRecipe
     YamlConfiguration config = Variable.customRecipes.get(category);
     if (config == null)
     {
-      MessageUtil.sendError(player, "커스텀 레시피 목록 &e" + category + "&r" + MessageUtil.getFinalConsonant(category, MessageUtil.ConsonantType.을_를) + " 찾을 수 없습니다. 현상이 지속적으로 발생한다면, 관리자에게 문의해주세요.");
+      MessageUtil.sendError(player, "커스텀 레시피 목록 &e" + category + "&r" + MessageUtil.getFinalConsonant(category, MessageUtil.ConsonantType.을를) + " 찾을 수 없습니다. 현상이 지속적으로 발생한다면, 관리자에게 문의해주세요.");
       if (openInventoryTitle.startsWith(Constant.CANCEL_STRING))
       {
         player.closeInventory();

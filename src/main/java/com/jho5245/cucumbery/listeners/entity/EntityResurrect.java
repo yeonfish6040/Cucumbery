@@ -82,7 +82,7 @@ public class EntityResurrect implements Listener
               String itemName = ComponentUtil.itemName(totem).toString();
               Method.playWarnSound(player);
               MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, totem),
-                      ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을_를) + " 사용할 수 없어 사망하였습니다. (남은 시간 : &e" + remainTime + "&r)"));
+                      ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + " 사용할 수 없어 사망하였습니다. (남은 시간 : &e" + remainTime + "&r)"));
               event.setCancelled(true);
               return;
             }

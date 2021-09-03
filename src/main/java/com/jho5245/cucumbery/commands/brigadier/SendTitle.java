@@ -36,7 +36,7 @@ public class SendTitle extends CommandBase
 			int fadeOut = -1;
 			try
 			{
-				String[] split = input.split(";;");
+				String[] split = MessageUtil.splitEscape(input, ';');
 				if (!split[0].equals(""))
 				{
 					title = split[0];

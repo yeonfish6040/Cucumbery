@@ -1431,7 +1431,7 @@ public class Scheduler
               Variable.spectateUpdater.put(uuid, target.getLocation());
             }
             Location plLoc = player.getLocation(), tarLoc = Variable.spectateUpdater.get(uuid);
-            double distance = plLoc.distance(tarLoc);
+            double distance = Method2.distance(plLoc, tarLoc);
             if (distance == -1D || distance > 128D)
             {
               player.setSpectatorTarget(null);

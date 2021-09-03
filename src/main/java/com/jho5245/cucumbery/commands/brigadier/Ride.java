@@ -3,7 +3,6 @@ package com.jho5245.cucumbery.commands.brigadier;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
@@ -20,6 +19,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class Ride extends CommandBase
 {
@@ -94,7 +94,7 @@ public class Ride extends CommandBase
       if (entity == vehicle)
       {
         Method.playErrorSound(entity);
-        CommandAPI.fail("&c[오류] §f자기 자신은 탑승할 수 없습니다.");
+        CommandAPI.fail("자기 자신은 탑승할 수 없습니다.");
         return;
       }
 
@@ -154,7 +154,7 @@ public class Ride extends CommandBase
       if (vehicle == null)
       {
         Method.playErrorSound(entity);
-        CommandAPI.fail("&c[오류] §f개체를 탑승하고 있지 않습니다.");
+        CommandAPI.fail("개체를 탑승하고 있지 않습니다.");
         return;
       }
 
@@ -351,7 +351,6 @@ public class Ride extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      String senderName = "&e" + ComponentUtil.senderComponent(commandSender) + "&r";
 
       Collection<Entity> entities = (Collection<Entity>) args[0];
       int successCount = 0;
@@ -367,14 +366,14 @@ public class Ride extends CommandBase
           successCount++;
           if (successCount != 1 && loop instanceof Player)
           {
-            MessageUtil.sendMessage(entity, Prefix.INFO, sender, "에 의해 ", vehicle, "을(를) 탑승하지 않습니다.");
-            MessageUtil.sendMessage(vehicle, Prefix.INFO, sender, "에 의해 ", entity, "이(가) 당신을 탑승하지 않습니다.");
+            MessageUtil.sendMessage(entity, Prefix.INFO, commandSender, "에 의해 ", vehicle, "을(를) 탑승하지 않습니다.");
+            MessageUtil.sendMessage(vehicle, Prefix.INFO, commandSender, "에 의해 ", entity, "이(가) 당신을 탑승하지 않습니다.");
           }
         }
       }
       if (successCount == 1)
       {
-        MessageUtil.sendMessage(entity, Prefix.INFO, sender, "에 의해 ", vehicle, "을(를) 탑승하지 않습니다.");
+        MessageUtil.sendMessage(entity, Prefix.INFO, commandSender, "에 의해 ", Objects.requireNonNull(vehicle), "을(를) 탑승하지 않습니다.");
         MessageUtil.sendMessage(vehicle, Prefix.INFO, sender, "에 의해 ", entity, "이(가) 당신을 탑승하지 않습니다.");
         MessageUtil.sendMessage(commandSender, Prefix.INFO, entity, "을(를) ", vehicle, "에게서 탑승을 중지시켰습니다.");
         for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers())
@@ -455,7 +454,7 @@ public class Ride extends CommandBase
       }
       if (!hideOutput && successCount == 1)
       {
-        MessageUtil.sendMessage(entity, Prefix.INFO, sender, "에 의해 ", vehicle, "을(를) 더이상 탑승하지 않습니다.");
+        MessageUtil.sendMessage(entity, Prefix.INFO, sender, "에 의해 ", Objects.requireNonNull(vehicle), "을(를) 더이상 탑승하지 않습니다.");
         MessageUtil.sendMessage(vehicle, Prefix.INFO, sender, "에 의해 ", entity, "이(가) 당신을 더이상 탑승하지 않습니다.");
         MessageUtil.sendMessage(commandSender, Prefix.INFO, entity, "을(를) ", vehicle, "에게서 탑승을 중지시켰습니다.");
         for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers())

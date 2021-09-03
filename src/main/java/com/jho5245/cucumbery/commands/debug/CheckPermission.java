@@ -1,7 +1,8 @@
 package com.jho5245.cucumbery.commands.debug;
 
-import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,7 +25,7 @@ public class CheckPermission implements CommandExecutor
 		}
 		else if (args.length == 2)
 		{
-			Player target = Method.getPlayer(sender, args[0]);
+			Player target = SelectorUtil.getPlayer(sender, args[0]);
 			if (target == null)
 				return true;
 			MessageUtil.info(sender, "&e" + Method.getDisplayName(target) + "&r은(는) &e" + args[1] + "&r 퍼미션 노드를 " + ((target.hasPermission(args[1])) ? "&a가지고 있습니다." : "&c가지고 있지 않습니다."));

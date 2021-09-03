@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util;
 
+import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
@@ -50,9 +51,22 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Method extends SoundPlay
 {
+  private static final Random RANDOM_INTEGER = new Random();
+  private static final List<String> VANILLA_COMMANDS = new ArrayList<>(Arrays
+          .asList("advancement", "attribute", "ban", "ban-ip", "banlist", "bossbar", "cucumbery", "ccucumbery", "cgive", "chp", "ckill",
+                  "clear", "clone", "cride", "crideoff", "csetitem", "csudo2", "cvelo", "cvelocity", "data", "datapack", "debug",
+                  "defaultgamemode", "deop", "difficulty", "effect", "enchant", "execute", "experience", "fill", "forceload", "function",
+                  "gamemode", "gamerule", "give", "haspermission", "healthpoint", "help", "hp", "kick", "kill", "list", "locate",
+                  "locatebiome", "loot", "me", "msg", "op", "pardon", "pardon-ip", "particle", "playsound", "randomchance", "recipe",
+                  "reload", "replaceitem", "ride", "rideoff", "save-all", "save-off", "save-on", "say", "schedule", "scoreboard", "seed",
+                  "setblock", "setidletimeout", "setitem", "setworldspawn", "spawnpoint", "spectate", "spreadplayers", "stop",
+                  "stopsound", "sudo2", "summon", "tag", "team", "teammsg", "teleport", "tell", "tellraw", "time", "title", "tm", "tp",
+                  "trigger", "velo", "velocity", "w", "weather", "whitelist", "world", "worldborder", "xp", "날리기"));
+
   public static String timeFormatMilli(long ms)
   {
     return Method.timeFormatMilli(ms, true, 2);
@@ -122,7 +136,6 @@ public class Method extends SoundPlay
             ((min != 0) ? ((year != 0 || day != 0 || hour != 0) ? " " : "") + min + "분" : "") +
             ((sec != 0) ? ((year != 0 || day != 0 || hour != 0 || min != 0) ? " " : "") + displaySec + "초" : "");
   }
-
 
   /**
    * 플레이어의 인벤토리에 있는 모든 아이템의 설명을 새로고침합니다.
@@ -204,8 +217,6 @@ public class Method extends SoundPlay
       ItemLore.removeItemLore(item);
     }
   }
-
-  private static final Random RANDOM_INTEGER = new Random();
 
   public static int random(int min, int max)
   {
@@ -1169,476 +1180,6 @@ public class Method extends SoundPlay
   }
 
   @Nullable
-  public static Entity getEntity(@Nullable CommandSender sender, @NotNull String name)
-  {
-    return Method.getEntity(sender, name, true);
-  }
-
-  @Nullable
-  public static Entity getEntity(@Nullable CommandSender sender, @NotNull String name, boolean notice)
-  {
-    if (Method.isUUID(name))
-    {
-      Entity entity = Bukkit.getServer().getEntity(UUID.fromString(name));
-      if (entity == null && notice)
-      {
-        if (sender != null)
-        {
-          MessageUtil.noArg(sender, Prefix.NO_ENTITY, name);
-        }
-      }
-      return entity;
-    }
-    else
-    {
-      if (name.startsWith("@es") && sender instanceof Entity)
-      {
-        Entity entity = (Entity) sender;
-        if (name.equals("@es"))
-        {
-          return entity;
-        }
-        else
-        {
-          try
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@esworld=")[1];
-            World world = Bukkit.getServer().getWorld(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-              }
-              return null;
-            }
-            if (entity.getWorld().getName().equals(worldName))
-            {
-              return entity;
-            }
-            else
-            {
-              if (notice)
-              {
-                MessageUtil.sendError(entity, "개체가 일치하는 월드에 존재하지 않습니다.");
-              }
-              return null;
-            }
-          }
-          catch (Exception e)
-          {
-            if (notice)
-            {
-              MessageUtil.noArg(sender, Prefix.NO_ENTITY, name);
-            }
-            return null;
-          }
-        }
-      }
-
-      if (name.startsWith("@npes") && sender instanceof Entity)
-      {
-        Entity entity = (Entity) sender;
-        if (name.equals("@npes") && !(entity instanceof Player))
-        {
-          return entity;
-        }
-        else
-        {
-          try
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@npesworld=")[1];
-            World world = Bukkit.getServer().getWorld(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-              }
-              return null;
-            }
-            if (entity.getWorld().getName().equals(worldName) && !(entity instanceof Player))
-            {
-              return entity;
-            }
-            else
-            {
-              if (notice)
-              {
-                MessageUtil.sendError(entity, "개체가 일치하는 월드에 존재하지 않습니다.");
-              }
-              return null;
-            }
-          }
-          catch (Exception e)
-          {
-            if (notice)
-            {
-              MessageUtil.noArg(sender, Prefix.NO_ENTITY, name);
-            }
-            return null;
-          }
-        }
-      }
-
-      String worldDisplay = "";
-      if (name.startsWith("@er"))
-      {
-        try
-        {
-          Set<Entity> entities = new HashSet<>();
-          for (World world : Bukkit.getServer().getWorlds())
-          {
-            entities.addAll(world.getEntities());
-          }
-          World world = null;
-          if (!name.equals("@er"))
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@erworld=")[1];
-            world = Bukkit.getServer().getWorld(worldName);
-            worldDisplay = Method.getWorldDisplayName(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                if (sender != null)
-                {
-                  MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-                }
-              }
-              return null;
-            }
-            else
-            {
-              entities.clear();
-              entities.addAll(world.getEntities());
-            }
-          }
-          int counter = 1;
-          int random = Method.random(1, entities.size());
-          for (Entity online : entities)
-          {
-            if (random == counter && (name.equals("@er") || online.getWorld().getName().equals(world.getName())))
-            {
-              return online;
-            }
-            counter++;
-          }
-
-          if (notice)
-          {
-            if (!worldDisplay.equals(""))
-            {
-              if (sender != null)
-              {
-                MessageUtil.sendError(sender, "§e" + worldDisplay + "&r 월드에 개체가 존재하지 않습니다.");
-              }
-            }
-            else
-            {
-              if (sender != null)
-              {
-                MessageUtil.sendError(sender, Prefix.NO_ENTITY);
-              }
-            }
-          }
-          return null;
-        }
-        catch (Exception e)
-        {
-          if (notice)
-          {
-            if (sender != null)
-            {
-              MessageUtil.noArg(sender, Prefix.NO_ENTITY, name);
-            }
-          }
-          return null;
-        }
-      }
-      if (name.startsWith("@nper"))
-      {
-        try
-        {
-          Set<Entity> entities = new HashSet<>();
-          for (World world : Bukkit.getServer().getWorlds())
-          {
-            for (Entity entity : world.getEntities())
-            {
-              if (!(entity instanceof Player))
-              {
-                entities.add(entity);
-              }
-            }
-          }
-          World world = null;
-          if (!name.equals("@nper"))
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@nperworld=")[1];
-            world = Bukkit.getServer().getWorld(worldName);
-            worldDisplay = Method.getWorldDisplayName(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                if (sender != null)
-                {
-                  MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-                }
-              }
-              return null;
-            }
-            else
-            {
-              entities.clear();
-              for (Entity online : world.getEntities())
-              {
-                if (!(online instanceof Player))
-                {
-                  entities.add(online);
-                }
-              }
-            }
-          }
-          int counter = 1;
-          int random = Method.random(1, entities.size());
-          for (Entity online : entities)
-          {
-            if (random == counter && (name.equals("@nper") || online.getWorld().getName().equals(world.getName())))
-            {
-              return online;
-            }
-            counter++;
-          }
-
-          if (notice)
-          {
-            if (!worldDisplay.equals(""))
-            {
-              if (sender != null)
-              {
-                MessageUtil.sendError(sender, "§e" + worldDisplay + "&r 월드에 개체가 존재하지 않습니다.");
-              }
-            }
-            else
-            {
-              if (sender != null)
-              {
-                MessageUtil.sendError(sender, Prefix.NO_ENTITY);
-              }
-            }
-          }
-          return null;
-        }
-        catch (Exception e)
-        {
-          if (notice)
-          {
-            if (sender != null)
-            {
-              MessageUtil.noArg(sender, Prefix.NO_ENTITY, name);
-            }
-          }
-          return null;
-        }
-      }
-      if (name.startsWith("@ep"))
-      {
-        World world;
-        double x = 0d, y = 0d, z = 0d;
-        if (!name.equals("@ep"))
-        {
-          try
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@epworld=")[1];
-            world = Bukkit.getServer().getWorld(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                if (sender != null)
-                {
-                  MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-                }
-              }
-              return null;
-            }
-          }
-          catch (Exception e)
-          {
-            if (notice)
-            {
-              if (sender != null)
-              {
-                MessageUtil.noArg(sender, Prefix.NO_ENTITY, name);
-              }
-            }
-            return null;
-          }
-        }
-        else
-        {
-          if (sender instanceof Entity)
-          {
-            Entity entity = (Entity) sender;
-            Location senderLoc = entity.getLocation();
-            world = senderLoc.getWorld();
-          }
-          else if (sender instanceof BlockCommandSender)
-          {
-            Block block = ((BlockCommandSender) sender).getBlock();
-            Location blockLoc = block.getLocation();
-            world = blockLoc.getWorld();
-          }
-          else
-          {
-            world = Bukkit.getServer().getWorlds().get(0);
-          }
-        }
-        if (sender instanceof Entity)
-        {
-          Entity entity = (Entity) sender;
-          Location senderLoc = entity.getLocation();
-          x = senderLoc.getX();
-          y = senderLoc.getY();
-          z = senderLoc.getZ();
-        }
-        else if (sender instanceof BlockCommandSender)
-        {
-          Block block = ((BlockCommandSender) sender).getBlock();
-          Location blockLoc = block.getLocation();
-          x = blockLoc.getX();
-          y = blockLoc.getY();
-          z = blockLoc.getZ();
-        }
-        Location loc = new Location(world, x, y, z);
-        double distance = Double.MAX_VALUE;
-        Entity target = null;
-        for (Entity online : world.getEntities())
-        {
-          double temp = online.getLocation().distance(loc);
-          if (distance == Double.MAX_VALUE || temp < distance)
-          {
-            distance = temp;
-            target = online;
-          }
-        }
-        if (target == null && notice)
-        {
-          if (sender != null)
-          {
-            MessageUtil.sendError(sender, Prefix.NO_ENTITY);
-          }
-        }
-        return target;
-      }
-      if (name.startsWith("@npep"))
-      {
-        World world;
-        double x = 0d, y = 0d, z = 0d;
-        if (!name.equals("@npep"))
-        {
-          try
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@npepworld=")[1];
-            world = Bukkit.getServer().getWorld(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                if (sender != null)
-                {
-                  MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-                }
-              }
-              return null;
-            }
-          }
-          catch (Exception e)
-          {
-            if (notice)
-            {
-              if (sender != null)
-              {
-                MessageUtil.noArg(sender, Prefix.NO_ENTITY, name);
-              }
-            }
-            return null;
-          }
-        }
-        else
-        {
-          if (sender instanceof Player)
-          {
-            Entity entity = (Entity) sender;
-            Location senderLoc = entity.getLocation();
-            world = senderLoc.getWorld();
-          }
-          else if (sender instanceof BlockCommandSender)
-          {
-            Block block = ((BlockCommandSender) sender).getBlock();
-            Location blockLoc = block.getLocation();
-            world = blockLoc.getWorld();
-          }
-          else
-          {
-            world = Bukkit.getServer().getWorlds().get(0);
-          }
-        }
-        if (sender instanceof Player)
-        {
-          Entity entity = (Entity) sender;
-          Location senderLoc = entity.getLocation();
-          x = senderLoc.getX();
-          y = senderLoc.getY();
-          z = senderLoc.getZ();
-        }
-        else if (sender instanceof BlockCommandSender)
-        {
-          Block block = ((BlockCommandSender) sender).getBlock();
-          Location blockLoc = block.getLocation();
-          x = blockLoc.getX();
-          y = blockLoc.getY();
-          z = blockLoc.getZ();
-        }
-        Location loc = new Location(world, x, y, z);
-        double distance = Double.MAX_VALUE;
-        Entity target = null;
-        for (Entity online : world.getEntities())
-        {
-          if (online instanceof Player)
-          {
-            continue;
-          }
-          double temp = online.getLocation().distance(loc);
-          if (distance == Double.MAX_VALUE || temp < distance)
-          {
-            distance = temp;
-            target = online;
-          }
-        }
-        if (target == null && notice)
-        {
-          if (sender != null)
-          {
-            MessageUtil.sendError(sender, Prefix.NO_ENTITY);
-          }
-        }
-        return target;
-      }
-      Player player = Method.getPlayer(sender, name, false);
-      if (player == null && notice)
-      {
-        if (sender != null)
-        {
-          MessageUtil.noArg(sender, Prefix.NO_ENTITY, name);
-        }
-      }
-      return player;
-    }
-  }
-
-  @Nullable
   public static Player getPlayer(@Nullable CommandSender sender, @NotNull String name)
   {
     return getPlayer(sender, name, true);
@@ -1647,288 +1188,44 @@ public class Method extends SoundPlay
   @Nullable
   public static Player getPlayer(@Nullable CommandSender sender, @NotNull String name, boolean notice)
   {
-    if (Method.isUUID(name))
+    Player player = Bukkit.getServer().getPlayer(name);
+    if (player == null)
     {
-      Player player = Bukkit.getServer().getPlayer(UUID.fromString(name));
-      if (player == null && notice)
+      for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
-        if (sender != null)
+        String display = MessageUtil.stripColor(ComponentUtil.serialize(online.displayName()));
+        if (display.toLowerCase().contains(name.toLowerCase()))
+        {
+          return online;
+        }
+        display = display.replace(" ", "");
+        String name2 = name.replace("+", "");
+        if (name2.toLowerCase().contains(display.toLowerCase()))
+        {
+          return online;
+        }
+        String listName = MessageUtil.stripColor(ComponentUtil.serialize(online.playerListName()));
+        listName = listName.replace(" ", "");
+        if (name2.toLowerCase().contains(listName.toLowerCase()))
+        {
+          return online;
+        }
+      }
+      if (name.contains("+"))
+      {
+        String name2 = name.replace("+", " ");
+        player = Method.getPlayer(sender, name2, false);
+        if (player != null)
+        {
+          return player;
+        }
+        if (notice && sender != null)
         {
           MessageUtil.noArg(sender, Prefix.NO_PLAYER, name);
         }
       }
-      return player;
     }
-    else
-    {
-      if (name.startsWith("@s") && sender instanceof Player)
-      {
-        Player target = (Player) sender;
-        if (name.equals("@s"))
-        {
-          return target;
-        }
-        else
-        {
-          try
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@sworld=")[1];
-            World world = Bukkit.getServer().getWorld(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-              }
-              return null;
-            }
-            if (target.getWorld().getName().equals(worldName))
-            {
-              return target;
-            }
-            else
-            {
-              if (notice)
-              {
-                MessageUtil.sendError(target, "플레이어가 일치하는 월드에 존재하지 않습니다.");
-              }
-              return null;
-            }
-          }
-          catch (Exception e)
-          {
-            if (notice)
-            {
-              MessageUtil.noArg(sender, Prefix.NO_PLAYER, name);
-            }
-            return null;
-          }
-        }
-      }
-
-      String worldDisplay = "";
-      if (name.startsWith("@r"))
-      {
-        try
-        {
-          Set<Player> players = new HashSet<>(Bukkit.getServer().getOnlinePlayers());
-          World world = null;
-          if (!name.equals("@r"))
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@rworld=")[1];
-            world = Bukkit.getServer().getWorld(worldName);
-            worldDisplay = Method.getWorldDisplayName(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                if (sender != null)
-                {
-                  MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-                }
-              }
-              return null;
-            }
-            else
-            {
-              for (Player online : Bukkit.getServer().getOnlinePlayers())
-              {
-                if (!online.getWorld().getName().equals(world.getName()))
-                {
-                  players.remove(online);
-                }
-              }
-            }
-          }
-          int counter = 1;
-          int random = Method.random(1, players.size());
-          for (Player online : players)
-          {
-            if (random == counter && (name.equals("@r") || online.getWorld().getName().equals(world.getName())))
-            {
-              return online;
-            }
-            counter++;
-          }
-
-          if (notice)
-          {
-            if (!worldDisplay.equals(""))
-            {
-              if (sender != null)
-              {
-                MessageUtil.sendError(sender, "§e" + worldDisplay + "&r 월드에 플레이어가 존재하지 않습니다.");
-              }
-            }
-            else
-            {
-              if (sender != null)
-              {
-                MessageUtil.sendError(sender, Prefix.NO_PLAYER);
-              }
-            }
-          }
-          return null;
-        }
-        catch (Exception e)
-        {
-          if (notice)
-          {
-            if (sender != null)
-            {
-              MessageUtil.noArg(sender, Prefix.NO_PLAYER, name);
-            }
-          }
-          return null;
-        }
-      }
-      if (name.startsWith("@p"))
-      {
-        World world;
-        double x = 0d, y = 0d, z = 0d;
-        if (!name.equals("@p"))
-        {
-          try
-          {
-            String worldName = name.replace("[", "").replace("]", "").split("@pworld=")[1];
-            world = Bukkit.getServer().getWorld(worldName);
-            if (world == null)
-            {
-              if (notice)
-              {
-                if (sender != null)
-                {
-                  MessageUtil.noArg(sender, Prefix.NO_WORLD, worldName);
-                }
-              }
-              return null;
-            }
-          }
-          catch (Exception e)
-          {
-            if (notice)
-            {
-              if (sender != null)
-              {
-                MessageUtil.noArg(sender, Prefix.NO_PLAYER, name);
-              }
-            }
-            return null;
-          }
-        }
-        else
-        {
-          if (sender instanceof Player)
-          {
-            Player playerSender = (Player) sender;
-            Location senderLoc = playerSender.getLocation();
-            world = senderLoc.getWorld();
-          }
-          else if (sender instanceof BlockCommandSender)
-          {
-            Block block = ((BlockCommandSender) sender).getBlock();
-            Location blockLoc = block.getLocation();
-            world = blockLoc.getWorld();
-          }
-          else
-          {
-            world = Bukkit.getServer().getWorlds().get(0);
-          }
-        }
-        if (sender instanceof Player)
-        {
-          Player playerSender = (Player) sender;
-          Location senderLoc = playerSender.getLocation();
-          x = senderLoc.getX();
-          y = senderLoc.getY();
-          z = senderLoc.getZ();
-        }
-        else if (sender instanceof BlockCommandSender)
-        {
-          Block block = ((BlockCommandSender) sender).getBlock();
-          Location blockLoc = block.getLocation();
-          x = blockLoc.getX();
-          y = blockLoc.getY();
-          z = blockLoc.getZ();
-        }
-        Location loc = new Location(world, x, y, z);
-        double distance = Double.MAX_VALUE;
-        Player target = null;
-        for (Player online : Bukkit.getServer().getOnlinePlayers())
-        {
-          if (online.equals(sender))
-          {
-            continue;
-          }
-          if (online.getWorld().getName().equals(world.getName()))
-          {
-            double temp = online.getLocation().distance(loc);
-            if (distance == Double.MAX_VALUE || temp < distance)
-            {
-              distance = temp;
-              target = online;
-            }
-          }
-        }
-        if (target == null && notice)
-        {
-          if (sender != null)
-          {
-            MessageUtil.sendError(sender, Prefix.NO_PLAYER);
-          }
-        }
-        return target;
-      }
-      Player player = Bukkit.getServer().getPlayer(name);
-      if (player == null)
-      {
-        for (Player online : Bukkit.getServer().getOnlinePlayers())
-        {
-          String display = MessageUtil.stripColor(ComponentUtil.serialize(online.displayName()));
-          if (display.toLowerCase().contains(name.toLowerCase()))
-          {
-            return online;
-          }
-          display = display.replace(" ", "");
-          String name2 = name.replace("__", "");
-          if (display.toLowerCase().contains(name2.toLowerCase()) || name2.toLowerCase().contains(display.toLowerCase()))
-          {
-            return online;
-          }
-          Component playerListName = online.playerListName();
-          if (playerListName != null)
-          {
-            String listName = MessageUtil.stripColor(ComponentUtil.serialize(playerListName));
-            if (listName.toLowerCase().contains(name.toLowerCase()))
-            {
-              return online;
-            }
-            listName = listName.replace(" ", "");
-            if (listName.toLowerCase().contains(name2.toLowerCase()) || name2.toLowerCase().contains(listName.toLowerCase()))
-            {
-              return online;
-            }
-          }
-        }
-        if (name.contains("__"))
-        {
-          String name2 = name.replace("__", " ");
-          player = Method.getPlayer(sender, name2, false);
-          if (player != null)
-          {
-            return player;
-          }
-        }
-        if (notice)
-        {
-          if (sender != null)
-          {
-            MessageUtil.noArg(sender, Prefix.NO_PLAYER, name);
-          }
-        }
-      }
-      return player;
-    }
+    return player;
   }
 
   @Nullable
@@ -1958,13 +1255,8 @@ public class Method extends SoundPlay
     }
     else
     {
-      Player player = Method.getPlayer(sender, name, false);
-      if (player != null)
-      {
-        return player;
-      }
-     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(name);
-     if (offlinePlayer != null)
+      OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(name);
+      if (offlinePlayer != null)
       {
         return offlinePlayer;
       }
@@ -1972,27 +1264,27 @@ public class Method extends SoundPlay
       {
         return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name));
       }
-      if (Variable.cachedUUIDs.containsKey(name.replace("__", " ")))
+      if (Variable.cachedUUIDs.containsKey(name.replace("+", " ")))
       {
-        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("__", " ")));
+        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("+", " ")));
       }
-      if (Variable.cachedUUIDs.containsKey(name.replace("__", "")))
+      if (Variable.cachedUUIDs.containsKey(name.replace("+", "")))
       {
-        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("__", "")));
+        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("+", "")));
       }
-      if (Variable.cachedUUIDs.containsKey(name.replace("__", "").replace(" ", "")))
+      if (Variable.cachedUUIDs.containsKey(name.replace("+", "").replace(" ", "")))
       {
-        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("__", "").replace(" ", "")));
+        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("+", "").replace(" ", "")));
       }
       for (String cache : Variable.cachedUUIDs.keySet())
       {
-        if (name.equalsIgnoreCase(cache) || cache.toLowerCase().contains(name.toLowerCase()) || cache.toLowerCase().contains(name.toLowerCase().replace("__", " "))
-                || cache.toLowerCase().contains(name.toLowerCase().replace("__", "").replace(" ", "")))
+        if (name.equalsIgnoreCase(cache) || cache.toLowerCase().contains(name.toLowerCase()) || cache.toLowerCase().contains(name.toLowerCase().replace("+", " "))
+                || cache.toLowerCase().contains(name.toLowerCase().replace("+", "").replace(" ", "")))
         {
           return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(cache));
         }
 
-        if (cache.replace(" ", "__").contains(name) || cache.replace("__", "").contains(name) || cache.replace(" ", "").contains(name))
+        if (cache.replace(" ", "+").contains(name) || cache.replace("+", "").contains(name) || cache.replace(" ", "").contains(name))
         {
           return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(cache));
         }
@@ -2050,7 +1342,7 @@ public class Method extends SoundPlay
           {
             return Bukkit.getServer().getOfflinePlayer(uuid);
           }
-          if (display != null && MessageUtil.stripColor(display).replace(" ", "__").contains(name.toLowerCase()))
+          if (display != null && MessageUtil.stripColor(display).replace(" ", "+").contains(name.toLowerCase()))
           {
             return Bukkit.getServer().getOfflinePlayer(uuid);
           }
@@ -2059,7 +1351,7 @@ public class Method extends SoundPlay
           {
             return Bukkit.getServer().getOfflinePlayer(uuid);
           }
-          if (listName != null && MessageUtil.stripColor(listName).replace(" ", "__").contains(name.toLowerCase()))
+          if (listName != null && MessageUtil.stripColor(listName).replace(" ", "+").contains(name.toLowerCase()))
           {
             return Bukkit.getServer().getOfflinePlayer(uuid);
           }
@@ -2085,7 +1377,7 @@ public class Method extends SoundPlay
       Player online = player.getPlayer();
       if (player.isOnline() && online != null)
       {
-        name = ComponentUtil.serialize(online.displayName());
+        name = online.getDisplayName();
       }
       else
       {
@@ -2187,15 +1479,13 @@ public class Method extends SoundPlay
     return Method.arrayToList(keyArray);
   }
 
-
   @NotNull
   public static List<String> getPluginCommands(@NotNull Plugin plugin)
   {
     String pluginName = plugin.getName();
     List<String> cmds = new ArrayList<>();
-    if (plugin instanceof JavaPlugin)
+    if (plugin instanceof JavaPlugin javaPlugin)
     {
-      JavaPlugin javaPlugin = (JavaPlugin) plugin;
       for (HelpTopic cmdLabel2 : Bukkit.getServer().getHelpMap().getHelpTopics())
       {
         String cmd2 = cmdLabel2.getName();
@@ -2216,17 +1506,6 @@ public class Method extends SoundPlay
     }
     return cmds;
   }
-
-  private static final List<String> VANILLA_COMMANDS = new ArrayList<>(Arrays
-          .asList("advancement", "attribute", "ban", "ban-ip", "banlist", "bossbar", "me/jho5245/cucumbery", "ccucumbery", "cgive", "chp", "ckill",
-                  "clear", "clone", "cride", "crideoff", "csetitem", "csudo2", "cvelo", "cvelocity", "data", "datapack", "debug",
-                  "defaultgamemode", "deop", "difficulty", "effect", "enchant", "execute", "experience", "fill", "forceload", "function",
-                  "gamemode", "gamerule", "give", "haspermission", "healthpoint", "help", "hp", "kick", "kill", "list", "locate",
-                  "locatebiome", "loot", "me", "msg", "op", "pardon", "pardon-ip", "particle", "playsound", "randomchance", "recipe",
-                  "reload", "replaceitem", "ride", "rideoff", "save-all", "save-off", "save-on", "say", "schedule", "scoreboard", "seed",
-                  "setblock", "setidletimeout", "setitem", "setworldspawn", "spawnpoint", "spectate", "spreadplayers", "stop",
-                  "stopsound", "sudo2", "summon", "tag", "team", "teammsg", "teleport", "tell", "tellraw", "time", "title", "tm", "tp",
-                  "trigger", "velo", "velocity", "w", "weather", "whitelist", "world", "worldborder", "xp", "날리기"));
 
   public static List<String> getAllServerCommands()
   {
@@ -2814,22 +2093,7 @@ public class Method extends SoundPlay
     }
     list.removeIf(str -> str.replace(" ", "").equals(""));
     Collections.sort(list);
-    return list;
-  }
-
-
-  public enum ReinforceSound
-  {
-    OPERATION,
-    SUCCESS,
-    FAIL,
-    DESTROY
-  }
-
-  public enum ReinforceType
-  {
-    COMMAND,
-    SCROLL
+    return list.stream().distinct().collect(Collectors.toList());
   }
 
   public static void reinforceSound(Player player, ReinforceSound type, boolean use, ReinforceType reinforceType)
@@ -2926,7 +2190,6 @@ public class Method extends SoundPlay
     }
   }
 
-
   /**
    * 인벤토리가 텅 비었는지 확인합니다.
    *
@@ -2958,7 +2221,6 @@ public class Method extends SoundPlay
     }
   }
 
-
   /**
    * 개체의 attribute 값을 가져와서 보기 좋은 문자열로 반환합니다.
    *
@@ -2980,7 +2242,6 @@ public class Method extends SoundPlay
     }
     return MessageUtil.n2s(attrString);
   }
-
 
   public static String getCurrentTime(Calendar calendar)
   {
@@ -3111,7 +2372,6 @@ public class Method extends SoundPlay
     }
   }
 
-
   /**
    * 명령어를 실행합니다.
    *
@@ -3192,7 +2452,6 @@ public class Method extends SoundPlay
       }
     }
   }
-
 
   public static void commandPack(CommandSender sender, String fileName, String packName)
   {
@@ -3349,19 +2608,30 @@ public class Method extends SoundPlay
       if (returnValue.size() == 0 && !key.equals("") && !ignoreEmpty)
       {
         return Collections.singletonList(tabArg +
-                MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은_는) +
+                MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은는) +
                 " 잘못되거나 알 수 없는 " +
                 key.replace("<", "").replace(">", "").replace("[", "").replace("]", "") +
                 "입니다" +
                 ".");
       }
+      returnValue = Method.sort(returnValue);
       if ((ignoreEmpty && returnValue.size() == 0) || (!key.equals("") && returnValue.size() == 1 && returnValue.get(0).equalsIgnoreCase(tabArg)))
       {
         return Collections.singletonList(key);
       }
-      return Method.sort(returnValue);
+      return returnValue;
     }
     return Method.sort(list);
+  }
+
+  public static List<String> tabCompleterList(String[] args, String key, String... list)
+  {
+    return Method.tabCompleterList(args, Method.arrayToList(list), key, false);
+  }
+
+  public static List<String> tabCompleterList(String[] args, String key, boolean ignoreEmpty, String... list)
+  {
+    return Method.tabCompleterList(args, Method.arrayToList(list), key, ignoreEmpty);
   }
 
 //  public static int getMaxSpaceAmount(List<String> input)
@@ -3404,16 +2674,6 @@ public class Method extends SoundPlay
 //
 //    return returnValue;
 //  }
-
-  public static List<String> tabCompleterList(String[] args, String key, String... list)
-  {
-    return Method.tabCompleterList(args, Method.arrayToList(list), key, false);
-  }
-
-  public static List<String> tabCompleterList(String[] args, String key, boolean ignoreEmpty, String... list)
-  {
-    return Method.tabCompleterList(args, Method.arrayToList(list), key, ignoreEmpty);
-  }
 
   public static List<String> tabCompleterList(String[] args, Set<String> set, String key)
   {
@@ -3459,21 +2719,21 @@ public class Method extends SoundPlay
     }
     if (!MessageUtil.isDouble(null, tabArg, false))
     {
-      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은_는) + " 정수가 아닙니다.");
+      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은는) + " 정수가 아닙니다.");
     }
     if (!MessageUtil.isInteger(null, tabArg, false))
     {
-      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은_는) + " 잘못된 정수입니다.");
+      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은는) + " 잘못된 정수입니다.");
     }
     int argInt = Integer.parseInt(tabArg);
     tabArg = Constant.Sosu15.format(argInt);
     if (!MessageUtil.checkNumberSize(null, argInt, from, Integer.MAX_VALUE))
     {
-      return Collections.singletonList("정수는 " + Constant.Sosu15.format(from) + " 이상이어야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이_가) + " 있습니다.");
+      return Collections.singletonList("정수는 " + Constant.Sosu15.format(from) + " 이상이어야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
     if (!MessageUtil.checkNumberSize(null, argInt, Integer.MIN_VALUE, to))
     {
-      return Collections.singletonList("정수는 " + Constant.Sosu15.format(to) + " 이하여야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이_가) + " 있습니다.");
+      return Collections.singletonList("정수는 " + Constant.Sosu15.format(to) + " 이하여야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
     return Collections.singletonList(key);
   }
@@ -3498,21 +2758,21 @@ public class Method extends SoundPlay
     }
     if (!MessageUtil.isDouble(null, tabArg, false))
     {
-      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은_는) + " 정수가 아닙니다.");
+      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은는) + " 정수가 아닙니다.");
     }
     if (!MessageUtil.isLong(null, tabArg, false))
     {
-      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은_는) + " 잘못된 정수입니다.");
+      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은는) + " 잘못된 정수입니다.");
     }
     long argLong = Long.parseLong(tabArg);
     tabArg = Constant.Sosu15.format(argLong);
     if (!MessageUtil.checkNumberSize(null, argLong, from, Long.MAX_VALUE))
     {
-      return Collections.singletonList("정수는 " + Constant.Sosu15.format(from) + " 이상이어야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이_가) + " 있습니다.");
+      return Collections.singletonList("정수는 " + Constant.Sosu15.format(from) + " 이상이어야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
     if (!MessageUtil.checkNumberSize(null, argLong, Long.MIN_VALUE, to))
     {
-      return Collections.singletonList("정수는 " + Constant.Sosu15.format(to) + " 이하여야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이_가) + " 있습니다.");
+      return Collections.singletonList("정수는 " + Constant.Sosu15.format(to) + " 이하여야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
     return Collections.singletonList(key);
   }
@@ -3559,188 +2819,34 @@ public class Method extends SoundPlay
     }
     if (!MessageUtil.isDouble(null, tabArg, false))
     {
-      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은_는) + " 숫자가 아닙니다.");
+      return Collections.singletonList(tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은는) + " 숫자가 아닙니다.");
     }
     double argDouble = Double.parseDouble(tabArg);
     tabArg = Constant.Sosu15.format(argDouble);
     if (!MessageUtil.checkNumberSize(null, argDouble, from, Double.MAX_VALUE, excludeFrom, excludeTo, false))
     {
       return Collections.singletonList("숫자는 " + Constant.Sosu15.format(from) + " " + (excludeFrom ? "초과여야" : "이상이어야") + " 하는데, "
-              + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이_가) + " 있습니다.");
+              + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
     if (!MessageUtil.checkNumberSize(null, argDouble, -Double.MAX_VALUE, to, excludeFrom, excludeTo, false))
     {
       return Collections.singletonList("숫자는 " + Constant.Sosu15.format(to) + " " + (excludeTo ? "미만이어야" : "이하여야") + " 하는데, "
-              + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이_가) + " 있습니다.");
+              + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
     return Collections.singletonList(key);
   }
 
-  public static List<String> tabCompleterEntities(CommandSender sender, String[] args)
+  private static List<String> tabCompleterEntity(CommandSender sender)
   {
-    List<String> list = new ArrayList<>(Method.tabCompleterPlayers(sender, args));
-    list.addAll(Arrays.asList("@ep", "@er", "@npep", "@nper"));
-    boolean isEntity = sender instanceof Entity;
-    String arg = args[args.length - 1];
-    if (isEntity)
-    {
-      list.add("@es");
-      if (Method.equals(arg, "@es", "@es["))
-      {
-        list.add("@es[");
-      }
-      if (arg.startsWith("@es["))
-      {
-        list.add("@es[world=");
-      }
-    }
-    if (isEntity && !(sender instanceof Player))
-    {
-      list.add("@npes");
-      if (Method.equals(arg, "@npes", "@npes["))
-      {
-        list.add("@npes[");
-      }
-      if (arg.startsWith("@npes["))
-      {
-        list.add("@npes[world=");
-      }
-    }
-    if (Method.equals(arg, "@ep", "@ep["))
-    {
-      list.add("@ep[");
-    }
-    if (arg.startsWith("@ep["))
-    {
-      list.add("@ep[world=");
-    }
-    if (Method.equals(arg, "@er", "@er["))
-    {
-      list.add("@er[");
-    }
-    if (arg.startsWith("@er["))
-    {
-      list.add("@er[world=");
-    }
-    if (Method.equals(arg, "@npep", "@npep["))
-    {
-      list.add("@npep[");
-    }
-    if (arg.startsWith("@npep["))
-    {
-      list.add("@npep[world=");
-    }
-    if (Method.equals(arg, "@nper", "@nper["))
-    {
-      list.add("@nper[");
-    }
-    if (arg.startsWith("@nper["))
-    {
-      list.add("@nper[world=");
-    }
-    for (World world : Bukkit.getServer().getWorlds())
-    {
-      String name = world.getName();
-      if (args[args.length - 1].startsWith("@ep[world="))
-      {
-        list.add("@ep[world=" + name + "]");
-      }
-      if (args[args.length - 1].startsWith("@er[world="))
-      {
-        list.add("@er[world=" + name + "]");
-      }
-      if (isEntity && args[args.length - 1].startsWith("@es[world="))
-      {
-        list.add("@es[world=" + name + "]");
-      }
-
-      if (args[args.length - 1].startsWith("@npep[world="))
-      {
-        list.add("@npep[world=" + name + "]");
-      }
-      if (args[args.length - 1].startsWith("@nper[world="))
-      {
-        list.add("@nper[world=" + name + "]");
-      }
-      if (isEntity && args[args.length - 1].startsWith("@npes[=world"))
-      {
-        list.add("@npes[world=" + name + "]");
-      }
-    }
-    if (sender instanceof Player)
-    {
-      Player player = (Player) sender;
-      Location location = player.getLocation();
-      location.add(location.getDirection().multiply(3d));
-      for (Entity entity : player.getWorld().getNearbyEntities(location, 2d, 2d, 2d))
-      {
-        list.add(entity.getUniqueId().toString());
-      }
-    }
-    return Method.tabCompleterList(args, list, "[<개체>]", true);
-  }
-
-  public static List<String> tabCompleterPlayers(CommandSender sender, String[] args)
-  {
-    Set<String> list = new HashSet<>(Arrays.asList("@p", "@r"));
-    boolean isPlayer = sender instanceof Player;
-    if (isPlayer)
-    {
-      list.add("@s");
-    }
-    String arg = args[args.length - 1];
-    if (Method.equals(arg, "@p", "@p["))
-    {
-      list.add("@p[");
-    }
-    if (arg.startsWith("@p["))
-    {
-      list.add("@p[world=");
-    }
-
-    if (Method.equals(arg, "@r", "@r["))
-    {
-      list.add("@r[");
-    }
-    if (arg.startsWith("@r["))
-    {
-      list.add("@r[world=");
-    }
-
-    if (isPlayer && Method.equals(arg, "@s", "@s["))
-    {
-      list.add("@s[");
-    }
-    if (isPlayer && arg.startsWith("@s["))
-    {
-      list.add("@s[world=");
-    }
-
-    for (World world : Bukkit.getServer().getWorlds())
-    {
-      String name = world.getName();
-      if (arg.startsWith("@p[world="))
-      {
-        list.add("@p[world=" + name + "]");
-      }
-      if (arg.startsWith("@r[world="))
-      {
-        list.add("@r[world=" + name + "]");
-      }
-      if (isPlayer && arg.startsWith("@s[world="))
-      {
-        list.add("@s[world=" + name + "]");
-      }
-    }
+    List<String> list = new ArrayList<>(Arrays.asList("@p", "@r", "@a", "@s", "@e"));
     for (Player online : Bukkit.getServer().getOnlinePlayers())
     {
       list.add(online.getName());
-      list.add(MessageUtil.stripColor(online.getDisplayName().replace(" ", "__")));
-      list.add(MessageUtil.stripColor(online.getPlayerListName().replace(" ", "__")));
+      list.add(MessageUtil.stripColor(ComponentUtil.serialize(online.displayName())).replace(" ", "+"));
+      list.add(MessageUtil.stripColor(ComponentUtil.serialize(online.playerListName())).replace(" ", "+"));
     }
-    if (sender instanceof Player)
+    if (sender instanceof Player player)
     {
-      Player player = (Player) sender;
       Location location = player.getLocation();
       location.add(location.getDirection().multiply(1d));
       for (Entity entity : player.getWorld().getNearbyEntities(location, 1.5d, 1.5d, 1.5d))
@@ -3752,14 +2858,100 @@ public class Method extends SoundPlay
         }
       }
     }
-
-
-    return Method.tabCompleterList(args, list, "[<플레이어>]", true);
+    return list;
   }
 
-  public static List<String> tabCompleterOfflinePlayers(CommandSender sender, String[] args)
+  public static List<String> tabCompleterEntity(CommandSender sender, String[] args)
   {
-    List<String> list = new ArrayList<>(Method.tabCompleterPlayers(sender, args));
+    return tabCompleterEntity(sender, args, "[<개체>]");
+  }
+
+  public static List<String> tabCompleterEntity(CommandSender sender, String[] args, String key)
+  {
+    return tabCompleterEntity(sender, args, key, false);
+  }
+
+  public static List<String> tabCompleterEntity(CommandSender sender, String[] args, String key, boolean multiple)
+  {
+    List<String> list = tabCompleterEntity(sender);
+    List<String> returnList = Method.tabCompleterList(args, list, key, true);
+    if ((Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") || !list.contains(args[args.length - 1]))
+            && returnList.size() == 1 && key.equals(returnList.get(0)))
+    {
+      try
+      {
+        List<Entity> entities = Bukkit.selectEntities(sender, args[args.length - 1]);
+        if (entities.size() == 0)
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.notfound.entity")));
+        }
+        if (!multiple && entities.size() > 1)
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.toomany")));
+        }
+      }
+      catch (IllegalArgumentException e)
+      {
+        return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
+      }
+    }
+    return returnList;
+  }
+
+  public static List<String> tabCompleterPlayer(CommandSender sender, String[] args)
+  {
+    return tabCompleterPlayer(sender, args, "[<플레이어>]");
+  }
+
+  public static List<String> tabCompleterPlayer(CommandSender sender, String[] args, String key)
+  {
+    return tabCompleterPlayer(sender, args, key, false);
+  }
+
+  public static List<String> tabCompleterPlayer(CommandSender sender, String[] args, String key, boolean multiple)
+  {
+    List<String> list = tabCompleterEntity(sender);
+    List<String> returnList = Method.tabCompleterList(args, list, key, true);
+    if ((Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") || !list.contains(args[args.length - 1]))
+            && returnList.size() == 1 && key.equals(returnList.get(0)))
+    {
+      try
+      {
+        List<Entity> entities = Bukkit.selectEntities(sender, args[args.length - 1]);
+        if (entities.size() == 0)
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.notfound.player")));
+        }
+        if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)))
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.entities")));
+        }
+        if (!multiple && entities.size() > 1)
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.toomany")));
+        }
+      }
+      catch (IllegalArgumentException e)
+      {
+        return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
+      }
+    }
+    return returnList;
+  }
+
+  public static List<String> tabCompleterOfflinePlayer(CommandSender sender, String[] args)
+  {
+    return tabCompleterOfflinePlayer(sender, args, "[<플레이어>]");
+  }
+
+  public static List<String> tabCompleterOfflinePlayer(CommandSender sender, String[] args, String key)
+  {
+    return tabCompleterOfflinePlayer(sender, args, key, false);
+  }
+
+  public static List<String> tabCompleterOfflinePlayer(CommandSender sender, String[] args, String key, boolean multiple)
+  {
+    List<String> list = tabCompleterEntity(sender);
     for (String nickName : Variable.nickNames)
     {
       if (!Method.isUUID(nickName) || (Bukkit.getOfflinePlayer(UUID.fromString(nickName)).getName() == null))
@@ -3767,7 +2959,32 @@ public class Method extends SoundPlay
         list.add(MessageUtil.stripColor(nickName).replace(" ", "__"));
       }
     }
-    return Method.tabCompleterList(args, list, "[<플레이어>]", true);
+    List<String> returnList = Method.tabCompleterList(args, list, key, true);
+    if ((Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") || !list.contains(args[args.length - 1]))
+            && returnList.size() == 1 && key.equals(returnList.get(0)))
+    {
+      try
+      {
+        List<Entity> entities = Bukkit.selectEntities(sender, args[args.length - 1]);
+        if (entities.size() == 0)
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.notfound.player")));
+        }
+        if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)))
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.entities")));
+        }
+        if (!multiple && entities.size() > 1)
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.toomany")));
+        }
+      }
+      catch (IllegalArgumentException e)
+      {
+        return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
+      }
+    }
+    return returnList;
   }
 
   public static List<String> tabCompleterStatistics(String[] args, String type, String key)
@@ -3821,7 +3038,7 @@ public class Method extends SoundPlay
     String tag = args[args.length - 1];
     if (!Method.startsWith(tag, true, "true", "false") && !noExtra)
     {
-      return Collections.singletonList("잘못된 불입니다. 'true' 또는 'false'가 필요하지만 '" + tag + "'" + MessageUtil.getFinalConsonant(tag, MessageUtil.ConsonantType.이_가) + " 입력되었습니다.");
+      return Collections.singletonList("잘못된 불입니다. 'true' 또는 'false'가 필요하지만 '" + tag + "'" + MessageUtil.getFinalConsonant(tag, MessageUtil.ConsonantType.이가) + " 입력되었습니다.");
     }
     if (tag.equals("true"))
     {
@@ -3835,7 +3052,7 @@ public class Method extends SoundPlay
     String tag = args[args.length - 1];
     if (!Method.startsWith(tag, true, "on", "off"))
     {
-      return Collections.singletonList("잘못된 토글입니다. 'on' 또는 'off'가 필요하지만 '" + tag + "'" + MessageUtil.getFinalConsonant(tag, MessageUtil.ConsonantType.이_가) + " 입력되었습니다.");
+      return Collections.singletonList("잘못된 토글입니다. 'on' 또는 'off'가 필요하지만 '" + tag + "'" + MessageUtil.getFinalConsonant(tag, MessageUtil.ConsonantType.이가) + " 입력되었습니다.");
     }
     if (tag.equals("true"))
     {
@@ -3987,7 +3204,6 @@ public class Method extends SoundPlay
     }
   }
 
-
   public static boolean useItem(Player player, ItemStack item, EquipmentSlot slot)
   {
     if (!ItemStackUtil.itemExists(item))
@@ -4006,7 +3222,7 @@ public class Method extends SoundPlay
       String itemName = item.toString();
       playWarnSound(player);
       MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN), ComponentUtil.create(itemName, item),
-              ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을_를) + " 우클릭 사용할 권한이 없습니다."));
+              ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + " 우클릭 사용할 권한이 없습니다."));
       return true;
     }
     if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()) && cooldownTag != null)
@@ -4025,7 +3241,7 @@ public class Method extends SoundPlay
           String itemName = item.toString();
           playWarnSound(player);
           MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, item),
-                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을_를) + " 우클릭 사용할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
+                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + " 우클릭 사용할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
           return true;
         }
         if (configPlayerCooldown == null)
@@ -4248,5 +3464,20 @@ public class Method extends SoundPlay
   public static void itemBreakParticle(Player player, ItemStack item)
   {
     player.getLocation().getWorld().spawnParticle(Particle.ITEM_CRACK, player.getEyeLocation().add(player.getLocation().getDirection().multiply(1D)), 20, 0, 0, 0, 0.1, item);
+  }
+
+
+  public enum ReinforceSound
+  {
+    OPERATION,
+    SUCCESS,
+    FAIL,
+    DESTROY
+  }
+
+  public enum ReinforceType
+  {
+    COMMAND,
+    SCROLL
   }
 }

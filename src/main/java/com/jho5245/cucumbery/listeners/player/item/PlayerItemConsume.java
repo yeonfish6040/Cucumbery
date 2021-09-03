@@ -97,7 +97,7 @@ public class PlayerItemConsume implements Listener
         Variable.itemConsumeAlertCooldown2.add(uuid);
         String itemName = (item).toString();
         MessageUtil.sendTitle(player, "&c섭취 불가!",
-                "&r인벤토리가 가득 찬 상태에서는 &e" + itemName + "&r" + MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을_를) + " 섭취할 수 없습니다.", 5, 120, 15);
+                "&r인벤토리가 가득 찬 상태에서는 &e" + itemName + "&r" + MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + " 섭취할 수 없습니다.", 5, 120, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown2.remove(uuid), 100L);
       }
@@ -232,7 +232,7 @@ public class PlayerItemConsume implements Listener
           String itemName = (item).toString();
           Method.playWarnSound(player);
           MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, item),
-                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을_를) + (isSneaking ? "웅크리고 " : "") + " 섭취할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
+                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + (isSneaking ? "웅크리고 " : "") + " 섭취할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
           event.setCancelled(true);
           return;
         }

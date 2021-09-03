@@ -1,11 +1,9 @@
 package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.ItemSerializer;
-import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.*;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.Method2;
+import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
 import com.jho5245.cucumbery.util.storage.*;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -89,7 +87,7 @@ public class ItemStorage implements CommandExecutor
           }
           if (!Variable.itemStorage.containsKey(args[1]))
           {
-            MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을_를) + " 찾을 수 없습니다.");
+            MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다.");
             return true;
           }
           YamlConfiguration config = Variable.itemStorage.get(args[1]);
@@ -204,7 +202,7 @@ public class ItemStorage implements CommandExecutor
           config.set("items." + args[2], ItemSerializer.serialize(item));
           itemListConfig.saveConfig();
           Variable.itemStorage.put(args[1], config);
-          MessageUtil.sendMessage(player, Prefix.INFO_ITEMSTORAGE, "주로 사용하는 손에 들고 있는 아이템을 아이템 목록 &e" + args[1] + "&r에 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.이라_라) + "는 이름으로 저장했습니다.");
+          MessageUtil.sendMessage(player, Prefix.INFO_ITEMSTORAGE, "주로 사용하는 손에 들고 있는 아이템을 아이템 목록 &e" + args[1] + "&r에 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.이라) + "는 이름으로 저장했습니다.");
         }
         else
         {
@@ -225,7 +223,7 @@ public class ItemStorage implements CommandExecutor
         {
           if (!Variable.itemStorage.containsKey(args[1]))
           {
-            MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을_를) + " 찾을 수 없습니다.");
+            MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다.");
             return true;
           }
           YamlConfiguration config = Variable.itemStorage.get(args[1]);
@@ -310,7 +308,7 @@ public class ItemStorage implements CommandExecutor
           Player player = (Player) sender;
           if (!Variable.itemStorage.containsKey(args[1]))
           {
-            MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을_를) + " 찾을 수 없습니다.");
+            MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다.");
             return true;
           }
           YamlConfiguration config = Variable.itemStorage.get(args[1]);
@@ -369,7 +367,7 @@ public class ItemStorage implements CommandExecutor
             }
           }
           String itemName = args[2].replace("__", " ");
-          String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을_를);
+          String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을를);
           if (lostItem != null)
           {
             lostAmount = lostItem.getAmount();
@@ -403,14 +401,14 @@ public class ItemStorage implements CommandExecutor
         }
         else if (args.length <= 6)
         {
-          Player target = Method.getPlayer(sender, args[1]);
+          Player target = SelectorUtil.getPlayer(sender, args[1]);
           if (target == null)
           {
             return true;
           }
           if (!Variable.itemStorage.containsKey(args[2]))
           {
-            MessageUtil.sendError(sender, "아이템 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을_를) + " 찾을 수 없습니다.");
+            MessageUtil.sendError(sender, "아이템 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을를) + " 찾을 수 없습니다.");
             return true;
           }
           YamlConfiguration config = Variable.itemStorage.get(args[2]);
@@ -473,50 +471,7 @@ public class ItemStorage implements CommandExecutor
               hideOutput = true;
             }
           }
-          Collection<ItemStack> lostItems = target.getInventory().addItem(item).values();
-          if (lostItems.size() != 0)
-          {
-            for (ItemStack lost : lostItems)
-            {
-              lostItem = lost;
-            }
-          }
-          if (!hideOutput)
-          {
-            Component targetName = ComponentUtil.senderComponent(target);
-            Component senderName = ComponentUtil.senderComponent(sender);
-            String itemName = args[3].replace("__", " ");
-            String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을_를);
-            if (lostItem != null)
-            {
-              lostAmount = lostItem.getAmount();
-              String lostDisplay = (lostAmount == amount ? "&c전부&r(&e총 " + lostAmount + "개&r)" : lostAmount + "개");
-              Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_WARN, "인벤토리가 가득 차서 ", senderName, "이 보낸 &e" + itemName + "&r" + finalConsonant + "&e " + lostDisplay + "&r 지급받지 못하였습니다."), item);
-              if (!target.equals(sender))
-              {
-                MessageUtil.sendMessage(target, txt);
-                SoundPlay.playSound(target, Constant.WARNING_SOUND);
-              }
-              txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_WARN, targetName, "&r의 인벤토리가 가득 차서 아이템의 &c" + lostDisplay + "&r를 지급하지 못하였습니다."), item);
-              MessageUtil.sendMessage(sender, txt);
-              if (sender instanceof Player)
-              {
-                SoundPlay.playSound(sender, Constant.WARNING_SOUND);
-              }
-              amount -= lostAmount;
-            }
-            if (amount != 0)
-            {
-              String amountDisplay = (lostAmount == 0 ? amount + "" : amount + "&r(&e" + (amount + lostAmount) + "&r - &e" + lostAmount + "&r)&e");
-              Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_ITEMSTORAGE, senderName, "이 당신에게 &e" + itemName + "&r" + finalConsonant + "&e " + amountDisplay + "개&r 지급하였습니다."), item);
-              if (!target.equals(sender))
-              {
-                MessageUtil.sendMessage(target, txt);
-              }
-              txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE + "&e" + targetName + "&r에게 &e" + itemName + "&r" + finalConsonant + "&e " + amountDisplay + "개&r 지급하였습니다.", item);
-              MessageUtil.sendMessage(sender, txt);
-            }
-          }
+          AddItemUtil.addItemResult2(sender, target, item, amount).sendFeedback(hideOutput);
         }
         else
         {
@@ -535,7 +490,7 @@ public class ItemStorage implements CommandExecutor
         }
         else
         {
-          Player target = Method.getPlayer(sender, args[1]);
+          Player target = SelectorUtil.getPlayer(sender, args[1]);
           if (target == null)
           {
             return true;
@@ -606,7 +561,7 @@ public class ItemStorage implements CommandExecutor
           }
           if (!Variable.itemStorage.containsKey(args[3]))
           {
-            MessageUtil.sendError(sender, "아이템 목록 &e" + args[3] + "&r" + MessageUtil.getFinalConsonant(args[3], ConsonantType.을_를) + " 찾을 수 없습니다.");
+            MessageUtil.sendError(sender, "아이템 목록 &e" + args[3] + "&r" + MessageUtil.getFinalConsonant(args[3], ConsonantType.을를) + " 찾을 수 없습니다.");
             return true;
           }
           YamlConfiguration config = Variable.itemStorage.get(args[3]);
@@ -690,7 +645,7 @@ public class ItemStorage implements CommandExecutor
               }
             }
             String itemName = args[3].replace("__", " ");
-            String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을_를);
+            String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을를);
             Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_ITEMSTORAGE, sender, "이 당신의 &e" + args[2] + "&r 슬롯에 &e" + itemName + "&r" + finalConsonant + "&e " + amount + "개&r 지급하였습니다."), item);
             if (!target.equals(sender))
             {
@@ -723,7 +678,7 @@ public class ItemStorage implements CommandExecutor
           File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/ItemStorage/" + args[1] + ".yml");
           if (!file.exists())
           {
-            MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을_를) + " 찾을 수 없습니다.");
+            MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다.");
             return true;
           }
           CustomConfig itemListConfig = CustomConfig.getCustomConfig("data/ItemStorage/" + args[1] + ".yml");

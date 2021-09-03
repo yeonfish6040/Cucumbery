@@ -142,7 +142,7 @@ public class PlayerInteractEntity implements Listener
             itemName = (item).toString();
           }
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
-          MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&e"+itemName+"&r"+MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.은_는)+" &e"+(entity)+"&r에게 사용할 수 없습니다.", 5, 80, 15);
+          MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&e"+itemName+"&r"+MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.은는)+" &e"+(entity)+"&r에게 사용할 수 없습니다.", 5, 80, 15);
           Variable.playerInteractAtEntityRestrictedItemAlertCooldown.add(uuid);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityRestrictedItemAlertCooldown.remove(uuid), 100L);
         }

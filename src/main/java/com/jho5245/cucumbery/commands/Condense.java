@@ -1,8 +1,9 @@
 package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -34,7 +35,7 @@ public class Condense implements CommandExecutor
 				player = (Player) sender;
 			else
 			{
-				player = Method.getPlayer(sender, args[2]);
+				player = SelectorUtil.getPlayer(sender, args[2]);
 				if (player == null)
 					return true;
 			}

@@ -1,7 +1,8 @@
 package com.jho5245.cucumbery.commands.debug;
 
-import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -36,7 +37,7 @@ public class UUID implements CommandExecutor
 		}
 		else if (args.length == 1)
 		{
-			OfflinePlayer target = Method.getOfflinePlayer(sender, args[0]);
+			OfflinePlayer target = SelectorUtil.getOfflinePlayer(sender, args[0]);
 			if (target == null)
 				return true;
 			if (sender instanceof Player && sender.equals(target))

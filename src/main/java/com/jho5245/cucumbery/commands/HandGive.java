@@ -2,6 +2,8 @@ package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -50,8 +52,8 @@ public class HandGive implements CommandExecutor
       else if (args.length <= 3)
       {
         Player player = (Player) sender;
-        Player target = Method.getPlayer(sender, args[0]);
-        if (target == null)
+        List<Player> targets = SelectorUtil.getPlayers(sender, args[0]);
+        if (targets == null)
         {
           return true;
         }
@@ -91,49 +93,8 @@ public class HandGive implements CommandExecutor
           }
         }
 
-        String itemString = ComponentUtil.itemName(item) + ((amount == 1) ? "" : " " + amount + "개") + "§r";
-        itemString += MessageUtil.getFinalConsonant(itemString, MessageUtil.ConsonantType.을_를);
+        AddItemUtil.addItemResult2(sender, targets, item, amount).sendFeedback(hideOutput);
 
-        ItemStack lostItem = null;
-        int lostAmount = 0;
-        Collection<ItemStack> lostItems = target.getInventory().addItem(item).values();
-        if (lostItems.size() != 0)
-        {
-          for (ItemStack lost : lostItems)
-          {
-            lostItem = lost;
-          }
-        }
-        if (!hideOutput)
-        {
-          if (lostItem != null)
-          {
-            lostAmount = lostItem.getAmount();
-            String lostString = ComponentUtil.itemName(item) + ((lostAmount == amount) ? " 전부" : " " + lostAmount + "개") + "§r";
-            lostString += MessageUtil.getFinalConsonant(lostString, MessageUtil.ConsonantType.을_를);
-            if (!target.equals(sender))
-            {
-              MessageUtil.sendMessage(target, ComponentUtil.create(Prefix.INFO_WARN + "인벤토리가 가득 차서 §e" + ComponentUtil.senderComponent(player) + "§r이(가) 보낸 " + lostString + " 지급받지 못하였습니다.", item));
-              SoundPlay.playSound(target, Constant.WARNING_SOUND);
-            }
-            MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "§e" + target.getDisplayName() + "§r의 인벤토리가 가득 차서 보낸 " + lostString + " 지급하지 못하였습니다.", item));
-            SoundPlay.playSound(player, Constant.WARNING_SOUND);
-            amount -= lostAmount;
-          }
-          if (amount != 0)
-          {
-            if (lostAmount > 0)
-            {
-              itemString = ComponentUtil.itemName(item) + ((amount == 1) ? "" : " " + amount + "개") + "§r";
-              itemString += MessageUtil.getFinalConsonant(itemString, MessageUtil.ConsonantType.을_를);
-            }
-            if (!target.equals(sender))
-            {
-              MessageUtil.sendMessage(target, ComponentUtil.create(Prefix.INFO_HANDGIVE + "§e" + ComponentUtil.senderComponent(player) + "§r(으)로부터 " + itemString + " 지급받았습니다.", item));
-            }
-            MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_HANDGIVE + "§e" + target.getDisplayName() + "§r에게 " + itemString + " 지급하였습니다.", item));
-          }
-        }
       }
       else
       {
@@ -369,7 +330,7 @@ public class HandGive implements CommandExecutor
           int lostAmount = 0;
           Collection<ItemStack> lostItems = target.getInventory().addItem(item).values();
           String itemString = ComponentUtil.itemName(item) + ((amount == 1) ? "" : " " + amount + "개") + "§r";
-          itemString += MessageUtil.getFinalConsonant(itemString, MessageUtil.ConsonantType.을_를);
+          itemString += MessageUtil.getFinalConsonant(itemString, MessageUtil.ConsonantType.을를);
           if (lostItems.size() != 0)
           {
             for (ItemStack lost : lostItems)
@@ -384,7 +345,7 @@ public class HandGive implements CommandExecutor
               failureAmount++;
               lostAmount = lostItem.getAmount();
               String lostString = ComponentUtil.itemName(item) + ((lostAmount == amount) ? " 전부" : " " + lostAmount + "개") + "§r";
-              lostString += MessageUtil.getFinalConsonant(lostString, MessageUtil.ConsonantType.을_를);
+              lostString += MessageUtil.getFinalConsonant(lostString, MessageUtil.ConsonantType.을를);
               if (!target.equals(sender))
               {
                 MessageUtil.sendMessage(target, ComponentUtil.create(Prefix.INFO_WARN + "인벤토리가 가득 차서 §e" + ComponentUtil.senderComponent(player) + "§r이(가) 보낸 " + lostString + " 지급받지 못하였습니다.", item));
@@ -400,7 +361,7 @@ public class HandGive implements CommandExecutor
               if (lostAmount > 0)
               {
                 itemString = ComponentUtil.itemName(item) + ((amount == 1) ? "" : " " + amount + "개") + "§r";
-                itemString += MessageUtil.getFinalConsonant(itemString, MessageUtil.ConsonantType.을_를);
+                itemString += MessageUtil.getFinalConsonant(itemString, MessageUtil.ConsonantType.을를);
               }
               if (!target.equals(sender))
               {

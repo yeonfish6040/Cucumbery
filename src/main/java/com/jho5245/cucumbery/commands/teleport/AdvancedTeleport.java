@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.teleport;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -34,7 +35,7 @@ public class AdvancedTeleport implements CommandExecutor
     }
     else if (args.length <= 10)
     {
-      Entity target = Method.getEntity(sender, args[0]);
+      Entity target = SelectorUtil.getEntity(sender, args[0]);
       if (target == null)
       {
         return true;

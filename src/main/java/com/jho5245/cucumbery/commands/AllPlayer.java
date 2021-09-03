@@ -52,19 +52,17 @@ public class AllPlayer implements CommandExecutor
 			{
 				switch (args[1])
 				{
-					case "true":
-						bool = true;
-						break;
-					case "false":
-						bool = false;
-						break;
-					case "check":
+					case "true" -> bool = true;
+					case "false" -> bool = false;
+					case "check" -> {
 						bool = key.isEnabled();
-						MessageUtil.sendMessage(sender, Prefix.INFO_ALLPLAYER+"현재 &e"+keyString+"&r"+MessageUtil.getFinalConsonant(keyString, ConsonantType.을_를)+" 할 수 "+(!bool ? "&a있는" : "&c없는")+"&r 상태입니다.");
+						MessageUtil.sendMessage(sender, Prefix.INFO_ALLPLAYER, "현재 &e" + keyString + "&r" + MessageUtil.getFinalConsonant(keyString, ConsonantType.을를) + " 할 수 " + (!bool ? "&a있는" : "&c없는") + "&r 상태입니다.");
 						return true;
-					default:
+					}
+					default -> {
 						MessageUtil.wrongArg(sender, 2, args);
 						return true;
+					}
 				}
 			}
 			else
@@ -74,12 +72,12 @@ public class AllPlayer implements CommandExecutor
 			config.set(key.getKey(), bool);
 			customConfig.saveConfig();
 			Variable.allPlayerConfig = customConfig.getConfig();
-			MessageUtil.sendMessage(sender, Prefix.INFO_ALLPLAYER+"모든 플레이어가 &e"+keyString+"&r"+MessageUtil.getFinalConsonant(keyString, ConsonantType.을_를)+" 할 수 "+(!bool ? "&a있도록" : "&c없도록")+"&r 하였습니다.");
+			MessageUtil.sendMessage(sender, Prefix.INFO_ALLPLAYER,"모든 플레이어가 &e"+keyString+"&r"+MessageUtil.getFinalConsonant(keyString, ConsonantType.을를)+" 할 수 "+(!bool ? "&a있도록" : "&c없도록")+"&r 하였습니다.");
 			for (Player player : Bukkit.getServer().getOnlinePlayers())
 			{
 				if (!player.equals(sender))
 				{
-					MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER+"지금부터 &e"+keyString+"&r"+MessageUtil.getFinalConsonant(keyString, ConsonantType.을_를)+" 할 수 "+(!bool ? "&a있게" : "&c없게")+"&r 됩니다.");
+					MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER,"지금부터 &e"+keyString+"&r"+MessageUtil.getFinalConsonant(keyString, ConsonantType.을를)+" 할 수 "+(!bool ? "&a있게" : "&c없게")+"&r 됩니다.");
 				}
 			}
 		}

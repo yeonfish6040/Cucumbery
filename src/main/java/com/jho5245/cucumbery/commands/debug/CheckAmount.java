@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands.debug;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
@@ -32,7 +33,7 @@ public class CheckAmount implements CommandExecutor
 		}
 		else if (args.length <= 4)
 		{
-			Player player = Method.getPlayer(sender, args[0]);
+			Player player = SelectorUtil.getPlayer(sender, args[0]);
 			if (player == null)
 				return true;
 			if (!args[1].equals("space") && !args[1].equals("amount"))
@@ -89,8 +90,8 @@ public class CheckAmount implements CommandExecutor
 			String msg = "&e"+ComponentUtil.senderComponent(player)+((isSpace) ? "&r의 인벤토리에는 " : "&r은(는) 인벤토리에 ")+"&e"+name+"&r"+(ignoreDurability ?
 				"" :
 				("(내구도 : &e"+durability+"&r)"))+((isSpace) ?
-				MessageUtil.getFinalConsonant(name, MessageUtil.ConsonantType.이_가) :
-				MessageUtil.getFinalConsonant(name, MessageUtil.ConsonantType.을_를))+" &e"+number+"개 &r"+((isSpace) ? "들어갈 수 있는 공간이 있습니다." : "가지고 있습니다.");
+				MessageUtil.getFinalConsonant(name, MessageUtil.ConsonantType.이가) :
+				MessageUtil.getFinalConsonant(name, MessageUtil.ConsonantType.을를))+" &e"+number+"개 &r"+((isSpace) ? "들어갈 수 있는 공간이 있습니다." : "가지고 있습니다.");
 			if (!(sender instanceof Player))
 			{
 				MessageUtil.info(sender, msg);
