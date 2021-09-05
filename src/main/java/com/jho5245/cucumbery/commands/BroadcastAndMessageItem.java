@@ -101,7 +101,7 @@ public class BroadcastAndMessageItem implements CommandExecutor
             }
           }
         }
-        Component txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE, "§e", ComponentUtil.senderComponent(player), "§r이(가) ", item, "을(를) 채팅창에 올렸습니다.");
+        Component txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE, ComponentUtil.createTranslate("%s이(가) %s을(를) 채팅창에 올렸습니다.", player, item));
         for (Player online : Bukkit.getServer().getOnlinePlayers())
         {
           MessageUtil.sendMessage(online, txt);

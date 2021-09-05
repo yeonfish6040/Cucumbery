@@ -4735,6 +4735,17 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterPlayer(sender, args);
       }
     }
+    else if (name.equals("ckill2"))
+    {
+      if (length == 1)
+      {
+        return Method.tabCompleterEntity(sender, args, "<죽일 개체>", true);
+      }
+      else if (length == 2)
+      {
+        return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+      }
+    }
     else if (name.equals("testcommand"))
     {
       if (length == 1)

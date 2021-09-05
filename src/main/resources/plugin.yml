@@ -363,6 +363,10 @@ commands:
     description: yeet
     usage: /<command> <player>
     aliases: [csocialmenu]
+  ckill2:
+    description: yee
+    usage: /<command> <entities>
+    aliases: [kill3]
 
 permissions:
   cucumbery.error.hide:

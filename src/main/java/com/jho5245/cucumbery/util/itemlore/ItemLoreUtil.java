@@ -213,11 +213,16 @@ public class ItemLoreUtil
     boolean useTMI = Cucumbery.config.getBoolean("use-tmi-enchantment-lore-feature");
     if (object instanceof Enchantment enchant)
     {
-      component = Component.translatable(
-                      "enchantment.minecraft." + enchant.getKey().value())
-              .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-              .color((Enchantment.BINDING_CURSE.equals(enchant) || Enchantment.VANISHING_CURSE.equals(enchant)) ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
-      component = component.append(Component.text((enchant.getMaxLevel() == 1 ? "" : " " + enchantLevel)));
+      if (enchant.getMaxLevel() == 1 && enchantLevel == 1)
+      {
+        component = Component.translatable(enchant.translationKey());
+      }
+      else
+      {
+        component = ComponentUtil.createTranslate("%s %s", Component.translatable(enchant.translationKey()), enchantLevel);
+      }
+      component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+      component = component.color(enchant.isCursed() ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
       lore.add(component);
 
       if (useTMI)
@@ -663,50 +668,8 @@ public class ItemLoreUtil
       default:
         break;
     }
-
-    Component colorComponent = ComponentUtil.createTranslate("&a폭죽 색상 : ");
-    for (int j = 0; j < fireworkEffect.getColors().size(); j++)
-    {
-      Color fireworkColor = fireworkEffect.getColors().get(j);
-      String colorName = ColorCode.getColorName(fireworkColor, "item.minecraft.firework_star.");
-      if (colorName.endsWith("custom_color"))
-      {
-        colorComponent = colorComponent.append(ComponentUtil.create(ColorCode.getColorCode(fireworkColor) + "#" + Integer.toHexString(0x100 | fireworkColor.getRed()).substring(1)
-                + Integer.toHexString(0x100 | fireworkColor.getGreen()).substring(1) + Integer.toHexString(0x100 | fireworkColor.getBlue()).substring(1)));
-      }
-      else
-      {
-        colorComponent = colorComponent.append(ComponentUtil.createTranslate("&e" + colorName));
-      }
-      if (j != fireworkEffect.getColors().size() - 1)
-      {
-        colorComponent = colorComponent.append(ComponentUtil.create("&8, "));
-      }
-    }
-    lore.add(colorComponent);
-    colorComponent = ComponentUtil.createTranslate("&6사라지는 효과 색상 : ");
-    if (fireworkEffect.getFadeColors().size() > 0)
-    {
-      for (int j = 0; j < fireworkEffect.getFadeColors().size(); j++)
-      {
-        Color fireworkColor = fireworkEffect.getFadeColors().get(j);
-        String colorName = ColorCode.getColorName(fireworkColor, "item.minecraft.firework_star.");
-        if (colorName.endsWith("custom_color"))
-        {
-          colorComponent = colorComponent.append(ComponentUtil.create(ColorCode.getColorCode(fireworkColor) + "#" + Integer.toHexString(0x100 | fireworkColor.getRed()).substring(1)
-                  + Integer.toHexString(0x100 | fireworkColor.getGreen()).substring(1) + Integer.toHexString(0x100 | fireworkColor.getBlue()).substring(1)));
-        }
-        else
-        {
-          colorComponent = colorComponent.append(ComponentUtil.createTranslate("&e" + colorName));
-        }
-        if (j != fireworkEffect.getFadeColors().size() - 1)
-        {
-          colorComponent = colorComponent.append(ComponentUtil.create("&8, "));
-        }
-      }
-      lore.add(colorComponent);
-    }
+    addColors(lore, ComponentUtil.createTranslate("&a폭죽 색상 : %s"), fireworkEffect.getColors());
+    addColors(lore, ComponentUtil.createTranslate("&6사라지는 효과 색상 : "), fireworkEffect.getFadeColors());
     if (fireworkEffect.hasTrail())
     {
       lore.add(ComponentUtil.createTranslate("&citem.minecraft.firework_star.trail"));
@@ -715,6 +678,31 @@ public class ItemLoreUtil
     {
       lore.add(ComponentUtil.createTranslate("&citem.minecraft.firework_star.flicker"));
     }
+  }
+
+  private static void addColors(@NotNull List<Component> lore, @NotNull TranslatableComponent prefix, @NotNull List<Color> colors)
+  {
+    if (colors.size() == 0)
+      return;
+    StringBuilder key = new StringBuilder("&7");
+    List<Component> args = new ArrayList<>();
+    for (Color color : colors)
+    {
+      key.append("%s, ");
+      String colorName = ColorCode.getColorName(color, "item.minecraft.firework_star.");
+      if (colorName.endsWith("custom_color"))
+      {
+        args.add(ComponentUtil.create(ColorCode.getColorCode(color) + "#" + Integer.toHexString(0x100 | color.getRed()).substring(1)
+                + Integer.toHexString(0x100 | color.getGreen()).substring(1) + Integer.toHexString(0x100 | color.getBlue()).substring(1)));
+      }
+      else
+      {
+        args.add(ComponentUtil.createTranslate("&e" + colorName));
+      }
+    }
+    key = new StringBuilder(key.substring(0, key.length() - 2));
+    prefix = prefix.args(ComponentUtil.createTranslate(key.toString(), args));
+    lore.add(prefix);
   }
 }
 

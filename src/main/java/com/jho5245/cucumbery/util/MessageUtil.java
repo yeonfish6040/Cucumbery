@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class MessageUtil
 {
+  private static final Pattern PATTERN_N2S_RGB = Pattern.compile("(([RGBrgb]){1,3})(([0-9]){1,3})(,(([0-9]){1,3}))?(,(([0-9]){1,3}))?;");
+
   @NotNull
   public static String[] splitEscape(@NotNull String str, char token)
   {
@@ -56,6 +58,7 @@ public class MessageUtil
     list.add(builder.toString());
     return Method.listToArray(list);
   }
+
   /**
    * 문자열 배열을 하나의 문자열로 반환합니다.
    *
@@ -154,7 +157,9 @@ public class MessageUtil
         message = component;
       }
       else
-         message = ComponentUtil.create(objects);
+      {
+        message = ComponentUtil.create(objects);
+      }
       ((Audience) audience).sendMessage(message);
     }
   }
@@ -271,13 +276,6 @@ public class MessageUtil
     return msg.replaceAll("§(.)", "");
   }
 
-  public enum N2SType // 컬러 코드 적용 타입
-  {
-    NORMAL,
-    SPECIAL,
-    SPECIAL_ONLY
-  }
-
   /**
    * 문자열의 컬러 코드 기호 (&)를 컬러 코드 (§)로 변환합니다.
    *
@@ -305,10 +303,10 @@ public class MessageUtil
       return input.replace("&&", "§");
     }
     String tmp = MessageUtil.n2sHex(ChatColor.translateAlternateColorCodes('&', input));
+    tmp = ColorUtil.chatEffect(tmp);
+    tmp = tmp.replace("&p", "§p").replace("&q", "§q");
     return type == N2SType.SPECIAL ? tmp.replace("&&", "§") : tmp;
   }
-
-  private static final Pattern PATTERN_N2S_RGB = Pattern.compile("(([RGBrgb]){1,3})(([0-9]){1,3})(,(([0-9]){1,3}))?(,(([0-9]){1,3}))?;");
 
   /**
    * #AAAAAA; #AAA; #AA; #A; 요로코롬 쓰면 댐 뒤에 2개(#AA;, #A;)는 흑백 채널 rgb100,100,100; rg100,100; rbg100,100,100; r100;
@@ -494,7 +492,7 @@ public class MessageUtil
     player.showTitle(t);
   }
 
-  public static void sendActionBar(@NotNull Player player, @NotNull Object ... objects)
+  public static void sendActionBar(@NotNull Player player, @NotNull Object... objects)
   {
     player.sendActionBar(ComponentUtil.create(objects));
   }
@@ -547,7 +545,6 @@ public class MessageUtil
   {
     return checkNumberSize(sender, value, min, max, false, false, true);
   }
-
 
   public static boolean checkNumberSize(@Nullable CommandSender sender, double value, double min, double max, boolean notice)
   {
@@ -610,34 +607,6 @@ public class MessageUtil
     return true;
   }
 
-  @SuppressWarnings({"all"})
-  public enum ConsonantType
-  {
-    을를("을(를)"),
-    를을("를(을)"),
-    은는("은(는)"),
-    는은("는(은)"),
-    이가("이(가)"),
-    가이("가(이)"),
-    와과("와(과)"),
-    과와("과(와)"),
-    으로("(으)로"),
-    이라("(이)라");
-
-    private final String a;
-
-    ConsonantType(String a)
-    {
-      this.a = a;
-    }
-
-    @Override
-    public String toString()
-    {
-      return a;
-    }
-  }
-
   @NotNull
   public static String getFinalConsonant(@Nullable String word, @NotNull ConsonantType type)
   {
@@ -647,44 +616,28 @@ public class MessageUtil
       {
         return type.toString();
       }
-      String wordClone = word;
-      wordClone = stripColor(n2s(wordClone)).replace(" ", "");
-/*      wordClone = wordClone.replace("TNT", "티엔티");
-      while (wordClone.matches("(.*)[^A-Za-z0-9가-힣]"))
+      word = stripColor(n2s(word));
+      word = word.replaceAll("[&%!?\"'\\\\$_,\\-ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅙㅞㅚㅟㅢㅝㅘㅐㅖ]", "가");
+      word = word.replaceAll("[.#@ㄱㄲㄴㄷㄸㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ]", "각");
+      word = word.replaceAll("[*ㄹ]", "갈");
+      char c;
+      boolean b = true;
+      String test = KoreanUtils.format("%s는", word);
+      if (test.endsWith(")"))
       {
-        wordClone = wordClone.substring(0, wordClone.length() - 1);
-      }*/
-      char c = wordClone.charAt(wordClone.length() - 1);
-/*      switch (c)
-      {
-        case '0' -> c = '영';
-        case '1' -> c = '일';
-        case '2', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-               'o', 'p', 'q', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' -> c = '이';
-        case  'l', 'm', 'n' , 'r'-> c = '익';
-        case '3' -> c = '삼';
-        case '4' -> c = '사';
-        case '5' -> c = '오';
-        case '6' -> c = '육';
-        case '7' -> c = '칠';
-        case '8' -> c = '팔';
-        case '9' -> c = '구';
-      }*/
-      /*
-      if (c < 44032 || c > 55203)
-      {
-        return type.toString();
-      }*/
-      //String nfd = Normalizer.normalize(c + "", Normalizer.Form.NFD);
-      boolean b = true; // nfd.length() != 2;
-      String test = KoreanUtils.format("%s는", c);
+        throw new Exception();
+      }
       if (test.endsWith("은"))
       {
-        test = KoreanUtils.format("%s로", c);
+        test = KoreanUtils.format("%s로", word);
         if (test.endsWith("으로"))
-        c = '각';
+        {
+          c = '각';
+        }
         else
+        {
           c = '갈';
+        }
       }
       else
       {
@@ -693,7 +646,7 @@ public class MessageUtil
       }
       switch (type)
       {
-        case 와과, 과와 -> {
+        case 와과, 과와, 와, 과 -> {
           if (b)
           {
             return "과";
@@ -707,21 +660,21 @@ public class MessageUtil
           }
           return "로";
         }
-        case 은는, 는은 -> {
+        case 은는, 는은, 은, 는 -> {
           if (b)
           {
             return "은";
           }
           return "는";
         }
-        case 을를, 를을 -> {
+        case 을를, 를을, 을, 를 -> {
           if (b)
           {
             return "을";
           }
           return "를";
         }
-        case 이가, 가이 -> {
+        case 이가, 가이, 이, 가 -> {
           if (b)
           {
             return "이";
@@ -772,6 +725,7 @@ public class MessageUtil
       return false;
     }
   }
+
   public static boolean isLong(CommandSender sender, String a, boolean notice)
   {
     try
@@ -840,7 +794,6 @@ public class MessageUtil
     return true;
   }
 
-
   /**
    * 밀리초 단위로 시간을 받아 현실 시간과 게임 시간을 나타낸 문자열을 반환합니다.
    *
@@ -852,7 +805,6 @@ public class MessageUtil
   {
     return MessageUtil.n2s("&2현실 시간 : &a" + Method.timeFormatMilli(time * 50L) + "&r, &3게임 시간 : &b" + Method.timeFormatMilli(time * 3600L));
   }
-
 
   /**
    * 컬러 코드만 연속적으로 막 §1§2§3 하면 제대로 저장되지 않기 때문에 §１§２§３ 으로 저장되게 하기 위함
@@ -882,5 +834,49 @@ public class MessageUtil
             .replace("Ａ", "A").replace("Ｂ", "B").replace("Ｃ", "C").replace("Ｄ", "D").replace("Ｅ", "E").replace("Ｆ", "F").replace("Ｋ", "K").replace("Ｌ", "L").replace("Ｍ", "M").replace("Ｎ", "N")
             .replace("Ｏ", "O").replace("Ｒ", "R").replace("Ｘ", "X").replace("ａ", "a").replace("ｂ", "b").replace("ｃ", "c").replace("ｄ", "d").replace("ｅ", "e").replace("ｆ", "f").replace("ｋ", "k")
             .replace("ｌ", "l").replace("ｍ", "m").replace("ｎ", "n").replace("ｏ", "o").replace("ｒ", "r").replace("ｘ", "x");
+  }
+
+
+  public enum N2SType // 컬러 코드 적용 타입
+  {
+    NORMAL,
+    SPECIAL,
+    SPECIAL_ONLY
+  }
+
+  @SuppressWarnings({"all"})
+  public enum ConsonantType
+  {
+    을를("을(를)"),
+    를을("를(을)"),
+    을("을(를)"),
+    를("를(을)"),
+    은는("은(는)"),
+    는은("는(은)"),
+    은("은(는)"),
+    는("는(은)"),
+    이가("이(가)"),
+    가이("가(이)"),
+    이("이(가)"),
+    가("가(이)"),
+    와과("와(과)"),
+    과와("과(와)"),
+    와("와(과)"),
+    과("과(와)"),
+    으로("(으)로"),
+    이라("(이)라");
+
+    private final String a;
+
+    ConsonantType(String a)
+    {
+      this.a = a;
+    }
+
+    @Override
+    public String toString()
+    {
+      return a;
+    }
   }
 }

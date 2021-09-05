@@ -2,9 +2,9 @@ package com.jho5245.cucumbery.util.storage;
 
 import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.ColorUtil;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -41,7 +41,10 @@ import org.jetbrains.annotations.Nullable;
 import org.json.simple.parser.JSONParser;
 
 import java.awt.Color;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,6 +57,7 @@ public class ComponentUtil
    */
   private static final Pattern URL = Pattern.compile("^(?:(https?)://)?([-\\w_.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
   private static final Pattern p = Pattern.compile("%s"), p2 = Pattern.compile("%[0-9]+\\$s");
+  private static final Pattern yeet = Pattern.compile("(%s|%[0-9]+\\$s)([^가-힣ㄱ-ㅎA-Za-z0-9]+|)(이\\(가\\)|가\\(이\\)|을\\(를\\)|를\\(을\\)|와\\(과\\)|과\\(와\\)|은\\(는\\)|는\\(은\\)|\\(으\\)로|\\(이\\)라)");
 
   /**
    * 아이템의 이름을 컴포넌트 형태로 반환합니다.
@@ -238,7 +242,7 @@ public class ComponentUtil
   @NotNull
   public static Component senderComponent(@NotNull Object object)
   {
-    return senderComponent(object, TextColor.color(255, 204, 0));
+    return senderComponent(object, Constant.THE_COLOR);
   }
 
   /**
@@ -276,10 +280,12 @@ public class ComponentUtil
             hover = hover.append(ComponentUtil.createTranslate("&7&o" + (isPlayer ? "외 %s명 더..." : "container.shulkerBox.more"), entities.size() - 20));
             break;
           }
+          Location location = entity.getLocation();
           hover = hover.append(senderComponent(list.get(i), defaultColor)
                   .append(ComponentUtil.createTranslate("&r(%s, %s)",
                           ComponentUtil.createTranslate(entity.getType().translationKey()),
-                          entity.getUniqueId())));
+                          locationComponent(location)
+                  )));
           if (i + 1 != entities.size())
           {
             hover = hover.append(Component.text("\n"));
@@ -289,7 +295,7 @@ public class ComponentUtil
         return component;
       }
     }
-    if (object instanceof ConsoleCommandSender)
+    if (object instanceof ConsoleCommandSender commandSender)
     {
       return ComponentUtil.create("&d" + Bukkit.getServer().getName()).
               hoverEvent(HoverEvent.showText(
@@ -302,15 +308,12 @@ public class ComponentUtil
     {
       Block block = blockCommandSender.getBlock();
       Location location = block.getLocation();
-      String worldName = location.getWorld().getName();
-      int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
       String name = blockCommandSender.getName();
       return ComponentUtil.itemName(block.getType()).
               hoverEvent(HoverEvent.showText(
-                      ComponentUtil.createTranslate("&e이름 : %s", "&6" + name)
+                      ComponentUtil.createTranslate("이름 : %s", Constant.THE_COLOR_HEX + name)
                               .append(ComponentUtil.create("\n"))
-                              .append(ComponentUtil.createTranslate("&e좌표 : %s",
-                                      ComponentUtil.createTranslate("&8%s, %s, %s, %s", "&6" + worldName, "&6" + x, "&6" + y, "&6" + z)))
+                              .append(ComponentUtil.createTranslate("좌표 : %s", locationComponent(location)))
               ));
     }
     else if (object instanceof Entity entity)
@@ -325,7 +328,7 @@ public class ComponentUtil
         nameComponent = entity.customName();
         if (nameComponent == null)
         {
-          nameComponent = ComponentUtil.createTranslate("entity.minecraft." + entity.getType().getKey().value());
+          nameComponent = ComponentUtil.createTranslate(entity.getType().translationKey());
         }
       }
       if (defaultColor != null && nameComponent.color() == null)
@@ -335,16 +338,13 @@ public class ComponentUtil
 
       UUID uuid = entity.getUniqueId();
       Location location = entity.getLocation();
-      int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
-
       Component hover = ComponentUtil.createTranslate("유형 : %s",
-                      ComponentUtil.createTranslate("&6entity.minecraft." + entity.getType().getKey().value())
+                      ComponentUtil.createTranslate(Constant.THE_COLOR_HEX + entity.getType().translationKey())
               )
               .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("UUID : %s", "&6" + uuid))
+              .append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid))
               .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("좌표 : %s",
-                      ComponentUtil.createTranslate("&8%s, %s, %s, %s", location.getWorld(), "&6" + x, "&6" + y, "&6" + z))
+              .append(ComponentUtil.createTranslate("좌표 : %s", locationComponent(location))
               );
       String click = "/minecraft:tp " + uuid;
       if (entity instanceof Item item)
@@ -363,8 +363,10 @@ public class ComponentUtil
         AttributeInstance maxHealthInstance = attributable.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (maxHealthInstance != null)
         {
-          String healthDisplay = "&c" + Constant.Sosu2.format(health);
-          String maxHealthDisplay = "&c" + Constant.Sosu2.format(maxHealthInstance.getValue());
+          double maxHealth = maxHealthInstance.getValue();
+          String color = Method2.getPercentageColor(health, maxHealth);
+          String healthDisplay = color + Constant.Sosu2.format(health);
+          String maxHealthDisplay = "g255;" + Constant.Sosu2.format(maxHealth);
           hover = hover.append(Component.text("\n"));
           hover = hover.append(ComponentUtil.createTranslate("HP : %s", ComponentUtil.createTranslate("&7%s / %s", healthDisplay, maxHealthDisplay)));
         }
@@ -372,7 +374,7 @@ public class ComponentUtil
       if (entity instanceof Villager villager)
       {
         Villager.Profession profession = villager.getProfession();
-        String key = "&eentity.minecraft.villager." + profession.toString().toLowerCase();
+        String key = Constant.THE_COLOR_HEX + "entity.minecraft.villager." + profession.toString().toLowerCase();
         if (profession == Villager.Profession.NONE)
         {
           key = "&c없음";
@@ -380,7 +382,8 @@ public class ComponentUtil
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.createTranslate("직업 : %s", ComponentUtil.createTranslate(key)));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("레벨 : %s (%s)", villager.getVillagerLevel(), villager.getVillagerExperience()));
+        hover = hover.append(ComponentUtil.createTranslate("레벨 : %s (%s)",
+                Constant.THE_COLOR_HEX + villager.getVillagerLevel(), Constant.THE_COLOR_HEX + villager.getVillagerExperience()));
 
       }
       if (entity instanceof Tameable tameable && tameable.isTamed())
@@ -399,13 +402,13 @@ public class ComponentUtil
         GameMode gameMode = player.getGameMode();
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("ID : %s", "&6" + name))
+                .append(ComponentUtil.createTranslate("ID : %s", Constant.THE_COLOR_HEX + name))
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("게임 모드 : %s", ComponentUtil.createTranslate("&6gameMode." + gameMode.toString().toLowerCase())))
+                .append(ComponentUtil.createTranslate("게임 모드 : %s", ComponentUtil.createTranslate(Constant.THE_COLOR_HEX + "gameMode." + gameMode.toString().toLowerCase())))
                 .append(Component.text("\n"))
                 .append(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR + Constant.ITEM_LORE_SEPARATOR))
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("클릭하여 이 플레이어의 소셜 메뉴 열기 : %s", "&e/socialmenu " + name))
+                .append(ComponentUtil.createTranslate("클릭하여 이 플레이어의 소셜 메뉴 열기 : %s", Constant.THE_COLOR_HEX + "/socialmenu " + name))
         ;
 
         click = "/socialmenu " + name;
@@ -426,7 +429,7 @@ public class ComponentUtil
       UUID uuid = offlinePlayer.getUniqueId();
       String displayName = Method.getDisplayName(offlinePlayer);
       Component component = ComponentUtil.create(displayName);
-      Component hover = ComponentUtil.createTranslate("UUID : %s", "&6" + uuid);
+      Component hover = ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid);
       hover = hover.append(Component.text("\n"));
       hover = hover.append(Component.translatable("chat.copy.click"));
       component = component.hoverEvent(HoverEvent.showText(hover));
@@ -434,6 +437,16 @@ public class ComponentUtil
       return component;
     }
     return Component.empty();
+  }
+
+  @NotNull
+  public static Component locationComponent(@NotNull Location location)
+  {
+    Component world = ComponentUtil.create(location.getWorld());
+    Component x = Component.text(Constant.Sosu2.format(location.getX())).color(Constant.THE_COLOR);
+    Component y = Component.text(Constant.Sosu2.format(location.getY())).color(Constant.THE_COLOR);
+    Component z = Component.text(Constant.Sosu2.format(location.getZ())).color(Constant.THE_COLOR);
+    return createTranslate("&8%s, %s, %s, %s", world, x, y, z);
   }
 
   /**
@@ -447,7 +460,7 @@ public class ComponentUtil
   public static Component create(@NotNull Object... objects)
   {
     Component component = Component.empty();
-    boolean n2s = !objects[0].equals(false);
+    boolean n2s = objects.length > 0 && !objects[0].equals(false);
     for (Object object : objects)
     {
       // 개체의 경우 추가
@@ -647,19 +660,11 @@ public class ComponentUtil
    */
   public static Component create2(String value, boolean n2s)
   {
-    //  return GsonComponentSerializer.gson().deserialize(ItemEditor.create(n2s ? MessageUtil.n2s(value) : value));
-    List<TextComponent> components = ComponentUtil.fromLegacyText(n2s ? MessageUtil.n2s(value) : value);
+    List<TextComponent> components = ComponentUtil.fromLegacyText(value, n2s);
     TextComponent component = Component.empty();
     for (TextComponent textComponent : components)
     {
-//      if (component == null)
-//      {
-//        component = components.get(0);
-//      }
-//      else
-//      {
       component = component.append(textComponent);
-//      }
     }
     return component;
   }
@@ -670,7 +675,7 @@ public class ComponentUtil
    * @param key 컴포넌트의 키 값
    * @return 번역 컴포넌트
    */
-  public static Component createTranslate(String key)
+  public static TranslatableComponent createTranslate(String key)
   {
     return ComponentUtil.createTranslate(key, true);
   }
@@ -678,7 +683,7 @@ public class ComponentUtil
   @NotNull
   private static TranslatableComponent yeet(@NotNull String key, @NotNull TranslatableComponent component)
   {
-    String vanillaKey = Variable.lang.getString(key);
+    String vanillaKey = Variable.lang.getString(key.replace(".", "-"));
     boolean needChange = false;
     if (vanillaKey != null)
     {
@@ -692,7 +697,6 @@ public class ComponentUtil
       }
       if (needChange)
       {
-        vanillaKey = vanillaKey.replace("'%s'", "%s");
         String serial = serialize(component);
         String editKey = yeet2(vanillaKey, serial);
         if (!editKey.equals(vanillaKey))
@@ -723,8 +727,6 @@ public class ComponentUtil
     }
     return component;
   }
-
-  private static final Pattern yeet = Pattern.compile("(%s|%[0-9]+\\$s)([^가-힣ㄱ-ㅎA-Za-z0-9]+|)(이\\(가\\)|가\\(이\\)|을\\(를\\)|를\\(을\\)|와\\(과\\)|과\\(와\\)|은\\(는\\)|는\\(은\\)|\\(으\\)로|\\(이\\)라)");
 
   @NotNull
   private static String yeet2(@NotNull String key, @NotNull String serial)
@@ -760,28 +762,53 @@ public class ComponentUtil
    */
   @NotNull
   @SuppressWarnings("all")
-  public static Component createTranslate(@NotNull String key, @NotNull Object... args)
+  public static TranslatableComponent createTranslate(@NotNull String key, @NotNull Object... args)
   {
     boolean n2s = args.length > 0 && !args[0].equals(false);
-    TranslatableComponent component = ComponentUtil.fromLegacyTextTranslate(n2s ? MessageUtil.n2s(key) : key);
+    TranslatableComponent component = ComponentUtil.fromLegacyTextTranslate(key, true);
     List<Component> componentArgs = new ArrayList<>();
-    for (Object arg : args)
+    for (Object obj : args)
     {
-      if (arg instanceof List<?> list)
+      Component senderComponent = ComponentUtil.senderComponent(obj);
+      if (!senderComponent.equals(Component.empty()))
+      {
+        if (senderComponent.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
+        {
+          senderComponent = senderComponent.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
+        }
+        componentArgs.add(senderComponent);
+        continue;
+      }
+      if (obj instanceof List<?> list)
       {
         for (Object o : list)
         {
-          componentArgs.add(ComponentUtil.create(o));
+          Component arg = ComponentUtil.create(n2s, o);
+          if (arg.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
+          {
+            arg = arg.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
+          }
+          componentArgs.add(arg);
         }
       }
-      if (!(arg instanceof Boolean))
+      if (!(obj instanceof Boolean))
       {
-        componentArgs.add(ComponentUtil.create(arg));
+        Component arg = ComponentUtil.create(n2s, obj);
+        if (arg.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
+        {
+          arg = arg.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
+        }
+        componentArgs.add(arg);
       }
     }
     component = component.args(componentArgs);
     component = yeet(key, component);
-    return ComponentUtil.create(component);
+    return component;
+  }
+
+  private static List<TextComponent> fromLegacyText(@NotNull String message)
+  {
+    return fromLegacyText(message, true);
   }
 
   /**
@@ -790,8 +817,12 @@ public class ComponentUtil
    * @param message 구버전 텍스트
    * @return 컴포넌트
    */
-  private static List<TextComponent> fromLegacyText(@NotNull String message)
+  private static List<TextComponent> fromLegacyText(@NotNull String message, boolean n2s)
   {
+    if (n2s)
+    {
+      message = MessageUtil.n2s(message);
+    }
     List<TextComponent> components = new ArrayList<>();
     StringBuilder builder = new StringBuilder();
     TextComponent component = Component.empty();
@@ -889,6 +920,32 @@ public class ComponentUtil
             component = component.decoration(TextDecoration.OBFUSCATED, TextDecoration.State.NOT_SET);
           }
         }
+        else
+        {
+          if (c == 'p' || c == 'q')
+          {
+            if (builder.length() > 0)
+            {
+              old = component;
+              old = old.content(builder.toString());
+              builder = new StringBuilder();
+              components.add(old);
+            }
+
+            switch (c)
+            {
+              case 'p' -> component = component.color(component.color() != null ? NamedTextColor.WHITE : null);
+              case 'q' -> {
+                component = component.decoration(TextDecoration.BOLD, component.decoration(TextDecoration.BOLD) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.ITALIC, component.decoration(TextDecoration.ITALIC) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.UNDERLINED, component.decoration(TextDecoration.UNDERLINED) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.STRIKETHROUGH, component.decoration(TextDecoration.STRIKETHROUGH) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.OBFUSCATED, component.decoration(TextDecoration.OBFUSCATED) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+              }
+            }
+          }
+        }
+
       }
       else
       {
@@ -932,6 +989,15 @@ public class ComponentUtil
 
   private static TranslatableComponent fromLegacyTextTranslate(@NotNull String message)
   {
+    return fromLegacyTextTranslate(message, true);
+  }
+
+  private static TranslatableComponent fromLegacyTextTranslate(@NotNull String message, boolean n2s)
+  {
+    if (n2s)
+    {
+      message = MessageUtil.n2s(message);
+    }
     TranslatableComponent components = null;
     StringBuilder builder = new StringBuilder();
     TranslatableComponent component = Component.translatable("");
@@ -952,7 +1018,6 @@ public class ComponentUtil
         {
           c = (char) (c + 32);
         }
-
         ChatColor format;
         if (c == 'x' && i + 12 < message.length())
         {
@@ -1018,7 +1083,7 @@ public class ComponentUtil
           else if (format == ChatColor.RESET)
           {
             component = Component.translatable("");
-            component = component.color(TextColor.color(255, 255, 255));
+            component = component.color(null);
             component = component.decoration(TextDecoration.BOLD, TextDecoration.State.NOT_SET);
             component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
             component = component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.NOT_SET);
@@ -1037,6 +1102,40 @@ public class ComponentUtil
             component = component.decoration(TextDecoration.OBFUSCATED, TextDecoration.State.NOT_SET);
           }
         }
+        else
+        {
+          if (c == 'p' || c == 'q')
+          {
+            if (builder.length() > 0)
+            {
+              old = component;
+              old = old.key(builder.toString());
+              builder = new StringBuilder();
+              if (components == null)
+              {
+                components = old;
+              }
+              else
+              {
+                components = components.append(old);
+              }
+            }
+
+
+            switch (c)
+            {
+              case 'p' -> component = component.color(component.color() != null ? NamedTextColor.WHITE : null);
+              case 'q' -> {
+                component = component.decoration(TextDecoration.BOLD, component.decoration(TextDecoration.BOLD) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.ITALIC, component.decoration(TextDecoration.ITALIC) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.UNDERLINED, component.decoration(TextDecoration.UNDERLINED) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.STRIKETHROUGH, component.decoration(TextDecoration.STRIKETHROUGH) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.OBFUSCATED, component.decoration(TextDecoration.OBFUSCATED) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+              }
+            }
+          }
+        }
+
       }
       else
       {
@@ -1100,11 +1199,78 @@ public class ComponentUtil
     String color = null;
     if (textColor != null)
     {
-      color = ColorUtil.hex2mfc(textColor.asHexString());
+      if (textColor.equals(NamedTextColor.BLACK))
+      {
+        color = "§0";
+      }
+      else if (textColor.equals(NamedTextColor.DARK_BLUE))
+      {
+        color = "§1";
+      }
+      else if (textColor.equals(NamedTextColor.DARK_GREEN))
+      {
+        color = "§2";
+      }
+      else if (textColor.equals(NamedTextColor.DARK_AQUA))
+      {
+        color = "§3";
+      }
+      else if (textColor.equals(NamedTextColor.DARK_RED))
+      {
+        color = "§4";
+      }
+      else if (textColor.equals(NamedTextColor.DARK_PURPLE))
+      {
+        color = "§5";
+      }
+      else if (textColor.equals(NamedTextColor.GOLD))
+      {
+        color = "§6";
+      }
+      else if (textColor.equals(NamedTextColor.GRAY))
+      {
+        color = "§7";
+      }
+      else if (textColor.equals(NamedTextColor.DARK_GRAY))
+      {
+        color = "§8";
+      }
+      else if (textColor.equals(NamedTextColor.BLUE))
+      {
+        color = "§9";
+      }
+      else if (textColor.equals(NamedTextColor.GREEN))
+      {
+        color = "§a";
+      }
+      else if (textColor.equals(NamedTextColor.AQUA))
+      {
+        color = "§b";
+      }
+      else if (textColor.equals(NamedTextColor.RED))
+      {
+        color = "§c";
+      }
+      else if (textColor.equals(NamedTextColor.LIGHT_PURPLE))
+      {
+        color = "§d";
+      }
+      else if (textColor.equals(NamedTextColor.YELLOW))
+      {
+        color = "§e";
+      }
+      else if (textColor.equals(NamedTextColor.WHITE))
+      {
+        color = "§f";
+      }
+      else
+      {
+        color = "§x" + Method.format(textColor.asHexString().substring(1), "§");
+      }
     }
     if (color != null)
     {
-      //builder.append(color);
+      builder.append(color);
     }
     if (italic)
     {
@@ -1133,7 +1299,7 @@ public class ComponentUtil
     if (component instanceof TranslatableComponent translatableComponent)
     {
       String key = translatableComponent.key();
-      String serial = Variable.lang.getString(key);
+      String serial = Variable.lang.getString(key.replace(".", "-"));
       if (serial != null)
       {
         key = serial;
@@ -1174,7 +1340,9 @@ public class ComponentUtil
             args.add(Component.text(player.getName()));
           }
           else
-          args.add(Component.translatable(entity.getType().translationKey()));
+          {
+            args.add(Component.translatable(entity.getType().translationKey()));
+          }
         }
         key = new StringBuilder(key.substring(0, key.length() - 2));
         Component translate = ComponentUtil.createTranslate(key.toString(), args);

@@ -376,6 +376,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("velocity2", new Velocity2());
     Initializer.registerCommand("repeat", new Repeat());
     Initializer.registerCommand("socialmenu", new SocialMenu());
+    Initializer.registerCommand("ckill2", new CommandCKill2());
 
     if (Cucumbery.using_QuickShop)
     {

@@ -39,6 +39,8 @@ public class Constant
 
   public static final TextColor THE_COLOR = TextColor.color(255, 204, 0);
 
+  public static final String THE_COLOR_HEX = THE_COLOR.asHexString() + ";";
+
   static
   {
     try
@@ -65,55 +67,18 @@ public class Constant
 
   public static final String TMI_LORE_NBT_TAG_COPIED = "[NBT 태그 복사됨]";
 
-  public static final Component ITEM_MODIFIERS_PREFIX = ComponentUtil.create("rgb235,170,41;[");
+  public static final String ITEM_MODIFIERS_BRACKET = "rgb235,170,41;[%s]";
 
-  public static final Component ITEM_MODIFIERS_SUFFIX = ComponentUtil.create("rgb235,170,41;]");
+  public static final Component ITEM_MODIFIERS_CHEST = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.chest"));
 
-  public static final Component ITEM_MODIFIERS_CHEST;
+  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.feet"));;
 
-  public static final Component ITEM_MODIFIERS_FEET;
-
-  public static final Component ITEM_MODIFIERS_HEAD;
-  public static final Component ITEM_MODIFIERS_LEGS;
-  public static final Component ITEM_MODIFIERS_MAINHAND;
-  public static final Component ITEM_MODIFIERS_OFFHAND;
-
-  static
-  {
-    ITEM_MODIFIERS_CHEST = ITEM_MODIFIERS_PREFIX.append(Component.translatable("item.modifiers.chest")
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(TextColor.color(235, 170, 41)))
-            .append(ITEM_MODIFIERS_SUFFIX);
-
-    ITEM_MODIFIERS_FEET = ITEM_MODIFIERS_PREFIX.append(Component.translatable("item.modifiers.feet")
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(TextColor.color(235, 170, 41)))
-            .append(ITEM_MODIFIERS_SUFFIX);
-
-    ITEM_MODIFIERS_HEAD = ITEM_MODIFIERS_PREFIX.append(Component.translatable("item.modifiers.head")
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(TextColor.color(235, 170, 41)))
-            .append(ITEM_MODIFIERS_SUFFIX);
-
-    ITEM_MODIFIERS_LEGS = ITEM_MODIFIERS_PREFIX.append(Component.translatable("item.modifiers.legs")
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(TextColor.color(235, 170, 41)))
-            .append(ITEM_MODIFIERS_SUFFIX);
-
-    ITEM_MODIFIERS_MAINHAND = ITEM_MODIFIERS_PREFIX.append(Component.translatable("item.modifiers.mainhand")
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(TextColor.color(235, 170, 41)))
-            .append(ITEM_MODIFIERS_SUFFIX);
-
-    ITEM_MODIFIERS_OFFHAND = ITEM_MODIFIERS_PREFIX.append(Component.translatable("item.modifiers.offhand")
-            .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .color(TextColor.color(235, 170, 41)))
-            .append(ITEM_MODIFIERS_SUFFIX);
-  }
+  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.head"));;
+  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.legs"));;
+  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.mainhand"));;
+  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.offhand"));;
 
   // ItemLore 기능 관련 상수
-  
-  public static final String ITEM_LORE_PREFIX = "기본아이템설명";
 
   public static final String ITEM_LORE_MATERIAL_CRAFTABLE = "#F0E68C;[조합 가능]";
   

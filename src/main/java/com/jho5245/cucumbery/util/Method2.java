@@ -83,11 +83,43 @@ public class Method2 extends Method
 
   public static double distance(@NotNull Location from, @NotNull Location to, boolean ignoreWorld)
   {
-    if (!ignoreWorld && from.getWorld().getName().equals(to.getWorld().getName()))
+    if (!ignoreWorld && !from.getWorld().getName().equals(to.getWorld().getName()))
     {
       return -1d;
     }
     double fromX = from.getX(), fromY = from.getY(), fromZ = from.getZ(), toX = to.getX(), toY = to.getY(), toZ = to.getZ();
     return Math.sqrt(Math.pow(fromX - toX, 2d) + Math.pow(fromY - toY, 2d) + Math.pow(fromZ - toZ, 2d));
+  }
+
+  @NotNull
+  public static String getPercentageColor(double current, double maximum)
+  {
+    double ratio = current / maximum;
+
+    int red = 255;
+    int green = (int) (ratio * 2 * 255);
+    if (ratio >= 0.5)
+    {
+      green = 255;
+      red = (int) ((255d / 50) * (100 - (ratio * 100d - 50d)) - 255d);
+    }
+    if (green < 0)
+    {
+      green = 0;
+    }
+    if (green > 255)
+    {
+      green = 255;
+    }
+    if (red < 0)
+    {
+      red = 0;
+    }
+    if (red > 255)
+    {
+      red = 255;
+    }
+
+    return "rg" + red + "," + green + ";";
   }
 }
