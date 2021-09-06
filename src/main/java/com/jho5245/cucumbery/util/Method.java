@@ -19,6 +19,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -2089,7 +2090,21 @@ public class Method extends SoundPlay
   {
     for (int i = 0; i < list.size(); i++)
     {
-      list.set(i, MessageUtil.stripColor(list.get(i)));
+       String s = list.get(i);
+       try
+       {
+         s = ComponentUtil.serialize(GsonComponentSerializer.gson().deserialize(s));
+       }
+       catch (Exception ignored)
+       {
+
+       }
+       s = MessageUtil.stripColor(s);
+       if (s.length() > 53)
+       {
+         s = s.substring(0, s.length() - 50) + "...";
+       }
+      list.set(i, s);
     }
     list.removeIf(str -> str.replace(" ", "").equals(""));
     Collections.sort(list);

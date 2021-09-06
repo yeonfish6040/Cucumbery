@@ -75,21 +75,11 @@ public class Ride extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(ride1);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      CommandSender commandSender = sender.getCallee();
-      try
+      if (!(sender.getCallee() instanceof Entity entity))
       {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
-      if (!(sender.getCallee() instanceof Entity))
-      {
-        MessageUtil.sendError(commandSender, Prefix.ONLY_PLAYER);
+        MessageUtil.sendError(sender, Prefix.ONLY_PLAYER);
         return;
       }
-      Entity entity = (Entity) commandSender;
       Entity vehicle = (Entity) args[0];
       if (entity == vehicle)
       {
@@ -119,7 +109,7 @@ public class Ride extends CommandBase
 
       for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers())
       {
-        if (onlinePlayer == commandSender || onlinePlayer == vehicle)
+        if (onlinePlayer == sender.getCallee() || onlinePlayer == vehicle)
         {
           continue;
         }

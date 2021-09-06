@@ -9,6 +9,7 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -55,7 +56,12 @@ public class EntityDamageByEntity implements Listener
     UUID victimUUID = victim.getUniqueId(), damagerUUID = damager.getUniqueId();
     if (!(damager instanceof LivingEntity) && !(damager instanceof Projectile) && !(damager instanceof AreaEffectCloud))
     {
-      Variable.victimAndDamager.put(victimUUID, damager);
+      DamageCause cause = event.getCause();
+      switch (cause)
+      {
+        case CUSTOM, ENTITY_ATTACK, ENTITY_SWEEP_ATTACK ->
+                Variable.victimAndDamager.put(victimUUID, damager);
+      }
     }
     if (damager instanceof LivingEntity livingEntity)
     {
@@ -1821,15 +1827,13 @@ public class EntityDamageByEntity implements Listener
     {
       return;
     }
-    if (!(entity instanceof LivingEntity))
+    if (!(entity instanceof LivingEntity livingEntity))
     {
       return;
     }
-    LivingEntity livingEntity = (LivingEntity) entity;
     Player player;
-    if (event.getDamager() instanceof Projectile)
+    if (event.getDamager() instanceof Projectile projectile)
     {
-      Projectile projectile = (Projectile) event.getDamager();
       if (projectile.getType() == EntityType.ENDER_PEARL)
       {
         return;
@@ -1896,7 +1900,7 @@ public class EntityDamageByEntity implements Listener
     {
       return; // 콘픽이 비활성화이거나 기능이 비활성화된 월드에 있으면서 강제 액션바 출력이 false라면
     }
-    String entityName = (livingEntity).getName();
+    String entityName = ComponentUtil.serialize(ComponentUtil.senderComponent(livingEntity));
     int round = config.getInt("actionbar-on-attack-numbers-round-number");
     DecimalFormat df = Constant.Sosu2;
     if (round > 0)

@@ -367,7 +367,7 @@ public class ItemLore2
           Damageable damageable = (Damageable) itemMeta;
           damageable.setDamage((int) originItemDuraDouble);
           item.setItemMeta(damageable);
-          long duraDifference = maxDurability - originMaxDura;
+          long duraDifference = originMaxDura - maxDurability;
           if (duraDifference > 0)
           {
             ItemLoreUtil.setItemRarityValue(lore, (long) Math.pow(duraDifference / (originMaxDura == 0 ? 60d : 30d), 2));
@@ -412,7 +412,7 @@ public class ItemLore2
       // 내구도로 인한 아이템 등급 수치 감소에서는 내구도가 꽉 찼을 때 비율이 0으로 되게 함
       if (hasEnchant || ratio < 0.05)
       {
-        long duraNegative = (long) Math.pow(ratio * (2.0 + (20.0 / maxDurability)), Math.abs(Math.pow(3.0 - dura / 10.0, Math.abs(ratio)) + 1.7 + (200.0 / maxDurability) - maxDurability / 1300.0)); // 내구도로 인한 아이템 등급 수치 감소
+        long duraNegative = (long) (ItemLoreUtil.getItemRarityValue(lore) * (1 - ratio / (dura + 1))) - ItemCategory.Rarity.NORMAL.getRarityValue(); // (long) Math.pow(ratio * (2.0 + (20.0 / maxDurability)), Math.abs(Math.pow(3.0 - dura / 10.0, Math.abs(ratio)) + 1.7 + (200.0 / maxDurability) - maxDurability / 1300.0)); // 내구도로 인한 아이템 등급 수치 감소
         if (duraNegative > 0)
         {
           ItemLoreUtil.setItemRarityValue(lore, -duraNegative);

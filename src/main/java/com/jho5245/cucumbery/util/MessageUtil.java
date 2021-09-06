@@ -7,6 +7,7 @@ import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -149,6 +150,10 @@ public class MessageUtil
    */
   public static void sendMessage(@NotNull Object audience, @NotNull Object... objects)
   {
+    if (Cucumbery.using_CommandAPI && audience instanceof NativeProxyCommandSender proxyCommandSender)
+    {
+      audience = proxyCommandSender.getCallee();
+    }
     if (audience instanceof Audience)
     {
       Component message;

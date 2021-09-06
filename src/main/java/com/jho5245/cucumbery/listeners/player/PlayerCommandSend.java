@@ -1,10 +1,8 @@
 package com.jho5245.cucumbery.listeners.player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
+import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -12,9 +10,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
-import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.data.Permission;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class PlayerCommandSend implements Listener
 {
@@ -177,6 +176,7 @@ public class PlayerCommandSend implements Listener
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_VELOCITY, "velocity2"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_QUICKSHOP_ADDON, "quickshopaddon"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_REPEAT, "repeat"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_TRUEKILL, "ckill2"));
 
 		// 뭔데 왜 /cucumbery:nick 안사라지는데
 		if (!Method.hasPermission(player, Permission.CMD_NICK, false))

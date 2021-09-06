@@ -32,6 +32,18 @@ public enum Messages
    */
   ARROW_COMBAT_ITEM("death-messages.messages.arrow-combat-item"),
   /**
+   * %1$s이(가) %2$s에게 저격당했습니다
+   */
+  SHULKER_BULLET_COMBAT("death-messages.messages.shulker-bullet-combat"),
+  /**
+   * %1$s이(가) %2$s에게 저격당했습니다
+   */
+  SHULKER_BULLET_COMBAT_UNKNOWN("death-messages.messages.shulker-bullet-combat-unknown"),
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
+   */
+  SHULKER_BULLET_COMBAT_ITEM("death-messages.messages.shulker-bullet-combat-item"),
+  /**
    * %1$s이(가) %2$s에게 목숨을 빼앗겼습니다
    */
   BAD_RESPAWN("death-messages.messages.bad-respawn"),
@@ -184,6 +196,10 @@ public enum Messages
    */
   FIREBALL_COMBAT("death-messages.messages.fireball-combat"),
   /**
+   * %1$s이(가) %2$s이(가) 던진 화염구에 맞았습니다
+   */
+  FIREBALL_COMBAT_UNKNOWN("death-messages.messages.fireball-combat-unknown"),
+  /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s이(가) 던진 화염구에 맞았습니다
    */
   FIREBALL_COMBAT_ITEM("death-messages.messages.fireball-combat-item"),
@@ -311,6 +327,10 @@ public enum Messages
    * %1$s이(가) %2$s에게서 도망치려다 마법으로 살해당했습니다
    */
   MAGIC_COMBAT_ITEM("death-messages.messages.magic-combat-item"),
+  /**
+   * %1$s이(가) %2$s에게서 도망치려다 마법으로 살해당했습니다
+   */
+  MAGIC_COMBAT_UNKNOWN("death-messages.messages.magic-combat-unknown"),
   /**
    * %1$s이(가) %2$s에게 살해당했습니다
    */
@@ -460,6 +480,7 @@ public enum Messages
    */
   WITHER_SKULL("death-messages.messages.wither-skull"),
   KILL("death-messages.messages.kill"),
+  UNKNOWN("death-messages.messages.unknown")
   ;
 
   private final String key;

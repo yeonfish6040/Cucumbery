@@ -258,7 +258,7 @@ public class ComponentUtil
   {
     if (Cucumbery.using_CommandAPI && object instanceof NativeProxyCommandSender sender)
     {
-      return senderComponent(sender.getCallee(), defaultColor);
+      return ComponentUtil.createTranslate("%s에 의한 %s", senderComponent(sender.getCaller(), defaultColor), senderComponent(sender.getCallee(), defaultColor));
     }
     if (object instanceof List<?> list && list.size() > 0)
     {
@@ -281,8 +281,8 @@ public class ComponentUtil
             break;
           }
           Location location = entity.getLocation();
-          hover = hover.append(senderComponent(list.get(i), defaultColor)
-                  .append(ComponentUtil.createTranslate("&r(%s, %s)",
+          hover = hover.append(Component.translatable("%s%s").args(senderComponent(entity, defaultColor)
+                  , ComponentUtil.createTranslate("(%s, %s)",
                           ComponentUtil.createTranslate(entity.getType().translationKey()),
                           locationComponent(location)
                   )));
@@ -355,6 +355,19 @@ public class ComponentUtil
         {
           hover = hover.append(Component.text("\n"));
           hover = hover.append(lor);
+        }
+      }
+      if (entity instanceof ItemFrame itemFrame)
+      {
+        ItemStack item = itemFrame.getItem();
+        if (ItemStackUtil.itemExists(item))
+        {
+          List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.createTranslate("&e[아이템]"), true);
+          for (Component lor : lore)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(lor);
+          }
         }
       }
       if (entity instanceof Damageable damageable && entity instanceof Attributable attributable)
@@ -802,7 +815,7 @@ public class ComponentUtil
       }
     }
     component = component.args(componentArgs);
-    component = yeet(key, component);
+    component = yeet(component.key(), component);
     return component;
   }
 
