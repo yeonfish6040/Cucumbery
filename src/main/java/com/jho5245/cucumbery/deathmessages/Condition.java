@@ -5,16 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class Condition
+public record Condition(ConditionType conditionType, String value)
 {
-  private final ConditionType conditionType;
-  private final String value;
-
-  public Condition(ConditionType conditionType, String value)
-  {
-    this.conditionType = conditionType;
-    this.value = value;
-  }
 
   public ConditionType getConditionType()
   {

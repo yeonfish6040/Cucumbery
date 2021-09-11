@@ -28,12 +28,11 @@ public class EditBlockData implements CommandExecutor
 		{
 			return true;
 		}
-		if (!(sender instanceof Player))
+		if (!(sender instanceof Player player))
 		{
 			MessageUtil.sendError(sender, Prefix.ONLY_PLAYER);
 			return true;
 		}
-		Player player = (Player) sender;
 		PlayerInventory playerInventory = player.getInventory();
 		ItemStack item = playerInventory.getItemInMainHand();
 		if (!ItemStackUtil.itemExists(item))
@@ -49,11 +48,10 @@ public class EditBlockData implements CommandExecutor
 		else if (args.length == 2)
 		{
 			Material material = item.getType();
-			String itemName = ComponentUtil.itemName(item).toString();
 			String[] keys = BlockDataInfo.getBlockDataKeys(material);
 			if (keys == null)
 			{
-				MessageUtil.sendError(sender, "&e"+itemName+"&r에는 속성이 없습니다.");
+				MessageUtil.sendError(sender, ComponentUtil.createTranslate("%s에게는 속성이 없습니다.", item));
 				return true;
 			}
 			String key = args[0];
@@ -63,15 +61,15 @@ public class EditBlockData implements CommandExecutor
 			{
 				if (!Method.equals(args[0], keys))
 				{
-					MessageUtil.sendError(sender, "&e"+args[0]+"&r"+ MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.은는)+" 알 수 없는 속성입니다.");
+					MessageUtil.sendError(sender, ComponentUtil.createTranslate("%s은(는) 알 수 없는 속성입니다.", "&e" + args[0]));
 					return true;
 				}
-				MessageUtil.sendError(sender, "&e"+args[1]+"&r"+ MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는)+" 알 수 없는 값입니다.");
+				MessageUtil.sendError(sender, ComponentUtil.createTranslate("%s은(는) 알 수 없는 값입니다.", "&e" + args[1]));
 				return true;
 			}
 			if (!removal && !Method.equals(args[1], values))
 			{
-				MessageUtil.sendError(sender, "&e"+args[1]+"&r"+ MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는)+" 알 수 없는 값입니다.");
+				MessageUtil.sendError(sender, ComponentUtil.createTranslate("%s은(는) 알 수 없는 값입니다.", "&e" + args[1]));
 				return true;
 			}
 			NBTItem nbtItem = new NBTItem(item);
@@ -80,13 +78,13 @@ public class EditBlockData implements CommandExecutor
 			{
 				if (blockStateTag == null || !blockStateTag.hasKey(key))
 				{
-					MessageUtil.sendError(sender, "&e"+itemName+"&r에는 &e"+key+"&r 속성값을 가지고 있지 않습니다.");
+					MessageUtil.sendError(sender, ComponentUtil.createTranslate("%s에게는 %s 속성이 없습니다.", item, "&e" + key));
 					return true;
 				}
 				NBTAPI.removeKey(blockStateTag, key);
 				playerInventory.setItemInMainHand(nbtItem.getItem());
 				Method.updateInventory(player);
-				MessageUtil.info(sender, "&e"+itemName+"&r에서 &e"+key+"&r 속성값을 제거하였습니다.");
+				MessageUtil.info(sender, ComponentUtil.createTranslate("%s에서 %s 속성을 제거하였습니다.", item, "&e" + key));
 				return true;
 			}
 			if (blockStateTag == null)
@@ -96,7 +94,7 @@ public class EditBlockData implements CommandExecutor
 			blockStateTag.setString(key, args[1]);
 			playerInventory.setItemInMainHand(nbtItem.getItem());
 			Method.updateInventory(player);
-			MessageUtil.info(sender, "&e"+itemName+"&r에서 &e"+key+"&r 속성의 값을 &e"+args[1]+"&r으로 설정하였습니다.");
+			MessageUtil.info(sender, ComponentUtil.createTranslate("%s에서 %s 속성의 값을 %s(으)로 설정하였습니다.", item, "&e" + key, "&e" + args[1]));
 		}
 		else
 		{

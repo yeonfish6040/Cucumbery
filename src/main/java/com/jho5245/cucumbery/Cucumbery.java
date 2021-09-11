@@ -229,7 +229,14 @@ public class Cucumbery extends JavaPlugin
     this.registerCustomConfig();
     if (using_CommandAPI)
     {
-      this.registerBrigadierCommands();
+      try
+      {
+        this.registerBrigadierCommands();
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
     }
     this.registerCommands();
     this.registerEvents();
@@ -420,6 +427,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new EntityDeath());
     Initializer.registerEvent(new EntityExplode());
     Initializer.registerEvent(new EntityLoadCrossbow());
+    Initializer.registerEvent(new EntityMount());
     Initializer.registerEvent(new EntityMove());
     Initializer.registerEvent(new EntityPickupItem());
     Initializer.registerEvent(new EntityResurrect());

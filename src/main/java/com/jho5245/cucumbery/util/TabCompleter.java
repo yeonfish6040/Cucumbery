@@ -4653,7 +4653,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         return Collections.singletonList(Prefix.NO_HOLDING_ITEM.toString());
       }
-      String itemName = MessageUtil.stripColor(ComponentUtil.itemName(item).toString());
+      String itemName = MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.itemName(item)));
       String[] keys = BlockDataInfo.getBlockDataKeys(item.getType());
       if (keys == null)
       {

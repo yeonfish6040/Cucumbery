@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.Collection;
 import java.util.UUID;
 
 public class EntitySpawn implements Listener
@@ -130,7 +129,7 @@ public class EntitySpawn implements Listener
           Variable.entityAndSourceLocation.put(projectileUUID, key);
         }
       }
-    }
+    }/*
     if (entity instanceof TNTPrimed tntPrimed)
     {
       if (tntPrimed.getSource() == null)
@@ -156,14 +155,12 @@ public class EntitySpawn implements Listener
           tntPrimed.setSource(target);
         }
       }
-    }
+    }*/
 
     if (entity instanceof LivingEntity livingEntity)
     {
       EntityEquipment equipment = livingEntity.getEquipment();
       if (equipment != null)
-
-
       {
         ItemStack mainHand = equipment.getItemInMainHand(), offHand = equipment.getItemInOffHand(), helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment
                 .getLeggings(), boots = equipment.getBoots();

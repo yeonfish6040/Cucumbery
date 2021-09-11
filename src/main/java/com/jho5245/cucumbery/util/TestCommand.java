@@ -22,7 +22,7 @@ public class TestCommand implements CommandExecutor
     {
       case "entities" -> {
         List<Entity> entities = SelectorUtil.getEntities(sender, args[1], true);
-          MessageUtil.sendMessage(sender, entities != null ? entities : "null");
+        MessageUtil.sendMessage(sender, entities != null ? entities : "null");
       }
       case "entity" -> {
         Entity entity = SelectorUtil.getEntity(sender, args[1], true);

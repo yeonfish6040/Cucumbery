@@ -28,9 +28,6 @@ public class PlayerDeath implements Listener
     {
       event.setCancelled(true);
     }
-
-
-
     boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player.getUniqueId());
     boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player.getUniqueId());
     if (keepInv)

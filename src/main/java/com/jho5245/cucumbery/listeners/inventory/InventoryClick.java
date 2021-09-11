@@ -23,13 +23,16 @@ import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
-import com.jho5245.cucumbery.util.storage.data.Constant.*;
+import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
@@ -55,6 +58,319 @@ public class InventoryClick implements Listener
 {
   public static List<Player> check = new ArrayList<>();
 
+  private static void removeItem(Player player, String category, FileConfiguration config, String recipe, List<ItemStack> ingredients, List<Integer> ingredientAmounts)
+  {
+    long requireTimeToCraft = config.getLong("recipes." + recipe + ".extra.crafting-time");
+    if (requireTimeToCraft > 0)
+    {
+      YamlConfiguration playerCraftingTimeConfig = Variable.craftingTime.get(player.getUniqueId());
+      long playerCraftingTime = playerCraftingTimeConfig == null ? 0 : playerCraftingTimeConfig.getLong("crafting-time." + category + "." + recipe);
+      if (playerCraftingTime > 0)
+      {
+        return;
+      }
+    }
+    for (int i = 0; i < ingredients.size(); i++)
+    {
+      ItemStack ingredient = ingredients.get(i);
+      NBTCompound itemTag = NBTAPI.getMainCompound(ingredient);
+      NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
+      // 재사용 가능 재료는 사라지지 않게 함
+      if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.CUSTOM_RECIPE_REUSABLE.toString()) && !config.getBoolean("recipes." + recipe + ".ingredients." + (i + 1) + ".reusable"))
+      {
+        int amount = ingredientAmounts.get(i);
+        int maxStackSize = ingredient.getMaxStackSize();
+        ingredient.setAmount(maxStackSize);
+        int stack = amount / maxStackSize;
+        for (int j = 0; j < stack; j++)
+        {
+          player.getInventory().removeItem(ingredient);
+          amount -= maxStackSize;
+        }
+        if (amount > 0)
+        {
+          ingredient.setAmount(amount);
+          player.getInventory().removeItem(ingredient);
+        }
+      }
+    }
+    if (Cucumbery.using_Vault)
+    {
+      double cost = config.getDouble("recipes." + recipe + ".extra.cost");
+      if (cost > 0)
+      {
+        if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player))
+        {
+          Cucumbery.eco.withdrawPlayer(player, cost);
+        }
+      }
+    }
+    int levelCost = config.getInt("recipes." + recipe + ".extra.levelcost");
+    if (levelCost > 0)
+    {
+      player.setLevel(Math.max(0, player.getLevel() - levelCost));
+    }
+    int foodLevelCost = config.getInt("recipes." + recipe + ".extra.foodlevelcost");
+    if (foodLevelCost > 0)
+    {
+      player.setFoodLevel(Math.max(0, player.getFoodLevel() - foodLevelCost));
+    }
+    double healthCost = config.getDouble("recipes." + recipe + ".extra.hpcost");
+    if (healthCost > 0)
+    {
+      player.setHealth(Math.max(0.01, player.getHealth() - healthCost));
+    }
+    double saturationCost = config.getDouble("recipes." + recipe + ".extra.saturationcost");
+    if (saturationCost > 0)
+    {
+      player.setSaturation((float) Math.max(0, player.getSaturation() - saturationCost));
+    }
+    double maxHealthCost = config.getDouble("recipes." + recipe + ".extra.mhpcost");
+    if (maxHealthCost > 0)
+    {
+      double playerMaxHealth = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue();
+      Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(Math.max(0.01, maxHealthCost - playerMaxHealth));
+    }
+  }
+
+  private static void chanceGiveItem(Player player, String recipeListName, FileConfiguration recipeList, String recipe, ItemStack result)
+  {
+    List<String> commands = Cucumbery.config.getStringList("customrecipe.commands-on-craft.commands");
+    for (String command : commands)
+    {
+      placeHolder(command, player, recipeListName, recipeList, recipe, result);
+      Method.performCommand(player, command, true, true, null);
+    }
+    giveItem(player, recipeListName, recipeList, recipe, result);
+  }
+
+  private static void giveItem(Player player, String recipeListName, FileConfiguration recipeList, String recipe, ItemStack result)
+  {
+    UUID uuid = player.getUniqueId();
+    long requireTimeToCraft = recipeList.getLong("recipes." + recipe + ".extra.crafting-time");
+    if (requireTimeToCraft > 0)
+    {
+      YamlConfiguration playerCraftingTimeConfig = Variable.craftingTime.get(uuid);
+      long playerCraftingTime = playerCraftingTimeConfig == null ? 0 : playerCraftingTimeConfig.getLong("crafting-time." + recipeListName + "." + recipe);
+      if (playerCraftingTime > 0)
+      {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime <= playerCraftingTime)
+        {
+          return;
+        }
+        else
+        {
+          CustomConfig playerCraftingTimeConfigFile = CustomConfig.getCustomConfig("data/CustomRecipe/CraftingTime/" + player.getUniqueId().toString() + ".yml");
+          playerCraftingTimeConfigFile.getConfig().set("crafting-time." + recipeListName + "." + recipe, null);
+          playerCraftingTimeConfig.set("crafting-time." + recipeListName + "." + recipe, null);
+          ConfigurationSection categorySection = playerCraftingTimeConfig.getConfigurationSection("crafting-time." + recipeListName);
+          if (categorySection == null || categorySection.getKeys(false).size() == 0)
+          {
+            playerCraftingTimeConfigFile.getConfig().set("crafting-time." + recipeListName, null);
+            playerCraftingTimeConfig.set("crafting-time." + recipeListName, null);
+          }
+          playerCraftingTimeConfigFile.saveConfig();
+          Variable.craftingTime.put(uuid, playerCraftingTimeConfig);
+        }
+      }
+      else
+      {
+        CustomConfig playerCraftingTimeConfigFile = CustomConfig.getCustomConfig("data/CustomRecipe/CraftingTime/" + player.getUniqueId().toString() + ".yml");
+        if (playerCraftingTimeConfig == null)
+        {
+          playerCraftingTimeConfig = playerCraftingTimeConfigFile.getConfig();
+        }
+        playerCraftingTimeConfigFile.getConfig().set("crafting-time." + recipeListName + "." + recipe, System.currentTimeMillis() + requireTimeToCraft);
+        playerCraftingTimeConfig.set("crafting-time." + recipeListName + "." + recipe, System.currentTimeMillis() + requireTimeToCraft);
+        playerCraftingTimeConfigFile.saveConfig();
+        Variable.craftingTime.put(uuid, playerCraftingTimeConfig);
+        return;
+      }
+    }
+    ItemStack trueResult = null;
+    PlayerInventory playerInventory = player.getInventory();
+    List<String> randomResult = recipeList.getStringList("recipes." + recipe + ".extra.random-result");
+    if (randomResult.size() > 0)
+    {
+      double randomStart = 0d;
+      double random = Math.random() * 100d;
+      for (String randomResultString : randomResult)
+      {
+        try
+        {
+          String[] split = randomResultString.split(";;");
+          String randomResultCategory = split[0];
+          String randomResultRecipe = split[1];
+          double chance = Double.parseDouble(split[2]);
+          File randomResultCategoryFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + randomResultCategory + ".yml");
+          if (!randomResultCategoryFile.exists())
+          {
+            continue;
+          }
+          YamlConfiguration randomResultRecipeConfig = Variable.customRecipes.get(randomResultCategory);
+          ConfigurationSection randomResultRecipeSection = randomResultRecipeConfig.getConfigurationSection("recipes." + randomResultRecipe);
+          if (randomResultRecipeSection == null || randomResultRecipeSection.getKeys(false).size() == 0)
+          {
+            continue;
+          }
+          if (random >= randomStart && random <= randomStart + chance)
+          {
+            trueResult = ItemSerializer.deserialize(randomResultRecipeSection.getString("result"));
+          }
+          randomStart += chance;
+        }
+        catch (Exception ignored)
+        {
+        }
+      }
+    }
+    if (!ItemStackUtil.itemExists(trueResult) && !recipeList.getBoolean("recipes." + recipe + ".extra.no-give-item"))
+    {
+      trueResult = result;
+    }
+    double chance = recipeList.getDouble("recipes." + recipe + ".extra.chance");
+    if (chance > 0d)
+    {
+      if (Math.random() * 100d < chance)
+      {
+        if (ItemStackUtil.itemExists(trueResult))
+        {
+          playerInventory.addItem(trueResult);
+        }
+        String successMessage = Cucumbery.config.getString("customrecipe.chance-items.success.message");
+        if (successMessage != null && !successMessage.equals("none"))
+        {
+          MessageUtil.sendMessage(player, successMessage.replace("%chance%", Constant.Sosu15.format(chance)).replace("%item%", result.toString()));
+        }
+        List<String> successSounds = Cucumbery.config.getStringList("customrecipe.chance-items.success.sounds");
+        for (String successSound : successSounds)
+        {
+          try
+          {
+            String[] split = successSound.split(",");
+            Method.playSound(player, Sound.valueOf(split[0]), Float.parseFloat(split[1]), Float.parseFloat(split[2]));
+          }
+          catch (Exception ignored)
+          {
+          }
+        }
+        List<String> successCommands = Cucumbery.config.getStringList("customrecipe.chance-items.success.commands");
+        for (String command : successCommands)
+        {
+          command = placeHolder(command, player, recipeListName, recipeList, recipe, result);
+          Method.performCommand(player, command, true, true, null);
+        }
+        List<String> craftCommands = recipeList.getStringList("recipes." + recipe + ".extra.commands.success");
+        for (String craftCommand : craftCommands)
+        {
+          craftCommand = placeHolder(craftCommand, player, recipeListName, recipeList, recipe, result);
+          Method.performCommand(player, craftCommand, true, true, null);
+        }
+      }
+      else
+      {
+        String failureMessage = Cucumbery.config.getString("customrecipe.chance-items.failure.message");
+        if (failureMessage != null && !failureMessage.equals("none"))
+        {
+          MessageUtil.sendMessage(player, failureMessage.replace("%chance%", Constant.Sosu15.format(100d - chance)).replace("%item%", result.toString()));
+        }
+        List<String> failureSounds = Cucumbery.config.getStringList("customrecipe.chance-items.failure.sounds");
+        for (String failureSound : failureSounds)
+        {
+          try
+          {
+            String[] split = failureSound.split(",");
+            Method.playSound(player, Sound.valueOf(split[0]), Float.parseFloat(split[1]), Float.parseFloat(split[2]));
+          }
+          catch (Exception ignored)
+          {
+          }
+        }
+        List<String> failureCommands = Cucumbery.config.getStringList("customrecipe.chance-items.failure.commands");
+        for (String command : failureCommands)
+        {
+          command = placeHolder(command, player, recipeListName, recipeList, recipe, result);
+          Method.performCommand(player, command, true, true, null);
+        }
+        List<String> craftCommands = recipeList.getStringList("recipes." + recipe + ".extra.commands.failure");
+        for (String craftCommand : craftCommands)
+        {
+          craftCommand = placeHolder(craftCommand, player, recipeListName, recipeList, recipe, result);
+          Method.performCommand(player, craftCommand, true, true, null);
+        }
+      }
+    }
+    else if (ItemStackUtil.itemExists(trueResult))
+    {
+      playerInventory.addItem(trueResult);
+    }
+    List<String> craftCommands = recipeList.getStringList("recipes." + recipe + ".extra.commands.craft");
+    for (String craftCommand : craftCommands)
+    {
+      craftCommand = placeHolder(craftCommand, player, recipeListName, recipeList, recipe, result);
+      Method.performCommand(player, craftCommand, true, true, null);
+    }
+    logCraft(player, recipeListName, recipe);
+  }
+
+  private static String placeHolder(
+          @NotNull String command, @NotNull Player player, @NotNull String recipeListName, @NotNull FileConfiguration recipeList, @NotNull String recipe, @NotNull ItemStack result)
+  {
+    command = command.replace("%result%", result.toString());
+    String categoryDisplay = recipeList.getString("extra.display");
+    if (categoryDisplay == null)
+    {
+      categoryDisplay = recipeListName;
+    }
+    command = command.replace("%category%", categoryDisplay);
+    String recipeDisplay = recipeList.getString("recipes." + recipe + ".extra.display");
+    if (recipeDisplay == null)
+    {
+      recipeDisplay = recipe;
+    }
+    command = command.replace("%recipe%", recipeDisplay);
+    FileConfiguration craftsLog = Variable.craftsLog.get(player.getUniqueId());
+    if (craftsLog != null)
+    {
+      command = command.replace("%category_" + recipeListName + "_crafted%", craftsLog.getInt("crafts.categories." + recipeListName) + "");
+      command = command.replace("%recipe_" + recipeListName + "_" + recipe + "_crafted%", craftsLog.getInt("crafts.recipes." + recipeListName + "." + recipe) + "");
+    }
+    command = Method.parseCommandString(player, command);
+    return command;
+  }
+
+  /**
+   * 아이템 제작 기록을 저장합니다.
+   *
+   * @param player   저장할 플레이어
+   * @param category 제작한 아이템의 레시피 목록 이름
+   * @param recipe   제작한 아이템의 레시피 이름
+   */
+  private static void logCraft(Player player, String category, String recipe)
+  {
+    UUID uuid = player.getUniqueId();
+    CustomConfig craftLogConfig = CustomConfig.getCustomConfig("data/CustomRecipe/CraftsLog/" + player.getUniqueId().toString() + ".yml");
+    YamlConfiguration logConfig = Variable.craftsLog.get(uuid), logConfig2 = craftLogConfig.getConfig();
+    if (logConfig == null)
+    {
+      logConfig = logConfig2;
+    }
+    int categoryAmount = logConfig.getInt("crafts.categories." + category);
+    logConfig2.set("crafts.categories." + category, categoryAmount + 1);
+    logConfig.set("crafts.categories." + category, categoryAmount + 1);
+    int craftAmount = logConfig.getInt("crafts.recipes." + category + "." + recipe);
+    logConfig2.set("crafts.recipes." + category + "." + recipe, craftAmount + 1);
+    logConfig.set("crafts.recipes." + category + "." + recipe, craftAmount + 1);
+    craftLogConfig.saveConfig();
+    Variable.craftsLog.put(uuid, logConfig);
+    CustomConfig customConfigLastCraft = CustomConfig.getCustomConfig("data/CustomRecipe/LastCraftsLog/" + player.getUniqueId().toString() + ".yml");
+    YamlConfiguration configLastCraft = customConfigLastCraft.getConfig();
+    configLastCraft.set("last-crafts." + category + "." + recipe, System.currentTimeMillis());
+    customConfigLastCraft.saveConfig();
+    Variable.lastCraftsLog.put(uuid, configLastCraft);
+  }
+
   @EventHandler
   public void onInventoryClick(InventoryClickEvent event)
   {
@@ -62,14 +378,15 @@ public class InventoryClick implements Listener
     {
       return;
     }
-    Player player = (Player) event.getView().getPlayer();
+    InventoryView view = event.getView();
+    Player player = (Player) view.getPlayer();
     UUID uuid = player.getUniqueId();
     if (Variable.scrollReinforcing.contains(uuid))
     {
       event.setCancelled(true);
       return;
     }
-
+    Component title = view.title();
     GameMode gameMode = player.getGameMode();
     PlayerInventory playerInventory = player.getInventory();
     ItemStack helmet = playerInventory.getHelmet();
@@ -876,42 +1193,45 @@ public class InventoryClick implements Listener
     }
 
     // 휴대용 셜커 상자를 연 상태에서는 셜커 상자를 건드릴 수 없도록 함
-    if (event.getInventory().getType() == InventoryType.SHULKER_BOX && event.getView().getTitle().contains(Constant.ITEM_PORTABLE_SHULKER_BOX_GUI))
+    if (event.getInventory().getType() == InventoryType.SHULKER_BOX && title instanceof TranslatableComponent translatableComponent)
     {
-      if (clickType == ClickType.SWAP_OFFHAND)
+      List<Component> args = translatableComponent.args();
+      if (args.size() == 2 && args.get(1) instanceof TextComponent textComponent && textComponent.content().startsWith(Constant.ITEM_PORTABLE_SHULKER_BOX_GUI))
       {
-        ItemStack offhand = playerInventory.getItemInOffHand();
-        if (ItemStackUtil.itemExists(offhand))
+        if (clickType == ClickType.SWAP_OFFHAND)
         {
-          if (Constant.SHULKER_BOXES.contains(offhand.getType()))
+          ItemStack offhand = playerInventory.getItemInOffHand();
+          if (ItemStackUtil.itemExists(offhand))
+          {
+            if (Constant.SHULKER_BOXES.contains(offhand.getType()))
+            {
+              event.setCancelled(true);
+              return;
+            }
+          }
+        }
+        if (clickType == ClickType.NUMBER_KEY)
+        {
+          ItemStack item = player.getInventory().getItem(event.getHotbarButton());
+          if (ItemStackUtil.itemExists(item))
+          {
+            if (Constant.SHULKER_BOXES.contains(item.getType()))
+            {
+              event.setCancelled(true);
+              return;
+            }
+          }
+        }
+        if (slotNumber < 9 && ItemStackUtil.itemExists(event.getCurrentItem()))
+        {
+          if (Constant.SHULKER_BOXES.contains(event.getCurrentItem().getType()))
           {
             event.setCancelled(true);
             return;
           }
-        }
-      }
-      if (clickType == ClickType.NUMBER_KEY)
-      {
-        ItemStack item = player.getInventory().getItem(event.getHotbarButton());
-        if (ItemStackUtil.itemExists(item))
-        {
-          if (Constant.SHULKER_BOXES.contains(item.getType()))
-          {
-            event.setCancelled(true);
-            return;
-          }
-        }
-      }
-      if (slotNumber < 9 && ItemStackUtil.itemExists(event.getCurrentItem()))
-      {
-        if (Constant.SHULKER_BOXES.contains(event.getCurrentItem().getType()))
-        {
-          event.setCancelled(true);
-          return;
         }
       }
     }
-    /////
 
     if (!event.isCancelled())
     {
@@ -1992,319 +2312,6 @@ public class InventoryClick implements Listener
         }
       }
     }
-  }
-
-  private static void removeItem(Player player, String category, FileConfiguration config, String recipe, List<ItemStack> ingredients, List<Integer> ingredientAmounts)
-  {
-    long requireTimeToCraft = config.getLong("recipes." + recipe + ".extra.crafting-time");
-    if (requireTimeToCraft > 0)
-    {
-      YamlConfiguration playerCraftingTimeConfig = Variable.craftingTime.get(player.getUniqueId());
-      long playerCraftingTime = playerCraftingTimeConfig == null ? 0 : playerCraftingTimeConfig.getLong("crafting-time." + category + "." + recipe);
-      if (playerCraftingTime > 0)
-      {
-        return;
-      }
-    }
-    for (int i = 0; i < ingredients.size(); i++)
-    {
-      ItemStack ingredient = ingredients.get(i);
-      NBTCompound itemTag = NBTAPI.getMainCompound(ingredient);
-      NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
-      // 재사용 가능 재료는 사라지지 않게 함
-      if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.CUSTOM_RECIPE_REUSABLE.toString()) && !config.getBoolean("recipes." + recipe + ".ingredients." + (i + 1) + ".reusable"))
-      {
-        int amount = ingredientAmounts.get(i);
-        int maxStackSize = ingredient.getMaxStackSize();
-        ingredient.setAmount(maxStackSize);
-        int stack = amount / maxStackSize;
-        for (int j = 0; j < stack; j++)
-        {
-          player.getInventory().removeItem(ingredient);
-          amount -= maxStackSize;
-        }
-        if (amount > 0)
-        {
-          ingredient.setAmount(amount);
-          player.getInventory().removeItem(ingredient);
-        }
-      }
-    }
-    if (Cucumbery.using_Vault)
-    {
-      double cost = config.getDouble("recipes." + recipe + ".extra.cost");
-      if (cost > 0)
-      {
-        if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player))
-        {
-          Cucumbery.eco.withdrawPlayer(player, cost);
-        }
-      }
-    }
-    int levelCost = config.getInt("recipes." + recipe + ".extra.levelcost");
-    if (levelCost > 0)
-    {
-      player.setLevel(Math.max(0, player.getLevel() - levelCost));
-    }
-    int foodLevelCost = config.getInt("recipes." + recipe + ".extra.foodlevelcost");
-    if (foodLevelCost > 0)
-    {
-      player.setFoodLevel(Math.max(0, player.getFoodLevel() - foodLevelCost));
-    }
-    double healthCost = config.getDouble("recipes." + recipe + ".extra.hpcost");
-    if (healthCost > 0)
-    {
-      player.setHealth(Math.max(0.01, player.getHealth() - healthCost));
-    }
-    double saturationCost = config.getDouble("recipes." + recipe + ".extra.saturationcost");
-    if (saturationCost > 0)
-    {
-      player.setSaturation((float) Math.max(0, player.getSaturation() - saturationCost));
-    }
-    double maxHealthCost = config.getDouble("recipes." + recipe + ".extra.mhpcost");
-    if (maxHealthCost > 0)
-    {
-      double playerMaxHealth = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue();
-      Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(Math.max(0.01, maxHealthCost - playerMaxHealth));
-    }
-  }
-
-  private static void chanceGiveItem(Player player, String recipeListName, FileConfiguration recipeList, String recipe, ItemStack result)
-  {
-    List<String> commands = Cucumbery.config.getStringList("customrecipe.commands-on-craft.commands");
-    for (String command : commands)
-    {
-      placeHolder(command, player, recipeListName, recipeList, recipe, result);
-      Method.performCommand(player, command, true, true, null);
-    }
-    giveItem(player, recipeListName, recipeList, recipe, result);
-  }
-
-  private static void giveItem(Player player, String recipeListName, FileConfiguration recipeList, String recipe, ItemStack result)
-  {
-    UUID uuid = player.getUniqueId();
-    long requireTimeToCraft = recipeList.getLong("recipes." + recipe + ".extra.crafting-time");
-    if (requireTimeToCraft > 0)
-    {
-      YamlConfiguration playerCraftingTimeConfig = Variable.craftingTime.get(uuid);
-      long playerCraftingTime = playerCraftingTimeConfig == null ? 0 : playerCraftingTimeConfig.getLong("crafting-time." + recipeListName + "." + recipe);
-      if (playerCraftingTime > 0)
-      {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime <= playerCraftingTime)
-        {
-          return;
-        }
-        else
-        {
-          CustomConfig playerCraftingTimeConfigFile = CustomConfig.getCustomConfig("data/CustomRecipe/CraftingTime/" + player.getUniqueId().toString() + ".yml");
-          playerCraftingTimeConfigFile.getConfig().set("crafting-time." + recipeListName + "." + recipe, null);
-          playerCraftingTimeConfig.set("crafting-time." + recipeListName + "." + recipe, null);
-          ConfigurationSection categorySection = playerCraftingTimeConfig.getConfigurationSection("crafting-time." + recipeListName);
-          if (categorySection == null || categorySection.getKeys(false).size() == 0)
-          {
-            playerCraftingTimeConfigFile.getConfig().set("crafting-time." + recipeListName, null);
-            playerCraftingTimeConfig.set("crafting-time." + recipeListName, null);
-          }
-          playerCraftingTimeConfigFile.saveConfig();
-          Variable.craftingTime.put(uuid, playerCraftingTimeConfig);
-        }
-      }
-      else
-      {
-        CustomConfig playerCraftingTimeConfigFile = CustomConfig.getCustomConfig("data/CustomRecipe/CraftingTime/" + player.getUniqueId().toString() + ".yml");
-        if (playerCraftingTimeConfig == null)
-        {
-          playerCraftingTimeConfig = playerCraftingTimeConfigFile.getConfig();
-        }
-        playerCraftingTimeConfigFile.getConfig().set("crafting-time." + recipeListName + "." + recipe, System.currentTimeMillis() + requireTimeToCraft);
-        playerCraftingTimeConfig.set("crafting-time." + recipeListName + "." + recipe, System.currentTimeMillis() + requireTimeToCraft);
-        playerCraftingTimeConfigFile.saveConfig();
-        Variable.craftingTime.put(uuid, playerCraftingTimeConfig);
-        return;
-      }
-    }
-    ItemStack trueResult = null;
-    PlayerInventory playerInventory = player.getInventory();
-    List<String> randomResult = recipeList.getStringList("recipes." + recipe + ".extra.random-result");
-    if (randomResult.size() > 0)
-    {
-      double randomStart = 0d;
-      double random = Math.random() * 100d;
-      for (String randomResultString : randomResult)
-      {
-        try
-        {
-          String[] split = randomResultString.split(";;");
-          String randomResultCategory = split[0];
-          String randomResultRecipe = split[1];
-          double chance = Double.parseDouble(split[2]);
-          File randomResultCategoryFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + randomResultCategory + ".yml");
-          if (!randomResultCategoryFile.exists())
-          {
-            continue;
-          }
-          YamlConfiguration randomResultRecipeConfig = Variable.customRecipes.get(randomResultCategory);
-          ConfigurationSection randomResultRecipeSection = randomResultRecipeConfig.getConfigurationSection("recipes." + randomResultRecipe);
-          if (randomResultRecipeSection == null || randomResultRecipeSection.getKeys(false).size() == 0)
-          {
-            continue;
-          }
-          if (random >= randomStart && random <= randomStart + chance)
-          {
-            trueResult = ItemSerializer.deserialize(randomResultRecipeSection.getString("result"));
-          }
-          randomStart += chance;
-        }
-        catch (Exception ignored)
-        {
-        }
-      }
-    }
-    if (!ItemStackUtil.itemExists(trueResult) && !recipeList.getBoolean("recipes." + recipe + ".extra.no-give-item"))
-    {
-      trueResult = result;
-    }
-    double chance = recipeList.getDouble("recipes." + recipe + ".extra.chance");
-    if (chance > 0d)
-    {
-      if (Math.random() * 100d < chance)
-      {
-        if (ItemStackUtil.itemExists(trueResult))
-        {
-          playerInventory.addItem(trueResult);
-        }
-        String successMessage = Cucumbery.config.getString("customrecipe.chance-items.success.message");
-        if (successMessage != null && !successMessage.equals("none"))
-        {
-          MessageUtil.sendMessage(player, successMessage.replace("%chance%", Constant.Sosu15.format(chance)).replace("%item%", result.toString()));
-        }
-        List<String> successSounds = Cucumbery.config.getStringList("customrecipe.chance-items.success.sounds");
-        for (String successSound : successSounds)
-        {
-          try
-          {
-            String[] split = successSound.split(",");
-            Method.playSound(player, Sound.valueOf(split[0]), Float.parseFloat(split[1]), Float.parseFloat(split[2]));
-          }
-          catch (Exception ignored)
-          {
-          }
-        }
-        List<String> successCommands = Cucumbery.config.getStringList("customrecipe.chance-items.success.commands");
-        for (String command : successCommands)
-        {
-          command = placeHolder(command, player, recipeListName, recipeList, recipe, result);
-          Method.performCommand(player, command, true, true, null);
-        }
-        List<String> craftCommands = recipeList.getStringList("recipes." + recipe + ".extra.commands.success");
-        for (String craftCommand : craftCommands)
-        {
-          craftCommand = placeHolder(craftCommand, player, recipeListName, recipeList, recipe, result);
-          Method.performCommand(player, craftCommand, true, true, null);
-        }
-      }
-      else
-      {
-        String failureMessage = Cucumbery.config.getString("customrecipe.chance-items.failure.message");
-        if (failureMessage != null && !failureMessage.equals("none"))
-        {
-          MessageUtil.sendMessage(player, failureMessage.replace("%chance%", Constant.Sosu15.format(100d - chance)).replace("%item%", result.toString()));
-        }
-        List<String> failureSounds = Cucumbery.config.getStringList("customrecipe.chance-items.failure.sounds");
-        for (String failureSound : failureSounds)
-        {
-          try
-          {
-            String[] split = failureSound.split(",");
-            Method.playSound(player, Sound.valueOf(split[0]), Float.parseFloat(split[1]), Float.parseFloat(split[2]));
-          }
-          catch (Exception ignored)
-          {
-          }
-        }
-        List<String> failureCommands = Cucumbery.config.getStringList("customrecipe.chance-items.failure.commands");
-        for (String command : failureCommands)
-        {
-          command = placeHolder(command, player, recipeListName, recipeList, recipe, result);
-          Method.performCommand(player, command, true, true, null);
-        }
-        List<String> craftCommands = recipeList.getStringList("recipes." + recipe + ".extra.commands.failure");
-        for (String craftCommand : craftCommands)
-        {
-          craftCommand = placeHolder(craftCommand, player, recipeListName, recipeList, recipe, result);
-          Method.performCommand(player, craftCommand, true, true, null);
-        }
-      }
-    }
-    else if (ItemStackUtil.itemExists(trueResult))
-    {
-      playerInventory.addItem(trueResult);
-    }
-    List<String> craftCommands = recipeList.getStringList("recipes." + recipe + ".extra.commands.craft");
-    for (String craftCommand : craftCommands)
-    {
-      craftCommand = placeHolder(craftCommand, player, recipeListName, recipeList, recipe, result);
-      Method.performCommand(player, craftCommand, true, true, null);
-    }
-    logCraft(player, recipeListName, recipe);
-  }
-
-  private static String placeHolder(
-          @NotNull String command, @NotNull Player player, @NotNull String recipeListName, @NotNull FileConfiguration recipeList, @NotNull String recipe, @NotNull ItemStack result)
-  {
-    command = command.replace("%result%", result.toString());
-    String categoryDisplay = recipeList.getString("extra.display");
-    if (categoryDisplay == null)
-    {
-      categoryDisplay = recipeListName;
-    }
-    command = command.replace("%category%", categoryDisplay);
-    String recipeDisplay = recipeList.getString("recipes." + recipe + ".extra.display");
-    if (recipeDisplay == null)
-    {
-      recipeDisplay = recipe;
-    }
-    command = command.replace("%recipe%", recipeDisplay);
-    FileConfiguration craftsLog = Variable.craftsLog.get(player.getUniqueId());
-    if (craftsLog != null)
-    {
-      command = command.replace("%category_" + recipeListName + "_crafted%", craftsLog.getInt("crafts.categories." + recipeListName) + "");
-      command = command.replace("%recipe_" + recipeListName + "_" + recipe + "_crafted%", craftsLog.getInt("crafts.recipes." + recipeListName + "." + recipe) + "");
-    }
-    command = Method.parseCommandString(player, command);
-    return command;
-  }
-
-  /**
-   * 아이템 제작 기록을 저장합니다.
-   *
-   * @param player   저장할 플레이어
-   * @param category 제작한 아이템의 레시피 목록 이름
-   * @param recipe   제작한 아이템의 레시피 이름
-   */
-  private static void logCraft(Player player, String category, String recipe)
-  {
-    UUID uuid = player.getUniqueId();
-    CustomConfig craftLogConfig = CustomConfig.getCustomConfig("data/CustomRecipe/CraftsLog/" + player.getUniqueId().toString() + ".yml");
-    YamlConfiguration logConfig = Variable.craftsLog.get(uuid), logConfig2 = craftLogConfig.getConfig();
-    if (logConfig == null)
-    {
-      logConfig = logConfig2;
-    }
-    int categoryAmount = logConfig.getInt("crafts.categories." + category);
-    logConfig2.set("crafts.categories." + category, categoryAmount + 1);
-    logConfig.set("crafts.categories." + category, categoryAmount + 1);
-    int craftAmount = logConfig.getInt("crafts.recipes." + category + "." + recipe);
-    logConfig2.set("crafts.recipes." + category + "." + recipe, craftAmount + 1);
-    logConfig.set("crafts.recipes." + category + "." + recipe, craftAmount + 1);
-    craftLogConfig.saveConfig();
-    Variable.craftsLog.put(uuid, logConfig);
-    CustomConfig customConfigLastCraft = CustomConfig.getCustomConfig("data/CustomRecipe/LastCraftsLog/" + player.getUniqueId().toString() + ".yml");
-    YamlConfiguration configLastCraft = customConfigLastCraft.getConfig();
-    configLastCraft.set("last-crafts." + category + "." + recipe, System.currentTimeMillis());
-    customConfigLastCraft.saveConfig();
-    Variable.lastCraftsLog.put(uuid, configLastCraft);
   }
 
 }

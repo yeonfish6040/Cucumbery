@@ -765,8 +765,9 @@ public class ItemStackUtil
       switch (type)
       {
         case AIR, CAVE_AIR, VOID_AIR -> newType = Material.BARRIER;
-        case WATER -> newType = Material.WATER_BUCKET;
-        case LAVA -> newType = Material.LAVA_BUCKET;
+        case WATER, WATER_CAULDRON -> newType = Material.WATER_BUCKET;
+        case FIRE, SOUL_FIRE -> newType = Material.FLINT_AND_STEEL;
+        case LAVA, LAVA_CAULDRON -> newType = Material.LAVA_BUCKET;
         case CAVE_VINES_PLANT -> newType = Material.CAVE_VINES;
         case WEEPING_VINES_PLANT -> newType = Material.WEEPING_VINES;
         case TWISTING_VINES_PLANT -> newType = Material.TWISTING_VINES;
@@ -807,10 +808,7 @@ public class ItemStackUtil
     {
       lore.add(ComponentUtil.create2(Constant.ITEM_LORE_SEPARATOR));
     }
-    String worldName = location.getWorld().getName();
-    int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
-    lore.add(ComponentUtil.createTranslate("&e좌표 : %s",
-            ComponentUtil.createTranslate("&8%s, %s, %s, %s", "&6" + worldName, "&6" + x, "&6" + y, "&6" + z)));
+    lore.add(ComponentUtil.createTranslate("&e좌표 : %s", ComponentUtil.locationComponent(location)));
     itemMeta.lore(lore);
     itemStack.setItemMeta(itemMeta);
     return itemStack;

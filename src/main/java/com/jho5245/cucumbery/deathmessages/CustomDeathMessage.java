@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomDeathMessage
+public record CustomDeathMessage(String key, Condition... conditions)
 {
   public static List<CustomDeathMessage> customMessages = new ArrayList<>();
 
@@ -57,16 +57,6 @@ public class CustomDeathMessage
         }
       }
     }
-  }
-
-  private final Condition[] conditions;
-
-  private final String key;
-
-  CustomDeathMessage(String key, Condition... conditions)
-  {
-    this.key = key;
-    this.conditions = conditions;
   }
 
   public Condition[] getConditions()

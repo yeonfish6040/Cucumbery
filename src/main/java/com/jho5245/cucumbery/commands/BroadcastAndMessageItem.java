@@ -6,12 +6,12 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,12 +34,11 @@ public class BroadcastAndMessageItem implements CommandExecutor
       {
         return true;
       }
-      if (!(sender instanceof Player))
+      if (!(sender instanceof Player player))
       {
         MessageUtil.sendError(sender, Prefix.ONLY_PLAYER);
         return true;
       }
-      Player player = (Player) sender;
       String msg = "";
       if (args.length > 0)
       {
@@ -101,11 +100,7 @@ public class BroadcastAndMessageItem implements CommandExecutor
             }
           }
         }
-        Component txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE, ComponentUtil.createTranslate("%s이(가) %s을(를) 채팅창에 올렸습니다.", player, item));
-        for (Player online : Bukkit.getServer().getOnlinePlayers())
-        {
-          MessageUtil.sendMessage(online, txt);
-        }
+        MessageUtil.broadcastPlayer(Prefix.INFO_ITEMSTORAGE, ComponentUtil.createTranslate("%s이(가) %s을(를) 채팅창에 올렸습니다.", player, ComponentUtil.itemStackComponent(item, Constant.THE_COLOR)));
         return true;
       }
       if (!msg.contains("[i]") && !msg.contains("[i1]") && !msg.contains("[i2]") && !msg.contains("[i3]") && !msg.contains("[i4]") && !msg.contains("[i5]") && !msg.contains("[i6]") && !msg.contains(
@@ -142,12 +137,10 @@ public class BroadcastAndMessageItem implements CommandExecutor
             }
           }
         }
-        String itemString = ComponentUtil.itemName(item) + ((amount == 1) ? "" : " " + amount + "개") + "§r";
-        Component txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE, player, " : ", ComponentUtil.createTranslate(msg.replace("[i]", "%s"), false, item));
-        for (Player online : Bukkit.getServer().getOnlinePlayers())
-        {
-          MessageUtil.sendMessage(online, false, txt);
-        }
+        MessageUtil.broadcastPlayer(false, Prefix.INFO_ITEMSTORAGE, ComponentUtil.createTranslate("%s : %s",
+                false,
+                player,
+                ComponentUtil.createTranslate(msg.replace("[i]", "%1$s"), false, ComponentUtil.itemStackComponent(item, Constant.THE_COLOR))));
       }
       else
       {
@@ -161,50 +154,13 @@ public class BroadcastAndMessageItem implements CommandExecutor
         ItemStack item7 = inv.getItem(6);
         ItemStack item8 = inv.getItem(7);
         ItemStack item9 = inv.getItem(8);
-        if (msg.contains("[i1]") && !ItemStackUtil.itemExists(item1))
+        for (int i = 1; i <= 9; i++)
         {
-          MessageUtil.sendError(player, "&e1번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
-        }
-        if (msg.contains("[i2]") && !ItemStackUtil.itemExists(item2))
-        {
-          MessageUtil.sendError(player, "&e2번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
-        }
-        if (msg.contains("[i3]") && !ItemStackUtil.itemExists(item3))
-        {
-          MessageUtil.sendError(player, "&e3번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
-        }
-        if (msg.contains("[i4]") && !ItemStackUtil.itemExists(item4))
-        {
-          MessageUtil.sendError(player, "&e4번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
-        }
-        if (msg.contains("[i5]") && !ItemStackUtil.itemExists(item5))
-        {
-          MessageUtil.sendError(player, "&e5번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
-        }
-        if (msg.contains("[i6]") && !ItemStackUtil.itemExists(item6))
-        {
-          MessageUtil.sendError(player, "&e6번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
-        }
-        if (msg.contains("[i7]") && !ItemStackUtil.itemExists(item7))
-        {
-          MessageUtil.sendError(player, "&e7번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
-        }
-        if (msg.contains("[i8]") && !ItemStackUtil.itemExists(item8))
-        {
-          MessageUtil.sendError(player, "&e8번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
-        }
-        if (msg.contains("[i9]") && !ItemStackUtil.itemExists(item9))
-        {
-          MessageUtil.sendError(player, "&e9번째 &r단축바 슬롯에 아이템을 들고 있지 않습니다.");
-          return true;
+          if (msg.contains("[i" + i + "]") && !ItemStackUtil.itemExists(inv.getItem(i - 1)))
+          {
+            MessageUtil.sendError(player, ComponentUtil.createTranslate("%s에 아이템을 들고 있지 않습니다.", ComponentUtil.createTranslate("&e%s번째 단축바 슬롯", i)));
+            return true;
+          }
         }
         if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player))
         {
@@ -269,15 +225,60 @@ public class BroadcastAndMessageItem implements CommandExecutor
               }
               switch (itemHover.toString())
               {
-                case "[i1]" -> txt.add(ComponentUtil.create(item1));
-                case "[i2]" -> txt.add(ComponentUtil.create(item2));
-                case "[i3]" -> txt.add(ComponentUtil.create(item3));
-                case "[i4]" -> txt.add(ComponentUtil.create(item4));
-                case "[i5]" -> txt.add(ComponentUtil.create(item5));
-                case "[i6]" -> txt.add(ComponentUtil.create(item6));
-                case "[i7]" -> txt.add(ComponentUtil.create(item7));
-                case "[i8]" -> txt.add(ComponentUtil.create(item8));
-                case "[i9]" -> txt.add(ComponentUtil.create(item9));
+                case "[i1]" -> {
+                  if (item1 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item1, Constant.THE_COLOR));
+                  }
+                }
+                case "[i2]" -> {
+                  if (item2 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item2, Constant.THE_COLOR));
+                  }
+                }
+                case "[i3]" -> {
+                  if (item3 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item3, Constant.THE_COLOR));
+                  }
+                }
+                case "[i4]" -> {
+                  if (item4 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item4, Constant.THE_COLOR));
+                  }
+                }
+                case "[i5]" -> {
+                  if (item5 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item5, Constant.THE_COLOR));
+                  }
+                }
+                case "[i6]" -> {
+                  if (item6 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item6, Constant.THE_COLOR));
+                  }
+                }
+                case "[i7]" -> {
+                  if (item7 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item7, Constant.THE_COLOR));
+                  }
+                }
+                case "[i8]" -> {
+                  if (item8 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item8, Constant.THE_COLOR));
+                  }
+                }
+                case "[i9]" -> {
+                  if (item9 != null)
+                  {
+                    txt.add(ComponentUtil.itemStackComponent(item9, Constant.THE_COLOR));
+                  }
+                }
               }
               i += 2;
             }
@@ -288,62 +289,9 @@ public class BroadcastAndMessageItem implements CommandExecutor
           }
         }
         txt.add(ComponentUtil.create(false, builder.toString()));
-        for (Player online : Bukkit.getServer().getOnlinePlayers())
-        {
-          MessageUtil.sendMessage(online, false, txt);
-        }
+          MessageUtil.broadcastPlayer(txt);
       }
     }
-/*    else if (cmd.getName().equalsIgnoreCase("messageitem"))
-    {
-      if (!Method.hasPermission(sender, Permission.CMD_MESSAGEITEM, true))
-      {
-        return true;
-      }
-      if (!(sender instanceof Player))
-      {
-        MessageUtil.sendError(sender, Prefix.ONLY_PLAYER);
-        return true;
-      }
-      if (args.length == 0)
-      {
-        MessageUtil.shortArg(sender, 1, args);
-        MessageUtil.commandInfo(sender, label, "<플레이어 ID>");
-        return true;
-      }
-      if (args.length > 1)
-      {
-        MessageUtil.longArg(sender, 1, args);
-        MessageUtil.commandInfo(sender, label, "<플레이어 ID>");
-        return true;
-      }
-      Player player = (Player) sender;
-      ItemStack item = player.getInventory().getItemInMainHand();
-      if (!ItemStackUtil.itemExists(item))
-      {
-        MessageUtil.sendError(sender, Prefix.NO_HOLDING_ITEM);
-        return true;
-      }
-      NBTItem nbtItem = new NBTItem(item);
-      nbtItem.removeKey("BlockEntityTag");
-      nbtItem.removeKey("BlockStateTag");
-      item = nbtItem.getItem();
-      Player target = SelectorUtil.getPlayer(sender, args[0]);
-      if (target == null)
-      {
-        return true;
-      }
-      int amount = item.getAmount();
-
-      String itemString = ComponentUtil.itemName(item) + ((amount == 1) ? "" : " " + amount + "개") + "§r";
-      String consonant = MessageUtil.getFinalConsonant(itemString, ConsonantType.을_를);
-      itemString += consonant;
-      Component txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE + "§e" + ComponentUtil.senderComponent(player) + "§r이(가) 당신에게 " + itemString + " 보여줍니다.", item);
-      target.sendMessage(txt);
-      txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE + "§e" + target.getDisplayName() + "§r에게 " + itemString + " 보여주었습니다.", item);
-      player.sendMessage(txt);
-      return true;
-    }*/
     return true;
   }
 }

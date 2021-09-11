@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,7 +42,7 @@ public class Respawn implements CommandExecutor
         {
           return true;
         }
-        MessageUtil.sendError(sender, target, "은(는) 죽어 있는 상태가 아닙니다.");
+        MessageUtil.sendError(sender, ComponentUtil.createTranslate("%s은(는) 죽어 있는 상태가 아닙니다.", target));
         return true;
       }
       target.spigot().respawn();
@@ -49,9 +50,9 @@ public class Respawn implements CommandExecutor
       {
         if (!target.equals(sender))
         {
-          MessageUtil.info(target, sender, "이 당신을 강제로 리스폰시켰습니다.");
+          MessageUtil.info(target, ComponentUtil.createTranslate("%s이(가) 당신을 강제로 리스폰시켰습니다.", sender));
         }
-        MessageUtil.info(sender, target, "을(를) 강제로 리스폰시켰습니다.");
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s을(를) 강제로 리스폰시켰습니다.", target));
       }
     }
     else

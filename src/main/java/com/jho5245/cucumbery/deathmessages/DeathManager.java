@@ -11,17 +11,17 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockDataMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +38,14 @@ public class DeathManager
   public static Component DEATH_PREFIX_PVP = ComponentUtil.createTranslate(
           BRACKET, ComponentUtil.createTranslate(Variable.deathMessages.getString("death-messages.prefix.pvp")));
 
+  public static final Component downloadURL = ComponentUtil.createTranslate("&9&l여기")
+          .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://cucumbery.com/api/builds/dev/latest/download")))
+          .clickEvent(ClickEvent.openUrl("https://cucumbery.com/api/builds/dev/latest/download"));
+
+  public static final Component reportBugURL = ComponentUtil.createTranslate("&9&l여기")
+          .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://github.com/jho5245/Cucumbery/issues")))
+          .clickEvent(ClickEvent.openUrl("https://github.com/jho5245/Cucumbery/issues"));
+
   public static void what(EntityDeathEvent event)
   {
     Component timeFormat = ComponentUtil.createTranslate("사망 시각 : %s", "&e" + Method.getCurrentTime(Calendar.getInstance(), true, false));
@@ -52,7 +60,7 @@ public class DeathManager
     PlayerDeathEvent playerDeathEvent = isPlayerDeath ? (PlayerDeathEvent) event : null;
     if (entity.customName() != null)
     {
-      success = location.getNearbyPlayers(100).size() > 0;
+      success = success || location.getNearbyPlayers(100).size() > 0;
     }
     if (entity instanceof Tameable tameable)
     {
@@ -65,6 +73,10 @@ public class DeathManager
     if (entity instanceof IronGolem ironGolem)
     {
       success = success || ironGolem.isPlayerCreated();
+    }
+    if (entity instanceof Boss)
+    {
+      success = true;
     }
 
     EntityDamageEvent damageCause = entity.getLastDamageCause();
@@ -113,14 +125,30 @@ public class DeathManager
             if (block != null)
             {
               Material type = block.getType();
-              extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(block)));
+              ItemStack itemStack = ItemStackUtil.getItemStackFromBlock(block);
+              ItemMeta itemMeta = itemStack.getItemMeta();
+              if (itemMeta instanceof BlockDataMeta blockDataMeta)
+              {
+                blockDataMeta.setBlockData(block.getBlockData());
+                itemStack.setItemMeta(blockDataMeta);
+                ItemLore.setItemLore(itemStack);
+              }
+              extraArgs.add(ComponentUtil.create(itemStack));
               if (type == Material.SWEET_BERRY_BUSH)
               {
                 key = "sweet_berry_bush";
               }
-              else
+              else if (type == Material.POINTED_DRIPSTONE)
+              {
+                key = "stalagmite";
+              }
+              else if (type == Material.CACTUS)
               {
                 key = "cactus";
+              }
+              else
+              {
+                key = "contact";
               }
             }
           }
@@ -136,14 +164,22 @@ public class DeathManager
             else
             {
               key = "melee";
+              if (weapon != null)
+              {
+                Material type = weapon.getType();
+                switch (type)
+                {
+                  case DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, NETHERITE_SWORD, STONE_SWORD -> key += "_sword";
+                }
+              }
             }
           }
           else
           {
-            key = "melee";
+            key = "entity_attack";
           }
         }
-        case ENTITY_SWEEP_ATTACK -> key = "melee";
+        case ENTITY_SWEEP_ATTACK -> key = "melee_sweep";
         case MAGIC -> key = "magic";
         case PROJECTILE -> {
           if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent)
@@ -153,9 +189,25 @@ public class DeathManager
             {
               key = "trident";
             }
-            else if (damagerEntity instanceof Fireball)
+            else if (damagerEntity instanceof Fireball fireball)
             {
-              key = "fireball";
+              if (fireball instanceof DragonFireball)
+              {
+                key = "dragon_fireball";
+              }
+              else if (fireball instanceof SizedFireball sizedFireball)
+              {
+                key = "sized_fireball";
+                extraArgs.add(ComponentUtil.create(sizedFireball.getDisplayItem()));
+              }
+              else if (fireball instanceof WitherSkull)
+              {
+                key = "wither_skull";
+              }
+              else
+              {
+                key = "fireball";
+              }
             }
             else if (damagerEntity instanceof ShulkerBullet)
             {
@@ -171,7 +223,10 @@ public class DeathManager
             key = "arrow";
           }
         }
-        case SUFFOCATION -> key = "suffocation";
+        case SUFFOCATION -> {
+          key = "suffocation";
+          extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(entity.getEyeLocation().getBlock())));
+        }
         case FALL -> {
           if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.getDamager() instanceof EnderPearl enderPearl && entity.equals(enderPearl.getShooter()))
           {
@@ -196,16 +251,21 @@ public class DeathManager
         case FIRE -> key = "fire_block";
         case FIRE_TICK -> key += "fire";
         case MELTING -> key = "melting";
-        case LAVA -> key = "lava";
+        case LAVA -> {
+          key = "lava";
+          Block block = location.getBlock();
+          if (block.getType() == Material.LAVA_CAULDRON)
+          {
+            key += "_cauldron";
+            extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(block)));
+          }
+        }
         case DROWNING -> key = "drown";
         case BLOCK_EXPLOSION -> {
           if (damageCause instanceof EntityDamageByBlockEvent damageByBlockEvent)
           {
             Block block = damageByBlockEvent.getDamager();
-            if (block != null)
-            {
-              Material type = block.getType();
-            }
+            MessageUtil.broadcastDebug(block + "");
           }
           key += "bad_respawn";
           args.add(BAD_RESPAWM_POINT);
@@ -216,10 +276,13 @@ public class DeathManager
             Entity damagerEntity = damageByEntityEvent.getDamager();
             if (damagerEntity instanceof Firework)
             {
-              key = "fireworks_crossbow";
-              if (ItemStackUtil.itemExists(weapon) && weapon.getType() == Material.FIREWORK_ROCKET)
+              key = "fireworks";
+              if (damager != null)
               {
-                key = "fireworks";
+                if (ItemStackUtil.itemExists(weapon) && weapon.getType() == Material.CROSSBOW)
+                {
+                  key = "fireworks_crossbow";
+                }
               }
             }
             else
@@ -232,6 +295,7 @@ public class DeathManager
           if (damageCause.getDamage() > Math.pow(2, 127))
           {
             key = "kill";
+            extraArgs.add(Component.text(entity.getName()));
           }
           else
           {
@@ -245,8 +309,8 @@ public class DeathManager
             {
               key += "_high";
             }
+            extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(entity.getFallDistance())).color(Constant.THE_COLOR));
           }
-          extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(entity.getFallDistance())).color(Constant.THE_COLOR));
         }
         case LIGHTNING -> {
           key = "lightning_bolt";
@@ -273,21 +337,59 @@ public class DeathManager
               switch (material)
               {
                 case ANVIL -> key = "anvil";
-                case POINTED_DRIPSTONE -> key = "stalagmite";
+                case POINTED_DRIPSTONE -> key = "falling_stalactite";
               }
+              extraArgs.add(ComponentUtil.create(fallingBlock));
             }
           }
         }
         case THORNS -> key = "thorns";
         case DRAGON_BREATH -> key = "dragon_breath";
         case CUSTOM -> key = "generic";
-        case FLY_INTO_WALL -> key = "elytra";
-        case HOT_FLOOR -> key = "magma_block";
-        case CRAMMING -> key = "cramming";
+        case FLY_INTO_WALL -> {
+          key = "elytra";
+          Vector vector = location.getDirection();
+          Location locationClone = location.clone();
+          locationClone.add(vector.setX(vector.getX() / 2).setY(vector.getY() / 2).setZ(vector.getZ() / 2));
+          extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(
+                  locationClone.getBlock()
+          )));
+        }
+        case HOT_FLOOR -> {
+          key = "magma_block";
+          if (damageCause instanceof EntityDamageByBlockEvent damageByBlockEvent)
+          {
+            Block block = damageByBlockEvent.getDamager();
+            if (block != null)
+            {
+              extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(block)));
+            }
+          }
+        }
+        case CRAMMING -> {
+          key = "cramming";
+          Collection<LivingEntity> livingEntities = world.getNearbyLivingEntities(location, 1.5d);
+          livingEntities.removeIf(e -> e.equals(entity));
+          if (livingEntities.size() == 0)
+          {
+            key += "_none";
+          }
+          else
+          {
+            extraArgs.add(ComponentUtil.senderComponent(livingEntities));
+          }
+          Integer i = world.getGameRuleValue(GameRule.MAX_ENTITY_CRAMMING);
+          if (i != null)
+          {
+            if (i.equals(1) && livingEntities.size() == 1)
+            {
+              key += "_solo";
+            }
+          }
+        }
         case DRYOUT -> key = "dryOut";
         case FREEZE -> key = "freeze";
       }
-
       if (damager != null)
       {
         if (damager instanceof ItemStack itemStack)
@@ -334,10 +436,16 @@ public class DeathManager
       catch (Exception e)
       {
         deathMessages = Messages.UNKNOWN;
+        extraArgs.add(reportBugURL);
       }
       List<String> keys = deathMessages.getKeys();
       // 조건부 데스 메시지가 있으면 데스 메시지 치환
       Condition.changeDeathMessages(event, key, keys);
+      if (key.equals("kill_combat"))
+      {
+        extraArgs.add(downloadURL);
+        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요! 사실 이 메시지는 이스터 에그이며, 플러그인 다운로드 주소는 %" + (extraArgs.size() + args.size()) + "$s입니다!");
+      }
       // 해당 키 목록에서 랜덤 키를 하나 가져옴
       if (keys.size() != 0)
       {
@@ -401,15 +509,20 @@ public class DeathManager
         return;
       }
       // 모든 플레이어에게 데스메시지 보냄
+      if (event.isCancelled())
+      {
+        List<String> cancelledMessages = Variable.deathMessages.getStringList("death-messages.event-cancelled-messages");
+        String message = cancelledMessages.get(Method.random(0, cancelledMessages.size() - 1));
+        deathMessage = deathMessage.append(ComponentUtil.createTranslate(message, entity));
+      }
       MessageUtil.broadcastPlayer(deathMessage);
-      String x = Constant.Sosu2.format(location.getBlockX());
-      String y = Constant.Sosu2.format(location.getBlockY());
-      String z = Constant.Sosu2.format(location.getBlockZ());
+      int x = location.getBlockX();
+      int y = location.getBlockY();
+      int z = location.getBlockZ();
       deathMessage = deathMessage.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));
       // 콘솔에 디버그를 보내기 위함
       MessageUtil.consoleSendMessage(deathMessage);
     }
-
   }
 
   @Nullable
@@ -490,7 +603,7 @@ public class DeathManager
       else if (damager instanceof TNTPrimed tntPrimed)
       {
         Entity tntPrimer = tntPrimed.getSource();
-        if (tntPrimer != null && !entity.equals(tntPrimer))
+        if (tntPrimer != null)
         {
           return tntPrimer;
         }
@@ -499,7 +612,7 @@ public class DeathManager
       }
       else if (!(
               (cause == EntityDamageEvent.DamageCause.FALLING_BLOCK && damager instanceof FallingBlock)
-              || (cause == EntityDamageEvent.DamageCause.LIGHTNING && damager instanceof LightningStrike)
+                      || (cause == EntityDamageEvent.DamageCause.LIGHTNING && damager instanceof LightningStrike)
       ))
       {
         return damager;
@@ -545,9 +658,9 @@ public class DeathManager
     if (entityDamageEvent instanceof EntityDamageByEntityEvent damageEvent)
     {
       Entity damager = damageEvent.getDamager();
-      if (damager instanceof AreaEffectCloud)
+      if (damager instanceof AreaEffectCloud areaEffectCloud)
       {
-        return (AreaEffectCloud) damager;
+        return areaEffectCloud;
       }
     }
     return null;

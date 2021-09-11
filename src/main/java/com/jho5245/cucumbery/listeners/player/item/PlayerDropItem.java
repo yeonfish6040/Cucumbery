@@ -174,16 +174,12 @@ public class PlayerDropItem implements Listener
 
   private void actionbarOnItemDrop(Player player, ItemStack item)
   {
+
     if (UserData.SHOW_ACTIONBAR_ON_ITEM_DROP.getBoolean(player.getUniqueId()))
     {
       int amount = item.getAmount();
-      Component itemStackComponent = ComponentUtil.itemName(item);
-      if (itemStackComponent.color() == null)
-      {
-        itemStackComponent = itemStackComponent.color(TextColor.fromHexString("#ff9900"));
-      }
-      Component amountComponent = ComponentUtil.createTranslate("#ff9900;%s개", Component.text(amount));
-      player.sendActionBar(ComponentUtil.createTranslate("#ffd900;%s %s를 버렸습니다.", itemStackComponent, amountComponent));
+      Component itemStackComponent = ComponentUtil.itemName(item, TextColor.fromHexString("#ff9900"));
+      player.sendActionBar(ComponentUtil.createTranslate("#ffd900;%s을(를) %s개 버렸습니다.", itemStackComponent, "#ff9900;" + amount));
     }
     if (UserData.LISTEN_ITEM_DROP.getBoolean(player.getUniqueId()))
     {

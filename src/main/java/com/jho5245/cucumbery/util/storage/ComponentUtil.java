@@ -8,7 +8,6 @@ import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import io.papermc.paper.inventory.ItemRarity;
@@ -30,7 +29,9 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.*;
@@ -67,7 +68,18 @@ public class ComponentUtil
    */
   public static Component itemName(@NotNull Material type)
   {
-    return itemName(new ItemStack(type));
+    return itemName(new ItemStack(type), null);
+  }
+
+  /**
+   * 아이템의 이름을 컴포넌트 형태로 반환합니다.
+   *
+   * @param type 아이템의 종류
+   * @return 컴포넌트 형태의 아이템 이름
+   */
+  public static Component itemName(@NotNull Material type, @Nullable TextColor defaultColor)
+  {
+    return itemName(new ItemStack(type), defaultColor);
   }
 
   /**
@@ -207,33 +219,6 @@ public class ComponentUtil
   }
 
   /**
-   * 문자열을 컴포넌트로 변환합니다.
-   *
-   * @param string 컴포넌트로 변환할 문자열
-   * @return 컴포넌트
-   */
-  @NotNull
-  public static Component fromString(@NotNull String string)
-  {
-    try
-    {
-      ItemStack item = new ItemStack(Material.NAME_TAG);
-      NBTItem nbtItem = new NBTItem(item);
-      NBTCompound display = nbtItem.addCompound("display");
-      display.setString("Name", string);
-      if (item.equals(nbtItem.getItem()))
-      {
-        throw new Exception();
-      }
-      return ComponentUtil.itemName(nbtItem.getItem());
-    }
-    catch (Exception e)
-    {
-      return Component.empty();
-    }
-  }
-
-  /**
    * 콘솔, 명령 블록, 개체, 플레이어, 접속 중이지 않은 플레이어의 정보를 표시할 컴포넌트를 반환합니다.
    *
    * @param object 정보를 가져올 오브젝트
@@ -253,17 +238,22 @@ public class ComponentUtil
    * @return 해당 오브젝트의 정보를 가진 컴포넌트
    */
   @NotNull
-  @SuppressWarnings("all")
   public static Component senderComponent(@NotNull Object object, @Nullable TextColor defaultColor)
   {
     if (Cucumbery.using_CommandAPI && object instanceof NativeProxyCommandSender sender)
     {
+      CommandSender caller = sender.getCaller(), callee = sender.getCallee();
+      if (caller.equals(callee))
+      {
+        return senderComponent(caller);
+      }
       return ComponentUtil.createTranslate("%s에 의한 %s", senderComponent(sender.getCaller(), defaultColor), senderComponent(sender.getCallee(), defaultColor));
     }
     if (object instanceof List<?> list && list.size() > 0)
     {
       if (list.stream().allMatch(Predicates.instanceOf(Entity.class)::apply))
       {
+        @SuppressWarnings("all")
         List<Entity> entities = (List<Entity>) list;
         if (entities.size() == 1)
         {
@@ -326,14 +316,6 @@ public class ComponentUtil
       else
       {
         nameComponent = entity.customName();
-        if (nameComponent == null)
-        {
-          nameComponent = ComponentUtil.createTranslate(entity.getType().translationKey());
-        }
-      }
-      if (defaultColor != null && nameComponent.color() == null)
-      {
-        nameComponent = nameComponent.color(defaultColor);
       }
 
       UUID uuid = entity.getUniqueId();
@@ -384,6 +366,28 @@ public class ComponentUtil
           hover = hover.append(ComponentUtil.createTranslate("HP : %s", ComponentUtil.createTranslate("&7%s / %s", healthDisplay, maxHealthDisplay)));
         }
       }
+      if (entity instanceof FallingBlock fallingBlock)
+      {
+        BlockData blockData = fallingBlock.getBlockData();
+        Material type = blockData.getMaterial();
+        if (nameComponent == null)
+        {
+          nameComponent = itemName(type);
+        }
+        ItemStack itemStack = ItemStackUtil.loredItemStack(type);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta instanceof BlockDataMeta blockDataMeta)
+        {
+          blockDataMeta.setBlockData(blockData);
+          itemStack.setItemMeta(blockDataMeta);
+        }
+        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(itemStack, ComponentUtil.createTranslate("&e[아이템]"), true);
+        for (Component lor : lore)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(lor);
+        }
+      }
       if (entity instanceof Villager villager)
       {
         Villager.Profession profession = villager.getProfession();
@@ -417,6 +421,10 @@ public class ComponentUtil
                 .append(Component.text("\n"))
                 .append(ComponentUtil.createTranslate("ID : %s", Constant.THE_COLOR_HEX + name))
                 .append(Component.text("\n"))
+                .append(ComponentUtil.createTranslate("접속 횟수 : %s회", Constant.THE_COLOR_HEX + player.getStatistic(Statistic.LEAVE_GAME) + 1))
+                .append(Component.text("\n"))
+                .append(ComponentUtil.createTranslate("플레이 시간 : %s", MessageUtil.periodRealTimeAndGameTime(player.getStatistic(Statistic.PLAY_ONE_MINUTE))))
+                .append(Component.text("\n"))
                 .append(ComponentUtil.createTranslate("게임 모드 : %s", ComponentUtil.createTranslate(Constant.THE_COLOR_HEX + "gameMode." + gameMode.toString().toLowerCase())))
                 .append(Component.text("\n"))
                 .append(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR + Constant.ITEM_LORE_SEPARATOR))
@@ -425,6 +433,14 @@ public class ComponentUtil
         ;
 
         click = "/socialmenu " + name;
+      }
+      if (nameComponent == null)
+      {
+        nameComponent = Component.translatable(entity.getType().translationKey());
+      }
+      if (defaultColor != null && nameComponent.color() == null)
+      {
+        nameComponent = nameComponent.color(defaultColor);
       }
       nameComponent = nameComponent.hoverEvent(HoverEvent.showText(hover));
       if (object instanceof Player)
@@ -460,6 +476,50 @@ public class ComponentUtil
     Component y = Component.text(Constant.Sosu2.format(location.getY())).color(Constant.THE_COLOR);
     Component z = Component.text(Constant.Sosu2.format(location.getZ())).color(Constant.THE_COLOR);
     return createTranslate("&8%s, %s, %s, %s", world, x, y, z);
+  }
+
+  @NotNull
+  public static Component itemStackComponent(@NotNull ItemStack itemStack)
+  {
+    return itemStackComponent(itemStack, itemStack.getAmount(), null);
+  }
+
+
+  @NotNull
+  public static Component itemStackComponent(@NotNull ItemStack itemStack, int amount)
+  {
+    return itemStackComponent(itemStack, amount, null);
+  }
+
+  @NotNull
+  public static Component itemStackComponent(@NotNull ItemStack itemStack, @Nullable TextColor defaultColor)
+  {
+    return itemStackComponent(itemStack, itemStack.getAmount(), defaultColor);
+  }
+
+  @NotNull
+  public static Component itemStackComponent(@NotNull ItemStack itemStack, int amount, @Nullable TextColor defaultColor)
+  {
+    if (defaultColor == null)
+    {
+      defaultColor = NamedTextColor.GRAY;
+    }
+    itemStack = itemStack.clone();
+    NBTItem nbtItem = new NBTItem(itemStack);
+    for (String key : nbtItem.getKeys())
+    {
+      if (!Method.equals(key, "display", "Enchantments", "Damage", "HideFlags", "Color", "CustomModelData", "StoredEnchantments"))
+      {
+        nbtItem.removeKey(key);
+      }
+    }
+    itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
+    if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
+    {
+      return itemName(itemStack, defaultColor).hoverEvent(itemStack.asHoverEvent());
+    }
+
+    return ComponentUtil.createTranslate("&f%s %s개", itemName(itemStack), amount).color(defaultColor).hoverEvent(itemStack.asHoverEvent());
   }
 
   /**
@@ -519,10 +579,12 @@ public class ComponentUtil
       {
         ItemStack itemStack = new ItemStack(material);
         Component concat = ComponentUtil.itemName(itemStack, TextColor.color(255, 204, 0));
+        concat = concat.hoverEvent(itemStack.asHoverEvent());
         component = component.append(concat);
       }
       else if (object instanceof ItemStack itemStack)
       {
+        itemStack = itemStack.clone();
         NBTItem nbtItem = new NBTItem(itemStack);
         for (String key : nbtItem.getKeys())
         {
@@ -532,9 +594,7 @@ public class ComponentUtil
           }
         }
         itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
-        int amount = itemStack.getAmount();
-        Component itemComponent = ComponentUtil.itemName(itemStack, TextColor.color(255, 204, 0));
-        Component concat = amount == 1 ? itemComponent : ComponentUtil.createTranslate("rg255,204;%s %s개", itemComponent, amount);
+        Component concat = ComponentUtil.itemName(itemStack, TextColor.color(255, 204, 0));
         concat = concat.hoverEvent(itemStack.asHoverEvent());
         component = component.append(concat);
       }
@@ -1005,6 +1065,7 @@ public class ComponentUtil
     return fromLegacyTextTranslate(message, true);
   }
 
+  @SuppressWarnings("all")
   private static TranslatableComponent fromLegacyTextTranslate(@NotNull String message, boolean n2s)
   {
     if (n2s)

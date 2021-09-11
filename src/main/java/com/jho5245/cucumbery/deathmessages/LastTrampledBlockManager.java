@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.deathmessages;
 
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Location;
@@ -8,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockDataMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class LastTrampledBlockManager
@@ -51,6 +54,13 @@ public class LastTrampledBlockManager
       }
       if (blockItem != null)
       {
+        ItemMeta itemMeta = blockItem.getItemMeta();
+        if (itemMeta instanceof BlockDataMeta blockDataMeta)
+        {
+          blockDataMeta.setBlockData(block.getBlockData());
+          blockItem.setItemMeta(blockDataMeta);
+          ItemLore.setItemLore(blockItem);
+        }
         Variable.lastTrampledBlock.put(livingEntity.getUniqueId(), blockItem);
         Variable.lastTrampledBlockType.put(livingEntity.getUniqueId(), type);
       }

@@ -19,6 +19,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
@@ -1201,7 +1202,7 @@ public class Method extends SoundPlay
         }
         display = display.replace(" ", "");
         String name2 = name.replace("+", "");
-        if (name2.toLowerCase().contains(display.toLowerCase()))
+        if ((name.length() > 1 || display.startsWith(name2)) && name2.toLowerCase().contains(display.toLowerCase()))
         {
           return online;
         }
@@ -2090,20 +2091,23 @@ public class Method extends SoundPlay
   {
     for (int i = 0; i < list.size(); i++)
     {
-       String s = list.get(i);
-       try
-       {
-         s = ComponentUtil.serialize(GsonComponentSerializer.gson().deserialize(s));
-       }
-       catch (Exception ignored)
-       {
+      String s = list.get(i);
+      try
+      {
+        if (s.startsWith("{\""))
+        {
+          s = ComponentUtil.serialize(GsonComponentSerializer.gson().deserialize(s));
+        }
+      }
+      catch (Exception ignored)
+      {
 
-       }
-       s = MessageUtil.stripColor(s);
-       if (s.length() > 53)
-       {
-         s = s.substring(0, s.length() - 50) + "...";
-       }
+      }
+      s = MessageUtil.stripColor(s);
+      if (s.length() > 53)
+      {
+        s = s.substring(0, s.length() - 50) + "...";
+      }
       list.set(i, s);
     }
     list.removeIf(str -> str.replace(" ", "").equals(""));
@@ -2854,6 +2858,10 @@ public class Method extends SoundPlay
   private static List<String> tabCompleterEntity(CommandSender sender)
   {
     List<String> list = new ArrayList<>(Arrays.asList("@p", "@r", "@a", "@s", "@e"));
+    if (!sender.hasPermission("asdf"))
+    {
+      list.clear();
+    }
     for (Player online : Bukkit.getServer().getOnlinePlayers())
     {
       list.add(online.getName());
@@ -2888,6 +2896,10 @@ public class Method extends SoundPlay
 
   public static List<String> tabCompleterEntity(CommandSender sender, String[] args, String key, boolean multiple)
   {
+    if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("asdf"))
+    {
+      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+    }
     List<String> list = tabCompleterEntity(sender);
     List<String> returnList = Method.tabCompleterList(args, list, key, true);
     if ((Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") || !list.contains(args[args.length - 1]))
@@ -2902,11 +2914,19 @@ public class Method extends SoundPlay
         }
         if (!multiple && entities.size() > 1)
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+          }
           return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.toomany")));
         }
       }
       catch (IllegalArgumentException e)
       {
+        if (!sender.hasPermission("asdf"))
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+        }
         return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
       }
     }
@@ -2925,6 +2945,10 @@ public class Method extends SoundPlay
 
   public static List<String> tabCompleterPlayer(CommandSender sender, String[] args, String key, boolean multiple)
   {
+    if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("asdf"))
+    {
+      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+    }
     List<String> list = tabCompleterEntity(sender);
     List<String> returnList = Method.tabCompleterList(args, list, key, true);
     if ((Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") || !list.contains(args[args.length - 1]))
@@ -2939,15 +2963,27 @@ public class Method extends SoundPlay
         }
         if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)))
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+          }
           return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.entities")));
         }
         if (!multiple && entities.size() > 1)
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+          }
           return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.toomany")));
         }
       }
       catch (IllegalArgumentException e)
       {
+        if (!sender.hasPermission("asdf"))
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+        }
         return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
       }
     }
@@ -2966,12 +3002,16 @@ public class Method extends SoundPlay
 
   public static List<String> tabCompleterOfflinePlayer(CommandSender sender, String[] args, String key, boolean multiple)
   {
+    if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("asdf"))
+    {
+      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+    }
     List<String> list = tabCompleterEntity(sender);
     for (String nickName : Variable.nickNames)
     {
       if (!Method.isUUID(nickName) || (Bukkit.getOfflinePlayer(UUID.fromString(nickName)).getName() == null))
       {
-        list.add(MessageUtil.stripColor(nickName).replace(" ", "__"));
+        list.add(MessageUtil.stripColor(nickName).replace(" ", "+"));
       }
     }
     List<String> returnList = Method.tabCompleterList(args, list, key, true);
@@ -2987,15 +3027,27 @@ public class Method extends SoundPlay
         }
         if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)))
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+          }
           return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.entities")));
         }
         if (!multiple && entities.size() > 1)
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+          }
           return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.toomany")));
         }
       }
       catch (IllegalArgumentException e)
       {
+        if (!sender.hasPermission("asdf"))
+        {
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+        }
         return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
       }
     }
@@ -3347,20 +3399,9 @@ public class Method extends SoundPlay
           BlockStateMeta boxMeta = (BlockStateMeta) item.getItemMeta();
           ShulkerBox shulker = (ShulkerBox) boxMeta.getBlockState();
           ItemStack[] contents = shulker.getInventory().getContents();
-          String display;
-          if (!itemMeta.hasDisplayName())
-          {
-            display = (item).toString();
-          }
-          else if (!itemMeta.getDisplayName().contains("§"))
-          {
-            display = (item).toString().replace("§o", "");
-          }
-          else
-          {
-            display = (item).toString();
-          }
-          Inventory inv = Bukkit.createInventory(null, InventoryType.SHULKER_BOX, "§8" + display + Constant.ITEM_PORTABLE_SHULKER_BOX_GUI + "§" + (slot == EquipmentSlot.HAND ? "M" : "O"));
+          Component display = ComponentUtil.itemName(item, NamedTextColor.DARK_GRAY);
+          Inventory inv = Bukkit.createInventory(null, InventoryType.SHULKER_BOX,
+                  Component.translatable("%s").args(display, Component.text(Constant.ITEM_PORTABLE_SHULKER_BOX_GUI + (slot == EquipmentSlot.HAND ? "MAIN_HAND" : "OFF_HAND"))));
           inv.setContents(contents);
           playSound(player, Sound.BLOCK_SHULKER_BOX_OPEN, SoundCategory.BLOCKS);
           player.openInventory(inv);

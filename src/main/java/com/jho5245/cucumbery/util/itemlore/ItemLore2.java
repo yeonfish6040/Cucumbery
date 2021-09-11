@@ -18,7 +18,6 @@ import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
@@ -1054,7 +1053,7 @@ public class ItemLore2
           int pageCount = bookMeta.getPageCount();
           ItemLoreUtil.setItemRarityValue(lore, pageCount);
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&7쪽수 : %s", ComponentUtil.createTranslate("&6%s장", "" + pageCount)));
+          lore.add(ComponentUtil.createTranslate("&7쪽수 : %s", ComponentUtil.createTranslate("&6%s장", pageCount)));
         }
       }
       case WRITTEN_BOOK -> {
@@ -1071,7 +1070,7 @@ public class ItemLore2
         lore.add(Component.empty());
         lore.add(ComponentUtil.createTranslate("&7저자 : %s", author != null ? author : ComponentUtil.createTranslate("알 수 없음")));
         lore.add(ComponentUtil.createTranslate("&7출판 : %s", ComponentUtil.createTranslate("&6book.generation." + (g != null ? g.ordinal() : "0"))));
-        lore.add(ComponentUtil.createTranslate("&7쪽수 : %s", ComponentUtil.createTranslate("&6%s장", "" + pageCount)));
+        lore.add(ComponentUtil.createTranslate("&7쪽수 : %s", ComponentUtil.createTranslate("&6%s장", pageCount)));
       }
       case WHITE_BANNER, BLACK_BANNER, BLUE_BANNER, BROWN_BANNER, CYAN_BANNER, GRAY_BANNER, GREEN_BANNER, LIGHT_BLUE_BANNER, LIGHT_GRAY_BANNER
               , LIME_BANNER, MAGENTA_BANNER, ORANGE_BANNER, PURPLE_BANNER, PINK_BANNER, RED_BANNER, YELLOW_BANNER -> {
@@ -1344,17 +1343,15 @@ public class ItemLore2
         if (compassMeta.hasLodestone())
         {
           Location lodestoneLocation = compassMeta.getLodestone();
-          World world = lodestoneLocation.getWorld();
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", Material.LODESTONE));
-          lore.add(ComponentUtil.createTranslate("#FA414D;%s, %s, %s, %s",
-                  world, "#C8B8C3;" + lodestoneLocation.getBlockX(), "#C8B8C3;" + lodestoneLocation.getBlockY(), "#C8B8C3;" + lodestoneLocation.getBlockZ()));
+          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", ComponentUtil.itemName(Material.LODESTONE)));
+          lore.add(ComponentUtil.locationComponent(lodestoneLocation));
         }
         else if (compassMeta.isLodestoneTracked())
         {
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", Material.LODESTONE));
-          lore.add(ComponentUtil.createTranslate("#BD443C;자석석이 " + (Math.random() * 100d > 10d ? "" : "&m미국감") + "#BD443C;분실됨"));
+          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", ComponentUtil.itemName(Material.LODESTONE)));
+          lore.add(ComponentUtil.createTranslate("#BD443C;자석석이 " + (Math.random() * 100d > 10d ? "" : "&m미국감&q") + "분실됨"));
         }
       }
       case NOTE_BLOCK -> {
@@ -1483,8 +1480,12 @@ public class ItemLore2
           boolean hasAtleastOne = false;
           for (int i = 0; i < lines.size(); i++)
           {
-            Component line = lines.get(i).color(textColor);
-            if (!(line instanceof TextComponent textComponent && textComponent.content().equals("")))
+            Component line = lines.get(i);
+            if (line.color() == null)
+            {
+              line = line.color(textColor);
+            }
+            if (!(line.equals(Component.empty())))
             {
               hasAtleastOne = true;
               lore.add(ComponentUtil.createTranslate("&7%s번째 텍스트 : %s", (i + 1), line));
@@ -1523,11 +1524,10 @@ public class ItemLore2
               hasAtLeastOne = true;
               int cookTime = campfire.getCookTime(i);
               int cookTimeTotal = campfire.getCookTimeTotal(i);
-              Component itemName = ComponentUtil.itemName(itemStack);
-              int amount = itemStack.getAmount();
-              Component itemStackComponent = amount == 1 ? itemName : ComponentUtil.createTranslate("&7%s %s개", itemName, amount);
+              Component itemStackComponent = ComponentUtil.itemStackComponent(itemStack);
               lore.add(ComponentUtil.createTranslate("&7%s번째 아이템 : %s, 조리 진행도 : %s / %s (%s)",
-                      i + 1, itemStackComponent, ComponentUtil.createTranslate("&e%s초", Constant.Sosu2.format(cookTime / 20d)),
+                      i + 1,
+                      itemStackComponent, ComponentUtil.createTranslate("&e%s초", Constant.Sosu2.format(cookTime / 20d)),
                       ComponentUtil.createTranslate("&6%s초", Constant.Sosu2.format(cookTimeTotal / 20d)),
                       ComponentUtil.createTranslate("&a%s%%", Constant.Sosu2.format(100d * cookTime / cookTimeTotal))));
             }
@@ -1551,36 +1551,33 @@ public class ItemLore2
           short burnTime = furnace.getBurnTime();
           short cookTime = furnace.getCookTime();
           int cookTimeTotal = furnace.getCookTimeTotal();
-          lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&7" + smeltType + " 진행도 : %s / %s (%s)",
-                  ComponentUtil.createTranslate("%s초", Constant.Sosu2.format(cookTime / 20d)),
-                  ComponentUtil.createTranslate("%s초", Constant.Sosu2.format(cookTimeTotal / 20d)),
-                  ComponentUtil.createTranslate("%s%%", Constant.Sosu2.format(100d * cookTime / cookTimeTotal))));
+          if (cookTimeTotal != 0)
+          {
+            lore.add(Component.empty());
+            lore.add(ComponentUtil.createTranslate("&7" + smeltType + " 진행도 : %s / %s (%s)",
+                    ComponentUtil.createTranslate("%s초", Constant.Sosu2.format(cookTime / 20d)),
+                    ComponentUtil.createTranslate("%s초", Constant.Sosu2.format(cookTimeTotal / 20d)),
+                    ComponentUtil.createTranslate("%s%%", Constant.Sosu2.format(100d * cookTime / cookTimeTotal))));
+          }
           if (!Method.inventoryEmpty(furnaceInventory))
           {
             lore.add(Component.empty());
             lore.add(customNameLore);
             if (ItemStackUtil.itemExists(ingredient))
             {
-              Component itemName = ComponentUtil.itemName(ingredient);
-              int amount = ingredient.getAmount();
-              Component itemStackComponent = amount == 1 ? itemName : ComponentUtil.createTranslate("&7%s %s개", itemName, amount);
+              Component itemStackComponent = ComponentUtil.itemStackComponent(ingredient);
               lore.add(ComponentUtil.createTranslate("&7" + smeltType + " 중인 아이템 : %s", itemStackComponent));
             }
             ItemStack fuel = furnaceInventory.getFuel();
             if (ItemStackUtil.itemExists(fuel))
             {
-              Component itemName = ComponentUtil.itemName(fuel);
-              int amount = fuel.getAmount();
-              Component itemStackComponent = amount == 1 ? itemName : ComponentUtil.createTranslate("&7%s %s개", itemName, amount);
+              Component itemStackComponent = ComponentUtil.itemStackComponent(fuel);
               lore.add(ComponentUtil.createTranslate("&7땔감 아이템 : %s", itemStackComponent));
             }
             ItemStack result = furnaceInventory.getResult();
             if (ItemStackUtil.itemExists(result))
             {
-              Component itemName = ComponentUtil.itemName(result);
-              int amount = result.getAmount();
-              Component itemStackComponent = amount == 1 ? itemName : ComponentUtil.createTranslate("&7%s %s개", itemName, amount);
+              Component itemStackComponent = ComponentUtil.itemStackComponent(result);
               lore.add(ComponentUtil.createTranslate("&7결과물 아이템 : %s", itemStackComponent));
             }
           }
@@ -1616,16 +1613,7 @@ public class ItemLore2
                     break;
                   }
                   ItemStack itemStack = itemStackList.get(i);
-                  Component itemName = ComponentUtil.itemName(itemStack);
-                  int amount = itemStack.getAmount();
-                  if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
-                  {
-                    lore.add(ComponentUtil.createTranslate("&7%s", itemName));
-                  }
-                  else
-                  {
-                    lore.add(ComponentUtil.createTranslate("&7%s %s개", itemName, amount));
-                  }
+                  lore.add(ComponentUtil.itemStackComponent(itemStack));
                 }
               }
             }
@@ -1940,7 +1928,7 @@ public class ItemLore2
     {
       for (String customLore : customLores)
       {
-        lore.add(ComponentUtil.fromString(customLore));
+        lore.add(ComponentUtil.create(customLore));
       }
     }
     // CucumberyItemTag - CustomItemType
@@ -1958,7 +1946,14 @@ public class ItemLore2
     String customRarityFinal = NBTAPI.getString(customRarityTag, CucumberyTag.CUSTOM_RARITY_FINAL_KEY);
     if (customRarityFinal != null)
     {
-      ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.valueOf(customRarityFinal).getRarityValue(), false);
+      try
+      {
+        ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.valueOf(customRarityFinal).getRarityValue(), false);
+      }
+      catch (Exception ignored)
+      {
+
+      }
     }
     if (!itemMeta.isUnbreakable() && itemMeta.hasItemFlag(ItemFlag.HIDE_UNBREAKABLE))
     {

@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.player.bucket;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -13,14 +14,12 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
 import java.util.UUID;
 
 public class PlayerBucketEmpty implements Listener
@@ -57,20 +56,15 @@ public class PlayerBucketEmpty implements Listener
         ItemStack finalItem = original.clone();
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.getInventory().setItem(event.getHand(), finalItem), 0L);
       }
-      boolean usefulLore = Cucumbery.config.getBoolean("use-helpful-lore-feature");
+      boolean usefulLore = Method.usingLoreFeature(player);
       if (usefulLore)
       {
-        World world = player.getLocation().getWorld();
-        List<String> worldList = Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds");
-        if (!worldList.contains(world.getName()))
-        {
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
           {
             ItemStack main = player.getInventory().getItemInMainHand(), off = player.getInventory().getItemInOffHand();
             ItemLore.setItemLore(main);
             ItemLore.setItemLore(off);
           }, 0L);
-        }
       }
     }
   }

@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
@@ -1060,7 +1061,7 @@ public class WHOIS implements CommandExecutor
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "X : &e" + Constant.Jeongsu.format(spawnPointX));
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Y : &e" + Constant.Jeongsu.format(spawnPointY));
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Z : &e" + Constant.Jeongsu.format(spawnPointZ));
-          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS + "거리 : &e" + (sender instanceof Player ? Constant.Sosu4.format(spawnPointLocation.distance(((Player) sender).getLocation())) +
+          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS + "거리 : &e" + (sender instanceof Player player1 ? Constant.Sosu4.format(Method2.distance(spawnPointLocation, player1.getLocation())) +
                   "m" : "-1m"));
         }
         else

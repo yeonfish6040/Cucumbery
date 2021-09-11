@@ -12,6 +12,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -152,6 +155,22 @@ public class SetUserData implements CommandExecutor
           case DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE:
             Method.updateInventory((Player) player);
             break;
+          case ENTITY_AGGRO:
+            if (!UserData.ENTITY_AGGRO.getBoolean(player))
+            {
+              Player online = (Player) player;
+              for (Entity entity : online.getWorld().getEntities())
+              {
+                if (entity instanceof Mob mob)
+                {
+                  LivingEntity livingEntity = mob.getTarget();
+                  if (online.equals(livingEntity))
+                  {
+                    mob.setTarget(null);
+                  }
+                }
+              }
+            }
           default:
             break;
         }

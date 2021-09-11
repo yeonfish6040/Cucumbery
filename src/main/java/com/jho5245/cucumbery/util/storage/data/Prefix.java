@@ -84,6 +84,8 @@ public enum Prefix
   INFO_ADVANCEMENT("key.advancements", "&a"),
   INFO_ADVANCEMENT_2("key.advancements", "&5"),
   INFO_SOCIAL("#52CEFF;소셜", "#5D7DC0;"),
+  INFO_JOIN("&a입장", "&2"),
+  INFO_QUIT("&c퇴장", "&5"),
   ;
 
   private final String text;

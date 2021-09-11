@@ -193,7 +193,6 @@ public class ItemLoreUtil
     lore.set(0, Component.translatable("", Component.text(before)));
   }
 
-
   /**
    * 아이템에 추가될 마법 부여 TMI
    *

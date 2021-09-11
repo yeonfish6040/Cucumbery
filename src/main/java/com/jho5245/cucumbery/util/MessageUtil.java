@@ -193,6 +193,16 @@ public class MessageUtil
   }
 
   /**
+   * 콘솔과 모든 플레이어에게 메시지를 보냅니다.
+   * @param objects 보낼 메시지
+   */
+  public static void broadcast(@NotNull Object... objects)
+  {
+    consoleSendMessage(objects);
+    broadcastPlayer(objects);
+  }
+
+  /**
    * 플레이어에게 디버그 메시지를 보냅니다.
    *
    * @param player  디버그 메시지를 받을 플레이어
@@ -481,25 +491,34 @@ public class MessageUtil
     sendError(audience, "잘못된 불입니다. '&etrue&r' 또는 '&efalse&r'가 필요하지만 &e" + input + "번&r째 인수에 '&e" + args[input - 1] + "&r'" + getFinalConsonant(args[input - 1], ConsonantType.이가) + " 입력되었습니다.");
   }
 
-  public static void sendTitle(@NotNull Player player, @Nullable Object title, @Nullable Object subTitle, int fadeIn, int stay, int fadeOut)
+  public static void sendTitle(@NotNull Object player, @Nullable Object title, @Nullable Object subTitle, int fadeIn, int stay, int fadeOut)
   {
     @SuppressWarnings("all")
     Title t = Title.title(title != null ? ComponentUtil.create(title) : Component.empty(), subTitle != null ? ComponentUtil.create(subTitle) : Component.empty(),
             Title.Times.of(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L)));
-    player.showTitle(t);
+    if (player instanceof Audience audience)
+    {
+      audience.showTitle(t);
+    }
   }
 
-  public static void sendTitle(@NotNull Player player, @Nullable Object[] title, @Nullable Object[] subTitle, int fadeIn, int stay, int fadeOut)
+  public static void sendTitle(@NotNull Object player, @Nullable Object[] title, @Nullable Object[] subTitle, int fadeIn, int stay, int fadeOut)
   {
     @SuppressWarnings("all")
     Title t = Title.title(ComponentUtil.create(title), subTitle != null ? ComponentUtil.create(subTitle) : Component.empty(),
             Title.Times.of(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L)));
-    player.showTitle(t);
+    if (player instanceof Audience audience)
+    {
+      audience.showTitle(t);
+    }
   }
 
-  public static void sendActionBar(@NotNull Player player, @NotNull Object... objects)
+  public static void sendActionBar(@NotNull Object player, @NotNull Object... objects)
   {
-    player.sendActionBar(ComponentUtil.create(objects));
+    if (player instanceof Audience audience)
+    {
+      audience.sendActionBar(ComponentUtil.create(objects));
+    }
   }
 
   public static boolean checkNumberSize(CommandSender sender, long value, long min, long max)

@@ -142,13 +142,8 @@ public class EntityPickupItem implements Listener
     if (UserData.SHOW_ACTIONBAR_ON_ITEM_PICKUP.getBoolean(player.getUniqueId()))
     {
       int amount = item.getAmount();
-      Component itemStackComponent = ComponentUtil.itemName(item);
-      if (itemStackComponent.color() == null)
-      {
-        itemStackComponent = itemStackComponent.color(TextColor.fromHexString("#00ff3c"));
-      }
-      Component amountComponent = ComponentUtil.createTranslate("#00ff3c;%s개", Component.text(amount));
-      player.sendActionBar(ComponentUtil.createTranslate("#00ccff;%s %s를 주웠습니다.", itemStackComponent, amountComponent));
+      Component itemStackComponent = ComponentUtil.itemName(item, TextColor.fromHexString("#00ff3c"));
+      player.sendActionBar(ComponentUtil.createTranslate("#00ccff;%s을(를) %s개 주웠습니다.", itemStackComponent, "#00ff3c;" + amount));
     }
   }
 }

@@ -53,6 +53,13 @@ import java.util.regex.Pattern;
 
 public class PlayerInteract implements Listener
 {
+  private static final Set<UUID> RAILGUN_WHITE_LIST = new HashSet<>();
+
+  static
+  {
+    RAILGUN_WHITE_LIST.add(UUID.fromString("4962252e-347b-4711-b418-3d1afae250b1"));
+  }
+
   @EventHandler
   public void onPlayerInteract(PlayerInteractEvent event)
   {
@@ -429,16 +436,14 @@ public class PlayerInteract implements Listener
           }
 
           // 손에 유리병/포션/양동이/물 양동이 들고 블록에 우클릭
-          if (itemType == Material.GLASS_BOTTLE || itemType == Material.POTION || itemType == Material.BUCKET || itemType == Material.WATER_BUCKET)
+          if (itemType == Material.GLASS_BOTTLE || itemType == Material.POTION || itemType == Material.BUCKET || itemType == Material.WATER_BUCKET ||
+          itemType == Material.LAVA_BUCKET || itemType == Material.POWDER_SNOW_BUCKET)
           {
-            if (player.getGameMode() != GameMode.CREATIVE)
+            if (clickedBlockType == Material.CAULDRON || clickedBlockType == Material.WATER_CAULDRON || clickedBlockType == Material.LAVA_CAULDRON || clickedBlockType == Material.POWDER_SNOW_CAULDRON)
             {
-              if (clickedBlockType == Material.CAULDRON)
+              if (Method.usingLoreFeature(player))
               {
-                if (Method.usingLoreFeature(player))
-                {
-                  Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
-                }
+                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
               }
             }
           }
@@ -479,7 +484,7 @@ public class PlayerInteract implements Listener
                         CompassMeta compassMeta1 = (CompassMeta) item1Meta, compassMeta2 = (CompassMeta) item2Meta;
                         if (ItemStackUtil.hasLore(item) &&
                                 ItemStackUtil.hasLore(item2) &&
-                                Objects.requireNonNull(item1Meta.getLore()).size() == Objects.requireNonNull(item2Meta.getLore()).size() &&
+                                Objects.requireNonNull(item1Meta.lore()).size() == Objects.requireNonNull(item2Meta.lore()).size() &&
                                 !compassMeta1.hasLodestone() &&
                                 !compassMeta1.isLodestoneTracked() &&
                                 (compassMeta2.hasLodestone() || compassMeta2.isLodestoneTracked()))
@@ -505,7 +510,7 @@ public class PlayerInteract implements Listener
                         CompassMeta compassMeta1 = (CompassMeta) item1Meta, compassMeta2 = (CompassMeta) item2Meta;
                         if (ItemStackUtil.hasLore(item) &&
                                 ItemStackUtil.hasLore(item2) &&
-                                Objects.requireNonNull(item1Meta.getLore()).size() == Objects.requireNonNull(item2Meta.getLore()).size() &&
+                                Objects.requireNonNull(item1Meta.lore()).size() == Objects.requireNonNull(item2Meta.lore()).size() &&
                                 (compassMeta1.hasLodestone() || compassMeta1.isLodestoneTracked()) &&
                                 (compassMeta2.hasLodestone() || compassMeta2.isLodestoneTracked()))
                         {
@@ -545,24 +550,12 @@ public class PlayerInteract implements Listener
               int x = block.getX(), y = block.getY(), z = block.getZ();
               switch (blockFace)
               {
-                case DOWN:
-                  y--;
-                  break;
-                case UP:
-                  y++;
-                  break;
-                case EAST:
-                  x++;
-                  break;
-                case WEST:
-                  x--;
-                  break;
-                case SOUTH:
-                  z++;
-                  break;
-                case NORTH:
-                  z--;
-                  break;
+                case DOWN -> y--;
+                case UP -> y++;
+                case EAST -> x++;
+                case WEST -> x--;
+                case SOUTH -> z++;
+                case NORTH -> z--;
               }
               Material beforeBlockType = player.getWorld().getBlockAt(x, y, z).getType();
 
@@ -604,56 +597,56 @@ public class PlayerInteract implements Listener
               {
                 if (Method.usingLoreFeature(player))
                 {
-                    if (item.getAmount() == 1)
+                  if (item.getAmount() == 1)
+                  {
+                    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                     {
-                      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                      ItemStack item2 = null;
+                      int slot = -1;
+                      for (int i = 0; i < player.getInventory().getSize(); i++)
                       {
-                        ItemStack item2 = null;
-                        int slot = -1;
-                        for (int i = 0; i < player.getInventory().getSize(); i++)
+                        item2 = player.getInventory().getItem(i);
+                        if (ItemStackUtil.itemExists(item2) && item2.getType() == Material.DRAGON_BREATH && !ItemStackUtil.hasLore(item2))
                         {
-                          item2 = player.getInventory().getItem(i);
-                          if (ItemStackUtil.itemExists(item2) && item2.getType() == Material.DRAGON_BREATH && !ItemStackUtil.hasLore(item2))
-                          {
-                            slot = i;
-                            break;
-                          }
+                          slot = i;
+                          break;
                         }
-                        if (item2 != null)
-                        {
-                          int amount = item2.getAmount();
-                          player.getInventory().remove(item2);
-                          ItemStack newItem = new ItemStack(Material.DRAGON_BREATH, amount);
-                          ItemLore.setItemLore(newItem);
-                          player.getInventory().setItem(slot, newItem);
-                        }
-                      }, 0L);
-                    }
-                    else
-                    {
-                      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                      }
+                      if (item2 != null)
                       {
-                        ItemStack item2 = null;
-                        for (int i = 0; i < player.getInventory().getSize(); i++)
-                        {
-                          item2 = player.getInventory().getItem(i);
-                          if (ItemStackUtil.itemExists(item2) && item2.getType() == Material.DRAGON_BREATH && !ItemStackUtil.hasLore(item2))
-                          {
-                            break;
-                          }
-                        }
-                        if (item2 != null)
-                        {
-                          int amount = item2.getAmount();
-                          player.getInventory().remove(item2);
-                          ItemStack newItem = new ItemStack(Material.DRAGON_BREATH, amount);
-                          ItemLore.setItemLore(newItem);
-                          player.getInventory().addItem(newItem);
-                        }
-                      }, 0L);
-                    }
-                    break;
+                        int amount = item2.getAmount();
+                        player.getInventory().remove(item2);
+                        ItemStack newItem = new ItemStack(Material.DRAGON_BREATH, amount);
+                        ItemLore.setItemLore(newItem);
+                        player.getInventory().setItem(slot, newItem);
+                      }
+                    }, 0L);
                   }
+                  else
+                  {
+                    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                    {
+                      ItemStack item2 = null;
+                      for (int i = 0; i < player.getInventory().getSize(); i++)
+                      {
+                        item2 = player.getInventory().getItem(i);
+                        if (ItemStackUtil.itemExists(item2) && item2.getType() == Material.DRAGON_BREATH && !ItemStackUtil.hasLore(item2))
+                        {
+                          break;
+                        }
+                      }
+                      if (item2 != null)
+                      {
+                        int amount = item2.getAmount();
+                        player.getInventory().remove(item2);
+                        ItemStack newItem = new ItemStack(Material.DRAGON_BREATH, amount);
+                        ItemLore.setItemLore(newItem);
+                        player.getInventory().addItem(newItem);
+                      }
+                    }, 0L);
+                  }
+                  break;
+                }
               }
             }
           }
@@ -1089,7 +1082,6 @@ public class PlayerInteract implements Listener
     return false;
   }
 
-
   private void noteBlock(PlayerInteractEvent event, boolean itemExists)
   {
     Player player = event.getPlayer();
@@ -1394,9 +1386,9 @@ public class PlayerInteract implements Listener
         }
         for (Entity entity : player.getWorld().getNearbyEntities(origin, 0.1D * width, 0.1D * width, 0.1D * width))
         {
-          if (current > piercing)
+          if (current >= piercing)
           {
-            break;
+            return;
           }
           EntityType entityType = entity.getType();
           if (entityType == EntityType.ARMOR_STAND)
@@ -1407,13 +1399,12 @@ public class PlayerInteract implements Listener
           {
             if (!ignoreInvincible && !alreadyWarned)
             {
-              MessageUtil.sendWarn(player, "&e" + (entity) + "&r에게는 피해를 입힐 수 없다.");
+              MessageUtil.sendWarn(player, ComponentUtil.createTranslate("%s에게는 피해를 입힐 수 없다.", entity));
             }
             alreadyWarned = true;
           }
-          if (entity instanceof LivingEntity && (suicide || entity != player))
+          if (entity instanceof LivingEntity livingEntity && (suicide || entity != player))
           {
-            LivingEntity livingEntity = (LivingEntity) entity;
             if (livingEntity.getHealth() > 0)
             {
               if (!(livingEntity instanceof Player && ((Player) livingEntity).getGameMode() == GameMode.SPECTATOR) &&
@@ -1421,9 +1412,8 @@ public class PlayerInteract implements Listener
               {
                 current++;
               }
-              if (entity instanceof Player)
+              if (entity instanceof Player victim)
               {
-                Player victim = (Player) entity;
                 if (victim.getGameMode() != GameMode.SPECTATOR)
                 {
                   double health = victim.getHealth();
@@ -1480,43 +1470,32 @@ public class PlayerInteract implements Listener
                 {
                   switch (fireworkType)
                   {
-                    case 2:
-                    {
+                    case 2 -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.BALL;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.RED).withFade(Color.ORANGE).build();
                       fwM.addEffect(effect);
                     }
-                    break;
-                    case 3:
-                    {
+                    case 3 -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.STAR;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.YELLOW).withFade(Color.WHITE).flicker(true).build();
                       fwM.addEffect(effect);
                     }
-                    break;
-                    case 4:
-                    {
+                    case 4 -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.CREEPER;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.GREEN).withFade(Color.RED).build();
                       fwM.addEffect(effect);
                     }
-                    break;
-                    case 5:
-                    {
+                    case 5 -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.BALL_LARGE;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.BLUE).build();
                       fwM.addEffect(effect);
                     }
-                    break;
-                    case 6:
-                    {
+                    case 6 -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.BALL_LARGE;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.WHITE).trail(true).build();
                       fwM.addEffect(effect);
                     }
-                    break;
-                    case 7:
-                    {
+                    case 7 -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.STAR;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.YELLOW).flicker(true).build();
                       fwM.addEffect(effect);
@@ -1524,9 +1503,7 @@ public class PlayerInteract implements Listener
                       effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.WHITE).build();
                       fwM.addEffect(effect);
                     }
-                    break;
-                    case 8:
-                    {
+                    case 8 -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.STAR;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.PURPLE).flicker(true).build();
                       fwM.addEffect(effect);
@@ -1537,9 +1514,7 @@ public class PlayerInteract implements Listener
                       effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.fromRGB(60, 0, 60), Color.fromRGB(80, 0, 80), Color.fromRGB(100, 0, 100)).build();
                       fwM.addEffect(effect);
                     }
-                    break;
-                    case 9:
-                    {
+                    case 9 -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.BURST;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.RED, Color.YELLOW, Color.ORANGE).flicker(true).trail(true).build();
                       fwM.addEffect(effect);
@@ -1556,9 +1531,7 @@ public class PlayerInteract implements Listener
                       effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.AQUA, Color.BLUE, Color.WHITE, Color.BLACK).build();
                       fwM.addEffect(effect);
                     }
-                    break;
-                    case 10:
-                    {
+                    case 10 -> {
                       int distance = 88;
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.CREEPER;
                       int temp = 0;
@@ -1604,14 +1577,11 @@ public class PlayerInteract implements Listener
                         temp -= distance;
                       }
                     }
-                    break;
-                    default:
-                    {
+                    default -> {
                       FireworkEffect.Type fireworkEffectType = FireworkEffect.Type.BALL;
                       FireworkEffect effect = FireworkEffect.builder().with(fireworkEffectType).withColor(Color.WHITE).build();
                       fwM.addEffect(effect);
                     }
-                    break;
                   }
                   fwM.setPower(0);
                   fw.setFireworkMeta(fwM);
@@ -1719,12 +1689,5 @@ public class PlayerInteract implements Listener
       }
     }
     Method.updateInventory(player);
-  }
-
-  private static final Set<UUID> RAILGUN_WHITE_LIST = new HashSet<>();
-
-  static
-  {
-    RAILGUN_WHITE_LIST.add(UUID.fromString("4962252e-347b-4711-b418-3d1afae250b1"));
   }
 }

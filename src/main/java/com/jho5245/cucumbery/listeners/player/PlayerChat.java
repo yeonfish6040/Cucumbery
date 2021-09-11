@@ -12,6 +12,7 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -174,6 +175,8 @@ public class PlayerChat implements Listener
   public void specialParse(AsyncChatEvent event)
   {
     Player player = event.getPlayer();
+    Component senderComponent = ComponentUtil.senderComponent(player);
+    player.displayName(player.displayName().hoverEvent(senderComponent.hoverEvent()));
     String uuidString = player.getUniqueId().toString();
     String message = ComponentUtil.serialize(event.message());
     /* 채팅을 칠때 해당 권한이 있으면 컬러 채팅으로 변환 */

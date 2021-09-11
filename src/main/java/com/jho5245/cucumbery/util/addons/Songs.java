@@ -106,7 +106,7 @@ public class Songs
         list.clear();
         for (int i = 0; i < array.size(); i++)
         {
-          String songName = array.get(i).toString();
+          String songName = ((JSONObject)array.get(i)).get("name").toString();
           list.add(songName);
         }
       }

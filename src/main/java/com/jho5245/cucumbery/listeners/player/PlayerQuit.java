@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -51,11 +52,6 @@ public class PlayerQuit implements Listener
     }
     if (enabledTellraw)
     {
-      String worldName = location.getWorld().getName();
-      double x = location.getX(), y = location.getY(), z = location.getZ(), yaw = location.getYaw(), pitch = location.getPitch();
-      Component prefix = ComponentUtil.create("&5[&c퇴장&5] ");
-      Component middle = ComponentUtil.senderComponent(player);
-      Component suffix = ComponentUtil.create("&r이(가) 퇴장하셨습니다.");
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
         if (online != player)
@@ -63,7 +59,7 @@ public class PlayerQuit implements Listener
           if (UserData.SHOW_QUIT_MESSAGE_FORCE.getBoolean(player.getUniqueId()) || (UserData.SHOW_QUIT_MESSAGE.getBoolean(player.getUniqueId()) && UserData.OUTPUT_QUIT_MESSAGE.getBoolean(
                   online.getUniqueId()) || UserData.OUTPUT_QUIT_MESSAGE_FORCE.getBoolean(online.getUniqueId())))
           {
-                MessageUtil.sendMessage(online, prefix, middle, suffix);
+            MessageUtil.sendMessage(online, Prefix.INFO_QUIT, ComponentUtil.createTranslate("%s이(가) 퇴장하셨습니다.", player));
           }
         }
       }

@@ -28,6 +28,7 @@ public class ConditionChecker
     boolean damagerIsLiving = damagerObject instanceof  LivingEntity;
     LivingEntity damager = damagerIsLiving ? (LivingEntity) damagerObject : null;
     Component damagerCustomName = damagerIsLiving ? damager.customName() : null;
+    Component victimCustomName = victim.customName();
     ItemStack weapon = DeathManager.getWeapon(event);
     boolean weaponExists = ItemStackUtil.itemExists(weapon);
     for (int i = 0; i < conditions.length; i++)
@@ -39,18 +40,19 @@ public class ConditionChecker
         {
           ConditionType conditionType = condition.getConditionType();
           String value = condition.getValue();
-          Pattern pattern = Pattern.compile("^" + value + "$");
+          Pattern pattern = conditionType == ConditionType.NBT ? Pattern.compile("(.*)") : Pattern.compile("^" + value + "$");
           switch (conditionType)
           {
             case DEATH_TYPE -> check[i] = pattern.matcher(key).find();
             case ENTITY_UUID -> check[i] = pattern.matcher(victim.getUniqueId().toString()).find();
             case ENTITY_TYPE -> check[i] = pattern.matcher(victim.getType().toString()).find();
+            case ENTITY_DISPLAY_NAME -> check[i] = victimCustomName != null && pattern.matcher(ComponentUtil.serialize(victimCustomName)).find();
             case PLAYER_NAME -> check[i] = victim instanceof Player && pattern.matcher(victim.getName()).find();
             case PLAYER_DISPLAY_NAME -> check[i] = victim instanceof Player && pattern.matcher(ComponentUtil.serialize(((Player) victim).displayName())).find();
             case PLAYER_PERMISSION -> check[i] = victim.hasPermission(value);
             case WORLD_NAME -> check[i] = pattern.matcher(victim.getLocation().getWorld().getName()).find();
             case BIOME_TYPE -> check[i] = pattern.matcher(victim.getLocation().getBlock().getBiome().toString()).find();
-            case ATTACKER_ENTITY_NAME -> check[i] = damagerIsLiving && pattern.matcher(damager.getName()).find();
+            case ATTACKER_ENTITY_TYPE -> check[i] = damagerIsLiving && pattern.matcher(damager.getName()).find();
             case ATTACKER_ENTITY_DISPLAY_NAME -> check[i] = damagerCustomName != null && pattern.matcher(ComponentUtil.serialize(damagerCustomName)).find();
             case ATTACKER_PLAYER_NAME -> check[i] = damager instanceof Player && pattern.matcher(damager.getName()).find();
             case ATTACKER_PLAYER_DISPLAY_NAME -> check[i] = damager instanceof Player && pattern.matcher(ComponentUtil.serialize(((Player) damager).displayName())).find();
@@ -68,6 +70,7 @@ public class ConditionChecker
             }
           }
         }
+
       }
       catch (Exception ignored)
       {

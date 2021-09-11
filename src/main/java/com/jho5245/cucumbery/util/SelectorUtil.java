@@ -34,10 +34,14 @@ public class SelectorUtil
       {
         return player;
       }
-      List<Entity> entities = Bukkit.selectEntities(sender != null ? sender : Bukkit.getConsoleSender(), selector);
+      if (sender == null)
+      {
+        sender = Bukkit.getConsoleSender();
+      }
+      List<Entity> entities = Bukkit.selectEntities(sender, selector);
       if (entities.size() == 0)
       {
-        if (sender != null && notice)
+        if (notice)
         {
           MessageUtil.noArg(sender, Prefix.NO_PLAYER, selector);
         }
@@ -45,18 +49,33 @@ public class SelectorUtil
       }
       if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)::apply))
       {
-        if (sender != null && notice)
+        if (notice)
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+            return null;
+          }
           MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.entities"));
         }
         return null;
       }
       if (entities.size() != 1)
       {
-        if (sender != null && notice)
+        if (notice)
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+            return null;
+          }
           MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.toomany"));
         }
+        return null;
+      }
+      if (!sender.hasPermission("asdf"))
+      {
+        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.notfound.player"));
         return null;
       }
       return (Player) entities.get(0);
@@ -65,6 +84,11 @@ public class SelectorUtil
     {
       if (sender != null && notice)
       {
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.notfound.player"));
+          return null;
+        }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
       }
     }
@@ -87,10 +111,14 @@ public class SelectorUtil
       {
         return player;
       }
-      List<Entity> entities = Bukkit.selectEntities(sender != null ? sender : Bukkit.getConsoleSender(), selector);
+      if (sender == null)
+      {
+        sender = Bukkit.getConsoleSender();
+      }
+      List<Entity> entities = Bukkit.selectEntities(sender, selector);
       if (entities.size() == 0)
       {
-        if (sender != null && notice)
+        if (notice)
         {
           MessageUtil.noArg(sender, Prefix.NO_ENTITY, selector);
         }
@@ -98,10 +126,20 @@ public class SelectorUtil
       }
       if (entities.size() != 1)
       {
-        if (sender != null && notice)
+        if (notice)
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+            return null;
+          }
           MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.toomany"));
         }
+        return null;
+      }
+      if (!sender.hasPermission("asdf"))
+      {
+        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
         return null;
       }
       return entities.get(0);
@@ -110,6 +148,11 @@ public class SelectorUtil
     {
       if (sender != null && notice)
       {
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          return null;
+        }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
       }
     }
@@ -132,10 +175,14 @@ public class SelectorUtil
       {
         return new ArrayList<>(Collections.singletonList(player));
       }
-      List<Entity> entities = Bukkit.selectEntities(sender != null ? sender : Bukkit.getConsoleSender(), selector);
+      if (sender == null)
+      {
+        sender = Bukkit.getConsoleSender();
+      }
+      List<Entity> entities = Bukkit.selectEntities(sender, selector);
       if (entities.size() == 0)
       {
-        if (sender != null && notice)
+        if (notice)
         {
           MessageUtil.noArg(sender, Prefix.NO_PLAYER, selector);
         }
@@ -143,8 +190,13 @@ public class SelectorUtil
       }
       if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)::apply))
       {
-        if (sender != null && notice)
+        if (notice)
         {
+          if (!sender.hasPermission("asdf"))
+          {
+            MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+            return null;
+          }
           MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.entities"));
         }
         return null;
@@ -157,12 +209,22 @@ public class SelectorUtil
           players.add(player2);
         }
       }
+      if (!sender.hasPermission("asdf"))
+      {
+        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        return null;
+      }
       return players;
   }
     catch (IllegalArgumentException e)
   {
     if (sender != null && notice)
     {
+      if (!sender.hasPermission("asdf"))
+      {
+        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        return null;
+      }
       MessageUtil.sendError(sender, errorMessage(sender, selector, e));
     }
   }
@@ -187,10 +249,19 @@ public class SelectorUtil
         entities.add(player);
         return entities;
       }
-      List<Entity> entities = Bukkit.selectEntities(sender != null ? sender : Bukkit.getConsoleSender(), selector);
-      if (entities.size() == 0 && sender != null && notice)
+      if (sender == null)
+      {
+        sender = Bukkit.getConsoleSender();
+      }
+      List<Entity> entities = Bukkit.selectEntities(sender, selector);
+      if (entities.size() == 0 && notice)
       {
         MessageUtil.noArg(sender, Prefix.NO_ENTITY, selector);
+      }
+      if (!sender.hasPermission("asdf"))
+      {
+        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        return null;
       }
       return entities.size() > 0 ? entities : null;
     }
@@ -198,6 +269,11 @@ public class SelectorUtil
     {
       if (sender != null && notice)
       {
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          return null;
+        }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
       }
     }
@@ -216,15 +292,19 @@ public class SelectorUtil
         entities.add(player);
         return entities;
       }
-      OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(sender, selector, notice);
+      if (sender == null)
+      {
+        sender = Bukkit.getConsoleSender();
+      }
+      OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(sender, selector, false);
       if (offlinePlayer != null)
       {
         return new ArrayList<>(Collections.singletonList(offlinePlayer));
       }
-      List<Entity> entities = Bukkit.selectEntities(sender != null ? sender : Bukkit.getConsoleSender(), selector);
+      List<Entity> entities = Bukkit.selectEntities(sender, selector);
       if (entities.size() == 0)
       {
-        if (sender != null && notice)
+        if (notice)
         {
           MessageUtil.noArg(sender, Prefix.NO_PLAYER, selector);
         }
@@ -232,7 +312,12 @@ public class SelectorUtil
       }
       if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)::apply))
       {
-        if (sender != null && notice)
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          return null;
+        }
+        if (notice)
         {
           MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.entities"));
         }
@@ -246,12 +331,22 @@ public class SelectorUtil
           players.add(player2);
         }
       }
+      if (!sender.hasPermission("asdf"))
+      {
+        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        return null;
+      }
       return players;
     }
     catch (IllegalArgumentException e)
     {
       if (sender != null && notice)
       {
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          return null;
+        }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
       }
     }
@@ -274,15 +369,19 @@ public class SelectorUtil
       {
         return player;
       }
+      if (sender == null)
+      {
+        sender = Bukkit.getConsoleSender();
+      }
       OfflinePlayer offlinePlayer = Method.getOfflinePlayer(sender, selector, false);
       if (offlinePlayer != null)
       {
         return offlinePlayer;
       }
-      List<Entity> entities = Bukkit.selectEntities(sender != null ? sender : Bukkit.getConsoleSender(), selector);
+      List<Entity> entities = Bukkit.selectEntities(sender, selector);
       if (entities.size() == 0)
       {
-        if (sender != null && notice)
+        if (notice)
         {
           MessageUtil.noArg(sender, Prefix.NO_PLAYER, selector);
         }
@@ -290,7 +389,12 @@ public class SelectorUtil
       }
       if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)::apply))
       {
-        if (sender != null && notice)
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          return null;
+        }
+        if (notice)
         {
           MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.entities"));
         }
@@ -298,10 +402,20 @@ public class SelectorUtil
       }
       if (entities.size() != 1)
       {
-        if (sender != null && notice)
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          return null;
+        }
+        if (notice)
         {
           MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.toomany"));
         }
+        return null;
+      }
+      if (!sender.hasPermission("asdf"))
+      {
+        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
         return null;
       }
       return (Player) entities.get(0);
@@ -310,6 +424,12 @@ public class SelectorUtil
     {
       if (sender != null && notice)
       {
+
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          return null;
+        }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
       }
     }

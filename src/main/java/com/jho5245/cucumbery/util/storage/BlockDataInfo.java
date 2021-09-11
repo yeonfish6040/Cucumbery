@@ -1,8 +1,17 @@
 package com.jho5245.cucumbery.util.storage;
 
+import com.jho5245.cucumbery.util.Method;
 import org.bukkit.Material;
+import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.AnaloguePowerable;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockDataMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockDataInfo
 {
@@ -533,6 +542,25 @@ public class BlockDataInfo
 				return new String[] { "level" };
 
 		}
+		return null;
+	}
+
+	@Nullable
+	public static String[] blockDataKeys(@NotNull Material material)
+	{
+		List<String> keys = new ArrayList<>();
+		ItemStack itemStack = new ItemStack(material);
+		if (!ItemStackUtil.itemExists(itemStack))
+			return null;
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		if (!(itemMeta instanceof BlockDataMeta blockDataMeta))
+			return null;
+		if (blockDataMeta instanceof Ageable)
+			keys.add("age");
+		if (blockDataMeta instanceof AnaloguePowerable)
+			keys.add("power");
+		if (keys.size() > 0)
+			return Method.listToArray(keys);
 		return null;
 	}
 

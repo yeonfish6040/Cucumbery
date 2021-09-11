@@ -219,7 +219,7 @@ public class Constant
 
   public static final String VIRTUAL_CHEST_ADMIN_MENU_PREFIX = "§가§상§창§고§관§리§자" + GUI_SUFFIX;
 
-  public static final String ITEM_PORTABLE_SHULKER_BOX_GUI = "§ §휴§대§용§ §셜§커§상§자" + GUI_SUFFIX;
+  public static final String ITEM_PORTABLE_SHULKER_BOX_GUI = "휴대용 셜커 상자";
 
   // 강화
 

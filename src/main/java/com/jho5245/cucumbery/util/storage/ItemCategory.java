@@ -1597,7 +1597,7 @@ public class ItemCategory
     LEGENDARY(6
             , Cucumbery.config.getLong("item-rarity-value.legendary.value")
             , Cucumbery.config.getString("item-rarity-value.legendary.name")),
-    ARITFACT(7
+    ARTIFACT(7
             , Cucumbery.config.getLong("item-rarity-value.artifact.value")
             , Cucumbery.config.getString("item-rarity-value.artifact.name"));
 
@@ -1661,13 +1661,13 @@ public class ItemCategory
       {
         return Rarity.EXCELLENT;
       }
-      else if (value < Rarity.ARITFACT.getRarityValue())
+      else if (value < Rarity.ARTIFACT.getRarityValue())
       {
         return Rarity.LEGENDARY;
       }
       else
       {
-        return Rarity.ARITFACT;
+        return Rarity.ARTIFACT;
       }
     }
   }
