@@ -43,9 +43,19 @@ public enum Messages
   ARROW_COMBAT_UNKNOWN("death-messages.messages.arrow-combat-unknown"),
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
+   * %1$s이(가) %2$s에게 목숨을 빼앗겼습니다
    */
   BAD_RESPAWN("death-messages.messages.bad-respawn"),
+
+  /**
+   * %1$s이(가) %2$s와(과) 싸우다 %3$s에게 목숨을 빼앗겼습니다.
+   */
+  BAD_RESPAWN_COMBAT("death-messages.messages.bad-respawn-combat"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 목숨을 빼앗겼습니다.
+   */
+  BAD_RESPAWN_COMBAT_ITEM("death-messages.messages.bad-respawn-combat-item"),
 
   /**
    * %1$s이(가) 찔려 사망했습니다

@@ -279,6 +279,8 @@ public class Cucumbery extends JavaPlugin
     new Setblock().registerCommand("csetblock", "cucumbery.command.setblock", "csetblock", "setblock2");
     new ReplaceEntity().registerCommand("replaceentity", "cucumbery.command.replaceentity", "creplaceentity");
     new Repeat2().registerCommand("crepeat", "cucumbery.command.repeat", "repeat2");
+    new Data().registerCommand("cdata", "cucumbery.command.data", "data2");
+    new TP2().registerCommand("tp2", "cucumbery.command.tp2");
   }
 
   private void registerCommands()
@@ -307,9 +309,7 @@ public class Cucumbery extends JavaPlugin
     HandGive handGive = new HandGive();
     Initializer.registerCommand("handgive", handGive);
     Initializer.registerCommand("handgiveall", handGive);
-    BroadcastAndMessageItem broadcastAndMessageItem = new BroadcastAndMessageItem();
-    Initializer.registerCommand("broadcastitem", broadcastAndMessageItem);
-    Initializer.registerCommand("messageitem", broadcastAndMessageItem);
+    Initializer.registerCommand("broadcastitem", new BroadcastItem());
     Initializer.registerCommand("call", new Call());
     Initializer.registerCommand("enderchest", new EnderChest());
     Initializer.registerCommand("workbench", new Workbench());

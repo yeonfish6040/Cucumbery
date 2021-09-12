@@ -577,7 +577,7 @@ public class ComponentUtil
       // 아이템의 경우 추가
       else if (object instanceof Material material)
       {
-        ItemStack itemStack = new ItemStack(material);
+        ItemStack itemStack = ItemStackUtil.loredItemStack(material);
         Component concat = ComponentUtil.itemName(itemStack, TextColor.color(255, 204, 0));
         concat = concat.hoverEvent(itemStack.asHoverEvent());
         component = component.append(concat);
@@ -656,15 +656,7 @@ public class ComponentUtil
           }
           catch (Exception e)
           {
-            Component concat;
-            if (KOREAN.matcher(string).find())
-            {
-              concat = ComponentUtil.createTranslate(string, n2s);
-            }
-            else
-            {
-              concat = ComponentUtil.create2(string, n2s);
-            }
+            Component concat = ComponentUtil.create2(string, n2s);
             component = component.append(ComponentUtil.create(concat));
           }
         }
@@ -1044,7 +1036,7 @@ public class ComponentUtil
           String url = urlString.startsWith("http") ? urlString : "http://" + urlString;
           component = component.clickEvent(ClickEvent.openUrl(url));
           component = component.hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 연결합니다.", Component.text(url).color(NamedTextColor.YELLOW))));
-          components.add(component);
+          components.add(component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.TRUE));
           i += pos - i - 1;
           component = old;
         }

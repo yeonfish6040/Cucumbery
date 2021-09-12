@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.deathmessages;
 
+import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -40,6 +41,42 @@ public class ConditionChecker
         {
           ConditionType conditionType = condition.getConditionType();
           String value = condition.getValue();
+          if (conditionType == ConditionType.DEATH_TYPE)
+          {
+            if (value.startsWith("internal="))
+            {
+              value = value.split("internal=")[1];
+              String[] yeet2 = value.split(";");
+              boolean[] check2 = new boolean[yeet2.length];
+              for (int j = 0; j < yeet2.length; j++)
+              {
+                String yeet = yeet2[i];
+                String yeetKey = yeet.split(":")[0];
+                if (yeetKey.equals("include"))
+                {
+                  String[] values = yeet.split(":")[1].split(",");
+                  if (Method.contains(key, values))
+                  {
+                    check2[j] = true;
+                  }
+                }
+                if (yeetKey.equals("exclude"))
+                {
+                  String[] values = yeet.split(":")[1].split(",");
+                  if (!Method.contains(key, values))
+                  {
+                    check2[j] = true;
+                  }
+                }
+                if (yeetKey.equals("regex"))
+                {
+                  check2[j] = Pattern.compile(yeet.split(":")[1]).matcher(key).find();
+                }
+              }
+              check[i] = Method.allIsTrue(check2);
+              continue;
+            }
+          }
           Pattern pattern = conditionType == ConditionType.NBT ? Pattern.compile("(.*)") : Pattern.compile("^" + value + "$");
           switch (conditionType)
           {
@@ -64,7 +101,7 @@ public class ConditionChecker
               boolean success = false;
               if (Variable.lastTrampledBlockType.containsKey(victim.getUniqueId()))
               {
-                success = Variable.lastTrampledBlockType.get(victim.getUniqueId()).toString().equals(value);
+                success = pattern.matcher(Variable.lastTrampledBlockType.get(victim.getUniqueId()).toString()).find();
               }
               check[i] = success;
             }

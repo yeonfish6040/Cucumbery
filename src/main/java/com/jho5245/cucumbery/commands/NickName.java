@@ -85,7 +85,7 @@ public class NickName implements CommandExecutor
         }
 
         boolean off = args.length == 2 && args[1].equalsIgnoreCase("--off");
-        Component finalNickname = off ? Component.text(player.getName()) : nickName.append(Component.text("§f"));
+        Component finalNickname = off ? Component.text(player.getName()) : nickName.append(Component.text("§r"));
           Component senderComponent = ComponentUtil.senderComponent(player);
           finalNickname = finalNickname.hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
         String serialNickname = off ? null : ComponentUtil.serializeAsJson(nickName);
@@ -184,7 +184,7 @@ public class NickName implements CommandExecutor
       String originDisplay = MessageUtil.stripColor(UserData.DISPLAY_NAME.getString(uuid)), originList = MessageUtil.stripColor(
               UserData.PLAYER_LIST_NAME.getString(uuid));
       String inputName = nickName;
-      nickName = nickName + "§f";
+      nickName = nickName + "§r";
       String prefix;
       boolean off = args.length == 4 && args[3].equalsIgnoreCase("--off");
       if (args[1].equalsIgnoreCase("all"))

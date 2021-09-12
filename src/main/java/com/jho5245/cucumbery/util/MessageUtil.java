@@ -643,7 +643,7 @@ public class MessageUtil
       word = stripColor(n2s(word));
       word = word.replaceAll("[&%!?\"'\\\\$_,\\-ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅙㅞㅚㅟㅢㅝㅘㅐㅖ]", "가");
       word = word.replaceAll("[.#@ㄱㄲㄴㄷㄸㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ]", "각");
-      word = word.replaceAll("[*ㄹ]", "갈");
+      word = word.replaceAll("[*ㄹ~]", "갈");
       char c;
       boolean b = true;
       String test = KoreanUtils.format("%s는", word);

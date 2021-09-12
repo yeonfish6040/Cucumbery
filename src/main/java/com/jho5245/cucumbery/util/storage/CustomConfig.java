@@ -101,6 +101,7 @@ public class CustomConfig
     SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE("관전-중인-개체-정보-액션바에-표시(TMI 모드)", false),
     DISABLE_ITEM_COOLDOWN("아이템-재사용-대기-시간-무시(바닐라-아이템-전용)", false),
     GOD_MODE("무적-모드", false),
+    IMMEDIATE_RESPAWN("즉시-리스폰", false),
     ;
 
     private final String key;

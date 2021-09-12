@@ -37,71 +37,78 @@ public class ItemLoreUtil
   @SuppressWarnings("all")
   public static boolean isCucumberyTMIFood(@NotNull ItemStack itemStack)
   {
-    Material type = itemStack.getType();
-    if (type == Material.AIR || !type.isItem())
+    // for some exceptions due to api
+    try
     {
-      return false;
-    }
-    // 아이템의 메타 데이터
-    ItemMeta itemMeta = itemStack.getItemMeta();
-    // 메타 데이터가 없으면 true
-    if (itemMeta == null)
-    {
-      return true;
-    }
-    // 아이템의 설명
-    List<Component> lore = itemMeta.lore();
-    // 아이템의 설명이 없으면 true
-    if (lore == null || lore.size() == 0)
-    {
-      return true;
-    }
-
-    // 아이템의 설명이 있고 그 설명의 개수가 1개이고, 값이 (+NBT) 라면 true
-    if (hasOnlyNbtTagLore(itemStack))
-    {
-      return true;
-    }
-
-    Component lastLor = lore.get(lore.size() - 1);
-
-    // 마지막 설명이 [NBT 태그 복사됨] 이면 x
-    if (lastLor instanceof TranslatableComponent)
-    {
-      TranslatableComponent translatableLor = (TranslatableComponent) lastLor;
-      if (translatableLor.key().equals(Constant.TMI_LORE_NBT_TAG_COPIED))
+      Material type = itemStack.getType();
+      if (type == Material.AIR || !type.isItem())
       {
         return false;
       }
-    }
-
-    // 아이템의 설명이 있고 설명의 개수가 1개 이상
-    if (lore != null && lore.size() > 0)
-    {
-      // 첫 번째 설명이 공백 번역 컴포넌트이고, 텍스트 형태의 매개 변수 1개만 있으면
-      Component firstLor = lore.get(0);
-      if (firstLor instanceof TranslatableComponent translatableComponent)
+      // 아이템의 메타 데이터
+      ItemMeta itemMeta = itemStack.getItemMeta();
+      // 메타 데이터가 없으면 true
+      if (itemMeta == null)
       {
-        String key = translatableComponent.key();
-        if (key.equals(""))
+        return true;
+      }
+      // 아이템의 설명
+      List<Component> lore = itemMeta.lore();
+      // 아이템의 설명이 없으면 true
+      if (lore == null || lore.size() == 0)
+      {
+        return true;
+      }
+
+      // 아이템의 설명이 있고 그 설명의 개수가 1개이고, 값이 (+NBT) 라면 true
+      if (hasOnlyNbtTagLore(itemStack))
+      {
+        return true;
+      }
+
+      Component lastLor = lore.get(lore.size() - 1);
+
+      // 마지막 설명이 [NBT 태그 복사됨] 이면 x
+      if (lastLor instanceof TranslatableComponent translatableComponent)
+      {
+        if (translatableComponent.key().equals(Constant.TMI_LORE_NBT_TAG_COPIED))
         {
-          List<Component> args = translatableComponent.args();
-          if (args.size() == 1 && args.get(0) instanceof TextComponent)
+          return false;
+        }
+      }
+
+      // 아이템의 설명이 있고 설명의 개수가 1개 이상
+      if (lore != null && lore.size() > 0)
+      {
+        // 첫 번째 설명이 공백 번역 컴포넌트이고, 텍스트 형태의 매개 변수 1개만 있으면
+        Component firstLor = lore.get(0);
+        if (firstLor instanceof TranslatableComponent translatableComponent)
+        {
+          String key = translatableComponent.key();
+          if (key.equals(""))
+          {
+            List<Component> args = translatableComponent.args();
+            if (args.size() == 1 && args.get(0) instanceof TextComponent)
+            {
+              return true;
+            }
+          }
+        }
+
+        if (lore.size() > 1)
+        {
+          String firstLorSerial = ComponentUtil.serialize(firstLor);
+          String secondLorSerial = MessageUtil.stripColor(ComponentUtil.serialize(lore.get(1)));
+          if (firstLorSerial.equals("") && secondLorSerial.startsWith("아이템 종류"))
           {
             return true;
           }
         }
       }
+    }
+    catch (Exception ignored)
+    {
 
-      if (lore.size() > 1)
-      {
-        String firstLorSerial = ComponentUtil.serialize(firstLor);
-        String secondLorSerial = MessageUtil.stripColor(ComponentUtil.serialize(lore.get(1)));
-        if (firstLorSerial.equals("") && secondLorSerial.startsWith("아이템 종류"))
-        {
-          return true;
-        }
-      }
     }
     return false;
   }
@@ -682,7 +689,9 @@ public class ItemLoreUtil
   private static void addColors(@NotNull List<Component> lore, @NotNull TranslatableComponent prefix, @NotNull List<Color> colors)
   {
     if (colors.size() == 0)
+    {
       return;
+    }
     StringBuilder key = new StringBuilder("&7");
     List<Component> args = new ArrayList<>();
     for (Color color : colors)

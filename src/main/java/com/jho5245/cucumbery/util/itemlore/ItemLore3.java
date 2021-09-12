@@ -65,7 +65,7 @@ public class ItemLore3
         else
         {
           description.addAll(Arrays.asList(
-                  ComponentUtil.createTranslate("&7일반 %s와(과) 같으나, 설치한 %s을(를) 부수면", ComponentUtil.itemName(Material.CHEST), ComponentUtil.itemName(itemStack)),
+                  ComponentUtil.createTranslate("&7일반 %s와(과) 같으나, 설치한 %s을(를) 부수면", ComponentUtil.itemName(Material.CHEST), ComponentUtil.itemName(Material.SHULKER_BOX)),
                   ComponentUtil.createTranslate("&7내용물이 드롭되지 않고 상자 째로 드롭된다.")
           ));
         }

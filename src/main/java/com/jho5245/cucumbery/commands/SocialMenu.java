@@ -114,6 +114,15 @@ public class SocialMenu implements CommandExecutor
                         .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 관전을 중지합니다. %s", "&7 - /spectate")))
                         .clickEvent(ClickEvent.runCommand("/spectate"))
         );
+        if (Cucumbery.getPlugin().getPluginManager().getPlugin("OpenInv") != null)
+        {
+          adminPanel = adminPanel.append(Component.text(" "));
+          adminPanel = adminPanel.append(
+                  ComponentUtil.createTranslate("&6[인벤토리 열기]")
+                          .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s의 인벤토리를 엽니다. %s", target, "&7 - /openinv " + name)))
+                          .clickEvent(ClickEvent.runCommand("/openinv " + name))
+          );
+        }
         adminPanel = adminPanel.append(Component.text(" "));
         adminPanel = adminPanel.append(
                 ComponentUtil.createTranslate("&4[접속 제한]")

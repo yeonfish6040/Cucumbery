@@ -11,7 +11,6 @@ import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.*;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
-import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
@@ -46,29 +45,11 @@ import java.util.*;
 
 public class ItemLore2
 {
-  protected static ItemStack setItemLore(@NotNull ItemStack item, ItemMeta itemMeta, List<Component> lore, @Nullable Object... params)
+  protected static ItemStack setItemLore(@NotNull ItemStack item, ItemMeta itemMeta, List<Component> lore, @Nullable Object params)
   {
     Player player = null;
     PrepareItemCraftEvent prepareItemCraftEvent = null;
     EntityPickupItemEvent entityPickupItemEvent = null;
-    if (params != null)
-    {
-      for (Object o : params)
-      {
-        if (o instanceof Player)
-        {
-          player = (Player) o;
-        }
-        if (o instanceof PrepareItemCraftEvent)
-        {
-          prepareItemCraftEvent = (PrepareItemCraftEvent) o;
-        }
-        if (o instanceof EntityPickupItemEvent)
-        {
-          entityPickupItemEvent = (EntityPickupItemEvent) o;
-        }
-      }
-    }
 
     Material type = item.getType();
     NBTItem nbtItem = new NBTItem(item);
@@ -150,68 +131,52 @@ public class ItemLore2
     }
 
     NBTList<String> customLores = itemTag != null ? itemTag.getStringList(CucumberyTag.CUSTOM_LORE_KEY) : null;
-    if (player != null && (customLores == null || customLores.size() == 0))
-    {
-      switch (type)
-      {
-        case DRAGON_HEAD, NETHER_STAR, BEACON, ELYTRA -> {
-          if (itemTag == null)
-          {
-            itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-          }
-          switch (type)
-          {
-            case BEACON:
-              if (prepareItemCraftEvent != null)
-              {
-                if (itemTag == null)
-                {
-                  itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-                }
-                if (customLores == null)
-                {
-                  customLores = itemTag.getStringList(CucumberyTag.CUSTOM_LORE_KEY);
-                }
-                customLores.addAll(Arrays.asList("", "&7제작자 : &e" + ComponentUtil.senderComponent(player)));
-              }
-              break;
-            case DRAGON_HEAD:
-            case NETHER_STAR:
-            case ELYTRA:
-              if (entityPickupItemEvent != null)
-              {
-                if (itemTag == null)
-                {
-                  itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-                }
-                if (customLores == null)
-                {
-                  customLores = itemTag.getStringList(CucumberyTag.CUSTOM_LORE_KEY);
-                }
-                customLores.addAll(Arrays.asList("", "&7습득 유저 : &e" + ComponentUtil.senderComponent(player)));
-              }
-              break;
-          }
-          switch (type)
-          {
-            case DRAGON_HEAD, BEACON -> {
-              NBTList<String> extraTags = itemTag != null ? itemTag.getStringList(CucumberyTag.EXTRA_TAGS_KEY) : null;
-              if (itemTag == null)
-              {
-                itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-              }
-              if (extraTags == null)
-              {
-                extraTags = itemTag.getStringList(CucumberyTag.EXTRA_TAGS_KEY);
-              }
-              extraTags.add(ExtraTag.PREVERSE_BLOCK_NBT.toString());
-            }
-          }
-          item = nbtItem.getItem();
-          itemMeta = item.getItemMeta();
-        }
-      }
-    }
+//    if (player != null && (customLores == null || customLores.size() == 0))
+//    {
+//      switch (type)
+//      {
+//        case DRAGON_HEAD, NETHER_STAR, ELYTRA -> {
+//          if (itemTag == null)
+//          {
+//            itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+//          }
+//          switch (type)
+//          {
+//            case DRAGON_HEAD:
+//            case NETHER_STAR:
+//            case ELYTRA:
+//              if (entityPickupItemEvent != null)
+//              {
+//                if (itemTag == null)
+//                {
+//                  itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+//                }
+//                if (customLores == null)
+//                {
+//                  customLores = itemTag.getStringList(CucumberyTag.CUSTOM_LORE_KEY);
+//                }
+//                customLores.addAll(Arrays.asList("", "&7습득 유저 : &e" + ComponentUtil.serialize(ComponentUtil.senderComponent(player))));
+//              }
+//              break;
+//          }
+//          if (type == Material.DRAGON_HEAD)
+//          {
+//            NBTList<String> extraTags = itemTag != null ? itemTag.getStringList(CucumberyTag.EXTRA_TAGS_KEY) : null;
+//            if (itemTag == null)
+//            {
+//              itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+//            }
+//            if (extraTags == null)
+//            {
+//              extraTags = itemTag.getStringList(CucumberyTag.EXTRA_TAGS_KEY);
+//            }
+//            extraTags.add(ExtraTag.PREVERSE_BLOCK_NBT.toString());
+//          }
+//          item.setItemMeta(nbtItem.getItem().getItemMeta());
+//          itemMeta = item.getItemMeta();
+//        }
+//      }
+//    }
 
     NBTCompound customRarityTag = NBTAPI.getCompound(itemTag, CucumberyTag.CUSTOM_RARITY_KEY);
     String customRarityBase = NBTAPI.getString(customRarityTag, CucumberyTag.CUSTOM_RARITY_BASE_KEY);
@@ -328,7 +293,7 @@ public class ItemLore2
         try
         {
           maxDurability = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
-          currentDurability = maxDurability - duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
+          currentDurability = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
         }
         catch (Exception e)
         {
@@ -347,7 +312,7 @@ public class ItemLore2
         if (maxDurability != 0)
         {
           int originMaxDura = type.getMaxDurability();
-          double originItemDuraDouble = (originMaxDura * (currentDurability * 1d / maxDurability));
+          double originItemDuraDouble = (originMaxDura * ((maxDurability - currentDurability) * 1d / maxDurability));
           if (originItemDuraDouble > 0d && originItemDuraDouble < 1d)
           {
             originItemDuraDouble = 1d;
@@ -366,15 +331,15 @@ public class ItemLore2
           Damageable damageable = (Damageable) itemMeta;
           damageable.setDamage((int) originItemDuraDouble);
           item.setItemMeta(damageable);
-          long duraDifference = originMaxDura - maxDurability;
-          if (duraDifference > 0)
-          {
-            ItemLoreUtil.setItemRarityValue(lore, (long) Math.pow(duraDifference / (originMaxDura == 0 ? 60d : 30d), 2));
-          }
-          else
-          {
-            ItemLoreUtil.setItemRarityValue(lore, (long) -Math.pow(Math.abs(duraDifference / 30d), 1.05));
-          }
+//          long duraDifference = originMaxDura - maxDurability;
+//          if (duraDifference > 0)
+//          {
+//            ItemLoreUtil.setItemRarityValue(lore, (long) Math.pow(duraDifference / (originMaxDura == 0 ? 60d : 30d), 2));
+//          }
+//          else
+//          {
+//            ItemLoreUtil.setItemRarityValue(lore, (long) -Math.pow(Math.abs(duraDifference / 30d), 1.05));
+//          }
         }
       }
 
@@ -1317,7 +1282,7 @@ public class ItemLore2
         }
       }
       case BOW -> {
-        if (params != null && params.length > 0 && params[0] instanceof EntityShootBowEvent event)
+        if (params instanceof EntityShootBowEvent event)
         {
           ItemStack consumable = event.getConsumable();
           if (ItemStackUtil.itemExists(consumable))

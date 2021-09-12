@@ -33,6 +33,12 @@ death-messages:
     bad-respawn:
       - "death.attack.badRespawnPoint.message" # %1$s이(가) %2$s에게 목숨을 빼앗겼습니다
       - "%1$s이(가) %2$s에게 몸을 맡겼습니다."
+    bad-respawn-combat:
+      - "%1$s이(가) %2$s와(과) 싸우다 %3$s에게 목숨을 빼앗겼습니다."
+      - "%1$s이(가) %2$s와(과) 싸우다 %3$s에게 몸을 맡겼습니다."
+    bad-respawn-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 목숨을 빼앗겼습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 몸을 맡겼습니다."
     cactus:
      # - "death.attack.cactus" # %1$s이(가) 찔려 사망했습니다
       - "%1$s이(가) %2$s에 찔렸습니다."
@@ -40,8 +46,8 @@ death-messages:
       - "%1$s이(가) %2$s이(가) 오이인줄 알고 껴안았습니다."
     cactus-combat:
      # - "death.attack.cactus.player" # %1$s이(가) %2$s에게서 도망치려다 선인장에 찔렸습니다
-      - "%1$s이(가) %2$s에게서 도망치려다 %2$s에 찔렸습니다."
-      - "%1$s이(가) %2$s에게서 도망치려다 %2$s에 찔려 사망했습니다."
+      - "%1$s이(가) %2$s에게서 도망치려다 %3$s에 찔렸습니다."
+      - "%1$s이(가) %2$s에게서 도망치려다 %3$s에 찔려 사망했습니다."
       - "%1$s이(가) %2$s에게서 도망치려다 %3$s이(가) 오이인줄 알고 껴안았습니다."
     cactus-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔렸습니다."
@@ -280,14 +286,14 @@ death-messages:
       - "death.attack.lightningBolt.player" # %1$s이(가) %2$s과(와) 싸우다가 벼락을 맞았습니다
       - "%1$s이(가) %2$s과(와) 싸우다가 번갯불에 콩까지마라."
     lightning-bolt-combat-item:
-      - "%1$s이(가) %3$s(을)를 사용한 %2$s과(와) 싸우다가 벼락을 맞았습니다."
-      - "%1$s이(가) %3$s(을)를 사용한 %2$s과(와) 싸우다가 번갯불에 콩까지마라."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 벼락을 맞았습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 번갯불에 콩까지마라."
     magic:
       - "death.attack.magic" # %1$s이(가) 마법으로 살해당했습니다
     magic-combat:
       - "death.attack.magic.player" # %1$s이(가) %2$s에게서 도망치려다 마법으로 살해당했습니다
     magic-combat-item:
-      - "%1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 마법으로 살해당했습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 마법으로 살해당했습니다."
     magic-combat-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 마법으로 살해당했습니다."
     magma-block:
@@ -389,8 +395,6 @@ death-messages:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다."
     trident-combat-unknown:
       - "%1$s이(가) 어딘가에서 낼아온 %2$s에게 찔렸습니다."
-    unknown:
-      - "%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요!"
     void:
       - "death.attack.outOfWorld" # %1$s이(가) 세계 밖으로 떨어졌습니다
       - "%1$s이(가) 1.18 업데이트를 구경하러 갔습니다."
@@ -485,7 +489,7 @@ death-messages:
           value: "jho5245" # 플레이어 이름이 jho5245이다.
     nbt-example:
       messages: # 조건문 만족시 나올 데스 메시지
-        - "%1$s이(가) %3$s(을)를 사용한 누군가에게 암살당했습니다."
+        - "%1$s이(가) %3$s을(를) 사용한 누군가에게 암살당했습니다."
       conditions:
         condition-1:
           key: NBT # NBT Predicate
@@ -496,7 +500,7 @@ death-messages:
       conditions:
         condition-1:
           key: DEATH_TYPE
-          value: "(.*combat)+((?!item).)*" # 죽은 이유에 combat은 포함하나, item은 제외
+          value: "internal=include:combat;exclude:item" # 죽은 이유에 combat은 포함하나, item은 제외
         condition-2:
           key: ENTITY_TYPE # 죽은 개체의 종류
           value: "ENDER_DRAGON" # 종류가 엔더 드래곤
@@ -516,7 +520,7 @@ death-messages:
       conditions:
         condition-1:
           key: DEATH_TYPE
-          value: "(.*combat)+((?!item).)*"
+          value: "internal=include:combat;exclude:item"
         condition-2:
           key: ENTITY_TYPE
           value: "WITHER"
@@ -530,3 +534,27 @@ death-messages:
         condition-2:
           key: ENTITY_TYPE
           value: "WITHER"
+    water-meme:
+      messages:
+        - "death.attack.fell.water... 이 아니고 %1$s이(가) %2$s에서 떨어졌습니다."
+        - "%1$s이(가) %2$s에서 땅바닥으로 곤두박질쳤습니다."
+        - "%1$s이(가) 별로 높지도 않은데 딸피여서 %2$s에서 떨어져 뼈가 부러져 죽었습니다."
+      conditions:
+        condition-1:
+          key: DEATH_TYPE
+          value: "internal=include:fall_block;exclude:item,high,combat"
+        condition-2:
+          key: LAST_TRAMPLED_BLOCK_TYPE
+          value: "WATER"
+    water-meme-high:
+      messages:
+        - "death.attack.fell.water... 이 아니고 %1$s이(가) 높은 %2$s에서 떨어졌습니다."
+        - "%1$s이(가) 높은 %2$s에서 떨어졌습니다."
+        - "%1$s은(는) 높은 %2$s에서 추락을 피하지 못했습니다."
+      conditions:
+        condition-1:
+          key: DEATH_TYPE
+          value: "internal=include:fall_block_high;exclude:item,combat"
+        condition-2:
+          key: LAST_TRAMPLED_BLOCK_TYPE
+          value: "WATER"

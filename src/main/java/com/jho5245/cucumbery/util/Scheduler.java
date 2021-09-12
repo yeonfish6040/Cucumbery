@@ -38,6 +38,11 @@ import java.util.*;
 
 public class Scheduler
 {
+  /**
+   * 플레이어가 플레이어를 관전 중일 때 표시할 영양 게이지 텍스트
+   */
+  private static final String EXHAUSTION_GUAGE = "▁▂▃▄▅▆▇█";
+
   @SuppressWarnings("all")
   public static void Schedule(Cucumbery cucumbery)
   {
@@ -94,11 +99,6 @@ public class Scheduler
     reinforceChancetime();
   }
 
-  /**
-   * 플레이어가 플레이어를 관전 중일 때 표시할 영양 게이지 텍스트
-   */
-  private static final String EXHAUSTION_GUAGE = "▁▂▃▄▅▆▇█";
-
   private static void showSpectatorTargetInfoActionbar()
   {
     for (Player player : Bukkit.getServer().getOnlinePlayers())
@@ -116,24 +116,22 @@ public class Scheduler
       {
         continue;
       }
-      String message = "&e" + target.getName() + "&r 관전 중";
-      if (target instanceof Player)
+      Component message = ComponentUtil.createTranslate("%s 관전 중", target);
+      if (target instanceof Player targetPlayer)
       {
-        Player targetPlayer = (Player) target;
         int level = targetPlayer.getLevel();
         float exp = targetPlayer.getExp();
-        message += " | &aLv." + level + "(" + Constant.Sosu2.format(exp * 100) + "%)&r";
+        message = message.append(ComponentUtil.create(" | &aLv." + level + "(" + Constant.Sosu2.format(exp * 100) + "%)"));
       }
-      if (target instanceof Damageable && target instanceof Attributable)
+      if (target instanceof Damageable && target instanceof Attributable attributable)
       {
-        Attributable attributable = (Attributable) target;
         AttributeInstance attributeInstanceMaxHealth = attributable.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (attributeInstanceMaxHealth != null)
         {
           Damageable damageable = (Damageable) target;
           double hp = damageable.getHealth();
           double mhp = attributeInstanceMaxHealth.getValue();
-          message += " | &c" + Constant.Sosu2.format(hp) + "&7/&c" + Constant.Sosu2.format(mhp) + "❤&r";
+          message = message.append(ComponentUtil.create(" | &c" + Constant.Sosu2.format(hp) + "&7/&c" + Constant.Sosu2.format(mhp) + "❤"));
         }
 
         AttributeInstance attributeInstanceArmor = attributable.getAttribute(Attribute.GENERIC_ARMOR);
@@ -143,12 +141,11 @@ public class Scheduler
         {
           double armor = attributeInstanceArmor.getValue();
           double armorToughness = attributeInstanceArmorToughness.getValue();
-          message += " | &b" + Constant.Sosu2.format(armor) + (armorToughness != 0 ? "(" + Constant.Sosu2.format(armorToughness) + ")" : "") + "⛨&r";
+          message = message.append(ComponentUtil.create(" | &b" + Constant.Sosu2.format(armor) + (armorToughness != 0 ? "(" + Constant.Sosu2.format(armorToughness) + ")" : "") + "⛨"));
         }
       }
-      if (target instanceof Player)
+      if (target instanceof Player targetPlayer)
       {
-        Player targetPlayer = (Player) target;
 
         int foodLevel = targetPlayer.getFoodLevel();
         float saturation = targetPlayer.getSaturation();
@@ -156,12 +153,13 @@ public class Scheduler
 
         if (UserData.SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE.getBoolean(player))
         {
-          message += " | &6" + foodLevel + "⛁ " + Constant.Sosu2.format(saturation)
-                  + "s " + Constant.Sosu2Force.format(Math.max(0, 4 - exhaustion) * 25) + "%&l⚡ " + EXHAUSTION_GUAGE.charAt(Math.max(0, 8 - (int) (exhaustion * 2) - 1)) + "&r";
+          message = message.append(ComponentUtil.create(" | &6" + foodLevel + "⛁ " + Constant.Sosu2.format(saturation)
+                  + "s " + Constant.Sosu2Force.format(Math.max(0, 4 - exhaustion) * 25) + "%&l⚡ " + EXHAUSTION_GUAGE.charAt(Math.max(0, 8 - (int) (exhaustion * 2) - 1))));
         }
         else
         {
-          message += " | &6" + Constant.Sosu2.format(foodLevel + saturation) + (exhaustion != 0 ? "(" + EXHAUSTION_GUAGE.charAt(Math.max(0, 8 - (int) (exhaustion * 2) - 1)) + ")" : "") + "⛁&r";
+          message = message.append(ComponentUtil.create(
+                  " | &6" + Constant.Sosu2.format(foodLevel + saturation) + (exhaustion != 0 ? "(" + EXHAUSTION_GUAGE.charAt(Math.max(0, 8 - (int) (exhaustion * 2) - 1)) + ")" : "") + "⛁"));
         }
       }
       MessageUtil.sendActionBar(player, message);
@@ -582,10 +580,7 @@ public class Scheduler
         }
         else if (i != 40 || !ItemStackUtil.itemExists(playerInventory.getItemInOffHand()))
         {
-          if (item != null)
-          {
-            Method.updateInventory(player, item);
-          }
+          Method.updateInventory(player, item);
         }
       }
       String title = player.getOpenInventory().getTitle();
@@ -603,10 +598,7 @@ public class Scheduler
             {
               continue Outter;
             }
-            if (item != null)
-            {
-              Method.updateInventory(player, item);
-            }
+            Method.updateInventory(player, item);
           }
         }
       }
@@ -636,23 +628,8 @@ public class Scheduler
       }
       switch (item.getType())
       {
-        case COMMAND_BLOCK:
-        case REPEATING_COMMAND_BLOCK:
-        case CHAIN_COMMAND_BLOCK:
-        case NETHERITE_SWORD:
-        case DIAMOND_SWORD:
-        case GOLDEN_SWORD:
-        case IRON_SWORD:
-        case STONE_SWORD:
-        case WOODEN_SWORD:
-        case COMPASS:
-        case DEBUG_STICK:
-        case REDSTONE_BLOCK:
-        case WOODEN_AXE:
-        case IRON_BLOCK:
-        case BARRIER:
-        case COMMAND_BLOCK_MINECART:
-        case TRIDENT:
+        case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK, NETHERITE_SWORD, DIAMOND_SWORD, GOLDEN_SWORD,
+                IRON_SWORD, STONE_SWORD, WOODEN_SWORD, COMPASS, DEBUG_STICK, REDSTONE_BLOCK, WOODEN_AXE, IRON_BLOCK, BARRIER, COMMAND_BLOCK_MINECART, TRIDENT -> {
           Set<Material> transparent = new HashSet<>();
           for (Material material : Material.values())
           {
@@ -664,9 +641,7 @@ public class Scheduler
           Block block = player.getTargetBlock(transparent, 10);
           switch (block.getType())
           {
-            case COMMAND_BLOCK:
-            case REPEATING_COMMAND_BLOCK:
-            case CHAIN_COMMAND_BLOCK:
+            case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK -> {
               CommandBlock commandBlock = (CommandBlock) block.getState();
               String command = commandBlock.getCommand();
               if (command.length() == 0)
@@ -674,7 +649,9 @@ public class Scheduler
                 command = " ";
               }
               MessageUtil.sendActionBar(player, command, false);
+            }
           }
+        }
       }
     }
   }
@@ -896,105 +873,6 @@ public class Scheduler
             player.setItemOnCursor(boots);
           }
           player.updateInventory();
-        }
-      }
-    }
-  }
-
-  @SuppressWarnings("all")
-  private void airPack() // 산소통 기능
-  {
-    for (Player player : Bukkit.getServer().getOnlinePlayers())
-    {
-      GameMode gameMode = player.getGameMode();
-      if (gameMode != GameMode.SURVIVAL && gameMode != GameMode.ADVENTURE)
-      {
-        continue;
-      }
-      if (player.hasPotionEffect(PotionEffectType.WATER_BREATHING) && player.getPotionEffect(PotionEffectType.WATER_BREATHING)
-              .getAmplifier() != 5)
-      {
-        continue;
-      }
-      Material type = player.getLocation().getWorld().getBlockAt(player.getEyeLocation()).getType();
-      if (type != Material.WATER)
-      {
-        continue;
-      }
-      boolean mainHand = false;
-      ItemStack item = player.getInventory().getItemInMainHand();
-      ItemMeta meta = item.getItemMeta();
-      if (ItemStackUtil.hasLore(item))
-      {
-        List<String> lores = meta.getLore();
-        for (int i = 0; i < lores.size(); i++)
-        {
-          String lore = lores.get(i);
-          if (lore.startsWith(Constant.AIR_PREFIX + Constant.AIR + " : "))
-          {
-            long current = 0, max = 0;
-            String split = MessageUtil.stripColor(lore.split(Constant.AIR + " : ")[1]);
-            try
-            {
-              current = Long.parseLong(split.split(" / ")[0]);
-              max = Long.parseLong(split.split(" / ")[1]);
-              mainHand = true;
-            }
-            catch (NumberFormatException e)
-            {
-              mainHand = false;
-            }
-            if (mainHand && current > 0)
-            {
-              current--;
-              lores.set(i, Constant.AIR_PREFIX + Constant.AIR + " : " + current + " / " + max);
-              meta.setLore(lores);
-              item.setItemMeta(meta);
-              player.getInventory().setItemInMainHand(item);
-              player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1, 5, true, false));
-              player.setRemainingAir(player.getMaximumAir());
-              break;
-            }
-          }
-        }
-      }
-      if (mainHand)
-      {
-        continue;
-      }
-      item = player.getInventory().getItemInOffHand();
-      meta = item.getItemMeta();
-      if (ItemStackUtil.hasLore(item))
-      {
-        List<String> lores = meta.getLore();
-        for (int i = 0; i < lores.size(); i++)
-        {
-          String lore = lores.get(i);
-          if (lore.startsWith(Constant.AIR_PREFIX + Constant.AIR + " : "))
-          {
-            long current, max;
-            String split = MessageUtil.stripColor(lore.split(Constant.AIR + " : ")[1]);
-            try
-            {
-              current = Long.parseLong(split.split(" / ")[0]);
-              max = Long.parseLong(split.split(" / ")[1]);
-            }
-            catch (NumberFormatException e)
-            {
-              continue;
-            }
-            if (current > 0)
-            {
-              current--;
-              lores.set(i, Constant.AIR_PREFIX + Constant.AIR + " : " + current + " / " + max);
-              meta.setLore(lores);
-              item.setItemMeta(meta);
-              player.getInventory().setItemInOffHand(item);
-              player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1, 5, true, false));
-              player.setRemainingAir(player.getMaximumAir());
-              break;
-            }
-          }
         }
       }
     }
@@ -1442,6 +1320,105 @@ public class Scheduler
                 player.setSpectatorTarget(target);
               }, 1L);
               Variable.spectateUpdater.put(uuid, target.getLocation());
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @SuppressWarnings("all")
+  private void airPack() // 산소통 기능
+  {
+    for (Player player : Bukkit.getServer().getOnlinePlayers())
+    {
+      GameMode gameMode = player.getGameMode();
+      if (gameMode != GameMode.SURVIVAL && gameMode != GameMode.ADVENTURE)
+      {
+        continue;
+      }
+      if (player.hasPotionEffect(PotionEffectType.WATER_BREATHING) && player.getPotionEffect(PotionEffectType.WATER_BREATHING)
+              .getAmplifier() != 5)
+      {
+        continue;
+      }
+      Material type = player.getLocation().getWorld().getBlockAt(player.getEyeLocation()).getType();
+      if (type != Material.WATER)
+      {
+        continue;
+      }
+      boolean mainHand = false;
+      ItemStack item = player.getInventory().getItemInMainHand();
+      ItemMeta meta = item.getItemMeta();
+      if (ItemStackUtil.hasLore(item))
+      {
+        List<String> lores = meta.getLore();
+        for (int i = 0; i < lores.size(); i++)
+        {
+          String lore = lores.get(i);
+          if (lore.startsWith(Constant.AIR_PREFIX + Constant.AIR + " : "))
+          {
+            long current = 0, max = 0;
+            String split = MessageUtil.stripColor(lore.split(Constant.AIR + " : ")[1]);
+            try
+            {
+              current = Long.parseLong(split.split(" / ")[0]);
+              max = Long.parseLong(split.split(" / ")[1]);
+              mainHand = true;
+            }
+            catch (NumberFormatException e)
+            {
+              mainHand = false;
+            }
+            if (mainHand && current > 0)
+            {
+              current--;
+              lores.set(i, Constant.AIR_PREFIX + Constant.AIR + " : " + current + " / " + max);
+              meta.setLore(lores);
+              item.setItemMeta(meta);
+              player.getInventory().setItemInMainHand(item);
+              player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1, 5, true, false));
+              player.setRemainingAir(player.getMaximumAir());
+              break;
+            }
+          }
+        }
+      }
+      if (mainHand)
+      {
+        continue;
+      }
+      item = player.getInventory().getItemInOffHand();
+      meta = item.getItemMeta();
+      if (ItemStackUtil.hasLore(item))
+      {
+        List<String> lores = meta.getLore();
+        for (int i = 0; i < lores.size(); i++)
+        {
+          String lore = lores.get(i);
+          if (lore.startsWith(Constant.AIR_PREFIX + Constant.AIR + " : "))
+          {
+            long current, max;
+            String split = MessageUtil.stripColor(lore.split(Constant.AIR + " : ")[1]);
+            try
+            {
+              current = Long.parseLong(split.split(" / ")[0]);
+              max = Long.parseLong(split.split(" / ")[1]);
+            }
+            catch (NumberFormatException e)
+            {
+              continue;
+            }
+            if (current > 0)
+            {
+              current--;
+              lores.set(i, Constant.AIR_PREFIX + Constant.AIR + " : " + current + " / " + max);
+              meta.setLore(lores);
+              item.setItemMeta(meta);
+              player.getInventory().setItemInOffHand(item);
+              player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1, 5, true, false));
+              player.setRemainingAir(player.getMaximumAir());
+              break;
             }
           }
         }

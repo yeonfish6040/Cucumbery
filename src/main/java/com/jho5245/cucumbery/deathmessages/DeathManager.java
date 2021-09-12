@@ -15,6 +15,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockDataMeta;
@@ -31,20 +32,19 @@ public class DeathManager
 {
   public static final Component BAD_RESPAWM_POINT = ComponentUtil.createTranslate("chat.square_brackets", ComponentUtil.createTranslate("death.attack.badRespawnPoint.link"))
           .hoverEvent(HoverEvent.showText(Component.text("MC-28723"))).clickEvent(ClickEvent.openUrl("https://bugs.mojang.com/browse/MCPE-28723"));
-  public static String BRACKET = Variable.deathMessages.getString("death-messages.prefix.bracket", "&6[%s]");
-  public static Component DEATH_PREFIX = ComponentUtil.createTranslate(
-          BRACKET, ComponentUtil.createTranslate(Variable.deathMessages.getString("death-messages.prefix.death")));
-
-  public static Component DEATH_PREFIX_PVP = ComponentUtil.createTranslate(
-          BRACKET, ComponentUtil.createTranslate(Variable.deathMessages.getString("death-messages.prefix.pvp")));
-
   public static final Component downloadURL = ComponentUtil.createTranslate("&9&l여기")
           .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://cucumbery.com/api/builds/dev/latest/download")))
           .clickEvent(ClickEvent.openUrl("https://cucumbery.com/api/builds/dev/latest/download"));
-
   public static final Component reportBugURL = ComponentUtil.createTranslate("&9&l여기")
           .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://github.com/jho5245/Cucumbery/issues")))
           .clickEvent(ClickEvent.openUrl("https://github.com/jho5245/Cucumbery/issues"));
+  private static final int COOLDOWN_IN_TICKS = 5;
+  public static String BRACKET = Variable.deathMessages.getString("death-messages.prefix.bracket", "&6[%s]");
+  public static Component DEATH_PREFIX = ComponentUtil.createTranslate(
+          BRACKET, ComponentUtil.createTranslate(Variable.deathMessages.getString("death-messages.prefix.death")));
+  public static Component DEATH_PREFIX_PVP = ComponentUtil.createTranslate(
+          BRACKET, ComponentUtil.createTranslate(Variable.deathMessages.getString("death-messages.prefix.pvp")));
+  private static boolean goBack = false;
 
   public static void what(EntityDeathEvent event)
   {
@@ -52,6 +52,17 @@ public class DeathManager
     DEATH_PREFIX_PVP = DEATH_PREFIX_PVP.hoverEvent(HoverEvent.showText(timeFormat));
     DEATH_PREFIX = DEATH_PREFIX.hoverEvent(HoverEvent.showText(timeFormat));
     LivingEntity entity = event.getEntity();
+    if (!(entity instanceof Player))
+    {
+      if (goBack)
+      {
+        return;
+      }
+      goBack = true;
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+              goBack = false, COOLDOWN_IN_TICKS);
+    }
+
     // 접두사 기능 붙여넣기
     boolean usePrefix = Variable.deathMessages.getBoolean("death-messages.prefix.enable");
     Location location = entity.getLocation();
@@ -73,6 +84,11 @@ public class DeathManager
     if (entity instanceof IronGolem ironGolem)
     {
       success = success || ironGolem.isPlayerCreated();
+    }
+    if (entity instanceof AbstractHorse horse)
+    {
+      AbstractHorseInventory inventory = horse.getInventory();
+      success = success || !Method.inventoryEmpty(inventory);
     }
     if (entity instanceof Boss)
     {
@@ -115,7 +131,7 @@ public class DeathManager
       ItemStack weapon = getWeapon(event);
       ItemStack lastTrampledBlock = getLastTrampledBlock(entity.getUniqueId());
       float fallDistance = entity.getFallDistance();
-      MessageUtil.broadcastDebug(cause);
+//      MessageUtil.broadcastDebug(cause);
       switch (cause)
       {
         case CONTACT -> {
@@ -225,6 +241,8 @@ public class DeathManager
         }
         case SUFFOCATION -> {
           key = "suffocation";
+          Block block = entity.getEyeLocation().getBlock();
+          Material type = block.getType();
           extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(entity.getEyeLocation().getBlock())));
         }
         case FALL -> {
@@ -427,7 +445,7 @@ public class DeathManager
         }
       }
 
-      MessageUtil.broadcastDebug(key);
+//      MessageUtil.broadcastDebug(key);
       Messages deathMessages;
       try
       {
@@ -441,6 +459,13 @@ public class DeathManager
       List<String> keys = deathMessages.getKeys();
       // 조건부 데스 메시지가 있으면 데스 메시지 치환
       Condition.changeDeathMessages(event, key, keys);
+
+      if (deathMessages == Messages.UNKNOWN)
+      {
+        keys.clear();
+        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %" + (extraArgs.size() + args.size()) + "$s에서 해당 버그를 제보해주세요!");
+      }
+
       if (key.equals("kill_combat"))
       {
         extraArgs.add(downloadURL);
@@ -495,33 +520,40 @@ public class DeathManager
       Variable.lastTrampledBlockType.remove(entity.getUniqueId());
       if (damager != null)
       {
-        if (damager instanceof LivingEntity livingEntity)
+        if (damager instanceof Entity e)
         {
-          Variable.attackerAndWeapon.remove(livingEntity.getUniqueId());
+          Variable.attackerAndWeapon.remove(e.getUniqueId());
         }
-      }
-      if (playerDeathEvent != null)
-      {
-        playerDeathEvent.deathMessage(null);
-      }
-      if (key.equals("none"))
-      {
-        return;
       }
       // 모든 플레이어에게 데스메시지 보냄
       if (event.isCancelled())
       {
         List<String> cancelledMessages = Variable.deathMessages.getStringList("death-messages.event-cancelled-messages");
-        String message = cancelledMessages.get(Method.random(0, cancelledMessages.size() - 1));
-        deathMessage = deathMessage.append(ComponentUtil.createTranslate(message, entity));
+        if (cancelledMessages.size() > 0)
+        {
+          String message = cancelledMessages.get(Method.random(0, cancelledMessages.size() - 1));
+          deathMessage = deathMessage.append(ComponentUtil.createTranslate(message, entity));
+        }
       }
-      MessageUtil.broadcastPlayer(deathMessage);
-      int x = location.getBlockX();
-      int y = location.getBlockY();
-      int z = location.getBlockZ();
-      deathMessage = deathMessage.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));
-      // 콘솔에 디버그를 보내기 위함
-      MessageUtil.consoleSendMessage(deathMessage);
+      if (key.equals("none"))
+      {
+        deathMessage = null;
+      }
+      if (playerDeathEvent != null)
+      {
+        playerDeathEvent.deathMessage(deathMessage);
+        MessageUtil.consoleSendMessage(ComponentUtil.createTranslate("&7죽은 위치 : %s", ComponentUtil.locationComponent(location)));
+      }
+      else if (deathMessage != null)
+      {
+        MessageUtil.broadcastPlayer(deathMessage);
+        int x = location.getBlockX();
+        int y = location.getBlockY();
+        int z = location.getBlockZ();
+        // 콘솔에 디버그를 보내기 위함
+        deathMessage = deathMessage.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));
+        MessageUtil.consoleSendMessage(deathMessage);
+      }
     }
   }
 

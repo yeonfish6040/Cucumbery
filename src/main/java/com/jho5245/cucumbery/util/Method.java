@@ -1202,13 +1202,13 @@ public class Method extends SoundPlay
         }
         display = display.replace(" ", "");
         String name2 = name.replace("+", "");
-        if ((name.length() > 1 || display.startsWith(name2)) && name2.toLowerCase().contains(display.toLowerCase()))
+        if (display.toLowerCase().contains(name2))
         {
           return online;
         }
         String listName = MessageUtil.stripColor(ComponentUtil.serialize(online.playerListName()));
         listName = listName.replace(" ", "");
-        if (name2.toLowerCase().contains(listName.toLowerCase()))
+        if (listName.toLowerCase().contains(name2))
         {
           return online;
         }

@@ -265,7 +265,6 @@ public class Summon extends CommandBase
         if (entity instanceof Item itemEntity)
         {
           Method.updateItem(itemEntity);
-          entity = itemEntity;
           nbtEntity.mergeCompound(nbtContainer);
         }
         success = !entity.isDead();

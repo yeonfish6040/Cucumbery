@@ -87,13 +87,13 @@ public class PlayerJoin implements Listener
     {
       displayname = player.getName();
     }
-    Component finalDislay = ComponentUtil.create(displayname).append(Component.text("§f")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    Component finalDislay = ComponentUtil.create(displayname).append(Component.text("§r")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
     player.displayName(finalDislay);
     if (playerListName == null)
     {
       playerListName = player.getName();
     }
-    finalDislay = ComponentUtil.create(playerListName).append(Component.text("§f")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    finalDislay = ComponentUtil.create(playerListName).append(Component.text("§r")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
     player.playerListName(finalDislay);
     Component displayName = ComponentUtil.senderComponent(player);
     String displayNameString = ComponentUtil.serialize(displayName);

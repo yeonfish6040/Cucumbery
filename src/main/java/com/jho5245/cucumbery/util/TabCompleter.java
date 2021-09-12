@@ -132,7 +132,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         {
           case ITEM_DROP_MODE:
           case ITEM_PICKUP_MODE:
-            return Method.tabCompleterList(args, "<인수>", "normal", "sneak", "disabled");
+            return Method.tabCompleterList(args, "<모드>", "normal", "sneak", "disabled");
           case LISTEN_CHAT:
           case EVENT_EXCEPTION_ACCESS:
           case LISTEN_CHAT_FORCE:
@@ -205,7 +205,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
           case DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING:
           case SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR:
           case SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE:
+          case DISABLE_ITEM_COOLDOWN:
           case GOD_MODE:
+          case IMMEDIATE_RESPAWN:
             return Method.tabCompleterBoolean(args, "<값>");
           case DISPLAY_NAME:
           case PLAYER_LIST_NAME:

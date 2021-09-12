@@ -23,13 +23,14 @@ import java.util.List;
 public class Damage extends CommandBase
 {
   final private List<Argument> argumentList1 = new ArrayList<>();
+  final private List<Argument> argumentList2 = new ArrayList<>();
+  final private List<Argument> argumentList3 = new ArrayList<>();
+  final private List<Argument> argumentList4 = new ArrayList<>();
 
   {
     argumentList1.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
     argumentList1.add(new DoubleArgument("대미지", 0));
   }
-
-  final private List<Argument> argumentList2 = new ArrayList<>();
 
   {
     argumentList2.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
@@ -37,15 +38,11 @@ public class Damage extends CommandBase
     argumentList2.add(new BooleanArgument("명령어 출력 숨김 여부"));
   }
 
-  final private List<Argument> argumentList3 = new ArrayList<>();
-
   {
     argumentList3.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
     argumentList3.add(new DoubleArgument("대미지", 0));
     argumentList3.add(new EntitySelectorArgument("가해 개체", EntitySelectorArgument.EntitySelector.ONE_ENTITY));
   }
-
-  final private List<Argument> argumentList4 = new ArrayList<>();
 
   {
     argumentList4.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
@@ -90,7 +87,7 @@ public class Damage extends CommandBase
       }
       if (successEntities.size() > 0)
       {
-        MessageUtil.info(commandSender, successEntities,  "에게 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+        MessageUtil.info(commandSender, successEntities, "에게 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
       }
       else
       {

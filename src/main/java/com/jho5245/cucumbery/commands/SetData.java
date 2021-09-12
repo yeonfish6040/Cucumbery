@@ -2,7 +2,6 @@ package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -72,7 +71,7 @@ public class SetData implements CommandExecutor
             }
             clone.setAmount(amount);
             player.getInventory().setItemInMainHand(clone);
-            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 개수를 &e" + amount + "개&r로 설정하였습니다.", item);
+            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 개수를 %s개로 설정하였습니다.", amount).hoverEvent(item.asHoverEvent()));
             player.sendMessage(txt);
             return true;
           case "durability":
@@ -91,7 +90,7 @@ public class SetData implements CommandExecutor
             clone.setItemMeta((ItemMeta) duraMeta);
             player.getInventory().setItemInMainHand(clone);
             Method.updateInventory(player);
-            txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 내구도를 &e" + durability + "&r으로 설정하였습니다.", item);
+            txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 내구도를 %s(으)로 설정하였습니다.", durability).hoverEvent(item.asHoverEvent()));
             player.sendMessage(txt);
             return true;
           case "material":
@@ -136,19 +135,13 @@ public class SetData implements CommandExecutor
             }
             if (ItemStackUtil.itemExists(item))
             {
-              txt = ComponentUtil.create(
-                      Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 종류를 &e" + ComponentUtil.itemName(type) + "&r" + MessageUtil.getFinalConsonant(ComponentUtil.itemName(type).toString(), ConsonantType.으로) + " 설정하였습니다.", item);
-              player.sendMessage(txt);
+              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정하였습니다.", type).hoverEvent(item.asHoverEvent()));
             }
             else
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_SETDATA +
-                      "주로 사용하는 손에 들고 있는 아이템의 종류를 &e" +
-                      ComponentUtil.itemName(type) +
-                      "&r" +
-                      MessageUtil.getFinalConsonant(ComponentUtil.itemName(type).toString(), ConsonantType.으로) +
-                      " 설정하였습니다.");
+              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정하였습니다.", type).hoverEvent(new ItemStack(type).asHoverEvent()));
             }
+            player.sendMessage(txt);
             return true;
           default:
             MessageUtil.noArg(sender, Prefix.ARGS_WRONG, args[0]);

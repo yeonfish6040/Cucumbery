@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.util.storage;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -59,6 +61,10 @@ public class SoundPlay
 
   public static void playSound(@NotNull Object audience, @NotNull Sound sound, @NotNull SoundCategory category, double volume, double pitch)
   {
+    if (Cucumbery.using_CommandAPI && audience instanceof NativeProxyCommandSender sender)
+    {
+      audience = sender.getCaller();
+    }
     if (audience instanceof Player player)
     {
       player.playSound(player.getLocation(), sound, category, (float) volume, (float) pitch);

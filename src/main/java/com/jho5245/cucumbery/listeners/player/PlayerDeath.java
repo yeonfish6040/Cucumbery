@@ -1,8 +1,10 @@
 package com.jho5245.cucumbery.listeners.player;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,8 +30,8 @@ public class PlayerDeath implements Listener
     {
       event.setCancelled(true);
     }
-    boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player.getUniqueId());
-    boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player.getUniqueId());
+    boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player);
+    boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player);
     if (keepInv)
     {
       event.setKeepInventory(true);
@@ -48,9 +50,16 @@ public class PlayerDeath implements Listener
       for (ItemStack drop : drops)
       {
         if (NBTAPI.isRestricted(player, drop, RestrictionType.NO_TRADE))
+        {
           removals.add(drop);
+        }
       }
       drops.removeAll(removals);
+    }
+
+    if (UserData.IMMEDIATE_RESPAWN.getBoolean(player))
+    {
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.spigot().respawn(), 0L);
     }
   }
 }

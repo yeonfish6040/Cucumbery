@@ -780,7 +780,14 @@ public class ItemStackUtil
     ItemMeta itemMeta = itemStack.getItemMeta();
     if (type != newType)
     {
-      itemMeta.displayName(ComponentUtil.itemName(type));
+      if (type == Material.AIR)
+      {
+        itemMeta.displayName(ComponentUtil.createTranslate("벽").color(Constant.THE_COLOR));
+      }
+      else
+      {
+        itemMeta.displayName(ComponentUtil.itemName(type));
+      }
       itemStack.setItemMeta(itemMeta);
     }
     if (itemMeta instanceof BlockStateMeta blockStateMeta)
@@ -884,7 +891,7 @@ public class ItemStackUtil
     {
       fireworkMeta.clearEffects();
       itemStack.setItemMeta(fireworkMeta);
-  }
+    }
     List<Component> components = new ArrayList<>();
     if (separator)
     {
