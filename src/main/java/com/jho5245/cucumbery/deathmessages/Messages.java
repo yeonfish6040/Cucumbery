@@ -188,6 +188,11 @@ public enum Messages
   EXPLOSION_COMBAT("death-messages.messages.explosion-combat"),
 
   /**
+   * %1$s이(가) 어딘가에서 날아온 %2$s때문에 폭파당했습니다
+   */
+  EXPLOSION_COMBAT_UNKNOWN("death-messages.messages.explosion-combat-unknown"),
+
+  /**
    * %1$s이(가) %2$s에게 %3$s(으)로 폭파당했습니다
    */
   EXPLOSION_COMBAT_ITEM("death-messages.messages.explosion-combat-item"),

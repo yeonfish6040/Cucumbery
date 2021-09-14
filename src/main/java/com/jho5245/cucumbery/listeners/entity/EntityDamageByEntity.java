@@ -1,10 +1,6 @@
 package com.jho5245.cucumbery.listeners.entity;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.rpg.DamageCalculator;
-import com.jho5245.cucumbery.rpg.DamageDebugCommand;
-import com.jho5245.cucumbery.rpg.GetStat;
-import com.jho5245.cucumbery.rpg.StatManager;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
@@ -230,7 +226,7 @@ public class EntityDamageByEntity implements Listener
       this.sneakAttackPlayerRangedCommand(event, attcker, isMelee, isPvP, isSneaking);
       this.sneakAttackEntityRangedCommand(event, attcker, isMelee, isPvP, isSneaking);
     }
-    this.rpg(event);
+//    this.rpg(event);
     this.damageActionbar(event);
     this.cancelFireworkDamage(event);
   }
@@ -1169,7 +1165,7 @@ public class EntityDamageByEntity implements Listener
     }
   }
 
-  private void rpg(EntityDamageByEntityEvent event)
+/*  private void rpg(EntityDamageByEntityEvent event)
   {
     if (!Cucumbery.config.getBoolean("rpg-enabled"))
     {
@@ -1798,7 +1794,7 @@ public class EntityDamageByEntity implements Listener
         }
       }
     }
-  }
+  }*/
 
   private void damageActionbar(EntityDamageByEntityEvent event)
   {

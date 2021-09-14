@@ -15,6 +15,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +26,10 @@ public class AdvancedTeleport implements CommandExecutor
     if (!Method.hasPermission(sender, Permission.CMD_ADVANCED_TELEPORT, true))
     {
       return true;
+    }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
     }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length < 5)

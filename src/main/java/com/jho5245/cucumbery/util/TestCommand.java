@@ -7,17 +7,20 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TestCommand implements CommandExecutor
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
+    args = MessageUtil.wrapWithQuote(args);
     if (!Method.hasPermission(sender, "asdf", true))
     {
       return true;
     }
     Player player = (Player) sender;
+    player.sendMessage(Arrays.toString(args));
     switch (args[0])
     {
       case "entities" -> {

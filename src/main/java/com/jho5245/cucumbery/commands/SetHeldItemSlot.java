@@ -18,6 +18,10 @@ public class SetHeldItemSlot implements CommandExecutor
 		{
 			return true;
 		}
+		if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+		{
+			return sender instanceof Player;
+		}
 		String usage = cmd.getUsage().replace("/<command> ", ""), consoleUsage = usage.replace("[플레이어 ID]", "<플레이어 ID>");
 		if (args.length == 0)
 		{

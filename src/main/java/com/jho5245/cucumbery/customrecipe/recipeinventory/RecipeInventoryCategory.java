@@ -102,7 +102,7 @@ public class RecipeInventoryCategory
     {
       categoryDisplay = category;
     }
-    categoryDisplay = categoryDisplay.replace("__", " ");
+    categoryDisplay = categoryDisplay;
 
     Inventory menu = Bukkit.createInventory(
             null, 45, Constant.CANCEL_STRING +
@@ -214,7 +214,7 @@ public class RecipeInventoryCategory
       {
         display = recipe;
       }
-      display = display.replace("__", " ");
+      display = display;
       resultLore.addAll(
               Arrays.asList(Component.empty(),
                       ComponentUtil.create("§8--------------------"),

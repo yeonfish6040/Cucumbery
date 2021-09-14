@@ -118,6 +118,9 @@ death-messages:
     explosion-combat:
       - "death.attack.explosion.player" # %1$s이(가) %2$s에게 폭파당했습니다
       - "%1$s이(가) %2$s 때문에 펑! 펑! 펑!"
+    explosion-combat-unknown:
+      - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 폭파당했습니다."
+      - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 펑! 펑! 펑!"
     explosion-combat-item:
       - "death.attack.explosion.player.item" # %1$s이(가) %2$s에게 %3$s(으)로 폭파당했습니다
       - "%1$s이(가) %3$s을(를) 사용한 %2$s 때문에 폭파당했습니다."
@@ -460,20 +463,17 @@ death-messages:
     # ATTACKER_PLAYER_PERMISSION = 죽인 플레이어의 퍼미션 노드
     # WEAPON_TYPE = 사용한 무기 종류(BOW, DIAMOND_SWORD 등)
     # WEAPON_DISPLAY_NAME = 사용한 무기 이름
-    # NBT = NBT Predicate : 사용한 무기가 해당 nbt를 가지고 있는지 확인 (nbt를 병합해도 아이템이 같으면 가지고 있음)
+    # WEAPON_NBT = NBT Predicate : 사용한 무기가 해당 nbt를 가지고 있는지 확인 (nbt를 병합해도 아이템이 같으면 가지고 있음)
     # LAST_TRAMPLED_BLOCK_TYPE = 낙사 전 마지막으로 밟은 블록 종류
     #
     # key 값에 조건 키를 적고 value에 값을 적으면 된다. 값은 정규식을 사용한다.
     # 따라서 사용한 무기 이름에 오이가 포함되는 것을 조건으로 하기 위해서는
     # key를 WEAPON_DISPLAY_NAME 으로 하고 value를 ".*오이.*" 로 하면 된다.
     #
-    # 특정 문자열은 포함하고 동시에 특정 문자열 제외하는 방법
-    # ^(.*al)+((?!ch).)*
-    # 해당 방식으로 작성하면 al은 포함하고 ch는 제외한다.
+    # 특정 문자열은 포함하고 동시에 특정 문자열 제외하는 방법 (DEATH_TYPE에만 사용 가능)
+    # internal=include:a,b;exclude:c,d
+    # 해당 방식으로 작성하면 a,b는 포함하고 c,d는 제외한다.
     #
-    # 여러 문자열 제외하기
-    # ((.*al))+((?!(ch|de|fo)).)*
-    # al은 포함하고 ch, de, fo 전부 제외한다.
     # 아래는 예시 조건이다.
     #
     example: # 예시 조건 ID이다. 중복되지만 않으면 아무거나 상관 없다.
@@ -491,47 +491,47 @@ death-messages:
       messages: # 조건문 만족시 나올 데스 메시지
         - "%1$s이(가) %3$s을(를) 사용한 누군가에게 암살당했습니다."
       conditions:
-        condition-1:
-          key: NBT # NBT Predicate
+        nbt:
+          key: WEAPON_NBT # NBT Predicate
           value: "{foo:bar}" # 사용한 무기에 {foo:bar} 태그가 있는지 확인
     ender-dragon:
       messages:
         - "%2$s이(가) %1$s에게 최후의 일격을 날렸습니다."
       conditions:
-        condition-1:
+        death:
           key: DEATH_TYPE
           value: "internal=include:combat;exclude:item" # 죽은 이유에 combat은 포함하나, item은 제외
-        condition-2:
+        entity:
           key: ENTITY_TYPE # 죽은 개체의 종류
           value: "ENDER_DRAGON" # 종류가 엔더 드래곤
     ender-dragon-item:
       messages:
         - "%3$s을(를) 사용한 %2$s이(가) %1$s에게 최후의 일격을 날렸습니다."
       conditions:
-        condition-1:
+        death:
           key: DEATH_TYPE
-          value: ".*combat_item.*" # 죽은 이유에 combat_item 이라는 문자열 포함
-        condition-2: # 2번째 조건
+          value: "internal=include:combat,item" # 죽은 이유에 combat과 item 이라는 문자열 포함
+        entity:
           key: ENTITY_TYPE
           value: "ENDER_DRAGON"
     wither:
       messages:
         - "%2$s이(가) %1$s에게 최후의 일격을 날렸습니다."
       conditions:
-        condition-1:
+        death:
           key: DEATH_TYPE
           value: "internal=include:combat;exclude:item"
-        condition-2:
+        entity:
           key: ENTITY_TYPE
           value: "WITHER"
     wither-item:
       messages:
         - "%3$s을(를) 사용한 %2$s이(가) %1$s에게 최후의 일격을 날렸습니다."
       conditions:
-        condition-1:
+        death:
           key: DEATH_TYPE
-          value: ".*combat_item.*"
-        condition-2:
+          value: "internal=include:combat,item"
+        entity:
           key: ENTITY_TYPE
           value: "WITHER"
     water-meme:
@@ -540,21 +540,21 @@ death-messages:
         - "%1$s이(가) %2$s에서 땅바닥으로 곤두박질쳤습니다."
         - "%1$s이(가) 별로 높지도 않은데 딸피여서 %2$s에서 떨어져 뼈가 부러져 죽었습니다."
       conditions:
-        condition-1:
-          key: DEATH_TYPE
-          value: "internal=include:fall_block;exclude:item,high,combat"
-        condition-2:
+        a:
           key: LAST_TRAMPLED_BLOCK_TYPE
           value: "WATER"
+        b:
+          key: DEATH_TYPE
+          value: "internal=include:fall_block;exclude:item,high,combat"
     water-meme-high:
       messages:
         - "death.attack.fell.water... 이 아니고 %1$s이(가) 높은 %2$s에서 떨어졌습니다."
         - "%1$s이(가) 높은 %2$s에서 떨어졌습니다."
         - "%1$s은(는) 높은 %2$s에서 추락을 피하지 못했습니다."
       conditions:
-        condition-1:
-          key: DEATH_TYPE
-          value: "internal=include:fall_block_high;exclude:item,combat"
-        condition-2:
+        a:
           key: LAST_TRAMPLED_BLOCK_TYPE
           value: "WATER"
+        b:
+          key: DEATH_TYPE
+          value: "internal=include:fall_block_high;exclude:item,combat"

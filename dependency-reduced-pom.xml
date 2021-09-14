@@ -31,6 +31,11 @@
               <shadedPattern>com.jho5245.cucumbery.util.shading</shadedPattern>
             </relocation>
           </relocations>
+          <transformers>
+            <transformer>
+              <resource>LICENSE</resource>
+            </transformer>
+          </transformers>
         </configuration>
       </plugin>
     </plugins>
@@ -78,7 +83,7 @@
     <dependency>
       <groupId>dev.jorel.CommandAPI</groupId>
       <artifactId>commandapi-core</artifactId>
-      <version>6.3.0</version>
+      <version>6.3.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -96,7 +101,7 @@
     <dependency>
       <groupId>org.maxgamer</groupId>
       <artifactId>QuickShop</artifactId>
-      <version>4.0.9.7</version>
+      <version>4.0.9.10</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

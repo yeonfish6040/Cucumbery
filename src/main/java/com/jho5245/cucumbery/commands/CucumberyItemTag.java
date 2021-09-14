@@ -38,6 +38,10 @@ public class CucumberyItemTag implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (!(sender instanceof Player))
     {
       MessageUtil.sendError(sender, Prefix.ONLY_PLAYER);

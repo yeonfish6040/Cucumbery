@@ -1,25 +1,17 @@
 package com.jho5245.cucumbery.rpg;
 
-import com.jho5245.cucumbery.util.MessageUtil;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.List;
-
 public class GetStat
 {
-	private static GetStat getStat = new GetStat();
+/*	private static final GetStat getStat = new GetStat();
 
 	public static GetStat getStatClass()
 	{
 		return getStat;
-	}
+	}*/
 
 	public static final String PREFIX_1 = "§알§피§지§일", PREFIX_2 = "§알§피§지§이", PREFIX_3 = "§알§피§지§삼", PREFIX_4 = "§알§피§지§사";
 
-	public static enum Stat
+/*	public enum Stat
 	{
 		STR,
 		DEX,
@@ -50,7 +42,7 @@ public class GetStat
 		IGNORE_DEF
 	}
 	
-	public static enum RPGSlot
+	public enum RPGSlot
 	{
 		MAIN_HAND,
 		OFF_HAND,
@@ -59,8 +51,8 @@ public class GetStat
 		LEGGNINGS,
 		BOOTS,
 		INVENTORY
-	}
-
+	}*/
+/*
 	public long getLongStat(Player player, Stat type)
 	{
 		long[] stat = new long[StatManager.size];
@@ -8246,5 +8238,5 @@ public class GetStat
 			default:
 				return 0D;
 		}
-	}
+	}*/
 }

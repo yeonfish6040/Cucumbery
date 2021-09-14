@@ -20,6 +20,10 @@ public class AirPoint implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length < 3)
     {

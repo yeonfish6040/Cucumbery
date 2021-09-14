@@ -27,6 +27,10 @@ public class HealAndFeed implements CommandExecutor
         {
           return true;
         }
+        if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+        {
+          return sender instanceof Player;
+        }
         if (args.length == 0)
         {
           if (!(sender instanceof Player player))
@@ -94,6 +98,10 @@ public class HealAndFeed implements CommandExecutor
         {
           return true;
         }
+        if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+        {
+          return sender instanceof Player;
+        }
         if (args.length == 0)
         {
           if (!(sender instanceof Player player))
@@ -155,6 +163,10 @@ public class HealAndFeed implements CommandExecutor
         if (!Method.hasPermission(sender, Permission.CMD_AFEED, true))
         {
           return true;
+        }
+        if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+        {
+          return sender instanceof Player;
         }
         if (args.length < 4)
         {
@@ -599,10 +611,10 @@ public class HealAndFeed implements CommandExecutor
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "(으)로부터 포화도를 &e" +
-                              Constant.Sosu2.format(saturation) +
-                              "&r만큼 차감하였습니다. &e(&r현재 포화도 : &e" +
-                              Constant.Sosu2.format(target.getSaturation()) +
-                              "&e)");
+                                      Constant.Sosu2.format(saturation) +
+                                      "&r만큼 차감하였습니다. &e(&r현재 포화도 : &e" +
+                                      Constant.Sosu2.format(target.getSaturation()) +
+                                      "&e)");
                     }
                   }
                   else
@@ -617,10 +629,10 @@ public class HealAndFeed implements CommandExecutor
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "(으)로부터 포화도를 &e" +
-                              Constant.Sosu2.format(saturationInput) +
-                              "&r만큼 차감하였습니다. &e(&r현재 포화도 : &e" +
-                              Constant.Sosu2.format(target.getSaturation()) +
-                              "&e)");
+                                      Constant.Sosu2.format(saturationInput) +
+                                      "&r만큼 차감하였습니다. &e(&r현재 포화도 : &e" +
+                                      Constant.Sosu2.format(target.getSaturation()) +
+                                      "&e)");
                     }
                   }
                 }

@@ -36,6 +36,10 @@ public class ItemStorage implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length == 0)
     {
@@ -366,7 +370,7 @@ public class ItemStorage implements CommandExecutor
               lostItem = lost;
             }
           }
-          String itemName = args[2].replace("__", " ");
+          String itemName = args[2];
           String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을를);
           if (lostItem != null)
           {
@@ -644,7 +648,7 @@ public class ItemStorage implements CommandExecutor
                 Method.playSound(sender, Constant.WARNING_SOUND, Constant.WARNING_SOUND_VOLUME, Constant.WARNING_SOUND_PITCH);
               }
             }
-            String itemName = args[3].replace("__", " ");
+            String itemName = args[3];
             String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을를);
             Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_ITEMSTORAGE, sender, "이 당신의 &e" + args[2] + "&r 슬롯에 &e" + itemName + "&r" + finalConsonant + "&e " + amount + "개&r 지급하였습니다."), item);
             if (!target.equals(sender))

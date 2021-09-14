@@ -36,6 +36,10 @@ public class NickName implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (!Cucumbery.config.getBoolean("use-nickname-feature"))
     {
       MessageUtil.sendError(sender, "닉네임 기능이 비활성화 되어 있습니다. config에서 &euse-nickname-feature&r 값을 &etrue&r로 설정해주세요.");
@@ -62,10 +66,10 @@ public class NickName implements CommandExecutor
         UUID uuid = player.getUniqueId();
         String inputName = MessageUtil.listToString(" ", 1, args.length, args);
         if (inputName.length() > 4096)
-      {
-        MessageUtil.sendError(player, "너무 긴 닉네임입니다. 최대 &e4096자&r까지 입력할 수 있으나, &e" + inputName.length() + "자&r가 입력되었습니다.");
-        return true;
-      }
+        {
+          MessageUtil.sendError(player, "너무 긴 닉네임입니다. 최대 &e4096자&r까지 입력할 수 있으나, &e" + inputName.length() + "자&r가 입력되었습니다.");
+          return true;
+        }
         Component nickName;
         if (inputName.equals("--item"))
         {
@@ -86,8 +90,8 @@ public class NickName implements CommandExecutor
 
         boolean off = args.length == 2 && args[1].equalsIgnoreCase("--off");
         Component finalNickname = off ? Component.text(player.getName()) : nickName.append(Component.text("§r"));
-          Component senderComponent = ComponentUtil.senderComponent(player);
-          finalNickname = finalNickname.hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+        Component senderComponent = ComponentUtil.senderComponent(player);
+        finalNickname = finalNickname.hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
         String serialNickname = off ? null : ComponentUtil.serializeAsJson(nickName);
         String originDisplay = MessageUtil.stripColor(ComponentUtil.serialize(player.displayName())), originList = MessageUtil.stripColor(ComponentUtil.serialize(player.playerListName()));
         String prefix;
@@ -129,18 +133,14 @@ public class NickName implements CommandExecutor
         Variable.nickNames.remove(originDisplay);
         Variable.nickNames.remove(originList);
         Variable.cachedUUIDs.remove(originDisplay);
-        Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("__", ""));
         Variable.cachedUUIDs.remove(originList);
-        Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("__", ""));
         Variable.nickNames.add(uuid.toString());
         Variable.nickNames.add(player.getName());
         Variable.nickNames.add(MessageUtil.stripColor(ComponentUtil.serialize(player.displayName())));
         Variable.nickNames.add(MessageUtil.stripColor(ComponentUtil.serialize(player.playerListName())));
         Variable.cachedUUIDs.put(player.getName(), uuid);
         Variable.cachedUUIDs.put(MessageUtil.stripColor(ComponentUtil.serialize(player.displayName())), uuid);
-        Variable.cachedUUIDs.put(MessageUtil.stripColor(ComponentUtil.serialize(player.displayName())).replace(" ", "").replace("__", ""), uuid);
         Variable.cachedUUIDs.put(MessageUtil.stripColor(ComponentUtil.serialize(player.playerListName())), uuid);
-        Variable.cachedUUIDs.put(MessageUtil.stripColor(ComponentUtil.serialize(player.playerListName())).replace(" ", "").replace("__", ""), uuid);
         File nickNamesFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/Nicknames.yml");
         if (!nickNamesFile.exists())
         {
@@ -181,8 +181,7 @@ public class NickName implements CommandExecutor
         MessageUtil.sendError(sender, "너무 긴 닉네임입니다. 최대 &e4096자&r까지 입력할 수 있으나, &e" + nickName.length() + "자&r가 입력되었습니다.");
         return true;
       }
-      String originDisplay = MessageUtil.stripColor(UserData.DISPLAY_NAME.getString(uuid)), originList = MessageUtil.stripColor(
-              UserData.PLAYER_LIST_NAME.getString(uuid));
+      String originDisplay = UserData.DISPLAY_NAME.getString(uuid), originList = UserData.PLAYER_LIST_NAME.getString(uuid);
       String inputName = nickName;
       nickName = nickName + "§r";
       String prefix;
@@ -193,16 +192,22 @@ public class NickName implements CommandExecutor
         if (isOnline)
         {
           target.displayName(off ? null : ComponentUtil.create(nickName));
-          target.playerListName(off ? null :ComponentUtil.create(nickName));
+          target.playerListName(off ? null : ComponentUtil.create(nickName));
         }
         UserData.DISPLAY_NAME.set(uuid, off ? null : inputName);
         UserData.PLAYER_LIST_NAME.set(uuid, off ? null : inputName);
-        Variable.nickNames.remove(originDisplay);
-        Variable.cachedUUIDs.remove(originDisplay);
-        Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("+", ""));
-        Variable.nickNames.remove(originList);
-        Variable.cachedUUIDs.remove(originList);
-        Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("+", ""));
+        if (originDisplay != null)
+        {
+          Variable.nickNames.remove(originDisplay);
+          Variable.cachedUUIDs.remove(originDisplay);
+          Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("+", ""));
+        }
+        if (originList != null)
+        {
+          Variable.nickNames.remove(originList);
+          Variable.cachedUUIDs.remove(originList);
+          Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("+", ""));
+        }
         if (!off)
         {
           Variable.nickNames.add(MessageUtil.stripColor(inputName));

@@ -2,7 +2,6 @@ package com.jho5245.cucumbery.commands.debug;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.SelectorUtil;
@@ -11,6 +10,7 @@ import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -42,6 +42,10 @@ public class WHOIS implements CommandExecutor
     if (!Method.hasPermission(sender, Permission.CMD_WHOIS, true))
     {
       return true;
+    }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
     }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length < 2)
@@ -117,11 +121,8 @@ public class WHOIS implements CommandExecutor
         }
         double distance = -1D;
         Location location = player.getLocation();
-        // Block block = location.getBlock();
-        // double temperature = block.getTemperature(), humidity = block.getHumidity();
-        if (sender instanceof Player)
+        if (sender instanceof Player playerSender)
         {
-          Player playerSender = (Player) sender;
           Location loc2 = playerSender.getLocation();
           if (location.getWorld().getName().equals(loc2.getWorld().getName()))
           {
@@ -164,23 +165,15 @@ public class WHOIS implements CommandExecutor
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Yaw : &e" + locationYaw);
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Pitch : &e" + locationPitch);
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "거리 : &e" + distanceStr + "&em");
-        MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "생물 군계 : &e" + locationBiome + "&e(&r" + biome.toString() + "&e)");
+        MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "생물 군계 : &e" + locationBiome + "&e(&r" + biome + "&e)");
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
       }
       else if (args.length == 2 && args[1].equalsIgnoreCase("name"))
       {
-        String playerDisplayName = CustomConfig.UserData.DISPLAY_NAME.getString(offlinePlayer.getUniqueId()), playerListName = CustomConfig.UserData.PLAYER_LIST_NAME.getString(offlinePlayer.getUniqueId());
-        if (playerDisplayName == null)
-        {
-          playerDisplayName = Method.getName(offlinePlayer);
-        }
+        String playerDisplayName = ComponentUtil.serialize(ComponentUtil.create(CustomConfig.UserData.DISPLAY_NAME.getString(offlinePlayer.getUniqueId()))), playerListName = ComponentUtil.serialize(ComponentUtil.create(CustomConfig.UserData.PLAYER_LIST_NAME.getString(offlinePlayer.getUniqueId())));
         if (Method.isUUID(playerDisplayName))
         {
           playerDisplayName = "알 수 없음";
-        }
-        if (playerListName == null)
-        {
-          playerListName = Method.getName(offlinePlayer);
         }
         if (Method.isUUID(playerListName))
         {
@@ -188,14 +181,14 @@ public class WHOIS implements CommandExecutor
         }
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "&e" + playerName + "&6의 이름 정보");
-        MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "UUID : &e" + offlinePlayer.getUniqueId().toString());
+        MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "UUID : &e" + offlinePlayer.getUniqueId());
 
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "닉네임 : &e" + playerDisplayName);
-        MessageUtil.sendMessage(sender, ComponentUtil.create(MessageUtil.n2s(Prefix.INFO_WHOIS + "닉네임(색깔 없음) : &e") + playerDisplayName.replace("§", "&"), "클릭하여 클립보드에 복사", ClickEvent.Action.COPY_TO_CLIPBOARD,
-                        playerDisplayName.replace("§", "&")));
+        MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, ComponentUtil.create(MessageUtil.n2s("닉네임(색깔 없음) : &e") + playerDisplayName.replace("§", "&"), "클릭하여 클립보드에 복사", ClickEvent.Action.COPY_TO_CLIPBOARD,
+                playerDisplayName.replace("§", "&")));
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "목록 닉네임 : &e" + playerListName);
-        MessageUtil.sendMessage(sender, ComponentUtil.create(MessageUtil.n2s(Prefix.INFO_WHOIS + "목록 닉네임(색깔 없음) : &e") + playerListName.replace("§", "&"), "클릭하여 클립보드에 복사", ClickEvent.Action.COPY_TO_CLIPBOARD,
-                        playerListName.replace("§", "&")));
+        MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, ComponentUtil.create(MessageUtil.n2s("목록 닉네임(색깔 없음) : &e") + playerListName.replace("§", "&"), "클릭하여 클립보드에 복사", ClickEvent.Action.COPY_TO_CLIPBOARD,
+                playerListName.replace("§", "&")));
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
       }
       else if (args[1].equalsIgnoreCase("state"))
@@ -250,16 +243,18 @@ public class WHOIS implements CommandExecutor
             if (source instanceof LivingEntity)
             {
               damagerShooter = (LivingEntity) ((Projectile) damager).getShooter();
-              shooterString = damagerShooter.getName();
+              if (damagerShooter != null)
+              {
+                shooterString = damagerShooter.getName();
+              }
               if (damagerShooter instanceof Player)
               {
                 shooterPlayer = (Player) damagerShooter;
                 shooterString = shooterPlayer.getName();
               }
             }
-            else if (source instanceof BlockProjectileSource)
+            else if (source instanceof BlockProjectileSource blockSource)
             {
-              BlockProjectileSource blockSource = (BlockProjectileSource) source;
               Block block = blockSource.getBlock();
               shooterString = (ComponentUtil.itemName(block.getType())).toString();
             }
@@ -317,15 +312,12 @@ public class WHOIS implements CommandExecutor
         String gliding = isGliding ? "&a겉날개 활강 중" : "&c겉날개 활강 중이 아님";
         String glowing = isGlowing ? "&a발광 상태 효과 적용 중" : "&c발광 포션 상태 적용 중이 아님";
         String op = player.isOp() ? "&a관리자(오피)" : "&7관리자 아님(오피 아님)";
-//        player.isSilent();
         boolean isSleeping = player.isSleeping();
         boolean isSneaking = player.isSneaking();
         boolean isSprinting = player.isSprinting();
         String sleep = isSleeping ? "&a침대에서 자고 있음" : "&c침대에서 자고 있지 않음";
         String sneak = isSneaking ? "&c웅크리고 있음" : "&a웅크리고 있지 않음";
         String sprint = isSprinting ? "&a달리기 중" : "&c달리고 있지 않음";
-//        player.isWhitelisted();
-//        player.getCompassTarget();
         double percentage = player.getHealth() / Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue();
         if (percentage < 0.0D)
         {
@@ -360,7 +352,7 @@ public class WHOIS implements CommandExecutor
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "영양 : &e" + exhaustion);
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "레벨 : &e" + Constant.Jeongsu.format(level));
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS,
-                        "경험치 : &e" +
+                "경험치 : &e" +
                         Constant.Jeongsu.format(exp * expToLevel) +
                         "&r / &e" +
                         Constant.Jeongsu.format(expToLevel) +
@@ -420,7 +412,7 @@ public class WHOIS implements CommandExecutor
           {
             continue;
           }
-          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, attrs.toString() + " : &e" + Method.attributeString(player, attrs));
+          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate(attrs.translationKey()), " : &e" + Method.attributeString(player, attrs));
         }
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
       }
@@ -603,109 +595,40 @@ public class WHOIS implements CommandExecutor
         }
         switch (stats)
         {
-          case ANIMALS_BRED:
-          case ARMOR_CLEANED:
-          case AVIATE_ONE_CM:
-          case BANNER_CLEANED:
-          case BEACON_INTERACTION:
-          case BELL_RING:
-          case BOAT_ONE_CM:
-          case BREWINGSTAND_INTERACTION:
-          case CAKE_SLICES_EATEN:
-          case CAULDRON_FILLED:
-          case CAULDRON_USED:
-          case CHEST_OPENED:
-          case CLEAN_SHULKER_BOX:
-          case CLIMB_ONE_CM:
-          case CRAFTING_TABLE_INTERACTION:
-          case CROUCH_ONE_CM:
-          case DAMAGE_ABSORBED:
-          case DAMAGE_BLOCKED_BY_SHIELD:
-          case DAMAGE_DEALT:
-          case DAMAGE_DEALT_ABSORBED:
-          case DAMAGE_DEALT_RESISTED:
-          case DAMAGE_RESISTED:
-          case DAMAGE_TAKEN:
-          case DEATHS:
-          case DISPENSER_INSPECTED:
-          case DROPPER_INSPECTED:
-          case DROP_COUNT:
-          case ENDERCHEST_OPENED:
-          case FALL_ONE_CM:
-          case FISH_CAUGHT:
-          case FLOWER_POTTED:
-          case FLY_ONE_CM:
-          case FURNACE_INTERACTION:
-          case HOPPER_INSPECTED:
-          case HORSE_ONE_CM:
-          case INTERACT_WITH_ANVIL:
-          case INTERACT_WITH_BLAST_FURNACE:
-          case INTERACT_WITH_CAMPFIRE:
-          case INTERACT_WITH_CARTOGRAPHY_TABLE:
-          case INTERACT_WITH_GRINDSTONE:
-          case INTERACT_WITH_LECTERN:
-          case INTERACT_WITH_LOOM:
-          case INTERACT_WITH_SMOKER:
-          case INTERACT_WITH_STONECUTTER:
-          case ITEM_ENCHANTED:
-          case JUMP:
-          case LEAVE_GAME:
-          case MINECART_ONE_CM:
-          case MOB_KILLS:
-          case NOTEBLOCK_PLAYED:
-          case NOTEBLOCK_TUNED:
-          case OPEN_BARREL:
-          case PIG_ONE_CM:
-          case PLAYER_KILLS:
-          case PLAY_ONE_MINUTE:
-          case RAID_TRIGGER:
-          case RAID_WIN:
-          case RECORD_PLAYED:
-          case SHULKER_BOX_OPENED:
-          case SLEEP_IN_BED:
-          case SNEAK_TIME:
-          case SPRINT_ONE_CM:
-          case SWIM_ONE_CM:
-          case TALKED_TO_VILLAGER:
-          case TIME_SINCE_DEATH:
-          case TIME_SINCE_REST:
-          case TRADED_WITH_VILLAGER:
-          case TRAPPED_CHEST_TRIGGERED:
-          case WALK_ONE_CM:
-          case WALK_ON_WATER_ONE_CM:
-          case WALK_UNDER_WATER_ONE_CM:
-          case INTERACT_WITH_SMITHING_TABLE:
-          case STRIDER_ONE_CM:
-          case TARGET_HIT:
-            String statisticName = stats.toString();
+          case ANIMALS_BRED, ARMOR_CLEANED, AVIATE_ONE_CM, BANNER_CLEANED, BEACON_INTERACTION, BELL_RING, BOAT_ONE_CM, BREWINGSTAND_INTERACTION,
+                  CAKE_SLICES_EATEN, CAULDRON_FILLED, CAULDRON_USED, CHEST_OPENED, CLEAN_SHULKER_BOX, CLIMB_ONE_CM, CRAFTING_TABLE_INTERACTION,
+                  CROUCH_ONE_CM, DAMAGE_ABSORBED, DAMAGE_BLOCKED_BY_SHIELD, DAMAGE_DEALT, DAMAGE_DEALT_ABSORBED, DAMAGE_DEALT_RESISTED, DAMAGE_RESISTED,
+                  DAMAGE_TAKEN, DEATHS, DISPENSER_INSPECTED, DROPPER_INSPECTED, DROP_COUNT, ENDERCHEST_OPENED, FALL_ONE_CM, FISH_CAUGHT, FLOWER_POTTED,
+                  FLY_ONE_CM, FURNACE_INTERACTION, HOPPER_INSPECTED, HORSE_ONE_CM, INTERACT_WITH_ANVIL, INTERACT_WITH_BLAST_FURNACE, INTERACT_WITH_CAMPFIRE,
+                  INTERACT_WITH_CARTOGRAPHY_TABLE, INTERACT_WITH_GRINDSTONE, INTERACT_WITH_LECTERN, INTERACT_WITH_LOOM, INTERACT_WITH_SMOKER, INTERACT_WITH_STONECUTTER,
+                  ITEM_ENCHANTED, JUMP, LEAVE_GAME, MINECART_ONE_CM, MOB_KILLS, NOTEBLOCK_PLAYED, NOTEBLOCK_TUNED, OPEN_BARREL, PIG_ONE_CM, PLAYER_KILLS,
+                  PLAY_ONE_MINUTE, RAID_TRIGGER, RAID_WIN, RECORD_PLAYED, SHULKER_BOX_OPENED, SLEEP_IN_BED, SNEAK_TIME, SPRINT_ONE_CM, SWIM_ONE_CM, TALKED_TO_VILLAGER,
+                  TIME_SINCE_DEATH, TIME_SINCE_REST, TRADED_WITH_VILLAGER, TRAPPED_CHEST_TRIGGERED, WALK_ONE_CM, WALK_ON_WATER_ONE_CM, WALK_UNDER_WATER_ONE_CM,
+                  INTERACT_WITH_SMITHING_TABLE, STRIDER_ONE_CM, TARGET_HIT, TOTAL_WORLD_TIME -> {
+            Component key = Component.translatable("stat.minecraft." + stats.toString().toLowerCase());
+            String statisticName = ComponentUtil.serialize(key);
+            double value = offlinePlayer.getStatistic(stats);
+            String suffix = "";
+            if (stats.toString().endsWith("CM"))
+            {
+              value /= 100d;
+              suffix = "m";
+            }
+            if (statisticName.endsWith("개수"))
+            {
+              suffix = "개";
+            }
+            if (statisticName.endsWith("횟수"))
+            {
+              suffix = "회";
+            }
             MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
             MessageUtil.sendMessage(
-                    sender, Prefix.INFO_WHOIS +
-                            "&e" +
-                            playerName +
-                            "&r이(가) &e" +
-                            statisticName +
-                            "&r" +
-                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은는) +
-                            " &e" +
-                            offlinePlayer.getStatistic(stats) +
-                            "&r" +
-                            (statisticName.endsWith("개수") ? "개" : (statisticName.endsWith("횟수") ? "회" : "")) +
-                            "입니다.");
-            break;
-          default:
-          case BREAK_ITEM:
-          case CRAFT_ITEM:
-          case DROP:
-          case MINE_BLOCK:
-          case PICKUP:
-          case USE_ITEM:
-            MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_material <통계> <아이템 이름>&r 명령어를 사용해주세요.");
-            break;
-          case ENTITY_KILLED_BY:
-          case KILL_ENTITY:
-            MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_entity <통계> <몹 이름>&r 명령어를 사용해주세요.");
-            break;
+                    sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate("%s의 %s은(는) %s입니다.", offlinePlayer, key.color(Constant.THE_COLOR),
+                            ComponentUtil.createTranslate("%s" + suffix, Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
+          }
+          case BREAK_ITEM, CRAFT_ITEM, DROP, MINE_BLOCK, PICKUP, USE_ITEM -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_material <통계> <아이템 이름>&r 명령어를 사용해주세요.");
+          case ENTITY_KILLED_BY, KILL_ENTITY -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_entity <통계> <몹 이름>&r 명령어를 사용해주세요.");
         }
       }
       else if (args.length >= 3 && args[1].equals("stats_material"))
@@ -738,104 +661,36 @@ public class WHOIS implements CommandExecutor
         }
         switch (stats)
         {
-          case ANIMALS_BRED:
-          case ARMOR_CLEANED:
-          case AVIATE_ONE_CM:
-          case BANNER_CLEANED:
-          case BEACON_INTERACTION:
-          case BELL_RING:
-          case BOAT_ONE_CM:
-          case BREWINGSTAND_INTERACTION:
-          case CAKE_SLICES_EATEN:
-          case CAULDRON_FILLED:
-          case CAULDRON_USED:
-          case CHEST_OPENED:
-          case CLEAN_SHULKER_BOX:
-          case CLIMB_ONE_CM:
-          case CRAFTING_TABLE_INTERACTION:
-          case CROUCH_ONE_CM:
-          case DAMAGE_ABSORBED:
-          case DAMAGE_BLOCKED_BY_SHIELD:
-          case DAMAGE_DEALT:
-          case DAMAGE_DEALT_ABSORBED:
-          case DAMAGE_DEALT_RESISTED:
-          case DAMAGE_RESISTED:
-          case DAMAGE_TAKEN:
-          case DEATHS:
-          case DISPENSER_INSPECTED:
-          case DROPPER_INSPECTED:
-          case DROP_COUNT:
-          case ENDERCHEST_OPENED:
-          case FALL_ONE_CM:
-          case FISH_CAUGHT:
-          case FLOWER_POTTED:
-          case FLY_ONE_CM:
-          case FURNACE_INTERACTION:
-          case HOPPER_INSPECTED:
-          case HORSE_ONE_CM:
-          case INTERACT_WITH_ANVIL:
-          case INTERACT_WITH_BLAST_FURNACE:
-          case INTERACT_WITH_CAMPFIRE:
-          case INTERACT_WITH_CARTOGRAPHY_TABLE:
-          case INTERACT_WITH_GRINDSTONE:
-          case INTERACT_WITH_LECTERN:
-          case INTERACT_WITH_LOOM:
-          case INTERACT_WITH_SMOKER:
-          case INTERACT_WITH_STONECUTTER:
-          case ITEM_ENCHANTED:
-          case JUMP:
-          case LEAVE_GAME:
-          case MINECART_ONE_CM:
-          case MOB_KILLS:
-          case NOTEBLOCK_PLAYED:
-          case NOTEBLOCK_TUNED:
-          case OPEN_BARREL:
-          case PIG_ONE_CM:
-          case PLAYER_KILLS:
-          case PLAY_ONE_MINUTE:
-          case RAID_TRIGGER:
-          case RAID_WIN:
-          case RECORD_PLAYED:
-          case SHULKER_BOX_OPENED:
-          case SLEEP_IN_BED:
-          case SNEAK_TIME:
-          case SPRINT_ONE_CM:
-          case SWIM_ONE_CM:
-          case TALKED_TO_VILLAGER:
-          case TIME_SINCE_DEATH:
-          case TIME_SINCE_REST:
-          case TRADED_WITH_VILLAGER:
-          case TRAPPED_CHEST_TRIGGERED:
-          case WALK_ONE_CM:
-          case WALK_ON_WATER_ONE_CM:
-          case WALK_UNDER_WATER_ONE_CM:
-            MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
-            break;
-          default:
-          case BREAK_ITEM:
-          case CRAFT_ITEM:
-          case DROP:
-          case MINE_BLOCK:
-          case PICKUP:
-          case USE_ITEM:
-            String statisticName = stats.name();
+          case ANIMALS_BRED, ARMOR_CLEANED, AVIATE_ONE_CM, BANNER_CLEANED, BEACON_INTERACTION, BELL_RING, BOAT_ONE_CM, BREWINGSTAND_INTERACTION,
+                  CAKE_SLICES_EATEN, CAULDRON_FILLED, CAULDRON_USED, CHEST_OPENED, CLEAN_SHULKER_BOX, CLIMB_ONE_CM, CRAFTING_TABLE_INTERACTION,
+                  CROUCH_ONE_CM, DAMAGE_ABSORBED, DAMAGE_BLOCKED_BY_SHIELD, DAMAGE_DEALT, DAMAGE_DEALT_ABSORBED, DAMAGE_DEALT_RESISTED, DAMAGE_RESISTED,
+                  DAMAGE_TAKEN, DEATHS, DISPENSER_INSPECTED, DROPPER_INSPECTED, DROP_COUNT, ENDERCHEST_OPENED, FALL_ONE_CM, FISH_CAUGHT, FLOWER_POTTED,
+                  FLY_ONE_CM, FURNACE_INTERACTION, HOPPER_INSPECTED, HORSE_ONE_CM, INTERACT_WITH_ANVIL, INTERACT_WITH_BLAST_FURNACE, INTERACT_WITH_CAMPFIRE,
+                  INTERACT_WITH_CARTOGRAPHY_TABLE, INTERACT_WITH_GRINDSTONE, INTERACT_WITH_LECTERN, INTERACT_WITH_LOOM, INTERACT_WITH_SMOKER, INTERACT_WITH_STONECUTTER,
+                  ITEM_ENCHANTED, JUMP, LEAVE_GAME, MINECART_ONE_CM, MOB_KILLS, NOTEBLOCK_PLAYED, NOTEBLOCK_TUNED, OPEN_BARREL, PIG_ONE_CM, PLAYER_KILLS,
+                  PLAY_ONE_MINUTE, RAID_TRIGGER, RAID_WIN, RECORD_PLAYED, SHULKER_BOX_OPENED, SLEEP_IN_BED, SNEAK_TIME, SPRINT_ONE_CM, SWIM_ONE_CM, TALKED_TO_VILLAGER,
+                  TIME_SINCE_DEATH, TIME_SINCE_REST, TRADED_WITH_VILLAGER, TRAPPED_CHEST_TRIGGERED, WALK_ONE_CM, WALK_ON_WATER_ONE_CM, WALK_UNDER_WATER_ONE_CM,
+                  INTERACT_WITH_SMITHING_TABLE, STRIDER_ONE_CM, TARGET_HIT, TOTAL_WORLD_TIME -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
+          case BREAK_ITEM, CRAFT_ITEM, DROP, MINE_BLOCK, PICKUP, USE_ITEM -> {
+            String keyWhat = switch (stats)
+                    {
+                      case BREAK_ITEM -> "broken";
+                      case CRAFT_ITEM -> "crafted";
+                      case DROP -> "dropped";
+                      case MINE_BLOCK -> "mined";
+                      case PICKUP -> "picked_up";
+                      case USE_ITEM -> "used";
+                      default -> stats.toString();
+                    };
+            Component key = Component.translatable("stat_type.minecraft." + keyWhat);
+            String statisticName = ComponentUtil.serialize(key);
+            int value = offlinePlayer.getStatistic(stats, type);
             MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
             MessageUtil.sendMessage(
-                    sender, Prefix.INFO_WHOIS +
-                            "&e" +
-                            playerName +
-                            "&r이(가) &e" +
-                            statisticName +
-                            "&r" +
-                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은는) +
-                            " &e" +
-                            offlinePlayer.getStatistic(stats, type) +
-                            "&r회입니다.");
-            break;
-          case ENTITY_KILLED_BY:
-          case KILL_ENTITY:
-            MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_entity <통계> <몹 이름>&r 명령어를 사용해주세요.");
-            break;
+                    sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate("%s의 %s %s은(는) %s입니다.", offlinePlayer, type, key,
+                            ComponentUtil.createTranslate("%s회", Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
+          }
+          case ENTITY_KILLED_BY, KILL_ENTITY -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_entity <통계> <몹 이름>&r 명령어를 사용해주세요.");
         }
       }
       else if (args.length >= 3 && args[1].equals("stats_entity"))
@@ -868,104 +723,40 @@ public class WHOIS implements CommandExecutor
         }
         switch (stats)
         {
-          case ANIMALS_BRED:
-          case ARMOR_CLEANED:
-          case AVIATE_ONE_CM:
-          case BANNER_CLEANED:
-          case BEACON_INTERACTION:
-          case BELL_RING:
-          case BOAT_ONE_CM:
-          case BREWINGSTAND_INTERACTION:
-          case CAKE_SLICES_EATEN:
-          case CAULDRON_FILLED:
-          case CAULDRON_USED:
-          case CHEST_OPENED:
-          case CLEAN_SHULKER_BOX:
-          case CLIMB_ONE_CM:
-          case CRAFTING_TABLE_INTERACTION:
-          case CROUCH_ONE_CM:
-          case DAMAGE_ABSORBED:
-          case DAMAGE_BLOCKED_BY_SHIELD:
-          case DAMAGE_DEALT:
-          case DAMAGE_DEALT_ABSORBED:
-          case DAMAGE_DEALT_RESISTED:
-          case DAMAGE_RESISTED:
-          case DAMAGE_TAKEN:
-          case DEATHS:
-          case DISPENSER_INSPECTED:
-          case DROPPER_INSPECTED:
-          case DROP_COUNT:
-          case ENDERCHEST_OPENED:
-          case FALL_ONE_CM:
-          case FISH_CAUGHT:
-          case FLOWER_POTTED:
-          case FLY_ONE_CM:
-          case FURNACE_INTERACTION:
-          case HOPPER_INSPECTED:
-          case HORSE_ONE_CM:
-          case INTERACT_WITH_ANVIL:
-          case INTERACT_WITH_BLAST_FURNACE:
-          case INTERACT_WITH_CAMPFIRE:
-          case INTERACT_WITH_CARTOGRAPHY_TABLE:
-          case INTERACT_WITH_GRINDSTONE:
-          case INTERACT_WITH_LECTERN:
-          case INTERACT_WITH_LOOM:
-          case INTERACT_WITH_SMOKER:
-          case INTERACT_WITH_STONECUTTER:
-          case ITEM_ENCHANTED:
-          case JUMP:
-          case LEAVE_GAME:
-          case MINECART_ONE_CM:
-          case MOB_KILLS:
-          case NOTEBLOCK_PLAYED:
-          case NOTEBLOCK_TUNED:
-          case OPEN_BARREL:
-          case PIG_ONE_CM:
-          case PLAYER_KILLS:
-          case PLAY_ONE_MINUTE:
-          case RAID_TRIGGER:
-          case RAID_WIN:
-          case RECORD_PLAYED:
-          case SHULKER_BOX_OPENED:
-          case SLEEP_IN_BED:
-          case SNEAK_TIME:
-          case SPRINT_ONE_CM:
-          case SWIM_ONE_CM:
-          case TALKED_TO_VILLAGER:
-          case TIME_SINCE_DEATH:
-          case TIME_SINCE_REST:
-          case TRADED_WITH_VILLAGER:
-          case TRAPPED_CHEST_TRIGGERED:
-          case WALK_ONE_CM:
-          case WALK_ON_WATER_ONE_CM:
-          case WALK_UNDER_WATER_ONE_CM:
-            MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
-            break;
-          default:
-          case BREAK_ITEM:
-          case CRAFT_ITEM:
-          case DROP:
-          case MINE_BLOCK:
-          case PICKUP:
-          case USE_ITEM:
-            MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_material <통계> <아이템 이름>&r 명령어를 사용해주세요.");
-            break;
-          case ENTITY_KILLED_BY:
-          case KILL_ENTITY:
-            String statisticName = stats.toString();
+          case ANIMALS_BRED, ARMOR_CLEANED, AVIATE_ONE_CM, BANNER_CLEANED, BEACON_INTERACTION, BELL_RING, BOAT_ONE_CM, BREWINGSTAND_INTERACTION,
+                  CAKE_SLICES_EATEN, CAULDRON_FILLED, CAULDRON_USED, CHEST_OPENED, CLEAN_SHULKER_BOX, CLIMB_ONE_CM, CRAFTING_TABLE_INTERACTION,
+                  CROUCH_ONE_CM, DAMAGE_ABSORBED, DAMAGE_BLOCKED_BY_SHIELD, DAMAGE_DEALT, DAMAGE_DEALT_ABSORBED, DAMAGE_DEALT_RESISTED, DAMAGE_RESISTED,
+                  DAMAGE_TAKEN, DEATHS, DISPENSER_INSPECTED, DROPPER_INSPECTED, DROP_COUNT, ENDERCHEST_OPENED, FALL_ONE_CM, FISH_CAUGHT, FLOWER_POTTED,
+                  FLY_ONE_CM, FURNACE_INTERACTION, HOPPER_INSPECTED, HORSE_ONE_CM, INTERACT_WITH_ANVIL, INTERACT_WITH_BLAST_FURNACE, INTERACT_WITH_CAMPFIRE,
+                  INTERACT_WITH_CARTOGRAPHY_TABLE, INTERACT_WITH_GRINDSTONE, INTERACT_WITH_LECTERN, INTERACT_WITH_LOOM, INTERACT_WITH_SMOKER, INTERACT_WITH_STONECUTTER,
+                  ITEM_ENCHANTED, JUMP, LEAVE_GAME, MINECART_ONE_CM, MOB_KILLS, NOTEBLOCK_PLAYED, NOTEBLOCK_TUNED, OPEN_BARREL, PIG_ONE_CM, PLAYER_KILLS,
+                  PLAY_ONE_MINUTE, RAID_TRIGGER, RAID_WIN, RECORD_PLAYED, SHULKER_BOX_OPENED, SLEEP_IN_BED, SNEAK_TIME, SPRINT_ONE_CM, SWIM_ONE_CM, TALKED_TO_VILLAGER,
+                  TIME_SINCE_DEATH, TIME_SINCE_REST, TRADED_WITH_VILLAGER, TRAPPED_CHEST_TRIGGERED, WALK_ONE_CM, WALK_ON_WATER_ONE_CM, WALK_UNDER_WATER_ONE_CM,
+                  INTERACT_WITH_SMITHING_TABLE, STRIDER_ONE_CM, TARGET_HIT, TOTAL_WORLD_TIME -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
+          case BREAK_ITEM, CRAFT_ITEM, DROP, MINE_BLOCK, PICKUP, USE_ITEM -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_material <통계> <아이템 이름>&r 명령어를 사용해주세요.");
+          case ENTITY_KILLED_BY, KILL_ENTITY -> {
+            String keyWhat = switch (stats)
+                    {
+                      case ENTITY_KILLED_BY -> "killed_by";
+                      case KILL_ENTITY -> "killed";
+                      default -> stats.toString();
+                    };
+            int value = offlinePlayer.getStatistic(stats, type);
             MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
-            MessageUtil.sendMessage(
-                    sender, Prefix.INFO_WHOIS +
-                            "&e" +
-                            playerName +
-                            "&r이(가) &e" +
-                            statisticName +
-                            "&r" +
-                            MessageUtil.getFinalConsonant(statisticName, ConsonantType.은는) +
-                            " &e" +
-                            offlinePlayer.getStatistic(stats, type) +
-                            "&r회입니다.");
-            break;
+            if (stats == Statistic.KILL_ENTITY)
+            {
+              MessageUtil.sendMessage(
+                      sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate("%s은(는) %s", offlinePlayer,
+                              ComponentUtil.createTranslate("stat_type.minecraft." + keyWhat, Constant.THE_COLOR_HEX + Constant.Sosu2.format(value), Component.translatable(type.translationKey()).color(Constant.THE_COLOR))));
+            }
+            else
+            {
+
+              MessageUtil.sendMessage(
+                      sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate("%s은(는) %s", offlinePlayer,
+                              ComponentUtil.createTranslate("stat_type.minecraft." + keyWhat, Component.translatable(type.translationKey()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
+            }
+          }
         }
       }
       else if (args.length == 2 && args[1].equalsIgnoreCase("effect"))
@@ -1029,7 +820,7 @@ public class WHOIS implements CommandExecutor
           calendar.setTimeInMillis(firstPlayed);
           calendar.add(Calendar.HOUR, timeDiffer);
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "최초 접속 시각 : &e"
-                  + Method.getCurrentTime(calendar, true, false) + " (" + Method.timeFormatMilli(current - firstPlayed,false) + " 전)");
+                  + Method.getCurrentTime(calendar, true, false) + " (" + Method.timeFormatMilli(current - firstPlayed, false) + " 전)");
         }
         if (lastLogin != 0)
         {
@@ -1061,7 +852,7 @@ public class WHOIS implements CommandExecutor
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "X : &e" + Constant.Jeongsu.format(spawnPointX));
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Y : &e" + Constant.Jeongsu.format(spawnPointY));
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Z : &e" + Constant.Jeongsu.format(spawnPointZ));
-          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS + "거리 : &e" + (sender instanceof Player player1 ? Constant.Sosu4.format(Method2.distance(spawnPointLocation, player1.getLocation())) +
+          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "거리 : &e" + (sender instanceof Player player1 ? Constant.Sosu4.format(Method2.distance(spawnPointLocation, player1.getLocation())) +
                   "m" : "-1m"));
         }
         else

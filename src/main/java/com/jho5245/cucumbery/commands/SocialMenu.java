@@ -19,6 +19,10 @@ public class SocialMenu implements CommandExecutor
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (!(sender instanceof Player player))
     {
       MessageUtil.sendError(sender, Prefix.ONLY_PLAYER);

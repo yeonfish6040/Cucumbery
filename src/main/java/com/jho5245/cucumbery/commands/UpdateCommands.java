@@ -18,6 +18,10 @@ public class UpdateCommands implements CommandExecutor
 		{
 			return true;
 		}
+		if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+		{
+			return sender instanceof Player;
+		}
 		String usage = cmd.getUsage().replace("<command>", label);
 		if (args.length <= 2)
 		{

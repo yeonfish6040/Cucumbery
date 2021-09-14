@@ -42,7 +42,6 @@ import com.jho5245.cucumbery.listeners.player.interact.PlayerInteractEntity;
 import com.jho5245.cucumbery.listeners.player.item.*;
 import com.jho5245.cucumbery.listeners.server.ServerCommand;
 import com.jho5245.cucumbery.listeners.server.ServerListPing;
-import com.jho5245.cucumbery.rpg.DamageDebugCommand;
 import com.jho5245.cucumbery.util.*;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.plugin_support.QuickShopTabCompleter;
@@ -65,6 +64,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.maxgamer.quickshop.QuickShop;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
@@ -165,6 +166,7 @@ public class Cucumbery extends JavaPlugin
   private void init()
   {
     Cucumbery.cucumbery = this;
+    file = this.getFile();
     dataFolder = this.getDataFolder();
     Cucumbery.config = (YamlConfiguration) this.getConfig();
     this.pluginDescriptionFile = this.getDescription();
@@ -172,8 +174,6 @@ public class Cucumbery extends JavaPlugin
     this.currentConfigVersion = Cucumbery.config.getInt("config-version");
     this.registerItems();
     Scheduler.Schedule(this);
-    dataFolder = new File(new File(Cucumbery.getPlugin().getDataFolder().getAbsoluteFile().getParent()).getParent());
-    file = this.getFile();
     Updater.onEnable();
     if (using_NoteBlockAPI)
     {
@@ -188,6 +188,7 @@ public class Cucumbery extends JavaPlugin
   // 플러그인 비활성화 시 처리 과정
   private void disableOperation()
   {
+    executorService.shutdown();
     Initializer.saveUserData();
     Initializer.saveBlockPlaceData();
     Initializer.saveItemUsageData();
@@ -306,9 +307,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("whois", new WHOIS());
     Initializer.registerCommand("whatis", new WHATIS());
     Initializer.registerCommand("sudo", new Sudo());
-    HandGive handGive = new HandGive();
-    Initializer.registerCommand("handgive", handGive);
-    Initializer.registerCommand("handgiveall", handGive);
+    Initializer.registerCommand("handgive", new HandGive());
     Initializer.registerCommand("broadcastitem", new BroadcastItem());
     Initializer.registerCommand("call", new Call());
     Initializer.registerCommand("enderchest", new EnderChest());
@@ -321,9 +320,6 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("heal", healAndFeed);
     Initializer.registerCommand("feed", healAndFeed);
     Initializer.registerCommand("advancedfeed", healAndFeed);
-    Initializer.registerCommand("copystring", new CopyString());
-    Initializer.registerCommand("viewdamage", new ViewDamage());
-    Initializer.registerCommand("uuid", new com.jho5245.cucumbery.commands.debug.UUID());
     Initializer.registerCommand("broadcast", new Broadcast());
     Initializer.registerCommand("sendmessage", new SendMessage());
     Initializer.registerCommand("clearchat", new ClearChat());
@@ -340,7 +336,6 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("airpoint", new AirPoint());
     Initializer.registerCommand("getuserdata", new GetUserData());
     Initializer.registerCommand("reinforce", new Reinforce());
-    Initializer.registerCommand("debugdamage", new DamageDebugCommand());
     Initializer.registerCommand("menu", new Menu());
     Initializer.registerCommand("forcechat", new ForceChat());
     Initializer.registerCommand("setrepaircost", setItemMeta);
@@ -356,7 +351,6 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("swapteleport", new SwapTeleport());
     Initializer.registerCommand("calcdistance", new CalcDistance());
     Initializer.registerCommand("checkamount", new CheckAmount());
-    Initializer.registerCommand("setattribute", new SetAttribute());
     Initializer.registerCommand("updateinventory", new UpdateInventory());
     Initializer.registerCommand("yunnori", new Yunnori());
     Initializer.registerCommand("hat", new Hat());
@@ -523,8 +517,10 @@ public class Cucumbery extends JavaPlugin
     this.currentConfigVersion = this.getConfig().getInt("config-version");
   }
 
+  private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+
   private void registerCustomConfig()
   {
-    Initializer.loadCustomConfigs();
+    executorService.submit(Initializer::loadCustomConfigs);
   }
 }

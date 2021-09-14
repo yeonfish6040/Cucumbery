@@ -97,9 +97,6 @@ public class PlayerCommandSend implements Listener
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_CHECKPERMISSION, "checkpermission"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_CLEARCHAT, "clearchat"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_COMMANDPACK, "commandpack"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_CONDENSE, "condense"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_COPYSTRING, "copystring"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_DAMAGE_DEBUG, "debugdamage"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_DELWARP, "cdelwarp"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_ENDERCHEST, "enderchest"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_FEED, "feed"));
@@ -108,15 +105,11 @@ public class PlayerCommandSend implements Listener
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_GETUSERDATA, "getuserdata"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_GUICOMMANDS, "menu"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_HANDGIVE, "handgive"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_HANDGIVEALL, "handgiveall"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_HAT, "hat"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_HEAL, "heal"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_ITEMDATA, "itemdata"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_ITEMDATA, "itemdata2"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_ITEMDATA, "itemdata3"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_ITEMSTORAGE, "citemstorage"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_MAINCOMMAND, "me/jho5245/cucumbery"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_MESSAGEITEM, "messageitem"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_MAINCOMMAND, "cucumbery"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_MHP, "maxhealthpoint"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_NICK, "nickname"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_NICK_OTHERS, "nicknameothers"));
@@ -125,7 +118,6 @@ public class PlayerCommandSend implements Listener
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_PLAYSOUNDALL2, "playsoundall2"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_REINFORCE, "reinforce"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SENDMESSAGE, "sendmessage"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_SET_ATTRIBUTE, "setattribute"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SETDATA, "itemflag"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SETDATA, "setrepaircost"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SETDATA, "setdata"));
@@ -146,8 +138,6 @@ public class PlayerCommandSend implements Listener
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SWAPHELDITEM, "swaphelditem"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_TRASHCAN, "trashcan"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_UPDATE_INVENTORY, "updateinventory"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_UUID, "uuid"));
-		commands.removeAll(this.deleteCommands(player, Permission.CMD_VIEWDAMAGE, "viewdamage"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_WARP, "cwarp"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_WARPS, "cwarps"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_WHATIS, "whatis"));
@@ -226,14 +216,6 @@ public class PlayerCommandSend implements Listener
 			commands.remove("엔더상자");
 			commands.remove("dpstkd");
 			commands.remove("dpsejtkdwk");
-		}
-		
-		// cucumbery:condense도 안사라지네 에센셜때문이냐
-		if (!Method.hasPermission(player, Permission.CMD_CONDENSE, false))
-		{
-			commands.remove("블록압축");
-			commands.remove("압축");
-			commands.remove("ccondense");
 		}
 		
 		if (!Permission.EVENT2_COMMAND_SEND_COLON.has(player))

@@ -254,7 +254,7 @@ public class InventoryClose implements Listener
         }
         if (config.getString("recipes." + recipe + ".extra.display") == null)
         {
-//					String display = recipe + "§e__(" + ComponentUtil.itemName(result).replace(" ", "__") + "§e)";
+//					String display = recipe + "§e__(" + ComponentUtil.itemName(result) + "§e)";
           config.set("recipes." + recipe + ".extra.display", recipe);
         }
         config.set("recipes." + recipe + ".result", resultSerial);
@@ -287,7 +287,7 @@ public class InventoryClose implements Listener
         }
         customRecipeListConfig.saveConfig();
         Variable.customRecipes.put(category, config);
-        MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + category.replace("__", " ") + "&r에 &e" + recipe.replace("__", " ") + "&r" + MessageUtil
+        MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + category + "&r에 &e" + recipe + "&r" + MessageUtil
                 .getFinalConsonant(recipe, MessageUtil.ConsonantType.이라) + "는 이름의 레시피를 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "하였습니다.");
         // player.sendMessage(category.replace("§", "&") + ", " + recipe.replace("§", "&"));
         player.updateInventory();

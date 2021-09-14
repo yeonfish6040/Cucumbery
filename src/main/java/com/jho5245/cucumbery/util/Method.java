@@ -33,10 +33,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.help.HelpTopic;
 import org.bukkit.inventory.EquipmentSlot;
@@ -1200,30 +1197,10 @@ public class Method extends SoundPlay
         {
           return online;
         }
-        display = display.replace(" ", "");
-        String name2 = name.replace("+", "");
-        if (display.toLowerCase().contains(name2))
-        {
-          return online;
-        }
         String listName = MessageUtil.stripColor(ComponentUtil.serialize(online.playerListName()));
-        listName = listName.replace(" ", "");
-        if (listName.toLowerCase().contains(name2))
+        if (listName.toLowerCase().contains(name.toLowerCase()))
         {
           return online;
-        }
-      }
-      if (name.contains("+"))
-      {
-        String name2 = name.replace("+", " ");
-        player = Method.getPlayer(sender, name2, false);
-        if (player != null)
-        {
-          return player;
-        }
-        if (notice && sender != null)
-        {
-          MessageUtil.noArg(sender, Prefix.NO_PLAYER, name);
         }
       }
     }
@@ -1266,27 +1243,9 @@ public class Method extends SoundPlay
       {
         return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name));
       }
-      if (Variable.cachedUUIDs.containsKey(name.replace("+", " ")))
-      {
-        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("+", " ")));
-      }
-      if (Variable.cachedUUIDs.containsKey(name.replace("+", "")))
-      {
-        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("+", "")));
-      }
-      if (Variable.cachedUUIDs.containsKey(name.replace("+", "").replace(" ", "")))
-      {
-        return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(name.replace("+", "").replace(" ", "")));
-      }
       for (String cache : Variable.cachedUUIDs.keySet())
       {
-        if (name.equalsIgnoreCase(cache) || cache.toLowerCase().contains(name.toLowerCase()) || cache.toLowerCase().contains(name.toLowerCase().replace("+", " "))
-                || cache.toLowerCase().contains(name.toLowerCase().replace("+", "").replace(" ", "")))
-        {
-          return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(cache));
-        }
-
-        if (cache.replace(" ", "+").contains(name) || cache.replace("+", "").contains(name) || cache.replace(" ", "").contains(name))
+        if (cache.toLowerCase().contains(name.toLowerCase()))
         {
           return Bukkit.getServer().getOfflinePlayer(Variable.cachedUUIDs.get(cache));
         }
@@ -1340,20 +1299,12 @@ public class Method extends SoundPlay
             return Bukkit.getServer().getOfflinePlayer(uuid);
           }
           String display = config.getString(UserData.DISPLAY_NAME.getKey());
-          if (display != null && MessageUtil.stripColor(display).toLowerCase().contains(name.toLowerCase()))
-          {
-            return Bukkit.getServer().getOfflinePlayer(uuid);
-          }
-          if (display != null && MessageUtil.stripColor(display).replace(" ", "+").contains(name.toLowerCase()))
+          if (display != null && MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.create(display))).toLowerCase().contains(name.toLowerCase()))
           {
             return Bukkit.getServer().getOfflinePlayer(uuid);
           }
           String listName = config.getString(UserData.PLAYER_LIST_NAME.getKey());
-          if (listName != null && MessageUtil.stripColor(listName).toLowerCase().contains(name.toLowerCase()))
-          {
-            return Bukkit.getServer().getOfflinePlayer(uuid);
-          }
-          if (listName != null && MessageUtil.stripColor(listName).replace(" ", "+").contains(name.toLowerCase()))
+          if (listName != null && MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.create(listName))).toLowerCase().contains(name.toLowerCase()))
           {
             return Bukkit.getServer().getOfflinePlayer(uuid);
           }
@@ -1379,7 +1330,7 @@ public class Method extends SoundPlay
       Player online = player.getPlayer();
       if (player.isOnline() && online != null)
       {
-        name = online.getDisplayName();
+        name = ComponentUtil.serialize(online.displayName());
       }
       else
       {
@@ -1411,7 +1362,7 @@ public class Method extends SoundPlay
     String name = player.getName();
     if (name == null)
     {
-      File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/UserData/" + player.getUniqueId().toString() + ".yml");
+      File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/UserData/" + player.getUniqueId() + ".yml");
       if (file.exists())
       {
         name = CustomConfig.getPlayerConfig(player.getUniqueId()).getConfig().getString(CustomConfig.UserData.ID.getKey());
@@ -1858,13 +1809,23 @@ public class Method extends SoundPlay
     return usefulLore && !Method.configContainsLocation(location, worldList);
   }
 
-
   /**
    * 아이템의 정보를 갱신하여 CustomName의 값을 올바르게 수정합니다.
    *
    * @param itemEntity 갱신할 아이템 개체
    */
-  public static void updateItem(@NotNull org.bukkit.entity.Item itemEntity)
+  public static void updateItem(@NotNull Item itemEntity)
+  {
+    updateItem(itemEntity, 0);
+  }
+
+  /**
+   * 아이템의 정보를 갱신하여 CustomName의 값을 올바르게 수정합니다.
+   *
+   * @param itemEntity 갱신할 아이템 개체
+   * @param mergeAmount ItemMergeEvent에서 개수를 추가
+   */
+  public static void updateItem(@NotNull Item itemEntity, int mergeAmount)
   {
     ItemStack item = itemEntity.getItemStack();
     if (NBTAPI.isRestricted(item, Constant.RestrictionType.NO_ITEM_EXISTS))
@@ -1891,14 +1852,12 @@ public class Method extends SoundPlay
     }
     NBTList<String> hideFlags = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.HIDE_FLAGS_KEY);
     String customName = itemEntity.getCustomName();
-    boolean isDefault = customName != null && customName.startsWith("§기§본§아§이§템§이§름");
+//    boolean isDefault = customName != null && customName.startsWith("§기§본§아§이§템§이§름");
     if (NBTAPI.arrayContainsValue(hideFlags, Constant.CucumberyHideFlag.CUSTOM_NAME))
     {
-      if (isDefault)
-      {
-        itemEntity.customName(null);
-        itemEntity.setCustomNameVisible(false);
-      }
+//      if (isDefault)
+      itemEntity.customName(null);
+      itemEntity.setCustomNameVisible(false);
       return;
     }
     if (Cucumbery.config.getBoolean("name-tag-on-item-spawn"))
@@ -1908,34 +1867,50 @@ public class Method extends SoundPlay
         if (ItemStackUtil.hasDisplayName(item) || !Cucumbery.config.getBoolean("name-tag-on-item-spawn-only-has-displayname") || Method.configContainsLocation(itemEntity.getLocation(), Cucumbery.config
                 .getStringList("no-name-tag-on-item-spawn-only-has-displayname-worlds")))
         {
+          ItemMeta itemMeta = item.getItemMeta();
+          Component displayName = itemMeta.displayName();
+          if (displayName == null)
+          {
+            displayName = Component.empty();
+          }
+          String displayNameSerial = ComponentUtil.serialize(displayName);
           String noItemTagString = Cucumbery.config.getString("no-name-tag-on-item-spawn-string");
-          if (!ItemStackUtil.hasDisplayName(item) || !Cucumbery.config.getBoolean("use-no-name-tag-on-item-spawn-string") || Method.configContainsLocation(itemEntity.getLocation(), Cucumbery.config
-                  .getStringList("no-use-no-name-tag-on-item-spawn-string-worlds")) || !item.getItemMeta().getDisplayName().contains(
-                  MessageUtil.n2s(Objects.requireNonNull(noItemTagString), MessageUtil.N2SType.SPECIAL)))
+          if (!ItemStackUtil.hasDisplayName(item) ||
+                  !Cucumbery.config.getBoolean("use-no-name-tag-on-item-spawn-string") ||
+                  Method.configContainsLocation(itemEntity.getLocation(), Cucumbery.config.getStringList("no-use-no-name-tag-on-item-spawn-string-worlds")) ||
+                  (noItemTagString != null && !displayNameSerial.contains(MessageUtil.n2s(noItemTagString, MessageUtil.N2SType.SPECIAL)))
+          )
           {
             Component component = ComponentUtil.itemName(item);
-            int amount = item.getAmount();
+            if (component.color() != null && item.hasItemMeta())
+            {
+              if (displayName.color() == null)
+              {
+                component = component.color(null);
+              }
+            }
+            int amount = item.getAmount() + mergeAmount;
             if (amount > 1)
             {
-              component = ComponentUtil.createTranslate("%s (%s)", component, ComponentUtil.create("&6" + amount));
+              component = ComponentUtil.createTranslate("%s (%s)", component, Constant.THE_COLOR_HEX + amount);
             }
 
             itemEntity.customName(component);
             itemEntity.setCustomNameVisible(true);
           }
-          else if (isDefault)
+          else
           {
             itemEntity.customName(null);
             itemEntity.setCustomNameVisible(false);
           }
         }
-        else if (isDefault)
+        else
         {
           itemEntity.customName(null);
           itemEntity.setCustomNameVisible(false);
         }
       }
-      else if (isDefault)
+      else
       {
         itemEntity.customName(null);
         itemEntity.setCustomNameVisible(false);
@@ -2108,9 +2083,12 @@ public class Method extends SoundPlay
       {
         s = s.substring(0, s.length() - 50) + "...";
       }
+      if (s.contains(" "))
+      {
+        s = "\"" + s + "\"";
+      }
       list.set(i, s);
     }
-    list.removeIf(str -> str.replace(" ", "").equals(""));
     Collections.sort(list);
     return list.stream().distinct().collect(Collectors.toList());
   }
@@ -2653,47 +2631,6 @@ public class Method extends SoundPlay
     return Method.tabCompleterList(args, Method.arrayToList(list), key, ignoreEmpty);
   }
 
-//  public static int getMaxSpaceAmount(List<String> input)
-//  {
-//    int amount = 0;
-//    for (String str : input)
-//    {
-//      amount = Math.max(amount, str.split(" ").length);
-//    }
-//    return  amount;
-//  }
-//
-//  public static List<String> tabCompleterWithSpaces(String[] args, int maxSpace, List<String> input)
-//  {
-//    if (args.length == 0)
-//      return input;
-//    List<List<String>> listList = new ArrayList<>();
-//    for (int i = 0; i < maxSpace; i++)
-//    {
-//      listList.add(new ArrayList<>());
-//    }
-//
-//    List<String> returnValue = new ArrayList<>();
-//
-//    for (String key : input)
-//    {
-//      String[] split = key.split(" ");
-//      try
-//      {
-//        for (int i = 0; i < split.length; i++)
-//        {
-//          if (i >= 1 && )
-//        }
-//      }
-//      catch (Exception ignored)
-//      {
-//
-//      }
-//    }
-//
-//    return returnValue;
-//  }
-
   public static List<String> tabCompleterList(String[] args, Set<String> set, String key)
   {
     return Method.tabCompleterList(args, Method.setToList(set), key, false);
@@ -2865,8 +2802,10 @@ public class Method extends SoundPlay
     for (Player online : Bukkit.getServer().getOnlinePlayers())
     {
       list.add(online.getName());
-      list.add(MessageUtil.stripColor(ComponentUtil.serialize(online.displayName())).replace(" ", "+"));
-      list.add(MessageUtil.stripColor(ComponentUtil.serialize(online.playerListName())).replace(" ", "+"));
+      String displayName = MessageUtil.stripColor(ComponentUtil.serialize(online.displayName()));
+      String playerListName = MessageUtil.stripColor(ComponentUtil.serialize(online.playerListName()));
+      list.add(displayName);
+      list.add(playerListName);
     }
     if (sender instanceof Player player)
     {

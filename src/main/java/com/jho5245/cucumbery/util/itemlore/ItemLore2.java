@@ -1473,7 +1473,7 @@ public class ItemLore2
           int brewingTime = brewingStand.getBrewingTime();
           int fuelLevel = brewingStand.getFuelLevel();
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&6양조 완료까지 남은 시간 : %s", ComponentUtil.createTranslate("&e%초", Constant.Sosu2.format(brewingTime / 20D))));
+          lore.add(ComponentUtil.createTranslate("&6양조 완료까지 남은 시간 : %s", ComponentUtil.createTranslate("&e%s초", Constant.Sosu2.format(brewingTime / 20D))));
           lore.add(ComponentUtil.createTranslate("&6남은 땔감 : %s", "&e" + fuelLevel));
         }
         if (blockState instanceof Campfire campfire)
@@ -1584,9 +1584,10 @@ public class ItemLore2
             }
           }
         }
-        catch (Exception ignored)
+        catch (Exception e)
         {
-
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.createTranslate("&7일해라 페이퍼 오류 안고치니"));
         }
         if (blockState instanceof Beehive beehive)
         {
@@ -1607,10 +1608,10 @@ public class ItemLore2
           LootTable lootTable = lootable.getLootTable();
           if (lootTable != null)
           {
-            long seed = lootable.getSeed();
+            Long seed = blockEntityTag.getLong("LootTableSeed");
             lore.add(Component.empty());
             lore.add(ComponentUtil.createTranslate("&7&o루트테이블 : %s", lootTable.getKey()));
-            if (blockEntityTag.getLong("LootTableSeed") != null)
+            if (seed != null)
             {
               lore.add(ComponentUtil.createTranslate("&7&o시드 : %s", seed));
             }

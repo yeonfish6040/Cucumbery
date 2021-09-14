@@ -18,6 +18,10 @@ public class UpdateInventory implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (args.length <= 2)
     {
       Player player;

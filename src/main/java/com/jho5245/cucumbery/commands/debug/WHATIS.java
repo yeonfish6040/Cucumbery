@@ -24,6 +24,10 @@ public class WHATIS implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     String usage = cmd.getUsage().replace("/<command> ", ""), consoleUsage = usage.replace("\\[월드 이름\\]", "<월드 이름>");
     if (args.length == 0 && !(sender instanceof Player))
     {
@@ -33,12 +37,12 @@ public class WHATIS implements CommandExecutor
     }
     else if (args.length <= 2)
     {
-      World world = null;
+      World world;
       if (sender instanceof Player && args.length == 0)
       {
         world = ((Player) sender).getLocation().getWorld();
       }
-      else if (args.length >= 1)
+      else
       {
         world = Bukkit.getServer().getWorld(args[0]);
       }
@@ -66,45 +70,24 @@ public class WHATIS implements CommandExecutor
         return true;
       }
       String worldName = world.getName();
-      String difficulty;
-      switch (world.getDifficulty())
-      {
-        case EASY:
-          difficulty = "쉬움";
-          break;
-        case HARD:
-          difficulty = "어려움";
-          break;
-        case NORMAL:
-          difficulty = "보통";
-          break;
-        case PEACEFUL:
-          difficulty = "평화로움";
-          break;
-        default:
-          difficulty = "알 수 없음";
-          break;
-      }
+      String difficulty = switch (world.getDifficulty())
+              {
+                case EASY -> "쉬움";
+                case HARD -> "어려움";
+                case NORMAL -> "보통";
+                case PEACEFUL -> "평화로움";
+              };
       String allowAnimals = world.getAllowAnimals() ? "&a동물 소환 가능" : "&c동물 소환 불가능";
       String allowMonsters = world.getAllowMonsters() ? "&a몬스터 소환 가능" : "&c몬스터 소환 불가능";
       int ambientSpawnLimit = world.getAmbientSpawnLimit();
       int animalSpawnLimit = world.getAnimalSpawnLimit();
-      String worldType;
-      switch (world.getEnvironment())
-      {
-        case NETHER:
-          worldType = "네더";
-          break;
-        case NORMAL:
-          worldType = "오버월드";
-          break;
-        case THE_END:
-          worldType = "디 엔드";
-          break;
-        default:
-          worldType = "알 수 없음";
-          break;
-      }
+      String worldType = switch (world.getEnvironment())
+              {
+                case NETHER -> "네더";
+                case NORMAL -> "오버월드";
+                case THE_END -> "디 엔드";
+                case CUSTOM -> "사용자 지정";
+              };
       String fullTime = MessageUtil.periodRealTimeAndGameTime(world.getFullTime());
       StringBuilder gamerule = new StringBuilder();
       for (int i = 0; i < GameRule.values().length; i++)

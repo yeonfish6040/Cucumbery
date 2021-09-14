@@ -70,6 +70,9 @@ use-hook-plugins:
   # Cucumbery에서 TMI 설명 기능 사용 시 양조기에서 mcMMO의 양조 기술과 충돌하는 것을 방지하기 위해 사용
   mcMMO: true
 
+# 알 수 없는 명령어 사용 시 뜰 메시지 굳검버리화 해버리기
+use-custom-unknown-command-message: true
+
 # 소리 상수
 sound-const:
   # 오류 효과음

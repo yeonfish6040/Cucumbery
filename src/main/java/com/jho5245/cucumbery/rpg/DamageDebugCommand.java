@@ -3,13 +3,13 @@ package com.jho5245.cucumbery.rpg;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,16 +18,13 @@ public class DamageDebugCommand implements CommandExecutor
 {
 	public static HashMap<Player, Boolean> debug = new HashMap<Player, Boolean>();
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args)
 	{
 		if (!Cucumbery.config.getBoolean("rpg-enabled"))
 		{
 			Bukkit.dispatchCommand(sender, "cucumberyunknowncommand");
 			return true;
 		}
-		
-		if (!Method.hasPermission(sender, Permission.CMD_DAMAGE_DEBUG, true))
-			return true;
 		
 		if (args.length == 0)
 		{

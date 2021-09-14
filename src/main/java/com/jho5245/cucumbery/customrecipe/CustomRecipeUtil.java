@@ -1450,7 +1450,7 @@ public class CustomRecipeUtil
           {
             categoryDisplay = requireCategory;
           }
-          categoryDisplay = MessageUtil.n2s(categoryDisplay.replace("__", " "));
+          categoryDisplay = MessageUtil.n2s(categoryDisplay);
 
           String dupCheckString = (category.equals(requireCategory) ? "rgb213,136,43;현재 레시피 목록의 레시피 제작 횟수 : " : categoryDisplay + "rgb213,136,43; 레시피 목록의 레시피 제작 횟수 : ");
 
@@ -1525,13 +1525,13 @@ public class CustomRecipeUtil
               {
                 display = requireRecipe;
               }
-              display = MessageUtil.n2s(display.replace("__", " "));
+              display = MessageUtil.n2s(display);
               String categoryDisplay = requireCategoryConfig.getString("extra.display");
               if (categoryDisplay == null)
               {
                 categoryDisplay = requireCategory;
               }
-              categoryDisplay = MessageUtil.n2s(categoryDisplay.replace("__", " "));
+              categoryDisplay = MessageUtil.n2s(categoryDisplay);
 
               String dupCheckString = (category.equals(requireCategory) ? "rg255,230;" : categoryDisplay + "rgb213,136,43; 레시피 목록의 rg255,230;") + display + "rgb213,136,43; 레시피 제작 횟수 : ";
               if (category.equals(requireCategory) && recipe.equals(requireRecipe))
@@ -1906,9 +1906,9 @@ public class CustomRecipeUtil
             null, 54, Constant.CUSTOM_RECIPE_CREATE_GUI +
                     title +
                     " - " +
-                    MessageUtil.n2s(category.replace("__", " ")) +
+                    MessageUtil.n2s(category) +
                     "§3 - " +
-                    MessageUtil.n2s(recipe.replace("__", " ") + Method.format("category:" + category + "recipe:" + recipe, "§")));
+                    MessageUtil.n2s(recipe + Method.format("category:" + category + "recipe:" + recipe, "§")));
 
     ItemStack deco1 = CreateItemStack.newItem(Material.ORANGE_STAINED_GLASS_PANE, 1, "§와", true);
     ItemStack deco2 = CreateItemStack.newItem(Material.GREEN_STAINED_GLASS_PANE, 1, "§와", true);

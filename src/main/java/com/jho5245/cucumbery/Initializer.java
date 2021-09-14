@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.milkbowl.vault.economy.Economy;
@@ -358,7 +359,7 @@ public class Initializer
           }
           if (display != null)
           {
-            display = MessageUtil.stripColor(display);
+            display = MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.create(display)));
             if (!nickNames.contains(display))
             {
               nickNames.add(MessageUtil.stripColor(display));
@@ -366,7 +367,7 @@ public class Initializer
           }
           if (listName != null)
           {
-            listName = MessageUtil.stripColor(listName);
+            listName = MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.create(listName)));
             if (!nickNames.contains(listName))
             {
               nickNames.add(MessageUtil.stripColor(listName));
@@ -399,11 +400,6 @@ public class Initializer
         continue;
       }
       Variable.cachedUUIDs.put(nickName, offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace(" ", ""), offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace(" ", "+"), offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace("+", ""), offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace("+", " "), offlinePlayer.getUniqueId());
-      Variable.cachedUUIDs.put(nickName.replace("+", "").replace(" ", ""), offlinePlayer.getUniqueId());
     }
   }
 

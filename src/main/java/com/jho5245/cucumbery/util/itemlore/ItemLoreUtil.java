@@ -92,6 +92,10 @@ public class ItemLoreUtil
             {
               return true;
             }
+            else
+            {
+              return false;
+            }
           }
         }
 
@@ -111,6 +115,19 @@ public class ItemLoreUtil
 
     }
     return false;
+  }
+
+  public static void removeCucumberyTMIFood(@NotNull ItemStack itemStack)
+  {
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    List<Component> lore = itemMeta.lore();
+    if (lore == null || lore.size() == 0)
+    {
+      return;
+    }
+    lore.set(0, Component.translatable("").args(Component.empty(), Component.empty()));
+    itemMeta.lore(lore);
+    itemStack.setItemMeta(itemMeta);
   }
 
   /**
@@ -577,11 +594,14 @@ public class ItemLoreUtil
                 default -> true;
               };
       maxIs1 = maxIs1 && enchantLevel == 1;
+
       Component prefix = ComponentUtil.createTranslate((isCurse ? "&c" : "rgb154,84,255;") + customEnchant.getDisplay());
+      
       if (!maxIs1)
       {
-        prefix = prefix.append(ComponentUtil.create(" " + enchantLevel));
+        component = ComponentUtil.createTranslate("%s %s", prefix, enchantLevel);
       }
+      
       lore.add(prefix);
       if (useTMI)
       {
@@ -601,6 +621,18 @@ public class ItemLoreUtil
           case DULL_TOUCH -> lore.add(
                   ComponentUtil.createTranslate("&7블록을 캘 경우 %s 확률로 부싯돌이 대신 나옴", "&e" + Math.min(100, enchantLevel) + "%")
           );
+          case COLD_TOUCH -> lore.add(ComponentUtil.createTranslate("&7얼음을 캘 경우 등급에 따른 종류의 얼음이 나옴"));
+          case TELEKINESIS_PVP -> lore.addAll(Arrays.asList(
+                  ComponentUtil.createTranslate("&7인벤세이브가 꺼져 있는 경우에 플레이어와 싸웠을 때 "),
+                  ComponentUtil.createTranslate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.createTranslate("&a즉시 인벤토리에 들어옴")))
+          );
+          case UNSKILLED_TOUCH -> lore.add(
+                  ComponentUtil.createTranslate("&7블록을 캐거나 적을 잡았을 때 ").append(ComponentUtil.createTranslate("&c경험치를 드롭하지 않음"))
+          );
+          case VANISHING_TOUCH -> lore.add(
+                  ComponentUtil.createTranslate("&7아이템이 들어있는 컨테이너를 캤을 때 ").append(ComponentUtil.createTranslate("&c아이템을 드롭하지 않음"))
+          );
+          case WARM_TOUCH -> lore.add(ComponentUtil.createTranslate("&7선인장을 캘 경우 등급에 따른 종류의 선인장이 나옴"));
         }
       }
     }

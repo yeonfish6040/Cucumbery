@@ -26,7 +26,7 @@ public class ItemSerializer
   {
     try
     {
-      if (itemStack == null)
+      if (itemStack == null || itemStack.equals(""))
       {
         return new ItemStack(Material.AIR);
       }

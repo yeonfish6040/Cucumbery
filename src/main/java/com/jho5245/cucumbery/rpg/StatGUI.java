@@ -1,30 +1,24 @@
 package com.jho5245.cucumbery.rpg;
 
-import com.jho5245.cucumbery.util.storage.data.Constant;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.List;
 
 public class StatGUI
 {
-	private static StatGUI statGUI = new StatGUI();
+/*	private static final StatGUI statGUI = new StatGUI();
 
 	DecimalFormat d1 = new DecimalFormat("#,###.##"), d2 = new DecimalFormat("#,###");
 
 	public static StatGUI getStatGUI()
 	{
 		return statGUI;
-	}
+	}*/
 
 	public void stack(String display, Material type, int durability, int amount, List<String> lore, boolean hideflag, int loc, Inventory inv)
 	{
@@ -46,17 +40,9 @@ public class StatGUI
 
 	public void hideFlag(ItemMeta meta)
 	{
-		meta.addItemFlags(new ItemFlag[]
-		{
-			ItemFlag.HIDE_ATTRIBUTES,
-			ItemFlag.HIDE_DESTROYS,
-			ItemFlag.HIDE_ENCHANTS,
-			ItemFlag.HIDE_PLACED_ON,
-			ItemFlag.HIDE_POTION_EFFECTS,
-			ItemFlag.HIDE_UNBREAKABLE
-		});
+		meta.addItemFlags(ItemFlag.values());
 	}
-
+/*
 	public void statGUI(Player player)
 	{
 		long[] stat = new long[StatManager.size];
@@ -502,5 +488,5 @@ public class StatGUI
 				true, 24, gui);
 
 		player.openInventory(gui);
-	}
+	}*/
 }

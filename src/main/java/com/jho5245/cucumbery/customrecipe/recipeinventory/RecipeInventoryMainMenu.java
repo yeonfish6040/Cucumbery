@@ -165,7 +165,7 @@ public class RecipeInventoryMainMenu
         categoryItemMeta.addItemFlags(ItemFlag.values());
       }
       String categoryDisplayName = config.getString("extra.display");
-      categoryItemMeta.displayName(ComponentUtil.create("&e" + (categoryDisplayName != null ? categoryDisplayName.replace("__", " ") : category)));
+      categoryItemMeta.displayName(ComponentUtil.create("&e" + (categoryDisplayName != null ? categoryDisplayName : category)));
       List<Component> categoryItemLore = new ArrayList<>();
       ConfigurationSection recipeList = config.getConfigurationSection("recipes");
       if (recipeList == null || recipeList.getKeys(false).size() == 0)
@@ -212,7 +212,7 @@ public class RecipeInventoryMainMenu
 //            display = "&e" + ComponentUtil.itemName(item) + "&6" + (amount == 1 ? "" : amount + "개");
             display = recipe;
           }
-          categoryItemLore.add(ComponentUtil.create("§b - §e" + display.replace("__", " ")));
+          categoryItemLore.add(ComponentUtil.create("§b - §e" + display));
         }
       }
       // 접근 조건 설명 추가

@@ -14,6 +14,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
@@ -35,6 +36,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ItemInfo
 {
@@ -100,18 +102,26 @@ public class ItemInfo
       if (itemMeta.hasEnchants())
       {
         MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "-------------------- 부여된 마법 목록 --------------------");
-        StringBuilder msg = new StringBuilder(Prefix.INFO_ITEMSTORAGE.toString());
-        for (Enchantment enchant : Enchantment.values())
+        Component message = Prefix.INFO_ITEMSTORAGE.get();
+        Map<Enchantment, Integer> enchants = itemMeta.getEnchants();
+        for (Enchantment enchantment : enchants.keySet())
         {
-          if (itemMeta.hasEnchant(enchant))
+          int level = itemMeta.getEnchantLevel(enchantment);
+          int maxLevel = enchantment.getMaxLevel();
+          boolean isCursed = enchantment.isCursed();
+          Component component;
+          if (maxLevel == 1 && level == 1)
           {
-            msg.append((enchant.equals(Enchantment.BINDING_CURSE) || enchant.equals(Enchantment.BINDING_CURSE)) ? "&c" : "")
-                    .append(enchant).append((enchant.getMaxLevel() == 1 && item.getEnchantmentLevel(
-                            enchant) == 1) ? "" : " " + item.getEnchantmentLevel(enchant)).append("&r, ");
+            component = Component.translatable(enchantment.translationKey());
           }
+          else
+          {
+            component = ComponentUtil.createTranslate("%s %s", Component.translatable(enchantment.translationKey()), level);
+          }
+          component = component.color(isCursed ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
+          message = message.append(component).append(Component.text(" "));
         }
-        msg = new StringBuilder(msg.substring(0, msg.length() - 2));
-        MessageUtil.sendMessage(sender, msg.toString());
+        MessageUtil.sendMessage(sender, message);
       }
       else
       {
@@ -123,18 +133,26 @@ public class ItemInfo
         EnchantmentStorageMeta storeMeta = (EnchantmentStorageMeta) itemMeta;
         if (storeMeta.hasStoredEnchants())
         {
-          StringBuilder msg = new StringBuilder(Prefix.INFO_ITEMSTORAGE.toString());
-          for (Enchantment enchant : Enchantment.values())
+          Component message = Prefix.INFO_ITEMSTORAGE.get();
+          Map<Enchantment, Integer> enchants = storeMeta.getStoredEnchants();
+          for (Enchantment enchantment : enchants.keySet())
           {
-            if (storeMeta.hasStoredEnchant(enchant))
+            int level = itemMeta.getEnchantLevel(enchantment);
+            int maxLevel = enchantment.getMaxLevel();
+            boolean isCursed = enchantment.isCursed();
+            Component component;
+            if (maxLevel == 1 && level == 1)
             {
-              msg.append((enchant.equals(Enchantment.BINDING_CURSE) || enchant.equals(Enchantment.BINDING_CURSE)) ? "&c" : "")
-                      .append(enchant).append((
-                              enchant.getMaxLevel() == 1 && storeMeta.getStoredEnchantLevel(enchant) == 1) ? "" : " " + storeMeta.getStoredEnchantLevel(enchant)).append("&r, ");
+              component = Component.translatable(enchantment.translationKey());
             }
+            else
+            {
+              component = ComponentUtil.createTranslate("%s %s", Component.translatable(enchantment.translationKey()), level);
+            }
+            component = component.color(isCursed ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
+            message = message.append(component).append(Component.text(" "));
           }
-          msg = new StringBuilder(msg.substring(0, msg.length() - 2));
-          MessageUtil.sendMessage(sender, msg.toString());
+          MessageUtil.sendMessage(sender, message);
         }
         else
         {

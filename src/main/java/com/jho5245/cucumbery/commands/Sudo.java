@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.PlaceHolderUtil;
 import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.command.Command;
@@ -12,6 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class Sudo implements CommandExecutor
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
@@ -19,6 +22,10 @@ public class Sudo implements CommandExecutor
     if (!Method.hasPermission(sender, Permission.CMD_SUDO, true))
     {
       return true;
+    }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
     }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length < 3)
@@ -29,12 +36,13 @@ public class Sudo implements CommandExecutor
     }
     else
     {
-      Player target = SelectorUtil.getPlayer(sender, args[0]);
-      if (target == null)
+      List<Player> targets = SelectorUtil.getPlayers(sender, args[0]);
+      if (targets == null)
       {
         return true;
       }
-      String command;
+      String command = MessageUtil.listToString(" ", 2, args.length, args);
+      final String finalCommand = command;
       boolean op = false;
       if (!args[1].equals("true") && !args[1].equals("false"))
       {
@@ -47,60 +55,67 @@ public class Sudo implements CommandExecutor
         op = true;
         args[2] = args[2].substring(3);
       }
-      command = MessageUtil.listToString(" ", 2, args.length, args);
-      if (!command.contains("--noph"))
+      for (Player target : targets)
       {
-        command = PlaceHolderUtil.placeholder(target, command, null);
-      }
-      else
-      {
-        command = command.replaceFirst("--noph", "");
-      }
-      if (!command.contains("--noeval"))
-      {
-        command = PlaceHolderUtil.evalString(command);
-      }
-      else
-      {
-        command = command.replaceFirst("--noeval", "");
-      }
-      command = MessageUtil.n2s(command, MessageUtil.N2SType.SPECIAL);
-
-      if (!op)
-      {
-        if (!hideMessage)
+        if (!command.contains("--noph"))
         {
-          if (!target.equals(sender))
-          {
-            MessageUtil.sendMessage(target, Prefix.INFO_SUDO, sender, "이 당신에게 다음 명령어를 강제로 시행합니다.");
-            MessageUtil.sendMessage(target, Prefix.INFO_SUDO, "&e/" + command);
-          }
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, target, "에게 다음 명령어를 강제로 시행합니다.");
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
+          command = PlaceHolderUtil.placeholder(target, command, null);
         }
-        target.performCommand(command);
-      }
-      else
-      {
-        if (!hideMessage)
+        else
         {
-          if (!target.equals(sender))
-          {
-            MessageUtil.sendMessage(target, Prefix.INFO_SUDO, sender + "이 당신에게 다음 명령어를 오피 권한으로 강제로 시행합니다.");
-            MessageUtil.sendMessage(target, Prefix.INFO_SUDO, "&e/" + command);
-          }
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e" + target.getDisplayName() + "&r에게 다음 명령어를 오피 권한으로 강제로 시행합니다.");
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
+          command = command.replaceFirst("--noph", "");
         }
-        if (!target.isOp())
+        if (!command.contains("--noeval"))
         {
-          target.setOp(true);
-          target.performCommand(command);
-          target.setOp(false);
+          command = PlaceHolderUtil.evalString(command);
+        }
+        else
+        {
+          command = command.replaceFirst("--noeval", "");
+        }
+        command = MessageUtil.n2s(command, MessageUtil.N2SType.SPECIAL);
+        if (op)
+        {
+          if (!target.isOp())
+          {
+            target.setOp(true);
+            target.performCommand(command);
+            target.setOp(false);
+          }
+          else
+          {
+            target.performCommand(command);
+          }
         }
         else
         {
           target.performCommand(command);
+        }
+      }
+      if (op)
+      {
+        if (!hideMessage)
+        {
+          if (!targets.equals(sender))
+          {
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s이(가) 당신에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", sender));
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, "&e/" + command);
+          }
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", targets));
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
+        }
+      }
+      else
+      {
+        if (!hideMessage)
+        {
+          if (!targets.equals(sender))
+          {
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s이(가) 당신에게 다음 명령어를 강제로 시행합니다.", sender));
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, "&e/" + command);
+          }
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s에게 다음 명령어를 강제로 시행합니다.", targets));
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
         }
       }
     }

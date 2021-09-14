@@ -46,6 +46,10 @@ public class NoteBlockAPISong implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (!Cucumbery.using_NoteBlockAPI)
     {
       MessageUtil.sendError(sender, "&eNoteBlockAPI&r 플러그인을 사용하고 있지 않습니다.");
@@ -112,7 +116,7 @@ public class NoteBlockAPISong implements CommandExecutor
                 {
                   if (!sender.equals(player))
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, sender, "이(가) &e" + radioSongPlayer.getSong().getPath().getName() +"&r 파일의 재생을 " + display + "하였습니다.");
+                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, sender, "이(가) &e" + radioSongPlayer.getSong().getPath().getName() + "&r 파일의 재생을 " + display + "하였습니다.");
                   }
                 }
               }
@@ -380,7 +384,7 @@ public class NoteBlockAPISong implements CommandExecutor
                 playerRadio.addPlayer(player);
                 if (!hideOutput && !player.equals(sender))
                 {
-                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, player,"이(가) 당신에게 &e" + playerRadio.getSong().getPath().getName() + "&r 파일을 재생하였습니다.");
+                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, player, "이(가) 당신에게 &e" + playerRadio.getSong().getPath().getName() + "&r 파일을 재생하였습니다.");
                 }
               }
               playerRadio.setPlaying(true);

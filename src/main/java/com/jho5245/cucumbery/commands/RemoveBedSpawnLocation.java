@@ -18,6 +18,10 @@ public class RemoveBedSpawnLocation implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (args.length == 0)
     {
       MessageUtil.shortArg(sender, 1, args);

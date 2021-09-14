@@ -22,6 +22,10 @@ public class Teleport implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (args.length == 0)
     {
       if (sender instanceof Player)
@@ -69,7 +73,9 @@ public class Teleport implements CommandExecutor
         player.setSpectatorTarget(null);
       }
       if (entity != null)
-      entity.teleport(target);
+      {
+        entity.teleport(target.getLocation());
+      }
       if (entities != null)
       {
         for (Entity e : entities)
@@ -78,13 +84,13 @@ public class Teleport implements CommandExecutor
           {
             player.setSpectatorTarget(null);
           }
-          e.teleport(target);
+          e.teleport(target.getLocation());
         }
       }
     }
     else
     {
-      MessageUtil.longArg(sender, 3, args);
+      MessageUtil.longArg(sender, 2, args);
       if (sender instanceof Player)
       {
         MessageUtil.commandInfo(sender, label, "<플레이어 ID> <다른 플레이어 ID>");

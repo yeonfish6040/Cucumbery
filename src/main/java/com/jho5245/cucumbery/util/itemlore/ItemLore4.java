@@ -1,19 +1,33 @@
 package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.storage.ItemCategory;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class ItemLore4
 {
   protected static void setItemLore(@NotNull ItemStack itemStack)
   {
     NBTItem nbtItem = new NBTItem(itemStack);
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    if (itemMeta != null)
+    {
+      List<Component> lore = itemMeta.lore();
+      if (lore != null)
+      {
+        nbtItem.setInteger("Rarity", ItemCategory.Rarity.getRarityFromValue(ItemLoreUtil.getItemRarityValue(lore)).getRarityNumber());
+      }
+    }
     NBTCompound nbtCompound = nbtItem.getCompound(CucumberyTag.KEY_TMI);
     if (nbtCompound == null)
     {
@@ -81,7 +95,7 @@ public class ItemLore4
     switch (type)
     {
       case WHITE_WOOL, BLACK_WOOL, BLUE_WOOL, BROWN_WOOL, CYAN_WOOL, GRAY_WOOL -> {
-              }
+      }
     }
     itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
   }

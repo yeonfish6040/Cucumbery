@@ -16,6 +16,7 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.*;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
@@ -40,6 +41,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
 {
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
+    args = MessageUtil.wrapWithQuote(true, args);
+    if (args.length == 1 && args[0].equals(ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end"))))
+    {
+      return Collections.singletonList(args[0]);
+    }
     String name = cmd.getName();
     int length = args.length;
     String lastArg = length >= 1 ? args[length - 1] : "";
@@ -439,7 +445,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayer(sender, args);
+        return Method.tabCompleterPlayer(sender, args, "<플레이어>", true);
       }
       else if (length == 2)
       {
@@ -467,43 +473,6 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterIntegerRadius(args, 1, 2304, "[개수]");
       }
       else if (length == 3)
-      {
-        return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
-      }
-    }
-    else if (name.equals("handgiveall") && Method.hasPermission(sender, Permission.CMD_HANDGIVEALL, false))
-    {
-      Player player = (Player) sender;
-      ItemStack item = player.getInventory().getItemInMainHand();
-      if (!ItemStackUtil.itemExists(item))
-      {
-        return Collections.singletonList(Prefix.NO_HOLDING_ITEM.toString());
-      }
-      if (length == 1)
-      {
-        return Method.tabCompleterIntegerRadius(args, 1, 2304, "[개수]", "R#~#");
-      }
-      else if (length == 2)
-      {
-        return Method.tabCompleterList(args, "[추가 조건]", "world", "distance", "permission", "level", "hp", "maxhp", "healthbar", "gamemode");
-      }
-      else if (length == 3)
-      {
-        switch (args[1])
-        {
-          case "world":
-            return Method.tabCompleterList(args, Method.listWorlds(), "<월드>");
-          case "gamemode":
-            return Method.tabCompleterList(args, GameMode.values(), "<게임 모드>");
-          case "distance":
-            return Method.tabCompleterDoubleRadius(args, 0, Double.MAX_VALUE, "<거리>");
-          case "permission":
-            return Method.tabCompleterList(args, "<퍼미션 노드>", true);
-          case "level":
-            return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<레벨>");
-        }
-      }
-      else if (length == 4)
       {
         return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
       }
@@ -922,22 +891,6 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         }
       }
     }
-    else if (name.equals("viewdamage") && Method.hasPermission(sender, Permission.CMD_VIEWDAMAGE, false))
-    {
-      if (length == 1)
-      {
-        return Method.tabCompleterOnOff(args, "[토글]");
-      }
-    }
-    else if (name.equals("uuid") && Method.hasPermission(sender, Permission.CMD_UUID, false))
-    {
-      if (length == 1)
-      {
-        List<String> list = new ArrayList<>(label.equals("uuid") ? Method.tabCompleterPlayer(sender, args) : Method.tabCompleterOfflinePlayer(sender, args));
-        list.removeIf(Method::isUUID);
-        return list;
-      }
-    }
     else if (name.equals("sendmessage") && Method.hasPermission(sender, Permission.CMD_SENDMESSAGE, false))
     {
       if (length == 1)
@@ -1229,7 +1182,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayer(sender, args);
+        return Method.tabCompleterEntity(sender, args, "<개체>", true);
       }
       else if (length == 2)
       {
@@ -1344,7 +1297,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   {
                     return Collections.singletonList("명령어를 들여쓸 수 없습니다.");
                   }
-                  List<String> commands = config.getStringList(args[2].replace("__", " "));
+                  List<String> commands = config.getStringList(args[2]);
                   if (commands.size() == 0)
                   {
                     return Collections.singletonList("명령어를 들여쓸 수 없습니다.");
@@ -1357,7 +1310,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   {
                     return Collections.singletonList("제거할 명령어가 없습니다.");
                   }
-                  List<String> commands = config.getStringList(args[2].replace("__", " "));
+                  List<String> commands = config.getStringList(args[2]);
                   if (commands.size() == 0)
                   {
                     return Collections.singletonList("제거할 명령어가 없습니다.");
@@ -1512,25 +1465,6 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       else if (length == 4)
       {
         return Method.tabCompleterIntegerRadius(args, 0, 32767, "[내구도 조건]", "*");
-      }
-    }
-    else if (name.equals("setattribute") && Method.hasPermission(sender, Permission.CMD_SET_ATTRIBUTE, false))
-    {
-      if (length == 1)
-      {
-        return Method.tabCompleterPlayer(sender, args);
-      }
-      else if (length == 2)
-      {
-        return Method.tabCompleterList(args, Attribute.values(), "<속성 값>");
-      }
-      else if (length == 3)
-      {
-        return Method.tabCompleterDoubleRadius(args, 0, Double.MAX_VALUE, "<수치>", "reset");
-      }
-      else if (length == 4)
-      {
-        return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
       }
     }
     else if (name.equals("updateinventory") && Method.hasPermission(sender, Permission.CMD_UPDATE_INVENTORY, false))
@@ -4288,7 +4222,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayer(sender, args);
+        return Method.tabCompleterPlayer(sender, args, "<플레이어>", true);
       }
       else if (length == 2)
       {

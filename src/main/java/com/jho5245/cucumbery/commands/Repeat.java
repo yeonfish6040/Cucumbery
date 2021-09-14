@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Repeat implements CommandExecutor
@@ -17,6 +18,10 @@ public class Repeat implements CommandExecutor
     if (!Method.hasPermission(sender, Permission.CMD_REPEAT, true))
     {
       return true;
+    }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
     }
     if (args.length < 2)
     {

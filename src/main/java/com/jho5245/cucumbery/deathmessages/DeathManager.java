@@ -213,7 +213,7 @@ public class DeathManager
               }
               else if (fireball instanceof SizedFireball sizedFireball)
               {
-                key = "sized_fireball";
+                key = "fireball";
                 extraArgs.add(ComponentUtil.create(sizedFireball.getDisplayItem()));
               }
               else if (fireball instanceof WitherSkull)
@@ -229,14 +229,18 @@ public class DeathManager
             {
               key = "shulker_bullet";
             }
-            else
+            else if (damagerEntity instanceof AbstractArrow)
             {
               key = "arrow";
+            }
+            else
+            {
+              key = "projectile";
             }
           }
           else
           {
-            key = "arrow";
+            key = "projectile";
           }
         }
         case SUFFOCATION -> {
@@ -445,7 +449,7 @@ public class DeathManager
         }
       }
 
-//      MessageUtil.broadcastDebug(key);
+      MessageUtil.broadcastDebug(key);
       Messages deathMessages;
       try
       {
@@ -463,7 +467,8 @@ public class DeathManager
       if (deathMessages == Messages.UNKNOWN)
       {
         keys.clear();
-        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %" + (extraArgs.size() + args.size()) + "$s에서 해당 버그를 제보해주세요!");
+        extraArgs.add(Component.text(key));
+        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %" + (extraArgs.size() + args.size() - 1) + "$s에서 해당 버그를 제보해주세요! 키 : %" + (extraArgs.size() + args.size()) + "$s");
       }
 
       if (key.equals("kill_combat"))
@@ -541,8 +546,12 @@ public class DeathManager
       }
       if (playerDeathEvent != null)
       {
-        playerDeathEvent.deathMessage(deathMessage);
         MessageUtil.consoleSendMessage(ComponentUtil.createTranslate("&7죽은 위치 : %s", ComponentUtil.locationComponent(location)));
+        if (event.isCancelled() && deathMessage != null)
+        {
+          MessageUtil.broadcast(deathMessage);
+        }
+        playerDeathEvent.deathMessage(deathMessage);
       }
       else if (deathMessage != null)
       {

@@ -38,7 +38,7 @@ public class PlayerAdvancementDone implements Listener
           {
             if (color.equals(NamedTextColor.DARK_PURPLE))
             {
-              prefix = Prefix.INFO_ADVANCEMENT_2.get();
+              prefix = Prefix.INFO_ADVANCEMENT_CHALLENGE.get();
             }
           }
         }

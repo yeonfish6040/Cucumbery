@@ -13,7 +13,7 @@ public enum Permission
   BYPASS(".bypass"),
   GUI("gui."),
 
-  GUI_SERVER_SETTINGS_ADMIN(P + "" +GUI+ "serversettingsadmin"),
+  GUI_SERVER_SETTINGS_ADMIN(P + "" + GUI + "serversettingsadmin"),
 
   EVENT_BLOCK_BREAK(P + "" + E + "block.break"),
   EVENT_BLOCK_PLACE(P + "" + E + "block.place"),
@@ -74,22 +74,14 @@ public enum Permission
   CMD_MHP(P + "" + C + "mhp"),
   CMD_SHP(P + "" + C + "shp"),
   CMD_HP(P + "" + C + "hp"),
-  CMD_UUID(P + "" + C + "uuid"),
-  CMD_VIEWDAMAGE(P + "" + C + "viewdamage"),
   CMD_WHOIS(P + "" + C + "whois"),
   CMD_PLAYSOUND(P + "" + C + "playsound"),
   CMD_PLAYSOUNDALL(P + "" + C + "playsoundall"),
   CMD_PLAYSOUNDALL2(P + "" + C + "playsoundall2"),
-  CMD_STATMENU(P + "" + C + "statmenu"),
-  CMD_STATMENU_OTHERS(CMD_STATMENU + "" + O),
-  CMD_DAMAGE_DEBUG(P + "" + C + "debugdamage"),
   CMD_HANDGIVE(P + "" + C + "handgive"),
-  CMD_HANDGIVEALL(P + "" + C + "handgiveall"),
   CMD_BROADCASTITEM(P + "" + C + "broadcastitem"),
   CMD_BROADCASTITEM_BYPASS(CMD_BROADCASTITEM + ".bypass"),
-  CMD_MESSAGEITEM(P + "" + C + "messageitem"),
   CMD_REINFORCE(P + "" + C + "reinforce"),
-  CMD_COPYSTRING(P + "" + C + "copystring"),
   CMD_VELOCITY(P + "" + C + "velocity"),
   CMD_WARP(P + "" + C + "warp"),
   CMD_WARPS(P + "" + C + "warps"),
@@ -106,7 +98,6 @@ public enum Permission
   CMD_AIRPOINT(P + "" + C + "airpoint"),
   CMD_GETUSERDATA(P + "" + C + "getuserdata"),
   CMD_FORCECHAT(P + "" + C + "forcechat"),
-  CMD_RIDE(P + "" + C + "ride"),
   CMD_CHECKPERMISSION(P + "" + C + "checkpermission"),
   CMD_SETHELDITEMSLOT(P + "" + C + "sethelditemslot"),
   CMD_SWAPHELDITEM(P + "" + C + "swaphelditem"),
@@ -116,7 +107,6 @@ public enum Permission
   CMD_SWAP_TELEPORT(P + "" + C + "swapteleport"),
   CMD_CALC_DISTANCE(P + "" + C + "calcdistance"),
   CMD_CHECK_AMOUNT(P + "" + C + "checkamount"),
-  CMD_SET_ATTRIBUTE(P + "" + C + "setattribute"),
   CMD_CONDENSE(P + "" + C + "condense"),
   CMD_CONDENSE_OTHERS(CMD_CONDENSE + "" + O),
   CMD_UPDATE_INVENTORY(P + "" + C + "updateinventory"),
@@ -131,7 +121,7 @@ public enum Permission
   CMD_VIRTUAL_CHEST(P + "" + C + "virtualchest"),
   CMD_VIRTUAL_CHEST_UNLIMITED(CMD_VIRTUAL_CHEST + ".unlimited"),
   CMD_VIRTUAL_CHEST_ADMIN(CMD_VIRTUAL_CHEST + ".admin"),
-  CMD_CUSTOM_FIX(P + "" +C+ "customfix"),
+  CMD_CUSTOM_FIX(P + "" + C + "customfix"),
   CMD_ECONOMY(P + "" + C + "economy"),
   CMD_TRUEKILL(P + "" + C + "truekill"),
   CMD_RESPAWN(P + "" + C + "respawn"),
@@ -146,7 +136,7 @@ public enum Permission
 
   OTHER_EVAL(P + "" + "eval"),
   OTHER_PLACEHOLDER(P + "" + "placeholder"),
-          ;
+  ;
 
   private final String permission;
 

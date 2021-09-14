@@ -22,6 +22,10 @@ public class CucumberyEconomyCommand implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (!Cucumbery.using_Vault)
     {
       MessageUtil.sendError(sender, "&eVault&r 플러그인을 사용하고 있지 않습니다.");

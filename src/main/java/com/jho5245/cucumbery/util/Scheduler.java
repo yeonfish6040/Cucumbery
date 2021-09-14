@@ -679,7 +679,7 @@ public class Scheduler
         String categorySplitter = Method.format("category:", "§");
         String mainSplitter = Method.format("mainpage:", "§");
         int page = Integer.parseInt(title.split(Method.format("page:", "§"))[1].split(Method.format("category:", "§"))[0].replace("§", ""));
-        String category = title.split(categorySplitter)[1].split(mainSplitter)[0].replace(" ", "__").replace("§", "");
+        String category = title.split(categorySplitter)[1].split(mainSplitter)[0].replace("§", "");
         int mainPage = Integer.parseInt(title.split(mainSplitter)[1].replace("§", ""));
         RecipeInventoryCategory.openRecipeInventory(player, mainPage, category, page, false);
       }
@@ -687,10 +687,10 @@ public class Scheduler
       // 커스텀 레시피 제작 화면 업데이트
       if (title.startsWith(Constant.CANCEL_STRING + Method.format("category:", "§")))
       {
-        String category = title.split(Method.format("category:", "§"))[1].split(Constant.CUSTOM_RECIPE_CRAFTING_MENU)[0].replace("§", "").replace(" ", "__");
+        String category = title.split(Method.format("category:", "§"))[1].split(Constant.CUSTOM_RECIPE_CRAFTING_MENU)[0].replace("§", "");
         String mainSplitter = Method.format("mainpage:", "§");
         String categorySplitter = Method.format("categorypage:", "§");
-        String recipe = title.split(Method.format("recipe:", "§"))[1].split(mainSplitter)[0].replace("§", "").replace(" ", "__");
+        String recipe = title.split(Method.format("recipe:", "§"))[1].split(mainSplitter)[0].replace("§", "");
         int mainPage = Integer.parseInt(title.split(mainSplitter)[1].split(categorySplitter)[0].replace("§", ""));
         int categoryPage = Integer.parseInt(title.split(categorySplitter)[1].replace("§", ""));
         RecipeInventoryRecipe.openRecipeInventory(player, mainPage, category, categoryPage, recipe, false);

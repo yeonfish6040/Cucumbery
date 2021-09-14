@@ -6,11 +6,8 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.player.PlayerExpChangeEvent;
-import org.bukkit.event.player.PlayerLevelChangeEvent;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,12 +15,12 @@ import java.util.List;
 
 public class StatManager implements Listener
 {
-	private static StatManager statManager = new StatManager();
-
-	public static StatManager getStatManager()
-	{
-		return statManager;
-	}
+//	private static final StatManager statManager = new StatManager();
+//
+//	public static StatManager getStatManager()
+//	{
+//		return statManager;
+//	}
 
 	public static int size = 9;
 
@@ -345,7 +342,7 @@ public class StatManager implements Listener
 
 		setStat(player, stat);
 	}
-
+/*
 	@EventHandler
 	public void onExpGain(PlayerExpChangeEvent event)
 	{
@@ -395,5 +392,5 @@ public class StatManager implements Listener
 		MessageUtil.sendActionBar(player, "레벨업을 §e" + differance + "&r 번 하여 스탯포인트를 §e" + differance * 5 + "&r 만큼 획득하였습니다.");
 
 		setStat(player, stat);
-	}
+	}*/
 }

@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands.msg;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.command.Command;
@@ -18,6 +19,10 @@ public class ClearChat implements CommandExecutor
     if (!Method.hasPermission(sender, Permission.CMD_CLEARCHAT, true))
     {
       return true;
+    }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
     }
     String usage = cmd.getUsage().replace("/<command> ", "");
     String easterEgg;
@@ -35,7 +40,7 @@ public class ClearChat implements CommandExecutor
       {
         MessageUtil.broadcastPlayer("§c§l§e§a§r§c§h§a§t");
       }
-      MessageUtil.broadcastPlayer(Prefix.INFO_CLEARCHAT, sender, "이(가) " + easterEgg);
+      MessageUtil.broadcastPlayer(Prefix.INFO_CLEARCHAT, ComponentUtil.createTranslate("%s이(가) " + easterEgg, sender));
       if (!(sender instanceof Player))
       {
         MessageUtil.sendMessage(sender, Prefix.INFO_CLEARCHAT, "채팅창을 청소하였습니다.");

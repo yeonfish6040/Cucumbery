@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Broadcast implements CommandExecutor
@@ -15,6 +16,10 @@ public class Broadcast implements CommandExecutor
     if (!Method.hasPermission(sender, Permission.CMD_BROADCAST, true))
     {
       return true;
+    }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
     }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length == 0)

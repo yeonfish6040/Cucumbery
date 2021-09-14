@@ -12,21 +12,31 @@ import org.jetbrains.annotations.NotNull;
 
 public class SendMessage implements CommandExecutor
 {
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
-	{
+  public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
+  {
 		if (!Method.hasPermission(sender, Permission.CMD_SENDMESSAGE, true))
-			return true;
-		String usage = cmd.getUsage().replace("/<command> ", "");
-		if (args.length < 2)
 		{
-			MessageUtil.shortArg(sender, 2, args);
-			MessageUtil.commandInfo(sender, label, usage);
 			return true;
 		}
-		Player target = SelectorUtil.getPlayer(sender, args[0]); if (target == null) return true;
-		String msg = MessageUtil.listToString(" ", 1, args.length, args);
-		msg = Method.parseCommandString(target, msg);
-		target.sendMessage(msg);
-		return true;
-	}
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
+    String usage = cmd.getUsage().replace("/<command> ", "");
+    if (args.length < 2)
+    {
+      MessageUtil.shortArg(sender, 2, args);
+      MessageUtil.commandInfo(sender, label, usage);
+      return true;
+    }
+    Player target = SelectorUtil.getPlayer(sender, args[0]);
+		if (target == null)
+		{
+			return true;
+		}
+    String msg = MessageUtil.listToString(" ", 1, args.length, args);
+    msg = Method.parseCommandString(target, msg);
+    target.sendMessage(msg);
+    return true;
+  }
 }

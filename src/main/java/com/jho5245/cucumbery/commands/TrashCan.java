@@ -48,6 +48,10 @@ public class TrashCan implements CommandExecutor
         MessageUtil.commandInfo(sender, label, "");
         return true;
       }
+      if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+      {
+        return sender instanceof Player;
+      }
       Player target = SelectorUtil.getPlayer(sender, args[0]);
       if (target == null)
       {
@@ -56,7 +60,7 @@ public class TrashCan implements CommandExecutor
       String customName = "";
       if (args.length >= 3)
       {
-        customName = MessageUtil.listToString(" ",2, args.length, args);
+        customName = MessageUtil.listToString(" ", 2, args.length, args);
       }
       Inventory inventory = Bukkit.createInventory(null, 54, Constant.TRASH_CAN + ((customName.equals("")) ? MessageUtil.n2s("&8쓰레기통") : MessageUtil.n2s("&8" + customName)));
       target.openInventory(inventory);

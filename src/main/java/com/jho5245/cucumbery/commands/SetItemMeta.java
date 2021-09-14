@@ -1,11 +1,11 @@
 package com.jho5245.cucumbery.commands;
 
-import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -17,6 +17,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,8 @@ public class SetItemMeta implements CommandExecutor
       MessageUtil.sendError(sender, Prefix.ONLY_PLAYER);
       return true;
     }
-    ItemStack item = player.getInventory().getItemInMainHand();
+    PlayerInventory inventory = player.getInventory();
+    ItemStack item = inventory.getItemInMainHand();
     if (!ItemStackUtil.itemExists(item))
     {
       MessageUtil.sendError(sender, Prefix.NO_HOLDING_ITEM);
@@ -65,11 +67,10 @@ public class SetItemMeta implements CommandExecutor
         {
           itemMeta.displayName(null);
           item.setItemMeta(itemMeta);
-          player.getInventory().setItemInMainHand(item);
+          inventory.setItemInMainHand(item);
           if (!silent)
           {
-            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 이름을 제거하였습니다.", item);
-            MessageUtil.sendMessage(player, txt);
+            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 이름을 제거하였습니다.").hoverEvent(item.asHoverEvent()));
           }
         }
         else
@@ -87,13 +88,12 @@ public class SetItemMeta implements CommandExecutor
             itemMeta.displayName(ComponentUtil.create(name));
             item.setItemMeta(itemMeta);
           }
-          player.getInventory().setItemInMainHand(item);
+          inventory.setItemInMainHand(item);
           Method.updateInventory(player);
           if (!silent)
           {
-            Component itemName = ComponentUtil.itemName(item);
-            String itemNameSerial = ComponentUtil.serialize(itemName);
-            MessageUtil.sendMessage(player,Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 이름을 ", item, MessageUtil.getFinalConsonant(itemNameSerial, ConsonantType.으로) + " 설정하였습니다." );
+            Component itemName = ComponentUtil.itemName(item, Constant.THE_COLOR);
+            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 이름을 %s(으)로 설정하였습니다.", itemName).hoverEvent(item.asHoverEvent()));
           }
         }
       }
@@ -123,34 +123,39 @@ public class SetItemMeta implements CommandExecutor
           {
             return true;
           }
-          String displayName = ComponentUtil.itemName(item).toString();
+          String displayName = ComponentUtil.serialize(ComponentUtil.itemName(item));
           if (subString >= displayName.length())
           {
             itemMeta.displayName(null);
             item.setItemMeta(itemMeta);
-            player.getInventory().setItemInMainHand(item);
-            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 이름을 제거하였습니다.", item);
-            MessageUtil.sendMessage(player, txt);
+            inventory.setItemInMainHand(item);
+            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 이름을 제거하였습니다.").hoverEvent(item.asHoverEvent()));
           }
           else
           {
             displayName = displayName.substring(0, displayName.length() - subString);
             itemMeta.displayName(ComponentUtil.create(displayName));
             item.setItemMeta(itemMeta);
-            player.getInventory().setItemInMainHand(item);
-            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 이름을 &e" + subString + "글자&r만큼 제거하였습니다.");
+            inventory.setItemInMainHand(item);
+            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 이름을 %s글자 제거하였습니다.", Constant.THE_COLOR_HEX + subString).hoverEvent(item.asHoverEvent()));
           }
         }
         else
         {
           String name = MessageUtil.n2s(MessageUtil.listToString(" ", args), MessageUtil.N2SType.SPECIAL_ONLY);
-          itemMeta.displayName(itemMeta.displayName().append(ComponentUtil.create(name)));
+          Component input = ComponentUtil.create(name);
+          Component origin = itemMeta.displayName();
+          input = origin != null ? origin.append(input) : input;
+          itemMeta.displayName(input);
           item.setItemMeta(itemMeta);
-          player.getInventory().setItemInMainHand(item);
-          Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템에 §r" + name + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.이라) + "는 이름을 추가로 " +
-                          "입력하였습니다.",
-                  item);
-          MessageUtil.sendMessage(player, txt);
+          inventory.setItemInMainHand(item);
+          // 메시지에만 색깔 추가
+          input = ComponentUtil.create(name);
+          if (input.color() == null)
+          {
+            input = input.color(Constant.THE_COLOR);
+          }
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템에 %s(이)라는 이름을 추가로 입력하였습니다.", input));
         }
       }
     }
@@ -173,41 +178,46 @@ public class SetItemMeta implements CommandExecutor
         {
           return true;
         }
-        List<String> lore = itemMeta.getLore();
+        List<Component> lore = itemMeta.lore();
         if (lore == null)
         {
           lore = new ArrayList<>();
           for (int i = 0; i < index; i++)
           {
-            lore.add("");
+            lore.add(Component.empty());
           }
         }
         else if (lore.size() < index)
         {
           for (int i = lore.size(); i < index; i++)
           {
-            lore.add("");
+            lore.add(Component.empty());
           }
         }
         if (args.length == 2 && args[1].equals("--empty"))
         {
-          lore.set(index - 1, "");
-          itemMeta.setLore(lore);
+          lore.set(index - 1, Component.empty());
+          itemMeta.lore(lore);
           item.setItemMeta(itemMeta);
-          Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 &e" + index + "번째&r 줄의 설명을 공백으로 설정하였습니다.", ItemSerializer.serialize(item));
-          MessageUtil.sendMessage(player, txt);
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                  ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명을 공백으로 설정하였습니다.", Constant.THE_COLOR_HEX + index).hoverEvent(item.asHoverEvent()));
         }
         else
         {
           String input = MessageUtil.n2s(MessageUtil.listToString(" ", 1, args.length, args), MessageUtil.N2SType.SPECIAL_ONLY);
-          lore.set(index - 1, input);
-          itemMeta.setLore(lore);
+          Component inputComponent = ComponentUtil.create(input);
+          lore.set(index - 1, inputComponent);
+          itemMeta.lore(lore);
           item.setItemMeta(itemMeta);
-          Component txt = ComponentUtil.create(
-                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄의 설명을 §e" + input + "§r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로) + " 설정하였습니다.", item);
-          MessageUtil.sendMessage(player, txt);
+          inventory.setItemInMainHand(item);
+          // 메시지에만 색깔 추가
+          if (inputComponent.color() == null)
+          {
+            inputComponent = inputComponent.color(Constant.THE_COLOR);
+          }
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                  ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명을 %s(으)로 설정하였습니다.", index, inputComponent).hoverEvent(item.asHoverEvent()));
         }
-        player.getInventory().setItemInMainHand(item);
       }
     }
     else if (cmd.getName().equals("setlore2"))
@@ -229,20 +239,20 @@ public class SetItemMeta implements CommandExecutor
         {
           return true;
         }
-        List<String> lores = itemMeta.getLore();
+        List<Component> lores = itemMeta.lore();
         if (lores == null)
         {
           lores = new ArrayList<>();
           for (int i = 0; i < index; i++)
           {
-            lores.add("");
+            lores.add(Component.empty());
           }
         }
         else if (lores.size() < index)
         {
           for (int i = lores.size(); i < index; i++)
           {
-            lores.add("");
+            lores.add(Component.empty());
           }
         }
         if (args.length == 2 && args[1].startsWith("--") && (MessageUtil.isInteger(sender, args[1].substring(2), false) || args[1].equals("--")))
@@ -260,38 +270,54 @@ public class SetItemMeta implements CommandExecutor
           {
             return true;
           }
-          String lore = lores.get(index - 1);
-          if (subString >= lore.length())
+          Component lore = lores.get(index - 1);
+          String loreSerial = ComponentUtil.serialize(lore);
+          if (subString >= loreSerial.length())
           {
             lores.remove(index - 1);
-            itemMeta.setLore(lores);
+            itemMeta.lore(lores);
             item.setItemMeta(itemMeta);
-            player.getInventory().setItemInMainHand(item);
-            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 &e" + index + "번째&r 줄의 설명을 제거하였습니다.", item);
-            MessageUtil.sendMessage(player, txt);
+            inventory.setItemInMainHand(item);
+            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                    ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명을 제거하였습니다.", Constant.THE_COLOR_HEX + index).hoverEvent(item.asHoverEvent()));
           }
           else
           {
-            lore = lore.substring(0, lore.length() - subString);
-            lores.set(index - 1, lore);
-            itemMeta.setLore(lores);
+            loreSerial = loreSerial.substring(0, loreSerial.length() - subString);
+            lores.set(index - 1, ComponentUtil.create(loreSerial));
+            itemMeta.lore(lores);
             item.setItemMeta(itemMeta);
-            player.getInventory().setItemInMainHand(item);
-            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 &e" + index + "번째&r 줄의 설명을 &e" + subString + "글자&r만큼 제거하였습니다.", item);
-            MessageUtil.sendMessage(player, txt);
+            if (ItemLoreUtil.isCucumberyTMIFood(item))
+            {
+              ItemLoreUtil.removeCucumberyTMIFood(item);
+            }
+            inventory.setItemInMainHand(item);
+            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                    ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명을 %s글자 제거하였습니다.", Constant.THE_COLOR_HEX + index, Constant.THE_COLOR_HEX + subString).hoverEvent(item.asHoverEvent()));
           }
         }
         else
         {
           String input = MessageUtil.n2s(MessageUtil.listToString(" ", 1, args.length, args), MessageUtil.N2SType.SPECIAL_ONLY);
-          lores.set(index - 1, lores.get(index - 1) + input);
-          itemMeta.setLore(lores);
+          Component inputComponent = ComponentUtil.create(input);
+          Component origin = lores.get(index - 1);
+          inputComponent = origin != null ? origin.append(inputComponent) : inputComponent;
+          lores.set(index - 1, inputComponent);
+          itemMeta.lore(lores);
           item.setItemMeta(itemMeta);
-          player.getInventory().setItemInMainHand(item);
-          Component txt = ComponentUtil.create(
-                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄의 설명에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라) + "는 설명을 추가로 입력하였습니다.",
-                  item);
-          MessageUtil.sendMessage(player, txt);
+          if (ItemLoreUtil.isCucumberyTMIFood(item))
+          {
+            ItemLoreUtil.removeCucumberyTMIFood(item);
+          }
+          inventory.setItemInMainHand(item);
+          // 피드백에만 색깔
+          inputComponent = ComponentUtil.create(input);
+          if (inputComponent.color() == null)
+          {
+            inputComponent = inputComponent.color(Constant.THE_COLOR);
+          }
+          MessageUtil.sendMessage(player, ComponentUtil.createTranslate(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명에 %s(이)라는 설명을 추가로 입력하였습니다.",
+                  Constant.THE_COLOR_HEX + index, inputComponent).hoverEvent(item.asHoverEvent()));
         }
       }
     }
@@ -305,49 +331,67 @@ public class SetItemMeta implements CommandExecutor
       }
       else
       {
-        List<String> lore = itemMeta.getLore();
+        List<Component> lore = itemMeta.lore();
         if (lore == null)
         {
           lore = new ArrayList<>();
         }
         if (args.length == 1 && args[0].equals("--empty"))
         {
-          lore.add("");
-          itemMeta.setLore(lore);
+          lore.add(Component.empty());
+          itemMeta.lore(lore);
           item.setItemMeta(itemMeta);
-          Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 &e" + lore.size() + "번째&r 줄에 공백 설명을 추가하였습니다.", item);
-          MessageUtil.sendMessage(player, txt);
+          if (ItemLoreUtil.isCucumberyTMIFood(item))
+          {
+            ItemLoreUtil.removeCucumberyTMIFood(item);
+          }
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                  ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄에 공백 설명을 추가하였습니다.", Constant.THE_COLOR_HEX + lore.size()).hoverEvent(item.asHoverEvent()));
         }
         else
         {
           String input = MessageUtil.n2s(MessageUtil.listToString(" ", args), MessageUtil.N2SType.SPECIAL_ONLY);
-          if (input.endsWith(" --json"))
+          Component inputComponent = ComponentUtil.create(input);
+          if (input.contains("--json"))
           {
-            input = input.substring(0, input.length() - 7);
+            input = input.replaceFirst("--json", "");
             NBTItem nbtItem = new NBTItem(item);
             NBTCompound display = nbtItem.addCompound("display");
             NBTList<String> loreCompound = display.getStringList("Lore");
             loreCompound.add(input);
-            lore.add(input);
             item = nbtItem.getItem();
+            lore = item.getItemMeta().lore();
+            if (lore == null)
+            {
+              lore = new ArrayList<>();
+            }
           }
           else
           {
-            lore.add(input);
-            itemMeta.setLore(lore);
+            lore.add(inputComponent);
+            itemMeta.lore(lore);
             item.setItemMeta(itemMeta);
           }
-          Component txt = ComponentUtil.create(
-                  Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + lore.size() + "번째§r 줄에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라) + "는 설명을 추가하였습니다.", item);
-          MessageUtil.sendMessage(player, txt);
+          if (ItemLoreUtil.isCucumberyTMIFood(item))
+          {
+            ItemLoreUtil.removeCucumberyTMIFood(item);
+          }
+          inputComponent = ComponentUtil.create(input);
+          if (inputComponent.color() == null)
+          {
+            inputComponent = inputComponent.color(Constant.THE_COLOR);
+          }
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명에 %s(이)라는 설명을 추가하였습니다.",
+                  Constant.THE_COLOR_HEX + lore.size(), inputComponent).hoverEvent(item.asHoverEvent()));
         }
-        player.getInventory().setItemInMainHand(item);
+        inventory.setItemInMainHand(item);
+
       }
     }
     else if (cmd.getName().equals("deletelore"))
     {
-      List<String> lores = itemMeta.getLore();
-      if (lores == null)
+      List<Component> lores = itemMeta.lore();
+      if (lores == null || lores.size() == 0)
       {
         MessageUtil.sendError(player, "더 이상 제거할 수 있는 설명이 없습니다.");
         return true;
@@ -355,21 +399,28 @@ public class SetItemMeta implements CommandExecutor
       if (args.length == 0)
       {
         lores.remove(lores.size() - 1);
-        itemMeta.setLore(lores);
+        itemMeta.lore(lores);
         item.setItemMeta(itemMeta);
-        Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 &e" + ((lores.size() != 0) ? (lores.size() + 1) + "번째" : "모든") + "&r 줄의 설명을 제거하였습니다.", item);
-        MessageUtil.sendMessage(player, txt);
-        player.getInventory().setItemInMainHand(item);
+        if (lores.size() == 0)
+        {
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 모든 설명을 제거하였습니다.").hoverEvent(item.asHoverEvent()));
+        }
+        else
+        {
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                  ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명을 제거하였습니다.", Constant.THE_COLOR_HEX + (lores.size() + 1))
+                          .hoverEvent(item.asHoverEvent()));
+        }
+        inventory.setItemInMainHand(item);
       }
       else if (args.length == 1)
       {
         if (args[0].equals("--all"))
         {
-          itemMeta.setLore(null);
+          itemMeta.lore(null);
           item.setItemMeta(itemMeta);
-          player.getInventory().setItemInMainHand(item);
-          Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 &e모든&r 줄의 설명을 제거하였습니다.", item);
-          MessageUtil.sendMessage(player, txt);
+          inventory.setItemInMainHand(item);
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 모든 설명을 제거하였습니다.").hoverEvent(item.asHoverEvent()));
           return true;
         }
         if (!MessageUtil.isInteger(sender, args[0], true))
@@ -382,11 +433,19 @@ public class SetItemMeta implements CommandExecutor
           return true;
         }
         lores.remove(index - 1);
-        itemMeta.setLore(lores);
+        itemMeta.lore(lores);
         item.setItemMeta(itemMeta);
-        player.getInventory().setItemInMainHand(item);
-        Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 &e" + ((lores.size() != 0) ? index + "번째" : "모든") + "&r 줄의 설명을 제거하였습니다.", item);
-        MessageUtil.sendMessage(player, txt);
+        inventory.setItemInMainHand(item);
+        if (lores.size() == 0)
+        {
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 모든 설명을 제거하였습니다.").hoverEvent(item.asHoverEvent()));
+        }
+        else
+        {
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                  ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명을 제거하였습니다.", Constant.THE_COLOR_HEX + (lores.size() + 1))
+                          .hoverEvent(item.asHoverEvent()));
+        }
       }
       else
       {
@@ -406,7 +465,7 @@ public class SetItemMeta implements CommandExecutor
       {
         return true;
       }
-      List<String> lore = itemMeta.getLore();
+      List<Component> lore = itemMeta.lore();
       if (lore == null)
       {
         MessageUtil.sendError(sender, "설명을 들여쓸 수 없습니다.");
@@ -417,41 +476,31 @@ public class SetItemMeta implements CommandExecutor
       {
         return true;
       }
-      List<String> temp = new ArrayList<>();
-      for (int i = 0; i < index - 1; i++)
-      {
-        temp.add(lore.get(i));
-      }
-      boolean empty = false;
       String input = MessageUtil.n2s(MessageUtil.listToString(" ", 1, args.length, args), MessageUtil.N2SType.SPECIAL_ONLY);
-      if (args[1].equals("--empty"))
-      {
-        temp.add("");
-        empty = true;
-      }
-      else
-      {
-        temp.add(input);
-      }
-      for (int i = index - 1; i < lore.size(); i++)
-      {
-        temp.add(lore.get(i));
-      }
-      itemMeta.setLore(temp);
+      boolean empty = input.equals("--empty");
+      Component inputComponent = empty ? Component.empty() : ComponentUtil.create(input);
+      lore.add(index - 1, inputComponent);
+      itemMeta.lore(lore);
       item.setItemMeta(itemMeta);
-      player.getInventory().setItemInMainHand(item);
-      Component txt;
+      if (ItemLoreUtil.isCucumberyTMIFood(item))
+      {
+        ItemLoreUtil.removeCucumberyTMIFood(item);
+      }
+      inventory.setItemInMainHand(item);
       if (empty)
       {
-        txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 &e" + index + "번째&r 줄에 공백 설명을 들여썼습니다.", item);
+        MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 %s번째 줄에 공백 설명을 들여썼습니다.", Constant.THE_COLOR_HEX + index).hoverEvent(item.asHoverEvent()));
       }
       else
       {
-        txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 §e" + index + "번째§r 줄에 §e" + input + "§r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(input), ConsonantType.이라) + "는 설명을 " +
-                        "들여썼습니다.",
-                item);
+        if (inputComponent.color() == null)
+        {
+          inputComponent = inputComponent.color(Constant.THE_COLOR);
+        }
+        MessageUtil.sendMessage(player, ComponentUtil.createTranslate(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 %s번째 줄의 설명에 %s(이)라는 설명을 들여썼습니다.",
+                Constant.THE_COLOR_HEX + index, inputComponent).hoverEvent(item.asHoverEvent()));
       }
-      MessageUtil.sendMessage(player, txt);
     }
     else if (cmd.getName().equals("setrepaircost"))
     {
@@ -474,7 +523,7 @@ public class SetItemMeta implements CommandExecutor
         }
         ((Repairable) itemMeta).setRepairCost((int) Math.pow(2, repairCost) - 1);
         item.setItemMeta(itemMeta);
-        player.getInventory().setItemInMainHand(item);
+        inventory.setItemInMainHand(item);
         Method.updateInventory(player);
         if (!MessageUtil.isBoolean(sender, args, 2, true))
         {
@@ -483,8 +532,8 @@ public class SetItemMeta implements CommandExecutor
         boolean hideOutput = args.length == 2 && Boolean.parseBoolean(args[1]);
         if (!hideOutput)
         {
-          Component txt = ComponentUtil.create(Prefix.INFO_SETDATA + "주로 사용하는 손에 들고 있는 아이템의 모루 사용 횟수를 &e" + repairCost + "번&r으로 설정하였습니다.", item);
-          MessageUtil.sendMessage(player, txt);
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
+                  ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 모루 사용 횟수를 %s번으로 설정하였습니다.", Constant.THE_COLOR_HEX + repairCost).hoverEvent(item.asHoverEvent()));
         }
       }
       else

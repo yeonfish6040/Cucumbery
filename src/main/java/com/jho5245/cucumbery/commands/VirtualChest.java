@@ -35,9 +35,12 @@ public class VirtualChest implements CommandExecutor
     String usage = Method.getUsage(cmd);
     switch (cmd.getName())
     {
-      case "virtualchest":
-      {
+      case "virtualchest" -> {
         if (!Method.hasPermission(sender, Permission.CMD_VIRTUAL_CHEST, true))
+        {
+          return true;
+        }
+        if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
         {
           return true;
         }
@@ -84,10 +87,13 @@ public class VirtualChest implements CommandExecutor
         player.openInventory(chest);
         MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "&e" + chestName + "&r 가상창고를 엽니다.");
       }
-      break;
-      case "virtualchestadd":
-      {
+      case "virtualchestadd" -> {
         if (!Method.hasPermission(sender, Permission.CMD_VIRTUAL_CHEST_ADMIN, true))
+        {
+          return true;
+        }
+
+        if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
         {
           return true;
         }
@@ -148,8 +154,8 @@ public class VirtualChest implements CommandExecutor
         String display = ComponentUtil.itemName(handItem).toString();
         MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "&e" + chestName + "&r 가상창고에 &e" + display + "&r" + MessageUtil.getFinalConsonant(display, MessageUtil.ConsonantType.을를) + " 추가하였습니다.");
       }
-      break;
-      case "virtualchestadmin":
+      case "virtualchestadmin" -> {
+        args = MessageUtil.wrapWithQuote(args);
         if (!Method.hasPermission(sender, Permission.CMD_VIRTUAL_CHEST_ADMIN, true))
         {
           return true;
@@ -211,7 +217,7 @@ public class VirtualChest implements CommandExecutor
         }
         player.openInventory(chest);
         MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "&e" + Method.getDisplayName(target) + "&r의 &e" + chestName + "&r 가상창고를 엽니다.");
-        break;
+      }
     }
     return true;
   }

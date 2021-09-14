@@ -24,6 +24,10 @@ public class Menu implements CommandExecutor
 		{
 			return true;
 		}
+		if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+		{
+			return sender instanceof Player;
+		}
 		String usage = cmd.getUsage().replace("/<command> ", ""), consoleUsage = usage.replace("[플레이어 ID]", "<플레이어 ID>");
 		if (args.length == 0)
 		{
@@ -36,13 +40,12 @@ public class Menu implements CommandExecutor
 
 			Player player = (Player) sender;
 			Method.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1.5F);
-			//MessageUtil.sendMessage(player, Prefix.INFO_MENU+"메뉴를 엽니다.");
 			Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> GUI.openGUI(player, GUIType.MAIN_MENU), 0L);
 		}
 
 		else if (args.length <= 2)
 		{
-			if (!Method.hasPermission(sender, Permission.CMD_GUICOMMANDS_OTHERS, true))
+			args = MessageUtil.wrapWithQuote(args); if (!Method.hasPermission(sender, Permission.CMD_GUICOMMANDS_OTHERS, true))
 			{
 				MessageUtil.longArg(sender, 0, args);
 				MessageUtil.commandInfo(sender, label, "");
@@ -57,16 +60,12 @@ public class Menu implements CommandExecutor
 			{
 				Method.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1.5F);
 				MessageUtil.sendMessage(sender, Prefix.INFO_MENU, "&e", target, "&r에게 메뉴를 열어줍니다.");
-				if (!target.equals(sender))
-				{
-					//MessageUtil.sendMessage(target, Prefix.INFO_MENU+"메뉴를 엽니다.");
-				}
 			}
 			Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> GUI.openGUI(target, GUIType.MAIN_MENU), 0L);
 		}
 		else
 		{
-			if (!Method.hasPermission(sender, Permission.CMD_GUICOMMANDS_OTHERS, false))
+			args = MessageUtil.wrapWithQuote(args); if (!Method.hasPermission(sender, Permission.CMD_GUICOMMANDS_OTHERS, false))
 			{
 				MessageUtil.longArg(sender, 0, args);
 				MessageUtil.commandInfo(sender, label, "");

@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util;
 
+import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.josautil.KoreanUtils;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
@@ -28,6 +29,92 @@ import java.util.regex.Pattern;
 public class MessageUtil
 {
   private static final Pattern PATTERN_N2S_RGB = Pattern.compile("(([RGBrgb]){1,3})(([0-9]){1,3})(,(([0-9]){1,3}))?(,(([0-9]){1,3}))?;");
+
+
+  @NotNull
+  public static String[] wrapWithQuote(@NotNull String[] args)
+  {
+    return wrapWithQuote(false, args);
+  }
+
+  @NotNull
+  public static String[] wrapWithQuote(boolean forTabComplete, @NotNull String[] args)
+  {
+    String input = listToString(" ", args);
+    List<String> a = new ArrayList<>();
+    StringBuilder builder = new StringBuilder();
+    boolean isInQuote = false;
+    boolean isInDoubleQuote = false;
+    for (int i = 0; i < input.length(); i++)
+    {
+      char c = input.charAt(i);
+      if (c == '\"' && !isInQuote)
+      {
+        if (isInDoubleQuote)
+        {
+          if (input.charAt(i - 1) == '\\')
+          {
+            builder.append("\"");
+          }
+          if (!builder.isEmpty())
+          {
+            a.add(builder.toString());
+            builder = new StringBuilder();
+            isInDoubleQuote = false;
+          }
+        }
+        else
+        {
+          isInDoubleQuote = true;
+        }
+      }
+      else if (c == '\'' && !isInDoubleQuote)
+      {
+        if (isInQuote)
+        {
+          if (input.charAt(i - 1) == '\\')
+          {
+            builder.append("'");
+          }
+          if (!builder.isEmpty())
+          {
+            a.add(builder.toString());
+            builder = new StringBuilder();
+            isInQuote = false;
+          }
+        }
+        else
+        {
+          isInQuote = true;
+        }
+      }
+      else if (c == ' ' && !isInQuote && !isInDoubleQuote)
+      {
+        if (!builder.isEmpty() && !builder.toString().equals(" "))
+        {
+          a.add(builder.toString());
+        }
+        builder = new StringBuilder();
+      }
+      else
+      {
+        builder.append(c);
+      }
+    }
+    if (!builder.isEmpty())
+    {
+      if (isInQuote || isInDoubleQuote)
+      {
+        return new String[] {ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end"))};
+      }
+      a.add(builder.toString());
+    }
+    if ((forTabComplete && a.size() == 0) || input.endsWith(" "))
+    {
+      a.add("");
+    }
+    return Method.listToArray(a);
+  }
 
   @NotNull
   public static String[] splitEscape(@NotNull String str, char token)
@@ -148,11 +235,23 @@ public class MessageUtil
    * @param audience 메시지를 받는 대상
    * @param objects  보낼 메시지
    */
+  @SuppressWarnings("unchecked")
   public static void sendMessage(@NotNull Object audience, @NotNull Object... objects)
   {
     if (Cucumbery.using_CommandAPI && audience instanceof NativeProxyCommandSender proxyCommandSender)
     {
       audience = proxyCommandSender.getCallee();
+    }
+    if (audience instanceof List<?> list)
+    {
+      if (list.stream().allMatch(Predicates.instanceOf(Audience.class)::apply))
+      {
+        List<Audience> audiences = (List<Audience>) list;
+        for (Audience a : audiences)
+        {
+          MessageUtil.sendMessage(a, objects);
+        }
+      }
     }
     if (audience instanceof Audience)
     {
@@ -194,6 +293,7 @@ public class MessageUtil
 
   /**
    * 콘솔과 모든 플레이어에게 메시지를 보냅니다.
+   *
    * @param objects 보낼 메시지
    */
   public static void broadcast(@NotNull Object... objects)
@@ -277,6 +377,16 @@ public class MessageUtil
   public static void commandInfo(@NotNull Object audience, @NotNull String label, @NotNull String usage)
   {
     info(audience, "/" + label + " " + usage);
+  }
+
+  public static boolean checkQuoteIsValidInArgs(@NotNull CommandSender sender, @NotNull String[] args)
+  {
+    if (args.length == 1 && args[0].equals(ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end"))))
+    {
+      MessageUtil.sendError(sender, Component.translatable("parsing.quote.expected.end"));
+      return false;
+    }
+    return true;
   }
 
   /**

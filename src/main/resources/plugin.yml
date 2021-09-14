@@ -79,18 +79,10 @@ commands:
     description: 주로 사용하는 손에 들고 있는 아이템을 다른 플레이어에게 줍니다.
     usage: /<command> <플레이어> [아이템 개수] [명령어 출력 숨김 여부]
     aliases: [hg, chg, chandgive, 주기, wnrl]
-  handgiveall:
-    description: 주로 사용하는 손에 들고 있는 아이템을 모든 플레이어에게 줍니다.
-    usage: /<command> [아이템 개수|R#~#] [<world|distance|permission|level|hp|maxhp|healthbar> <값>] [명령어 출력 숨김 여부]
-    aliases: [hga, chga, chandgiveall, 모두주기, ahenwnrl]
   broadcastitem:
     description: 주로 사용하는 손에 들고 있는 아이템을 모두에게 보여줍니다.
     usage: /<command> [메시지]
     aliases: [bitem, cbitem, cbroadcastitem, 아이템확성기, 아확, dkdlxpaghkrtjdrl, dkghkr]
-  messageitem:
-    description: 주로 사용하는 손에 들고 있는 아이템을 플레이어에게 보여줍니다.
-    usage: /<command> <플레이어>
-    aliases: [msgi, cmsgi, cmessageitem, 귓아이템, rnltdkdlxpa]
   call:
     description: 플레이어를 호출합니다.
     usage: /<command> <플레이어>
@@ -131,18 +123,6 @@ commands:
     description: 고오오오급 음식 포인트/포화도 명령어
     usage: /<command> <set|give|take> <플레이어> <all|foodlevel|saturation> <값> [명령어 출력 숨김 여부]
     aliases: [afeed, cafeed, cadvancedfeed]
-  copystring:
-    description: 주로 사용하는 손에 들고 있는 아이템의 이름이나 설명을 복사합니다.
-    usage: /<command> <name|lore> ...
-    aliases: [cstring, ccstring, ccopystring]
-  viewdamage:
-    description: 대미지를 봅니다.
-    usage: /<command> [on|off]
-    aliases: [vdmg, cvdmg, cviewdamage]
-  uuid:
-    description: UUID를 봅니다.
-    usage: /<command> [플레이어]
-    aliases: [cuuid]
   broadcast:
     description: 모든 플레이어와 콘솔에게 메시지를 보냅니다.
     usage: /<command> <메시지>
@@ -194,10 +174,6 @@ commands:
     description: 강화를 합니다.
     usage: /<command> <상태|시작>
     aliases: [강화, rkdghk]
-  debugdamage:
-    description: 대미지 디버그 모드를 사용합니다.
-    usage: /<command>
-    aliases: [ddmg]
   menu:
     description: 메뉴 명령어
     usage: /<command> [플레이어] [명령어 출력 숨김 여부]
@@ -218,14 +194,6 @@ commands:
     description: 주로 사용하는 손에 들고 있는 아이템을 맞바꿉니다.
     usage: /<command> [플레이어] [명령어 출력 숨김 여부]
     aliases: [shi, cshi, swapheld, cswapheld, cswaphelditem]
-  itemdata2:
-    description: 플레이어의 인벤토리의 아이템 정보를 봅니다.
-    usage: /<command> <슬롯> [플레이어]
-    aliases: [id2, citemdata2]
-  itemdata3:
-    description: 플레이어의 엔더 상자의 아이템 정보를 봅니다.
-    usage: /<command> <슬롯> [플레이어]
-    aliases: [id3, citemdata3]
   getpositions:
     description: 모든 플레이어의 위치를 봅니다.
     usage: /<command> [월드]
@@ -257,14 +225,6 @@ commands:
     description: 플레이어가 해당 아이템을 얼마나 들고 있는지/얼마나 안전하게 인벤토리에 지급할 수 있는지에 대한 개수를 확인합니다.
     usage: /<command> <플레이어> <space|amount> <아이템 이름> [내구도|*]
     aliases: [ccheckamount]
-  setattribute:
-    description: 플레이어의 Attribute 값을 설정합니다.
-    usage: /<command> <플레이어> <Attribute 값> <수치|reset> [명령어 출력 숨김 여부]
-    aliases: [setattr, csetattr, csetattribute]
-  # condense:
-  #  description: "블록을 압축하여 인벤토리 공간을 덜 차지하게 합니다. (예 : 석탄 9개 -> 석탄 블록 1개)"
-  #  usage: /<command> [아이템 종류] [최대 압축 개수|*] [플레이어] [명령어 출력 숨김 여부]
-  #  aliases: [블록압축, 압축, ccondense]
   updateinventory:
     description: 플레이어의 인벤토리를 업데이트 합니다.
     usage: /<command> <플레이어> [명령어 출력 숨김 여부]

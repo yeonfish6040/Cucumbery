@@ -13,6 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -26,6 +27,10 @@ public class CommandPack implements CommandExecutor
     {
       return true;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (args.length < 2)
     {
       MessageUtil.shortArg(sender, 3, args);
@@ -36,8 +41,7 @@ public class CommandPack implements CommandExecutor
     {
       switch (args[0])
       {
-        case "remove":
-        {
+        case "remove" -> {
           if (args.length > 2)
           {
             MessageUtil.longArg(sender, 2, args);
@@ -59,9 +63,7 @@ public class CommandPack implements CommandExecutor
           Variable.commandPacks.remove(fileName);
           MessageUtil.info(sender, "&e" + fileName + ".yml&r 명령어 팩 파일을 제거하였습니다.");
         }
-        break;
-        case "execute":
-        {
+        case "execute" -> {
           if (args.length < 4)
           {
             MessageUtil.shortArg(sender, 4, args);
@@ -89,9 +91,7 @@ public class CommandPack implements CommandExecutor
           }
           Method.commandPack(executor, args[2], args[3]);
         }
-        break;
-        case "edit":
-        {
+        case "edit" -> {
           if (args.length < 4)
           {
             MessageUtil.shortArg(sender, 5, args);
@@ -110,8 +110,7 @@ public class CommandPack implements CommandExecutor
 
           switch (args[3])
           {
-            case "list":
-            {
+            case "list" -> {
               if (args.length > 4)
               {
                 MessageUtil.longArg(sender, 4, args);
@@ -129,9 +128,7 @@ public class CommandPack implements CommandExecutor
                 MessageUtil.info(sender, "&e" + (i + 1) + "번째 &r명령어 : &e" + commands.get(i));
               }
             }
-            break;
-            case "add":
-            {
+            case "add" -> {
               if (args.length < 5)
               {
                 MessageUtil.shortArg(sender, 5, args);
@@ -156,9 +153,7 @@ public class CommandPack implements CommandExecutor
               Variable.commandPacks.put(fileName, configuration);
               MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + commands.size() + "번째&r 줄에 &e" + command + "&r 명령어를 추가하였습니다.");
             }
-            break;
-            case "remove":
-            {
+            case "remove" -> {
               if (commands == null || commands.size() == 0)
               {
                 MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않거나 명령어가 없습니다. (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
@@ -233,9 +228,7 @@ public class CommandPack implements CommandExecutor
                 }
               }
             }
-            break;
-            case "set":
-            {
+            case "set" -> {
               if (args.length < 6)
               {
                 MessageUtil.shortArg(sender, 6, args);
@@ -275,9 +268,7 @@ public class CommandPack implements CommandExecutor
               Variable.commandPacks.put(fileName, configuration);
               MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + line + "번째&r 줄의 명령어를 &e" + command + "&r으로 설정하였습니다.");
             }
-            break;
-            case "insert":
-            {
+            case "insert" -> {
               if (args.length < 6)
               {
                 MessageUtil.shortArg(sender, 6, args);
@@ -315,18 +306,18 @@ public class CommandPack implements CommandExecutor
               Variable.commandPacks.put(fileName, configuration);
               MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + line + "번째&r 줄에 &e" + command + "&r 명령어를 들여썼습니다.");
             }
-            break;
-            default:
+            default -> {
               MessageUtil.wrongArg(sender, 4, args);
               MessageUtil.commandInfo(sender, label, "edit <명령어 팩 파일 이름> <명령어 팩> <list|add|remove|set|insert> ...");
               return true;
+            }
           }
         }
-        break;
-        default:
+        default -> {
           MessageUtil.wrongArg(sender, 1, args);
           MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
           return true;
+        }
       }
     }
     return true;

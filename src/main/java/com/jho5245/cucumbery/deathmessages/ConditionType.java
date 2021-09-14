@@ -83,7 +83,7 @@ public enum ConditionType
   /**
    * NBT
    */
-  NBT,
+  WEAPON_NBT,
   
   /**
    * 낙사 전 마지막으로 밟은 블록 종류

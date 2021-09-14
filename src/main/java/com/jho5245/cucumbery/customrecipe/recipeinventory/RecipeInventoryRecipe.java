@@ -105,14 +105,14 @@ public class RecipeInventoryRecipe
     {
       categoryDisplay = category;
     }
-    categoryDisplay = MessageUtil.n2s(categoryDisplay).replace("__", " ");
+    categoryDisplay = MessageUtil.n2s(categoryDisplay);
 
     String recipeDisplay = config.getString("recipes." + recipe + ".extra.display");
     if (recipeDisplay == null)
     {
       recipeDisplay = recipe;
     }
-    recipeDisplay = MessageUtil.n2s(recipeDisplay).replace("__", " ");
+    recipeDisplay = MessageUtil.n2s(recipeDisplay);
     Inventory menu = Bukkit.createInventory(null, 54, Constant.CANCEL_STRING +
             Method.format("category:" + category, "§") +
             Constant.CUSTOM_RECIPE_CRAFTING_MENU +

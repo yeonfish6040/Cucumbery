@@ -8,8 +8,6 @@ import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryMainMen
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryRecipe;
 import com.jho5245.cucumbery.gui.GUI;
 import com.jho5245.cucumbery.gui.GUI.GUIType;
-import com.jho5245.cucumbery.rpg.StatGUI;
-import com.jho5245.cucumbery.rpg.StatManager;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -1644,13 +1642,13 @@ public class InventoryClick implements Listener
       {
         categoryDisplay = category;
       }
-      categoryDisplay = categoryDisplay.replace("__", " ");
+      categoryDisplay = categoryDisplay;
       String recipeDisplay = config.getString("recipes." + recipe + ".extra.display");
       if (recipeDisplay == null)
       {
         recipeDisplay = recipe;
       }
-      recipeDisplay = recipeDisplay.replace("__", " ");
+      recipeDisplay = recipeDisplay;
       MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + category + "&r(&e" + categoryDisplay + "&r)에서 &e" + recipe + "&r(&e" + recipeDisplay + "&r) 레시피를 제거하였습니다.");
       for (File logFile : CustomRecipeUtil.getPlayersCraftLog())
       {
@@ -2041,7 +2039,7 @@ public class InventoryClick implements Listener
         GUI.openGUI(player, GUIType.ITEM_PICKUP_MODE_MENU);
       }
     }
-    else if (invName.equals(Constant.CANCEL_STRING + "§8스탯"))
+/*    else if (invName.equals(Constant.CANCEL_STRING + "§8스탯"))
     {
       long[] stat = StatManager.getStatManager().getStat(player);
       if ((s == 53 || s == 45) && type == Material.BOOKSHELF)
@@ -2074,7 +2072,7 @@ public class InventoryClick implements Listener
         StatManager.getStatManager().statUp(stat, player, 5, event.getClick());
         StatGUI.getStatGUI().statGUI(player);
       }
-    }
+    }*/
     else
     {
       boolean isMenuItem = (s >= 10 && s <= 16) || (s >= 19 && s <= 25) || (s >= 28 && s <= 34);
@@ -2122,7 +2120,7 @@ public class InventoryClick implements Listener
         String categorySplitter = Method.format("category:", "§");
         String mainSplitter = Method.format("mainpage:", "§");
         int page = Integer.parseInt(invName.split(Method.format("page:", "§"))[1].split(Method.format("category:", "§"))[0].replace("§", ""));
-        String category = invName.split(categorySplitter)[1].split(mainSplitter)[0].replace(" ", "__").replace("§", "");
+        String category = invName.split(categorySplitter)[1].split(mainSplitter)[0].replace("§", "");
         int mainPage = Integer.parseInt(invName.split(mainSplitter)[1].replace("§", ""));
         if (s == 44)
         {
@@ -2227,10 +2225,10 @@ public class InventoryClick implements Listener
         {
           GUI.openGUI(player, GUIType.MAIN_MENU);
         }
-        String category = invName.split(Method.format("category:", "§"))[1].split(Constant.CUSTOM_RECIPE_CRAFTING_MENU)[0].replace("§", "").replace(" ", "__");
+        String category = invName.split(Method.format("category:", "§"))[1].split(Constant.CUSTOM_RECIPE_CRAFTING_MENU)[0].replace("§", "");
         String mainSplitter = Method.format("mainpage:", "§");
         String splitter = Method.format("categorypage:", "§");
-        String recipe = invName.split(Method.format("recipe:", "§"))[1].split(mainSplitter)[0].replace("§", "").replace(" ", "__");
+        String recipe = invName.split(Method.format("recipe:", "§"))[1].split(mainSplitter)[0].replace("§", "");
         int mainPage = Integer.parseInt(invName.split(mainSplitter)[1].split(splitter)[0].replace("§", ""));
         int categoryPage = Integer.parseInt(invName.split(splitter)[1].replace("§", ""));
         if (s == 53)

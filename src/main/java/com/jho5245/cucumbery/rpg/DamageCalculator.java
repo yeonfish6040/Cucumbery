@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class DamageCalculator
 {
-	private static DamageCalculator damageCalculator = new DamageCalculator();
+	private static final DamageCalculator damageCalculator = new DamageCalculator();
 	
 	public static DamageCalculator getDamageCalc()
 	{
@@ -124,10 +124,8 @@ public class DamageCalculator
 	public boolean critChance(double chance)
 	{
 		int i = random(0, 10000) / 100;
-		
-		if (i <= chance)
-			return true;
-		return false;
+
+		return i <= chance;
 	}
 	
 	public double criticalDamageRatio(int min, int max)

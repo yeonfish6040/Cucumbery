@@ -24,6 +24,10 @@ public class CommandCKill2 implements CommandExecutor
     {
       return sender instanceof Player;
     }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
+    }
     if (args.length == 0 || args.length > 2)
     {
       if (args.length == 0)

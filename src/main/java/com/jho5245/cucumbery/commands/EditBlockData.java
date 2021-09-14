@@ -28,6 +28,10 @@ public class EditBlockData implements CommandExecutor
 		{
 			return true;
 		}
+		if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+		{
+			return sender instanceof Player;
+		}
 		if (!(sender instanceof Player player))
 		{
 			MessageUtil.sendError(sender, Prefix.ONLY_PLAYER);

@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +21,10 @@ public class Velocity2 implements CommandExecutor
     if (!Method.hasPermission(sender, Permission.CMD_VELOCITY, true))
     {
       return true;
+    }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return sender instanceof Player;
     }
     if (args.length < 4)
     {
@@ -34,7 +39,6 @@ public class Velocity2 implements CommandExecutor
       {
         return true;
       }
-
       for (Entity entity : entities)
       {
         Vector vector = entity.getVelocity();

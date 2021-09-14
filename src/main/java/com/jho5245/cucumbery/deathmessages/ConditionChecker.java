@@ -5,6 +5,9 @@ import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
+import org.bukkit.Nameable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -24,11 +27,15 @@ public class ConditionChecker
     }
     boolean[] check = new boolean[conditions.length];
     LivingEntity victim = event.getEntity();
-    Object damagerObject = DeathManager.getDamager(event);
-    boolean damagerExists = damagerObject != null;
-    boolean damagerIsLiving = damagerObject instanceof  LivingEntity;
-    LivingEntity damager = damagerIsLiving ? (LivingEntity) damagerObject : null;
-    Component damagerCustomName = damagerIsLiving ? damager.customName() : null;
+    String victimUUIDString = victim.getUniqueId().toString();
+    String victimTypeString = victim.getType().toString();
+    Location victimLocation = victim.getLocation();
+    Object objectDamager = DeathManager.getDamager(event);
+    boolean damagerExists = objectDamager != null;
+    boolean damagerIsEntity = objectDamager instanceof Entity;
+    boolean damagerIsLiving = objectDamager instanceof LivingEntity;
+    LivingEntity livingDamager = damagerIsLiving ? (LivingEntity) objectDamager : null;
+    Component damagerCustomName = objectDamager instanceof Nameable nameable ? nameable.customName() : null;
     Component victimCustomName = victim.customName();
     ItemStack weapon = DeathManager.getWeapon(event);
     boolean weaponExists = ItemStackUtil.itemExists(weapon);
@@ -41,61 +48,112 @@ public class ConditionChecker
         {
           ConditionType conditionType = condition.getConditionType();
           String value = condition.getValue();
-          if (conditionType == ConditionType.DEATH_TYPE)
+          if (value.startsWith("internal="))
           {
-            if (value.startsWith("internal="))
+            value = value.split("internal=")[1];
+            String[] yeet2 = value.split(";");
+            boolean[] check2 = new boolean[yeet2.length];
+            for (int j = 0; j < yeet2.length; j++)
             {
-              value = value.split("internal=")[1];
-              String[] yeet2 = value.split(";");
-              boolean[] check2 = new boolean[yeet2.length];
-              for (int j = 0; j < yeet2.length; j++)
+              String yeet = yeet2[j];
+              String yeetKey = yeet.split(":")[0];
+              String[] values = yeet.split(":")[1].split(",");
+              if (yeetKey.equals("include"))
               {
-                String yeet = yeet2[i];
-                String yeetKey = yeet.split(":")[0];
-                if (yeetKey.equals("include"))
+                check2[j] = true;
+                Outter:
+                for (String v : values)
                 {
-                  String[] values = yeet.split(":")[1].split(",");
-                  if (Method.contains(key, values))
+                  switch (conditionType)
                   {
-                    check2[j] = true;
+                    case DEATH_TYPE -> {
+                      if (!key.contains(v))
+                      {
+                        check2[j] = false;
+                        break Outter;
+                      }
+                    }
+                    case ENTITY_UUID -> {
+                      if (!victimUUIDString.contains(v))
+                      {
+                        check2[j] = false;
+                        break Outter;
+                      }
+                    }
+                    case ENTITY_TYPE -> {
+                      if (!victimTypeString.contains(v))
+                      {
+                        check2[j] = false;
+                        break Outter;
+                      }
+                    }
                   }
-                }
-                if (yeetKey.equals("exclude"))
-                {
-                  String[] values = yeet.split(":")[1].split(",");
-                  if (!Method.contains(key, values))
-                  {
-                    check2[j] = true;
-                  }
-                }
-                if (yeetKey.equals("regex"))
-                {
-                  check2[j] = Pattern.compile(yeet.split(":")[1]).matcher(key).find();
                 }
               }
-              check[i] = Method.allIsTrue(check2);
-              continue;
+              if (yeetKey.equals("exclude"))
+              {
+                check2[j] = true;
+                Outter:
+                for (String v : values)
+                {
+                  switch (conditionType)
+                  {
+                    case DEATH_TYPE -> {
+                      if (key.contains(v))
+                      {
+                        check2[j] = false;
+                        break Outter;
+                      }
+                    }
+                    case ENTITY_UUID -> {
+                      if (victimUUIDString.contains(v))
+                      {
+                        check2[j] = false;
+                        break Outter;
+                      }
+                    }
+                    case ENTITY_TYPE -> {
+                      if (victimTypeString.contains(v))
+                      {
+                        check2[j] = false;
+                        break Outter;
+                      }
+                    }
+                  }
+                }
+              }
+              if (yeetKey.equals("regex"))
+              {
+                switch (conditionType)
+                {
+                  case DEATH_TYPE -> check2[j] = Pattern.compile(yeet.split(":")[1]).matcher(key).find();
+                  case ENTITY_UUID -> check2[j] = Pattern.compile(yeet.split(":")[1]).matcher(victimUUIDString).find();
+                  case ENTITY_TYPE -> check2[j] = Pattern.compile(yeet.split(":")[1]).matcher(victimTypeString).find();
+                }
+              }
             }
+            check[i] = Method.allIsTrue(check2);
+            continue;
           }
-          Pattern pattern = conditionType == ConditionType.NBT ? Pattern.compile("(.*)") : Pattern.compile("^" + value + "$");
+          Pattern pattern = conditionType == ConditionType.WEAPON_NBT ? Pattern.compile("(.*)") : Pattern.compile("^" + value + "$");
           switch (conditionType)
           {
             case DEATH_TYPE -> check[i] = pattern.matcher(key).find();
-            case ENTITY_UUID -> check[i] = pattern.matcher(victim.getUniqueId().toString()).find();
-            case ENTITY_TYPE -> check[i] = pattern.matcher(victim.getType().toString()).find();
+            case ENTITY_UUID -> check[i] = pattern.matcher(victimUUIDString).find();
+            case ENTITY_TYPE -> check[i] = pattern.matcher(victimTypeString).find();
             case ENTITY_DISPLAY_NAME -> check[i] = victimCustomName != null && pattern.matcher(ComponentUtil.serialize(victimCustomName)).find();
-            case PLAYER_NAME -> check[i] = victim instanceof Player && pattern.matcher(victim.getName()).find();
+            case PLAYER_NAME -> check[i] = victim instanceof Player player && pattern.matcher(player.getName()).find();
             case PLAYER_DISPLAY_NAME -> check[i] = victim instanceof Player && pattern.matcher(ComponentUtil.serialize(((Player) victim).displayName())).find();
             case PLAYER_PERMISSION -> check[i] = victim.hasPermission(value);
-            case WORLD_NAME -> check[i] = pattern.matcher(victim.getLocation().getWorld().getName()).find();
-            case BIOME_TYPE -> check[i] = pattern.matcher(victim.getLocation().getBlock().getBiome().toString()).find();
-            case ATTACKER_ENTITY_TYPE -> check[i] = damagerIsLiving && pattern.matcher(damager.getName()).find();
+            case WORLD_NAME -> check[i] = pattern.matcher(victimLocation.getWorld().getName()).find();
+            case BIOME_TYPE -> check[i] = pattern.matcher(victimLocation.getBlock().getBiome().toString()).find();
+            case ATTACKER_ENTITY_TYPE -> check[i] = damagerIsEntity && pattern.matcher(((Entity) objectDamager).getType().toString()).find();
             case ATTACKER_ENTITY_DISPLAY_NAME -> check[i] = damagerCustomName != null && pattern.matcher(ComponentUtil.serialize(damagerCustomName)).find();
-            case ATTACKER_PLAYER_NAME -> check[i] = damager instanceof Player && pattern.matcher(damager.getName()).find();
-            case ATTACKER_PLAYER_DISPLAY_NAME -> check[i] = damager instanceof Player && pattern.matcher(ComponentUtil.serialize(((Player) damager).displayName())).find();
-            case ATTACKER_PLAYER_PERMISSION -> check[i] = damager instanceof Player && damager.hasPermission(value);
+            case ATTACKER_PLAYER_NAME -> check[i] = livingDamager instanceof Player player && pattern.matcher(player.getName()).find();
+            case ATTACKER_PLAYER_DISPLAY_NAME -> check[i] = livingDamager instanceof Player player && pattern.matcher(ComponentUtil.serialize(player.displayName())).find();
+            case ATTACKER_PLAYER_PERMISSION -> check[i] = damagerIsEntity && ((Entity) objectDamager).hasPermission(value);
             case WEAPON_TYPE -> check[i] = weaponExists && pattern.matcher(weapon.getType().toString()).find();
-            case NBT -> check[i] = weaponExists && ItemStackUtil.predicateItem(weapon, value);
+            case WEAPON_NBT -> check[i] = weaponExists && ItemStackUtil.predicateItem(weapon, value);
             case WEAPON_DISPLAY_NAME -> check[i] = weaponExists && pattern.matcher(ComponentUtil.serialize(ComponentUtil.itemName(weapon))).find();
             case LAST_TRAMPLED_BLOCK_TYPE -> {
               boolean success = false;
@@ -113,6 +171,7 @@ public class ConditionChecker
       {
 
       }
+
     }
 
     for (boolean b : check)
