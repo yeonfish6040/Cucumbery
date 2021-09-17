@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.ColorUtil.Type;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
@@ -29,10 +30,7 @@ import org.maxgamer.quickshop.shop.Shop;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Random;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -193,7 +191,7 @@ public class PlaceHolderUtil
       cmd = cmd.replace("%" + uuid + "_entity_level%", player.getLevel() + "");
       cmd = cmd.replace("%" + uuid + "_entity_total_experience%", player.getTotalExperience() + "");
       cmd = cmd.replace("%" + uuid + "_entity_game_mode%", player.getGameMode().toString());
-      if (Cucumbery.using_Vault)
+      if (Cucumbery.using_Vault_Economy)
       {
         cmd = cmd.replace("%" + uuid + "_entity_money_raw%", Constant.Sosu2rawFormat.format(Cucumbery.eco.getBalance(player)));
         cmd = cmd.replace("%" + uuid + "_entity_money%", Constant.Sosu2.format(Cucumbery.eco.getBalance(player)));
@@ -455,7 +453,7 @@ public class PlaceHolderUtil
             {
               params = params.split("%")[0];
             }
-            String[] split = params.split("__");
+            String[] split = MessageUtil.splitEscape(params,';');
             String value = split[0];
             String key = split[1];
             String parseValue = switch (key)
@@ -477,7 +475,7 @@ public class PlaceHolderUtil
         }
       }
 
-      if (Cucumbery.using_Vault && cmd.contains("%online_total_money%"))
+      if (Cucumbery.using_Vault_Economy && cmd.contains("%online_total_money%"))
       {
         double total = 0d;
         for (Player player : Bukkit.getOnlinePlayers())
@@ -487,7 +485,7 @@ public class PlaceHolderUtil
         cmd = cmd.replace("%online_total_money%", total + "");
       }
 
-      if (Cucumbery.using_Vault && cmd.contains("%online_users_total_money%"))
+      if (Cucumbery.using_Vault_Economy && cmd.contains("%online_users_total_money%"))
       {
         double total = 0d;
         for (Player player : Bukkit.getOnlinePlayers())
@@ -936,7 +934,148 @@ public class PlaceHolderUtil
         }
       }
     }
-    return ColorUtil.getGradientString(cmd);
+    return getGradientString(cmd);
+  }
+
+
+  public static final Pattern PATTERN_GRADIENT = Pattern.compile("%gradient_\\[([#&§0-9a-fA-FrgbRGB,;]+)]_((.*)[^%])");
+
+  public static String getGradientString(String s)
+  {
+    for (int i = 0; i < 10; i++)
+    {
+      Matcher m = PATTERN_GRADIENT.matcher(s);
+      while (m.find())
+      {
+        String[] colorStrings = m.group(1).split(";");
+        String content = m.group(2);
+        if (content.contains("%"))
+        {
+          content = content.split("%")[0];
+        }
+        List<ColorUtil> colors = new ArrayList<>();
+        for (String colorString : colorStrings)
+        {
+          if (colorString.startsWith("#"))
+          {
+            colors.add(new ColorUtil(Type.HEX, colorString));
+          }
+          else if (colorString.startsWith("&") || colorString.startsWith("§"))
+          {
+            colors.add(new ColorUtil(Type.MFC, colorString));
+          }
+          else if (colorString.contains(","))
+          {
+            colors.add(new ColorUtil(Type.RGB, colorString));
+          }
+        }
+        s = s.replace("%gradient_["+m.group(1)+"]_"+content+"%", getGradientString(colors, content));
+      }
+    }
+    return s;
+  }
+
+  public static String getGradientString(List<ColorUtil> colors, String string)
+  {
+    StringBuilder master = new StringBuilder();
+    String cleanString = string.replaceAll("&[0-9a-fA-FrRkKxXmMnNLloO]", "");
+    int length = cleanString.length();
+    if (colors.isEmpty())
+    {
+      return string;
+    }
+    else if (colors.size() == 1)
+    {
+      colors.add(colors.get(0));
+    }
+    if (string.length() == 1)
+    {
+      ColorUtil colorParser = colors.get(0);
+      return "rgb"+colorParser.getRed()+","+colorParser.getGreen()+","+colorParser.getBlue()+";"+string;
+    }
+    while (colors.size() > cleanString.length())
+    {
+      colors.remove(colors.size()-1);
+    }
+    int blockSize = length / (colors.size() - 1);
+    int left = length % (colors.size() - 1);
+    int pos = 0;
+    boolean bold = false;
+    boolean italic = false;
+    boolean strike = false;
+    boolean underline = false;
+    boolean random = false;
+    for (int n = 0; n < colors.size()-1; n++)
+    {
+      int gradientLength;
+      if (n == colors.size()-2)
+      {
+        gradientLength = blockSize+left;
+        blockSize = gradientLength;
+      }
+      else
+      {
+        gradientLength = blockSize;
+      }
+      List<ColorUtil> gradient = ColorUtil.getGradient(colors.get(n), colors.get(n+1), gradientLength+1);
+      for (int m = 0; m < blockSize; m++)
+      {
+        char c = cleanString.charAt(pos);
+        char s = string.charAt(pos);
+        while (s != c)
+        {
+          if (s == '&')
+          {
+            switch (string.charAt(pos + 1))
+            {
+              case 'r' -> {
+                bold = false;
+                italic = false;
+                strike = false;
+                underline = false;
+                random = false;
+              }
+              case 'l' -> bold = true;
+              case 'm' -> strike = true;
+              case 'n' -> underline = true;
+              case 'o' -> italic = true;
+              case 'k' -> random = true;
+            }
+            string = string.replaceFirst("&"+string.charAt(pos+1), "");
+            s = string.charAt(pos);
+          }
+          else
+          {
+            s = c;
+          }
+        }
+        ColorUtil color = gradient.get(m);
+        master.append(color.getMFC());
+        if (bold)
+        {
+          master.append("&l");
+        }
+        if (strike)
+        {
+          master.append("&m");
+        }
+        if (underline)
+        {
+          master.append("&n");
+        }
+        if (italic)
+        {
+          master.append("&o");
+        }
+        if (random)
+        {
+          master.append("&k");
+        }
+        master.append(cleanString.charAt(pos));
+        pos++;
+      }
+    }
+    return master.toString();
   }
 
   private static String eval(String str, boolean precision)

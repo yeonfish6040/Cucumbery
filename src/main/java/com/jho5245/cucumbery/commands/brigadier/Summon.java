@@ -1,10 +1,10 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
-import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import dev.jorel.commandapi.CommandAPI;
@@ -17,7 +17,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,10 +47,10 @@ public class Summon extends CommandBase
 
   private final List<Argument> argumentList5 = Arrays.asList(
           new EntityTypeArgument("개체"),
-    new IntegerArgument("마리수", 1, 10000),
-    new LocationArgument("위치"),
+          new IntegerArgument("마리수", 1, 10000),
+          new LocationArgument("위치"),
           new BooleanArgument("명령어 출력 숨김 여부"),
-    new GreedyStringArgument("nbt"));
+          new GreedyStringArgument("nbt"));
 
   public void registerCommand(String command, String permission, String... aliases)
   {
@@ -59,22 +59,14 @@ public class Summon extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       boolean success = false;
       Entity entity = null;
       EntityType entityType = (EntityType) args[0];
       int amount = (int) args[1];
       Location location;
-      if (commandSender instanceof Entity)
+      if (commandSender instanceof Entity e)
       {
-        location = ((Entity) commandSender).getLocation();
+        location = e.getLocation();
       }
       else if (commandSender instanceof BlockCommandSender)
       {
@@ -95,10 +87,8 @@ public class Summon extends CommandBase
       }
       else
       {
-        String typeString = (entity).getCustomName();
-        MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
-                        (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
+        MessageUtil.info(commandSender, ComponentUtil.createTranslate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.createTranslate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();
@@ -108,14 +98,6 @@ public class Summon extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       boolean success = false;
       Entity entity = null;
       EntityType entityType = (EntityType) args[0];
@@ -132,10 +114,8 @@ public class Summon extends CommandBase
       }
       else
       {
-        String typeString = (entity).getCustomName();
-        MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
-                        (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
+        MessageUtil.info(sender, ComponentUtil.createTranslate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.createTranslate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();
@@ -145,27 +125,19 @@ public class Summon extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       boolean success = false;
       Entity entity = null;
       EntityType entityType = (EntityType) args[0];
       int amount = (int) args[1];
       boolean hideOutput = (boolean) args[2];
       Location location;
-      if (commandSender instanceof Entity)
+      if (commandSender instanceof Entity e)
       {
-        location = ((Entity) commandSender).getLocation();
+        location = e.getLocation();
       }
-      else if (commandSender instanceof BlockCommandSender)
+      else if (commandSender instanceof BlockCommandSender blockCommandSender)
       {
-        location = ((BlockCommandSender) commandSender).getBlock().getLocation();
+        location = blockCommandSender.getBlock().getLocation();
       }
       else
       {
@@ -182,10 +154,8 @@ public class Summon extends CommandBase
       }
       else if (!hideOutput)
       {
-        String typeString = (entity).getCustomName();
-        MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
-                        (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
+        MessageUtil.info(sender, ComponentUtil.createTranslate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.createTranslate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();
@@ -195,14 +165,6 @@ public class Summon extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       boolean success = false;
       Entity entity = null;
       EntityType entityType = (EntityType) args[0];
@@ -220,10 +182,8 @@ public class Summon extends CommandBase
       }
       else if (!hideOutput)
       {
-        String typeString = (entity).getCustomName();
-        MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
-                        (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
+        MessageUtil.info(sender, ComponentUtil.createTranslate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.createTranslate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();
@@ -233,14 +193,6 @@ public class Summon extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       boolean success = false;
       Entity entity = null;
       EntityType entityType = (EntityType) args[0];
@@ -275,10 +227,8 @@ public class Summon extends CommandBase
       }
       else if (!hideOutput)
       {
-        String typeString = (entity).getCustomName();
-        MessageUtil.sendMessage(commandSender, Prefix.INFO, "새로운 ", ComponentUtil.senderComponent(entity),
-                ComponentUtil.create(MessageUtil.getFinalConsonant(typeString, MessageUtil.ConsonantType.을를) + " &e" + amount +
-                        (entity instanceof LivingEntity ? "마리" : "개") + "&r 소환하였습니다."));
+        MessageUtil.info(sender, ComponentUtil.createTranslate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.createTranslate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();

@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -1704,7 +1705,7 @@ public class Reinforce implements CommandExecutor
     Player player = (Player) sender;
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length == 0)

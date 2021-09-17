@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,11 +23,11 @@ public class CommandCKill2 implements CommandExecutor
   {
     if (!Method.hasPermission(sender, Permission.CMD_TRUEKILL, true))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (args.length == 0 || args.length > 2)
     {
@@ -39,12 +40,12 @@ public class CommandCKill2 implements CommandExecutor
         MessageUtil.longArg(sender, 2, args);
       }
       MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     List<Entity> entities = SelectorUtil.getEntities(sender, args[0]);
     if (entities == null)
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     List<Entity> successEntities = new ArrayList<>();
     for (Entity entity : entities)
@@ -69,7 +70,7 @@ public class CommandCKill2 implements CommandExecutor
     }
     if (!MessageUtil.isBoolean(sender, args, 2, true))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     boolean hideOutput = args.length == 2 && args[1].equals("true");
     if (!hideOutput)

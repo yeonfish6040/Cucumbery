@@ -1,14 +1,14 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
-import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.BooleanArgument;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 
@@ -39,29 +39,19 @@ public class UpdateItem extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       Collection<Entity> entities = (Collection<Entity>) args[0];
-      int successCount = 0;
+      List<Entity> successEntities = new ArrayList<>();
       for (Entity entity : entities)
       {
-        if (entity instanceof Item)
+        if (entity instanceof Item itemEntity)
         {
-          successCount++;
-          Item itemEntity = (Item) entity;
+          successEntities.add(itemEntity);
           Method.updateItem(itemEntity);
         }
       }
-      if (successCount > 0)
+      if (successEntities.size() > 0)
       {
-        CommandSender commandSender = sender.getCallee();
-        try
-        {
-          commandSender.getName();
-        }
-        catch (Exception e)
-        {
-          commandSender = sender.getCaller();
-        }
-
-        MessageUtil.info(commandSender, "&e" + successCount + "개&r의 아이템의 태그를 업데이트 하였습니다.");
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 아이템 태그를 업데이트 하였습니다.", successEntities));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.createTranslate("[%s: %s의 아이템 태그를 업데이트 하였습니다.]", sender, successEntities));
       }
       else
       {
@@ -77,32 +67,24 @@ public class UpdateItem extends CommandBase
     {
       Collection<Entity> entities = (Collection<Entity>) args[0];
       boolean hideOutout = (boolean) args[1];
-      int successCount = 0;
+      List<Entity> successEntities = new ArrayList<>();
       for (Entity entity : entities)
       {
         if (entity instanceof Item itemEntity)
         {
-          successCount++;
+          successEntities.add(itemEntity);
           Method.updateItem(itemEntity);
         }
       }
-      if (successCount > 0)
+      if (successEntities.size() > 0)
       {
-        CommandSender commandSender = sender.getCallee();
-        try
-        {
-          commandSender.getName();
-        }
-        catch (Exception e)
-        {
-          commandSender = sender.getCaller();
-        }
         if (!hideOutout)
         {
-          MessageUtil.info(commandSender, "&e" + successCount + "개&r의 아이템의 태그를 업데이트 하였습니다.");
+          MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 아이템 태그를 업데이트 하였습니다.", successEntities));
+          MessageUtil.sendAdminMessage(sender, null, ComponentUtil.createTranslate("[%s: %s의 아이템 태그를 업데이트 하였습니다.]", sender, successEntities));
         }
       }
-      else if (!hideOutout)
+      else
       {
         CommandAPI.fail("아이템을 찾을 수 없습니다.");
       }

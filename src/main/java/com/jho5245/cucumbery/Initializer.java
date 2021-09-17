@@ -8,6 +8,7 @@ import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -66,6 +67,19 @@ public class Initializer
     }
     Cucumbery.eco = rsp.getProvider();
     return true;
+  }
+
+  public static boolean setupChat() {
+    if (getPlugin().getPluginManager().getPlugin("Vault") == null)
+    {
+      return false;
+    }
+    RegisteredServiceProvider<Chat> rsp = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
+    if (rsp != null)
+    {
+      Cucumbery.chat = rsp.getProvider();
+    }
+    return Cucumbery.chat != null;
   }
 
   public static void loadDeathMessagesConfig()
@@ -447,18 +461,12 @@ public class Initializer
       displayname = MessageUtil.stripColor(displayname);
       Variable.nickNames.add(displayname);
       Variable.cachedUUIDs.put(displayname, playerUUID);
-      Variable.cachedUUIDs.put(displayname.replace(" ", ""), playerUUID);
-      Variable.cachedUUIDs.put(displayname.replace("+", ""), playerUUID);
-      Variable.cachedUUIDs.put(displayname.replace("+", "").replace(" ", ""), playerUUID);
     }
     if (playerListName != null)
     {
       playerListName = MessageUtil.stripColor(playerListName);
       Variable.nickNames.add(playerListName);
       Variable.cachedUUIDs.put(playerListName, playerUUID);
-      Variable.cachedUUIDs.put(playerListName.replace(" ", ""), playerUUID);
-      Variable.cachedUUIDs.put(playerListName.replace("+", ""), playerUUID);
-      Variable.cachedUUIDs.put(playerListName.replace("+", "").replace(" ", ""), playerUUID);
     }
   }
 
@@ -487,7 +495,7 @@ public class Initializer
         }
         customConfig.saveConfig();
       }
-      if (Method.getPlayer(null, uuid.toString(), false) == null)
+      if (Bukkit.getPlayer(uuid) == null)
       {
         removal.put(uuid, Variable.userData.get(uuid));
       }

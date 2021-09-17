@@ -16,9 +16,7 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.*;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,10 +37,12 @@ import java.util.*;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter
 {
+  private static final List<String> greedyStringCommands = Arrays.asList("broadcast", "sendmessage", "nickname", "nicknameothers", "csong", "csong2", "setname", "setname2", "addlore", "setlore", "setlore2", "insertlore");
+
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
-    args = MessageUtil.wrapWithQuote(true, args);
-    if (args.length == 1 && args[0].equals(ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end"))))
+    final String[] orginalArgs = args.clone();
+    if (!greedyStringCommands.contains(cmd.getName()) && !MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
     {
       return Collections.singletonList(args[0]);
     }
@@ -116,7 +116,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         if (Method.equals(args[1], "id", "uuid"))
         {
-          return Collections.singletonList(args[1] + "("+UserData.valueOf(args[1].toUpperCase()).getKey().replace("-", " ")+")" + " 키의 값은 변경할 수 없습니다.");
+          return Collections.singletonList(args[1] + "(" + UserData.valueOf(args[1].toUpperCase()).getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다.");
         }
         List<String> list = Method.enumToList(UserData.values());
         list.remove("id");
@@ -134,99 +134,28 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         {
           return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + "잘못된 데이터 키입니다.");
         }
-        switch (key)
-        {
-          case ITEM_DROP_MODE:
-          case ITEM_PICKUP_MODE:
-            return Method.tabCompleterList(args, "<모드>", "normal", "sneak", "disabled");
-          case LISTEN_CHAT:
-          case EVENT_EXCEPTION_ACCESS:
-          case LISTEN_CHAT_FORCE:
-          case LISTEN_COMMAND:
-          case LISTEN_CONTAINER:
-          case LISTEN_GLOBAL:
-          case LISTEN_GLOBAL_FORCE:
-          case LISTEN_HELDITEM:
-          case LISTEN_ITEM_DROP:
-          case LISTEN_JOIN:
-          case LISTEN_JOIN_FORCE:
-          case LISTEN_QUIT:
-          case LISTEN_QUIT_FORCE:
-          case OUTPUT_JOIN_MESSAGE_FORCE:
-          case OUTPUT_JOIN_MESSAGE:
-          case OUTPUT_QUIT_MESSAGE:
-          case OUTPUT_QUIT_MESSAGE_FORCE:
-          case PLAY_CHAT:
-          case PLAY_CHAT_FORCE:
-          case PLAY_JOIN:
-          case PLAY_JOIN_FORCE:
-          case PLAY_QUIT:
-          case PLAY_QUIT_FORCE:
-          case SHOW_ACTIONBAR_ON_ATTACK:
-          case SHOW_ACTIONBAR_ON_ITEM_DROP:
-          case SHOW_ACTIONBAR_ON_ITEM_PICKUP:
-          case SHOW_JOIN_MESSAGE:
-          case SHOW_JOIN_MESSAGE_FORCE:
-          case SHOW_QUIT_MESSAGE:
-          case SHOW_QUIT_MESSAGE_FORCE:
-          case SERVER_RESOURCEPACK:
-          case TRAMPLE_SOIL:
-          case TRAMPLE_SOIL_ALERT:
-          case SHOW_ITEM_BREAK_TITLE:
-          case SHOW_JOIN_TITLE:
-          case SHOW_ACTIONBAR_ON_ATTACK_PVP:
-          case HIDE_ACTIONBAR_ON_ATTACK_PVP_TO_OTHERS:
-          case SHOW_ACTIONBAR_ON_ATTACK_FORCE:
-          case SHOW_ACTIONBAR_ON_ATTACK_PVP_FORCE:
-          case SHOW_ACTIONBAR_ON_ITEM_DROP_FORCE:
-          case SHOW_ACTIONBAR_ON_ITEM_PICKUP_FORCE:
-          case TRAMPLE_SOIL_FORCE:
-          case TRAMPLE_SOIL_NO_ALERT_FORCE:
-          case ENTITY_AGGRO:
-          case FIREWORK_LAUNCH_ON_AIR:
-          case USE_QUICK_COMMAND_BLOCK:
-          case ITEM_DROP_DELAY_ALERT:
-          case COPY_NOTE_BLOCK_INSTRUMENT:
-          case COPY_NOTE_BLOCK_PITCH:
-          case COPY_NOTE_BLOCK_VALUE_WHEN_SNEAKING:
-          case INVERT_NOTE_BLOCK_PITCH_WHEN_SNEAKING_IN_CREATIVE_MODE:
-          case PLAY_NOTE_BLOCK_WHEN_SNEAKING_IN_CREATIVE_MODE:
-          case SHORTEND_DEBUG_MESSAGE:
-          case USE_HELPFUL_LORE_FEATURE:
-          case SAVE_EXPERIENCE_UPON_DEATH:
-          case SAVE_INVENTORY_UPON_DEATH:
-          case SHOW_PLUGIN_DEV_DEBUG_MESSAGE:
-          case DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE:
-          case SHOW_PREVIEW_COMMAND_BLOCK_COMMAND:
-          case NOTIFY_IF_INVENTORY_IS_FULL:
-          case NOTIFY_IF_INVENTORY_IS_FULL_FORCE_DISABLE:
-          case SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN:
-          case FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN:
-          case SHOW_COMMAND_BLOCK_EXECUTION_LOCATION:
-          case HEALTH_SCALED:
-          case COPY_BLOCK_DATA:
-          case COPY_BLOCK_DATA_WHEN_SNEAKING:
-          case COPY_BLOCK_DATA_FACING:
-          case COPY_BLOCK_DATA_WATERLOGGED:
-          case DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING:
-          case SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR:
-          case SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE:
-          case DISABLE_ITEM_COOLDOWN:
-          case GOD_MODE:
-          case IMMEDIATE_RESPAWN:
-            return Method.tabCompleterBoolean(args, "<값>");
-          case DISPLAY_NAME:
-          case PLAYER_LIST_NAME:
-            return Collections.singletonList("닉네임은 닉네임 명령어(/nick, /nickothers)를 사용하여 변경해주세요.");
-          case HEALTH_BAR:
-            return Collections.singletonList("HP바는 hp바 명령어(/shp)를 사용하여 변겨해주세요.");
-          case ID:
-          case UUID:
-            return Collections.singletonList(args[1] + "("+key.getKey().replace("-", " ")+")" + " 키의 값은 변경할 수 없습니다.");
-          case ITEM_USE_DELAY:
-          case ITEM_DROP_DELAY:
-            return Method.tabCompleterIntegerRadius(args, 0, 200, "<틱>");
-        }
+        return switch (key)
+                {
+                  case ITEM_DROP_MODE, ITEM_PICKUP_MODE -> Method.tabCompleterList(args, "<모드>", "normal", "sneak", "disabled");
+                  case LISTEN_CHAT, EVENT_EXCEPTION_ACCESS, LISTEN_CHAT_FORCE, LISTEN_COMMAND, LISTEN_CONTAINER, LISTEN_GLOBAL, LISTEN_GLOBAL_FORCE, LISTEN_HELDITEM,
+                          LISTEN_ITEM_DROP, LISTEN_JOIN, LISTEN_JOIN_FORCE, LISTEN_QUIT, LISTEN_QUIT_FORCE, OUTPUT_JOIN_MESSAGE_FORCE, OUTPUT_JOIN_MESSAGE, OUTPUT_QUIT_MESSAGE,
+                          OUTPUT_QUIT_MESSAGE_FORCE, PLAY_CHAT, PLAY_CHAT_FORCE, PLAY_JOIN, PLAY_JOIN_FORCE, PLAY_QUIT, PLAY_QUIT_FORCE, SHOW_ACTIONBAR_ON_ATTACK,
+                          SHOW_ACTIONBAR_ON_ITEM_DROP, SHOW_ACTIONBAR_ON_ITEM_PICKUP, SHOW_JOIN_MESSAGE, SHOW_JOIN_MESSAGE_FORCE, SHOW_QUIT_MESSAGE, SHOW_QUIT_MESSAGE_FORCE,
+                          SERVER_RESOURCEPACK, TRAMPLE_SOIL, TRAMPLE_SOIL_ALERT, SHOW_ITEM_BREAK_TITLE, SHOW_JOIN_TITLE, SHOW_ACTIONBAR_ON_ATTACK_PVP,
+                          HIDE_ACTIONBAR_ON_ATTACK_PVP_TO_OTHERS, SHOW_ACTIONBAR_ON_ATTACK_FORCE, SHOW_ACTIONBAR_ON_ATTACK_PVP_FORCE, SHOW_ACTIONBAR_ON_ITEM_DROP_FORCE,
+                          SHOW_ACTIONBAR_ON_ITEM_PICKUP_FORCE, TRAMPLE_SOIL_FORCE, TRAMPLE_SOIL_NO_ALERT_FORCE, ENTITY_AGGRO, FIREWORK_LAUNCH_ON_AIR, USE_QUICK_COMMAND_BLOCK,
+                          ITEM_DROP_DELAY_ALERT, COPY_NOTE_BLOCK_INSTRUMENT, COPY_NOTE_BLOCK_PITCH, COPY_NOTE_BLOCK_VALUE_WHEN_SNEAKING,
+                          INVERT_NOTE_BLOCK_PITCH_WHEN_SNEAKING_IN_CREATIVE_MODE, PLAY_NOTE_BLOCK_WHEN_SNEAKING_IN_CREATIVE_MODE, SHORTEND_DEBUG_MESSAGE, USE_HELPFUL_LORE_FEATURE,
+                          SAVE_EXPERIENCE_UPON_DEATH, SAVE_INVENTORY_UPON_DEATH, SHOW_PLUGIN_DEV_DEBUG_MESSAGE, DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE, SHOW_PREVIEW_COMMAND_BLOCK_COMMAND,
+                          NOTIFY_IF_INVENTORY_IS_FULL, NOTIFY_IF_INVENTORY_IS_FULL_FORCE_DISABLE, SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN, FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN,
+                          SHOW_COMMAND_BLOCK_EXECUTION_LOCATION, HEALTH_SCALED, COPY_BLOCK_DATA, COPY_BLOCK_DATA_WHEN_SNEAKING, COPY_BLOCK_DATA_FACING, COPY_BLOCK_DATA_WATERLOGGED,
+                          DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE, DISABLE_ITEM_COOLDOWN,
+                          GOD_MODE, IMMEDIATE_RESPAWN -> Method.tabCompleterBoolean(args, "<값>");
+                  case DISPLAY_NAME, PLAYER_LIST_NAME -> Collections.singletonList("닉네임은 닉네임 명령어(/nick, /nickothers)를 사용하여 변경해주세요.");
+                  case HEALTH_BAR -> Collections.singletonList("HP바는 hp바 명령어(/shp)를 사용하여 변겨해주세요.");
+                  case ID, UUID -> Collections.singletonList(args[1] + "(" + key.getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다.");
+                  case ITEM_USE_DELAY, ITEM_DROP_DELAY -> Method.tabCompleterIntegerRadius(args, 0, 200, "<틱>");
+                };
       }
       else if (length == 4)
       {
@@ -249,6 +178,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else
       {
+        args = orginalArgs;
         if (length == 2)
         {
           return Method.tabCompleterList(args, "<닉네임>", true, "<닉네임>", "--off");
@@ -280,6 +210,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else
       {
+        args = orginalArgs;
         if (length == 4)
         {
           return Method.tabCompleterList(args, "<닉네임>", true, "<닉네임>", "--off");
@@ -466,7 +397,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       if (length == 1)
       {
-        return Method.tabCompleterPlayer(sender, args);
+        return Method.tabCompleterPlayer(sender, args, "<플레이어>", true);
       }
       else if (length == 2)
       {
@@ -856,43 +787,9 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
       }
     }
-    else if (name.equals("copystring") && sender instanceof Player)
-    {
-      Player player = (Player) sender;
-      ItemStack item = player.getInventory().getItemInMainHand();
-      if (!ItemStackUtil.itemExists(item))
-      {
-        return Collections.singletonList(Prefix.NO_HOLDING_ITEM.toString());
-      }
-      if (length == 1)
-      {
-        return Method.tabCompleterList(args, "<복사할 값>", "name", "lore");
-      }
-      else if (length == 2)
-      {
-        if (args[0].equals("name"))
-        {
-          return Method.tabCompleterBoolean(args, "[색깔 없앰 해체 여부]");
-        }
-        else if (args[0].equals("lore"))
-        {
-          if (!ItemStackUtil.hasLore(item))
-          {
-            return Collections.singletonList("복사할 수 있는 설명이 없습니다.");
-          }
-          return Method.tabCompleterIntegerRadius(args, 1, Objects.requireNonNull(item.getItemMeta().getLore()).size(), "<줄>");
-        }
-      }
-      else if (length == 3)
-      {
-        if (args[0].equals("lore"))
-        {
-          return Method.tabCompleterBoolean(args, "[색깔 없앰 해제 여부]");
-        }
-      }
-    }
     else if (name.equals("sendmessage") && Method.hasPermission(sender, Permission.CMD_SENDMESSAGE, false))
     {
+      args = orginalArgs;
       if (length == 1)
       {
         return Method.tabCompleterPlayer(sender, args);
@@ -921,10 +818,12 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (length == 2)
       {
+        args = orginalArgs;
         return Method.tabCompleterList(args, Method.addAll(Method.listWorlds(), "~"), "<월드>");
       }
       else if (length >= 3 && length <= 7)
       {
+        args = orginalArgs;
         switch (length)
         {
           case 3:
@@ -1471,7 +1370,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayer(sender, args);
+        return Method.tabCompleterPlayer(sender, args, "<플레이어>", true);
       }
       else if (length == 2)
       {
@@ -1482,7 +1381,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayer(sender, args);
+        return Method.tabCompleterPlayer(sender, args, "<플레이어>", true);
       }
       else if (length == 2)
       {
@@ -1501,10 +1400,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (args[0].equals("play"))
       {
+        args = orginalArgs;
         if (args.length == 2)
         {
           Variable.songFiles.addAll(Songs.list);
-          return Method.tabCompleterList(args, Variable.songFiles, "<노래 파일>", true);
+          return Method.tabCompleterList(args, Variable.songFiles, "<노래 파일>", true, true);
         }
         return Method.tabCompleterList(args, "<노래 파일>", true);
       }
@@ -1535,9 +1435,10 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       }
       else if (args[1].equals("play"))
       {
+        args = orginalArgs;
         if (args.length == 4)
         {
-          return Method.tabCompleterList(args, Variable.songFiles, "<노래 파일>", true);
+          return Method.tabCompleterList(args, Variable.songFiles, "<노래 파일>", true, true);
         }
         return Method.tabCompleterList(args, "<노래 파일>", true);
       }
@@ -1628,8 +1529,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             case "extratag":
               switch (args[1])
               {
-                case "add":
-                case "remove":
+                case "add", "remove" -> {
                   boolean shulkerBoxExclusive = !Constant.SHULKER_BOXES.contains(material);
                   boolean enderPearlExclusive = material != Material.ENDER_PEARL;
                   List<String> list = new ArrayList<>(Method.tabCompleterList(args, Constant.ExtraTag.values(), "<태그>"));
@@ -1655,6 +1555,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     return Collections.singletonList("해당 태그는 엔더 진주에만 사용할 수 있습니다.");
                   }
                   return list;
+                }
               }
             case "hideflag":
               switch (args[1])
@@ -1737,7 +1638,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                 case "chance":
                   return Method.tabCompleterDoubleRadius(args, 0, 100, "<내구도 감소 무효 확률(%)>");
                 case "durability":
-                  return Method.tabCompleterLongRadius(args, 0, Long.MAX_VALUE, "<내구도>", "0");
+                  return Method.tabCompleterLongRadius(args, 0, Long.MAX_VALUE, "(<내구도>|<현재 내구도> <최대 내구도>)", "0", "0 (삭제)");
               }
               break;
             case "food":
@@ -1858,7 +1759,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             case "usage":
               switch (args[1])
               {
-                case "command":
+                case "command" -> {
                   try
                   {
                     ItemUsageType.valueOf(args[2].toUpperCase());
@@ -1868,7 +1769,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
                   }
                   return Method.tabCompleterList(args, "<인수>", "add", "remove", "list", "set", "insert");
-                case "cooldown":
+                }
+                case "cooldown" -> {
                   try
                   {
                     ItemUsageType.valueOf(args[2].toUpperCase());
@@ -1878,7 +1780,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
                   }
                   return Method.tabCompleterList(args, "<인수>", "tag", "time");
-                case "disposable":
+                }
+                case "disposable" -> {
                   String display;
                   try
                   {
@@ -1894,7 +1797,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     return Collections.singletonList(display + " 태그에는 소비 확률을 적용할 수 없습니다.");
                   }
                   return Method.tabCompleterDoubleRadius(args, 0, 100, "<" + display + " 시 소비 확률(%)>", "-1");
-                case "permission":
+                }
+                case "permission" -> {
                   try
                   {
                     ItemUsageType.valueOf(args[2].toUpperCase());
@@ -1904,6 +1808,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 실행 유형입니다.");
                   }
                   return Method.tabCompleterList(args, "<퍼미션 노드>", true, "--remove", "<퍼미션 노드>");
+                }
               }
               break;
             case "nbt":
@@ -2291,14 +2196,14 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         case "customlore":
           switch (args[1])
           {
-            case "add":
+            case "add" -> {
               if (length == 3)
               {
                 return Method.tabCompleterList(args, "<커스텀 설명>", true, "<커스텀 설명>", "--empty");
               }
               return Method.tabCompleterList(args, "[커스텀 설명]", true);
-            case "set":
-            {
+            }
+            case "set" -> {
               if (length == 3)
               {
                 return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "<줄>");
@@ -2323,8 +2228,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
               }
               return Method.tabCompleterList(args, "[커스텀 설명]", true);
             }
-            case "remove":
-            {
+            case "remove" -> {
               {
                 if (length == 3)
                 {
@@ -2336,10 +2240,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   return Method.tabCompleterIntegerRadius(args, 1, customLore.size(), "[줄]", "--all");
                 }
               }
-              break;
             }
-            case "insert":
-            {
+            case "insert" -> {
               NBTList<String> customLore = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_LORE_KEY);
               if (customLore == null || customLore.size() == 0)
               {
@@ -2360,14 +2262,14 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         case "abovecustomlore":
           switch (args[1])
           {
-            case "add":
+            case "add" -> {
               if (length == 3)
               {
                 return Method.tabCompleterList(args, "<상단 커스텀 설명>", true, "<상단 커스텀 설명>", "--empty");
               }
               return Method.tabCompleterList(args, "[상단 커스텀 설명]", true);
-            case "set":
-            {
+            }
+            case "set" -> {
               if (length == 3)
               {
                 return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "<줄>");
@@ -2392,8 +2294,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
               }
               return Method.tabCompleterList(args, "[상단 커스텀 설명]", true);
             }
-            case "remove":
-            {
+            case "remove" -> {
               {
                 if (length == 3)
                 {
@@ -2407,8 +2308,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
               }
               break;
             }
-            case "insert":
-            {
+            case "insert" -> {
               NBTList<String> customLore = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.ABOVE_CUSTOM_LORE_KEY);
               if (customLore == null || customLore.size() == 0)
               {
@@ -2808,13 +2708,13 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
             case "edit":
               switch (args[1])
               {
-                case "category":
-                case "recipe":
+                case "category", "recipe" -> {
                   if (Variable.customRecipes.size() == 0)
                   {
                     return Collections.singletonList("유효한 레시피 목록이 없습니다.");
                   }
                   return Method.tabCompleterList(args, Variable.customRecipes.keySet(), "<레시피 목록>");
+                }
               }
               break;
           }
@@ -2912,7 +2812,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   case "saturation":
                     return Method.tabCompleterDoubleRadius(args, 0, 20, "<현재 포화도의 최소 조건>", "-1");
                   case "wealth":
-                    if (!Cucumbery.using_Vault)
+                    if (!Cucumbery.using_Vault_Economy)
                     {
                       return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
                     }
@@ -2923,7 +2823,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                 List<String> list = new ArrayList<>(Method.tabCompleterList(args, "<인수>", "permission", "chance", "reusable", "cost", "wealth", "levelcost", "level", "display", "require", "statistic",
                         "hp", "mhp", "maxplayer", "foodlevel", "saturation", "hpcost", "mhpcost", "foodlevelcost", "saturationcost", "craftingtime",
                         "command", "biome", "belowblock"));
-                if (!Cucumbery.using_Vault)
+                if (!Cucumbery.using_Vault_Economy)
                 {
                   list.remove("cost");
                   list.remove("wealth");
@@ -3040,7 +2940,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   case "wealth":
                   {
-                    if (!Cucumbery.using_Vault)
+                    if (!Cucumbery.using_Vault_Economy)
                     {
                       return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
                     }
@@ -3113,7 +3013,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   case "chance":
                     return Method.tabCompleterDoubleRadius(args, 0, 100, "<제작 성공 확률(%)>");
                   case "cost":
-                    if (!Cucumbery.using_Vault)
+                    if (!Cucumbery.using_Vault_Economy)
                     {
                       return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
                     }
@@ -3141,7 +3041,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   case "saturation":
                     return Method.tabCompleterDoubleRadius(args, 0, 20, "<현재 포화도의 최소 조건>", "-1");
                   case "wealth":
-                    if (!Cucumbery.using_Vault)
+                    if (!Cucumbery.using_Vault_Economy)
                     {
                       return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
                     }
@@ -3185,7 +3085,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                     switch (args[5])
                     {
                       case "skip":
-                        if (!Cucumbery.using_Vault)
+                        if (!Cucumbery.using_Vault_Economy)
                         {
                           return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
                         }
@@ -3264,7 +3164,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                   }
                   case "wealth":
                   {
-                    if (!Cucumbery.using_Vault)
+                    if (!Cucumbery.using_Vault_Economy)
                     {
                       return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
                     }
@@ -3616,7 +3516,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
                 case "craftingtime":
                   if ("skip".equals(args[5]))
                   {
-                    if (!Cucumbery.using_Vault)
+                    if (!Cucumbery.using_Vault_Economy)
                     {
                       return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
                     }
@@ -4186,7 +4086,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     }
     else if (name.equals("economy") && Method.hasPermission(sender, Permission.CMD_ECONOMY, false))
     {
-      if (!Cucumbery.using_Vault)
+      if (!Cucumbery.using_Vault_Economy)
       {
         return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
       }
@@ -4233,7 +4133,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterPlayer(sender, args);
+        return Method.tabCompleterPlayer(sender, args, "<플레이어>", true);
       }
       else if (length == 2)
       {
@@ -4259,7 +4159,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     {
       if (length == 1)
       {
-        return Method.tabCompleterEntity(sender, args, "(<개체>|<여러 개체> [다른 개체])", true);
+        return Method.tabCompleterEntity(sender, args, "(<개체>|<여러 개체> <다른 개체>)", true);
       }
       else if (length == 2)
       {
@@ -4446,10 +4346,12 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
     }
     else if (name.equals("broadcast"))
     {
+      args = orginalArgs;
       return Method.tabCompleterList(args, length == 1 ? "<메시지>" : "[메시지]", true);
     }
     else if (name.equals("broadcastitem") && sender instanceof Player player)
     {
+      args = orginalArgs;
       List<String> list = new ArrayList<>();
       String arg = MessageUtil.listToString(args);
       if (arg.contains("[i1]"))
@@ -4624,6 +4526,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
         return Method.tabCompleterEntity(sender, args, "<개체>", true);
       }
 
+      args = orginalArgs;
       Entity entity = SelectorUtil.getEntity(sender, args[0], false);
 
       String x = "~", y = "~", z = "~";
@@ -4692,15 +4595,26 @@ public class TabCompleter implements org.bukkit.command.TabCompleter
       {
         switch (args[0])
         {
-          case "entities", "entity" ->
-                  {
-                    return Method.tabCompleterEntity(sender, args);
-                  }
-                  case "players", "player" ->
-                          {
-                            return Method.tabCompleterPlayer(sender, args);
-                          }
+          case "entities" -> {
+            return Method.tabCompleterEntity(sender, args, "<개체>", true);
+          }
+          case "entity" -> {
+            return Method.tabCompleterEntity(sender, args, "<개체>");
+          }
+          case "players" -> {
+            return Method.tabCompleterPlayer(sender, args, "<플레이어>", true);
+          }
+          case "player" -> {
+            return Method.tabCompleterPlayer(sender, args, "<플레이어>");
+          }
         }
+      }
+    }
+    else if (name.equals("viewinventory"))
+    {
+      if (length == 1)
+      {
+        return Method.tabCompleterEntity(sender, args, "<개체>");
       }
     }
     return Collections.singletonList(Prefix.ARGS_LONG.toString());

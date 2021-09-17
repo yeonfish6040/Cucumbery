@@ -1,42 +1,51 @@
 package com.jho5245.cucumbery.util.additemmanager;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Data
 {
   private final CommandSender sender;
 
-  private final Collection<? extends InventoryHolder> targets;
+  private final Collection<UUID> targets;
 
-  private final HashMap<InventoryHolder, Integer> lostAmounts;
+  private final HashMap<UUID, Integer> lostAmounts;
 
-  private final List<? extends InventoryHolder> success;
+  private final List<UUID> success;
 
-  private final List<? extends InventoryHolder> failure;
+  private final List<UUID> failure;
 
   private final Component item;
 
-  public Data(@NotNull CommandSender sender, @NotNull Collection<? extends InventoryHolder> targets, HashMap<InventoryHolder, Integer> lostAmounts,
-              @NotNull List<? extends InventoryHolder> success, @NotNull List<? extends InventoryHolder> failure, @NotNull ItemStack given, int amount)
+  private final int amount;
+
+  private final Component amountComponent;
+
+  public Data(@NotNull CommandSender sender, @NotNull Collection<UUID> targets, HashMap<UUID, Integer> lostAmounts,
+              @NotNull List<UUID> success, @NotNull List<UUID> failure, @NotNull ItemStack given, int amount)
   {
     this.sender = sender;
     this.targets = targets;
     this.lostAmounts = lostAmounts;
     this.success = success;
     this.failure = failure;
-    this.item = ComponentUtil.itemStackComponent(given, amount, Constant.THE_COLOR);
+    this.amount = amount;
+    this.amountComponent = Component.text(amount).color(Constant.THE_COLOR);
+    this.item = ComponentUtil.itemName(given, Constant.THE_COLOR).hoverEvent(given.asHoverEvent());
   }
 
   public void sendFeedback(boolean hideOutput)
@@ -45,44 +54,59 @@ public class Data
     {
       return;
     }
-    if (targets.size() == 0)
+    if (targets.isEmpty())
     {
       return;
     }
-    if (success.size() == 0)
+    List<Permissible> newList = new ArrayList<>();
+    for (UUID holder : success)
     {
-      MessageUtil.sendWarn(sender, ComponentUtil.createTranslate(targets.size() == 1 ? "%s이(가) %s을(를) 지급받지 못했습니다." : "%s 전부 %s을(를) 지급받지 못했습니다.",
-              targets, item));
-      for (InventoryHolder target : targets)
+      Entity entity = Bukkit.getEntity(holder);
+      if (entity != null)
       {
-        if (sender.equals(target))
+        newList.add(entity);
+      }
+    }
+    MessageUtil.sendAdminMessage(sender, newList, ComponentUtil.createTranslate("[%s: %s에게 %s을(를) %s개 지급하였습니다.]", sender, targets, item, amountComponent));
+    if (!failure.isEmpty())
+    {
+      MessageUtil.sendWarn(sender, ComponentUtil.createTranslate("%s이(가) 인벤토리가 가득 차서 %s %s개를 제대로 지급하지 못했습니다.", failure, item, amountComponent));
+      Component hover = Component.empty();
+      for (int i = 0; i < failure.size(); i++)
+      {
+        UUID target = failure.get(i);
+        int lostAmount = lostAmounts.get(target);
+        hover = hover.append(ComponentUtil.createTranslate("%s : %s개 (%s - %s)",
+                target, Component.text(amount - lostAmount).color(Constant.THE_COLOR), amountComponent, Component.text(lostAmount).color(Constant.THE_COLOR)));
+        if (i + 1 != failure.size())
+        {
+          hover = hover.append(Component.text("\n"));
+        }
+        if (sender instanceof Player player && target.equals(player.getUniqueId()))
         {
           continue;
         }
-        MessageUtil.sendWarn(target, ComponentUtil.createTranslate("인벤토리가 가득 차서 %s이(가) 보낸 %s을(를) 지급받지 못했습니다.", sender, item));
+        MessageUtil.sendWarn(target, ComponentUtil.createTranslate("인벤토리가 가득 차서 %s이(가) 보낸 %s %s개 중 %s개를 지급받지 못했습니다.", sender, item, amountComponent, Component.text(lostAmount).color(Constant.THE_COLOR)));
       }
-      return;
+      if (sender instanceof Player player)
+      {
+        Component message = ComponentUtil.createTranslate("받은 아이템 개수 상태 (마우스를 올려서 보기)");
+        MessageUtil.info(player, message.hoverEvent(hover));
+      }
+      else if (Cucumbery.using_CommandAPI && sender instanceof NativeProxyCommandSender proxyCommandSender && proxyCommandSender.getCallee() instanceof Player player)
+      {
+        Component message = ComponentUtil.createTranslate("받은 아이템 개수 상태 (마우스를 올려서 보기)");
+        MessageUtil.info(player, message.hoverEvent(hover));
+      }
     }
-    MessageUtil.sendMessage(sender, Prefix.INFO_HANDGIVE, ComponentUtil.createTranslate("%s에게 %s을(를) 성공적으로 지급하였습니다.", success, item));
-    if (failure.size() > 0)
+    MessageUtil.sendMessage(sender, Prefix.INFO_HANDGIVE, ComponentUtil.createTranslate("%s에게 %s을(를) %s개 지급하였습니다.", targets, item, amountComponent));
+    for (UUID target : targets)
     {
-      MessageUtil.sendWarn(sender, failure, "이(가) 인본토리가 가득 차서 ");
-    }
-    for (InventoryHolder target : success)
-    {
-      if (sender.equals(target))
+      if (sender instanceof Player player && target.equals(player.getUniqueId()))
       {
         continue;
       }
-      MessageUtil.sendMessage(target, Prefix.INFO_HANDGIVE, ComponentUtil.createTranslate("%s(으)로부터 %s을(를) 성공적으로 지급받았습니다.", sender, item));
-    }
-    for (InventoryHolder target : failure)
-    {
-      if (sender.equals(target))
-      {
-        continue;
-      }
-      MessageUtil.sendWarn(target, ComponentUtil.createTranslate("인벤토리가 가득 차서 %s이(가) 보낸 %s의 %s을(를) 지급받지 못했습니다.", sender, item, lostAmounts.get(target)));
+      MessageUtil.sendMessage(target, Prefix.INFO_HANDGIVE, ComponentUtil.createTranslate("%s(으)로부터 %s을(를) %s개 지급받았습니다.", sender, item, amountComponent));
     }
   }
 }

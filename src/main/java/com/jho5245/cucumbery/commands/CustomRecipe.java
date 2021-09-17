@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.block.Biome;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,7 +45,7 @@ public class CustomRecipe implements CommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     String usage = Method.getUsage(cmd);
     if (args.length < 1)
@@ -499,7 +500,7 @@ public class CustomRecipe implements CommandExecutor
                 }
                 break;
               case "wealth":
-                if (!Cucumbery.using_Vault)
+                if (!Cucumbery.using_Vault_Economy)
                 {
                   MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다.");
                   return true;
@@ -2039,7 +2040,7 @@ public class CustomRecipe implements CommandExecutor
                                             " 지정하였습니다.")));
                     break;
                   case "skip":
-                    if (!Cucumbery.using_Vault)
+                    if (!Cucumbery.using_Vault_Economy)
                     {
                       MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다.");
                       return true;
@@ -2250,7 +2251,7 @@ public class CustomRecipe implements CommandExecutor
                 }
                 break;
               case "cost":
-                if (!Cucumbery.using_Vault)
+                if (!Cucumbery.using_Vault_Economy)
                 {
                   MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다.");
                   return true;
@@ -2471,7 +2472,7 @@ public class CustomRecipe implements CommandExecutor
                                 (inputFoodLevelCost == 0 ? ("&r의 레벨 비용을 제거하였습니다.") : ("&r의 레벨 비용을 &e" + Constant.Sosu15.format(inputFoodLevelCost) + "&r으로 지정하였습니다.")));
                 break;
               case "wealth":
-                if (!Cucumbery.using_Vault)
+                if (!Cucumbery.using_Vault_Economy)
                 {
                   MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다.");
                   return true;

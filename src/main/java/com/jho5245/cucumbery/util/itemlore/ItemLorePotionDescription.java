@@ -291,7 +291,7 @@ public class ItemLorePotionDescription
       args.add(arg);
     }
 
-    return ComponentUtil.createTranslate("rgb255,97,144;%s 확률로 %s %s%s 적용", args);
+    return ComponentUtil.createTranslate("rgb255,97,144;%s 확률로 %s %s%s 적용").args(args);
   }
 
   @NotNull

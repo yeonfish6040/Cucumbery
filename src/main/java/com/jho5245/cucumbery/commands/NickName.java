@@ -14,6 +14,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,7 +39,7 @@ public class NickName implements CommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (!Cucumbery.config.getBoolean("use-nickname-feature"))
     {
@@ -89,29 +90,67 @@ public class NickName implements CommandExecutor
         }
 
         boolean off = args.length == 2 && args[1].equalsIgnoreCase("--off");
-        Component finalNickname = off ? Component.text(player.getName()) : nickName.append(Component.text("§r"));
+        Component finalNickname = off ? Component.text(player.getName()) : nickName;
         Component senderComponent = ComponentUtil.senderComponent(player);
         finalNickname = finalNickname.hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
         String serialNickname = off ? null : ComponentUtil.serializeAsJson(nickName);
         String originDisplay = MessageUtil.stripColor(ComponentUtil.serialize(player.displayName())), originList = MessageUtil.stripColor(ComponentUtil.serialize(player.playerListName()));
-        String prefix;
+        String type;
         if (args[0].equalsIgnoreCase("all"))
         {
-          prefix = "모든";
+          type = "모든";
           player.displayName(finalNickname);
+          if (Cucumbery.using_Vault_Chat)
+          {
+            try
+            {
+              String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
+              if (prefix != null)
+              {
+                finalNickname = ComponentUtil.create(false, prefix, finalNickname);
+              }
+              if (suffix != null)
+              {
+                finalNickname = ComponentUtil.create(false, finalNickname, suffix);
+              }
+            }
+            catch (Exception e)
+            {
+              e.printStackTrace();
+            }
+          }
           player.playerListName(finalNickname);
           UserData.DISPLAY_NAME.set(uuid, serialNickname);
           UserData.PLAYER_LIST_NAME.set(uuid, serialNickname);
         }
         else if (args[0].equalsIgnoreCase("display"))
         {
-          prefix = "채팅";
+          type = "채팅";
           player.displayName(finalNickname);
           UserData.DISPLAY_NAME.set(uuid, serialNickname);
         }
         else if (args[0].equalsIgnoreCase("list"))
         {
-          prefix = "목록";
+          type = "목록";
+          if (Cucumbery.using_Vault_Chat)
+          {
+            try
+            {
+              String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
+              if (prefix != null)
+              {
+                finalNickname = ComponentUtil.create(false, prefix, finalNickname);
+              }
+              if (suffix != null)
+              {
+                finalNickname = ComponentUtil.create(false, finalNickname, suffix);
+              }
+            }
+            catch (Exception e)
+            {
+              e.printStackTrace();
+            }
+          }
           player.playerListName(finalNickname);
           UserData.PLAYER_LIST_NAME.set(uuid, serialNickname);
         }
@@ -123,11 +162,11 @@ public class NickName implements CommandExecutor
         }
         if (off)
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_NICK, prefix + " 닉네임§r을 초기화 하였습니다.");
+          MessageUtil.sendMessage(player, Prefix.INFO_NICK, type + " 닉네임§r을 초기화 하였습니다.");
         }
         else
         {
-          MessageUtil.sendMessage(player, false, Prefix.INFO_NICK, "§e" + prefix + " 닉네임§r을 ", nickName, "§r" +
+          MessageUtil.sendMessage(player, false, Prefix.INFO_NICK, "§e" + type + " 닉네임§r을 ", nickName, "§r" +
                   MessageUtil.getFinalConsonant(ComponentUtil.serialize(nickName), ConsonantType.으로) + " 변경" + "하였습니다.");
         }
         Variable.nickNames.remove(originDisplay);
@@ -200,19 +239,16 @@ public class NickName implements CommandExecutor
         {
           Variable.nickNames.remove(originDisplay);
           Variable.cachedUUIDs.remove(originDisplay);
-          Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("+", ""));
         }
         if (originList != null)
         {
           Variable.nickNames.remove(originList);
           Variable.cachedUUIDs.remove(originList);
-          Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("+", ""));
         }
         if (!off)
         {
           Variable.nickNames.add(MessageUtil.stripColor(inputName));
           Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName), uuid);
-          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("+", ""), uuid);
         }
       }
       else if (args[1].equalsIgnoreCase("display"))
@@ -225,15 +261,12 @@ public class NickName implements CommandExecutor
         UserData.DISPLAY_NAME.set(uuid, off ? null : inputName);
         Variable.nickNames.remove(originDisplay);
         Variable.cachedUUIDs.remove(originDisplay);
-        Variable.cachedUUIDs.remove(originDisplay.replace(" ", "").replace("+", ""));
         if (!off)
         {
           Variable.nickNames.add(MessageUtil.stripColor(inputName));
           Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName), uuid);
-          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("+", ""), uuid);
           Variable.nickNames.add(originList);
           Variable.cachedUUIDs.put(originList, uuid);
-          Variable.cachedUUIDs.put(originList.replace(" ", "").replace("+", ""), uuid);
         }
       }
       else if (args[1].equalsIgnoreCase("list"))
@@ -246,15 +279,12 @@ public class NickName implements CommandExecutor
         UserData.PLAYER_LIST_NAME.set(uuid, off ? null : inputName);
         Variable.nickNames.remove(originList);
         Variable.cachedUUIDs.remove(originList);
-        Variable.cachedUUIDs.remove(originList.replace(" ", "").replace("+", ""));
         if (!off)
         {
           Variable.nickNames.add(MessageUtil.stripColor(inputName));
           Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName), uuid);
-          Variable.cachedUUIDs.put(MessageUtil.stripColor(inputName).replace(" ", "").replace("+", ""), uuid);
           Variable.nickNames.add(originDisplay);
           Variable.cachedUUIDs.put(originDisplay, uuid);
-          Variable.cachedUUIDs.put(originDisplay.replace(" ", "").replace("+", ""), uuid);
         }
       }
       else

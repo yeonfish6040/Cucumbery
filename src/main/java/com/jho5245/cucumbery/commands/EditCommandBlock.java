@@ -10,6 +10,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.block.CommandBlock;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,7 +30,7 @@ public class EditCommandBlock implements CommandExecutor
 		}
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (!(sender instanceof Player player))
     {

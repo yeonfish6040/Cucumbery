@@ -11,6 +11,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,7 +51,7 @@ public class TrashCan implements CommandExecutor
       }
       if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
       {
-        return sender instanceof Player;
+        return !(sender instanceof BlockCommandSender);
       }
       Player target = SelectorUtil.getPlayer(sender, args[0]);
       if (target == null)

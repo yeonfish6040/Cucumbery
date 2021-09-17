@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.additemmanager;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -18,23 +19,30 @@ public class AddItemUtil
   @NotNull
   public static Data addItemResult2(@NotNull CommandSender sender, @NotNull Collection<? extends InventoryHolder> inventoryHolder, @NotNull ItemStack itemStack, int amount)
   {
-    HashMap<InventoryHolder, Integer> hashMap = new HashMap<>();
-    List<InventoryHolder> success = new ArrayList<>();
-    List<InventoryHolder> failure = new ArrayList<>();
+    itemStack = itemStack.clone();
+    HashMap<UUID, Integer> hashMap = new HashMap<>();
+    List<UUID> success = new ArrayList<>();
+    List<UUID> failure = new ArrayList<>();
+    List<UUID> uuids = new ArrayList<>();
     for (InventoryHolder holder : inventoryHolder)
     {
-      Collection<ItemStack> lostItem = holder.getInventory().addItem(itemStack).values();
-      int lostAmount = lostItem.size() > 0 ? lostItem.iterator().next().getAmount() : 0;
-      hashMap.put(holder, lostAmount);
-      if (lostItem.size() == 0)
+      if (holder instanceof Entity entity)
       {
-        success.add(holder);
-      }
-      else
-      {
-        failure.add(holder);
+        UUID uuid = entity.getUniqueId();
+        uuids.add(uuid);
+        Collection<ItemStack> lostItem = holder.getInventory().addItem(itemStack).values();
+        int lostAmount = lostItem.size() > 0 ? lostItem.iterator().next().getAmount() : 0;
+        hashMap.put(uuid, lostAmount);
+        if (lostItem.size() == 0 && lostAmount == 0)
+        {
+          success.add(uuid);
+        }
+        else
+        {
+          failure.add(uuid);
+        }
       }
     }
-    return new Data(sender, inventoryHolder, hashMap, success, failure, itemStack, amount);
+    return new Data(sender, uuids, hashMap, success, failure, itemStack, amount);
   }
 }

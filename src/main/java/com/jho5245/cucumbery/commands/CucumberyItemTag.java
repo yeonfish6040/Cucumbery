@@ -17,6 +17,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import de.tr7zw.changeme.nbtapi.*;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Material;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,7 +41,7 @@ public class CucumberyItemTag implements CommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (!(sender instanceof Player))
     {

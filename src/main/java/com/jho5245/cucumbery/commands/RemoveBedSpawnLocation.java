@@ -3,12 +3,17 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RemoveBedSpawnLocation implements CommandExecutor
 {
@@ -16,54 +21,75 @@ public class RemoveBedSpawnLocation implements CommandExecutor
   {
     if (!Method.hasPermission(sender, Permission.CMD_REMOVE_BED_SPAWN_LOCATION, true))
     {
-      return true;
+      return !(sender instanceof BlockCommandSender);
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (args.length == 0)
     {
-      MessageUtil.shortArg(sender, 1, args);
-      MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
-      return true;
+      if (sender instanceof Player player)
+      {
+        player.performCommand(label + " " + player.getName());
+      }
+      else
+      {
+        MessageUtil.shortArg(sender, 1, args);
+        MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
+      }
+      return !(sender instanceof BlockCommandSender);
     }
     else if (args.length <= 2)
     {
       if (args.length == 2 && !MessageUtil.isBoolean(sender, args, 2, true))
       {
-        return true;
+        return !(sender instanceof BlockCommandSender);
       }
-      Player target = SelectorUtil.getPlayer(sender, args[0]);
-      if (target == null)
+      List<Player> players = SelectorUtil.getPlayers(sender, args[0]);
+      if (players == null)
       {
-        return true;
+        return !(sender instanceof BlockCommandSender);
       }
-      if (target.getBedSpawnLocation() == null)
+      boolean hideOutput = args.length == 2 && args[1].equals("true");
+      List<Player> successPlayers = new ArrayList<>();
+      List<Player> failurePlayers = new ArrayList<>();
+      for (Player player : players)
       {
-        if (args.length == 2 && args[1].equals("true"))
+        if (player.getBedSpawnLocation() == null)
         {
+          failurePlayers.add(player);
+        }
+        else
+        {
+          player.setBedSpawnLocation(null);
+          if (!sender.equals(player) && !hideOutput)
+          {
+            MessageUtil.info(player, ComponentUtil.createTranslate("%s이(가) 당신의 스폰 포인트를 제거하였습니다.", sender));
+          }
+          successPlayers.add(player);
+        }
+      }
+      if (!hideOutput)
+      {
+        if (failurePlayers.size() > 0)
+        {
+          MessageUtil.sendWarnOrError(successPlayers.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender, ComponentUtil.createTranslate("%s은(는) 스폰 포인트가 없습니다.", failurePlayers));
+        }
+        if (successPlayers.size() > 0)
+        {
+          MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 스폰 포인트를 제거하였습니다.", successPlayers));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successPlayers), ComponentUtil.createTranslate("[%s: %s의 스폰 포인트를 제거하였습니다.]", sender, successPlayers));
           return true;
         }
-        MessageUtil.sendError(sender, target, "의 스폰 포인트가 없습니다.");
-        return true;
-      }
-      target.setBedSpawnLocation(null);
-      if (args.length != 2 || !args[1].equals("true"))
-      {
-        if (!target.equals(sender))
-        {
-          MessageUtil.info(target,  sender, "이 당신의 스폰 포인트를 제거하였습니다.");
-        }
-        MessageUtil.info(sender,  target, "의 스폰 포인트를 제거하였습니다.");
       }
     }
     else
     {
       MessageUtil.longArg(sender, 2, args);
       MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
-      return true;
+      return !(sender instanceof BlockCommandSender);
     }
-    return true;
+    return !(sender instanceof BlockCommandSender);
   }
 }

@@ -275,7 +275,7 @@ public class RecipeInventoryRecipe
         {
           createButtonLore.set(0, ComponentUtil.create("§7아이템을 제작하는 중입니다."));
           menu.setItem(49, CreateItemStack.newItem2(Material.CLOCK, 1, "§e[제작중]", createButtonLore, false));
-          if (Cucumbery.using_Vault)
+          if (Cucumbery.using_Vault_Economy)
           {
             double skipCost = config.getDouble("recipes." + recipe + ".extra.crafting-time-skip.cost");
             if (skipCost > 0)

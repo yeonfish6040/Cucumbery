@@ -148,6 +148,21 @@ public enum Messages
   DROWN_COMBAT_ITEM("death-messages.messages.drown-combat-item"),
 
   /**
+   * %1$s이(가) 목이 말라 죽었습니다
+   */
+  DRY_OUT("death-messages.messages.dry-out"),
+
+  /**
+   * %1$s이(가) %2$s에게서 도망치려다 탈수로 죽었습니다
+   */
+  DRY_OUT_COMBAT("death-messages.messages.dry-out-combat"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 탈수로 죽었습니다
+   */
+  DRY_OUT_COMBAT_ITEM("death-messages.messages.dry-out-combat-item"),
+
+  /**
    * %1$s이(가) 운동 에너지를 온몸으로 경험했습니다
    */
   ELYTRA("death-messages.messages.elytra"),
@@ -541,6 +556,26 @@ public enum Messages
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다.
    */
   MELEE_SWORD_COMBAT_ITEM("death-messages.messages.melee-sword-combat-item"),
+
+  /**
+   * %1$s이(가) 발사체에게 저격당했습니다.
+   */
+  PROJECTILE("death-messages.messages.projectile"),
+
+  /**
+   * %1$s이(가) %2$s에게 저격당했습니다
+   */
+  PROJECTILE_COMBAT("death-messages.messages.projectile-combat"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
+   */
+  PROJECTILE_COMBAT_ITEM("death-messages.messages.projectile-combat-item"),
+
+  /**
+   * %1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다.
+   */
+  PROJECTILE_COMBAT_UNKNOWN("death-messages.messages.projectile-combat-unknown"),
 
   /**
    * %1$s이(가) 셜커 탄환에게 살해당했습니다.

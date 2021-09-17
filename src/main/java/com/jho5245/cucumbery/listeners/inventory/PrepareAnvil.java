@@ -10,6 +10,7 @@ import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -115,7 +116,8 @@ public class PrepareAnvil implements Listener
 
       if (NBTAPI.isRestricted(player, firstItem, RestrictionType.NO_ANVIL_COMPOSITION_LEFT))
       {
-        if (Objects.requireNonNull(firstItem).getType() != Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(secondItem) && firstItem.getType() == secondItem.getType())
+        if (NBTAPI.getCustomEnchantLevel(firstItem, CustomEnchant.ENCHANT_CURSE) > 0 ||
+                (Objects.requireNonNull(firstItem).getType() != Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(secondItem) && firstItem.getType() == secondItem.getType()))
         {
           restricted = true;
           lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 왼쪽에 있는 아이템 같은 종류의 아이템끼리 합성할 수 없는 아이템이 존재합니다."));
@@ -125,7 +127,9 @@ public class PrepareAnvil implements Listener
 
       if (NBTAPI.isRestricted(player, secondItem, RestrictionType.NO_ANVIL_COMPOSITION_RIGHT))
       {
-        if (Objects.requireNonNull(secondItem).getType() != Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(firstItem) && firstItem.getType() == secondItem.getType())
+        if (
+                NBTAPI.getCustomEnchantLevel(secondItem, CustomEnchant.ENCHANT_CURSE) > 0 ||
+                        (Objects.requireNonNull(secondItem).getType() != Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(firstItem) && firstItem.getType() == secondItem.getType()))
         {
           restricted = true;
           lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 오른쪽에 있는 아이템 같은 종류의 아이템끼리 합성할 수 없는 아이템이 존재합니다."));

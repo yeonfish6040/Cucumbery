@@ -17,7 +17,6 @@ public class ItemSerializer
     {
       return "";
     }
-
     return NBTItem.convertItemtoNBT(itemStack).toString();
   }
 

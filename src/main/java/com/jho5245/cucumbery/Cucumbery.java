@@ -52,6 +52,7 @@ import com.jho5245.cucumbery.util.storage.Updater;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -61,49 +62,36 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.maxgamer.quickshop.QuickShop;
+import org.maxgamer.quickshop.api.QuickShopAPI;
+import org.maxgamer.quickshop.api.ShopAPI;
+import org.maxgamer.quickshop.shop.Shop;
 
 import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
 
 public class Cucumbery extends JavaPlugin
 {
-  private static Cucumbery cucumbery;
-
   public static YamlConfiguration config;
-
-  public PluginDescriptionFile pluginDescriptionFile;
-
-  private PluginManager pluginManager;
-
-  public int currentConfigVersion;
-
-  public static int CONFIG_VERSION = 1;
-
   public static boolean using_CommandAPI;
-
-  public static boolean using_Vault;
-
+  public static boolean using_Vault_Economy;
+  public static boolean using_Vault_Chat;
   public static boolean using_NoteBlockAPI;
-
   public static boolean using_QuickShop;
 
+  //  public static int CONFIG_VERSION = 1;
   public static boolean using_PlaceHolderAPI;
-
   public static boolean using_ItemEdit;
-
   public static boolean using_mcMMO;
-
   public static Economy eco;
-
+  public static Chat chat;
   public static File file;
-
   public static File dataFolder;
-
   public static long runTime;
-
+  private static Cucumbery cucumbery;
   private static TabCompleter tabCompleter;
+  public PluginDescriptionFile pluginDescriptionFile;
+  public int currentConfigVersion;
+  private PluginManager pluginManager;
 
   public static Cucumbery getPlugin()
   {
@@ -172,7 +160,14 @@ public class Cucumbery extends JavaPlugin
     this.pluginDescriptionFile = this.getDescription();
     this.pluginManager = Bukkit.getServer().getPluginManager();
     this.currentConfigVersion = Cucumbery.config.getInt("config-version");
-    this.registerItems();
+    try
+    {
+      this.registerItems();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
     Scheduler.Schedule(this);
     Updater.onEnable();
     if (using_NoteBlockAPI)
@@ -188,7 +183,6 @@ public class Cucumbery extends JavaPlugin
   // 플러그인 비활성화 시 처리 과정
   private void disableOperation()
   {
-    executorService.shutdown();
     Initializer.saveUserData();
     Initializer.saveBlockPlaceData();
     Initializer.saveItemUsageData();
@@ -211,7 +205,7 @@ public class Cucumbery extends JavaPlugin
         NoteBlockAPISong.radioSongPlayer.setPlaying(false);
         NoteBlockAPISong.radioSongPlayer.destroy();
       }
-      if (NoteBlockAPISong.playerRadio.size() > 0)
+      if (!NoteBlockAPISong.playerRadio.isEmpty())
       {
         for (RadioSongPlayer playerRadio : NoteBlockAPISong.playerRadio.values())
         {
@@ -226,8 +220,15 @@ public class Cucumbery extends JavaPlugin
   private void registerItems()
   {
     this.registerConfig();
-    this.checkUsingAddons();
-    this.registerCustomConfig();
+    try
+    {
+      this.checkUsingAddons();
+      this.registerCustomConfig();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
     if (using_CommandAPI)
     {
       try
@@ -246,7 +247,8 @@ public class Cucumbery extends JavaPlugin
   private void checkUsingAddons()
   {
     Cucumbery.using_CommandAPI = Cucumbery.config.getBoolean("use-hook-plugins.CommandAPI") && this.pluginManager.getPlugin("CommandAPI") != null;
-    Cucumbery.using_Vault = Cucumbery.config.getBoolean("use-hook-plugins.Vault") && Initializer.setupEconomy();
+    Cucumbery.using_Vault_Economy = Cucumbery.config.getBoolean("use-hook-plugins.Vault") && Initializer.setupEconomy() && eco != null;
+    Cucumbery.using_Vault_Chat = Cucumbery.config.getBoolean("use-hook-plugins.Vault") && Initializer.setupChat() && chat != null;
     Cucumbery.using_NoteBlockAPI = Cucumbery.config.getBoolean("use-hook-plugins.NoteBlockAPI") && this.pluginManager.getPlugin("NoteBlockAPI") != null;
     Cucumbery.using_QuickShop = Cucumbery.config.getBoolean("use-hook-plugins.QuickShop") && this.pluginManager.getPlugin("QuickShop") != null;
     Cucumbery.using_PlaceHolderAPI = Cucumbery.config.getBoolean("use-hook-plugins.PlaceHolderAPI") && this.pluginManager.getPlugin("PlaceHolderAPI") != null;
@@ -254,8 +256,26 @@ public class Cucumbery extends JavaPlugin
     Cucumbery.using_mcMMO = Cucumbery.config.getBoolean("use-hook-plugins.mcMMO") && this.pluginManager.getPlugin("mcMMO") != null;
     if (using_QuickShop)
     {
-      Variable.shops.clear();
-      Variable.shops = QuickShop.getInstance().getShopManager().getAllShops();
+      Bukkit.getServer().getScheduler().runTaskLater(this, () ->
+      {
+        try
+        {
+          ShopAPI shopAPI = QuickShopAPI.getShopAPI();
+          if (shopAPI != null)
+          {
+            List<Shop> shopList = shopAPI.getAllShops();
+            if (shopList != null)
+            {
+              Variable.shops.clear();
+              Variable.shops.addAll(shopList);
+            }
+          }
+        }
+        catch (Exception e)
+        {
+          e.printStackTrace();
+        }
+      }, 100L);
     }
   }
 
@@ -282,6 +302,7 @@ public class Cucumbery extends JavaPlugin
     new Repeat2().registerCommand("crepeat", "cucumbery.command.repeat", "repeat2");
     new Data().registerCommand("cdata", "cucumbery.command.data", "data2");
     new TP2().registerCommand("tp2", "cucumbery.command.tp2");
+    new Explode().registerCommand("explode", "cucumbery.command.explode", "cexplode");
   }
 
   private void registerCommands()
@@ -378,6 +399,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("repeat", new Repeat());
     Initializer.registerCommand("socialmenu", new SocialMenu());
     Initializer.registerCommand("ckill2", new CommandCKill2());
+    Initializer.registerCommand("viewinventory", new ViewInventory());
 
     if (Cucumbery.using_QuickShop)
     {
@@ -417,6 +439,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new EntityAddToWorld());
     Initializer.registerEvent(new EntityChangeBlock());
     Initializer.registerEvent(new EntityDamage());
+    Initializer.registerEvent(new EntityDamageByBlock());
     Initializer.registerEvent(new EntityDamageByEntity());
     Initializer.registerEvent(new EntityDeath());
     Initializer.registerEvent(new EntityExplode());
@@ -448,6 +471,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new InventoryClose());
     Initializer.registerEvent(new InventoryMoveItem());
     Initializer.registerEvent(new InventoryOpen());
+    Initializer.registerEvent(new InventoryPickupItem());
     Initializer.registerEvent(new PrepareAnvil());
     Initializer.registerEvent(new PrepareItemCraft());
     Initializer.registerEvent(new PrepareResult());
@@ -517,10 +541,9 @@ public class Cucumbery extends JavaPlugin
     this.currentConfigVersion = this.getConfig().getInt("config-version");
   }
 
-  private final ExecutorService executorService = Executors.newFixedThreadPool(1);
-
   private void registerCustomConfig()
   {
-    executorService.submit(Initializer::loadCustomConfigs);
+    Initializer.loadCustomConfigs();
+    Initializer.loadPlayersConfig();
   }
 }

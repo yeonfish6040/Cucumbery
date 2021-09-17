@@ -46,10 +46,6 @@ public class InventoryClose implements Listener
     if (event.getPlayer().getType() == EntityType.PLAYER)
     {
       Player player = (Player) event.getPlayer();
-			if (player.getGameMode() == GameMode.SPECTATOR)
-			{
-				return;
-			}
       Inventory inventory = event.getInventory();
       InventoryType inventoryType = inventory.getType();
       String title = event.getView().getTitle();
@@ -61,14 +57,14 @@ public class InventoryClose implements Listener
           ItemStack[] contents = event.getInventory().getContents();
           PlayerInventory playerInventory = player.getInventory();
           ItemStack shulker;
-					if (textComponent.content().endsWith("MAIN_HAND"))
-					{
-						shulker = playerInventory.getItemInMainHand();
-					}
-					else
-					{
-						shulker = playerInventory.getItemInOffHand();
-					}
+          if (textComponent.content().endsWith("MAIN_HAND"))
+          {
+            shulker = playerInventory.getItemInMainHand();
+          }
+          else
+          {
+            shulker = playerInventory.getItemInOffHand();
+          }
           if (ItemStackUtil.itemExists(shulker) && Constant.SHULKER_BOXES.contains(shulker.getType()))
           {
             BlockStateMeta boxMeta = (BlockStateMeta) shulker.getItemMeta();
@@ -106,10 +102,10 @@ public class InventoryClose implements Listener
           if (folder.exists() && folder.listFiles() != null && Objects.requireNonNull(folder.listFiles()).length == 0)
           {
             boolean success = folder.delete();
-						if (!success)
-						{
-							System.err.println("[Cucumbery] could not delete " + player.getUniqueId().toString() + " folder!");
-						}
+            if (!success)
+            {
+              System.err.println("[Cucumbery] could not delete " + player.getUniqueId().toString() + " folder!");
+            }
           }
           return;
         }
@@ -136,10 +132,10 @@ public class InventoryClose implements Listener
           if (folder.exists() && folder.listFiles() != null && Objects.requireNonNull(folder.listFiles()).length == 0)
           {
             boolean success = folder.delete();
-						if (!success)
-						{
-							System.err.println("[Cucumbery] could not delete " + player.getUniqueId().toString() + " folder!");
-						}
+            if (!success)
+            {
+              System.err.println("[Cucumbery] could not delete " + player.getUniqueId().toString() + " folder!");
+            }
           }
           return;
         }
@@ -157,10 +153,10 @@ public class InventoryClose implements Listener
       if (title.startsWith(Constant.CUSTOM_RECIPE_CREATE_GUI))
       {
         // 레시피 삭제 버튼을 누른 경우에 인벤토리가 닫히면 리턴
-				if (!ItemStackUtil.itemExists(inventory.getItem(0)))
-				{
-					return;
-				}
+        if (!ItemStackUtil.itemExists(inventory.getItem(0)))
+        {
+          return;
+        }
         // 확인 버튼을 누르지 않을 경우에 리턴
         if (ItemStackUtil.itemExists(inventory.getItem(22)))
         {
@@ -187,17 +183,17 @@ public class InventoryClose implements Listener
         if (!ItemStackUtil.itemExists(result))
         {
           MessageUtil.sendError(player, "레시피의 결과물이 되는 아이템을 중앙 상단에 놔두고 다시 시도해주세요. 결과물 아이템이 없어 레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "에 실패하였습니다.");
-					if (!title.contains("§레§시§피§ §편§집§3편집"))
-					{
-						for (int i = 27; i <= 53; i++)
-						{
-							ItemStack returnLost = inventory.getItem(i);
-							if (ItemStackUtil.itemExists(returnLost))
-							{
-								player.getInventory().addItem(returnLost);
-							}
-						}
-					}
+          if (!title.contains("§레§시§피§ §편§집§3편집"))
+          {
+            for (int i = 27; i <= 53; i++)
+            {
+              ItemStack returnLost = inventory.getItem(i);
+              if (ItemStackUtil.itemExists(returnLost))
+              {
+                player.getInventory().addItem(returnLost);
+              }
+            }
+          }
           player.updateInventory();
           return;
         }
@@ -213,24 +209,24 @@ public class InventoryClose implements Listener
         if (ingredientInventory.firstEmpty() == 0)
         {
           MessageUtil.sendError(player, "레시피의 재료로 되는 아이템을 하단 9×3 슬롯에 놔두고 다시 시도해주세요. 재료 아이템이 없어 레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "에 실패하였습니다.");
-					if (!title.contains("§레§시§피§ §편§집§3편집"))
-					{
-						player.getInventory().addItem(result);
-					}
+          if (!title.contains("§레§시§피§ §편§집§3편집"))
+          {
+            player.getInventory().addItem(result);
+          }
           return;
         }
         String category = Method.deformat(title.split(Method.format("category:", "§"))[1].split(Method.format("recipe:", "§"))[0], "§");
         String recipe = Method.deformat(title.split(Method.format("recipe:", "§"))[1], "§");
         CustomConfig customRecipeListConfig = CustomConfig.getCustomConfig("data/CustomRecipe/" + category + ".yml");
         YamlConfiguration config = customRecipeListConfig.getConfig();
-				if (!config.contains("extra.permissions.hide-if-no-base"))
-				{
-					config.set("extra.permissions.hide-if-no-base", false);
-				}
-				if (!config.contains("extra.display"))
-				{
-					config.set("extra.display", category);
-				}
+        if (!config.contains("extra.permissions.hide-if-no-base"))
+        {
+          config.set("extra.permissions.hide-if-no-base", false);
+        }
+        if (!config.contains("extra.display"))
+        {
+          config.set("extra.display", category);
+        }
         String resultSerial = ItemSerializer.serialize(result);
         boolean[] reusable = null;
         if (title.contains("§레§시§피§ §편§집§3편집"))
@@ -278,10 +274,10 @@ public class InventoryClose implements Listener
             for (int j = i; j < ingredientInventory.getSize(); j++)
             {
               ItemStack dupItem = ingredientInventory.getItem(j);
-							if (ItemStackUtil.itemExists(dupItem) && ItemStackUtil.itemEquals(dupItem, ingredient))
-							{
-								ingredientInventory.clear(j);
-							}
+              if (ItemStackUtil.itemExists(dupItem) && ItemStackUtil.itemEquals(dupItem, ingredient))
+              {
+                ingredientInventory.clear(j);
+              }
             }
           }
         }
@@ -292,8 +288,7 @@ public class InventoryClose implements Listener
         // player.sendMessage(category.replace("§", "&") + ", " + recipe.replace("§", "&"));
         player.updateInventory();
       }
-      if (!title.contains(Constant.CANCEL_STRING) && !title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI) && !title.contains("의 인벤토리") && !title
-              .contains("'s Inventory") && !CustomConfig.UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()) && inventory.getType() != InventoryType.MERCHANT)
+      if (inventory.getLocation() != null)
       {
         for (int i = 0; i < inventory.getSize(); i++)
         {
@@ -312,24 +307,24 @@ public class InventoryClose implements Listener
               if (player.getOpenInventory().getType() == InventoryType.CRAFTING || player.getOpenInventory().getType() == InventoryType.WORKBENCH)
               {
                 ItemStack inventoryItem = inventory.getItem(0);
-								if (ItemStackUtil.itemExists(inventoryItem))
-								{
-									inventoryItem.setAmount(0);
-								}
+                if (ItemStackUtil.itemExists(inventoryItem))
+                {
+                  inventoryItem.setAmount(0);
+                }
               }
               if (player.getOpenInventory().getType() == InventoryType.ANVIL)
               {
                 ItemStack inventoryItem = inventory.getItem(2);
-								if (ItemStackUtil.itemExists(inventoryItem))
-								{
-									inventoryItem.setAmount(0);
-								}
+                if (ItemStackUtil.itemExists(inventoryItem))
+                {
+                  inventoryItem.setAmount(0);
+                }
               }
             }
           }
         }
       }
-      if (CustomConfig.UserData.LISTEN_CONTAINER.getBoolean(player.getUniqueId()))
+      if (player.getGameMode() != GameMode.SPECTATOR && CustomConfig.UserData.LISTEN_CONTAINER.getBoolean(player.getUniqueId()))
       {
         switch (inventoryType)
         {

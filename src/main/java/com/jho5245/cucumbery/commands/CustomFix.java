@@ -12,6 +12,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.GameMode;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +31,7 @@ public class CustomFix implements CommandExecutor
 		}
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (!(sender instanceof Player player))
     {
@@ -55,7 +56,7 @@ public class CustomFix implements CommandExecutor
       return true;
     }
     double cost = Cucumbery.config.getDouble("fix-command-cost");
-    boolean useCost = Cucumbery.using_Vault && cost > 0;
+    boolean useCost = Cucumbery.using_Vault_Economy && cost > 0;
     String fixMessage = "주로 사용하는 손에 들고 있는 아이템을 수리하였습니다.";
     if (player.getGameMode() != GameMode.CREATIVE && useCost)
     {

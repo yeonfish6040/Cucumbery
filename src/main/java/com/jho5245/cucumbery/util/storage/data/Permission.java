@@ -133,6 +133,7 @@ public enum Permission
   CMD_CONSOLE_SUDO(P + "" + C + "consolesudo"),
   CMD_QUICKSHOP_ADDON(P + "" + C + "quickshopaddon"),
   CMD_REPEAT(P + "" + C + "repeat"),
+  CMD_VIEW_INVNETORY(P + "" + C + "viewinventory"),
 
   OTHER_EVAL(P + "" + "eval"),
   OTHER_PLACEHOLDER(P + "" + "placeholder"),

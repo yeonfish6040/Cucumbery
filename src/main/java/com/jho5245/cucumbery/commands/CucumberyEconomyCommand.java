@@ -8,6 +8,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,9 +25,9 @@ public class CucumberyEconomyCommand implements CommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
-    if (!Cucumbery.using_Vault)
+    if (!Cucumbery.using_Vault_Economy)
     {
       MessageUtil.sendError(sender, "&eVault&r 플러그인을 사용하고 있지 않습니다.");
       return true;

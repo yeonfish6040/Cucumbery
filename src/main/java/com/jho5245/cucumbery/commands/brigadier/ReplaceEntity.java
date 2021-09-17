@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import dev.jorel.commandapi.CommandAPI;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -42,38 +44,37 @@ public class ReplaceEntity extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       Collection<Entity> entities = (Collection<Entity>) args[0];
+      List<Entity> successEntities = new ArrayList<>();
+      List<Entity> resultEntities = new ArrayList<>();
       EntityType entityType = (EntityType) args[1];
-      int successCount = 0;
       for (Entity entity : entities)
       {
         if (entity instanceof Player)
         {
           continue;
         }
-
         NBTEntity nbtEntity = new NBTEntity(entity);
         Location location = entity.getLocation();
         entity.remove();
         Entity newEntity = location.getWorld().spawnEntity(location, entityType);
         NBTEntity newNbtEntity = new NBTEntity(newEntity);
         newNbtEntity.mergeCompound(nbtEntity);
-        successCount++;
+        successEntities.add(entity);
+        resultEntities.add(newEntity);
       }
-      if (successCount > 0)
+      List<Entity> failureEntities = new ArrayList<>(entities);
+      failureEntities.removeAll(successEntities);
+      if (failureEntities.size() > 0)
       {
-        String typeString = entityType.toString();
-        MessageUtil.info(commandSender, "&e" + successCount + "&r개의 개체의 종류를 &e" + typeString + "&r 변경하였습니다.");
+        MessageUtil.sendWarnOrError(successEntities.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender,
+                ComponentUtil.createTranslate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다.", failureEntities));
       }
-      else
+      if (successEntities.size() > 0)
+      {
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 개체 유형을 %s(으)로 변경하였습니다.", successEntities, resultEntities));
+      }
+      else if (!(sender.getCallee() instanceof Player))
       {
         CommandAPI.fail("개체를 찾을 수 없습니다.");
       }
@@ -85,42 +86,41 @@ public class ReplaceEntity extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       Collection<Entity> entities = (Collection<Entity>) args[0];
+      List<Entity> successEntities = new ArrayList<>();
+      List<Entity> resultEntities = new ArrayList<>();
       EntityType entityType = (EntityType) args[1];
       boolean hideOutput = (boolean) args[2];
-      int successCount = 0;
       for (Entity entity : entities)
       {
         if (entity instanceof Player)
         {
           continue;
         }
-
         NBTEntity nbtEntity = new NBTEntity(entity);
         Location location = entity.getLocation();
         entity.remove();
         Entity newEntity = location.getWorld().spawnEntity(location, entityType);
         NBTEntity newNbtEntity = new NBTEntity(newEntity);
         newNbtEntity.mergeCompound(nbtEntity);
-        successCount++;
+        successEntities.add(entity);
+        resultEntities.add(newEntity);
       }
-      if (successCount > 0)
+      if (!hideOutput)
       {
-        if (!hideOutput)
+        List<Entity> failureEntities = new ArrayList<>(entities);
+        failureEntities.removeAll(successEntities);
+        if (failureEntities.size() > 0)
         {
-          String typeString = entityType.toString();
-          MessageUtil.info(commandSender, "&e" + successCount + "&r개의 개체의 종류를 &e" + typeString + "&r 변경하였습니다.");
+          MessageUtil.sendWarnOrError(successEntities.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender,
+                  ComponentUtil.createTranslate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다.", failureEntities));
         }
       }
-      else
+      if (!hideOutput && successEntities.size() > 0)
+      {
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 개체 유형을 %s(으)로 변경하였습니다.", successEntities, resultEntities));
+      }
+      else if (!(sender.getCallee() instanceof Player))
       {
         CommandAPI.fail("개체를 찾을 수 없습니다.");
       }
@@ -132,14 +132,6 @@ public class ReplaceEntity extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       Collection<Entity> entities = (Collection<Entity>) args[0];
       EntityType entityType = (EntityType) args[1];
       boolean hideOutput = (boolean) args[2];
@@ -153,14 +145,15 @@ public class ReplaceEntity extends CommandBase
         CommandAPI.fail("잘못된 NBT입니다: " + args[3]);
         return;
       }
-      int successCount = 0;
+
+      List<Entity> successEntities = new ArrayList<>();
+      List<Entity> resultEntities = new ArrayList<>();
       for (Entity entity : entities)
       {
         if (entity instanceof Player)
         {
           continue;
         }
-
         NBTEntity nbtEntity = new NBTEntity(entity);
         Location location = entity.getLocation();
         entity.remove();
@@ -168,17 +161,24 @@ public class ReplaceEntity extends CommandBase
         NBTEntity newNbtEntity = new NBTEntity(newEntity);
         newNbtEntity.mergeCompound(nbtEntity);
         newNbtEntity.mergeCompound(nbtContainer);
-        successCount++;
+        successEntities.add(entity);
+        resultEntities.add(newEntity);
       }
-      if (successCount > 0)
+      if (!hideOutput)
       {
-        if (!hideOutput)
+        List<Entity> failureEntities = new ArrayList<>(entities);
+        failureEntities.removeAll(successEntities);
+        if (failureEntities.size() > 0)
         {
-          String typeString = entityType.toString();
-          MessageUtil.info(commandSender, "&e" + successCount + "&r개의 개체의 종류를 &e" + typeString + "&r 변경하였습니다.");
+          MessageUtil.sendWarnOrError(successEntities.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender,
+                  ComponentUtil.createTranslate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다.", failureEntities));
         }
       }
-      else
+      if (!hideOutput && successEntities.size() > 0)
+      {
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 개체 유형을 %s(으)로 변경하였습니다.", successEntities, resultEntities));
+      }
+      else if (!(sender.getCallee() instanceof Player))
       {
         CommandAPI.fail("개체를 찾을 수 없습니다.");
       }

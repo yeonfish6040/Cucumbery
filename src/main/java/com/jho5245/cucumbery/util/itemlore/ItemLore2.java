@@ -463,12 +463,16 @@ public class ItemLore2
     }
 
     boolean hideEnchant = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.ENCHANTS.toString());
-    int maxEnchantTMIAmount = Cucumbery.config.getInt("maximum-tmi-enchantment-lores");
     NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(itemTag, CucumberyTag.CUSTOM_ENCHANTS_KEY);
-    boolean hasCustomEnchants = customEnchantsTag != null && customEnchantsTag.size() > 0;
-    if (hasCustomEnchants || itemMeta.hasEnchants())
+    boolean hasCustomEnchants = customEnchantsTag != null && !customEnchantsTag.isEmpty();
+
+    if (itemMeta.hasEnchants())
     {
       itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+    }
+
+    if (hasCustomEnchants || itemMeta.hasEnchants())
+    {
       if (!hideEnchant)
       {
         lore.add(Component.empty());
@@ -490,10 +494,6 @@ public class ItemLore2
         }
       }
       ItemLoreEnchantRarity.enchantRarity(item, lore, type, itemMeta);
-    }
-    else
-    {
-      itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
 
     if (type == Material.ENCHANTED_BOOK)
@@ -1888,15 +1888,6 @@ public class ItemLore2
       lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_MATERIAL_COMPOSTABLE, Component.text(Constant.Sosu2.format(ItemStackUtil.getCompostChance(type)) + "%")));
     }
 
-    // CucumberyItemTag - CustomLore
-
-    if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.CUSTOM_LORE) && customLores != null && customLores.size() > 0)
-    {
-      for (String customLore : customLores)
-      {
-        lore.add(ComponentUtil.create(customLore));
-      }
-    }
     // CucumberyItemTag - CustomItemType
     String customItemType = NBTAPI.getString(itemTag, CucumberyTag.CUSTOM_ITEM_TYPE_KEY);
     if (customItemType != null)

@@ -15,7 +15,6 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
@@ -1762,28 +1761,6 @@ public class Method extends SoundPlay
     return input;
   }
 
-  public static int getCustomEnchantLevel(@Nullable ItemStack item, @NotNull Constant.CustomEnchant key)
-  {
-    if (!ItemStackUtil.itemExists(item))
-    {
-      return -1;
-    }
-    NBTCompound itemTag = NBTAPI.getMainCompound(item);
-    NBTCompoundList customEnchants = NBTAPI.getCompoundList(itemTag, CucumberyTag.CUSTOM_ENCHANTS_KEY);
-    if (customEnchants == null)
-    {
-      return -1;
-    }
-    for (NBTCompound customEnchant : customEnchants)
-    {
-      if (customEnchant.getString(CucumberyTag.ID_KEY).equals(key.toString()))
-      {
-        return customEnchant.getInteger(CucumberyTag.CUSTOM_ENCHANTS_LEVEL_KEY);
-      }
-    }
-    return -1;
-  }
-
 
   /**
    * 해당 플레이어가 아이템 설명을 추가해야하는지 제거해야하는지를 반환한다.
@@ -1822,7 +1799,7 @@ public class Method extends SoundPlay
   /**
    * 아이템의 정보를 갱신하여 CustomName의 값을 올바르게 수정합니다.
    *
-   * @param itemEntity 갱신할 아이템 개체
+   * @param itemEntity  갱신할 아이템 개체
    * @param mergeAmount ItemMergeEvent에서 개수를 추가
    */
   public static void updateItem(@NotNull Item itemEntity, int mergeAmount)
@@ -1842,7 +1819,7 @@ public class Method extends SoundPlay
     {
       itemEntity.setInvulnerable(true);
     }
-    if (Cucumbery.config.getBoolean("use-helpful-lore-feature") && !Method.configContainsLocation(itemEntity.getLocation(), Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds")))
+    if (Method.usingLoreFeature(itemEntity.getLocation()))
     {
       ItemLore.setItemLore(item);
     }
@@ -1851,11 +1828,8 @@ public class Method extends SoundPlay
       ItemLore.removeItemLore(item);
     }
     NBTList<String> hideFlags = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.HIDE_FLAGS_KEY);
-    String customName = itemEntity.getCustomName();
-//    boolean isDefault = customName != null && customName.startsWith("§기§본§아§이§템§이§름");
     if (NBTAPI.arrayContainsValue(hideFlags, Constant.CucumberyHideFlag.CUSTOM_NAME))
     {
-//      if (isDefault)
       itemEntity.customName(null);
       itemEntity.setCustomNameVisible(false);
       return;
@@ -1882,13 +1856,6 @@ public class Method extends SoundPlay
           )
           {
             Component component = ComponentUtil.itemName(item);
-            if (component.color() != null && item.hasItemMeta())
-            {
-              if (displayName.color() == null)
-              {
-                component = component.color(null);
-              }
-            }
             int amount = item.getAmount() + mergeAmount;
             if (amount > 1)
             {
@@ -2062,7 +2029,14 @@ public class Method extends SoundPlay
     return builder.toString();
   }
 
-  public static List<String> sort(List<String> list)
+  @NotNull
+  public static List<String> sort(@NotNull List<String> list)
+  {
+    return sort(list, false);
+  }
+
+  @NotNull
+  public static List<String> sort(@NotNull List<String> list, boolean allowSpace)
   {
     for (int i = 0; i < list.size(); i++)
     {
@@ -2079,13 +2053,26 @@ public class Method extends SoundPlay
 
       }
       s = MessageUtil.stripColor(s);
-      if (s.length() > 53)
+      if (s.length() > 123)
       {
-        s = s.substring(0, s.length() - 50) + "...";
+        s = "죄송합니다! 메시지가 너무 길었습니다! : " + s.substring(0, 100) + "...";
       }
-      if (s.contains(" "))
+      if (!allowSpace && s.contains(" ") &&
+              !(
+                      (s.startsWith("(") || s.endsWith(")")) ||
+                              (s.startsWith("<") || s.endsWith(">")) ||
+                              (s.startsWith("[") || s.endsWith("]"))
+              )
+      )
       {
-        s = "\"" + s + "\"";
+        if (s.contains("\""))
+        {
+          s = "'" + s + "'";
+        }
+        else
+        {
+          s = "\"" + s + "\"";
+        }
       }
       list.set(i, s);
     }
@@ -2569,6 +2556,11 @@ public class Method extends SoundPlay
 
   public static List<String> tabCompleterList(String[] args, List<String> list, String key, boolean ignoreEmpty)
   {
+    return tabCompleterList(args, list, key, ignoreEmpty, false);
+  }
+
+  public static List<String> tabCompleterList(String[] args, List<String> list, String key, boolean ignoreEmpty, boolean allowSpace)
+  {
     String tabArg = args[args.length - 1];
     if ((!ignoreEmpty && tabArg.equals("") && (list == null || list.size() == 0)) || (ignoreEmpty && (list == null || list.size() == 0)))
     {
@@ -2611,14 +2603,14 @@ public class Method extends SoundPlay
                 "입니다" +
                 ".");
       }
-      returnValue = Method.sort(returnValue);
+      returnValue = Method.sort(returnValue, allowSpace);
       if ((ignoreEmpty && returnValue.size() == 0) || (!key.equals("") && returnValue.size() == 1 && returnValue.get(0).equalsIgnoreCase(tabArg)))
       {
         return Collections.singletonList(key);
       }
       return returnValue;
     }
-    return Method.sort(list);
+    return Method.sort(list, allowSpace);
   }
 
   public static List<String> tabCompleterList(String[] args, String key, String... list)
@@ -2638,7 +2630,12 @@ public class Method extends SoundPlay
 
   public static List<String> tabCompleterList(String[] args, Set<String> set, String key, boolean ignoreEmpty)
   {
-    return Method.tabCompleterList(args, Method.setToList(set), key, ignoreEmpty);
+    return Method.tabCompleterList(args, Method.setToList(set), key, ignoreEmpty, false);
+  }
+
+  public static List<String> tabCompleterList(String[] args, Set<String> set, String key, boolean ignoreEmpty, boolean allowSpace)
+  {
+    return Method.tabCompleterList(args, Method.setToList(set), key, ignoreEmpty, allowSpace);
   }
 
   public static List<String> tabCompleterList(String[] args, Enum<?>[] array, String key)
@@ -2811,12 +2808,26 @@ public class Method extends SoundPlay
     {
       Location location = player.getLocation();
       location.add(location.getDirection().multiply(1d));
-      for (Entity entity : player.getWorld().getNearbyEntities(location, 1.5d, 1.5d, 1.5d))
+      for (Entity entity : player.getWorld().getNearbyEntities(location, 3d, 2d, 3d))
       {
-        if (entity instanceof Player && (!entity.equals(player)))
+        if ((!entity.equals(player)))
         {
+          String type = MessageUtil.stripColor(ComponentUtil.serialize(Component.translatable(entity.getType().translationKey())));
+          String display;
+          if (entity instanceof Player p)
+          {
+            display = p.getName() + "/" + type;
+          }
+          else
+          {
+            display = MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.senderComponent(entity)));
+            if (!type.equals(display))
+            {
+              display += "/" + type;
+            }
+          }
           list.add(entity.getUniqueId().toString());
-          break;
+          list.add(entity.getUniqueId() + "[" + display + "]");
         }
       }
     }

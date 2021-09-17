@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands.brigadier;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
@@ -10,9 +11,9 @@ import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.BooleanArgument;
 import dev.jorel.commandapi.arguments.DoubleArgument;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -58,15 +59,6 @@ public class Damage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argumentList1);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       Collection<Entity> entities = (Collection<Entity>) args[0];
       List<Entity> successEntities = new ArrayList<>();
       double damage = (double) args[1];
@@ -85,11 +77,20 @@ public class Damage extends CommandBase
           }
         }
       }
+      List<Entity> failureEntities = new ArrayList<>(entities);
+      failureEntities.removeAll(successEntities);
+      if (failureEntities.size() > 0)
+      {
+        MessageUtil.sendWarnOrError(successEntities.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender, 
+                ComponentUtil.createTranslate("%s에게 피해를 입힐 수 없습니다. (무적 시간 or 크리에이티브 모드 or PvP 불가능 구역)", failureEntities));
+      }
       if (successEntities.size() > 0)
       {
-        MessageUtil.info(commandSender, successEntities, "에게 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s만큼의 피해를 주었습니다.", successEntities, Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage)));
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
+                ComponentUtil.createTranslate("[%s: %s에게 %s만큼의 피해를 주었습니다.]", sender, successEntities, Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage)));
       }
-      else
+      else if (sender.getCallee() instanceof Player)
       {
         CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 피해를 줄 수 없는 상태입니다. (무적 시간 or 크리에이티브 모드 or PvP 불가능 구역)");
       }
@@ -100,15 +101,6 @@ public class Damage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argumentList2);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       Collection<Entity> entities = (Collection<Entity>) args[0];
       List<Entity> successEntities = new ArrayList<>();
       double damage = (double) args[1];
@@ -128,14 +120,23 @@ public class Damage extends CommandBase
           }
         }
       }
-      if (successEntities.size() > 0)
+      if (!hideOutput)
       {
-        if (!hideOutput)
+        List<Entity> failureEntities = new ArrayList<>(entities);
+        failureEntities.removeAll(successEntities);
+        if (failureEntities.size() > 0)
         {
-          MessageUtil.info(commandSender, successEntities, "에게 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+          MessageUtil.sendWarnOrError(successEntities.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender,
+                  ComponentUtil.createTranslate("%s에게 피해를 입힐 수 없습니다. (무적 시간 or 크리에이티브 모드 or PvP 불가능 구역)", failureEntities));
         }
       }
-      else
+      if (!hideOutput && successEntities.size() > 0)
+      {
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s만큼의 피해를 주었습니다.", successEntities, Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage)));
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
+                ComponentUtil.createTranslate("[%s: %s에게 %s만큼의 피해를 주었습니다.]", sender, successEntities, Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage)));
+      }
+      else if (sender.getCallee() instanceof Player)
       {
         CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 피해를 줄 수 없는 상태입니다. (무적 시간 or 크리에이티브 모드 or PvP 불가능 구역)");
       }
@@ -147,15 +148,6 @@ public class Damage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argumentList3);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       Collection<Entity> entities = (Collection<Entity>) args[0];
       List<Entity> successEntities = new ArrayList<>();
       double damage = (double) args[1];
@@ -180,12 +172,20 @@ public class Damage extends CommandBase
           }
         }
       }
+      List<Entity> failureEntities = new ArrayList<>(entities);
+      failureEntities.removeAll(successEntities);
+      if (failureEntities.size() > 0)
+      {
+        MessageUtil.sendWarnOrError(successEntities.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender,
+                ComponentUtil.createTranslate("%s에게 %s을(를) 가해 개체로 하는 피해를 입힐 수 없습니다. (무적 시간 or 크리에이티브 모드 or PvP 불가능 구역)", failureEntities, damager));
+      }
       if (successEntities.size() > 0)
       {
-        MessageUtil.info(commandSender,
-                successEntities, "에게 ", damager, "을(를) 가해 개체로 하는 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.", successEntities, damager, Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage)));
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
+                ComponentUtil.createTranslate("[%s: %s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.]", sender, successEntities, damager, Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage)));
       }
-      else
+      else if (sender.getCallee() instanceof Player)
       {
         CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 피해를 줄 수 없는 상태입니다. (무적 시간 or 크리에이티브 모드 or PvP 불가능 구역)");
       }
@@ -196,15 +196,6 @@ public class Damage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argumentList4);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      CommandSender commandSender = sender.getCallee();
-      try
-      {
-        commandSender.getName();
-      }
-      catch (Exception e)
-      {
-        commandSender = sender.getCaller();
-      }
       Collection<Entity> entities = (Collection<Entity>) args[0];
       List<Entity> successEntities = new ArrayList<>();
       double damage = (double) args[1];
@@ -230,14 +221,23 @@ public class Damage extends CommandBase
           }
         }
       }
-      if (successEntities.size() > 0)
+      if (!hideOutput)
       {
-        if (!hideOutput)
+        List<Entity> failureEntities = new ArrayList<>(entities);
+        failureEntities.removeAll(successEntities);
+        if (failureEntities.size() > 0)
         {
-          MessageUtil.info(commandSender, successEntities, "에게 ", damager, "을(를) 가해 개체로 하는 &e" + Constant.Sosu15.format(damage) + "&r만큼의 피해를 주었습니다.");
+          MessageUtil.sendWarnOrError(successEntities.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender,
+                  ComponentUtil.createTranslate("%s에게 %s을(를) 가해 개체로 하는 피해를 입힐 수 없습니다. (무적 시간 or 크리에이티브 모드 or PvP 불가능 구역)", failureEntities, damager));
         }
       }
-      else
+      if (!hideOutput && successEntities.size() > 0)
+      {
+        MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.", successEntities, damager, Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage)));
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
+                ComponentUtil.createTranslate("[%s: %s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.]", sender, successEntities, damager, Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage)));
+      }
+      else if (sender.getCallee() instanceof Player)
       {
         CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 피해를 줄 수 없는 상태입니다. (무적 시간 or 크리에이티브 모드 or PvP 불가능 구역)");
       }

@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -23,11 +24,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class QuickShopTabCompleter implements org.bukkit.command.TabCompleter
+public class QuickShopTabCompleter implements TabCompleter
 {
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
-    if (Variable.shops.size() == 0 && args.length >= 2 && args.length <= 6)
+    if (Variable.shops.isEmpty() && args.length >= 2 && args.length <= 6)
     {
       return Collections.singletonList("유효한 QuickShop 상점이 존재하지 않습니다.");
     }
@@ -127,7 +128,7 @@ public class QuickShopTabCompleter implements org.bukkit.command.TabCompleter
     }
     if (args.length == 1)
     {
-      return Method.tabCompleterList(args, list, "<상점 위치>", true);
+      return Method.tabCompleterList(args, list, "<상점 위치>", true, true);
     }
     else if (args.length == 2)
     {

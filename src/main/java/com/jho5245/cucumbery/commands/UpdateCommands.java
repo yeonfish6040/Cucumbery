@@ -3,12 +3,17 @@ package com.jho5245.cucumbery.commands;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpdateCommands implements CommandExecutor
 {
@@ -20,58 +25,52 @@ public class UpdateCommands implements CommandExecutor
 		}
 		if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
 		{
-			return sender instanceof Player;
+			return !(sender instanceof BlockCommandSender);
 		}
-		String usage = cmd.getUsage().replace("<command>", label);
-		if (args.length <= 2)
+		if (args.length == 0)
 		{
-			Player player;
-			if (args.length == 0)
+			if (sender instanceof Player player)
 			{
-				if (!(sender instanceof Player))
-				{
-					MessageUtil.shortArg(sender, 1, args);
-					MessageUtil.commandInfo(sender, label, usage);
-					return true;
-				}
-				player = (Player) sender;
+				player.performCommand(label + " " + player.getName());
 			}
 			else
 			{
-				player = SelectorUtil.getPlayer(sender, args[0]);
-				if (player == null)
-				{
-					return true;
-				}
+				MessageUtil.shortArg(sender, 1, args);
+				MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
 			}
-			boolean hideOutput = false;
-			if (args.length == 2)
+			return !(sender instanceof BlockCommandSender);
+		}
+		else if (args.length <= 2)
+		{
+			if (args.length == 2 && !MessageUtil.isBoolean(sender, args, 2, true))
 			{
-				if (!args[1].equals("true") && !args[1].equals("false"))
+				return !(sender instanceof BlockCommandSender);
+			}
+			List<Player> players = SelectorUtil.getPlayers(sender, args[0]);
+			if (players == null)
+			{
+				return !(sender instanceof BlockCommandSender);
+			}
+			boolean hideOutput = args.length == 2 && args[1].equals("true");
+			for (Player player : players)
+			{
+				player.updateCommands();
+				if (!sender.equals(player) && !hideOutput)
 				{
-					MessageUtil.wrongBool(sender, 2, args);
-					return true;
-				}
-				if (args[1].equals("true"))
-				{
-					hideOutput = true;
+					MessageUtil.info(player, ComponentUtil.createTranslate("%s이(가) 당신의 명령어 목록을 업데이트 하였습니다.", sender));
 				}
 			}
-			player.updateCommands();
 			if (!hideOutput)
 			{
-				if (!player.equals(sender))
-				{
-					MessageUtil.info(sender, player, "의 명령어 리스트를 업데이트 하였습니다.");
-				}
-				MessageUtil.info(player, sender, "이 당신의 명령어 리스트를 업데이트 하였습니다.");
+				MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 명령어 목록을 업데이트 하였습니다.", players));
+				MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), ComponentUtil.createTranslate("[%s: %s의 명령어 목록을 업데이트 하였습니다.]", sender, players));
 			}
 		}
 		else
 		{
 			MessageUtil.longArg(sender, 2, args);
-			MessageUtil.commandInfo(sender, label, usage);
-			return true;
+			MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
+			return !(sender instanceof BlockCommandSender);
 		}
 		return true;
 	}

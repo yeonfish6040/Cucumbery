@@ -6,7 +6,7 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -17,6 +17,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,7 +46,7 @@ public class WHOIS implements CommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length < 2)
@@ -170,7 +171,10 @@ public class WHOIS implements CommandExecutor
       }
       else if (args.length == 2 && args[1].equalsIgnoreCase("name"))
       {
-        String playerDisplayName = ComponentUtil.serialize(ComponentUtil.create(CustomConfig.UserData.DISPLAY_NAME.getString(offlinePlayer.getUniqueId()))), playerListName = ComponentUtil.serialize(ComponentUtil.create(CustomConfig.UserData.PLAYER_LIST_NAME.getString(offlinePlayer.getUniqueId())));
+        String display = UserData.DISPLAY_NAME.getString(offlinePlayer);
+        String listName = UserData.PLAYER_LIST_NAME.getString(offlinePlayer);
+        String playerDisplayName = ComponentUtil.serialize(ComponentUtil.create(display != null ? display : (offlinePlayer.getName() != null ? offlinePlayer.getName() : offlinePlayer.getUniqueId().toString()))),
+                playerListName = ComponentUtil.serialize(ComponentUtil.create(listName != null ? listName : (offlinePlayer.getName() != null ? offlinePlayer.getName() : offlinePlayer.getUniqueId().toString())));
         if (Method.isUUID(playerDisplayName))
         {
           playerDisplayName = "알 수 없음";
@@ -399,7 +403,7 @@ public class WHOIS implements CommandExecutor
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "포탈 이동 시간 : &e" + portalCooldown);
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "관전 중인 개체 : §e" + targetType, false);
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "잠 자고 있는 시간 : &e" + Constant.Jeongsu.format(sleepTicks));
-        if (Cucumbery.using_Vault)
+        if (Cucumbery.using_Vault_Economy)
         {
           String world = player.getLocation().getWorld().getName();
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "소지 금액 : &e" + Constant.Sosu2.format(Cucumbery.eco.getBalance(player, world)) + "원&r (&e" + world + "&r 월드 기준)");
@@ -747,14 +751,16 @@ public class WHOIS implements CommandExecutor
             {
               MessageUtil.sendMessage(
                       sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate("%s은(는) %s", offlinePlayer,
-                              ComponentUtil.createTranslate("stat_type.minecraft." + keyWhat, Constant.THE_COLOR_HEX + Constant.Sosu2.format(value), Component.translatable(type.translationKey()).color(Constant.THE_COLOR))));
+                              ComponentUtil.createTranslate("stat_type.minecraft." + keyWhat,
+                                      Constant.THE_COLOR_HEX + Constant.Sosu2.format(value), Component.translatable(type.translationKey()).color(Constant.THE_COLOR))));
             }
             else
             {
 
               MessageUtil.sendMessage(
                       sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate("%s은(는) %s", offlinePlayer,
-                              ComponentUtil.createTranslate("stat_type.minecraft." + keyWhat, Component.translatable(type.translationKey()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
+                              ComponentUtil.createTranslate("stat_type.minecraft." + keyWhat,
+                                      Component.translatable(type.translationKey()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
             }
           }
         }
@@ -836,7 +842,7 @@ public class WHOIS implements CommandExecutor
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "마지막으로 퇴장한 시각 : &e" +
                   Method.getCurrentTime(calendar, true, false) + " (" + Method.timeFormatMilli(current - lastSeen, false) + " 전)");
         }
-        if (Cucumbery.using_Vault)
+        if (Cucumbery.using_Vault_Economy)
         {
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "소지 금액 : &e" + Constant.Sosu2.format(Cucumbery.eco.getBalance(offlinePlayer)) + "원");
         }

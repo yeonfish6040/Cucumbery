@@ -320,13 +320,17 @@ commands:
     usage: /<command> <반복 횟수> <딜레이> <명령어>
     aliases: [crepeat]
   socialmenu:
-    description: yeet
-    usage: /<command> <player>
+    description: 소셜 메뉴 명령어입니다.
+    usage: /<command> [플레이어]
     aliases: [csocialmenu]
   ckill2:
-    description: yee
-    usage: /<command> <entities>
+    description: ckill인데 닉네임도 사용 가능한 명령어입니다.
+    usage: /<command> <개체>
     aliases: [kill3]
+  viewinventory:
+    description: 주민의 거래 목록 혹은 개체의 인벤토리를 참조합니다.
+    usage: /<command> <개체>
+    aliases: [viewinv, cviewinv, viewinventory]
 
 permissions:
   cucumbery.error.hide:

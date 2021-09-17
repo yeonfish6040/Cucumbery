@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.maxgamer.quickshop.shop.Shop;
 
@@ -103,7 +102,7 @@ public class Variable
 
   public static HashMap<UUID, Long> broadcastItemCooldown = new HashMap<>();
 
-  public static HashMap<UUID, Inventory> playerNotifyIfInventoryIsFullCheckInventory = new HashMap<>();
+  public static HashMap<UUID, Material[]> playerNotifyIfInventoryIsFullCheckInventory = new HashMap<>();
 
   public static HashMap<UUID, Integer> playerNotifyChatIfInventoryIsFullStack = new HashMap<>();
 

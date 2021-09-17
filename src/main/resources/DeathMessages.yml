@@ -97,6 +97,14 @@ death-messages:
     drown-combat-item:
       - "%1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 익사했습니다."
       - "%1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 물고기와 친구가 되었습니다."
+    dry-out:
+      - "death.attack.dryout" # %1$s이(가) 목이 말라 죽었습니다
+    dry-out-combat:
+      - "death.attack.dryout.player" # %1$s이(가) %2$s에게서 도망치려다 탈수로 죽었습니다.
+      - "%1$s이(가) %2$s에게서 도망치려다 목이 말라 죽었습니다."
+    dry-out-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 목이 말라 죽었습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 탈수로 죽었습니다."
     elytra:
       - "death.attack.flyIntoWall" # %1$s이(가) 운동 에너지를 온몸으로 경험했습니다
       - "%1$s이(가) 새가 되려다 %2$s에 처박아 죽었습니다."
@@ -206,16 +214,17 @@ death-messages:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 바삭해졌습니다."
     fire-block: # 불 블록에서 죽음
       - "death.attack.inFire" # %1$s이(가) 화염에 휩싸였습니다
+      - "%1$s이(가) %2$s에서 화염에 휩싸였습니다."
       - "%1$s이(가) 불에 빠졌습니다."
-      - "%1$s이(가) 활활 타올랐습니다."
+      - "%1$s이(가) %2$s에서 활활 타올랐습니다."
     fire-block-combat:
       - "death.attack.inFire.player" # %1$s이(가) %2$s과(와) 싸우다가 불에 빠졌습니다
-      - "%1$s이(가) %2$s과(와) 싸우다가 화염에 휩싸였습니다."
-      - "%1$s이(가) %2$s과(와) 싸우다가 활활 타올랐습니다."
+      - "%1$s이(가) %2$s과(와) 싸우다가 %3$s에서 화염에 휩싸였습니다."
+      - "%1$s이(가) %2$s과(와) 싸우다가 %3$s에서 활활 타올랐습니다."
     fire-block-combat-item:
-      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 화염에 휩싸였습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s에서 화염에 휩싸였습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 불에 빠졌습니다."
-      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 활활 타올랐습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s에서 활활 타올랐습니다."
     fireworks:
       - "death.attack.fireworks" # %1$s이(가) 굉음과 함께 폭사했습니다
       - "%1$s이(가) 폭죽 때문에 터졌습니다."
@@ -328,6 +337,14 @@ death-messages:
       - "%1$s이(가) %2$s에게 썰렸습니다."
     melee-sword-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다."
+    projectile:
+      - "%1$s이(가) 발사체에게 저격당했습니다."
+    projectile-combat:
+      - "death.attack.arrow" # %1$s이(가) %2$s에게 저격당했습니다
+    projectile-combat-item:
+      - "death.attack.arrow.item" # %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
+    projectile-combat-unknown:
+      - "%1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다."
     shulker-bullet:
       - "%1$s이(가) 셜커 탄환에게 살해당했습니다."
     shulker-bullet-unknown:
@@ -536,7 +553,7 @@ death-messages:
           value: "WITHER"
     water-meme:
       messages:
-        - "death.attack.fell.water... 이 아니고 %1$s이(가) %2$s에서 떨어졌습니다."
+        - "death.fell.accident.water... 이 아니고 %1$s이(가) %2$s에서 떨어졌습니다."
         - "%1$s이(가) %2$s에서 땅바닥으로 곤두박질쳤습니다."
         - "%1$s이(가) 별로 높지도 않은데 딸피여서 %2$s에서 떨어져 뼈가 부러져 죽었습니다."
       conditions:
@@ -548,7 +565,7 @@ death-messages:
           value: "internal=include:fall_block;exclude:item,high,combat"
     water-meme-high:
       messages:
-        - "death.attack.fell.water... 이 아니고 %1$s이(가) 높은 %2$s에서 떨어졌습니다."
+        - "death.fell.accident.water... 이 아니고 %1$s이(가) 높은 %2$s에서 떨어졌습니다."
         - "%1$s이(가) 높은 %2$s에서 떨어졌습니다."
         - "%1$s은(는) 높은 %2$s에서 추락을 피하지 못했습니다."
       conditions:

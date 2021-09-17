@@ -535,10 +535,12 @@ enable-item-drop-delay: false
 
 # 이 플러그인에서 월드 이름을 출력할때 월드의 진짜 이름 대신 월드의 별칭이 표시되게 할 수 있다.
 custom-world-name:
-  world: "&a야생"
-  world_nether: "&c네더"
-  world_the_end: "&e엔드"
-  wild: "&a야생"
+  world: "translate:&a야생"
+  world_nether: "translate:&c네더"
+  world_the_end: "translate:&e디 엔드"
+  wild: "translate:&a야생"
+  wild_nether: "translate:&c네더"
+  wild_the_end: "translate:&e디 엔드"
 
 # 메뉴 클릭 소리 이스터 에그 (주민소리)
 gui-easter-egg-sound: false

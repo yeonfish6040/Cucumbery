@@ -18,7 +18,8 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
-import org.maxgamer.quickshop.QuickShop;
+import org.maxgamer.quickshop.api.QuickShopAPI;
+import org.maxgamer.quickshop.api.ShopAPI;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,7 +58,18 @@ public class CucumberyMainCommand extends CommandBase
           if (Cucumbery.using_QuickShop)
           {
             Variable.shops.clear();
-            Variable.shops = QuickShop.getInstance().getShopManager().getAllShops();
+            try
+            {
+              ShopAPI shopAPI = QuickShopAPI.getShopAPI();
+              if (shopAPI != null)
+              {
+                Variable.shops = shopAPI.getAllShops();
+              }
+            }
+            catch (Exception e)
+            {
+              e.printStackTrace();
+            }
           }
 
           RecipeChecker.recipes.clear();

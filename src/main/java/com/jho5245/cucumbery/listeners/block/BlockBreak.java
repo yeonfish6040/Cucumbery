@@ -191,9 +191,8 @@ public class BlockBreak implements Listener
     }
     if (NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.VANISHING_TOUCH.toString()))
     {
-      if (block.getState() instanceof Container)
+      if (block.getState() instanceof Container container)
       {
-        Container container = (Container) block.getState();
         container.getInventory().setContents(new ItemStack[0]);
       }
     }
@@ -245,7 +244,7 @@ public class BlockBreak implements Listener
 
     if (vanilliaDrop && !isCoarseTouch && !isUnskilledTouch && NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.DULL_TOUCH.toString()))
     {
-      int level = Method.getCustomEnchantLevel(item, Constant.CustomEnchant.DULL_TOUCH);
+      int level = NBTAPI.getCustomEnchantLevel(item, Constant.CustomEnchant.DULL_TOUCH);
       if (Method.random(1, 100) <= level)
       {
         event.setDropItems(false);
@@ -290,9 +289,8 @@ public class BlockBreak implements Listener
 
           boolean lecternItemExists = false;
 
-          if (block.getState() instanceof BlockInventoryHolder && !(block.getState() instanceof ShulkerBox))
+          if (block.getState() instanceof BlockInventoryHolder blockInventoryHolder && !(block.getState() instanceof ShulkerBox))
           {
-            BlockInventoryHolder blockInventoryHolder = (BlockInventoryHolder) block.getState();
             Inventory containerInventory = blockInventoryHolder.getInventory();
             for (int i = 0; i < containerInventory.getSize(); i++)
             {
@@ -430,9 +428,8 @@ public class BlockBreak implements Listener
 
           boolean lecternItemExists = false;
 
-          if (block.getState() instanceof BlockInventoryHolder && !(block.getState() instanceof ShulkerBox))
+          if (block.getState() instanceof BlockInventoryHolder blockInventoryHolder && !(block.getState() instanceof ShulkerBox))
           {
-            BlockInventoryHolder blockInventoryHolder = (BlockInventoryHolder) block.getState();
             Inventory containerInventory = blockInventoryHolder.getInventory();
             for (int i = 0; i < containerInventory.getSize(); i++)
             {

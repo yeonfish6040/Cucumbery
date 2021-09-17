@@ -448,21 +448,13 @@ public class Scheduler
         if (Variable.playerNotifyIfInventoryIsFullCheckInventory.containsKey(uuid))
         {
           boolean tempSame = true;
-          Inventory hashMapInventory = Variable.playerNotifyIfInventoryIsFullCheckInventory.get(uuid);
-          for (int i = 0; i < hashMapInventory.getSize(); i++)
+          Material[] contents = Variable.playerNotifyIfInventoryIsFullCheckInventory.get(uuid);
+          for (int i = 0; i < contents.length; i++)
           {
-            ItemStack hashItem = hashMapInventory.getItem(i);
-            if (hashItem != null)
-            {
-              ItemLore.removeItemLore(hashItem);
-            }
+            Material type = contents[i];
             ItemStack playerItem = playerInventory.getItem(i);
-            if (playerItem != null)
-            {
-              playerItem = playerItem.clone();
-              ItemLore.removeItemLore(playerItem);
-            }
-            if (!ItemStackUtil.itemEquals(hashItem, playerItem, true))
+            Material playerType = playerItem != null ? playerItem.getType() : Material.AIR;
+            if (type != playerType)
             {
               tempSame = false;
               break;
@@ -474,18 +466,13 @@ public class Scheduler
                 .getBoolean(player.getUniqueId()) && UserData.NOTIFY_IF_INVENTORY_IS_FULL
                 .getBoolean(player.getUniqueId()) && !Variable.playerNotifyIfInventoryIsFullCooldown.contains(uuid))
         {
-          Inventory tempInventory = Bukkit.createInventory(null, 36);
+          Material[] contents = new Material[36];
           for (int i = 0; i < 36; i++)
           {
             ItemStack item = playerInventory.getItem(i);
-            if (item != null)
-            {
-              item = item.clone();
-              ItemLore.removeItemLore(item);
-            }
-            tempInventory.setItem(i, item);
+            contents[i] = item != null ? item.getType() : Material.AIR;
           }
-          Variable.playerNotifyIfInventoryIsFullCheckInventory.put(uuid, tempInventory);
+          Variable.playerNotifyIfInventoryIsFullCheckInventory.put(uuid, contents);
           Variable.playerNotifyIfInventoryIsFullCooldown.add(uuid);
           MessageUtil.sendTitle(player, "", "&c인벤토리 가득 참!", 5, 80, 15);
           MessageUtil.sendMessage(player, Prefix.INFO_WARN, "&c인벤토리가 가득 찼습니다!");

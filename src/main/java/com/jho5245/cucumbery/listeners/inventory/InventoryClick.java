@@ -92,7 +92,7 @@ public class InventoryClick implements Listener
         }
       }
     }
-    if (Cucumbery.using_Vault)
+    if (Cucumbery.using_Vault_Economy)
     {
       double cost = config.getDouble("recipes." + recipe + ".extra.cost");
       if (cost > 0)

@@ -36,8 +36,9 @@ public class DeathManager
           .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://cucumbery.com/api/builds/dev/latest/download")))
           .clickEvent(ClickEvent.openUrl("https://cucumbery.com/api/builds/dev/latest/download"));
   public static final Component reportBugURL = ComponentUtil.createTranslate("&9&l여기")
-          .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://github.com/jho5245/Cucumbery/issues")))
-          .clickEvent(ClickEvent.openUrl("https://github.com/jho5245/Cucumbery/issues"));
+          .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://github.com/jho5245/Cucumbery/issues/new")))
+          .clickEvent(ClickEvent.openUrl("https://github.com/jho5245/Cucumbery/issues/new"));
+  public static final int MAXIMUM_COMPONENT_SERIAL_LENGTH = 100000;
   private static final int COOLDOWN_IN_TICKS = 5;
   public static String BRACKET = Variable.deathMessages.getString("death-messages.prefix.bracket", "&6[%s]");
   public static Component DEATH_PREFIX = ComponentUtil.createTranslate(
@@ -62,7 +63,6 @@ public class DeathManager
       Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
               goBack = false, COOLDOWN_IN_TICKS);
     }
-
     // 접두사 기능 붙여넣기
     boolean usePrefix = Variable.deathMessages.getBoolean("death-messages.prefix.enable");
     Location location = entity.getLocation();
@@ -71,7 +71,7 @@ public class DeathManager
     PlayerDeathEvent playerDeathEvent = isPlayerDeath ? (PlayerDeathEvent) event : null;
     if (entity.customName() != null)
     {
-      success = success || location.getNearbyPlayers(100).size() > 0;
+      success = success || !location.getNearbyPlayers(100).isEmpty();
     }
     if (entity instanceof Tameable tameable)
     {
@@ -79,7 +79,7 @@ public class DeathManager
     }
     if (entity instanceof Villager villager)
     {
-      success = success || villager.getProfession() != Villager.Profession.NONE;
+      success = success || villager.getVillagerExperience() > 0;
     }
     if (entity instanceof IronGolem ironGolem)
     {
@@ -94,7 +94,6 @@ public class DeathManager
     {
       success = true;
     }
-
     EntityDamageEvent damageCause = entity.getLastDamageCause();
     if (damageCause == null)
     {
@@ -131,7 +130,6 @@ public class DeathManager
       ItemStack weapon = getWeapon(event);
       ItemStack lastTrampledBlock = getLastTrampledBlock(entity.getUniqueId());
       float fallDistance = entity.getFallDistance();
-//      MessageUtil.broadcastDebug(cause);
       switch (cause)
       {
         case CONTACT -> {
@@ -245,9 +243,7 @@ public class DeathManager
         }
         case SUFFOCATION -> {
           key = "suffocation";
-          Block block = entity.getEyeLocation().getBlock();
-          Material type = block.getType();
-          extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(entity.getEyeLocation().getBlock())));
+          extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(ItemStackUtil.getExactBlockFrom(entity.getEyeLocation(), Constant.OCCLUDING_BLOCKS))));
         }
         case FALL -> {
           if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.getDamager() instanceof EnderPearl enderPearl && entity.equals(enderPearl.getShooter()))
@@ -270,12 +266,28 @@ public class DeathManager
           }
           extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(entity.getFallDistance())).color(Constant.THE_COLOR));
         }
-        case FIRE -> key = "fire_block";
+        case FIRE -> {
+          key = "fire_block";
+          if (damageCause instanceof EntityDamageByBlockEvent damageByBlockEvent)
+          {
+            Block block = damageByBlockEvent.getDamager();
+            if (block == null)
+            {
+              block = ItemStackUtil.getExactBlockFromWithLimited(location, Arrays.asList(Material.LAVA, Material.LAVA_CAULDRON, Material.FIRE, Material.SOUL_FIRE, Material.CAMPFIRE, Material.SOUL_CAMPFIRE));
+            }
+            extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(block)));
+          }
+          else
+          {
+            extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(ItemStackUtil.getExactBlockFromWithLimited(location,
+                    Arrays.asList(Material.LAVA, Material.LAVA_CAULDRON, Material.FIRE, Material.SOUL_FIRE, Material.CAMPFIRE, Material.SOUL_CAMPFIRE)))));
+          }
+        }
         case FIRE_TICK -> key += "fire";
         case MELTING -> key = "melting";
         case LAVA -> {
           key = "lava";
-          Block block = location.getBlock();
+          Block block = ItemStackUtil.getExactBlockFromWithLimited(location, Arrays.asList(Material.LAVA, Material.LAVA_CAULDRON));
           if (block.getType() == Material.LAVA_CAULDRON)
           {
             key += "_cauldron";
@@ -290,7 +302,7 @@ public class DeathManager
             MessageUtil.broadcastDebug(block + "");
           }
           key += "bad_respawn";
-          args.add(BAD_RESPAWM_POINT);
+          extraArgs.add(BAD_RESPAWM_POINT);
         }
         case ENTITY_EXPLOSION -> {
           if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent)
@@ -317,7 +329,14 @@ public class DeathManager
           if (damageCause.getDamage() > Math.pow(2, 127))
           {
             key = "kill";
-            extraArgs.add(Component.text(entity.getName()));
+            if (entity instanceof Player player)
+            {
+              extraArgs.add(Component.text(player.getName()));
+            }
+            else
+            {
+              extraArgs.add(Component.text(entity.getUniqueId().toString()));
+            }
           }
           else
           {
@@ -373,9 +392,7 @@ public class DeathManager
           Vector vector = location.getDirection();
           Location locationClone = location.clone();
           locationClone.add(vector.setX(vector.getX() / 2).setY(vector.getY() / 2).setZ(vector.getZ() / 2));
-          extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(
-                  locationClone.getBlock()
-          )));
+          extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(ItemStackUtil.getExactBlockFromWithLimited(locationClone, Constant.OCCLUDING_BLOCKS))));
         }
         case HOT_FLOOR -> {
           key = "magma_block";
@@ -386,13 +403,17 @@ public class DeathManager
             {
               extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(block)));
             }
+            else
+            {
+              extraArgs.add(ComponentUtil.create(Material.MAGMA_BLOCK));
+            }
           }
         }
         case CRAMMING -> {
           key = "cramming";
           Collection<LivingEntity> livingEntities = world.getNearbyLivingEntities(location, 1.5d);
           livingEntities.removeIf(e -> e.equals(entity));
-          if (livingEntities.size() == 0)
+          if (livingEntities.isEmpty())
           {
             key += "_none";
           }
@@ -409,7 +430,7 @@ public class DeathManager
             }
           }
         }
-        case DRYOUT -> key = "dryOut";
+        case DRYOUT -> key = "dry_out";
         case FREEZE -> key = "freeze";
       }
       if (damager != null)
@@ -477,14 +498,14 @@ public class DeathManager
         keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요! 사실 이 메시지는 이스터 에그이며, 플러그인 다운로드 주소는 %" + (extraArgs.size() + args.size()) + "$s입니다!");
       }
       // 해당 키 목록에서 랜덤 키를 하나 가져옴
-      if (keys.size() != 0)
+      if (!keys.isEmpty())
       {
         int random = Method.random(0, keys.size() - 1);
         key = keys.get(random);
       }
       args.addAll(extraArgs);
-      Component deathMessage = ComponentUtil.createTranslate(key, args);
-      if (ComponentUtil.serializeAsJson(deathMessage).length() > 100000)
+      @Nullable Component deathMessage = ComponentUtil.createTranslate(key, args);
+      if (ComponentUtil.serializeAsJson(deathMessage).length() > MAXIMUM_COMPONENT_SERIAL_LENGTH)
       {
         for (int i = 0; i < args.size(); i++)
         {
@@ -531,10 +552,10 @@ public class DeathManager
         }
       }
       // 모든 플레이어에게 데스메시지 보냄
-      if (event.isCancelled())
+      if (event.isCancelled() || !entity.isDead())
       {
         List<String> cancelledMessages = Variable.deathMessages.getStringList("death-messages.event-cancelled-messages");
-        if (cancelledMessages.size() > 0)
+        if (!cancelledMessages.isEmpty())
         {
           String message = cancelledMessages.get(Method.random(0, cancelledMessages.size() - 1));
           deathMessage = deathMessage.append(ComponentUtil.createTranslate(message, entity));
@@ -728,7 +749,7 @@ public class DeathManager
       EntityEquipment entityEquipment = damager.getEquipment();
       if (entityEquipment != null)
       {
-        ItemStack mainHand = entityEquipment.getItemInMainHand(), offHand = entityEquipment.getItemInOffHand();
+        ItemStack mainHand = entityEquipment.getItemInMainHand();
         Projectile projectile = getDamagerProjectile(event);
         AreaEffectCloud areaEffectCloud = getDamagerAreaEffectCloud(event);
         if (isMelee(event))
@@ -758,7 +779,15 @@ public class DeathManager
     else
     {
       Projectile projectile = getDamagerProjectile(event);
-      if (damagerObject != null && damagerObject.equals(projectile))
+      if (projectile != null && projectile.getShooter() instanceof BlockProjectileSource blockProjectileSource)
+      {
+        Block block = blockProjectileSource.getBlock();
+        if (Variable.blockAttackerAndWeapon.containsKey(block.getLocation().toString()))
+        {
+          return Variable.blockAttackerAndWeapon.get(block.getLocation().toString());
+        }
+      }
+      if (!(damagerObject instanceof ItemStack) && damagerObject != null && damagerObject.equals(projectile))
       {
         return null;
       }
@@ -770,14 +799,7 @@ public class DeathManager
       {
         return Variable.projectile.get(projectile.getUniqueId());
       }
-      if (projectile != null && projectile.getShooter() instanceof BlockProjectileSource blockProjectileSource)
-      {
-        Block block = blockProjectileSource.getBlock();
-        if (Variable.blockAttackerAndWeapon.containsKey(block.getLocation().toString()))
-        {
-          return Variable.blockAttackerAndWeapon.get(block.getLocation().toString());
-        }
-      }
+
       if (projectile instanceof ThrowableProjectile throwableProjectile)
       {
         return throwableProjectile.getItem();

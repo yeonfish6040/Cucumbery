@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,63 +21,68 @@ public class Respawn implements CommandExecutor
   {
     if (!Method.hasPermission(sender, Permission.CMD_RESPAWN, true))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (args.length == 0)
     {
       MessageUtil.shortArg(sender, 1, args);
       MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     else if (args.length <= 2)
     {
       if (args.length == 2 && !MessageUtil.isBoolean(sender, args, 2, true))
       {
-        return sender instanceof Player;
+        return !(sender instanceof BlockCommandSender);
       }
-      List<Player> targets = SelectorUtil.getPlayers(sender, args[0]);
-      if (targets == null)
+      List<Player> players = SelectorUtil.getPlayers(sender, args[0]);
+      if (players == null)
       {
-        return sender instanceof Player;
+        return !(sender instanceof BlockCommandSender);
       }
-      List<Player> success = new ArrayList<>();
-      List<Player> failure = new ArrayList<>();
-      for (Player target : targets)
+      boolean hideOutput = args.length == 2 && args[1].equals("true");
+      List<Player> successPlayers = new ArrayList<>();
+      List<Player> failurePlayers = new ArrayList<>();
+      for (Player player : players)
       {
-        if (target.isDead())
+        if (player.isDead())
         {
-          success.add(target);
-          target.spigot().respawn();
+          player.spigot().respawn();
+          if (!sender.equals(player) && !hideOutput)
+          {
+            MessageUtil.info(player, ComponentUtil.createTranslate("%s이(가) 당신을 강제로 리스폰시켰습니다.", sender));
+          }
+          successPlayers.add(player);
         }
         else
         {
-          failure.add(target);
+          failurePlayers.add(player);
         }
       }
-      if (!(args.length == 2 && args[1].equals("true")))
+      if (!hideOutput)
       {
-        if (success.size() == 0)
+        if (failurePlayers.size() > 0)
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate(targets.size() == 1 ? "%s은(는) 죽어 있는 상태가 아닙니다." : "%s 모두 죽어 있는 상태가 아닙니다.", targets));
-          return sender instanceof Player;
+          MessageUtil.sendWarnOrError(successPlayers.size() != 0 ? MessageUtil.SendMessageType.WARN : MessageUtil.SendMessageType.ERROR, sender, ComponentUtil.createTranslate("%s은(는) 죽어 있는 상태가 아닙니다.", failurePlayers));
         }
-        if (failure.size() > 0)
+        if (successPlayers.size() > 0)
         {
-          MessageUtil.sendWarn(sender, ComponentUtil.createTranslate("%s은(는) 죽어 있는 상태가 아니여서 강제로 리스폰시키지 못했습니다.", failure));
+          MessageUtil.info(sender, ComponentUtil.createTranslate("%s을(를) 강제로 리스폰시켰습니다.", successPlayers));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successPlayers), ComponentUtil.createTranslate("[%s: %s을(를) 강제로 리스폰시켰습니다.]", sender, successPlayers));
+          return true;
         }
-        MessageUtil.sendMessage(sender, ComponentUtil.createTranslate("%s을(를) 강제로 리스폰시켰습니다.", success));
       }
     }
     else
     {
       MessageUtil.longArg(sender, 2, args);
       MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
-      return true;
+      return !(sender instanceof BlockCommandSender);
     }
-    return true;
+    return !(sender instanceof BlockCommandSender);
   }
 }

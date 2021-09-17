@@ -12,6 +12,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,7 +33,7 @@ public class PlaySound implements CommandExecutor
 				}
         if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
         {
-          return sender instanceof Player;
+          return !(sender instanceof BlockCommandSender);
         }
         if (args.length < 1)
         {
@@ -139,7 +140,7 @@ public class PlaySound implements CommandExecutor
 				}
 				if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
 				{
-					return sender instanceof Player;
+					return !(sender instanceof BlockCommandSender);
 				}
         if (args.length < 1)
         {

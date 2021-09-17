@@ -7,6 +7,7 @@ import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ public class Sudo implements CommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length < 3)
@@ -54,6 +55,29 @@ public class Sudo implements CommandExecutor
       {
         op = true;
         args[2] = args[2].substring(3);
+      }
+      if (!hideMessage)
+      {
+        if (op)
+        {
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", targets));
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
+          if (!(sender instanceof Player player && targets.contains(player)))
+          {
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s이(가) 당신에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", sender));
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, "&e/" + command);
+          }
+        }
+        else
+        {
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s에게 다음 명령어를 강제로 시행합니다.", targets));
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
+          if (!(sender instanceof Player player && targets.contains(player)))
+          {
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s이(가) 당신에게 다음 명령어를 강제로 시행합니다.", sender));
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, "&e/" + command);
+          }
+        }
       }
       for (Player target : targets)
       {
@@ -91,32 +115,7 @@ public class Sudo implements CommandExecutor
         {
           target.performCommand(command);
         }
-      }
-      if (op)
-      {
-        if (!hideMessage)
-        {
-          if (!targets.equals(sender))
-          {
-            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s이(가) 당신에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", sender));
-            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, "&e/" + command);
-          }
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", targets));
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
-        }
-      }
-      else
-      {
-        if (!hideMessage)
-        {
-          if (!targets.equals(sender))
-          {
-            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s이(가) 당신에게 다음 명령어를 강제로 시행합니다.", sender));
-            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, "&e/" + command);
-          }
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s에게 다음 명령어를 강제로 시행합니다.", targets));
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
-        }
+        command = finalCommand;
       }
     }
     return true;

@@ -87,13 +87,32 @@ public class PlayerJoin implements Listener
     {
       displayname = player.getName();
     }
-    Component finalDislay = ComponentUtil.create(displayname).append(Component.text("§r")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    Component finalDislay = ComponentUtil.create(displayname).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
     player.displayName(finalDislay);
     if (playerListName == null)
     {
       playerListName = player.getName();
     }
-    finalDislay = ComponentUtil.create(playerListName).append(Component.text("§r")).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    finalDislay = ComponentUtil.create(playerListName).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    if (Cucumbery.using_Vault_Chat)
+    {
+      try
+      {
+        String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
+        if (prefix != null)
+        {
+          finalDislay = ComponentUtil.create(false, prefix, finalDislay);
+        }
+        if (suffix != null)
+        {
+          finalDislay = ComponentUtil.create(false, finalDislay, suffix);
+        }
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
     player.playerListName(finalDislay);
     Component displayName = ComponentUtil.senderComponent(player);
     String displayNameString = ComponentUtil.serialize(displayName);

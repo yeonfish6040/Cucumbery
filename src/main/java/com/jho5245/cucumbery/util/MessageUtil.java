@@ -11,17 +11,27 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
+import org.bukkit.Location;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,13 +58,20 @@ public class MessageUtil
     for (int i = 0; i < input.length(); i++)
     {
       char c = input.charAt(i);
+      final boolean b = i + 1 < input.length() && input.charAt(i + 1) != ' ';
       if (c == '\"' && !isInQuote)
       {
         if (isInDoubleQuote)
         {
-          if (input.charAt(i - 1) == '\\')
+          if (i + 1 < input.length() && input.charAt(i + 1) == '\"')
           {
             builder.append("\"");
+            i++;
+            continue;
+          }
+          if (b)
+          {
+            return new String[]{(ComponentUtil.serialize(Component.translatable("command.expected.separator")))};
           }
           if (!builder.isEmpty())
           {
@@ -72,9 +89,15 @@ public class MessageUtil
       {
         if (isInQuote)
         {
-          if (input.charAt(i - 1) == '\\')
+          if (i + 1 < input.length() && input.charAt(i + 1) == '\'')
           {
             builder.append("'");
+            i++;
+            continue;
+          }
+          if (b)
+          {
+            return new String[]{(ComponentUtil.serialize(Component.translatable("command.expected.separator")))};
           }
           if (!builder.isEmpty())
           {
@@ -103,13 +126,13 @@ public class MessageUtil
     }
     if (!builder.isEmpty())
     {
-      if (isInQuote || isInDoubleQuote)
+      if (isInDoubleQuote || isInQuote)
       {
-        return new String[] {ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end"))};
+        return new String[]{(ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end")))};
       }
       a.add(builder.toString());
     }
-    if ((forTabComplete && a.size() == 0) || input.endsWith(" "))
+    if ((forTabComplete && a.isEmpty()) || input.endsWith(" "))
     {
       a.add("");
     }
@@ -132,7 +155,7 @@ public class MessageUtil
           i++;
           continue;
         }
-        if (builder.length() > 0)
+        if (!builder.isEmpty())
         {
           list.add(builder.toString());
           builder = new StringBuilder();
@@ -242,11 +265,19 @@ public class MessageUtil
     {
       audience = proxyCommandSender.getCallee();
     }
-    if (audience instanceof List<?> list)
+    if (audience instanceof UUID uuid)
+    {
+      Entity entity = Bukkit.getEntity(uuid);
+      if (entity != null)
+      {
+        audience = entity;
+      }
+    }
+    if (audience instanceof Collection<?> list)
     {
       if (list.stream().allMatch(Predicates.instanceOf(Audience.class)::apply))
       {
-        List<Audience> audiences = (List<Audience>) list;
+        Collection<Audience> audiences = (Collection<Audience>) list;
         for (Audience a : audiences)
         {
           MessageUtil.sendMessage(a, objects);
@@ -266,6 +297,73 @@ public class MessageUtil
       }
       ((Audience) audience).sendMessage(message);
     }
+  }
+
+  /**
+   * 관리자 메시지(회색 기울임꼴 문자)를 출력합니다. commandSender를 제외한 모든 관리자에게만 출력합니다.
+   *
+   * @param commandSender 해당 메시지를 실행한 주체
+   * @param exception     추가로 메시지를 보여주지 않을 개체
+   * @param objects       출력할 메시지
+   */
+  public static void sendAdminMessage(@NotNull Object commandSender, @Nullable List<Permissible> exception, @NotNull Object... objects)
+  {
+    Collection<Permissible> collection = new ArrayList<>(Bukkit.getOnlinePlayers());
+    if (exception != null)
+    {
+      collection.removeAll(exception);
+    }
+    collection.removeIf(c -> !c.hasPermission("minecraft.admin.command_feedback"));
+    if (Cucumbery.using_CommandAPI && commandSender instanceof NativeProxyCommandSender proxyCommandSender)
+    {
+      commandSender = proxyCommandSender.getCallee();
+    }
+    if (commandSender instanceof Player player)
+    {
+      collection.remove(player);
+    }
+    Location location = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+    if (commandSender instanceof BlockCommandSender blockCommandSender)
+    {
+      location = blockCommandSender.getBlock().getLocation();
+    }
+    if (commandSender instanceof Entity entity)
+    {
+      location = entity.getLocation();
+    }
+    if (Boolean.TRUE.equals(location.getWorld().getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK)))
+    {
+      Component message = setAdminMessage(ComponentUtil.create(objects));
+      sendMessage(collection, message);
+      String worldName = location.getWorld().getName();
+      int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
+      message = message.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));
+      consoleSendMessage(message);
+    }
+  }
+
+  @NotNull
+  private static Component setAdminMessage(@NotNull Component component)
+  {
+    component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.TRUE);
+    component = component.color(NamedTextColor.GRAY);
+    List<Component> children = new ArrayList<>(component.children());
+    for (int i = 0; i < children.size(); i++)
+    {
+      Component child = setAdminMessage(children.get(i));
+      children.set(i, child);
+    }
+    if (component instanceof TranslatableComponent translatableComponent)
+    {
+      List<Component> args = new ArrayList<>(translatableComponent.args());
+      for (int i = 0; i < args.size(); i++)
+      {
+        Component arg = setAdminMessage(args.get(i));
+        args.set(i, arg);
+      }
+      component = translatableComponent.args(args);
+    }
+    return component.children(children);
   }
 
   /**
@@ -344,11 +442,6 @@ public class MessageUtil
     sendMessage(audience, newObjects);
   }
 
-  public static void sendWarn(@NotNull Object audience, @NotNull Prefix msg)
-  {
-    sendWarn(audience, msg.toString());
-  }
-
   public static void sendError(@NotNull Object audience, @NotNull Object... objects)
   {
     if (Cucumbery.config.getBoolean("sound-const.error-sound.enable"))
@@ -361,9 +454,16 @@ public class MessageUtil
     sendMessage(audience, newObjects);
   }
 
-  public static void sendError(@NotNull Object audience, @NotNull Prefix msg)
+  public static void sendWarnOrError(@NotNull SendMessageType type, @NotNull Object audience, @NotNull Object objects)
   {
-    sendError(audience, msg.toString());
+    if (type == SendMessageType.WARN)
+    {
+      sendWarn(audience, objects);
+    }
+    if (type == SendMessageType.ERROR)
+    {
+      sendError(audience, objects);
+    }
   }
 
   public static void info(@NotNull Object audience, @NotNull Object... objects)
@@ -381,9 +481,25 @@ public class MessageUtil
 
   public static boolean checkQuoteIsValidInArgs(@NotNull CommandSender sender, @NotNull String[] args)
   {
+    return checkQuoteIsValidInArgs(sender, args, false);
+  }
+
+  public static boolean checkQuoteIsValidInArgs(@NotNull CommandSender sender, @NotNull String[] args, boolean forTabComplete)
+  {
     if (args.length == 1 && args[0].equals(ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end"))))
     {
-      MessageUtil.sendError(sender, Component.translatable("parsing.quote.expected.end"));
+      if (!forTabComplete)
+      {
+        MessageUtil.sendError(sender, Component.translatable("parsing.quote.expected.end"));
+      }
+      return false;
+    }
+    if (args.length == 1 && args[0].equals(ComponentUtil.serialize(Component.translatable("command.expected.separator"))))
+    {
+      if (!forTabComplete)
+      {
+        MessageUtil.sendError(sender, Component.translatable("command.expected.separator"));
+      }
       return false;
     }
     return true;
@@ -750,8 +866,9 @@ public class MessageUtil
       {
         return type.toString();
       }
+      word = word.replace(" ", "");
       word = stripColor(n2s(word));
-      word = word.replaceAll("[&%!?\"'\\\\$_,\\-ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅙㅞㅚㅟㅢㅝㅘㅐㅖ]", "가");
+      word = word.replaceAll("[&%!?\"'\\\\$_,\\-ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅙㅞㅚㅟㅢㅝㅘㅐㅖ∞ㄷ+]", "가");
       word = word.replaceAll("[.#@ㄱㄲㄴㄷㄸㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ]", "각");
       word = word.replaceAll("[*ㄹ~]", "갈");
       char c;
@@ -970,6 +1087,12 @@ public class MessageUtil
             .replace("ｌ", "l").replace("ｍ", "m").replace("ｎ", "n").replace("ｏ", "o").replace("ｒ", "r").replace("ｘ", "x");
   }
 
+  public enum SendMessageType
+  {
+    WARN,
+    ERROR
+  }
+
 
   public enum N2SType // 컬러 코드 적용 타입
   {
@@ -982,23 +1105,33 @@ public class MessageUtil
   public enum ConsonantType
   {
     을를("을(를)"),
+    을를_2("(을)를"),
     를을("를(을)"),
+    를을_2("(를)을"),
     을("을(를)"),
     를("를(을)"),
     은는("은(는)"),
+    은는_2("(은)는"),
     는은("는(은)"),
+    는은_2("(는)은"),
     은("은(는)"),
     는("는(은)"),
     이가("이(가)"),
+    이가_2("(이)가"),
     가이("가(이)"),
+    가이_2("(가)이"),
     이("이(가)"),
     가("가(이)"),
     와과("와(과)"),
+    와과_2("(와)과"),
     과와("과(와)"),
+    과와_2("(과)와"),
     와("와(과)"),
     과("과(와)"),
     으로("(으)로"),
-    이라("(이)라");
+    으로_2("으(로)"),
+    이라("(이)라"),
+    이라_2("이(라)");
 
     private final String a;
 

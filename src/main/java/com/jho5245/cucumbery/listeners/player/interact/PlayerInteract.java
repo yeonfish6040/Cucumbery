@@ -1417,6 +1417,7 @@ public class PlayerInteract implements Listener
                 if (victim.getGameMode() != GameMode.SPECTATOR)
                 {
                   double health = victim.getHealth();
+                  Variable.attackerAndWeapon.put(player.getUniqueId(), item.clone());
                   victim.damage(damage, player);
                   if (ignoreInvincible && health == victim.getHealth())
                   {
@@ -1445,6 +1446,7 @@ public class PlayerInteract implements Listener
               else
               {
                 double health = livingEntity.getHealth();
+                Variable.attackerAndWeapon.put(player.getUniqueId(), item.clone());
                 livingEntity.damage(damage, player);
                 if (ignoreInvincible && health == livingEntity.getHealth())
                 {

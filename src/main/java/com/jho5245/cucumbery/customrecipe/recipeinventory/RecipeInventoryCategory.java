@@ -311,7 +311,7 @@ public class RecipeInventoryCategory
               resultLore.remove(resultLore.size() - 1);
               resultLore.remove(resultLore.size() - 1);
               resultLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.create("§b[아이템을 제작하는 중입니다.]")));
-              if (Cucumbery.using_Vault)
+              if (Cucumbery.using_Vault_Economy)
               {
                 double skipCost = config.getDouble("recipes." + recipe + ".extra.crafting-time-skip.cost");
                 if (skipCost > 0)

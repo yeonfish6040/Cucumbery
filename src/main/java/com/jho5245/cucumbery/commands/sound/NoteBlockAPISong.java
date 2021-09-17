@@ -7,7 +7,6 @@ import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
@@ -15,14 +14,14 @@ import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.model.SoundCategory;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,9 +31,9 @@ import java.util.UUID;
 
 public class NoteBlockAPISong implements CommandExecutor
 {
-  public static RadioSongPlayer radioSongPlayer;
+  public static @Nullable RadioSongPlayer radioSongPlayer;
 
-  public static Song song;
+  public static @Nullable Song song;
 
   public static HashMap<UUID, RadioSongPlayer> playerRadio = new HashMap<>();
 
@@ -48,7 +47,7 @@ public class NoteBlockAPISong implements CommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     if (!Cucumbery.using_NoteBlockAPI)
     {
@@ -78,14 +77,14 @@ public class NoteBlockAPISong implements CommandExecutor
                 }
                 radioSongPlayer.setPlaying(false);
                 radioSongPlayer.destroy();
-                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "&e" + radioSongPlayer.getSong().getPath().getName() + "&r 파일의 재생을 멈췄습니다.");
+                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s의 재생을 멈췄습니다.", song));
                 for (Player player : Bukkit.getServer().getOnlinePlayers())
                 {
                   if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
                   {
                     if (!sender.equals(player))
                     {
-                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, sender, "이(가) &e" + radioSongPlayer.getSong().getPath().getName() + " &r파일의 재생을 멈췄습니다.");
+                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s이(가) %s의 재생을 멈췄습니다.", sender, song));
                     }
                   }
                 }
@@ -109,14 +108,14 @@ public class NoteBlockAPISong implements CommandExecutor
               boolean playing = radioSongPlayer.isPlaying();
               radioSongPlayer.setPlaying(!playing);
               String display = playing ? "중지" : "재개";
-              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "&e" + radioSongPlayer.getSong().getPath().getName() + "&r 파일의 재생을 " + display + "하였습니다.");
+              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s의 재생을 " + display + "하였습니다.", song));
               for (Player player : Bukkit.getServer().getOnlinePlayers())
               {
                 if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
                 {
                   if (!sender.equals(player))
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, sender, "이(가) &e" + radioSongPlayer.getSong().getPath().getName() + "&r 파일의 재생을 " + display + "하였습니다.");
+                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s이(가) %s의 재생을 " + display + "하였습니다.", sender, song));
                   }
                 }
               }
@@ -155,7 +154,7 @@ public class NoteBlockAPISong implements CommandExecutor
                   players.add(player);
                 }
               }
-              if (players.size() == 0)
+              if (players.isEmpty())
               {
                 MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "아무도 노래를 듣고 있지 않습니다.");
                 return true;
@@ -265,7 +264,7 @@ public class NoteBlockAPISong implements CommandExecutor
                 radioSongPlayer.setAutoDestroy(true);
                 if (!silent)
                 {
-                  MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "&e" + radioSongPlayer.getSong().getPath().getName() + "&r 파일을 재생합니다.");
+                  MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s을(를) 재생합니다.", song));
                 }
                 for (Player player : Bukkit.getServer().getOnlinePlayers())
                 {
@@ -274,10 +273,7 @@ public class NoteBlockAPISong implements CommandExecutor
                     radioSongPlayer.addPlayer(player);
                     if (!silent && !sender.equals(player))
                     {
-                      String display = radioSongPlayer.getSong().getPath().getName();
-                      display = display.substring(0, display.length() - 4);
-                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s이(가) %s을(를) 재생합니다.", sender, Component.text(display)
-                              .color(Constant.THE_COLOR).hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate(display)))));
+                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s이(가) %s을(를) 재생합니다.", sender, song));
                     }
                   }
                 }
@@ -377,14 +373,14 @@ public class NoteBlockAPISong implements CommandExecutor
               playerRadio.setAutoDestroy(true);
               if (!hideOutput)
               {
-                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, player, "에게 &e" + playerRadio.getSong().getPath().getName() + "&r 파일을 재생합니다.");
+                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s에게 %s을(를) 재생합니다.", player, playerSong));
               }
               if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
               {
                 playerRadio.addPlayer(player);
                 if (!hideOutput && !player.equals(sender))
                 {
-                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, player, "이(가) 당신에게 &e" + playerRadio.getSong().getPath().getName() + "&r 파일을 재생하였습니다.");
+                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s이(가) 당신에게 %s을(를) 재생합니다.", sender, playerSong));
                 }
               }
               playerRadio.setPlaying(true);
@@ -421,17 +417,18 @@ public class NoteBlockAPISong implements CommandExecutor
                 MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다.");
                 return true;
               }
+              Song playerSong = playerRadio.getSong();
               playerRadio.setPlaying(false);
               playerRadio.destroy();
               if (!hideOutput)
               {
-                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, player, "&r의 &e" + playerRadio.getSong().getPath().getName() + "&r 파일의 재생을 멈췄습니다.");
+                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s의 %s의 재생을 멈췄습니다.", player, playerSong));
               }
               if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
               {
                 if (!hideOutput && !player.equals(sender))
                 {
-                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, sender, "이(가) 당신의 &e" + playerRadio.getSong().getPath().getName() + " &r파일의 재생을 멈췄습니다.");
+                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s이(가) 당신의 %s의 재생을 멈췄습니다.", sender, playerSong));
                 }
               }
               NoteBlockAPISong.playerRadio.remove(uuid);
@@ -447,12 +444,13 @@ public class NoteBlockAPISong implements CommandExecutor
             RadioSongPlayer playerRadio = NoteBlockAPISong.playerRadio.get(uuid);
             if (playerRadio == null)
             {
-              MessageUtil.sendError(sender, "&e" + ComponentUtil.senderComponent(player) + "&r은(는) 노래를 재생하고 있지 않습니다.");
+              MessageUtil.sendError(sender, ComponentUtil.createTranslate("%s은(는) 노래를 재생하고 있지 않습니다.", player));
               return true;
             }
+            Song playerSong = playerRadio.getSong();
             MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "--------------------------------------------");
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "파일 이름 : &e" + playerRadio.getSong().getPath().getName());
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "길이 : &e" + playerRadio.getSong().getLength());
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.createTranslate("파일 이름 : %s", playerSong));
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG,  ComponentUtil.createTranslate("길이 : %s", playerSong.getLength()));
           }
           default -> {
             MessageUtil.wrongArg(sender, 2, args);

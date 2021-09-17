@@ -9,6 +9,7 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Nameable;
@@ -107,12 +108,8 @@ public class ItemStackUtil
    */
   public static boolean hasStatusEffect(@NotNull Material type)
   {
-    if (!ItemStackUtil.isEdible(type))
-    {
-      return false;
-    }
-    return type == Material.GOLDEN_APPLE || type == Material.ENCHANTED_GOLDEN_APPLE || type == Material.POISONOUS_POTATO || type == Material.SPIDER_EYE
-            || type == Material.PUFFERFISH || type == Material.ROTTEN_FLESH || type == Material.CHICKEN || type == Material.HONEY_BOTTLE || type == Material.MILK_BUCKET || type == Material.POTION;
+    return ItemStackUtil.isEdible(type) && (type == Material.GOLDEN_APPLE || type == Material.ENCHANTED_GOLDEN_APPLE || type == Material.POISONOUS_POTATO || type == Material.SPIDER_EYE
+            || type == Material.PUFFERFISH || type == Material.ROTTEN_FLESH || type == Material.CHICKEN || type == Material.HONEY_BOTTLE || type == Material.MILK_BUCKET || type == Material.POTION);
   }
 
 
@@ -241,11 +238,7 @@ public class ItemStackUtil
 
   public static boolean isPickBlockable(@NotNull Material type)
   {
-    if (type.isBlock())
-    {
-      return true;
-    }
-    return switch (type)
+    return type.isBlock() || switch (type)
             {
               case POTATO, CARROT, COCOA_BEANS, WHEAT_SEEDS, NETHER_WART, MELON_SEEDS, PUMPKIN_SEEDS, REDSTONE, SWEET_BERRIES, ARMOR_STAND, ITEM_FRAME, PAINTING
                       , BAT_SPAWN_EGG, BEE_SPAWN_EGG, BLAZE_SPAWN_EGG, CAT_SPAWN_EGG, CAVE_SPIDER_SPAWN_EGG, CHICKEN_SPAWN_EGG, COD_SPAWN_EGG, COW_SPAWN_EGG,
@@ -287,6 +280,7 @@ public class ItemStackUtil
     return ItemStackUtil.itemExists(item) && !new ItemStack(item.getType(), item.getAmount()).equals(item);
   }
 
+  @SuppressWarnings("unused")
   public static boolean hasItemMeta(ItemStack item, boolean exist)
   {
     if (exist)
@@ -301,6 +295,7 @@ public class ItemStackUtil
     return ItemStackUtil.itemExists(item) && item.hasItemMeta() && item.getItemMeta().hasDisplayName();
   }
 
+  @SuppressWarnings("unused")
   public static boolean hasDisplayName(ItemStack item, boolean exist) // 아이템이 이름을 가지고 있는지만 판별
   {
     if (exist)
@@ -312,7 +307,7 @@ public class ItemStackUtil
 
   public static boolean hasLore(ItemStack item) // 아이템이 설명을 가지고 있는지 판별
   {
-    return ItemStackUtil.itemExists(item) && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().lore() != null && Objects.requireNonNull(item.getItemMeta().lore()).size() > 0;
+    return ItemStackUtil.itemExists(item) && item.hasItemMeta() && item.getItemMeta().hasLore() && item.getItemMeta().lore() != null && !Objects.requireNonNull(item.getItemMeta().lore()).isEmpty();
   }
 
   public static boolean hasLore(ItemStack item, boolean exist) // 아이템이 설명만 가지고 있는지 판별
@@ -331,6 +326,7 @@ public class ItemStackUtil
    * @return 현실 시간과 게임 시간을 나타낸 문자열 (현실 시간 : n시 n분 n초, 게임 시간 : n시 n분 n초)
    */
   @NotNull
+  @SuppressWarnings("unused")
   public static String periodRealTimeAndGameTime(long time)
   {
     return MessageUtil.n2s("&2현실 시간 : &a" + Method.timeFormatMilli(time * 50L) + "&r, &3게임 시간 : &b" + Method.timeFormatMilli(time * 3600L));
@@ -466,14 +462,12 @@ public class ItemStackUtil
     List<ItemStack> dropsClone = new ArrayList<>();
     for (ItemStack drop : input)
     {
-//      boolean yeet = true;
-//      if (yeet)
       {
         for (Recipe recipe : RecipeChecker.recipes)
         {
           if (recipe instanceof FurnaceRecipe furnaceRecipe)
           {
-            if (furnaceRecipe.getInput().getType().equals(drop.getType()))
+            if (furnaceRecipe.getInput().getType() == drop.getType())
             {
               drop.setType(furnaceRecipe.getResult().getType());
               expOutput.add((double) furnaceRecipe.getExperience());
@@ -481,182 +475,6 @@ public class ItemStackUtil
           }
         }
       }
-//      else
-//      {
-//        Material dropType = drop.getType();
-//        switch (dropType)
-//        {
-//          case COBBLESTONE:
-//            drop.setType(Material.STONE);
-//            expOutput.add(0.1);
-//            break;
-//          case STONE:
-//            drop.setType(Material.SMOOTH_STONE);
-//            expOutput.add(0.1);
-//            break;
-//          case SAND:
-//          case RED_SAND:
-//            drop.setType(Material.GLASS);
-//            expOutput.add(0.1);
-//            break;
-//          case CACTUS:
-//            drop.setType(Material.GREEN_DYE);
-//            expOutput.add(1d);
-//            break;
-//          case RAW_IRON:
-//          case IRON_ORE:
-//          case DEEPSLATE_IRON_ORE:
-//            drop.setType(Material.IRON_INGOT);
-//            expOutput.add(0.7);
-//            break;
-//          case RAW_COPPER:
-//          case COPPER_ORE:
-//          case DEEPSLATE_COPPER_ORE:
-//            drop.setType(Material.COPPER_INGOT);
-//            expOutput.add(0.7);
-//            break;
-//          case RAW_GOLD:
-//          case GOLD_ORE:
-//          case DEEPSLATE_GOLD_ORE:
-//          case NETHER_GOLD_ORE:
-//            drop.setType(Material.GOLD_INGOT);
-//            expOutput.add(1d);
-//            break;
-//          case ANCIENT_DEBRIS:
-//            drop.setType(Material.NETHERITE_SCRAP);
-//            expOutput.add(2d);
-//            break;
-//          case NETHERRACK:
-//            drop.setType(Material.NETHER_BRICK);
-//            expOutput.add(0.1);
-//            break;
-//          case OAK_LOG:
-//          case OAK_WOOD:
-//          case STRIPPED_OAK_LOG:
-//          case STRIPPED_OAK_WOOD:
-//          case SPRUCE_LOG:
-//          case SPRUCE_WOOD:
-//          case STRIPPED_SPRUCE_LOG:
-//          case STRIPPED_SPRUCE_WOOD:
-//          case BIRCH_LOG:
-//          case BIRCH_WOOD:
-//          case STRIPPED_BIRCH_LOG:
-//          case STRIPPED_BIRCH_WOOD:
-//          case DARK_OAK_LOG:
-//          case DARK_OAK_WOOD:
-//          case STRIPPED_DARK_OAK_LOG:
-//          case STRIPPED_DARK_OAK_WOOD:
-//          case JUNGLE_LOG:
-//          case JUNGLE_WOOD:
-//          case STRIPPED_JUNGLE_LOG:
-//          case STRIPPED_JUNGLE_WOOD:
-//          case ACACIA_LOG:
-//          case ACACIA_WOOD:
-//          case STRIPPED_ACACIA_LOG:
-//          case STRIPPED_ACACIA_WOOD:
-//            drop.setType(Material.CHARCOAL);
-//            expOutput.add(0.15);
-//            break;
-//          case KELP:
-//            drop.setType(Material.DRIED_KELP);
-//            expOutput.add(0.1);
-//            break;
-//          case SANDSTONE:
-//            drop.setType(Material.SMOOTH_SANDSTONE);
-//            expOutput.add(0.1);
-//            break;
-//          case RED_SANDSTONE:
-//            drop.setType(Material.SMOOTH_RED_SANDSTONE);
-//            expOutput.add(0.1);
-//            break;
-//          case QUARTZ_BLOCK:
-//            drop.setType(Material.SMOOTH_QUARTZ);
-//            expOutput.add(0.1);
-//            break;
-//          case CLAY_BALL:
-//            drop.setType(Material.BRICK);
-//            expOutput.add(0.3);
-//            break;
-//          case NETHER_BRICKS:
-//            drop.setType(Material.CRACKED_NETHER_BRICKS);
-//            expOutput.add(0.1);
-//            break;
-//          case CLAY:
-//            drop.setType(Material.TERRACOTTA);
-//            expOutput.add(0.35);
-//            break;
-//          case STONE_BRICKS:
-//            drop.setType(Material.CRACKED_STONE_BRICKS);
-//            expOutput.add(0.1);
-//            break;
-//          case CHORUS_FRUIT:
-//            drop.setType(Material.POPPED_CHORUS_FRUIT);
-//            expOutput.add(0.1);
-//            break;
-//          case WET_SPONGE:
-//            drop.setType(Material.SPONGE);
-//            expOutput.add(0.15);
-//            break;
-//          case SEA_PICKLE:
-//            drop.setType(Material.LIME_DYE);
-//            expOutput.add(0.2);
-//            break;
-//          case BLACK_TERRACOTTA:
-//          case BLUE_TERRACOTTA:
-//          case BROWN_TERRACOTTA:
-//          case CYAN_TERRACOTTA:
-//          case GRAY_TERRACOTTA:
-//          case GREEN_TERRACOTTA:
-//          case LIME_TERRACOTTA:
-//          case LIGHT_BLUE_TERRACOTTA:
-//          case LIGHT_GRAY_TERRACOTTA:
-//          case MAGENTA_TERRACOTTA:
-//          case ORANGE_TERRACOTTA:
-//          case PINK_TERRACOTTA:
-//          case PURPLE_TERRACOTTA:
-//          case RED_TERRACOTTA:
-//          case WHITE_TERRACOTTA:
-//          case YELLOW_TERRACOTTA:
-//            drop.setType(Material.valueOf(dropType.toString().replace("TERRACOTTA", "GLAZED_TERRACOTTA")));
-//            expOutput.add(0.1);
-//            break;
-//          case PORKCHOP:
-//            drop.setType(Material.COOKED_PORKCHOP);
-//            expOutput.add(0.35);
-//            break;
-//          case BEEF:
-//            drop.setType(Material.COOKED_BEEF);
-//            expOutput.add(0.35);
-//            break;
-//          case CHICKEN:
-//            drop.setType(Material.COOKED_CHICKEN);
-//            expOutput.add(0.35);
-//            break;
-//          case COD:
-//            drop.setType(Material.COOKED_COD);
-//            expOutput.add(0.35);
-//            break;
-//          case SALMON:
-//            drop.setType(Material.COOKED_SALMON);
-//            expOutput.add(0.35);
-//            break;
-//          case POTATO:
-//            drop.setType(Material.BAKED_POTATO);
-//            expOutput.add(0.35);
-//            break;
-//          case MUTTON:
-//            drop.setType(Material.COOKED_MUTTON);
-//            expOutput.add(0.35);
-//            break;
-//          case RABBIT:
-//            drop.setType(Material.COOKED_RABBIT);
-//            expOutput.add(0.35);
-//            break;
-//          default:
-//            break;
-//        }
-//      }
-//      drop.setItemMeta(null);
       if (Method.usingLoreFeature(player))
       {
         ItemLore.setItemLore(drop);
@@ -750,6 +568,7 @@ public class ItemStackUtil
   }
 
   @NotNull
+  @SuppressWarnings("unused")
   public static EquipmentSlot getPlayerUsingSlot(@NotNull Player player, @NotNull Material... typeList)
   {
     return getPlayerUsingSlot(player, materialArrayToList(typeList));
@@ -782,7 +601,7 @@ public class ItemStackUtil
     {
       if (type == Material.AIR)
       {
-        itemMeta.displayName(ComponentUtil.createTranslate("벽").color(Constant.THE_COLOR));
+        itemMeta.displayName(ComponentUtil.createTranslate("벽").color(Constant.THE_COLOR).decoration(TextDecoration.ITALIC, State.FALSE));
       }
       else
       {
@@ -811,7 +630,7 @@ public class ItemStackUtil
     {
       lore = new ArrayList<>();
     }
-    if (lore.size() > 0)
+    if (!lore.isEmpty())
     {
       lore.add(ComponentUtil.create2(Constant.ITEM_LORE_SEPARATOR));
     }
@@ -930,6 +749,47 @@ public class ItemStackUtil
       components.add(ComponentUtil.create2(Constant.ITEM_LORE_SEPARATOR));
     }
     return components;
+  }
+
+  @NotNull
+  public static Block getExactBlockFromWithLimited(@NotNull Location location, @NotNull Collection<Material> include)
+  {
+    Collection<Material> values = new ArrayList<>(Arrays.asList(Material.values()));
+    values.removeAll(include);
+    return getExactBlockFrom(location, values);
+  }
+
+  @NotNull
+  public static Block getExactBlockFrom(@NotNull Location location, @Nullable Collection<Material> exceptions)
+  {
+    Block block = location.getBlock();
+    if (exceptions != null)
+    {
+      if (!exceptions.contains(block.getType()))
+      {
+        return block;
+      }
+      block = new Location(location.getWorld(), Math.round(location.getX()), Math.round(location.getY()), Math.round(location.getZ())).getBlock();
+      if (!exceptions.contains(block.getType()))
+      {
+        return block;
+      }
+      for (int x = location.getBlockX() - 1; x <= location.getBlockX() + 1; x++)
+      {
+        for (int y = location.getBlockY() - 1; y <= location.getBlockY() + 1; y++)
+        {
+          for (int k = location.getBlockZ() - 1; k <= location.getBlockZ() + 1; k++)
+          {
+            block = location.getWorld().getBlockAt(x, y, k);
+            if (!exceptions.contains(block.getType()))
+            {
+              return block;
+            }
+          }
+        }
+      }
+    }
+    return block;
   }
 }
 

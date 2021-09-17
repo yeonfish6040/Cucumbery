@@ -74,7 +74,7 @@ public class CustomRecipeUtil
         {
           String finalValue = prefixColor + "남은 제작 시간 : &e" + Method.timeFormatMilli(playerCraftingTime - System.currentTimeMillis(), false);
           requirementsLore.add(ComponentUtil.create(finalValue));
-          if (Cucumbery.using_Vault)
+          if (Cucumbery.using_Vault_Economy)
           {
             double skipCost = config.getDouble(configSection + "crafting-time-skip.cost");
             if (skipCost > 0)
@@ -459,7 +459,7 @@ public class CustomRecipeUtil
     }
 
     // 돈 플러그인 사용 시
-    if (Cucumbery.using_Vault)
+    if (Cucumbery.using_Vault_Economy)
     {
       // 제작 비용
       playerValueDouble = Cucumbery.eco.getBalance(player);

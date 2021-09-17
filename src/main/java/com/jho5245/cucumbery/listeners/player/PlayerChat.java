@@ -139,36 +139,6 @@ public class PlayerChat implements Listener
         }
       }
     }
-
-//    ChatRenderer chatRenderer = event.renderer();
-//    for (Audience audience : event.viewers())
-//    {
-//      audience.sendMessage(chatRenderer.render(player, player.displayName(), event.message(), audience));
-//    }
-    /*for (Player online : Bukkit.getServer().getOnlinePlayers())
-    {
-      if (UserData.PLAY_CHAT_FORCE.getBoolean(player.getUniqueId()) || UserData.LISTEN_CHAT_FORCE.getBoolean(online.getUniqueId()))
-      {
-        SoundPlay.playSound(online, Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER);
-      }
-      else if (UserData.PLAY_CHAT.getBoolean(player.getUniqueId()) && UserData.LISTEN_CHAT.getBoolean(online.getUniqueId()))
-      {
-        if (Cucumbery.config.getBoolean("play-sound-on-chat"))
-        {
-          if (!Method.configContainsLocation(location, Cucumbery.config.getStringList("no-play-sound-on-chat-worlds")))
-          {
-            SoundPlay.playSound(online, Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER);
-          }
-        }
-      }
-    }
-    for (Player online : Bukkit.getServer().getOnlinePlayers())
-    {
-      online.playSound(online.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1F, 1F);
-    }*/
-
-//    ChatRenderer chatRenderer = (source, displayName, messageComponent, audience) -> ComponentUtil.create("{prefix}", source, "{suffix}", " : ", messageComponent);
-//    event.renderer(chatRenderer);
   }
 
   @EventHandler(ignoreCancelled = true)
@@ -177,7 +147,6 @@ public class PlayerChat implements Listener
     Player player = event.getPlayer();
     Component senderComponent = ComponentUtil.senderComponent(player);
     player.displayName(player.displayName().hoverEvent(senderComponent.hoverEvent()));
-    String uuidString = player.getUniqueId().toString();
     String message = ComponentUtil.serialize(event.message());
     /* 채팅을 칠때 해당 권한이 있으면 컬러 채팅으로 변환 */
     if (Permission.OTHER_PLACEHOLDER.has(player))

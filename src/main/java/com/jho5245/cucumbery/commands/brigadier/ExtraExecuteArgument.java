@@ -1,19 +1,21 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
+import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.jorel.commandapi.Brigadier;
+import dev.jorel.commandapi.IStringTooltip;
 import dev.jorel.commandapi.StringTooltip;
 import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.wrappers.FloatRange;
-import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
-import com.jho5245.cucumbery.util.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,8 @@ import java.util.List;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class ExtraExecuteArgument
 {
-  StringTooltip[] worldNames;
+  IStringTooltip[] worldNames;
+  StringTooltip[] weatherTypes;
 
   {
     List<String> worldNames = CustomConfig.getCustomConfig("data/brigadier_tab_list.yml").getConfig().getStringList("worldNames");
@@ -34,8 +37,6 @@ public class ExtraExecuteArgument
     }
     this.worldNames[this.worldNames.length - 1] = StringTooltip.of("__current__", "현재 월드");
   }
-
-  StringTooltip[] weatherTypes;
 
   {
     weatherTypes = new StringTooltip[3];
@@ -140,7 +141,7 @@ public class ExtraExecuteArgument
 
     List<Argument> arguments = new ArrayList<>();
     arguments.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.ONE_ENTITY));
-    arguments.add(new StringArgument("월드").overrideSuggestionsT(worldNames));
+    arguments.add(new StringArgument("월드").replaceSuggestionsT(info -> worldNames));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "개체");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "월드");
@@ -151,14 +152,12 @@ public class ExtraExecuteArgument
       World world;
       if (worldName.equals("__current__"))
       {
-        if (sender instanceof Player)
+        if (sender instanceof Player player)
         {
-          Player player = (Player) sender;
           world = player.getWorld();
         }
-        else if (sender instanceof BlockCommandSender)
+        else if (sender instanceof BlockCommandSender blockCommandSender)
         {
-          BlockCommandSender blockCommandSender = (BlockCommandSender) sender;
           world = blockCommandSender.getBlock().getWorld();
         }
         else
@@ -183,7 +182,7 @@ public class ExtraExecuteArgument
 
     List<Argument> arguments = new ArrayList<>();
     arguments.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.ONE_ENTITY));
-    arguments.add(new StringArgument("월드").overrideSuggestionsT(worldNames));
+    arguments.add(new StringArgument("월드").replaceSuggestionsT(info -> worldNames));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "개체");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "월드");
@@ -194,14 +193,12 @@ public class ExtraExecuteArgument
       World world;
       if (worldName.equals("__current__"))
       {
-        if (sender instanceof Player)
+        if (sender instanceof Player player)
         {
-          Player player = (Player) sender;
           world = player.getWorld();
         }
-        else if (sender instanceof BlockCommandSender)
+        else if (sender instanceof BlockCommandSender blockCommandSender)
         {
-          BlockCommandSender blockCommandSender = (BlockCommandSender) sender;
           world = blockCommandSender.getBlock().getWorld();
         }
         else
@@ -225,8 +222,8 @@ public class ExtraExecuteArgument
     LiteralCommandNode weather = Brigadier.fromLiteralArgument(new LiteralArgument("weather")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new StringArgument("월드").overrideSuggestionsT(worldNames));
-    arguments.add(new StringArgument("날씨").overrideSuggestionsT(weatherTypes));
+    arguments.add(new StringArgument("월드").replaceSuggestionsT(info -> worldNames));
+    arguments.add(new StringArgument("날씨").replaceSuggestionsT(info -> weatherTypes));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "월드");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "날씨");
@@ -234,17 +231,15 @@ public class ExtraExecuteArgument
     {
       String worldName = (String) args[0];
       String weatherType = (String) args[1];
-      World world;
+      @Nullable World world;
       if (worldName.equals("__current__"))
       {
-        if (sender instanceof Player)
+        if (sender instanceof Player player)
         {
-          Player player = (Player) sender;
           world = player.getWorld();
         }
-        else if (sender instanceof BlockCommandSender)
+        else if (sender instanceof BlockCommandSender blockCommandSender)
         {
-          BlockCommandSender blockCommandSender = (BlockCommandSender) sender;
           world = blockCommandSender.getBlock().getWorld();
         }
         else
@@ -256,20 +251,13 @@ public class ExtraExecuteArgument
       {
         world = Bukkit.getWorld(worldName);
       }
-      if (world == null)
-      {
-        return false;
-      }
-      switch (weatherType)
-      {
-        case "clear":
-          return !world.hasStorm();
-        case "rain":
-          return world.hasStorm() && !world.isThundering();
-        case "thunder":
-          return world.hasStorm() && world.isThundering();
-      }
-      return false;
+      return world != null && switch (weatherType)
+              {
+                case "clear" -> !world.hasStorm();
+                case "rain" -> world.hasStorm() && !world.isThundering();
+                case "thunder" -> world.hasStorm() && world.isThundering();
+                default -> false;
+              };
     }, arguments));
 
     weather.addChild(builder1.then(builder2).build());
@@ -281,8 +269,8 @@ public class ExtraExecuteArgument
     LiteralCommandNode weather = Brigadier.fromLiteralArgument(new LiteralArgument("weather")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new StringArgument("월드").overrideSuggestionsT(worldNames));
-    arguments.add(new StringArgument("날씨").overrideSuggestionsT(weatherTypes));
+    arguments.add(new StringArgument("월드").replaceSuggestionsT(info -> worldNames));
+    arguments.add(new StringArgument("날씨").replaceSuggestionsT(info -> weatherTypes));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "월드");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "날씨");
@@ -290,17 +278,15 @@ public class ExtraExecuteArgument
     {
       String worldName = (String) args[0];
       String weatherType = (String) args[1];
-      World world;
+      @Nullable World world;
       if (worldName.equals("__current__"))
       {
-        if (sender instanceof Player)
+        if (sender instanceof Player player)
         {
-          Player player = (Player) sender;
           world = player.getWorld();
         }
-        else if (sender instanceof BlockCommandSender)
+        else if (sender instanceof BlockCommandSender blockCommandSender)
         {
-          BlockCommandSender blockCommandSender = (BlockCommandSender) sender;
           world = blockCommandSender.getBlock().getWorld();
         }
         else
@@ -312,20 +298,13 @@ public class ExtraExecuteArgument
       {
         world = Bukkit.getWorld(worldName);
       }
-      if (world == null)
-      {
-        return true;
-      }
-      switch (weatherType)
-      {
-        case "clear":
-          return world.hasStorm();
-        case "rain":
-          return !(world.hasStorm() && !world.isThundering());
-        case "thunder":
-          return !(world.hasStorm() && world.isThundering());
-      }
-      return true;
+      return world == null || switch (weatherType)
+              {
+                case "clear" -> world.hasStorm();
+                case "rain" -> !(world.hasStorm() && !world.isThundering());
+                case "thunder" -> !(world.hasStorm() && world.isThundering());
+                default -> true;
+              };
     }, arguments));
 
     weather.addChild(builder1.then(builder2).build());
@@ -441,7 +420,6 @@ public class ExtraExecuteArgument
     moneyRadius.addChild(builder.then(builder2).build());
     Brigadier.getRootNode().getChild("execute").getChild("if").addChild(moneyRadius);
   }
-
 
   private void registerUnlessMoneyRadius()
   {

@@ -1,11 +1,12 @@
 package com.jho5245.cucumbery.commands.debug;
 
-import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.*;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,7 +27,7 @@ public class WHATIS implements CommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      return sender instanceof Player;
+      return !(sender instanceof BlockCommandSender);
     }
     String usage = cmd.getUsage().replace("/<command> ", ""), consoleUsage = usage.replace("\\[월드 이름\\]", "<월드 이름>");
     if (args.length == 0 && !(sender instanceof Player))

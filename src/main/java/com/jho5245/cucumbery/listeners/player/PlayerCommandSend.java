@@ -27,64 +27,67 @@ public class PlayerCommandSend implements Listener
 			commands.clear();
 			return;
 		}
-		if (!player.hasPermission("bukkit.command.reload"))
 		{
-			commands.remove("rlc");
-			commands.remove("cherry:rlc");
+			if (!player.hasPermission("bukkit.command.reload"))
+			{
+				commands.remove("rlc");
+				commands.remove("cherry:rlc");
+			}
+			if (!player.hasPermission("minecraft.command.reload"))
+			{
+				commands.remove("minecraft:reload");
+			}
+			if (!player.hasPermission("minecraft.command.msg"))
+			{
+				commands.remove("msg");
+				commands.remove("tell");
+				commands.remove("w");
+				commands.remove("minecraft:msg");
+				commands.remove("minecraft:tell");
+				commands.remove("minecraft:w");
+			}
+			if (!player.hasPermission("minecraft.command.teammsg"))
+			{
+				commands.remove("teammsg");
+				commands.remove("minecraft:teammsg");
+				commands.remove("tm");
+				commands.remove("minecraft:tm");
+			}
+			if (!player.hasPermission("minecraft.command.me"))
+			{
+				commands.remove("me");
+				commands.remove("minecraft:me");
+			}
+			if (!player.hasPermission("minecraft.command.trigger"))
+			{
+				commands.remove("trigger");
+				commands.remove("minecraft:trigger");
+			}
+			if (!player.hasPermission("minecraft.command.list"))
+			{
+				commands.remove("list");
+				commands.remove("minecraft:list");
+			}
+			if (!player.hasPermission("deathmessagesprime.reload"))
+			{
+				commands.remove("dmsg");
+				commands.remove("deathmessagesprime:dmsg");
+			}
+			if (!player.hasPermission("deathmessagesprime.toggle"))
+			{
+				commands.remove("toggledeathmsg");
+				commands.remove("deathmessagesprime:toggledeathmsg");
+			}
+			if (!player.hasPermission("bukkit.command.help"))
+			{
+				commands.remove("icanhasbukkit");
+			}
+			if (!Cucumbery.config.getBoolean("rpg-enabled"))
+			{
+				commands.removeAll(this.deleteCommands(player, null, "debugdamage"));
+			}
 		}
-		if (!player.hasPermission("minecraft.command.reload"))
-		{
-			commands.remove("minecraft:reload");
-		}
-		if (!player.hasPermission("minecraft.command.msg"))
-		{
-			commands.remove("msg");
-			commands.remove("tell");
-			commands.remove("w");
-			commands.remove("minecraft:msg");
-			commands.remove("minecraft:tell");
-			commands.remove("minecraft:w");
-		}
-		if (!player.hasPermission("minecraft.command.teammsg"))
-		{
-			commands.remove("teammsg");
-			commands.remove("minecraft:teammsg");
-			commands.remove("tm");
-			commands.remove("minecraft:tm");
-		}
-		if (!player.hasPermission("minecraft.command.me"))
-		{
-			commands.remove("me");
-			commands.remove("minecraft:me");
-		}
-		if (!player.hasPermission("minecraft.command.trigger"))
-		{
-			commands.remove("trigger");
-			commands.remove("minecraft:trigger");
-		}
-		if (!player.hasPermission("minecraft.command.list"))
-		{
-			commands.remove("list");
-			commands.remove("minecraft:list");
-		}
-		if (!player.hasPermission("deathmessagesprime.reload"))
-		{
-			commands.remove("dmsg");
-			commands.remove("deathmessagesprime:dmsg");
-		}
-		if (!player.hasPermission("deathmessagesprime.toggle"))
-		{
-			commands.remove("toggledeathmsg");
-			commands.remove("deathmessagesprime:toggledeathmsg");
-		}
-		if (!player.hasPermission("bukkit.command.help"))
-		{
-			commands.remove("icanhasbukkit");
-		}
-		if (!Cucumbery.config.getBoolean("rpg-enabled"))
-		{
-			commands.removeAll(this.deleteCommands(player, null, "debugdamage"));
-		}
+
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_ADVANCED_TELEPORT, "advancedteleport"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_AFEED, "advancedfeed"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_AIRPOINT, "airpoint"));
@@ -167,6 +170,7 @@ public class PlayerCommandSend implements Listener
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_QUICKSHOP_ADDON, "quickshopaddon"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_REPEAT, "repeat"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_TRUEKILL, "ckill2"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_VIEW_INVNETORY, "viewinventory"));
 
 		// 뭔데 왜 /cucumbery:nick 안사라지는데
 		if (!Method.hasPermission(player, Permission.CMD_NICK, false))

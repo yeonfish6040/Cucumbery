@@ -1,8 +1,6 @@
 package com.jho5245.cucumbery.listeners.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.jho5245.cucumbery.Cucumbery;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,7 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockExplodeEvent;
 
-import com.jho5245.cucumbery.Cucumbery;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockExplode implements Listener
 {

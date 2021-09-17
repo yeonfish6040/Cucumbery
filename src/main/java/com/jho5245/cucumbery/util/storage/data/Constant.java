@@ -31,7 +31,7 @@ public class Constant
   public static final String AIR = "산소량";
 
   public static final String AIR_PREFIX = "§산§소§량§b";
-  public static final String ITEM_LORE_SEPARATOR = "&8&m                               &m ";
+  public static final String ITEM_LORE_SEPARATOR = "&8&m                                                                ";
 
   public static Sound WARNING_SOUND, ERROR_SOUND;
 
@@ -70,13 +70,11 @@ public class Constant
   public static final String ITEM_MODIFIERS_BRACKET = "rgb235,170,41;[%s]";
 
   public static final Component ITEM_MODIFIERS_CHEST = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.chest"));
-
-  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.feet"));;
-
-  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.head"));;
-  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.legs"));;
-  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.mainhand"));;
-  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.offhand"));;
+  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.feet"));
+  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.head"));
+  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.legs"));
+  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.mainhand"));
+  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.offhand"));
 
   // ItemLore 기능 관련 상수
 
@@ -307,6 +305,8 @@ public class Constant
           Material.ORANGE_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP, Material.OXEYE_DAISY, Material.CORNFLOWER,
           Material.LILY_OF_THE_VALLEY, Material.WITHER_ROSE, Material.SUNFLOWER, Material.LILAC, Material.ROSE_BUSH, Material.PEONY));
 
+  public static final Set<Material> OCCLUDING_BLOCKS = new HashSet<>();
+
   static
   {
     COMPOSTABLE_ITEMS.addAll(LEAVES);
@@ -325,6 +325,10 @@ public class Constant
       if (material.getMaxDurability() != 0)
       {
         DURABLE_ITEMS.add(material);
+      }
+      if (material.isOccluding())
+      {
+        OCCLUDING_BLOCKS.add(material);
       }
     }
     DEFAULT_MODIFIER_ITEMS.addAll(ARMORS);
@@ -676,6 +680,7 @@ public class Constant
     COLD_TOUCH("차가운 손길"),
     WARM_TOUCH("따뜻한 손길"),
     DULL_TOUCH("둔한 손길"),
+    ENCHANT_CURSE("마법 부여 불가 저주"),
     ;
 
     private final String display;

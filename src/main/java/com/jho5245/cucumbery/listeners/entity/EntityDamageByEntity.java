@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
@@ -40,6 +41,8 @@ import java.util.UUID;
 
 public class EntityDamageByEntity implements Listener
 {
+  private static final Material[] RANGED_WEAPONS = new Material[]{Material.BOW, Material.CROSSBOW, Material.TRIDENT};
+
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
   {
@@ -55,8 +58,7 @@ public class EntityDamageByEntity implements Listener
       DamageCause cause = event.getCause();
       switch (cause)
       {
-        case CUSTOM, ENTITY_ATTACK, ENTITY_SWEEP_ATTACK ->
-                Variable.victimAndDamager.put(victimUUID, damager);
+        case CUSTOM, ENTITY_ATTACK, ENTITY_SWEEP_ATTACK -> Variable.victimAndDamager.put(victimUUID, damager);
       }
     }
     if (damager instanceof LivingEntity livingEntity)
@@ -230,8 +232,6 @@ public class EntityDamageByEntity implements Listener
     this.damageActionbar(event);
     this.cancelFireworkDamage(event);
   }
-
-  private static final Material[] RANGED_WEAPONS = new Material[]{Material.BOW, Material.CROSSBOW, Material.TRIDENT};
 
   private void attackCommand(EntityDamageByEntityEvent event, @NotNull Player attacker, boolean isMelee)
   {
@@ -1798,37 +1798,24 @@ public class EntityDamageByEntity implements Listener
 
   private void damageActionbar(EntityDamageByEntityEvent event)
   {
-    double damage = event.getDamage();
     double finalDamage = event.getFinalDamage();
-    if (damage < 0)
-    {
-      return;
-    }
-    if (finalDamage < 0)
-    {
-      return;
-    }
     Entity entity = event.getEntity();
     Entity damager = event.getDamager();
     if (entity.isDead())
     {
       return;
     }
-    if (entity instanceof ArmorStand)
-    {
-      return;
-    }
     FileConfiguration config = Cucumbery.config;
-    if (damager.getType() != EntityType.PLAYER && !(damager instanceof Projectile))
+    if (!(entity instanceof Mob mob))
     {
       return;
     }
-    if (!(entity instanceof LivingEntity livingEntity))
+    Player player = null;
+    if (damager instanceof Player p)
     {
-      return;
+      player = p;
     }
-    Player player;
-    if (event.getDamager() instanceof Projectile projectile)
+    else if (damager instanceof Projectile projectile)
     {
       if (projectile.getType() == EntityType.ENDER_PEARL)
       {
@@ -1842,15 +1829,18 @@ public class EntityDamageByEntity implements Listener
       {
         return;
       }
-      if (!(projectile.getShooter() instanceof Player))
+      if (!(projectile.getShooter() instanceof Player p))
       {
         return;
       }
-      player = (Player) projectile.getShooter();
+      player = p;
     }
-    else
+    else if (damager instanceof AreaEffectCloud areaEffectCloud)
     {
-      player = (Player) event.getDamager();
+      if (areaEffectCloud.getSource() instanceof Player p)
+      {
+        player = p;
+      }
     }
     if (player == null)
     {
@@ -1875,7 +1865,7 @@ public class EntityDamageByEntity implements Listener
     {
       return; // 액션바를 출력 기능이 false이고, 강제 액션바 출력, 강제 PVP 액션바 출력 모두 false라면
     }
-    if (livingEntity.getType() == EntityType.PLAYER)
+    if (mob.getType() == EntityType.PLAYER)
     {
       if (!config.getBoolean("show-actionbar-on-pvp") && !showActionbarForce && !showActionbarPVPForce)
       {
@@ -1885,7 +1875,7 @@ public class EntityDamageByEntity implements Listener
       {
         return; // 기능이 비활성화된 위치에 있으며, 강제 액션바 출력, 강제 PVP 액션바 출력 모두 false라면
       }
-      Player target = (Player) livingEntity;
+      Player target = (Player) mob;
       boolean hideActionbar = UserData.HIDE_ACTIONBAR_ON_ATTACK_PVP_TO_OTHERS.getBoolean(target.getUniqueId());
       if ((!showActionbarPVP || hideActionbar) && !showActionbarForce && !showActionbarPVPForce)
       {
@@ -1896,7 +1886,6 @@ public class EntityDamageByEntity implements Listener
     {
       return; // 콘픽이 비활성화이거나 기능이 비활성화된 월드에 있으면서 강제 액션바 출력이 false라면
     }
-    String entityName = ComponentUtil.serialize(ComponentUtil.senderComponent(livingEntity));
     int round = config.getInt("actionbar-on-attack-numbers-round-number");
     DecimalFormat df = Constant.Sosu2;
     if (round > 0)
@@ -1906,42 +1895,31 @@ public class EntityDamageByEntity implements Listener
 
     boolean roundNumber = config.getBoolean("actionbar-on-attack-numbers-round");
 
-    double livingEntityMaxHealth = Objects.requireNonNull(livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue();
+    AttributeInstance attributeInstance = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);
 
-    String livingEntityMaxHealthString = roundNumber ? df.format(livingEntityMaxHealth) : livingEntityMaxHealth + "";
+    if (attributeInstance == null)
+      return;
 
-    String damageActionbar = config.getString("actionbars-on-attack"), kill = config.getString("actionbars-on-attack-death");
-    damageActionbar = Objects.requireNonNull(damageActionbar).replace("%entity%", entityName);
-    damageActionbar = damageActionbar.replace("%type%", entity.getType().toString());
-    damageActionbar = damageActionbar.replace("%type_kr%", (entity.getType()).toString());
-    damageActionbar = damageActionbar.replace("%max_hp%", livingEntityMaxHealthString);
 
-    String hpString = roundNumber ? df.format(livingEntity.getHealth() - finalDamage) : (livingEntity.getHealth() - finalDamage + "");
-    String damageString = roundNumber ? df.format(finalDamage) : finalDamage + "";
+    double health = Math.max(0d, mob.getHealth() - finalDamage);
+    double maxHealth = attributeInstance.getValue();
+    String damageStr = Constant.THE_COLOR_HEX + (roundNumber ? df.format(finalDamage) : finalDamage);
+    String healthStr = Constant.THE_COLOR_HEX + (roundNumber ? df.format(health) : health);
+    String maxHealthStr = Constant.THE_COLOR_HEX + (roundNumber ? df.format(maxHealth) : maxHealth);
 
-    damageActionbar = damageActionbar.replace("%hp%", hpString);
-    damageActionbar = damageActionbar.replace("%dmg%", damageString);
+//    String keyAttack = config.getString("actionbars-on-attack"), keyDeath = config.getString("actionbars-on-attack-death");
 
-    kill = Objects.requireNonNull(kill).replace("%entity%", entityName);
-    kill = kill.replace("%type%", entity.getType().toString());
-    kill = kill.replace("%type_kr%", (entity.getType()).toString());
-    kill = kill.replace("%hp%", 0 + "");
-    kill = kill.replace("%max_hp%", livingEntityMaxHealthString);
+    String keyAttack = "#52ee52;%s에게 %s만큼의 대미지를 주었습니다. %s / %s", keyDeath = "&c%s에게 %s만큼의 대미지를 주어 죽였습니다. %s / %s";
 
-    String killDamageString = roundNumber ?
-            (df.format(livingEntity.getHealth()) + ((finalDamage - livingEntity.getHealth() != 0) ? ("&4(&c+" + df.format(finalDamage - livingEntity.getHealth())) + "&4)" : "&4")) :
-            (livingEntity.getHealth() + ((finalDamage - livingEntity.getHealth() != 0) ? ("&4(&c+" + (finalDamage - livingEntity.getHealth())) + "&4)" : "&4") + "");
-    kill = kill.replace("%dmg%", killDamageString);
-
-    if (finalDamage >= 0.0000001D)
+    if (event.getDamage() > 0D)
     {
-      if (livingEntity.getHealth() - finalDamage <= 0D)
+      if (health - finalDamage <= 0D)
       {
-        MessageUtil.sendActionBar(player, kill);
+        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyDeath, mob, damageStr, healthStr, maxHealthStr));
       }
       else
       {
-        MessageUtil.sendActionBar(player, damageActionbar);
+        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyAttack, mob, damageStr, healthStr, maxHealthStr));
       }
     }
     else if (config.getBoolean("play-sound-on-attack-miss"))
@@ -1957,22 +1935,9 @@ public class EntityDamageByEntity implements Listener
       }
       float volume = (float) config.getDouble("play-sounds-on-attack-miss.volume"), pitch = (float) config.getDouble("play-sounds-on-attack-miss.pitch");
       SoundPlay.playSound(player, sound, volume, pitch);
-      String miss = config.getString("actionbars-on-attack-miss");
-      miss = Objects.requireNonNull(miss).replace("%entity%", entityName);
-      miss = miss.replace("%type%", livingEntity.getType().toString());
-      miss = miss.replace("%type_kr%", (livingEntity.getType().toString()));
-      miss = miss.replace("%max_hp%", df.format(livingEntityMaxHealth));
-      if (roundNumber)
-      {
-        miss = miss.replace("%hp%", df.format(livingEntity.getHealth() - finalDamage));
-        miss = miss.replace("%dmg%", df.format(finalDamage));
-      }
-      else
-      {
-        miss = miss.replace("%hp%", livingEntity.getHealth() - finalDamage + "");
-        miss = miss.replace("%dmg%", finalDamage + "");
-      }
-      MessageUtil.sendActionBar(player, miss);
+//      String miss = config.getString("actionbars-on-attack-miss");
+      String miss = "&d%s에게 피해를 입힐 수 없습니다. %s / %s";
+      MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(miss, mob, healthStr, maxHealthStr));
     }
   }
 
