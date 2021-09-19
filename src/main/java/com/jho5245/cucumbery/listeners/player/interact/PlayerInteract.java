@@ -1650,8 +1650,8 @@ public class PlayerInteract implements Listener
         {
           if (!Method.configContainsLocation(player.getLocation(), Cucumbery.getPlugin().getConfig().getStringList("no-send-title-on-item-break-worlds")))
           {
-            MessageUtil.sendTitle(player, "&c장비 파괴됨!",
-                    "&e인벤토리 아이템 중 &d" + (item) + "&e" + MessageUtil.getFinalConsonant(MessageUtil.stripColor((item).toString()), ConsonantType.이가) + " 파괴되었습니다.", 5, 100, 15);
+            MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c장비 파괴됨!"),
+                    ComponentUtil.createTranslate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다.", item), 5, 100, 15);
           }
         }
         Method.itemBreakParticle(player, item);

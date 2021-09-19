@@ -156,12 +156,7 @@ public class ConditionChecker
             case WEAPON_NBT -> check[i] = weaponExists && ItemStackUtil.predicateItem(weapon, value);
             case WEAPON_DISPLAY_NAME -> check[i] = weaponExists && pattern.matcher(ComponentUtil.serialize(ComponentUtil.itemName(weapon))).find();
             case LAST_TRAMPLED_BLOCK_TYPE -> {
-              boolean success = false;
-              if (Variable.lastTrampledBlockType.containsKey(victim.getUniqueId()))
-              {
-                success = pattern.matcher(Variable.lastTrampledBlockType.get(victim.getUniqueId()).toString()).find();
-              }
-              check[i] = success;
+              check[i] = Variable.lastTrampledBlockType.containsKey(victim.getUniqueId()) && pattern.matcher(Variable.lastTrampledBlockType.get(victim.getUniqueId()).toString()).find();
             }
           }
         }

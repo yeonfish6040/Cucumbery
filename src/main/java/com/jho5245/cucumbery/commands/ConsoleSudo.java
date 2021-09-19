@@ -5,7 +5,6 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.PlaceHolderUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,10 +18,6 @@ public class ConsoleSudo implements CommandExecutor
 		{
 			return true;
 		}
-    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
-    {
-      return !(sender instanceof BlockCommandSender);
-    }
     if (args.length == 0)
     {
       MessageUtil.shortArg(sender, 1, args);

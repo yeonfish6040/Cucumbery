@@ -558,6 +558,21 @@ public enum Messages
   MELEE_SWORD_COMBAT_ITEM("death-messages.messages.melee-sword-combat-item"),
 
   /**
+   * %1$s이(가) 녹아내렸습니다.
+   */
+  MELTING("death-messages.messages.melting"),
+
+  /**
+   * %1$s이(가) %2$s와(과) 싸우다 녹아내렸습니다.
+   */
+  MELTING_COMBAT("death-messages.messages.melting-combat"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 녹아내렸습니다.
+   */
+  MELTING_COMBAT_ITEM("death-messages.messages.melting-combat-item"),
+
+  /**
    * %1$s이(가) 발사체에게 저격당했습니다.
    */
   PROJECTILE("death-messages.messages.projectile"),

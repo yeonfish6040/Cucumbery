@@ -56,6 +56,7 @@ public class Data
     }
     if (targets.isEmpty())
     {
+      MessageUtil.sendError(sender, "플레이어를 찾을 수 없습니다.");
       return;
     }
     List<Permissible> newList = new ArrayList<>();
@@ -68,6 +69,7 @@ public class Data
       }
     }
     MessageUtil.sendAdminMessage(sender, newList, ComponentUtil.createTranslate("[%s: %s에게 %s을(를) %s개 지급하였습니다.]", sender, targets, item, amountComponent));
+
     if (!failure.isEmpty())
     {
       MessageUtil.sendWarn(sender, ComponentUtil.createTranslate("%s이(가) 인벤토리가 가득 차서 %s %s개를 제대로 지급하지 못했습니다.", failure, item, amountComponent));

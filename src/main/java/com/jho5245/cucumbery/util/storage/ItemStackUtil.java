@@ -649,6 +649,7 @@ public class ItemStackUtil
   {
     try
     {
+      itemStack = itemStack.clone();
       NBTContainer nbtContainer = new NBTContainer(nbt);
       NBTItem nbtItem = new NBTItem(itemStack);
       nbtItem.mergeCompound(nbtContainer);
@@ -656,8 +657,8 @@ public class ItemStackUtil
     }
     catch (Exception ignored)
     {
+      return false;
     }
-    return false;
   }
 
 

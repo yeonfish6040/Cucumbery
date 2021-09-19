@@ -485,6 +485,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerInteractAtEntity());
     Initializer.registerEvent(new PlayerInteractEntity());
     // event.player.item
+    Initializer.registerEvent(new PlayerAttemptPickupItem());
     Initializer.registerEvent(new PlayerDropItem());
     Initializer.registerEvent(new PlayerItemBreak());
     Initializer.registerEvent(new PlayerItemConsume());
@@ -509,6 +510,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerLoomPatternSelect());
     Initializer.registerEvent(new PlayerMove());
     Initializer.registerEvent(new PlayerPickupArrow());
+    Initializer.registerEvent(new PlayerPickupExperience());
     Initializer.registerEvent(new PlayerPreLogin());
     Initializer.registerEvent(new PlayerQuit());
     Initializer.registerEvent(new PlayerRecipeBookClick());

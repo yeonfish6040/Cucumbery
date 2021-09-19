@@ -224,8 +224,8 @@ public class RecipeInventoryRecipe
       }
       String playerAmountColor = CustomRecipeUtil.getPercentColor(playerAmount * 1d / amount);
       lore.addAll(Arrays.asList(Component.empty(),
-              ComponentUtil.create("§8--------------------"),
-              ComponentUtil.create("rgb238,172,17;[가지고 있는 재료 개수]"),
+              ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR),
+              ComponentUtil.createTranslate("rgb238,172,17;[가지고 있는 재료 개수]"),
               ComponentUtil.create(playerAmountColor + playerAmount + " &7/rgb0,255,84; " + amount)));
       NBTCompound itemTag = NBTAPI.getMainCompound(ingredient);
       NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);

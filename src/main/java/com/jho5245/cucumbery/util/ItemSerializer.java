@@ -33,7 +33,6 @@ public class ItemSerializer
     }
     catch (Exception e)
     {
-      e.printStackTrace();
       return new ItemStack(Material.AIR);
     }
   }

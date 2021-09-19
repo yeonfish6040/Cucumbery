@@ -39,6 +39,7 @@ public class ArgumentUtil
     }
     return switch (type)
     {
+      case BOOLEAN -> new BooleanArgument(key != null ? key : "값");
       case HIDE_OUTPUT -> new BooleanArgument(key != null ? key : "명령어 출력 숨김 여부");
       case LITERAL -> new MultiLiteralArgument(Arrays.stream(params).map(Object::toString).toArray(String[]::new));
       case INTEGER -> new IntegerArgument(key != null ? key : "값", (int) Math.max(Integer.MIN_VALUE, min), (int) Math.min(Integer.MAX_VALUE, max));
@@ -50,11 +51,13 @@ public class ArgumentUtil
       case ONE_ENTITY -> new EntitySelectorArgument(key != null ? key : "개체", EntitySelector.ONE_ENTITY);
       case MANY_ENTITIES -> new EntitySelectorArgument(key != null ? key : "여러 개체", EntitySelector.MANY_ENTITIES);
       case ITEMSTACK -> new ItemStackArgument(key != null ? key : "아이템");
+      case LOCATION -> new LocationArgument(key != null ? key : "좌표");
     };
   }
 
   public enum ArgumentType
   {
+    BOOLEAN,
     HIDE_OUTPUT,
     LITERAL,
     INTEGER,
@@ -62,6 +65,7 @@ public class ArgumentUtil
     FLOAT,
     DOUBLE,
     ITEMSTACK,
+    LOCATION,
     MANY_ENTITIES,
     MANY_PLAYERS,
     ONE_ENTITY,
@@ -74,4 +78,5 @@ public class ArgumentUtil
   public static final Argument ONE_ENTITY = of(ArgumentType.ONE_ENTITY);
   public static final Argument MANY_ENTITIES = of(ArgumentType.MANY_ENTITIES);
   public static final Argument ITEMSTACK = of(ArgumentType.ITEMSTACK);
+  public static final Argument LOCATION = of(ArgumentType.LOCATION);
 }

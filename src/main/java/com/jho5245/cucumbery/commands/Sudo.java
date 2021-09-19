@@ -7,7 +7,6 @@ import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,10 +23,6 @@ public class Sudo implements CommandExecutor
     {
       return true;
     }
-    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
-    {
-      return !(sender instanceof BlockCommandSender);
-    }
     String usage = cmd.getUsage().replace("/<command> ", "");
     if (args.length < 3)
     {
@@ -43,7 +38,6 @@ public class Sudo implements CommandExecutor
         return true;
       }
       String command = MessageUtil.listToString(" ", 2, args.length, args);
-      final String finalCommand = command;
       boolean op = false;
       if (!args[1].equals("true") && !args[1].equals("false"))
       {
@@ -51,11 +45,12 @@ public class Sudo implements CommandExecutor
         return true;
       }
       boolean hideMessage = args[1].equals("true");
-      if (args[2].startsWith("op:"))
+      if (command.startsWith("op:"))
       {
         op = true;
-        args[2] = args[2].substring(3);
+        command = command.substring(3);
       }
+      final String finalCommand = command;
       if (!hideMessage)
       {
         if (op)

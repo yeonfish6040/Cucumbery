@@ -308,7 +308,7 @@ public class ItemLoreUtil
           String msg = "&7물 속에서 이동 속도 감소량 %s 감소";
           lore.add(ComponentUtil.createTranslate(msg, "&a" + Constant.Sosu2.format(level * 100d / 3) + "%"));
         }
-        if ((compat || (Constant.TOOLS.contains(material) && !Constant.HOES.contains(material))) && enchant.equals(Enchantment.DIG_SPEED))
+        if ((compat || Constant.TOOLS.contains(material)) && enchant.equals(Enchantment.DIG_SPEED))
         {
           String msg = "&7블록을 캐는 속도 %s 증가";
           lore.add(ComponentUtil.createTranslate(msg, "&a" + Constant.Jeongsu.format((long) enchantLevel * enchantLevel + 1)));

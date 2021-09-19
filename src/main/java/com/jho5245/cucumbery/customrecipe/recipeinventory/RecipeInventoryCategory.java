@@ -214,15 +214,14 @@ public class RecipeInventoryCategory
       {
         display = recipe;
       }
-      display = display;
       resultLore.addAll(
               Arrays.asList(Component.empty(),
-                      ComponentUtil.create("§8--------------------"),
+                      ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR),
                       ComponentUtil.create("gb210,255;레시피 이름 : rgb93,244,255;" + MessageUtil.n2s(display)),
                       Component.empty()));
 
       List<String> description = config.getStringList("recipes." + recipe + ".extra.descriptions.preview");
-      if (description.size() > 0)
+      if (!description.isEmpty())
       {
         for (String str : description)
         {
@@ -273,11 +272,11 @@ public class RecipeInventoryCategory
         boolean reusable = NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.CUSTOM_RECIPE_REUSABLE) || config.getBoolean("recipes." + recipe + ".ingredients." + j + "." + "reusable");
         resultLore.add(ComponentUtil.create("&f", ComponentUtil.itemName(ingredient, TextColor.color(255, 255, 255)), "&8 : " + playerAmountColor + playerAmount + " §7/rgb0,255,84; " + amount + (reusable ? " §8[∞]" : "")));
       }
-      if (ingredients.size() == 0)
+      if (ingredients.isEmpty())
       {
         result = CreateItemStack.newItem(Material.MUSIC_DISC_11, 1, "&e알 수 없는 아이템", "&c&o손상된 레시피", true);
       }
-      if (ingredients.size() > 0)
+      if (!ingredients.isEmpty())
       {
         // 추가 조건 설명 추가
         List<Component> requirementsLore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.create("rgb255,115,255;[추가 제작 조건]")));
@@ -379,8 +378,10 @@ public class RecipeInventoryCategory
       }
     }
     menu.setItem(
-            40, CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?", Arrays
-                    .asList("&7제작을 원하는 아이템에 마우스를 올리면", "&7해당 아이템을 제작하는데 필요한 아이템들을 나열해줍니다.", "&e클릭&7을 하면 해당 재료에 대한 자세한 정보를 알려줍니다.", "&7제작 조건을 전부 충족시켰다면 &e시프트 클릭", "&7으로도 빠르게 아이템을 제작할 수 있습니다.",
-                            "&b제작하고 싶은 아이템을 선택해서 제작해보세요!"), false));
+            40, INFO_ITEM);
   }
+
+  private final static ItemStack INFO_ITEM = CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?", Arrays
+          .asList("&7제작을 원하는 아이템에 마우스를 올리면", "&7해당 아이템을 제작하는데 필요한 아이템들을 나열해줍니다.", "&e클릭&7을 하면 해당 재료에 대한 자세한 정보를 알려줍니다.", "&7제작 조건을 전부 충족시켰다면 &e시프트 클릭", "&7으로도 빠르게 아이템을 제작할 수 있습니다.",
+                  "&b제작하고 싶은 아이템을 선택해서 제작해보세요!"), false);
 }

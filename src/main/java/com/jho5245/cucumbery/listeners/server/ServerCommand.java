@@ -9,6 +9,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -103,7 +104,7 @@ public class ServerCommand implements Listener
             Component msg = ComponentUtil.create(Prefix.INFO, blockName, "&r(&e" + worldDisplayName + "&r : &e" + xDis + "&r : &e" + yDis + "&r : &e" + zDis + "&r)" + extraInfo + " 명령어 : &e" + command);
             String quickTpCommand = "/atp @s " + worldName + " " + (x + 0.5) + " " + (y + 1) + " " + (z + 0.5) + " ~ 90 false false true";
             String hoverText = "클릭하여 즉시 이동";
-            MessageUtil.sendMessage(player, ComponentUtil.create(MessageUtil.as(msg), MessageUtil.as(hoverText), ClickEvent.Action.RUN_COMMAND, quickTpCommand));
+            MessageUtil.sendMessage(player, msg.hoverEvent(HoverEvent.showText(ComponentUtil.create(hoverText))).clickEvent(ClickEvent.runCommand(quickTpCommand)));
           }
         }
       }

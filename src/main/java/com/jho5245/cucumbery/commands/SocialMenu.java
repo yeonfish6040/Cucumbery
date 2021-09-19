@@ -33,7 +33,7 @@ public class SocialMenu implements CommandExecutor
     {
       if (args.length == 0)
       {
-        player.performCommand("socialmenu @s");
+        player.performCommand("socialmenu " + player.getName());
         return true;
       }
       MessageUtil.longArg(player, 1, args);

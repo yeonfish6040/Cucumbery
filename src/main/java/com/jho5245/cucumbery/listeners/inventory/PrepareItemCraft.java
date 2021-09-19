@@ -221,6 +221,6 @@ public class PrepareItemCraft implements Listener
     ItemStack result = event.getView().getItem(0);
     if (!ItemStackUtil.itemExists(result))
       return;
-    ItemLore.setItemLore(result, player, event);
+    ItemLore.setItemLore(result, event);
   }
 }

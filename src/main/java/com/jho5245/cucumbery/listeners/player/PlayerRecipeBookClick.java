@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,7 +28,7 @@ public class PlayerRecipeBookClick implements Listener
       for (int i = 0; i < 36; i++)
       {
         ItemStack item = playerInventory.getItem(i);
-        if (item != null)
+        if (ItemStackUtil.itemExists(item))
         {
           ItemLore.removeItemLore(item);
         }

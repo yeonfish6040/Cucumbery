@@ -27,7 +27,6 @@ public class EntityShootBow implements Listener
 
     LivingEntity livingEntity = event.getEntity();
     ItemStack item = event.getBow();
-    ItemStack consumable = event.getConsumable();
     Entity projectile = event.getProjectile();
     if (ItemStackUtil.itemExists(item))
     {

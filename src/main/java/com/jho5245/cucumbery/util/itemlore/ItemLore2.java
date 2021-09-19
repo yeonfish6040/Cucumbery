@@ -58,7 +58,7 @@ public class ItemLore2
 
     // 커스텀 인챈트 배열이 있는 경우면 아이템의 인챈트 여부에 관계 없이 바닐라 인챈트 전부 제거
 
-    if (customEnchants != null && customEnchants.size() > 0)
+    if (customEnchants != null && !customEnchants.isEmpty())
     {
       customEnchants.removeIf(
               NBTCompound -> (

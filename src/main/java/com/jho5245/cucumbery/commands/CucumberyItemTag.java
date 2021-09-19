@@ -2493,6 +2493,16 @@ public class CucumberyItemTag implements CommandExecutor
             itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
           }
           String inputDate = MessageUtil.listToString(" ", 1, args.length, args);
+          boolean absolute = inputDate.contains("--absolute");
+          if (absolute)
+          {
+            inputDate = inputDate.replace("--absolute", "");
+          }
+          boolean relative = inputDate.contains("--relative");
+          if (relative)
+          {
+            inputDate = inputDate.replace("--relative", "");
+          }
           inputDate = inputDate.replace("y", "년").replace("mo", "개월").replace("d", "일").replace("h", "시간").replace("m", "분").replace("s", "초");
           if (remove)
           {
@@ -2511,9 +2521,13 @@ public class CucumberyItemTag implements CommandExecutor
                     " 설정하였습니다.")));
             if (!remove)
             {
-              if (!NBTAPI.arrayContainsValue(NBTAPI.getStringList(itemTag, CucumberyTag.HIDE_FLAGS_KEY), CucumberyHideFlag.EXPIRE_DATE_RELATIVE))
+              if (absolute && !NBTAPI.arrayContainsValue(NBTAPI.getStringList(itemTag, CucumberyTag.HIDE_FLAGS_KEY), CucumberyHideFlag.EXPIRE_DATE_RELATIVE))
               {
                 player.performCommand("itag hideflag add expire_date_relative");
+              }
+              if (relative && !NBTAPI.arrayContainsValue(NBTAPI.getStringList(itemTag, CucumberyTag.HIDE_FLAGS_KEY), CucumberyHideFlag.EXPIRE_DATE_ABSOLUTE))
+              {
+                player.performCommand("itag hideflag add expire_date_absolute");
               }
             }
           }

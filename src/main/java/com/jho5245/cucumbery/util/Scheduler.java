@@ -33,6 +33,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -512,7 +513,7 @@ public class Scheduler
       PlayerInventory playerInventory = player.getInventory();
       ItemStack mainHand = playerInventory.getItemInMainHand();
       NBTCompound itemTag = NBTAPI.getMainCompound(mainHand);
-      String expireDate = itemTag == null ? null : itemTag.getString(CucumberyTag.EXPIRE_DATE_KEY);
+      @Nullable String expireDate = itemTag == null ? null : itemTag.getString(CucumberyTag.EXPIRE_DATE_KEY);
       if (expireDate != null)
       {
         if (UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
@@ -547,6 +548,10 @@ public class Scheduler
       {
         continue;
       }
+      if (UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
+      {
+        continue;
+      }
       PlayerInventory playerInventory = player.getInventory();
       int heldItemSlot = playerInventory.getHeldItemSlot();
       for (int i = 0; i < playerInventory.getSize(); i++)
@@ -557,24 +562,15 @@ public class Scheduler
         }
         ItemStack item = playerInventory.getItem(i);
         String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
-        if (expireDate == null)
-        {
-          continue;
-        }
-        if (UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
-        {
-          continue Outter;
-        }
-        else if (i != 40 || !ItemStackUtil.itemExists(playerInventory.getItemInOffHand()))
+        if (expireDate != null && (i != 40 || !ItemStackUtil.itemExists(playerInventory.getItemInOffHand())))
         {
           Method.updateInventory(player, item);
         }
       }
-      String title = player.getOpenInventory().getTitle();
-      if (!title.contains(Constant.CANCEL_STRING) && !title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI) && !title.contains("의 인벤토리") && !title
-              .contains("'s Inventory"))
+
+      Inventory openInventoryTop = player.getOpenInventory().getTopInventory();
+      if (openInventoryTop.getLocation() != null)
       {
-        Inventory openInventoryTop = player.getOpenInventory().getTopInventory();
         for (int i = 0; i < openInventoryTop.getSize(); i++)
         {
           ItemStack item = openInventoryTop.getItem(i);
@@ -631,7 +627,7 @@ public class Scheduler
             case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK -> {
               CommandBlock commandBlock = (CommandBlock) block.getState();
               String command = commandBlock.getCommand();
-              if (command.length() == 0)
+              if (command.isEmpty())
               {
                 command = " ";
               }
@@ -950,19 +946,12 @@ public class Scheduler
           {
             ItemLore.setItemLore(item);
             Location location = itemEntity.getLocation();
-            String x = Constant.Sosu2.format(location.getX());
-            String y = Constant.Sosu2.format(location.getY());
-            String z = Constant.Sosu2.format(location.getZ());
             Collection<Entity> nearByEntites = world.getNearbyEntities(location, 10D, 10D, 10D);
             for (Entity nearByEntity : nearByEntites)
             {
-              if (nearByEntity.getType() == EntityType.PLAYER)
+              if (nearByEntity instanceof Player player)
               {
-                Player player = (Player) nearByEntity;
-                Component text = ComponentUtil.create(MessageUtil.as(Prefix.INFO + "근처에 떨어져 있는 아이템 &b[", item.displayName(), ((item.getAmount() > 1) ?
-                        "&r &6" + item.getAmount() + "개" :
-                        "") + "&b]&r(월드 : &e" + Method.getWorldDisplayName(world) + "&r, x : &e" + x + "&r, y : &e" + y + "&r, z : &e" + z + "&r)의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
-                player.sendMessage(text);
+                MessageUtil.info(player, ComponentUtil.createTranslate("근처에 떨어져 있는 아이템 [%s](%s)의 유효 기간이 지나서 아이템이 제거되었습니다.", item, location));
               }
             }
             item.setAmount(0);
@@ -978,19 +967,12 @@ public class Scheduler
           {
             ItemLore.setItemLore(item);
             Location location = itemFrame.getLocation();
-            String x = Constant.Sosu2.format(location.getX());
-            String y = Constant.Sosu2.format(location.getY());
-            String z = Constant.Sosu2.format(location.getZ());
             Collection<Entity> nearByEntites = world.getNearbyEntities(location, 10D, 10D, 10D);
             for (Entity nearByEntity : nearByEntites)
             {
-              if (nearByEntity.getType() == EntityType.PLAYER)
+              if (nearByEntity instanceof Player player)
               {
-                Player player = (Player) nearByEntity;
-                Component text = ComponentUtil.create(MessageUtil.as(Prefix.INFO, "근처에 있는 &e아이템 액자&r(월드 : &e" + Method
-                        .getWorldDisplayName(world) + "&r, x : &e" + x + "&r, y : &e" + y + "&r, z : &e" + z + "&r)에 설치되어있는 아이템 &b[", item.displayName(), ((item
-                        .getAmount() > 1) ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
-                player.sendMessage(text);
+                MessageUtil.info(player, ComponentUtil.createTranslate("근처에 있는 아이템 액자(%s)에 설치되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
               }
             }
             itemFrame.setItem(null);
@@ -1004,9 +986,6 @@ public class Scheduler
           {
             ItemStack item = entityEquipment.getHelmet();
             Location location = armorStand.getLocation();
-            String x = Constant.Sosu2.format(location.getX());
-            String y = Constant.Sosu2.format(location.getY());
-            String z = Constant.Sosu2.format(location.getZ());
             Collection<Entity> nearByEntites = world.getNearbyEntities(location, 10D, 10D, 10D);
             String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
             if (expireDate != null && Method.isTimeUp(item, expireDate))
@@ -1017,9 +996,7 @@ public class Scheduler
                 if (nearByEntity.getType() == EntityType.PLAYER)
                 {
                   Player player = (Player) nearByEntity;
-                  Component text = ComponentUtil.create(Prefix.INFO + "근처에 있는 &e갑옷 거치대&r(월드 : &e" + Method
-                          .getWorldDisplayName(world) + "&r, x : &e" + x + "&r, y : &e" + y + "&r, z : &e" + z + "&r)의 머리에 장착되어있는 아이템 &b[" + item + ((item.getAmount() > 1) ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다.", item);
-                  player.sendMessage(text);
+                  MessageUtil.info(player, ComponentUtil.createTranslate("근처에 있는 갑옷 거치대(%s)의 머리에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
                 }
               }
               entityEquipment.setHelmet(null);
@@ -1032,12 +1009,9 @@ public class Scheduler
 
               for (Entity nearByEntity : nearByEntites)
               {
-                if (nearByEntity.getType() == EntityType.PLAYER)
+                if (nearByEntity instanceof Player player)
                 {
-                  Player player = (Player) nearByEntity;
-                  Component text = ComponentUtil.create(Prefix.INFO + "근처에 있는 &e갑옷 거치대&r(월드 : &e" + Method
-                          .getWorldDisplayName(world) + "&r, x : &e" + x + "&r, y : &e" + y + "&r, z : &e" + z + "&r)의 몸에 장착되어있는 아이템 &b[" + item + ((item.getAmount() > 1) ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다.", item);
-                  player.sendMessage(text);
+                  MessageUtil.info(player, ComponentUtil.createTranslate("근처에 있는 갑옷 거치대(%s)의 몸에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
                 }
               }
               entityEquipment.setChestplate(null);
@@ -1050,12 +1024,9 @@ public class Scheduler
 
               for (Entity nearByEntity : nearByEntites)
               {
-                if (nearByEntity.getType() == EntityType.PLAYER)
+                if (nearByEntity instanceof Player player)
                 {
-                  Player player = (Player) nearByEntity;
-                  Component text = ComponentUtil.create(Prefix.INFO + "근처에 있는 &e갑옷 거치대&r(월드 : &e" + Method
-                          .getWorldDisplayName(world) + "&r, x : &e" + x + "&r, y : &e" + y + "&r, z : &e" + z + "&r)의 다리에 장착되어있는 아이템 &b[" + item + ((item.getAmount() > 1) ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다.", item);
-                  player.sendMessage(text);
+                  MessageUtil.info(player, ComponentUtil.createTranslate("근처에 있는 갑옷 거치대(%s)의 다리에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
                 }
               }
               entityEquipment.setLeggings(null);
@@ -1068,12 +1039,9 @@ public class Scheduler
 
               for (Entity nearByEntity : nearByEntites)
               {
-                if (nearByEntity.getType() == EntityType.PLAYER)
+                if (nearByEntity instanceof Player player)
                 {
-                  Player player = (Player) nearByEntity;
-                  Component text = ComponentUtil.create(Prefix.INFO + "근처에 있는 &e갑옷 거치대&r(월드 : &e" + Method
-                          .getWorldDisplayName(world) + "&r, x : &e" + x + "&r, y : &e" + y + "&r, z : &e" + z + "&r)의 발에 장착되어있는 아이템 &b[" + item + ((item.getAmount() > 1) ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다.", item);
-                  player.sendMessage(text);
+                  MessageUtil.info(player, ComponentUtil.createTranslate("근처에 있는 갑옷 거치대(%s)의 발에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
                 }
               }
               entityEquipment.setBoots(null);
@@ -1085,13 +1053,9 @@ public class Scheduler
               ItemLore.setItemLore(item);
               for (Entity nearByEntity : nearByEntites)
               {
-                if (nearByEntity.getType() == EntityType.PLAYER)
+                if (nearByEntity instanceof Player player)
                 {
-                  Player player = (Player) nearByEntity;
-                  Component text = ComponentUtil.create(Prefix.INFO + "근처에 있는 &e갑옷 거치대&r(월드 : &e" + Method
-                          .getWorldDisplayName(world) + "&r, x : &e" + x + "&r, y : &e" + y + "&r, z : &e" + z + "&r)의 주로 사용하는 손에 장착되어있는 아이템 &b[" + item + ((item
-                          .getAmount() > 1) ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다.", item);
-                  player.sendMessage(text);
+                  MessageUtil.info(player, ComponentUtil.createTranslate("근처에 있는 갑옷 거치대(%s)의 주로 사용하는 손에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
                 }
               }
               entityEquipment.setItemInMainHand(null);
@@ -1103,13 +1067,9 @@ public class Scheduler
               ItemLore.setItemLore(item);
               for (Entity nearByEntity : nearByEntites)
               {
-                if (nearByEntity.getType() == EntityType.PLAYER)
+                if (nearByEntity instanceof Player player)
                 {
-                  Player player = (Player) nearByEntity;
-                  Component text = ComponentUtil.create(Prefix.INFO + "근처에 있는 &e갑옷 거치대&r(월드 : &e" + Method
-                          .getWorldDisplayName(world) + "&r, x : &e" + x + "&r, y : &e" + y + "&r, z : &e" + z + "&r)의 다른 손에 장착되어있는 아이템 &b[" + item + ((item
-                          .getAmount() > 1) ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다.", item);
-                  player.sendMessage(text);
+                  MessageUtil.info(player, ComponentUtil.createTranslate("근처에 있는 갑옷 거치대(%s)의 다른 손에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
                 }
               }
               entityEquipment.setItemInOffHand(null);
@@ -1127,10 +1087,8 @@ public class Scheduler
       if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
       {
         InventoryView playerOpenInventory = player.getOpenInventory();
-        String title = playerOpenInventory.getTitle();
         Inventory openInventoryTop = playerOpenInventory.getTopInventory();
-        if (!title.contains(Constant.CANCEL_STRING) && !title.contains(Constant.CUSTOM_RECIPE_CRAFTING_MENU) && !title.contains("의 인벤토리") && !title
-                .contains("'s Inventory") && openInventoryTop.getType() != InventoryType.MERCHANT)
+        if (openInventoryTop.getLocation() != null)
         {
           for (int i = 0; i < openInventoryTop.getSize(); i++)
           {
@@ -1140,10 +1098,7 @@ public class Scheduler
               String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
               if (expireDate != null && Method.isTimeUp(item, expireDate))
               {
-                Component text = ComponentUtil.create(MessageUtil.as(Prefix.INFO, "아이템 &b[", item, ((item.getAmount() > 1) ?
-                        "&r &6" + item.getAmount() + "개" :
-                        "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
-                player.sendMessage(text);
+                MessageUtil.info(player, ComponentUtil.createTranslate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", item));
                 item.setAmount(0);
                 player.updateInventory();
                 if (player.getOpenInventory().getType() == InventoryType.CRAFTING || player.getOpenInventory().getType() == InventoryType.WORKBENCH)
@@ -1174,10 +1129,7 @@ public class Scheduler
             String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
             if (expireDate != null && Method.isTimeUp(item, expireDate))
             {
-              Component text = ComponentUtil.create(MessageUtil.as(Prefix.INFO, "아이템 &b[", item, ((item.getAmount() > 1) ?
-                      "&r &6" + item.getAmount() + "개" :
-                      "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
-              player.sendMessage(text);
+              MessageUtil.info(player, ComponentUtil.createTranslate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", item));
               item.setAmount(0);
             }
           }
@@ -1186,10 +1138,7 @@ public class Scheduler
         String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(cursor), CucumberyTag.EXPIRE_DATE_KEY);
         if (expireDate != null && Method.isTimeUp(cursor, expireDate))
         {
-          Component text = ComponentUtil.create(MessageUtil.as(Prefix.INFO, "아이템 &b[", cursor, ((cursor.getAmount() > 1) ?
-                  "&r &6" + cursor.getAmount() + "개" :
-                  "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), cursor);
-          player.sendMessage(text);
+          MessageUtil.info(player, ComponentUtil.createTranslate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", cursor));
           cursor.setAmount(0);
           player.updateInventory();
         }

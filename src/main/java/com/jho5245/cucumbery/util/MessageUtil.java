@@ -21,6 +21,7 @@ import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -51,6 +52,10 @@ public class MessageUtil
   public static String[] wrapWithQuote(boolean forTabComplete, @NotNull String[] args)
   {
     String input = listToString(" ", args);
+    if (input.equals("'") || input.equals("\""))
+    {
+      return new String[]{(ComponentUtil.serialize(Component.translatable("command.expected.separator")))};
+    }
     List<String> a = new ArrayList<>();
     StringBuilder builder = new StringBuilder();
     boolean isInQuote = false;
@@ -331,14 +336,18 @@ public class MessageUtil
     {
       location = entity.getLocation();
     }
-    if (Boolean.TRUE.equals(location.getWorld().getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK)))
+    if (Boolean.TRUE.equals(location.getWorld().getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK)) &&
+            (!(commandSender instanceof BlockCommandSender blockCommandSender) || Boolean.TRUE.equals(blockCommandSender.getBlock().getLocation().getWorld().getGameRuleValue(GameRule.COMMAND_BLOCK_OUTPUT))))
     {
       Component message = setAdminMessage(ComponentUtil.create(objects));
-      sendMessage(collection, message);
-      String worldName = location.getWorld().getName();
-      int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
-      message = message.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));
-      consoleSendMessage(message);
+      if (!(commandSender instanceof ConsoleCommandSender))
+      {
+        sendMessage(collection, message);
+        String worldName = location.getWorld().getName();
+        int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
+        message = message.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));
+        consoleSendMessage(message);
+      }
     }
   }
 

@@ -14,6 +14,7 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -1902,10 +1903,11 @@ public class EntityDamageByEntity implements Listener
 
 
     double health = Math.max(0d, mob.getHealth() - finalDamage);
+    boolean isBeenKilled = health <= 0;
     double maxHealth = attributeInstance.getValue();
-    String damageStr = Constant.THE_COLOR_HEX + (roundNumber ? df.format(finalDamage) : finalDamage);
-    String healthStr = Constant.THE_COLOR_HEX + (roundNumber ? df.format(health) : health);
-    String maxHealthStr = Constant.THE_COLOR_HEX + (roundNumber ? df.format(maxHealth) : maxHealth);
+    String damageStr = (isBeenKilled ? "&4" : "&6") + (roundNumber ? df.format(finalDamage) : finalDamage);
+    String healthStr = (isBeenKilled ? "&4" : "&6") + (roundNumber ? df.format(health) : health);
+    String maxHealthStr = (isBeenKilled ? "&4" : "&6") + (roundNumber ? df.format(maxHealth) : maxHealth);
 
 //    String keyAttack = config.getString("actionbars-on-attack"), keyDeath = config.getString("actionbars-on-attack-death");
 
@@ -1913,13 +1915,13 @@ public class EntityDamageByEntity implements Listener
 
     if (event.getDamage() > 0D)
     {
-      if (health - finalDamage <= 0D)
+      if (health <= 0D)
       {
-        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyDeath, mob, damageStr, healthStr, maxHealthStr));
+        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyDeath, ComponentUtil.senderComponent(mob, NamedTextColor.DARK_RED), damageStr, healthStr, maxHealthStr));
       }
       else
       {
-        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyAttack, mob, damageStr, healthStr, maxHealthStr));
+        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyAttack, ComponentUtil.senderComponent(mob, NamedTextColor.GOLD), damageStr, healthStr, maxHealthStr));
       }
     }
     else if (config.getBoolean("play-sound-on-attack-miss"))

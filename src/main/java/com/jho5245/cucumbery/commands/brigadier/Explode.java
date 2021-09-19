@@ -1,12 +1,15 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
+import com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.*;
+import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.FloatArgument;
+import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.text.Component;
@@ -22,6 +25,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil.HIDE_OUTPUT;
+import static com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil.ONE_ENTITY;
+
 @SuppressWarnings("all")
 public class Explode extends CommandBase
 {
@@ -31,11 +37,9 @@ public class Explode extends CommandBase
   private final String DEFAULT_PROPERTY = "break-only";
   private final boolean DEFAULT_HIDE_OUTPUT = false;
 
-  private final Argument LOCATION = new LocationArgument("좌표");
-  private final Argument POWER = new FloatArgument("강도", 0, 500);
-  private final Argument ENTITY = new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.ONE_ENTITY);
+  private final Argument LOCATION = ArgumentUtil.LOCATION;
+  private final Argument POWER = new FloatArgument("폭발 강도", 0, 500);
   private final Argument EXPLODE_PROPERTY = new MultiLiteralArgument("none", "fire-only", "break-only", "all");
-  private final Argument HIDE_OUTPUT = new BooleanArgument("명령어 출력 숨김 여부");
 
   private final List<Argument> list01 = Arrays.asList(HIDE_OUTPUT);
   private final List<Argument> list02 = Arrays.asList(POWER);
@@ -47,16 +51,16 @@ public class Explode extends CommandBase
   private final List<Argument> list08 = Arrays.asList(EXPLODE_PROPERTY, POWER);
   private final List<Argument> list09 = Arrays.asList(EXPLODE_PROPERTY, POWER, HIDE_OUTPUT);
 
-  private final List<Argument> list10 = Arrays.asList(ENTITY);
-  private final List<Argument> list11 = Arrays.asList(ENTITY, HIDE_OUTPUT);
-  private final List<Argument> list12 = Arrays.asList(ENTITY, POWER);
-  private final List<Argument> list13 = Arrays.asList(ENTITY, POWER, HIDE_OUTPUT);
-  private final List<Argument> list14 = Arrays.asList(ENTITY, POWER, EXPLODE_PROPERTY);
-  private final List<Argument> list15 = Arrays.asList(ENTITY, POWER, EXPLODE_PROPERTY, HIDE_OUTPUT);
-  private final List<Argument> list16 = Arrays.asList(ENTITY, EXPLODE_PROPERTY);
-  private final List<Argument> list17 = Arrays.asList(ENTITY, EXPLODE_PROPERTY, HIDE_OUTPUT);
-  private final List<Argument> list18 = Arrays.asList(ENTITY, EXPLODE_PROPERTY, POWER);
-  private final List<Argument> list19 = Arrays.asList(ENTITY, EXPLODE_PROPERTY, POWER, HIDE_OUTPUT);
+  private final List<Argument> list10 = Arrays.asList(ONE_ENTITY);
+  private final List<Argument> list11 = Arrays.asList(ONE_ENTITY, HIDE_OUTPUT);
+  private final List<Argument> list12 = Arrays.asList(ONE_ENTITY, POWER);
+  private final List<Argument> list13 = Arrays.asList(ONE_ENTITY, POWER, HIDE_OUTPUT);
+  private final List<Argument> list14 = Arrays.asList(ONE_ENTITY, POWER, EXPLODE_PROPERTY);
+  private final List<Argument> list15 = Arrays.asList(ONE_ENTITY, POWER, EXPLODE_PROPERTY, HIDE_OUTPUT);
+  private final List<Argument> list16 = Arrays.asList(ONE_ENTITY, EXPLODE_PROPERTY);
+  private final List<Argument> list17 = Arrays.asList(ONE_ENTITY, EXPLODE_PROPERTY, HIDE_OUTPUT);
+  private final List<Argument> list18 = Arrays.asList(ONE_ENTITY, EXPLODE_PROPERTY, POWER);
+  private final List<Argument> list19 = Arrays.asList(ONE_ENTITY, EXPLODE_PROPERTY, POWER, HIDE_OUTPUT);
 
   private final List<Argument> list20 = Arrays.asList(LOCATION);
   private final List<Argument> list21 = Arrays.asList(LOCATION, HIDE_OUTPUT);
@@ -69,32 +73,32 @@ public class Explode extends CommandBase
   private final List<Argument> list28 = Arrays.asList(LOCATION, EXPLODE_PROPERTY, POWER);
   private final List<Argument> list29 = Arrays.asList(LOCATION, EXPLODE_PROPERTY, POWER, HIDE_OUTPUT);
 
-  private final List<Argument> list30 = Arrays.asList(LOCATION, ENTITY);
-  private final List<Argument> list31 = Arrays.asList(LOCATION, ENTITY, HIDE_OUTPUT);
-  private final List<Argument> list32 = Arrays.asList(LOCATION, ENTITY, POWER);
-  private final List<Argument> list33 = Arrays.asList(LOCATION, ENTITY, POWER, HIDE_OUTPUT);
-  private final List<Argument> list34 = Arrays.asList(LOCATION, ENTITY, POWER, EXPLODE_PROPERTY);
-  private final List<Argument> list35 = Arrays.asList(LOCATION, ENTITY, POWER, EXPLODE_PROPERTY, HIDE_OUTPUT);
-  private final List<Argument> list36 = Arrays.asList(LOCATION, ENTITY, EXPLODE_PROPERTY);
-  private final List<Argument> list37 = Arrays.asList(LOCATION, ENTITY, EXPLODE_PROPERTY, HIDE_OUTPUT);
-  private final List<Argument> list38 = Arrays.asList(LOCATION, ENTITY, EXPLODE_PROPERTY, POWER);
-  private final List<Argument> list39 = Arrays.asList(LOCATION, ENTITY, EXPLODE_PROPERTY, POWER, HIDE_OUTPUT);
+  private final List<Argument> list30 = Arrays.asList(LOCATION, ONE_ENTITY);
+  private final List<Argument> list31 = Arrays.asList(LOCATION, ONE_ENTITY, HIDE_OUTPUT);
+  private final List<Argument> list32 = Arrays.asList(LOCATION, ONE_ENTITY, POWER);
+  private final List<Argument> list33 = Arrays.asList(LOCATION, ONE_ENTITY, POWER, HIDE_OUTPUT);
+  private final List<Argument> list34 = Arrays.asList(LOCATION, ONE_ENTITY, POWER, EXPLODE_PROPERTY);
+  private final List<Argument> list35 = Arrays.asList(LOCATION, ONE_ENTITY, POWER, EXPLODE_PROPERTY, HIDE_OUTPUT);
+  private final List<Argument> list36 = Arrays.asList(LOCATION, ONE_ENTITY, EXPLODE_PROPERTY);
+  private final List<Argument> list37 = Arrays.asList(LOCATION, ONE_ENTITY, EXPLODE_PROPERTY, HIDE_OUTPUT);
+  private final List<Argument> list38 = Arrays.asList(LOCATION, ONE_ENTITY, EXPLODE_PROPERTY, POWER);
+  private final List<Argument> list39 = Arrays.asList(LOCATION, ONE_ENTITY, EXPLODE_PROPERTY, POWER, HIDE_OUTPUT);
 
-  private final List<Argument> list40 = Arrays.asList(ENTITY, LOCATION);
-  private final List<Argument> list41 = Arrays.asList(ENTITY, LOCATION, HIDE_OUTPUT);
-  private final List<Argument> list42 = Arrays.asList(ENTITY, LOCATION, POWER);
-  private final List<Argument> list43 = Arrays.asList(ENTITY, LOCATION, POWER, HIDE_OUTPUT);
-  private final List<Argument> list44 = Arrays.asList(ENTITY, LOCATION, POWER, EXPLODE_PROPERTY);
-  private final List<Argument> list45 = Arrays.asList(ENTITY, LOCATION, POWER, EXPLODE_PROPERTY, HIDE_OUTPUT);
-  private final List<Argument> list46 = Arrays.asList(ENTITY, LOCATION, EXPLODE_PROPERTY);
-  private final List<Argument> list47 = Arrays.asList(ENTITY, LOCATION, EXPLODE_PROPERTY, HIDE_OUTPUT);
-  private final List<Argument> list48 = Arrays.asList(ENTITY, LOCATION, EXPLODE_PROPERTY, POWER);
-  private final List<Argument> list49 = Arrays.asList(ENTITY, LOCATION, EXPLODE_PROPERTY, POWER, HIDE_OUTPUT);
+  private final List<Argument> list40 = Arrays.asList(ONE_ENTITY, LOCATION);
+  private final List<Argument> list41 = Arrays.asList(ONE_ENTITY, LOCATION, HIDE_OUTPUT);
+  private final List<Argument> list42 = Arrays.asList(ONE_ENTITY, LOCATION, POWER);
+  private final List<Argument> list43 = Arrays.asList(ONE_ENTITY, LOCATION, POWER, HIDE_OUTPUT);
+  private final List<Argument> list44 = Arrays.asList(ONE_ENTITY, LOCATION, POWER, EXPLODE_PROPERTY);
+  private final List<Argument> list45 = Arrays.asList(ONE_ENTITY, LOCATION, POWER, EXPLODE_PROPERTY, HIDE_OUTPUT);
+  private final List<Argument> list46 = Arrays.asList(ONE_ENTITY, LOCATION, EXPLODE_PROPERTY);
+  private final List<Argument> list47 = Arrays.asList(ONE_ENTITY, LOCATION, EXPLODE_PROPERTY, HIDE_OUTPUT);
+  private final List<Argument> list48 = Arrays.asList(ONE_ENTITY, LOCATION, EXPLODE_PROPERTY, POWER);
+  private final List<Argument> list49 = Arrays.asList(ONE_ENTITY, LOCATION, EXPLODE_PROPERTY, POWER, HIDE_OUTPUT);
 
   @NotNull
   private Component explosionComponent(float power, boolean setFire, boolean breakBlocks, @Nullable Entity source)
   {
-    Component explosionComponent = ComponentUtil.createTranslate("폭발").color(Constant.THE_COLOR);
+    Component explosionComponent = ComponentUtil.createTranslate("폭발");
     Component hover = ComponentUtil.createTranslate("강도 : %s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(power));
     hover = hover.append(Component.text("\n"));
     hover = hover.append(ComponentUtil.createTranslate("블록 파괴 여부 : %s", Constant.THE_COLOR_HEX + breakBlocks));

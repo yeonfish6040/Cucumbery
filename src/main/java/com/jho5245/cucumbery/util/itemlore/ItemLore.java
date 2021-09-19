@@ -27,11 +27,11 @@ public class ItemLore
   @NotNull
   public static ItemStack setItemLore(@NotNull ItemStack itemStack)
   {
-    return ItemLore.setItemLore(itemStack, "");
+    return ItemLore.setItemLore(itemStack, null);
   }
 
   @NotNull
-  public static ItemStack setItemLore(@NotNull ItemStack itemStack, @Nullable Object... extraParams)
+  public static ItemStack setItemLore(@NotNull ItemStack itemStack, @Nullable Object params)
   {
     Material type = itemStack.getType();
     if (!ItemLoreUtil.isCucumberyTMIFood(itemStack))
@@ -74,7 +74,7 @@ public class ItemLore
     itemStack.setItemMeta(itemMeta);
 
     // 이후 아이템의 추가 설명
-    ItemLore2.setItemLore(itemStack, itemMeta, defaultLore, extraParams).getItemMeta();
+    ItemLore2.setItemLore(itemStack, itemMeta, defaultLore, params);
 
     // 추가 설명으로 인한 아이템의 등급 수치 변경
     long rarity2 = ItemLoreUtil.getItemRarityValue(defaultLore);
@@ -84,10 +84,10 @@ public class ItemLore
     itemMeta.lore(defaultLore);
     itemStack.setItemMeta(itemMeta);
 
-    // 이후 아이템 최하단의 회색 설명 추가
-    ItemLore3.setItemLore(itemStack, extraParams);
-    itemMeta = itemStack.getItemMeta();
-    defaultLore = itemMeta.lore();
+      // 이후 아이템 최하단의 회색 설명 추가
+      ItemLore3.setItemLore(itemStack);
+      itemMeta = itemStack.getItemMeta();
+      defaultLore = itemMeta.lore();
 
     // 그리고 만약 (+NBT) 설명만 추가되어 있는 아이템이였다면 최하단에 [NBT 태그 복사됨] 설명 추가
     if (hasOnlyNbtTagLore)
@@ -118,6 +118,7 @@ public class ItemLore
     itemStack.setItemMeta(itemMeta);
     NBTItem nbtItem = new NBTItem(itemStack);
     nbtItem.removeKey(CucumberyTag.KEY_TMI);
+    nbtItem.removeKey("Rarity");
     itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
     return itemStack;
   }

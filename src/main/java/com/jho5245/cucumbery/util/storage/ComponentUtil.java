@@ -24,7 +24,6 @@ import net.kyori.adventure.text.format.TextDecoration.State;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
-import org.bukkit.World.Environment;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -335,7 +334,7 @@ public class ComponentUtil
       hover = hover.append(ComponentUtil.createTranslate("버전 : %s", Constant.THE_COLOR_HEX + Bukkit.getServer().getVersion()));
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.createTranslate("접속 인원 : %s", Constant.THE_COLOR_HEX + Bukkit.getServer().getOnlinePlayers().size()));
-      return component.hoverEvent(hover);
+      return component.hoverEvent(hover).clickEvent(ClickEvent.runCommand("/version"));
     }
     else if (object instanceof BlockCommandSender blockCommandSender)
     {
@@ -352,9 +351,9 @@ public class ComponentUtil
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.createTranslate("유형 : %s", block.getType()));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("좌표 : %s", locationComponent(location)));
-
-      return component.hoverEvent(hover);
+      hover = hover.append(ComponentUtil.createTranslate("좌표 : %s", location));
+      int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
+      return component.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand("/atp @s " + location.getWorld().getName() + " " + x + " " + (y + 1) + " " + z + " ~ 180"));
     }
     else if (object instanceof Entity entity)
     {
@@ -390,7 +389,6 @@ public class ComponentUtil
           nameComponent = nameComponent.hoverEvent(null).clickEvent(null);
         }
       }
-
       if (entity instanceof FallingBlock fallingBlock && nameComponent == null)
       {
         nameComponent = itemName(fallingBlock.getBlockData().getMaterial());
@@ -399,7 +397,6 @@ public class ComponentUtil
       {
         nameComponent = Component.translatable(entity.getType().translationKey());
       }
-
       UUID uuid = entity.getUniqueId();
       String click = "/minecraft:tp " + uuid;
       Component hover = Component.empty().append(nameComponent);
@@ -473,16 +470,18 @@ public class ComponentUtil
       {
         Profession profession = villager.getProfession();
         String key = Constant.THE_COLOR_HEX + "entity.minecraft.villager." + profession.toString().toLowerCase();
-        if (profession == Profession.NONE)
+        if (profession != Profession.NONE)
         {
-          key = "&c없음";
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.createTranslate("직업 : %s", ComponentUtil.createTranslate(key)));
         }
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("직업 : %s", ComponentUtil.createTranslate(key)));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("레벨 : %s (%s)",
-                Constant.THE_COLOR_HEX + villager.getVillagerLevel(), Constant.THE_COLOR_HEX + villager.getVillagerExperience()));
-
+        int villagerExperience = villager.getVillagerExperience();
+        if (villagerExperience > 0)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.createTranslate("레벨 : %s (%s)",
+                  Constant.THE_COLOR_HEX + villager.getVillagerLevel(), Constant.THE_COLOR_HEX + villagerExperience));
+        }
       }
       if (entity instanceof Tameable tameable && tameable.isTamed())
       {
@@ -494,9 +493,15 @@ public class ComponentUtil
           hover = hover.append(component);
         }
       }
+      if (entity instanceof ExperienceOrb experienceOrb)
+      {
+        int experience = experienceOrb.getExperience();
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.createTranslate("경험치 : %s", Constant.THE_COLOR_HEX + experience));
+      }
       Location location = entity.getLocation();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("좌표 : %s", locationComponent(location)));
+      hover = hover.append(ComponentUtil.createTranslate("좌표 : %s", location));
       if (entity instanceof Damageable damageable && entity instanceof Attributable attributable)
       {
         double health = damageable.getHealth();
@@ -579,19 +584,6 @@ public class ComponentUtil
   }
 
   @NotNull
-  public static Component environmentComponent(@NotNull Environment environment)
-  {
-    String key = switch (environment)
-            {
-              case NORMAL -> "오버월드";
-              case NETHER -> "네더";
-              case THE_END -> "디 엔드";
-              case CUSTOM -> "사용자 지정";
-            };
-    return Component.translatable(key).color(Constant.THE_COLOR);
-  }
-
-  @NotNull
   public static Component itemStackComponent(@NotNull ItemStack itemStack)
   {
     return itemStackComponent(itemStack, itemStack.getAmount(), null);
@@ -621,7 +613,7 @@ public class ComponentUtil
     NBTItem nbtItem = new NBTItem(itemStack);
     for (String key : nbtItem.getKeys())
     {
-      if (!Method.equals(key, "display", "Enchantments", "Damage", "HideFlags", "Color", "CustomModelData", "StoredEnchantments", "Potion", "Items"))
+      if (!Method.equals(key, "display", "Enchantments", "Damage", "HideFlags", "Color", "CustomModelData", "StoredEnchantments", "Potion", "Items", "SkullOwner"))
       {
         nbtItem.removeKey(key);
       }
@@ -712,7 +704,7 @@ public class ComponentUtil
         NBTItem nbtItem = new NBTItem(itemStack);
         for (String key : nbtItem.getKeys())
         {
-          if (!Method.equals(key, "display", "Enchantments", "Damage", "HideFlags", "Color", "CustomModelData", "StoredEnchantments", "Potion", "Items"))
+          if (!Method.equals(key, "display", "Enchantments", "Damage", "HideFlags", "Color", "CustomModelData", "StoredEnchantments", "Potion", "Items", "SkullOwner"))
           {
             nbtItem.removeKey(key);
           }
@@ -751,8 +743,16 @@ public class ComponentUtil
         concat = concat.clickEvent(ClickEvent.suggestCommand("/whatis " + world.getName()));
         int playerCount = world.getPlayerCount();
         Component hover = Component.empty().append(ComponentUtil.create(worldName));
+
+        String environmentKey = switch (world.getEnvironment())
+                {
+                  case NORMAL -> "오버월드";
+                  case NETHER -> "네더";
+                  case THE_END -> "디 엔드";
+                  case CUSTOM -> "사용자 지정";
+                };
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("유형 : %s", environmentComponent(world.getEnvironment())));
+        hover = hover.append(ComponentUtil.createTranslate("유형 : %s", Component.translatable(environmentKey).color(Constant.THE_COLOR)));
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.createTranslate("ID : %s", Constant.THE_COLOR_HEX + world.getName()));
         hover = hover.append(Component.text("\n"));

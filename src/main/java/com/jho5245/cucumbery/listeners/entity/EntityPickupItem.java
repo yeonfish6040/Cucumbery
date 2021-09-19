@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -108,14 +109,14 @@ public class EntityPickupItem implements Listener
         }
         return;
       }
-      ItemStack item = event.getItem().getItemStack();
-      if (NBTAPI.isRestricted(player, item, Constant.RestrictionType.NO_PICKUP))
+      ItemStack itemStack = event.getItem().getItemStack();
+      if (NBTAPI.isRestricted(player, itemStack, Constant.RestrictionType.NO_PICKUP))
       {
         event.setCancelled(true);
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemPickupAlertCooldown2.contains(uuid))
         {
           Variable.itemPickupAlertCooldown2.add(uuid);
-          MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c줍기 불가!"), ComponentUtil.createTranslate("주울 수 없는 아이템입니다. (%s)", item), 5, 40, 15);
+          MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c줍기 불가!"), ComponentUtil.createTranslate("주울 수 없는 아이템입니다. (%s)", itemStack), 5, 40, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown2.remove(uuid), 100L);
         }
@@ -123,27 +124,33 @@ public class EntityPickupItem implements Listener
       }
       if (Method.usingLoreFeature(player))
       {
-        ItemLore.setItemLore(item, player, event);
+        ItemLore.setItemLore(itemStack, event);
       }
       else
       {
-        ItemLore.removeItemLore(item);
+        ItemLore.removeItemLore(itemStack);
       }
       if (!event.isCancelled())
       {
-        this.actionbarOnItemPickup(player, item);
+        this.actionbarOnItemPickup(player, itemStack, itemStack.getAmount() - event.getRemaining());
       }
     }
   }
 
 
-  private void actionbarOnItemPickup(Player player, ItemStack item)
+  private void actionbarOnItemPickup(@NotNull Player player, @NotNull ItemStack itemStack, int amount)
   {
     if (UserData.SHOW_ACTIONBAR_ON_ITEM_PICKUP.getBoolean(player.getUniqueId()))
     {
-      int amount = item.getAmount();
-      Component itemStackComponent = ComponentUtil.itemName(item, TextColor.fromHexString("#00ff3c"));
-      player.sendActionBar(ComponentUtil.createTranslate("#00ccff;%s을(를) %s개 주웠습니다.", itemStackComponent, "#00ff3c;" + amount));
+      Component itemStackComponent = ComponentUtil.itemName(itemStack, TextColor.fromHexString("#00ff3c"));
+      if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
+      {
+        player.sendActionBar(ComponentUtil.createTranslate("#00ccff;%s을(를) 주웠습니다.", itemStackComponent));
+      }
+      else
+      {
+        player.sendActionBar(ComponentUtil.createTranslate("#00ccff;%s을(를) %s개 주웠습니다.", itemStackComponent, "#00ff3c;" + amount));
+      }
     }
   }
 }

@@ -37,7 +37,7 @@ import java.util.*;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter
 {
-  private static final List<String> greedyStringCommands = Arrays.asList("broadcast", "sendmessage", "nickname", "nicknameothers", "csong", "csong2", "setname", "setname2", "addlore", "setlore", "setlore2", "insertlore");
+  private static final List<String> greedyStringCommands = Arrays.asList("broadcast", "sendmessage", "nickname", "nicknameothers", "csong", "csong2", "setname", "setname2", "addlore", "setlore", "setlore2", "insertlore", "consolesudo", "sudo");
 
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {

@@ -31,9 +31,9 @@ public class AddItemUtil
         UUID uuid = entity.getUniqueId();
         uuids.add(uuid);
         Collection<ItemStack> lostItem = holder.getInventory().addItem(itemStack).values();
-        int lostAmount = lostItem.size() > 0 ? lostItem.iterator().next().getAmount() : 0;
+        int lostAmount = !lostItem.isEmpty() ? lostItem.iterator().next().getAmount() : 0;
         hashMap.put(uuid, lostAmount);
-        if (lostItem.size() == 0 && lostAmount == 0)
+        if (lostItem.isEmpty() && lostAmount == 0)
         {
           success.add(uuid);
         }

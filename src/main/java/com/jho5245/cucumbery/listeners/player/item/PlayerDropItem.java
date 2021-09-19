@@ -179,10 +179,18 @@ public class PlayerDropItem implements Listener
     {
       int amount = item.getAmount();
       Component itemStackComponent = ComponentUtil.itemName(item, TextColor.fromHexString("#ff9900"));
-      player.sendActionBar(ComponentUtil.createTranslate("#ffd900;%s을(를) %s개 버렸습니다.", itemStackComponent, "#ff9900;" + amount));
+      if (amount == 1 && item.getType().getMaxStackSize() == 1)
+      {
+        player.sendActionBar(ComponentUtil.createTranslate("#ffd900;%s을(를) 버렸습니다.", itemStackComponent));
+      }
+      else
+      {
+        player.sendActionBar(ComponentUtil.createTranslate("#ffd900;%s을(를) %s개 버렸습니다.", itemStackComponent, "#ff9900;" + amount));
+      }
     }
     if (UserData.LISTEN_ITEM_DROP.getBoolean(player.getUniqueId()))
     {
+      Method.heldItemSound(player, item);
       SoundPlay.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1F, 0.5F);
     }
   }
