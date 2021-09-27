@@ -22,12 +22,20 @@ death-messages:
     anvil-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 짓눌렸습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 믿는 %4$s에 머리 찍혀 죽었습니다."
+    anvil-combat-suicide:
+      - "%1$s이(가) 자살을 시도하다가 떨어지는 모루에 짓눌렸습니다."
+    anvil-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하며 자살을 시도하다가 떨어지는 모루에 짓눌렸습니다."
     arrow:
       - "%1$s이(가) 화살에게 저격당했습니다."
     arrow-combat:
       - "death.attack.arrow" # %1$s이(가) %2$s에게 저격당했습니다
     arrow-combat-item:
       - "death.attack.arrow.item" # %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
+    arrow-combat-suicide:
+      - "%1$s이(가) 스스로를 저격했습니다."
+    arrow-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 스스로를 저격했습니다."
     arrow-combat-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다."
     bad-respawn:
@@ -39,6 +47,10 @@ death-messages:
     bad-respawn-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 목숨을 빼앗겼습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 몸을 맡겼습니다."
+    bad-respawn-combat-suicide:
+      - "%1$s이(가) %3$s으(로) 자살했습니다."
+    bad-respawn-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하고 %4$s으(로) 자살했습니다."
     cactus:
      # - "death.attack.cactus" # %1$s이(가) 찔려 사망했습니다
       - "%1$s이(가) %2$s에 찔렸습니다."
@@ -53,11 +65,19 @@ death-messages:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔렸습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 사망했습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s이(가) 오이인줄 알고 껴안았습니다."
+    cactus-combat-suicide:
+      - "%1$s이(가) 스스로를 %3$s에 찔려 죽었습니다."
+    cactus-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하고 스스로를 %4$s에 찔려 죽었습니다."
     contact:
       - "%1$s이(가) %2$s에 닿아 죽었습니다."
     contact-combat:
       - "%1$s이(가) %2$s에게서 도망치려다 %3$s에 닿아 죽었습니다."
     contact-combat-item:
+      - "%1$s이(가) 스스로를 %3$s에 닿아 죽었습니다."
+    contact-combat-suicide:
+      - "%1$s이(가) %2$s에게서 도망치려다 %3$s에 닿아 죽었습니다."
+    contact-combat-suicide-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 닿아 죽었습니다."
     cramming:
      # - "death.attack.cramming" # %1$s이(가) 으깨져버렸습니다
@@ -73,12 +93,20 @@ death-messages:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s 때문에 으깨져버렸습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 짓눌렸습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) %4$s에게 압사당했습니다."
+    cramming-combat-suicide:
+      - "%1$s이(가) 자살을 시도하다가 %3$s에게 짓눌렸습니다."
+    cramming-combat-suicide-item:
+      - "%1$s이(가) %3s을(를) 사용하여 자살을 시도하다가 %4$s에게 짓눌렸습니다."
     cramming-solo:
       - "%1$s이(가) %2$s에게 어깨빵을 당했습니다."
     cramming-solo-combat:
       - "%1$s이(가) %2$s와(과) 싸우다 %3$s에게 어깨빵을 당했습니다."
     cramming-solo-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 어깨빵을 당했습니다."
+    cramming-solo-combat-suicide:
+      - "%1$s이(가) 자살을 시도하다가 %3$s에게 어깨빵을 당했습니다."
+    cramming-solo-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 자살을 시도하다가 %4$s에게 어깨빵을 당했습니다."
     dragon-breath:
       - "death.attack.dragonBreath" # %1$s이(가) 드래곤의 숨결에 구워졌습니다
       - "%1$s이(가) 드래곤의 입김을 맡고 냄새가 지독해 죽었습니다."
@@ -88,6 +116,10 @@ death-messages:
     dragon-breath-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s 때문에 드래곤의 숨결에 구워졌습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s 때문에 드래곤의 입김을 맡고 냄새가 지독해 죽었습니다."
+    dragon-breath-combat-suicide:
+      - "%1$s이(가) 스스로를 드래곤의 숨결에 구웠습니다."
+    dragon-breath-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 스스로를 드래곤의 숨결에 구웠습니다."
     drown:
       - "death.attack.drown" # %1$s이(가) 익사했습니다
       - "%1$s이(가) 물고기와 친구가 되었습니다."
@@ -97,6 +129,24 @@ death-messages:
     drown-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 익사했습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 물고기와 친구가 되었습니다."
+    drown-combat-suicide:
+      - "%1$s이(가) 물속으로 투신자살했습니다."
+    drown-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 익사했습니다."
+      - "%1$s이(가) %3$s을(를) 사용하여 물고기와 친구가 되었습니다."
+    drown-water:
+      - "%1$s이(가) 물 밖에서 놀다가 익사했습니다."
+      - "%1$s이(가) 육상 생물과 친구가 되었습니다."
+    drown-water-combat:
+      - "%1$s이(가) %2$s에게서 물 밖으로 도망치려다 익사했습니다."
+      - "%1$s이(가) %2$s에게서 도망치려다 육상 생물과 친구가 되었습니다."
+    drown-water-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 물 밖으로 도망치려다 익사했습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 육상 생물과 친구가 되었습니다."
+    drown-water-combat-suicide:
+      - "%1$s이(가) 물 밖에서 자살했습니다."
+    drown-water-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 물 밖에서 자살했습니다."
     dry-out:
       - "death.attack.dryout" # %1$s이(가) 목이 말라 죽었습니다
     dry-out-combat:
@@ -105,6 +155,10 @@ death-messages:
     dry-out-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 목이 말라 죽었습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 탈수로 죽었습니다."
+    dry-out-combat-suicide:
+      - "%1$s이(가) 스스로를 말려비틀어 죽었습니다."
+    dry-out-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 스스로를 말려비틀어 죽었습니다."
     elytra:
       - "death.attack.flyIntoWall" # %1$s이(가) 운동 에너지를 온몸으로 경험했습니다
       - "%1$s이(가) 새가 되려다 %2$s에 처박아 죽었습니다."
@@ -114,25 +168,37 @@ death-messages:
     elytra-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 운동 에너지를 온몸으로 느꼈습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 처박아 죽었습니다."
+    elytra-combat-suicide:
+      - "%1$s이(가) %3$s에 처박아 죽었습니다."
+    elytra-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 %4$s에 처박아 죽었습니다."
     ender-pearl:
       - "%1$s이(가) %2$s을(를) 잘못 사용하였습니다."
     ender-pearl-combat:
       - "%1$s이(가) %2$s에게서 도망치려다 %3$s을(를) 잘못 사용하였습니다."
     ender-pearl-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s을(를) 잘못 사용하였습니다."
+    ender-pearl-combat-suicide:
+      - "%1$s이(가) %3$s을(를) 사용하여 자살하였습니다."
+    ender-pearl-combat-suicide-item:
+      - "%1$s이(가) %4$s와(과) %3$s을(를) 사용하여 자살하였습니다."
     explosion:
       - "death.attack.explosion" # %1$s이(가) 폭파당했습니다
       - "%1$s 펑! 펑! 펑!"
     explosion-combat:
       - "death.attack.explosion.player" # %1$s이(가) %2$s에게 폭파당했습니다
       - "%1$s이(가) %2$s 때문에 펑! 펑! 펑!"
-    explosion-combat-unknown:
-      - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 폭파당했습니다."
-      - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 펑! 펑! 펑!"
     explosion-combat-item:
       - "death.attack.explosion.player.item" # %1$s이(가) %2$s에게 %3$s(으)로 폭파당했습니다
       - "%1$s이(가) %3$s을(를) 사용한 %2$s 때문에 폭파당했습니다."
       - "%1$s이(가) %2$s에게 %3$s(으)로 펑! 펑! 펑!"
+    explosion-combat-suicide:
+      - "%1%s이(가) 자폭하였습니다."
+    explosion-combat-suicide-item:
+      - "%1%s이(가) %3$s을(를) 사용하여 자폭하였습니다."
+    explosion-combat-unknown:
+      - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 폭파당했습니다."
+      - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 펑! 펑! 펑!"
     fall:
       - "death.attack.fall" # %1$s이(가) 땅바닥으로 곤두박질쳤습니다
       - "%1$s이(가) 별로 높지도 않은데 딸피여서 떨어져 뼈가 부러져 죽었습니다."
@@ -142,6 +208,10 @@ death-messages:
     fall-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 땅바닥으로 곤두박질쳤습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 별로 높지도 않은데 딸피여서 떨어져 뼈가 부러져 죽었습니다."
+    fall-combat-suicide:
+      - "%1$s이(가) 높지는 않지만 스스로 몸을 던져 죽었습니다."
+    fall-combat-suicide-item:
+      - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 스스로 몸을 던져 죽었습니다."
     fall-high:
       - "death.fell.accident.generic" # %1$s이(가) 높은 곳에서 떨어졌습니다
       - "%1$s은(는) 추락을 피하지 못했습니다."
@@ -151,6 +221,10 @@ death-messages:
     fall-high-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s 때문에 높은 곳에서 떨어졌습니다."
       - "%1$s은(는) %3$s을(를) 사용한 %2$s 때문에 추락을 피하지 못했습니다."
+    fall-high-combat-suicide:
+      - "%1$s이(가) 스스로 몸을 던져 죽었습니다."
+    fall-high-combat-suicide-item:
+      - "%1$s이(가) %3$2을(를) 사용하여 스스로 몸을 던져 죽었습니다."
     fall-block:
       - "%1$s이(가) %2$s에서 땅바닥으로 곤두박질쳤습니다."
       - "%1$s이(가) 별로 높지도 않은데 딸피여서 %2$s에서 떨어져 뼈가 부러져 죽었습니다."
@@ -160,6 +234,10 @@ death-messages:
     fall-block-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에서 땅바닥으로 곤두박질쳤습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 별로 높지도 않은데 딸피여서 %4$s에서 떨어져 뼈가 부러져 죽었습니다."
+    fall-block-combat-suicide:
+      - "%1$s이(가) 높지는 않지만 %3$s에서 스스로 몸을 던져 죽었습니다."
+    fall-block-combat-suicide-item:
+      - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다."
     fall-block-high:
       - "%1$s이(가) 높은 %2$s에서 떨어졌습니다."
       - "%1$s은(는) 높은 %2$s에서 추락을 피하지 못했습니다."
@@ -169,6 +247,10 @@ death-messages:
     fall-block-high-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s 때문에 높은 %4$s에서 떨어졌습니다."
       - "%1$s은(는) %3$s을(를) 사용한 %2$s 때문에 높은 %4$s에서 추락을 피하지 못했습니다."
+    fall-block-high-combat-suicide:
+      - "%1$s이(가) %3$s에서 스스로 몸을 던져 죽었습니다."
+    fall-block-high-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다."
     falling-block:
      # - "death.attack.fallingBlock" # %1$s이(가) 떨어지는 블록에 짓눌렸습니다
       - "%1$s이(가) 떨어지는 %2$s에 짓눌렸습니다."
@@ -212,6 +294,7 @@ death-messages:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 불에 타 사망했습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 바삭하게 구워졌습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 바삭해졌습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 바삭하게 구워지다 못해 타버렸습니다."
     fire-block: # 불 블록에서 죽음
       - "death.attack.inFire" # %1$s이(가) 화염에 휩싸였습니다
       - "%1$s이(가) %2$s에서 화염에 휩싸였습니다."
@@ -290,7 +373,7 @@ death-messages:
     lava-cauldron-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 빠졌습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s 수영을 시도하였습니다."
-      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %3$s을(를) 좌욕기로 착각하여 앉아서 사망하였습니다."
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s을(를) 좌욕기로 착각하여 앉아서 사망하였습니다."
     lightning-bolt:
       - "death.attack.lightningBolt" # %1$s이(가) 벼락을 맞았습니다
       - "%1$s이(가) 번갯불에 콩볶아 먹다 죽었습니다."
@@ -325,6 +408,10 @@ death-messages:
     melee-combat-item:
       - "death.attack.mob.item" # %1$s이(가) %3$s을(를) 사용한 %2$s에게 살해당했습니다
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 죽었습니다."
+    melee-combat-suicide:
+      - "%1$s이(가) 자살했습니다."
+    melee-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 자살했습니다."
     melee-sweep:
       - "%1$s이(가) 썰렸습니다."
     melee-sweep-combat:
@@ -337,12 +424,28 @@ death-messages:
       - "%1$s이(가) %2$s에게 썰렸습니다."
     melee-sword-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다."
+    melee-sword-combat-suicide:
+      - "%1$s이(가) 자살했습니다."
+    melee-sword-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 자살했습니다."
     melting:
       - "%1$s이(가) 녹아내렸습니다."
     melting-combat:
       - "%1$s이(가) %2$s와(과) 싸우다 녹아내렸습니다."
     melting-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 녹아내렸습니다."
+    parrot-cookie-combat-item:
+      - "%2$s이(가) %1$s에게 %3$s을(를) 먹여 죽였습니다."
+    poison:
+      - "%1$s이(가) 독살당했습니다."
+    poison-combat:
+      - "%1$s이(가) %2$s에게 독살당했습니다."
+    poison-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 독살당했습니다."
+    poison-combat-suicide:
+      - "%1$s이(가) 스스로를 독살하였습니다."
+    poison-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 스스로를 독살하였습니다."
     projectile:
       - "%1$s이(가) 발사체에게 저격당했습니다."
     projectile-combat:
@@ -398,6 +501,12 @@ death-messages:
     suffocation-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s와(과) 하나가 되었습니다."
+    suicide:
+      - "%1$s이(가) 자살했습니다."
+    suicide-combat:
+      - "%1$s이(가) 자살했습니다."
+    suicide-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 자살했습니다."
     sweet-berry-bush:
      # - "death.attack.sweetBerryBush" # %1$s이(가) 달콤한 열매 덤불에 찔려 죽었습니다
       - "%1$s이(가) %2$s에 찔려 죽었습니다."
@@ -466,6 +575,16 @@ death-messages:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다."
     wither-skull:
       - "death.attack.witherSkull" # %1$s이(가) %2$s의 해골에게 저격당했습니다
+    world-border:
+      - "%1$s이(가) %2$s 밖으로 탈출하려다 질식사했습니다."
+    world-border-combat:
+      - "%1$s이(가) %2$s과(와) 싸우고 %3$s 밖으로 탈출하려다 질식사했습니다."
+    world-border-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우고 %4$s 밖으로 탈출하려다 질식사했습니다."
+    world-border-combat-suicide:
+      - "%1$s이(가) %3$s 밖으로 스스로의 몸을 던져 질식사했습니다."
+    world-border-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 %4$s 밖으로 스스로의 몸을 던져 질식사했습니다."
   custom-messages:
     # 특정 조건을 만족할 때만 특정 데스 메시지가 나오도록 커스텀할 수 있다.
     #

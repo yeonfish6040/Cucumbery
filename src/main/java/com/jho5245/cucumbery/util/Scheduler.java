@@ -2,14 +2,14 @@ package com.jho5245.cucumbery.util;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
-import com.jho5245.cucumbery.commands.Reinforce;
+import com.jho5245.cucumbery.commands.CommandReinforce;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryRecipe;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -1154,7 +1154,7 @@ public class Scheduler
       {
         for (Player player : Bukkit.getServer().getOnlinePlayers())
         {
-          if (Reinforce.chanceTime.contains(player))
+          if (CommandReinforce.chanceTime.contains(player))
           {
             Method.playSound(player, "reinforce_chancetime", 1000F, 1F);
           }
@@ -1171,7 +1171,7 @@ public class Scheduler
       {
         for (Player player : Bukkit.getServer().getOnlinePlayers())
         {
-          if (Reinforce.chanceTime.contains(player))
+          if (CommandReinforce.chanceTime.contains(player))
           {
             MessageUtil.sendTitle(player, "&eCHANCE TIME!", "&b강화 성공 확률 100%!", 0, 40, 0);
 

@@ -26,84 +26,104 @@ import java.util.UUID;
 
 public class PlayerFish implements Listener
 {
-	@EventHandler
-	public void onPlayerFish(PlayerFishEvent event)
-	{
-		if (event.isCancelled())
-			return;
-		Player player = event.getPlayer();
-		UUID uuid = player.getUniqueId();
-		State state = event.getState();
-		ItemStack item = ItemStackUtil.getPlayerUsingItem(player, Material.FISHING_ROD);
-		if (ItemStackUtil.itemExists(item))
-		{
-			if (state == State.CAUGHT_FISH && NBTAPI.isRestricted(player, item, Constant.RestrictionType.NO_FISH))
-			{
-				event.setCancelled(true);
-				if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerFishAlertCooldown.contains(uuid))
-				{
-					Variable.playerFishAlertCooldown.add(uuid);
-					MessageUtil.sendTitle(player, "&c낚시 불가!", "&r사용할 수 없는 낚싯대입니다.", 5, 80, 15);
-					SoundPlay.playSound(player, Constant.ERROR_SOUND);
-					Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerFishAlertCooldown.remove(uuid), 100L);
-				}
-				return;
-			}
-		}
+  @EventHandler
+  public void onPlayerFish(PlayerFishEvent event)
+  {
+    if (event.isCancelled())
+    {
+      return;
+    }
+    Player player = event.getPlayer();
+    UUID uuid = player.getUniqueId();
+    State state = event.getState();
+    ItemStack item = ItemStackUtil.getPlayerUsingItem(player, Material.FISHING_ROD);
+    if (ItemStackUtil.itemExists(item))
+    {
+      if (state == State.CAUGHT_FISH && NBTAPI.isRestricted(player, item, Constant.RestrictionType.NO_FISH))
+      {
+        event.setCancelled(true);
+        if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerFishAlertCooldown.contains(uuid))
+        {
+          Variable.playerFishAlertCooldown.add(uuid);
+          MessageUtil.sendTitle(player, "&c낚시 불가!", "&r사용할 수 없는 낚싯대입니다.", 5, 80, 15);
+          SoundPlay.playSound(player, Constant.ERROR_SOUND);
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerFishAlertCooldown.remove(uuid), 100L);
+        }
+        return;
+      }
+    }
 
-		NBTCompound customItemTag = NBTAPI.getCompound(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_ITEM_TAG_KEY);
-		String customItemId = NBTAPI.getString(customItemTag, CucumberyTag.ID_KEY);
-		if (customItemId != null && customItemId.equals("fishingrod"))
-		{
-			NBTCompound customItemTagCompound = NBTAPI.getCompound(customItemTag, CucumberyTag.TAG_KEY);
-			switch (state)
-			{
-				case FISHING:
-					if (customItemTagCompound != null && customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_FISHING_ROD_MULTIPLIER))
-					{
-						Double doubleObj = NBTAPI.getDouble(customItemTagCompound, CucumberyTag.CUSTOM_ITEM_FISHING_ROD_MULTIPLIER);
-						double multiplier = doubleObj == null ? 0d : doubleObj;
-						FishHook fishHook = event.getHook();
-						Vector vector = fishHook.getVelocity();
-						vector.multiply(multiplier);
-						fishHook.setVelocity(vector);
-						fishHook.setGlowing(true);
-					}
-					break;
-				case IN_GROUND:
-				case CAUGHT_ENTITY:
-					if (customItemTagCompound != null && customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_FISHING_ROD_MAX_VALUES))
-					{
-						NBTCompound maxValuesTag = NBTAPI.getCompound(customItemTagCompound, CucumberyTag.CUSTOM_ITEM_FISHING_ROD_MAX_VALUES);
-						if (maxValuesTag != null)
-						{
-							double maxX = maxValuesTag.hasKey("x") ? maxValuesTag.getDouble("x") : 5;
-							double maxY = maxValuesTag.hasKey("y") ? maxValuesTag.getDouble("y") : 5;
-							double maxZ = maxValuesTag.hasKey("z") ? maxValuesTag.getDouble("z") : 5;
-							FishHook fishHook = event.getHook();
-							Location hookLoc = fishHook.getLocation(), playerLoc = player.getLocation();
-							double x = (hookLoc.getX() - playerLoc.getX()) / 1.5;
-							double y = Math.min(2, (hookLoc.getY() - playerLoc.getY()) / 4 + 0.3);
-							double z = (hookLoc.getZ() - playerLoc.getZ()) / 1.5;
-							if (x > maxX)
-								x = maxX;
-							if (x < -maxX)
-								x = -maxX;
-							if (y > maxY)
-								y = maxY;
-							if (y < -maxY)
-								y = -maxY;
-							if (z > maxZ)
-								z = maxZ;
-							if (z < -maxZ)
-								z = -maxZ;
-							player.setVelocity(new Vector(x, y, z));
-						}
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	}
+    NBTCompound customItemTag = NBTAPI.getCompound(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_ITEM_TAG_KEY);
+    String customItemId = NBTAPI.getString(customItemTag, CucumberyTag.ID_KEY);
+    if (customItemId != null && customItemId.equals("fishingrod"))
+    {
+      NBTCompound customItemTagCompound = NBTAPI.getCompound(customItemTag, CucumberyTag.TAG_KEY);
+      switch (state)
+      {
+        case FISHING:
+          if (customItemTagCompound != null && customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_FISHING_ROD_MULTIPLIER))
+          {
+            Double doubleObj = NBTAPI.getDouble(customItemTagCompound, CucumberyTag.CUSTOM_ITEM_FISHING_ROD_MULTIPLIER);
+            double multiplier = doubleObj == null ? 0d : doubleObj;
+            FishHook fishHook = event.getHook();
+            Vector vector = fishHook.getVelocity();
+            vector.multiply(multiplier);
+            fishHook.setVelocity(vector);
+            fishHook.setGlowing(true);
+          }
+          break;
+        case IN_GROUND:
+        case CAUGHT_ENTITY:
+        case REEL_IN:
+          if (customItemTagCompound != null && customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_FISHING_ROD_MAX_VALUES))
+          {
+            NBTCompound maxValuesTag = NBTAPI.getCompound(customItemTagCompound, CucumberyTag.CUSTOM_ITEM_FISHING_ROD_MAX_VALUES);
+            if (maxValuesTag != null)
+            {
+              Boolean b = customItemTagCompound.getBoolean(CucumberyTag.CUSTOM_ITEM_FISHING_ROD_ALLOW_ON_AIR);
+              if (!b.equals(true) && state == State.REEL_IN)
+              {
+                return;
+              }
+              double maxX = maxValuesTag.hasKey("x") ? maxValuesTag.getDouble("x") : 5;
+              double maxY = maxValuesTag.hasKey("y") ? maxValuesTag.getDouble("y") : 5;
+              double maxZ = maxValuesTag.hasKey("z") ? maxValuesTag.getDouble("z") : 5;
+              FishHook fishHook = event.getHook();
+              Location hookLoc = fishHook.getLocation(), playerLoc = player.getLocation();
+              double x = (hookLoc.getX() - playerLoc.getX()) / 1.5;
+              double y = Math.min(2, (hookLoc.getY() - playerLoc.getY()) / 4 + 0.3);
+              double z = (hookLoc.getZ() - playerLoc.getZ()) / 1.5;
+              if (x > maxX)
+              {
+                x = maxX;
+              }
+              if (x < -maxX)
+              {
+                x = -maxX;
+              }
+              if (y > maxY)
+              {
+                y = maxY;
+              }
+              if (y < -maxY)
+              {
+                y = -maxY;
+              }
+              if (z > maxZ)
+              {
+                z = maxZ;
+              }
+              if (z < -maxZ)
+              {
+                z = -maxZ;
+              }
+              player.setVelocity(new Vector(x, y, z));
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
 }

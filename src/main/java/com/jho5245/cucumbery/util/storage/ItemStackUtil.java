@@ -3,6 +3,9 @@ package com.jho5245.cucumbery.util.storage;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.storage.component.LocationComponent;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -592,6 +595,7 @@ public class ItemStackUtil
         case TWISTING_VINES_PLANT -> newType = Material.TWISTING_VINES;
         case POWDER_SNOW -> newType = Material.POWDER_SNOW_BUCKET;
         case SWEET_BERRY_BUSH -> newType = Material.SWEET_BERRIES;
+        case PLAYER_WALL_HEAD -> newType = Material.PLAYER_HEAD;
       }
     }
 
@@ -605,7 +609,7 @@ public class ItemStackUtil
       }
       else
       {
-        itemMeta.displayName(ComponentUtil.itemName(type));
+        itemMeta.displayName(ItemNameUtil.itemName(type));
       }
       itemStack.setItemMeta(itemMeta);
     }
@@ -624,6 +628,12 @@ public class ItemStackUtil
     {
       ItemLore.setItemLore(itemStack);
       itemMeta = itemStack.getItemMeta();
+      if (itemMeta instanceof BlockDataMeta blockDataMeta)
+      {
+        blockDataMeta.setBlockData(block.getBlockData());
+        itemStack.setItemMeta(blockDataMeta);
+        ItemLore.setItemLore(itemStack);
+      }
     }
     List<Component> lore = itemMeta.lore();
     if (lore == null)
@@ -634,7 +644,7 @@ public class ItemStackUtil
     {
       lore.add(ComponentUtil.create2(Constant.ITEM_LORE_SEPARATOR));
     }
-    lore.add(ComponentUtil.createTranslate("&e좌표 : %s", ComponentUtil.locationComponent(location)));
+    lore.add(ComponentUtil.createTranslate("&f좌표 : %s", LocationComponent.locationComponent(location)));
     itemMeta.lore(lore);
     itemStack.setItemMeta(itemMeta);
     return itemStack;
@@ -721,7 +731,7 @@ public class ItemStackUtil
     {
       components.add(tag);
     }
-    components.add(ComponentUtil.itemName(itemStack, NamedTextColor.WHITE));
+    components.add(ItemNameUtil.itemName(itemStack, NamedTextColor.WHITE));
     if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore())
     {
       List<Component> lore = itemStack.getItemMeta().lore();

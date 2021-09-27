@@ -1,11 +1,12 @@
 package com.jho5245.cucumbery;
 
+import com.jho5245.cucumbery.custommerchant.MerchantData;
 import com.jho5245.cucumbery.deathmessages.CustomDeathMessage;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.milkbowl.vault.chat.Chat;
@@ -16,36 +17,48 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 import static com.jho5245.cucumbery.Cucumbery.getPlugin;
 
 public class Initializer
 {
-  public static void registerCommand(String cmd, CommandExecutor executor)
+  public static void registerCommand(@NotNull String command, @NotNull Object object)
   {
-    PluginCommand pluginCommand = getPlugin().getCommand(cmd);
+    PluginCommand pluginCommand = getPlugin().getCommand(command);
     if (pluginCommand != null)
     {
-      pluginCommand.setExecutor(executor);
-      pluginCommand.setTabCompleter(Cucumbery.getPlugin().getTabCompleter());
+      if (object instanceof CommandExecutor commandExecutor)
+      {
+        pluginCommand.setExecutor(commandExecutor);
+      }
+      if (object instanceof TabCompleter tabCompleter)
+      {
+        pluginCommand.setTabCompleter(tabCompleter);
+      }
     }
   }
 
-  public static void registerCommand(String cmd, CommandExecutor executor, org.bukkit.command.TabCompleter tabCompleter)
+  public static void registerCommand(@NotNull String command, @NotNull CommandExecutor executor, @NotNull TabCompleter tabCompleter)
   {
-    if (Cucumbery.getPlugin().getDescription().getCommands().containsKey(cmd))
+    PluginCommand pluginCommand = getPlugin().getCommand(command);
+    if (pluginCommand != null)
     {
-      Objects.requireNonNull(Cucumbery.getPlugin().getCommand(cmd)).setExecutor(executor);
-      Objects.requireNonNull(Cucumbery.getPlugin().getCommand(cmd)).setTabCompleter(tabCompleter);
+      pluginCommand.setExecutor(executor);
+      pluginCommand.setTabCompleter(tabCompleter);
     }
   }
 
@@ -69,7 +82,8 @@ public class Initializer
     return true;
   }
 
-  public static boolean setupChat() {
+  public static boolean setupChat()
+  {
     if (getPlugin().getPluginManager().getPlugin("Vault") == null)
     {
       return false;
@@ -307,6 +321,32 @@ public class Initializer
           {
             fileName = fileName.substring(0, fileName.length() - 4);
             Variable.blockPlaceData.put(fileName, CustomConfig.getCustomConfig(file).getConfig());
+          }
+        }
+      }
+    }
+
+    MerchantData.merchantDataHashMap.clear();
+    File customMerchantFolder = new File(getPlugin().getDataFolder() + "/data/CustomMerchants");
+    if (customMerchantFolder.exists())
+    {
+      File[] dataFiles = customMerchantFolder.listFiles();
+      if (dataFiles != null)
+      {
+        for (File file : dataFiles)
+        {
+          String fileName = file.getName();
+          if (fileName.endsWith(".yml"))
+          {
+            fileName = fileName.substring(0, fileName.length() - 4);
+            CustomConfig customConfig = CustomConfig.getCustomConfig(file);
+            YamlConfiguration configuration = customConfig.getConfig();
+            String display = configuration.getString("display");
+            if (display == null)
+            {
+              display = fileName;
+            }
+            new MerchantData(fileName, display, configuration);
           }
         }
       }
@@ -566,7 +606,7 @@ public class Initializer
         }
         customConfig.saveConfig();
       }
-      if (Method.getPlayer(null, uuid.toString(), false) == null)
+      if (Bukkit.getPlayer(uuid) == null)
       {
         removal.put(uuid, Variable.cooldownsItemUsage.get(uuid));
       }

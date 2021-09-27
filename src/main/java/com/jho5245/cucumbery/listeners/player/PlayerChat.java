@@ -4,9 +4,11 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.PlaceHolderUtil;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -20,6 +22,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
@@ -129,6 +132,15 @@ public class PlayerChat implements Listener
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerChatSameMessageSpamAlertCooldown.remove(uuid), chatCooldown);
       }
     }
+    ItemStack itemStack = player.getInventory().getItemInMainHand();
+    if (message.contains("[i]") && ItemStackUtil.itemExists(itemStack))
+    {
+      event.setCancelled(true);
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+              player.chat("/bitem " + ComponentUtil.serialize(event.originalMessage())),
+              0L);
+      return;
+    }
     if (Cucumbery.config.getBoolean("play-sound-on-chat"))
     {
       if (!Method.configContainsLocation(location, Cucumbery.config.getStringList("no-play-sound-on-chat-worlds")))
@@ -145,7 +157,7 @@ public class PlayerChat implements Listener
   public void specialParse(AsyncChatEvent event)
   {
     Player player = event.getPlayer();
-    Component senderComponent = ComponentUtil.senderComponent(player);
+    Component senderComponent = SenderComponentUtil.senderComponent(player);
     player.displayName(player.displayName().hoverEvent(senderComponent.hoverEvent()));
     String message = ComponentUtil.serialize(event.message());
     /* 채팅을 칠때 해당 권한이 있으면 컬러 채팅으로 변환 */

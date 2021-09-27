@@ -8,7 +8,14 @@ import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.PlaceHolderUtil;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.*;
+import com.jho5245.cucumbery.util.storage.ColorCode;
+import com.jho5245.cucumbery.util.storage.ItemCategory;
+import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.RecipeChecker;
+import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
+import com.jho5245.cucumbery.util.storage.component.LocationComponent;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -50,11 +57,10 @@ public class ItemLore2
     Player player = null;
     PrepareItemCraftEvent prepareItemCraftEvent = null;
     EntityPickupItemEvent entityPickupItemEvent = null;
-
     Material type = item.getType();
-    NBTItem nbtItem = new NBTItem(item);
-    NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
-    NBTCompoundList customEnchants = itemTag != null ? itemTag.getCompoundList(CucumberyTag.CUSTOM_ENCHANTS_KEY) : null;
+    NBTItem nbtItem = new NBTItem(item.clone());
+    @Nullable NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
+    @Nullable NBTCompoundList customEnchants = itemTag != null ? itemTag.getCompoundList(CucumberyTag.CUSTOM_ENCHANTS_KEY) : null;
 
     // 커스텀 인챈트 배열이 있는 경우면 아이템의 인챈트 여부에 관계 없이 바닐라 인챈트 전부 제거
 
@@ -62,35 +68,44 @@ public class ItemLore2
     {
       customEnchants.removeIf(
               NBTCompound -> (
-                      Enchantment.getByKey(
-                              NamespacedKey.minecraft(
-                                      NBTCompound.getString(CucumberyTag.ID_KEY).toLowerCase())) != null
+                      Enchantment.getByKey(NamespacedKey.minecraft(
+                              NBTCompound.getString(CucumberyTag.ID_KEY).toLowerCase()
+                      )) != null
               )
       );
-      item = nbtItem.getItem();
-      itemMeta = item.getItemMeta();
+      if (customEnchants.isEmpty())
+      {
+        itemTag.removeKey(CucumberyTag.CUSTOM_ENCHANTS_KEY);
+      }
+      if (itemTag.getKeys().isEmpty())
+      {
+        itemTag = null;
+        nbtItem.removeKey(CucumberyTag.KEY_MAIN);
+      }
+      itemMeta = nbtItem.getItem().getItemMeta();
     }
 
-    if (itemMeta.hasEnchants())
-    {
-      if (itemTag == null)
-      {
-        itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-      }
-      if (customEnchants == null)
-      {
-        customEnchants = itemTag.getCompoundList(CucumberyTag.CUSTOM_ENCHANTS_KEY);
-      }
-      Map<Enchantment, Integer> enchants = itemMeta.getEnchants();
-      for (Enchantment enchantment : enchants.keySet())
-      {
-        String id = enchantment.getKey().value();
-        Integer level = enchants.get(enchantment);
-        NBTCompound enchantCompound = customEnchants.addCompound();
-        enchantCompound.setString(CucumberyTag.ID_KEY, id);
-        enchantCompound.setInteger(CucumberyTag.CUSTOM_ENCHANTS_LEVEL_KEY, level);
-      }
-    }
+//    if (itemMeta.hasEnchants())
+//    {
+//      if (itemTag == null)
+//      {
+//        itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+//      }
+//      if (customEnchants == null)
+//      {
+//        customEnchants = itemTag.getCompoundList(CucumberyTag.CUSTOM_ENCHANTS_KEY);
+//      }
+//      Map<Enchantment, Integer> enchants = itemMeta.getEnchants();
+//      for (Enchantment enchantment : enchants.keySet())
+//      {
+//        String id = enchantment.getKey().value();
+//        Integer level = enchants.get(enchantment);
+//        NBTCompound enchantCompound = customEnchants.addCompound();
+//        enchantCompound.setString(CucumberyTag.ID_KEY, id);
+//        enchantCompound.setInteger(CucumberyTag.CUSTOM_ENCHANTS_LEVEL_KEY, level);
+//      }
+//      itemMeta = nbtItem.getItem().getItemMeta();
+//    }
     if (lore == null)
     {
       lore = new ArrayList<>();
@@ -116,7 +131,6 @@ public class ItemLore2
     }
 
     NBTCompound duraTag = itemTag != null ? itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY) : null;
-
     if (defaultConfigDura > 0 && duraTag == null)
     {
       if (itemTag == null)
@@ -124,14 +138,12 @@ public class ItemLore2
         itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
       }
       duraTag = itemTag.addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
-      duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, defaultConfigDura);
       duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, defaultConfigDura);
-      item = nbtItem.getItem();
-      itemMeta = item.getItemMeta();
+      duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, defaultConfigDura);
+      itemMeta = nbtItem.getItem().getItemMeta();
     }
 
-    NBTList<String> customLores = itemTag != null ? itemTag.getStringList(CucumberyTag.CUSTOM_LORE_KEY) : null;
-//    if (player != null && (customLores == null || customLores.size() == 0))
+    //    if (player != null && (customLores == null || customLores.size() == 0))
 //    {
 //      switch (type)
 //      {
@@ -191,7 +203,7 @@ public class ItemLore2
     if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.ABOVE_CUSTOM_LORE))
     {
       NBTList<String> aboveCustomLores = NBTAPI.getStringList(itemTag, CucumberyTag.ABOVE_CUSTOM_LORE_KEY);
-      if (aboveCustomLores != null && aboveCustomLores.size() > 0)
+      if (aboveCustomLores != null && !aboveCustomLores.isEmpty())
       {
         for (Object customLore : aboveCustomLores)
         {
@@ -240,7 +252,7 @@ public class ItemLore2
     if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.RESTRICTION.toString()))
     {
       NBTCompoundList restrictionTags = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.ITEM_USAGE_RESTRICTIONS_KEY);
-      if (restrictionTags != null && restrictionTags.size() > 0)
+      if (restrictionTags != null && !restrictionTags.isEmpty())
       {
         StringBuilder restrictionTagLore = new StringBuilder();
         for (NBTCompound restrictionTag : restrictionTags)
@@ -319,11 +331,11 @@ public class ItemLore2
           }
           if (type == Material.ELYTRA)
           {
-            if (maxDurability - currentDurability == 1)
+            if (currentDurability == 1)
             {
               originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 1;
             }
-            else if (maxDurability - currentDurability > 1 && originItemDuraDouble > 430)
+            else if (currentDurability > 1 && originItemDuraDouble > 430)
             {
               originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 2;
             }
@@ -349,8 +361,6 @@ public class ItemLore2
         currentDurability = maxDurability - ((Damageable) item.getItemMeta()).getDamage();
       }
 
-      Damageable damageable = (Damageable) itemMeta;
-
       if (maxDurability != 0 || Constant.DURABLE_ITEMS.contains(type))
       {
         if (!hideDurability)
@@ -362,7 +372,6 @@ public class ItemLore2
         }
       }
 
-      boolean hasEnchant = itemMeta.hasEnchants();
       int dura = 0;
       if (itemMeta.hasEnchant(Enchantment.DURABILITY))
       {
@@ -374,13 +383,12 @@ public class ItemLore2
       }
       double ratio = 1d * currentDurability / maxDurability;
       // 내구도로 인한 아이템 등급 수치 감소에서는 내구도가 꽉 찼을 때 비율이 0으로 되게 함
-      if (hasEnchant || ratio < 0.05)
+      ItemLoreUtil.setItemRarityValue(lore, (long) (ItemLoreUtil.getItemRarityValue(lore) * 0.01 + maxDurability * 0.05));
+      long duraNegative = (long) ((1 + ItemLoreUtil.getItemRarityValue(lore) / 10000) * Math.pow(1.055 - (dura / 1000d), (100 - ratio * 100)) - 1);
+      //(long) Math.pow(ratio * (2.0 + (20.0 / maxDurability)), Math.abs(Math.pow(3.0 - dura / 10.0, Math.abs(ratio)) + 1.7 + (200.0 / maxDurability) - maxDurability / 1300.0)); // 내구도로 인한 아이템 등급 수치 감소
+      if (duraNegative > 0)
       {
-        long duraNegative = (long) (ItemLoreUtil.getItemRarityValue(lore) * (1 - ratio / (dura + 1))) - ItemCategory.Rarity.NORMAL.getRarityValue(); // (long) Math.pow(ratio * (2.0 + (20.0 / maxDurability)), Math.abs(Math.pow(3.0 - dura / 10.0, Math.abs(ratio)) + 1.7 + (200.0 / maxDurability) - maxDurability / 1300.0)); // 내구도로 인한 아이템 등급 수치 감소
-        if (duraNegative > 0)
-        {
-          ItemLoreUtil.setItemRarityValue(lore, -duraNegative);
-        }
+        ItemLoreUtil.setItemRarityValue(lore, -duraNegative);
       }
       if (maxDurability != 0 && chanceNotToConsumeDura > 0d && chanceNotToConsumeDura <= 100d)
       {
@@ -471,17 +479,39 @@ public class ItemLore2
       itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
 
-    if (hasCustomEnchants || itemMeta.hasEnchants())
+    if (itemMeta.hasEnchants() || hasCustomEnchants)
     {
       if (!hideEnchant)
       {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_ENCHANTED));
-        for (NBTCompound customEnchant : customEnchantsTag)
+        List<Component> enchantLore = new ArrayList<>();
+        if (hasCustomEnchants)
         {
-          String id = customEnchant.getString(CucumberyTag.ID_KEY);
-          Integer level = customEnchant.getInteger(CucumberyTag.CUSTOM_ENCHANTS_LEVEL_KEY);
-          Enchantment defaultEnchant = Enchantment.getByKey(NamespacedKey.minecraft(id.toLowerCase()));
+          for (NBTCompound customEnchant : customEnchantsTag)
+          {
+            String id = customEnchant.getString(CucumberyTag.ID_KEY);
+            Integer level = customEnchant.getInteger(CucumberyTag.CUSTOM_ENCHANTS_LEVEL_KEY);
+            if (level > 255)
+            {
+              level = 255;
+            }
+            if (level <= 0)
+            {
+              level = 1;
+            }
+            enchantLore.addAll(ItemLoreUtil.enchantTMIDescription(itemMeta, type, id, level));
+          }
+        }
+        for (Enchantment enchantment : itemMeta.getEnchants().keySet())
+        {
+          if (type == Material.BOW && enchantment.equals(Enchantment.RIPTIDE))
+          {
+            continue;
+          }
+          else if (enchantment.equals(Enchantment.ARROW_INFINITE))
+          {
+            continue;
+          }
+          int level = itemMeta.getEnchantLevel(enchantment);
           if (level > 255)
           {
             level = 255;
@@ -490,11 +520,18 @@ public class ItemLore2
           {
             level = 1;
           }
-          lore.addAll(ItemLoreUtil.enchantTMIDescription(item, itemMeta, type, defaultEnchant != null ? defaultEnchant : id, level));
+          enchantLore.addAll(ItemLoreUtil.enchantTMIDescription(itemMeta, type, enchantment, level));
+        }
+        if (!enchantLore.isEmpty())
+        {
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_ENCHANTED));
+          lore.addAll(enchantLore);
         }
       }
-      ItemLoreEnchantRarity.enchantRarity(item, lore, type, itemMeta);
     }
+
+    ItemLoreEnchantRarity.enchantRarity(item, lore, type, itemMeta);
 
     if (type == Material.ENCHANTED_BOOK)
     {
@@ -516,7 +553,7 @@ public class ItemLore2
             {
               level = 1;
             }
-            lore.addAll(ItemLoreUtil.enchantTMIDescription(item, itemMeta, type, enchant, level));
+            lore.addAll(ItemLoreUtil.enchantTMIDescription(itemMeta, type, enchant, level));
           }
         }
         ItemLoreEnchantRarity.enchantedBookRarity(item, lore, type, (EnchantmentStorageMeta) itemMeta);
@@ -1134,7 +1171,7 @@ public class ItemLore2
         {
           bucketMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
           lore.add(Component.empty());
-          String key = TropicalFishLore.getTropicalFishKey(item);
+          String key = TropicalFishLore.getTropicalFishKey(bucketMeta.getBodyColor(), bucketMeta.getPatternColor(), bucketMeta.getPattern());
 
           Component arg;
           DyeColor bodyColor = bucketMeta.getBodyColor();
@@ -1254,7 +1291,7 @@ public class ItemLore2
                 {
                   if (i == 3)
                   {
-                    lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", skipped));
+                    lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", Component.text(skipped)));
                   }
                   continue;
                 }
@@ -1274,7 +1311,15 @@ public class ItemLore2
           itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
           lore.add(Component.empty());
           ItemStack chargedProjectile = crossbowMeta.getChargedProjectiles().get(0).clone();
-          lore.addAll(ItemStackUtil.getItemInfoAsComponents(chargedProjectile, ComponentUtil.createTranslate("&e[발사체]"), true));
+          if (ItemStackUtil.itemExists(chargedProjectile))
+          {
+            lore.addAll(ItemStackUtil.getItemInfoAsComponents(chargedProjectile, ComponentUtil.createTranslate("&e[발사체]"), true));
+          }
+          else
+          {
+            lore.remove(lore.size() - 1);
+            itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          }
         }
         else
         {
@@ -1299,7 +1344,7 @@ public class ItemLore2
         Color color = leatherArmorMeta.getColor();
         int red = color.getRed(), green = color.getGreen(), blue = color.getBlue();
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate("#a88932;[%s의 색상]", ComponentUtil.itemName(item)));
+        lore.add(ComponentUtil.createTranslate("#a88932;[%s의 색상]", ItemNameUtil.itemName(item)));
         lore.add(ComponentUtil.create2("rgb" + red + "," + green + "," + blue + ";#" +
                 Integer.toHexString(0x100 | red).substring(1) + Integer.toHexString(0x100 | green).substring(1) + Integer.toHexString(0x100 | blue).substring(1)));
       }
@@ -1309,13 +1354,13 @@ public class ItemLore2
         {
           Location lodestoneLocation = compassMeta.getLodestone();
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", ComponentUtil.itemName(Material.LODESTONE)));
-          lore.add(ComponentUtil.locationComponent(lodestoneLocation));
+          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", ItemNameUtil.itemName(Material.LODESTONE)));
+          lore.add(LocationComponent.locationComponent(lodestoneLocation));
         }
         else if (compassMeta.isLodestoneTracked())
         {
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", ComponentUtil.itemName(Material.LODESTONE)));
+          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", ItemNameUtil.itemName(Material.LODESTONE)));
           lore.add(ComponentUtil.createTranslate("#BD443C;자석석이 " + (Math.random() * 100d > 10d ? "" : "&m미국감&q") + "분실됨"));
         }
       }
@@ -1375,11 +1420,11 @@ public class ItemLore2
             Component itemType;
             try
             {
-              itemType = ComponentUtil.itemName(Material.valueOf(key.replace("minecraft:", "").replace(".", "_").toUpperCase()));
+              itemType = ItemNameUtil.itemName(Material.valueOf(key.replace("minecraft:", "").replace(".", "_").toUpperCase()));
             }
             catch (Exception ignored)
             {
-              itemType = ComponentUtil.itemName(Material.STONE);
+              itemType = ItemNameUtil.itemName(Material.STONE);
             }
             lore.add(ComponentUtil.createTranslate("&7%s : %s", itemType, "&e" + value));
           }
@@ -1397,7 +1442,7 @@ public class ItemLore2
         Component customName = blockState instanceof Nameable nameable ? nameable.customName() : null;
         if (customName == null)
         {
-          customName = ComponentUtil.itemName(item);
+          customName = ItemNameUtil.itemName(item);
         }
 
         String colorPrefix = "&2";
@@ -1489,7 +1534,7 @@ public class ItemLore2
               hasAtLeastOne = true;
               int cookTime = campfire.getCookTime(i);
               int cookTimeTotal = campfire.getCookTimeTotal(i);
-              Component itemStackComponent = ComponentUtil.itemStackComponent(itemStack);
+              Component itemStackComponent = ItemStackComponent.itemStackComponent(itemStack);
               lore.add(ComponentUtil.createTranslate("&7%s번째 아이템 : %s, 조리 진행도 : %s / %s (%s)",
                       i + 1,
                       itemStackComponent, ComponentUtil.createTranslate("&e%s초", Constant.Sosu2.format(cookTime / 20d)),
@@ -1530,19 +1575,19 @@ public class ItemLore2
             lore.add(customNameLore);
             if (ItemStackUtil.itemExists(ingredient))
             {
-              Component itemStackComponent = ComponentUtil.itemStackComponent(ingredient);
+              Component itemStackComponent = ItemStackComponent.itemStackComponent(ingredient);
               lore.add(ComponentUtil.createTranslate("&7" + smeltType + " 중인 아이템 : %s", itemStackComponent));
             }
             ItemStack fuel = furnaceInventory.getFuel();
             if (ItemStackUtil.itemExists(fuel))
             {
-              Component itemStackComponent = ComponentUtil.itemStackComponent(fuel);
+              Component itemStackComponent = ItemStackComponent.itemStackComponent(fuel);
               lore.add(ComponentUtil.createTranslate("&7땔감 아이템 : %s", itemStackComponent));
             }
             ItemStack result = furnaceInventory.getResult();
             if (ItemStackUtil.itemExists(result))
             {
-              Component itemStackComponent = ComponentUtil.itemStackComponent(result);
+              Component itemStackComponent = ItemStackComponent.itemStackComponent(result);
               lore.add(ComponentUtil.createTranslate("&7결과물 아이템 : %s", itemStackComponent));
             }
           }
@@ -1574,11 +1619,11 @@ public class ItemLore2
                 {
                   if (i == 9)
                   {
-                    lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", itemStackList.size() - i));
+                    lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", Component.text(itemStackList.size() - i)));
                     break;
                   }
                   ItemStack itemStack = itemStackList.get(i);
-                  lore.add(ComponentUtil.itemStackComponent(itemStack));
+                  lore.add(ItemStackComponent.itemStackComponent(itemStack));
                 }
               }
             }
@@ -1633,7 +1678,7 @@ public class ItemLore2
     }
 
     NBTCompound blockStateTag = nbtItem.getCompound(CucumberyTag.MINECRAFT_BLOCK_STATE_TAG_KEY);
-    if (type != Material.NOTE_BLOCK && blockStateTag != null && blockStateTag.getKeys().size() > 0)
+    if (type != Material.NOTE_BLOCK && blockStateTag != null && !blockStateTag.getKeys().isEmpty())
     {
       lore.add(Component.empty());
       lore.add(ComponentUtil.createTranslate("&b[블록 데이터 태그]"));
@@ -1916,13 +1961,12 @@ public class ItemLore2
     {
       itemMeta.removeItemFlags(ItemFlag.HIDE_UNBREAKABLE);
     }
-/*    final int size = lore.size();
-    if (size > 40)
-    {
-      int skipped = size - 39;
-      lore.subList(19, size - 20).clear();
-      lore.add(19, ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", skipped));
-    }*/
+
+    // 추가 설명으로 인한 아이템의 등급 수치 변경
+    long rarity2 = ItemLoreUtil.getItemRarityValue(lore);
+    String rarityDisplay = ItemCategory.Rarity.getRarityFromValue(rarity2).getDisplay();
+    Component itemRarityComponent = ComponentUtil.createTranslate("&7아이템 등급 : %s", ComponentUtil.createTranslate(rarityDisplay));
+    lore.set(2, itemRarityComponent);
     itemMeta.lore(lore);
     item.setItemMeta(itemMeta);
     return item;

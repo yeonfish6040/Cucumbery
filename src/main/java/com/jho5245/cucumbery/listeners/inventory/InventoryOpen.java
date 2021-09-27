@@ -6,9 +6,10 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -140,7 +141,7 @@ public class InventoryOpen implements Listener
                   {
                     ItemStack clone = ingre1.clone();
                     ItemLore.setItemLore(clone);
-                    if (!ingre1.equals(clone))
+                    if (!ingre1.isSimilar(clone))
                     {
                       recipeIsCorrect = false;
                       ItemLore.setItemLore(ingre1);
@@ -158,7 +159,7 @@ public class InventoryOpen implements Listener
                   {
                     ItemStack clone = ingre2.clone();
                     ItemLore.setItemLore(clone);
-                    if (!ingre2.equals(clone))
+                    if (!ingre2.isSimilar(clone))
                     {
                       recipeIsCorrect = false;
                       ItemLore.setItemLore(ingre2);
@@ -174,7 +175,7 @@ public class InventoryOpen implements Listener
                 {
                   ItemStack clone = result.clone();
                   ItemLore.setItemLore(clone);
-                  if (!result.equals(clone))
+                  if (!result.isSimilar(clone))
                   {
                     recipeIsCorrect = false;
                     ItemLore.setItemLore(result);
@@ -258,7 +259,7 @@ public class InventoryOpen implements Listener
             if (Method.isTimeUp(item, expireDate))
             {
               Component text = ComponentUtil.create(MessageUtil.as(
-                      Prefix.INFO, "아이템 &b[" + ComponentUtil.itemName(item), (item.getAmount() > 1 ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
+                      Prefix.INFO, "아이템 &b[" + ItemNameUtil.itemName(item), (item.getAmount() > 1 ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
               player.sendMessage(text);
               item.setAmount(0);
               player.updateInventory();

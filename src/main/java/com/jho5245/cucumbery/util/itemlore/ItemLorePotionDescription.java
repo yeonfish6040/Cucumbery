@@ -1,6 +1,6 @@
 package com.jho5245.cucumbery.util.itemlore;
 
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;

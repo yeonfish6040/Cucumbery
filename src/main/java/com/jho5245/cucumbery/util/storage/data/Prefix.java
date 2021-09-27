@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.util.storage.data;
 
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 
@@ -85,6 +85,7 @@ public enum Prefix
   INFO_SOCIAL("#52CEFF;소셜", "#5D7DC0;"),
   INFO_JOIN("&a입장", "&2"),
   INFO_QUIT("&c퇴장", "&5"),
+  INFO_CUSTOM_MERCHANT("&b사용 자지정 상인", "&9"),
   ;
 
   private final String text;

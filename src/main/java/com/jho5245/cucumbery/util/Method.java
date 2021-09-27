@@ -5,11 +5,13 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -54,16 +56,17 @@ import java.util.stream.Collectors;
 public class Method extends SoundPlay
 {
   private static final Random RANDOM_INTEGER = new Random();
-  private static final List<String> VANILLA_COMMANDS = new ArrayList<>(Arrays
+  @SuppressWarnings("all")
+  private static final List<String> VANILLA_COMMANDS = new ArrayList<>(/*Arrays
           .asList("advancement", "attribute", "ban", "ban-ip", "banlist", "bossbar", "cucumbery", "ccucumbery", "cgive", "chp", "ckill",
-                  "clear", "clone", "cride", "crideoff", "csetitem", "csudo2", "cvelo", "cvelocity", "data", "datapack", "debug",
+                  "clear", "clone", "cride", "csetitem", "csudo2", "cvelo", "cvelocity", "data", "datapack", "debug",
                   "defaultgamemode", "deop", "difficulty", "effect", "enchant", "execute", "experience", "fill", "forceload", "function",
                   "gamemode", "gamerule", "give", "haspermission", "healthpoint", "help", "hp", "kick", "kill", "list", "locate",
                   "locatebiome", "loot", "me", "msg", "op", "pardon", "pardon-ip", "particle", "playsound", "randomchance", "recipe",
-                  "reload", "replaceitem", "ride", "rideoff", "save-all", "save-off", "save-on", "say", "schedule", "scoreboard", "seed",
+                  "reload", "ride", "rideoff", "save-all", "save-off", "save-on", "say", "schedule", "scoreboard", "seed",
                   "setblock", "setidletimeout", "setitem", "setworldspawn", "spawnpoint", "spectate", "spreadplayers", "stop",
                   "stopsound", "sudo2", "summon", "tag", "team", "teammsg", "teleport", "tell", "tellraw", "time", "title", "tm", "tp",
-                  "trigger", "velo", "velocity", "w", "weather", "whitelist", "world", "worldborder", "xp", "날리기"));
+                  "trigger", "velo", "velocity", "w", "weather", "whitelist", "worldborder", "xp", "날리기", "item")*/);
 
   public static String timeFormatMilli(long ms)
   {
@@ -1855,7 +1858,7 @@ public class Method extends SoundPlay
                   (noItemTagString != null && !displayNameSerial.contains(MessageUtil.n2s(noItemTagString, MessageUtil.N2SType.SPECIAL)))
           )
           {
-            Component component = ComponentUtil.itemName(item);
+            Component component = ItemNameUtil.itemName(item);
             int amount = item.getAmount() + mergeAmount;
             if (amount > 1)
             {
@@ -2032,15 +2035,10 @@ public class Method extends SoundPlay
   @NotNull
   public static List<String> sort(@NotNull List<String> list)
   {
-    return sort(list, false);
-  }
-
-  @NotNull
-  public static List<String> sort(@NotNull List<String> list, boolean allowSpace)
-  {
     for (int i = 0; i < list.size(); i++)
     {
       String s = list.get(i);
+      // for legacy
       try
       {
         if (s.startsWith("{\""))
@@ -2057,22 +2055,18 @@ public class Method extends SoundPlay
       {
         s = "죄송합니다! 메시지가 너무 길었습니다! : " + s.substring(0, 100) + "...";
       }
-      if (!allowSpace && s.contains(" ") &&
-              !(
-                      (s.startsWith("(") || s.endsWith(")")) ||
-                              (s.startsWith("<") || s.endsWith(">")) ||
-                              (s.startsWith("[") || s.endsWith("]"))
+      if (s.contains(" ") &&
+              !(s.startsWith("(") || s.endsWith(")") ||
+                      s.startsWith("<") || s.endsWith(">") ||
+                      s.startsWith("[") || s.endsWith("]")
               )
       )
       {
-        if (s.contains("\""))
+        if (s.contains("'"))
         {
-          s = "'" + s + "'";
+          s = s.replace("'", "''");
         }
-        else
-        {
-          s = "\"" + s + "\"";
-        }
+        s = "'" + s + "'";
       }
       list.set(i, s);
     }
@@ -2553,16 +2547,10 @@ public class Method extends SoundPlay
   {
     return Method.tabCompleterList(args, list, key, false);
   }
-
   public static List<String> tabCompleterList(String[] args, List<String> list, String key, boolean ignoreEmpty)
   {
-    return tabCompleterList(args, list, key, ignoreEmpty, false);
-  }
-
-  public static List<String> tabCompleterList(String[] args, List<String> list, String key, boolean ignoreEmpty, boolean allowSpace)
-  {
     String tabArg = args[args.length - 1];
-    if ((!ignoreEmpty && tabArg.equals("") && (list == null || list.size() == 0)) || (ignoreEmpty && (list == null || list.size() == 0)))
+    if ((!ignoreEmpty && tabArg.equals("") && (list == null || list.isEmpty())) || (ignoreEmpty && (list == null || list.isEmpty())))
     {
       return Collections.singletonList(key);
     }
@@ -2594,7 +2582,7 @@ public class Method extends SoundPlay
           returnValue.add(str);
         }
       }
-      if (returnValue.size() == 0 && !key.equals("") && !ignoreEmpty)
+      if (returnValue.isEmpty() && !key.equals("") && !ignoreEmpty)
       {
         return Collections.singletonList(tabArg +
                 MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은는) +
@@ -2603,14 +2591,14 @@ public class Method extends SoundPlay
                 "입니다" +
                 ".");
       }
-      returnValue = Method.sort(returnValue, allowSpace);
-      if ((ignoreEmpty && returnValue.size() == 0) || (!key.equals("") && returnValue.size() == 1 && returnValue.get(0).equalsIgnoreCase(tabArg)))
+      returnValue = Method.sort(returnValue);
+      if ((ignoreEmpty && returnValue.isEmpty()) || (!key.equals("") && returnValue.size() == 1 && returnValue.get(0).equalsIgnoreCase(tabArg)))
       {
         return Collections.singletonList(key);
       }
       return returnValue;
     }
-    return Method.sort(list, allowSpace);
+    return Method.sort(list);
   }
 
   public static List<String> tabCompleterList(String[] args, String key, String... list)
@@ -2630,12 +2618,7 @@ public class Method extends SoundPlay
 
   public static List<String> tabCompleterList(String[] args, Set<String> set, String key, boolean ignoreEmpty)
   {
-    return Method.tabCompleterList(args, Method.setToList(set), key, ignoreEmpty, false);
-  }
-
-  public static List<String> tabCompleterList(String[] args, Set<String> set, String key, boolean ignoreEmpty, boolean allowSpace)
-  {
-    return Method.tabCompleterList(args, Method.setToList(set), key, ignoreEmpty, allowSpace);
+    return Method.tabCompleterList(args, Method.setToList(set), key, ignoreEmpty);
   }
 
   public static List<String> tabCompleterList(String[] args, Enum<?>[] array, String key)
@@ -2688,6 +2671,8 @@ public class Method extends SoundPlay
     {
       return Collections.singletonList("정수는 " + Constant.Sosu15.format(to) + " 이하여야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
+    char keyLast = key.charAt(key.length() - 1);
+    key = key.substring(0, key.length() - 1) + "=" + Constant.Sosu15.format(argInt) + keyLast;
     return Collections.singletonList(key);
   }
 
@@ -2727,6 +2712,8 @@ public class Method extends SoundPlay
     {
       return Collections.singletonList("정수는 " + Constant.Sosu15.format(to) + " 이하여야 하는데, " + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
+    char keyLast = key.charAt(key.length() - 1);
+    key = key.substring(0, key.length() - 1) + "=" + Constant.Sosu15.format(argLong) + keyLast;
     return Collections.singletonList(key);
   }
 
@@ -2786,12 +2773,21 @@ public class Method extends SoundPlay
       return Collections.singletonList("숫자는 " + Constant.Sosu15.format(to) + " " + (excludeTo ? "미만이어야" : "이하여야") + " 하는데, "
               + tabArg + MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.이가) + " 있습니다.");
     }
+
+    char keyLast = key.charAt(key.length() - 1);
+    key = key.substring(0, key.length() - 1) + "=" + Constant.Sosu15.format(argDouble) + keyLast;
     return Collections.singletonList(key);
   }
 
-  private static List<String> tabCompleterEntity(CommandSender sender)
+
+  private static List<String> tabCompleterEntity(CommandSender sender, String lastArg)
   {
-    List<String> list = new ArrayList<>(Arrays.asList("@p", "@r", "@a", "@s", "@e"));
+    return tabCompleterEntity(sender, lastArg, false);
+  }
+
+  private static List<String> tabCompleterEntity(CommandSender sender, String lastArg, boolean excludeNonPlayerEntity)
+  {
+    List<String> list = new ArrayList<>(Arrays.asList("@p", "@r", "@a", "@s"));
     if (!sender.hasPermission("asdf"))
     {
       list.clear();
@@ -2810,6 +2806,8 @@ public class Method extends SoundPlay
       location.add(location.getDirection().multiply(1d));
       for (Entity entity : player.getWorld().getNearbyEntities(location, 3d, 2d, 3d))
       {
+        if (excludeNonPlayerEntity && !(entity instanceof Player))
+          continue;
         if ((!entity.equals(player)))
         {
           String type = MessageUtil.stripColor(ComponentUtil.serialize(Component.translatable(entity.getType().translationKey())));
@@ -2817,19 +2815,29 @@ public class Method extends SoundPlay
           if (entity instanceof Player p)
           {
             display = p.getName() + "/" + type;
+            String playerDisplay = MessageUtil.stripColor(ComponentUtil.serialize(p.displayName()));
+            if (!p.getName().equals(playerDisplay))
+            {
+              display = playerDisplay + "/" + p.getName() + "/" + type;
+            }
           }
           else
           {
-            display = MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.senderComponent(entity)));
+            display = MessageUtil.stripColor(ComponentUtil.serialize(SenderComponentUtil.senderComponent(entity)));
             if (!type.equals(display))
             {
               display += "/" + type;
             }
           }
           list.add(entity.getUniqueId().toString());
+          if (!Method.isUUID(lastArg))
           list.add(entity.getUniqueId() + "[" + display + "]");
         }
       }
+    }
+    if (Bukkit.getServer().getPlayerExact(lastArg) != null)
+    {
+      return Collections.singletonList(lastArg);
     }
     return list;
   }
@@ -2850,7 +2858,8 @@ public class Method extends SoundPlay
     {
       return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
     }
-    List<String> list = tabCompleterEntity(sender);
+    List<String> list = new ArrayList<>(tabCompleterEntity(sender, args[args.length - 1]));
+    list.add("@e");
     List<String> returnList = Method.tabCompleterList(args, list, key, true);
     if ((Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") || !list.contains(args[args.length - 1]))
             && returnList.size() == 1 && key.equals(returnList.get(0)))
@@ -2858,7 +2867,7 @@ public class Method extends SoundPlay
       try
       {
         List<Entity> entities = Bukkit.selectEntities(sender, args[args.length - 1]);
-        if (entities.size() == 0)
+        if (entities.isEmpty())
         {
           return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.notfound.entity")));
         }
@@ -2899,7 +2908,7 @@ public class Method extends SoundPlay
     {
       return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
     }
-    List<String> list = tabCompleterEntity(sender);
+    List<String> list = tabCompleterEntity(sender, args[args.length - 1], true);
     List<String> returnList = Method.tabCompleterList(args, list, key, true);
     if ((Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") || !list.contains(args[args.length - 1]))
             && returnList.size() == 1 && key.equals(returnList.get(0)))
@@ -2907,7 +2916,7 @@ public class Method extends SoundPlay
       try
       {
         List<Entity> entities = Bukkit.selectEntities(sender, args[args.length - 1]);
-        if (entities.size() == 0)
+        if (entities.isEmpty())
         {
           return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.notfound.player")));
         }
@@ -2956,7 +2965,7 @@ public class Method extends SoundPlay
     {
       return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
     }
-    List<String> list = tabCompleterEntity(sender);
+    List<String> list = tabCompleterEntity(sender, args[args.length - 1], true);
     for (String nickName : Variable.nickNames)
     {
       if (!Method.isUUID(nickName) || (Bukkit.getOfflinePlayer(UUID.fromString(nickName)).getName() == null))
@@ -3255,10 +3264,8 @@ public class Method extends SoundPlay
         String remainTime = Method.timeFormatMilli(nextAvailable - currentTime);
         if (currentTime < nextAvailable)
         {
-          String itemName = item.toString();
           playWarnSound(player);
-          MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, item),
-                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + " 우클릭 사용할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
+          MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN, ComponentUtil.createTranslate("아직 %s을(를) 우클릭 사용할 수 없습니다. (남은 시간 : %s)", item, "&e" + remainTime)));
           return true;
         }
         if (configPlayerCooldown == null)
@@ -3349,7 +3356,7 @@ public class Method extends SoundPlay
           BlockStateMeta boxMeta = (BlockStateMeta) item.getItemMeta();
           ShulkerBox shulker = (ShulkerBox) boxMeta.getBlockState();
           ItemStack[] contents = shulker.getInventory().getContents();
-          Component display = ComponentUtil.itemName(item, NamedTextColor.DARK_GRAY);
+          Component display = ItemNameUtil.itemName(item, NamedTextColor.DARK_GRAY);
           Inventory inv = Bukkit.createInventory(null, InventoryType.SHULKER_BOX,
                   Component.translatable("%s").args(display, Component.text(Constant.ITEM_PORTABLE_SHULKER_BOX_GUI + (slot == EquipmentSlot.HAND ? "MAIN_HAND" : "OFF_HAND"))));
           inv.setContents(contents);

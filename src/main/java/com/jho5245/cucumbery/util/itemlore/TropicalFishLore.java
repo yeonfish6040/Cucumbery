@@ -1,20 +1,14 @@
 package com.jho5245.cucumbery.util.itemlore;
 
 import org.bukkit.DyeColor;
-import org.bukkit.entity.TropicalFish;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.TropicalFishBucketMeta;
+import org.bukkit.entity.TropicalFish.Pattern;
 import org.jetbrains.annotations.NotNull;
 
 public class TropicalFishLore
 {
   @NotNull
-  public static String getTropicalFishKey(@NotNull ItemStack itemStack)
+  public static String getTropicalFishKey(@NotNull DyeColor bodyColor, @NotNull DyeColor patternColor, @NotNull Pattern pattern)
   {
-    TropicalFishBucketMeta bucketMeta = (TropicalFishBucketMeta) itemStack.getItemMeta();
-    TropicalFish.Pattern pattern = bucketMeta.getPattern();
-    DyeColor bodyColor = bucketMeta.getBodyColor();
-    DyeColor patternColor = bucketMeta.getPatternColor();
     switch (pattern)
     {
       case BETTY:

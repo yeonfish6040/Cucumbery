@@ -5,7 +5,7 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -106,11 +106,8 @@ public class PlayerSwapHandItems implements Listener
         long currentTime = System.currentTimeMillis();
         if (currentTime < nextAvailable)
         {
-          String remainTime = Method.timeFormatMilli(nextAvailable - currentTime);
-          String itemName = ComponentUtil.itemName(item).toString();
-          Method.playWarnSound(player);
-          MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, item),
-                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + (isSneaking ? " 웅크리고" : "") + " 스와핑 사용할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
+          String remainTime = "&e" + Method.timeFormatMilli(nextAvailable - currentTime);
+          MessageUtil.sendWarn(player, ComponentUtil.create("아직 %s을(를)" + (isSneaking ? " 웅크리고" : "") + " 스와핑 사용할 수 없습니다. (남은 시간 : %s)", item, remainTime));
           event.setCancelled(true);
           return;
         }

@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.util;
 
 import com.google.common.base.Predicates;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -39,7 +39,7 @@ public class SelectorUtil
         sender = Bukkit.getConsoleSender();
       }
       List<Entity> entities = Bukkit.selectEntities(sender, selector);
-      if (entities.size() == 0)
+      if (entities.isEmpty())
       {
         if (notice)
         {
@@ -215,19 +215,19 @@ public class SelectorUtil
         return null;
       }
       return players;
-  }
-    catch (IllegalArgumentException e)
-  {
-    if (sender != null && notice)
-    {
-      if (!sender.hasPermission("asdf"))
-      {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
-        return null;
-      }
-      MessageUtil.sendError(sender, errorMessage(sender, selector, e));
     }
-  }
+    catch (IllegalArgumentException e)
+    {
+      if (sender != null && notice)
+      {
+        if (!sender.hasPermission("asdf"))
+        {
+          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          return null;
+        }
+        MessageUtil.sendError(sender, errorMessage(sender, selector, e));
+      }
+    }
     return null;
   }
 
@@ -254,7 +254,7 @@ public class SelectorUtil
         sender = Bukkit.getConsoleSender();
       }
       List<Entity> entities = Bukkit.selectEntities(sender, selector);
-      if (entities.size() == 0 && notice)
+      if (entities.isEmpty() && notice)
       {
         MessageUtil.noArg(sender, Prefix.NO_ENTITY, selector);
       }
@@ -285,12 +285,10 @@ public class SelectorUtil
   {
     try
     {
-      Player player = Method.getPlayer(sender, selector, false);
-      if (player != null)
+      List<Player> onlinePlayers = getPlayers(sender, selector, false);
+      if (onlinePlayers != null)
       {
-        List<OfflinePlayer> entities = new ArrayList<>();
-        entities.add(player);
-        return entities;
+        return new ArrayList<>(onlinePlayers);
       }
       if (sender == null)
       {
@@ -302,7 +300,7 @@ public class SelectorUtil
         return new ArrayList<>(Collections.singletonList(offlinePlayer));
       }
       List<Entity> entities = Bukkit.selectEntities(sender, selector);
-      if (entities.size() == 0)
+      if (entities.isEmpty())
       {
         if (notice)
         {
@@ -364,7 +362,7 @@ public class SelectorUtil
   {
     try
     {
-      Player player = Method.getPlayer(sender, selector, false);
+      Player player = getPlayer(sender, selector, false);
       if (player != null)
       {
         return player;
@@ -379,7 +377,7 @@ public class SelectorUtil
         return offlinePlayer;
       }
       List<Entity> entities = Bukkit.selectEntities(sender, selector);
-      if (entities.size() == 0)
+      if (entities.isEmpty())
       {
         if (notice)
         {
@@ -419,7 +417,7 @@ public class SelectorUtil
         return null;
       }
       return (Player) entities.get(0);
-  }
+    }
     catch (IllegalArgumentException e)
     {
       if (sender != null && notice)
@@ -455,9 +453,9 @@ public class SelectorUtil
     {
       String msg = e.getCause().getMessage();
       if (msg.startsWith("Unknown or incomplete command, see below for error"))
-    {
-      return "command.unknown.command";
-    }
+      {
+        return "command.unknown.command";
+      }
       if (msg.startsWith("Incorrect argument for command"))
       {
         return "command.unknown.argument";

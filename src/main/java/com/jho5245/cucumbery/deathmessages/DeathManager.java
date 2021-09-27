@@ -4,8 +4,9 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
@@ -18,8 +19,6 @@ import org.bukkit.event.entity.*;
 import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockDataMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
@@ -71,7 +70,7 @@ public class DeathManager
     PlayerDeathEvent playerDeathEvent = isPlayerDeath ? (PlayerDeathEvent) event : null;
     if (entity.customName() != null)
     {
-      success = success || !location.getNearbyPlayers(100).isEmpty();
+      success = success || !location.getNearbyPlayers(100d).isEmpty();
     }
     if (entity instanceof Tameable tameable)
     {
@@ -79,18 +78,22 @@ public class DeathManager
     }
     if (entity instanceof Villager villager)
     {
-      success = success || villager.getVillagerExperience() > 0;
+      success = success || !villager.isAdult() || villager.getVillagerExperience() > 0;
     }
     if (entity instanceof IronGolem ironGolem)
     {
       success = success || ironGolem.isPlayerCreated();
     }
-    if (entity instanceof AbstractHorse horse)
+    if (entity instanceof Snowman snowman && snowman.isDerp())
+    {
+      success = true;
+    }
+    if (entity instanceof AbstractHorse horse && !(horse instanceof SkeletonHorse))
     {
       AbstractHorseInventory inventory = horse.getInventory();
       success = success || !Method.inventoryEmpty(inventory);
     }
-    if (entity instanceof Boss)
+    if (entity instanceof Boss boss && !boss.getLocation().getNearbyPlayers(500d).isEmpty())
     {
       success = true;
     }
@@ -100,10 +103,6 @@ public class DeathManager
       damageCause = new EntityDamageEvent(entity, EntityDamageEvent.DamageCause.VOID, Double.MAX_VALUE);
     }
     EntityDamageEvent.DamageCause cause = damageCause.getCause();
-    if (cause == EntityDamageEvent.DamageCause.LIGHTNING)
-    {
-      success = true;
-    }
     if (cause == EntityDamageEvent.DamageCause.VOID)
     {
       if (damageCause.getDamage() < 100)
@@ -114,7 +113,7 @@ public class DeathManager
 
     if (success)
     {
-      Component entityComponent = ComponentUtil.senderComponent(entity);
+      Component entityComponent = SenderComponentUtil.senderComponent(entity);
       List<Component> args = new ArrayList<>();
       World world = location.getWorld();
       String worldName = world.getName();
@@ -140,13 +139,6 @@ public class DeathManager
             {
               Material type = block.getType();
               ItemStack itemStack = ItemStackUtil.getItemStackFromBlock(block);
-              ItemMeta itemMeta = itemStack.getItemMeta();
-              if (itemMeta instanceof BlockDataMeta blockDataMeta)
-              {
-                blockDataMeta.setBlockData(block.getBlockData());
-                itemStack.setItemMeta(blockDataMeta);
-                ItemLore.setItemLore(itemStack);
-              }
               extraArgs.add(ComponentUtil.create(itemStack));
               if (type == Material.SWEET_BERRY_BUSH)
               {
@@ -178,12 +170,21 @@ public class DeathManager
             else
             {
               key = "melee";
+              if (entity instanceof Parrot && damager instanceof Player player && damageCause.getDamage() > Math.pow(2, 127))
+              {
+                ItemStack item = ItemStackUtil.getPlayerUsingItem(player, Material.COOKIE);
+                if (ItemStackUtil.itemExists(item))
+                {
+                  weapon = item.clone();
+                  key = "parrot_cookie";
+                }
+              }
               if (weapon != null)
               {
                 Material type = weapon.getType();
                 switch (type)
                 {
-                  case DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, NETHERITE_SWORD, STONE_SWORD -> key += "_sword";
+                  case DIAMOND_SWORD, GOLDEN_SWORD, IRON_SWORD, NETHERITE_SWORD, STONE_SWORD, WOODEN_SWORD -> key += "_sword";
                 }
               }
             }
@@ -243,7 +244,25 @@ public class DeathManager
         }
         case SUFFOCATION -> {
           key = "suffocation";
-          extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(ItemStackUtil.getExactBlockFrom(entity.getEyeLocation(), Constant.OCCLUDING_BLOCKS))));
+          WorldBorder worldBorder = world.getWorldBorder();
+          if (!worldBorder.isInside(location))
+          {
+            key = "world_border";
+            Component worldBorderComponent = Component.translatable("세계 경계", Constant.THE_COLOR);
+            Location center = worldBorder.getCenter();
+            double size = worldBorder.getSize();
+            Component hover = Component.translatable("세계 경계");
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.createTranslate("크기 : %s", size));
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.createTranslate("중심 좌표 : %s", center));
+            worldBorderComponent = worldBorderComponent.hoverEvent(hover);
+            extraArgs.add(worldBorderComponent);
+          }
+          else
+          {
+            extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(ItemStackUtil.getExactBlockFromWithLimited(entity.getEyeLocation(), Constant.OCCLUDING_BLOCKS))));
+          }
         }
         case FALL -> {
           if (damageCause instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.getDamager() instanceof EnderPearl enderPearl && entity.equals(enderPearl.getShooter()))
@@ -294,7 +313,13 @@ public class DeathManager
             extraArgs.add(ComponentUtil.create(ItemStackUtil.getItemStackFromBlock(block)));
           }
         }
-        case DROWNING -> key = "drown";
+        case DROWNING -> {
+          key = "drown";
+          if (entity instanceof WaterMob)
+          {
+            key += "_water";
+          }
+        }
         case BLOCK_EXPLOSION -> {
           if (damageCause instanceof EntityDamageByBlockEvent damageByBlockEvent)
           {
@@ -360,7 +385,7 @@ public class DeathManager
             Entity damagerEntity = damageByEntityEvent.getDamager();
             if (damagerEntity instanceof LightningStrike lightningStrike)
             {
-              extraArgs.add(ComponentUtil.senderComponent(lightningStrike));
+              extraArgs.add(SenderComponentUtil.senderComponent(lightningStrike));
             }
           }
         }
@@ -379,9 +404,14 @@ public class DeathManager
               {
                 case ANVIL -> key = "anvil";
                 case POINTED_DRIPSTONE -> key = "falling_stalactite";
+                default -> key = "falling_block";
               }
               extraArgs.add(ComponentUtil.create(fallingBlock));
             }
+          }
+          else
+          {
+            key = "falling_block";
           }
         }
         case THORNS -> key = "thorns";
@@ -419,7 +449,7 @@ public class DeathManager
           }
           else
           {
-            extraArgs.add(ComponentUtil.senderComponent(livingEntities));
+            extraArgs.add(SenderComponentUtil.senderComponent(livingEntities));
           }
           Integer i = world.getGameRuleValue(GameRule.MAX_ENTITY_CRAMMING);
           if (i != null)
@@ -441,7 +471,7 @@ public class DeathManager
         }
         else
         {
-          args.add(ComponentUtil.senderComponent(damager));
+          args.add(SenderComponentUtil.senderComponent(damager));
           double distance = -1;
           try
           {
@@ -454,6 +484,10 @@ public class DeathManager
           extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(distance)).color(Constant.THE_COLOR));
         }
         key += "_combat";
+        if (entity.equals(damager))
+        {
+          key += "_suicide";
+        }
       }
 
       if (ItemStackUtil.itemExists(weapon))
@@ -471,25 +505,28 @@ public class DeathManager
       }
 
       MessageUtil.broadcastDebug(key);
-      Messages deathMessages;
+      DeathMessage deathMessage;
       try
       {
-        deathMessages = Messages.valueOf(key.toUpperCase());
+        deathMessage = DeathMessage.valueOf(key.toUpperCase());
       }
       catch (Exception e)
       {
-        deathMessages = Messages.UNKNOWN;
-        extraArgs.add(reportBugURL);
+        deathMessage = DeathMessage.UNKNOWN;
       }
-      List<String> keys = deathMessages.getKeys();
+      List<String> keys = deathMessage.getKeys();
       // 조건부 데스 메시지가 있으면 데스 메시지 치환
       Condition.changeDeathMessages(event, key, keys);
 
-      if (deathMessages == Messages.UNKNOWN)
+      if (deathMessage == DeathMessage.UNKNOWN)
       {
         keys.clear();
-        extraArgs.add(Component.text(key));
-        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %" + (extraArgs.size() + args.size() - 1) + "$s에서 해당 버그를 제보해주세요! 키 : %" + (extraArgs.size() + args.size()) + "$s");
+        args.clear();
+        extraArgs.clear();
+        args.add(SenderComponentUtil.senderComponent(entity));
+        args.add(reportBugURL);
+        args.add(Component.text(key).hoverEvent(Component.translatable("chat.copy.click")).clickEvent(ClickEvent.copyToClipboard(key)).color(Constant.THE_COLOR));
+        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요! 키 : %3$s");
       }
 
       if (key.equals("kill_combat"))
@@ -504,8 +541,8 @@ public class DeathManager
         key = keys.get(random);
       }
       args.addAll(extraArgs);
-      @Nullable Component deathMessage = ComponentUtil.createTranslate(key, args);
-      if (ComponentUtil.serializeAsJson(deathMessage).length() > MAXIMUM_COMPONENT_SERIAL_LENGTH)
+      @Nullable Component deathMessageComponent = ComponentUtil.createTranslate(key, args);
+      if (ComponentUtil.serializeAsJson(deathMessageComponent).length() > MAXIMUM_COMPONENT_SERIAL_LENGTH)
       {
         for (int i = 0; i < args.size(); i++)
         {
@@ -515,11 +552,11 @@ public class DeathManager
             args.set(i, args.get(i).hoverEvent(null));
           }
         }
-        deathMessage = ComponentUtil.createTranslate("death.attack.message_too_long", ComponentUtil.createTranslate(key, args));
+        deathMessageComponent = ComponentUtil.createTranslate("death.attack.message_too_long", ComponentUtil.createTranslate(key, args));
       }
       if (usePrefix)
       {
-        boolean isPvP = isPlayerDeath && (DeathManager.getDamager(event) instanceof Player && !entity.equals(DeathManager.getDamager(event)));
+        boolean isPvP = isPlayerDeath && (damager instanceof Player && !entity.equals(damager));
         Projectile projectile = getDamagerProjectile(event);
         if (projectile != null)
         {
@@ -538,7 +575,7 @@ public class DeathManager
             isPvP = false;
           }
         }
-        deathMessage = Component.empty().append(isPvP ? DEATH_PREFIX_PVP : DEATH_PREFIX).append(deathMessage);
+        deathMessageComponent = Component.empty().append(isPvP ? DEATH_PREFIX_PVP : DEATH_PREFIX).append(deathMessageComponent);
       }
       Variable.victimAndDamager.remove(entity.getUniqueId());
       Variable.victimAndBlockDamager.remove(entity.getUniqueId());
@@ -558,31 +595,31 @@ public class DeathManager
         if (!cancelledMessages.isEmpty())
         {
           String message = cancelledMessages.get(Method.random(0, cancelledMessages.size() - 1));
-          deathMessage = deathMessage.append(ComponentUtil.createTranslate(message, entity));
+          deathMessageComponent = deathMessageComponent.append(ComponentUtil.createTranslate(message, entity));
         }
       }
       if (key.equals("none"))
       {
-        deathMessage = null;
+        deathMessageComponent = null;
       }
       if (playerDeathEvent != null)
       {
-        MessageUtil.consoleSendMessage(ComponentUtil.createTranslate("&7죽은 위치 : %s", ComponentUtil.locationComponent(location)));
-        if (event.isCancelled() && deathMessage != null)
+        MessageUtil.consoleSendMessage(ComponentUtil.createTranslate("&7죽은 위치 : %s", location));
+        if (event.isCancelled() && deathMessageComponent != null)
         {
-          MessageUtil.broadcast(deathMessage);
+          MessageUtil.broadcast(deathMessageComponent);
         }
-        playerDeathEvent.deathMessage(deathMessage);
+        playerDeathEvent.deathMessage(deathMessageComponent);
       }
-      else if (deathMessage != null)
+      else if (deathMessageComponent != null)
       {
-        MessageUtil.broadcastPlayer(deathMessage);
+        MessageUtil.broadcastPlayer(deathMessageComponent);
         int x = location.getBlockX();
         int y = location.getBlockY();
         int z = location.getBlockZ();
         // 콘솔에 디버그를 보내기 위함
-        deathMessage = deathMessage.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));
-        MessageUtil.consoleSendMessage(deathMessage);
+        deathMessageComponent = deathMessageComponent.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));
+        MessageUtil.consoleSendMessage(deathMessageComponent);
       }
     }
   }

@@ -3,8 +3,9 @@ package com.jho5245.cucumbery.listeners.server;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
@@ -42,12 +43,16 @@ public class ServerCommand implements Listener
           return;
         }
       }
-    }
 
-    if (command.contains("--cucumbery"))
-    {
       command = command.replaceFirst("--cucumbery", "");
       command = Method.parseCommandString(Bukkit.getServer().getConsoleSender(), command);
+      event.setCommand(command);
+    }
+
+    // cucumberify
+    if (Cucumbery.using_CommandAPI && command.startsWith("/give"))
+    {
+      command = "/cgive" + command.substring(5);
       event.setCommand(command);
     }
 
@@ -79,7 +84,7 @@ public class ServerCommand implements Listener
         World world = loc.getWorld();
         String worldDisplayName = Method.getWorldDisplayName(world);
         String worldName = world.getName();
-        Component blockName = ComponentUtil.senderComponent(sender);
+        Component blockName = SenderComponentUtil.senderComponent(sender);
         String blockOriginName = switch (block.getType())
                 {
                   case COMMAND_BLOCK -> "rgb215,180,157;&l반응형 명령 블록";

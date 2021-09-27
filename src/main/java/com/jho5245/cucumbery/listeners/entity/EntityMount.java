@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.listeners.entity;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;

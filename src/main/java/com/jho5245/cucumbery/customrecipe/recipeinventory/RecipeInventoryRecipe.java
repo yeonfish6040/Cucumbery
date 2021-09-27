@@ -7,9 +7,10 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -175,9 +176,8 @@ public class RecipeInventoryRecipe
     }
 
     String nbtItemStack = config.getString("recipes." + recipe + ".result");
-    boolean resultIsNull;
     ItemStack result = ItemSerializer.deserialize(nbtItemStack);
-    resultIsNull = !ItemStackUtil.itemExists(result);
+    boolean resultIsNull = !ItemStackUtil.itemExists(result);
     if (resultIsNull)
     {
       MessageUtil.sendError(player, "레시피를 여는데 일시적인 오류가 발생했거나 올바르지 않은 레시피입니다. 현상이 지속적으로 발생한다면, 관리자에게 문의해주세요. (오류 코드 : Result)");
@@ -191,7 +191,7 @@ public class RecipeInventoryRecipe
     ItemMeta createButtonMeta = createButton.getItemMeta();
     List<Component> createButtonLore = new ArrayList<>(Arrays.asList(ComponentUtil.create("§e가지고 있는 재료가 부족하여 아이템을 제작할 수 없습니다."), Component.empty()));
     List<String> description = config.getStringList("recipes." + recipe + ".extra.descriptions.crafting");
-    if (description.size() > 0)
+    if (!description.isEmpty())
     {
       for (String str : description)
       {
@@ -236,7 +236,7 @@ public class RecipeInventoryRecipe
         lore.addAll(Arrays.asList(Component.empty(),
                 ComponentUtil.create("rgb153,217,234;[이 아이템은 제작 시 사라지지 않습니다.]")));
       }
-      createButtonLore.add(ComponentUtil.create(ComponentUtil.itemName(ingredient, TextColor.color(255, 255, 255)), "&8 : " + playerAmountColor + playerAmount + " &7/rgb0,255,84; " + amount + (reusable ? " &8[∞]" : "")));
+      createButtonLore.add(ComponentUtil.create(ItemNameUtil.itemName(ingredient, TextColor.color(255, 255, 255)), "&8 : " + playerAmountColor + playerAmount + " &7/rgb0,255,84; " + amount + (reusable ? " &8[∞]" : "")));
       itemMeta.lore(lore);
       ingredient.setItemMeta(itemMeta);
       menu.addItem(ingredient);

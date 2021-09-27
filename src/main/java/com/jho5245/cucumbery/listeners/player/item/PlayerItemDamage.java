@@ -6,7 +6,7 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -40,9 +40,8 @@ public class PlayerItemDamage implements Listener
     NBTCompound duraTag = NBTAPI.getCompound(itemTag, CucumberyTag.CUSTOM_DURABILITY_KEY);
     if (duraTag != null)
     {
-      long curDura, maxDura;
-      maxDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
-      curDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
+      long maxDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
+      long curDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
       boolean hasCustomDura = maxDura != 0;
       if (!hasCustomDura)
       {
@@ -134,7 +133,7 @@ public class PlayerItemDamage implements Listener
             Damageable duraMeta = (Damageable) itemMeta;
             event.setDamage(0);
             duraMeta.setDamage(0);
-            event.getItem().setItemMeta((ItemMeta) duraMeta);
+            event.getItem().setItemMeta(duraMeta);
             event.getItem().setAmount(amount - 1);
           }
         }
@@ -155,7 +154,7 @@ public class PlayerItemDamage implements Listener
             event.setDamage(0);
             duraMeta.setDamage(0);
           }
-          event.getItem().setItemMeta((ItemMeta) duraMeta);
+          event.getItem().setItemMeta(duraMeta);
         }
       }
     }

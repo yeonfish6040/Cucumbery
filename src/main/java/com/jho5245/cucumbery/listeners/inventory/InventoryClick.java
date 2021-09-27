@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.commands.sound.NoteBlockAPISong;
+import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.customrecipe.CustomRecipeUtil;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryMainMenu;
@@ -16,10 +16,11 @@ import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.BlockDataInfo;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -163,7 +164,7 @@ public class InventoryClick implements Listener
           playerCraftingTimeConfigFile.getConfig().set("crafting-time." + recipeListName + "." + recipe, null);
           playerCraftingTimeConfig.set("crafting-time." + recipeListName + "." + recipe, null);
           ConfigurationSection categorySection = playerCraftingTimeConfig.getConfigurationSection("crafting-time." + recipeListName);
-          if (categorySection == null || categorySection.getKeys(false).size() == 0)
+          if (categorySection == null || categorySection.getKeys(false).isEmpty())
           {
             playerCraftingTimeConfigFile.getConfig().set("crafting-time." + recipeListName, null);
             playerCraftingTimeConfig.set("crafting-time." + recipeListName, null);
@@ -189,7 +190,7 @@ public class InventoryClick implements Listener
     ItemStack trueResult = null;
     PlayerInventory playerInventory = player.getInventory();
     List<String> randomResult = recipeList.getStringList("recipes." + recipe + ".extra.random-result");
-    if (randomResult.size() > 0)
+    if (!randomResult.isEmpty())
     {
       double randomStart = 0d;
       double random = Math.random() * 100d;
@@ -208,7 +209,7 @@ public class InventoryClick implements Listener
           }
           YamlConfiguration randomResultRecipeConfig = Variable.customRecipes.get(randomResultCategory);
           ConfigurationSection randomResultRecipeSection = randomResultRecipeConfig.getConfigurationSection("recipes." + randomResultRecipe);
-          if (randomResultRecipeSection == null || randomResultRecipeSection.getKeys(false).size() == 0)
+          if (randomResultRecipeSection == null || randomResultRecipeSection.getKeys(false).isEmpty())
           {
             continue;
           }
@@ -490,36 +491,44 @@ public class InventoryClick implements Listener
                   if (!helmetExists)
                   {
                     ItemStack currentClone = Objects.requireNonNull(current).clone();
-                    event.setCurrentItem(null);
-                    playerInventory.setHelmet(currentClone);
-                    player.updateInventory();
+                    {
+                      event.setCurrentItem(null);
+                      playerInventory.setHelmet(currentClone);
+                      player.updateInventory();
+                    }
                   }
                   break;
                 case "CHESTPLATE":
                   if (!chestplateExists)
                   {
                     ItemStack currentClone = Objects.requireNonNull(current).clone();
-                    event.setCurrentItem(null);
-                    playerInventory.setChestplate(currentClone);
-                    player.updateInventory();
+                    {
+                      event.setCurrentItem(null);
+                      playerInventory.setChestplate(currentClone);
+                      player.updateInventory();
+                    }
                   }
                   break;
                 case "LEGGINGS":
                   if (!leggingsExists)
                   {
                     ItemStack currentClone = Objects.requireNonNull(current).clone();
-                    event.setCurrentItem(null);
-                    playerInventory.setLeggings(currentClone);
-                    player.updateInventory();
+                    {
+                      event.setCurrentItem(null);
+                      playerInventory.setLeggings(currentClone);
+                      player.updateInventory();
+                    }
                   }
                   break;
                 case "BOOTS":
                   if (!bootsExists)
                   {
                     ItemStack currentClone = Objects.requireNonNull(current).clone();
-                    event.setCurrentItem(null);
-                    playerInventory.setBoots(currentClone);
-                    player.updateInventory();
+                    {
+                      event.setCurrentItem(null);
+                      playerInventory.setBoots(currentClone);
+                      player.updateInventory();
+                    }
                   }
                   break;
               }
@@ -544,18 +553,20 @@ public class InventoryClick implements Listener
                       Enchantment.BINDING_CURSE) > 0;
               if (!isBound)
               {
-                event.setCancelled(true);
-                ItemStack cursorClone = Objects.requireNonNull(cursor).clone();
-                if (currentExists)
                 {
-                  ItemStack currentClone = current.clone();
-                  player.setItemOnCursor(currentClone);
+                  event.setCancelled(true);
+                  ItemStack cursorClone = Objects.requireNonNull(cursor).clone();
+                  if (currentExists)
+                  {
+                    ItemStack currentClone = current.clone();
+                    player.setItemOnCursor(currentClone);
+                  }
+                  else
+                  {
+                    player.setItemOnCursor(null);
+                  }
+                  playerInventory.setHelmet(cursorClone);
                 }
-                else
-                {
-                  player.setItemOnCursor(null);
-                }
-                playerInventory.setHelmet(cursorClone);
               }
             }
             if (slotNumber == 38 && equipmentSlot.equals("CHESTPLATE"))
@@ -564,18 +575,20 @@ public class InventoryClick implements Listener
                       Enchantment.BINDING_CURSE) > 0;
               if (!isBound)
               {
-                event.setCancelled(true);
-                ItemStack cursorClone = Objects.requireNonNull(cursor).clone();
-                if (currentExists)
                 {
-                  ItemStack currentClone = current.clone();
-                  player.setItemOnCursor(currentClone);
+                  event.setCancelled(true);
+                  ItemStack cursorClone = Objects.requireNonNull(cursor).clone();
+                  if (currentExists)
+                  {
+                    ItemStack currentClone = current.clone();
+                    player.setItemOnCursor(currentClone);
+                  }
+                  else
+                  {
+                    player.setItemOnCursor(null);
+                  }
+                  playerInventory.setChestplate(cursorClone);
                 }
-                else
-                {
-                  player.setItemOnCursor(null);
-                }
-                playerInventory.setChestplate(cursorClone);
               }
             }
             if (slotNumber == 37 && equipmentSlot.equals("LEGGINGS"))
@@ -584,18 +597,20 @@ public class InventoryClick implements Listener
                       Enchantment.BINDING_CURSE) > 0;
               if (!isBound)
               {
-                event.setCancelled(true);
-                ItemStack cursorClone = Objects.requireNonNull(cursor).clone();
-                if (currentExists)
                 {
-                  ItemStack currentClone = current.clone();
-                  player.setItemOnCursor(currentClone);
+                  event.setCancelled(true);
+                  ItemStack cursorClone = Objects.requireNonNull(cursor).clone();
+                  if (currentExists)
+                  {
+                    ItemStack currentClone = current.clone();
+                    player.setItemOnCursor(currentClone);
+                  }
+                  else
+                  {
+                    player.setItemOnCursor(null);
+                  }
+                  playerInventory.setLeggings(cursorClone);
                 }
-                else
-                {
-                  player.setItemOnCursor(null);
-                }
-                playerInventory.setLeggings(cursorClone);
               }
             }
             if (slotNumber == 36 && equipmentSlot.equals("BOOTS"))
@@ -604,18 +619,20 @@ public class InventoryClick implements Listener
                       Enchantment.BINDING_CURSE) > 0;
               if (!isBound)
               {
-                event.setCancelled(true);
-                ItemStack cursorClone = Objects.requireNonNull(cursor).clone();
-                if (currentExists)
                 {
-                  ItemStack currentClone = current.clone();
-                  player.setItemOnCursor(currentClone);
+                  event.setCancelled(true);
+                  ItemStack cursorClone = Objects.requireNonNull(cursor).clone();
+                  if (currentExists)
+                  {
+                    ItemStack currentClone = current.clone();
+                    player.setItemOnCursor(currentClone);
+                  }
+                  else
+                  {
+                    player.setItemOnCursor(null);
+                  }
+                  playerInventory.setBoots(cursorClone);
                 }
-                else
-                {
-                  player.setItemOnCursor(null);
-                }
-                playerInventory.setBoots(cursorClone);
               }
             }
           }
@@ -635,18 +652,20 @@ public class InventoryClick implements Listener
                     Enchantment.BINDING_CURSE) > 0;
             if (!isBound)
             {
-              event.setCancelled(true);
-              ItemStack offHandClone = offHand.clone();
-              if (helmetExists)
               {
-                ItemStack helmetClone = helmet.clone();
-                playerInventory.setItemInOffHand(helmetClone);
+                event.setCancelled(true);
+                ItemStack offHandClone = offHand.clone();
+                if (helmetExists)
+                {
+                  ItemStack helmetClone = helmet.clone();
+                  playerInventory.setItemInOffHand(helmetClone);
+                }
+                else
+                {
+                  playerInventory.setItemInOffHand(null);
+                }
+                playerInventory.setHelmet(offHandClone);
               }
-              else
-              {
-                playerInventory.setItemInOffHand(null);
-              }
-              playerInventory.setHelmet(offHandClone);
             }
           }
           else if (slotNumber == 38 && equipmentSlot.equals("CHESTPLATE"))
@@ -655,18 +674,20 @@ public class InventoryClick implements Listener
                     Enchantment.BINDING_CURSE) > 0;
             if (!isBound)
             {
-              event.setCancelled(true);
-              ItemStack offHandClone = offHand.clone();
-              if (chestplateExists)
               {
-                ItemStack chestplateClone = chestplate.clone();
-                playerInventory.setItemInOffHand(chestplateClone);
+                event.setCancelled(true);
+                ItemStack offHandClone = offHand.clone();
+                if (chestplateExists)
+                {
+                  ItemStack chestplateClone = chestplate.clone();
+                  playerInventory.setItemInOffHand(chestplateClone);
+                }
+                else
+                {
+                  playerInventory.setItemInOffHand(null);
+                }
+                playerInventory.setChestplate(offHandClone);
               }
-              else
-              {
-                playerInventory.setItemInOffHand(null);
-              }
-              playerInventory.setChestplate(offHandClone);
             }
           }
           else if (slotNumber == 37 && equipmentSlot.equals("LEGGINGS"))
@@ -675,18 +696,20 @@ public class InventoryClick implements Listener
                     Enchantment.BINDING_CURSE) > 0;
             if (!isBound)
             {
-              event.setCancelled(true);
-              ItemStack offHandClone = offHand.clone();
-              if (leggingsExists)
               {
-                ItemStack leggingsClone = leggings.clone();
-                playerInventory.setItemInOffHand(leggingsClone);
+                event.setCancelled(true);
+                ItemStack offHandClone = offHand.clone();
+                if (leggingsExists)
+                {
+                  ItemStack leggingsClone = leggings.clone();
+                  playerInventory.setItemInOffHand(leggingsClone);
+                }
+                else
+                {
+                  playerInventory.setItemInOffHand(null);
+                }
+                playerInventory.setLeggings(offHandClone);
               }
-              else
-              {
-                playerInventory.setItemInOffHand(null);
-              }
-              playerInventory.setLeggings(offHandClone);
             }
           }
           else if (slotNumber == 36 && equipmentSlot.equals("BOOTS"))
@@ -695,18 +718,20 @@ public class InventoryClick implements Listener
                     Enchantment.BINDING_CURSE) > 0;
             if (!isBound)
             {
-              event.setCancelled(true);
-              ItemStack offHandClone = offHand.clone();
-              if (bootsExists)
               {
-                ItemStack bootsClone = boots.clone();
-                playerInventory.setItemInOffHand(bootsClone);
+                event.setCancelled(true);
+                ItemStack offHandClone = offHand.clone();
+                if (bootsExists)
+                {
+                  ItemStack bootsClone = boots.clone();
+                  playerInventory.setItemInOffHand(bootsClone);
+                }
+                else
+                {
+                  playerInventory.setItemInOffHand(null);
+                }
+                playerInventory.setBoots(offHandClone);
               }
-              else
-              {
-                playerInventory.setItemInOffHand(null);
-              }
-              playerInventory.setBoots(offHandClone);
             }
           }
         }
@@ -726,22 +751,88 @@ public class InventoryClick implements Listener
                     Enchantment.BINDING_CURSE) > 0;
             if (!isBound)
             {
-              event.setCancelled(true);
-              ItemStack hotbarItemClone = Objects.requireNonNull(hotbarItem).clone();
-              if (helmetExists)
               {
-                ItemStack helmetClone = helmet.clone();
-                playerInventory.setItem(hotbarButton, helmetClone);
+                event.setCancelled(true);
+                ItemStack hotbarItemClone = Objects.requireNonNull(hotbarItem).clone();
+                if (helmetExists)
+                {
+                  ItemStack helmetClone = helmet.clone();
+                  playerInventory.setItem(hotbarButton, helmetClone);
+                }
+                else
+                {
+                  playerInventory.setItem(hotbarButton, null);
+                }
+                playerInventory.setHelmet(hotbarItemClone);
               }
-              else
-              {
-                playerInventory.setItem(hotbarButton, null);
-              }
-              playerInventory.setHelmet(hotbarItemClone);
             }
           }
-
-          // 흉갑 각반 부츠는 나중에 함, 귀찮음
+          if (slotNumber == 38 && equipmentSlot.equals("CHESTPLATE"))
+          {
+            boolean isBound = chestplateExists && chestplate.getItemMeta().hasEnchant(Enchantment.BINDING_CURSE) && chestplate.getItemMeta().getEnchantLevel(
+                    Enchantment.BINDING_CURSE) > 0;
+            if (!isBound)
+            {
+              {
+                event.setCancelled(true);
+                ItemStack hotbarItemClone = Objects.requireNonNull(hotbarItem).clone();
+                if (chestplateExists)
+                {
+                  ItemStack chestplateClone = chestplate.clone();
+                  playerInventory.setItem(hotbarButton, chestplateClone);
+                }
+                else
+                {
+                  playerInventory.setItem(hotbarButton, null);
+                }
+                playerInventory.setChestplate(hotbarItemClone);
+              }
+            }
+          }
+          if (slotNumber == 37 && equipmentSlot.equals("LEGGINGS"))
+          {
+            boolean isBound = leggingsExists && leggings.getItemMeta().hasEnchant(Enchantment.BINDING_CURSE) && leggings.getItemMeta().getEnchantLevel(
+                    Enchantment.BINDING_CURSE) > 0;
+            if (!isBound)
+            {
+              {
+                event.setCancelled(true);
+                ItemStack hotbarItemClone = Objects.requireNonNull(hotbarItem).clone();
+                if (leggingsExists)
+                {
+                  ItemStack leggingsClone = leggings.clone();
+                  playerInventory.setItem(hotbarButton, leggingsClone);
+                }
+                else
+                {
+                  playerInventory.setItem(hotbarButton, null);
+                }
+                playerInventory.setLeggings(hotbarItemClone);
+              }
+            }
+          }
+          if (slotNumber == 36 && equipmentSlot.equals("BOOTS"))
+          {
+            boolean isBound = bootsExists && boots.getItemMeta().hasEnchant(Enchantment.BINDING_CURSE) && boots.getItemMeta().getEnchantLevel(
+                    Enchantment.BINDING_CURSE) > 0;
+            if (!isBound)
+            {
+              {
+                event.setCancelled(true);
+                ItemStack hotbarItemClone = Objects.requireNonNull(hotbarItem).clone();
+                if (bootsExists)
+                {
+                  ItemStack bootsClone = boots.clone();
+                  playerInventory.setItem(hotbarButton, bootsClone);
+                }
+                else
+                {
+                  playerInventory.setItem(hotbarButton, null);
+                }
+                playerInventory.setBoots(hotbarItemClone);
+              }
+            }
+          }
         }
       }
     }
@@ -1712,7 +1803,7 @@ public class InventoryClick implements Listener
       Method.playSound(player, Sound.ENTITY_VILLAGER_AMBIENT);
     }
     Method.playSound(player, Sound.BLOCK_NOTE_BLOCK_HAT, 1F, 1.4F);
-    String itemName = ComponentUtil.serialize(ComponentUtil.itemName(item));
+    String itemName = ComponentUtil.serialize(ItemNameUtil.itemName(item));
     if (itemName.equalsIgnoreCase("§와"))
     {
       return;
@@ -1761,26 +1852,26 @@ public class InventoryClick implements Listener
         case 5:
           UserData.LISTEN_GLOBAL.setToggle(uuid);
           saveConfig = true;
-          if (NoteBlockAPISong.radioSongPlayer != null)
+          if (CommandSong.radioSongPlayer != null)
           {
             if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
             {
-              NoteBlockAPISong.radioSongPlayer.addPlayer(player);
+              CommandSong.radioSongPlayer.addPlayer(player);
             }
             else
             {
-              NoteBlockAPISong.radioSongPlayer.removePlayer(player);
+              CommandSong.radioSongPlayer.removePlayer(player);
             }
           }
-          if (NoteBlockAPISong.playerRadio.containsKey(uuid))
+          if (CommandSong.playerRadio.containsKey(uuid))
           {
             if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
             {
-              NoteBlockAPISong.playerRadio.get(uuid).addPlayer(player);
+              CommandSong.playerRadio.get(uuid).addPlayer(player);
             }
             else
             {
-              NoteBlockAPISong.playerRadio.get(uuid).removePlayer(player);
+              CommandSong.playerRadio.get(uuid).removePlayer(player);
             }
           }
           break;

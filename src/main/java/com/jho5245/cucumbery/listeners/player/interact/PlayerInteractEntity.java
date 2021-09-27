@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -136,13 +137,11 @@ public class PlayerInteractEntity implements Listener
         event.setCancelled(true);
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAtEntityRestrictedItemAlertCooldown.contains(uuid))
         {
-          String itemName = null;
+          SoundPlay.playSound(player, Constant.ERROR_SOUND);
           if (item != null)
           {
-            itemName = (item).toString();
+            MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.createTranslate("%s은(는) %s에게 사용할 수 없습니다.", item, entity), 5, 80, 15);
           }
-          SoundPlay.playSound(player, Constant.ERROR_SOUND);
-          MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&e"+itemName+"&r"+MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.은는)+" &e"+(entity)+"&r에게 사용할 수 없습니다.", 5, 80, 15);
           Variable.playerInteractAtEntityRestrictedItemAlertCooldown.add(uuid);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityRestrictedItemAlertCooldown.remove(uuid), 100L);
         }

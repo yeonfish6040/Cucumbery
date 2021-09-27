@@ -1,21 +1,26 @@
 package com.jho5245.cucumbery;
 
 import com.jho5245.cucumbery.commands.*;
-import com.jho5245.cucumbery.commands.addon.QuickShopAddon;
-import com.jho5245.cucumbery.commands.air.AirPoint;
+import com.jho5245.cucumbery.commands.addon.CommandQuickShopAddon;
+import com.jho5245.cucumbery.commands.air.CommandAirPoint;
 import com.jho5245.cucumbery.commands.brigadier.*;
+import com.jho5245.cucumbery.commands.brigadier.hp.CommandHealthPoint;
+import com.jho5245.cucumbery.commands.customrecipe.CommandCustomRecipe;
+import com.jho5245.cucumbery.commands.customrecipe.CommandCustomRecipeTabCompleter;
 import com.jho5245.cucumbery.commands.debug.*;
-import com.jho5245.cucumbery.commands.hp.HealthBar;
-import com.jho5245.cucumbery.commands.hp.MaxHealthPoint;
-import com.jho5245.cucumbery.commands.msg.Broadcast;
-import com.jho5245.cucumbery.commands.msg.ClearChat;
-import com.jho5245.cucumbery.commands.msg.SendMessage;
-import com.jho5245.cucumbery.commands.sound.NoteBlockAPISong;
-import com.jho5245.cucumbery.commands.sound.PlaySound;
-import com.jho5245.cucumbery.commands.teleport.AdvancedTeleport;
-import com.jho5245.cucumbery.commands.teleport.SwapTeleport;
-import com.jho5245.cucumbery.commands.teleport.Teleport;
-import com.jho5245.cucumbery.commands.teleport.Warp;
+import com.jho5245.cucumbery.commands.hp.CommandHealthScale;
+import com.jho5245.cucumbery.commands.hp.CommandMaxHealthPoint;
+import com.jho5245.cucumbery.commands.itemtag.CommandItemTag;
+import com.jho5245.cucumbery.commands.itemtag.CommandItemTagTabCompleter;
+import com.jho5245.cucumbery.commands.msg.CommandBroadcast;
+import com.jho5245.cucumbery.commands.msg.CommandClearChat;
+import com.jho5245.cucumbery.commands.msg.CommandSendMessage;
+import com.jho5245.cucumbery.commands.sound.CommandPlaySound;
+import com.jho5245.cucumbery.commands.sound.CommandSong;
+import com.jho5245.cucumbery.commands.teleport.CommandAdvancedTeleport;
+import com.jho5245.cucumbery.commands.teleport.CommandSwapTeleport;
+import com.jho5245.cucumbery.commands.teleport.CommandTeleport;
+import com.jho5245.cucumbery.commands.teleport.CommandWarp;
 import com.jho5245.cucumbery.listeners.UnknownCommand;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopDelete;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopItemChange;
@@ -42,13 +47,15 @@ import com.jho5245.cucumbery.listeners.player.interact.PlayerInteractEntity;
 import com.jho5245.cucumbery.listeners.player.item.*;
 import com.jho5245.cucumbery.listeners.server.ServerCommand;
 import com.jho5245.cucumbery.listeners.server.ServerListPing;
-import com.jho5245.cucumbery.util.*;
+import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.Scheduler;
+import com.jho5245.cucumbery.util.TestCommand;
 import com.jho5245.cucumbery.util.addons.Songs;
-import com.jho5245.cucumbery.util.plugin_support.QuickShopTabCompleter;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.Updater;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
@@ -88,7 +95,6 @@ public class Cucumbery extends JavaPlugin
   public static File dataFolder;
   public static long runTime;
   private static Cucumbery cucumbery;
-  private static TabCompleter tabCompleter;
   public PluginDescriptionFile pluginDescriptionFile;
   public int currentConfigVersion;
   private PluginManager pluginManager;
@@ -101,11 +107,6 @@ public class Cucumbery extends JavaPlugin
   public PluginManager getPluginManager()
   {
     return pluginManager;
-  }
-
-  public TabCompleter getTabCompleter()
-  {
-    return tabCompleter;
   }
 
   public void onEnable()
@@ -164,7 +165,7 @@ public class Cucumbery extends JavaPlugin
     {
       this.registerItems();
     }
-    catch (Exception e)
+    catch (Throwable e)
     {
       e.printStackTrace();
     }
@@ -200,14 +201,14 @@ public class Cucumbery extends JavaPlugin
     Updater.onDisable();
     if (Cucumbery.using_NoteBlockAPI)
     {
-      if (NoteBlockAPISong.radioSongPlayer != null)
+      if (CommandSong.radioSongPlayer != null)
       {
-        NoteBlockAPISong.radioSongPlayer.setPlaying(false);
-        NoteBlockAPISong.radioSongPlayer.destroy();
+        CommandSong.radioSongPlayer.setPlaying(false);
+        CommandSong.radioSongPlayer.destroy();
       }
-      if (!NoteBlockAPISong.playerRadio.isEmpty())
+      if (!CommandSong.playerRadio.isEmpty())
       {
-        for (RadioSongPlayer playerRadio : NoteBlockAPISong.playerRadio.values())
+        for (RadioSongPlayer playerRadio : CommandSong.playerRadio.values())
         {
           playerRadio.setPlaying(false);
           playerRadio.destroy();
@@ -225,7 +226,7 @@ public class Cucumbery extends JavaPlugin
       this.checkUsingAddons();
       this.registerCustomConfig();
     }
-    catch (Exception e)
+    catch (Throwable e)
     {
       e.printStackTrace();
     }
@@ -235,13 +236,27 @@ public class Cucumbery extends JavaPlugin
       {
         this.registerBrigadierCommands();
       }
-      catch (Exception e)
+      catch (Throwable e)
       {
         e.printStackTrace();
       }
     }
-    this.registerCommands();
-    this.registerEvents();
+    try
+    {
+      this.registerCommands();
+    }
+    catch (Throwable e)
+    {
+      e.printStackTrace();
+    }
+    try
+    {
+      this.registerEvents();
+    }
+    catch (Throwable e)
+    {
+      e.printStackTrace();
+    }
   }
 
   private void checkUsingAddons()
@@ -282,36 +297,36 @@ public class Cucumbery extends JavaPlugin
   private void registerBrigadierCommands()
   {
     new ExtraExecuteArgument().registerArgument();
-    new CucumberyMainCommand().registerCommand("cucumbery", "cucumbery.command.cucumbery", "ccucumbery");
-    new Ride().registerCommand("ride", "cucumbery.command.ride", "cride");
-    new Sudo2().registerCommand("sudo2", "cucumbery.command.sudo2", "csudo2");
-    new Give().registerCommand("cgive", "cucumbery.command.cgive", "cgive", "give2");
-    new Velocity().registerCommand("velocity", "cucumbery.command.velocity2", "velo", "날리기", "cvelo", "cvelocity");
-    new com.jho5245.cucumbery.commands.brigadier.hp.HealthPoint().registerCommand("healthpoint", "cucumbery.command.healthpoint", "hp", "chp");
-    new Kill().registerCommand("ckill", "cucumbery.command.ckill", "ckill", "kill2");
-    new SetItem().registerCommand("setitem", "cucumbery.command.setitem", "csetitem");
-    new ConsoleSudo2().registerCommand("consolesudo2", "cucumbery.command.consolesudo", "consolesudo2");
-    new SendActionbar().registerCommand("sendactionbar", "cucumbery.command.sendactionbar", "csendactionbar");
-    new SendTitle().registerCommand("sendtitle", "cucumbery.command.sendtitle", "csendtitle");
-    new UpdateItem().registerCommand("updateitem", "cucumbery.command.updateitem", "cupdateitem");
-    new Effect().registerCommand("ceffect", "cucumbery.command.effect", "ceffect", "effect2");
-    new Damage().registerCommand("damage", "cucumbery.command.damage", "cdamage");
-    new Summon().registerCommand("csummon", "cucumbery.command.summon", "csummon", "summon2");
-    new Setblock().registerCommand("csetblock", "cucumbery.command.setblock", "csetblock", "setblock2");
-    new ReplaceEntity().registerCommand("replaceentity", "cucumbery.command.replaceentity", "creplaceentity");
-    new Repeat2().registerCommand("crepeat", "cucumbery.command.repeat", "repeat2");
-    new Data().registerCommand("cdata", "cucumbery.command.data", "data2");
-    new TP2().registerCommand("tp2", "cucumbery.command.tp2");
-    new Explode().registerCommand("explode", "cucumbery.command.explode", "cexplode");
+    new CommandCucumbery().registerCommand("cucumbery", "cucumbery.command.cucumbery", "ccucumbery");
+    new CommandRide().registerCommand("ride", "cucumbery.command.ride", "cride");
+    new CommandSudo2().registerCommand("sudo2", "cucumbery.command.sudo2", "csudo2");
+    new CommandGive2().registerCommand("cgive", "cucumbery.command.cgive", "cgive", "give2");
+    new CommandVelocity().registerCommand("velocity", "cucumbery.command.velocity2", "velo", "날리기", "cvelo", "cvelocity");
+    new CommandHealthPoint().registerCommand("healthpoint", "cucumbery.command.healthpoint", "hp", "chp");
+    new CommandKill2().registerCommand("ckill", "cucumbery.command.ckill", "ckill", "kill2");
+    new CommandSetItem().registerCommand("setitem", "cucumbery.command.setitem", "csetitem");
+    new CommandConsoleSudo2().registerCommand("consolesudo2", "cucumbery.command.consolesudo", "consolesudo2");
+    new CommandSendActionbar().registerCommand("sendactionbar", "cucumbery.command.sendactionbar", "csendactionbar");
+    new CommandSendTitle().registerCommand("sendtitle", "cucumbery.command.sendtitle", "csendtitle");
+    new CommandUpdateItem().registerCommand("updateitem", "cucumbery.command.updateitem", "cupdateitem");
+    new CommandEffect2().registerCommand("ceffect", "cucumbery.command.effect", "ceffect", "effect2");
+    new CommandDamage().registerCommand("damage", "cucumbery.command.damage", "cdamage");
+    new CommandSummon2().registerCommand("csummon", "cucumbery.command.summon", "csummon", "summon2");
+    new CommandSetBlock2().registerCommand("csetblock", "cucumbery.command.setblock", "csetblock", "setblock2");
+    new CommandReplaceEntity().registerCommand("replaceentity", "cucumbery.command.replaceentity", "creplaceentity");
+    new CommandRepeat2().registerCommand("crepeat", "cucumbery.command.repeat", "repeat2");
+    new CommandData2().registerCommand("cdata", "cucumbery.command.data", "data2");
+    new CommandTeleport2().registerCommand("teleport2", "cucumbery.command.teleport");
+    new CommandExplode().registerCommand("explode", "cucumbery.command.explode", "cexplode");
+    new CommandVanillaTeleport().registerCommand("teleport", "minecraft.command.teleport", "tp");
   }
 
   private void registerCommands()
   {
-    tabCompleter = new TabCompleter();
-    ItemData itemData = new ItemData();
+    CommandItemData itemData = new CommandItemData();
     Initializer.registerCommand("itemdata", itemData);
-    Initializer.registerCommand("setdata", new SetData());
-    SetItemMeta setItemMeta = new SetItemMeta();
+    Initializer.registerCommand("setdata", new CommandSetData());
+    CommandSetItemMeta setItemMeta = new CommandSetItemMeta();
     Initializer.registerCommand("setname", setItemMeta);
     Initializer.registerCommand("setname2", setItemMeta);
     Initializer.registerCommand("setlore", setItemMeta);
@@ -319,103 +334,96 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("addlore", setItemMeta);
     Initializer.registerCommand("deletelore", setItemMeta);
     Initializer.registerCommand("insertlore", setItemMeta);
-    Initializer.registerCommand("setuserdata", new SetUserData());
-    NickName nickName = new NickName();
+    Initializer.registerCommand("setuserdata", new CommandSetUserData());
+    CommandNickName nickName = new CommandNickName();
     Initializer.registerCommand("nickname", nickName);
     Initializer.registerCommand("nicknameothers", nickName);
-    Initializer.registerCommand("healthbar", new HealthBar());
-    Initializer.registerCommand("maxhealthpoint", new MaxHealthPoint());
-    Initializer.registerCommand("whois", new WHOIS());
-    Initializer.registerCommand("whatis", new WHATIS());
-    Initializer.registerCommand("sudo", new Sudo());
-    Initializer.registerCommand("handgive", new HandGive());
-    Initializer.registerCommand("broadcastitem", new BroadcastItem());
-    Initializer.registerCommand("call", new Call());
-    Initializer.registerCommand("enderchest", new EnderChest());
-    Initializer.registerCommand("workbench", new Workbench());
-    Initializer.registerCommand("trashcan", new TrashCan());
-    Initializer.registerCommand("cspectate", new Spectate());
-    Initializer.registerCommand("citemstorage", new ItemStorage());
-    Initializer.registerCommand("itemflag", new ItemFlags());
-    HealAndFeed healAndFeed = new HealAndFeed();
+    Initializer.registerCommand("healthbar", new CommandHealthScale());
+    Initializer.registerCommand("maxhealthpoint", new CommandMaxHealthPoint());
+    Initializer.registerCommand("whois", new CommandWhoIs());
+    Initializer.registerCommand("whatis", new CommandWhatIs());
+    Initializer.registerCommand("sudo", new CommandSudo());
+    Initializer.registerCommand("handgive", new CommandHandGive());
+    Initializer.registerCommand("broadcastitem", new CommandBroadcastItem());
+    Initializer.registerCommand("call", new CommandCall());
+    Initializer.registerCommand("enderchest", new CommandEnderChest());
+    Initializer.registerCommand("workbench", new CommandWorkbench());
+    Initializer.registerCommand("trashcan", new CommandTrashCan());
+    Initializer.registerCommand("cspectate", new CommandSpectate2());
+    Initializer.registerCommand("citemstorage", new CommandItemStorage());
+    Initializer.registerCommand("itemflag", new CommandItemFlag());
+    CommandHeal healAndFeed = new CommandHeal();
     Initializer.registerCommand("heal", healAndFeed);
     Initializer.registerCommand("feed", healAndFeed);
     Initializer.registerCommand("advancedfeed", healAndFeed);
-    Initializer.registerCommand("broadcast", new Broadcast());
-    Initializer.registerCommand("sendmessage", new SendMessage());
-    Initializer.registerCommand("clearchat", new ClearChat());
-    Initializer.registerCommand("advancedteleport", new AdvancedTeleport());
-    Warp warp = new Warp();
+    Initializer.registerCommand("broadcast", new CommandBroadcast());
+    Initializer.registerCommand("sendmessage", new CommandSendMessage());
+    Initializer.registerCommand("clearchat", new CommandClearChat());
+    Initializer.registerCommand("advancedteleport", new CommandAdvancedTeleport());
+    CommandWarp warp = new CommandWarp();
     Initializer.registerCommand("cwarps", warp);
     Initializer.registerCommand("cwarp", warp);
     Initializer.registerCommand("csetwarp", warp);
     Initializer.registerCommand("cdelwarp", warp);
-    PlaySound playSound = new PlaySound();
+    CommandPlaySound playSound = new CommandPlaySound();
     Initializer.registerCommand("playsoundall", playSound);
     Initializer.registerCommand("playsoundall2", playSound);
     Initializer.registerCommand("cplaysound", playSound);
-    Initializer.registerCommand("airpoint", new AirPoint());
-    Initializer.registerCommand("getuserdata", new GetUserData());
-    Initializer.registerCommand("reinforce", new Reinforce());
-    Initializer.registerCommand("menu", new Menu());
-    Initializer.registerCommand("forcechat", new ForceChat());
+    Initializer.registerCommand("airpoint", new CommandAirPoint());
+    Initializer.registerCommand("getuserdata", new CommandGetUserData());
+    Initializer.registerCommand("reinforce", new CommandReinforce());
+    Initializer.registerCommand("menu", new CommandMenu());
+    Initializer.registerCommand("forcechat", new CommandForceChat());
     Initializer.registerCommand("setrepaircost", setItemMeta);
-    Initializer.registerCommand("sethelditemslot", new SetHeldItemSlot());
-    Initializer.registerCommand("swaphelditem", new SwapHeldItem());
+    Initializer.registerCommand("sethelditemslot", new CommandSetHeldItemSlot());
+    Initializer.registerCommand("swaphelditem", new CommandSwapHeldItem());
     Initializer.registerCommand("itemdata2", itemData);
     Initializer.registerCommand("itemdata3", itemData);
-    Initializer.registerCommand("getpositions", new GetPositions());
-    Initializer.registerCommand("checkpermission", new CheckPermission());
-    Initializer.registerCommand("allplayer", new AllPlayer());
-    Initializer.registerCommand("commandpack", new CommandPack());
+    Initializer.registerCommand("getpositions", new CommandGetPositions());
+    Initializer.registerCommand("checkpermission", new CommandCheckPermission());
+    Initializer.registerCommand("allplayer", new CommandAllPlayer());
+    Initializer.registerCommand("commandpack", new CommandCommandPack());
     Initializer.registerCommand("testcommand", new TestCommand());
-    Initializer.registerCommand("swapteleport", new SwapTeleport());
-    Initializer.registerCommand("calcdistance", new CalcDistance());
-    Initializer.registerCommand("checkamount", new CheckAmount());
-    Initializer.registerCommand("updateinventory", new UpdateInventory());
-    Initializer.registerCommand("yunnori", new Yunnori());
-    Initializer.registerCommand("hat", new Hat());
-    Initializer.registerCommand("updatecommands", new UpdateCommands());
-    NoteBlockAPISong songCommand = new NoteBlockAPISong();
+    Initializer.registerCommand("swapteleport", new CommandSwapTeleport());
+    Initializer.registerCommand("calcdistance", new CommandCalcDistance());
+    Initializer.registerCommand("checkamount", new CommandCheckAmount());
+    Initializer.registerCommand("updateinventory", new CommandUpdateInventory());
+    Initializer.registerCommand("yunnori", new CommandYunnori());
+    Initializer.registerCommand("hat", new CommandHat());
+    Initializer.registerCommand("updatecommands", new CommandUpdateCommands());
+    CommandSong songCommand = new CommandSong();
     Initializer.registerCommand("csong", songCommand);
     Initializer.registerCommand("csong2", songCommand);
-    Initializer.registerCommand("citemtag", new CucumberyItemTag());
-    Initializer.registerCommand("howis", new HOWIS());
-    Initializer.registerCommand("customrecipe", new CustomRecipe());
-    VirtualChest virtualChest = new VirtualChest();
+    Initializer.registerCommand("citemtag", new CommandItemTag(), new CommandItemTagTabCompleter());
+    Initializer.registerCommand("howis", new CommandHowIs());
+    Initializer.registerCommand("customrecipe", new CommandCustomRecipe(), new CommandCustomRecipeTabCompleter());
+    CommandVirtualChest virtualChest = new CommandVirtualChest();
     Initializer.registerCommand("virtualchest", virtualChest);
     Initializer.registerCommand("virtualchestadd", virtualChest);
     Initializer.registerCommand("virtualchestadmin", virtualChest);
-    Initializer.registerCommand("customfix", new CustomFix());
-    Initializer.registerCommand("economy", new CucumberyEconomyCommand());
-    Initializer.registerCommand("respawn", new Respawn());
-    Initializer.registerCommand("removebedspawnlocation", new RemoveBedSpawnLocation());
-    Initializer.registerCommand("checkconfig", new CheckConfig());
-    Initializer.registerCommand("cteleport", new Teleport());
-    Initializer.registerCommand("editcommandblock", new EditCommandBlock());
-    Initializer.registerCommand("editblockdata", new EditBlockData());
-    Initializer.registerCommand("consolesudo", new ConsoleSudo());
-    Initializer.registerCommand("velocity2", new Velocity2());
-    Initializer.registerCommand("repeat", new Repeat());
-    Initializer.registerCommand("socialmenu", new SocialMenu());
-    Initializer.registerCommand("ckill2", new CommandCKill2());
-    Initializer.registerCommand("viewinventory", new ViewInventory());
-
-    if (Cucumbery.using_QuickShop)
-    {
-      Initializer.registerCommand("quickshopaddon", new QuickShopAddon(), new QuickShopTabCompleter());
-    }
-    else
-    {
-      Initializer.registerCommand("quickshopaddon", new QuickShopAddon());
-    }
+    Initializer.registerCommand("customfix", new CommandCustomFix());
+    Initializer.registerCommand("economy", new CommandEconomy());
+    Initializer.registerCommand("respawn", new CommandRespawn());
+    Initializer.registerCommand("removebedspawnlocation", new CommandRemoveBedSpawnLocation());
+    Initializer.registerCommand("checkconfig", new CommandCheckConfig());
+    Initializer.registerCommand("cteleport", new CommandTeleport());
+    Initializer.registerCommand("editcommandblock", new CommandEditCommandBlock());
+    Initializer.registerCommand("editblockdata", new CommandEditBlockData());
+    Initializer.registerCommand("consolesudo", new CommandConsoleSudo());
+    Initializer.registerCommand("velocity2", new CommandVelocity2());
+    Initializer.registerCommand("repeat", new CommandRepeat());
+    Initializer.registerCommand("socialmenu", new CommandSocialMenu());
+    Initializer.registerCommand("ckill2", new CommandKill3());
+    Initializer.registerCommand("viewinventory", new CommandViewInventory());
+    Initializer.registerCommand("custommerchant", new CommandCustomMerchant());
+    Initializer.registerCommand("quickshopaddon", new CommandQuickShopAddon());
   }
 
   private void registerEvents()
   {
-    // event
+    // listener
     Initializer.registerEvent(new UnknownCommand());
-    // event.block
+    // listener.block
     Initializer.registerEvent(new BlockBreak());
     Initializer.registerEvent(new BlockBurn());
     Initializer.registerEvent(new BlockDestroy());
@@ -429,13 +437,13 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new BlockPreDispense());
     Initializer.registerEvent(new EntityBlockForm());
     Initializer.registerEvent(new TNTPrime());
-    // event.block.piston
+    // listener.block.piston
     Initializer.registerEvent(new BlockPistonExtend());
     Initializer.registerEvent(new BlockPistonRetract());
-    // event.enchantment
+    // listener.enchantment
     Initializer.registerEvent(new EnchantItem());
     Initializer.registerEvent(new PrepareItemEnchant());
-    // event.entity
+    // listener.entity
     Initializer.registerEvent(new EntityAddToWorld());
     Initializer.registerEvent(new EntityChangeBlock());
     Initializer.registerEvent(new EntityDamage());
@@ -456,13 +464,13 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new LingeringPotionSplash());
     Initializer.registerEvent(new VillagerAcquireTrade());
     Initializer.registerEvent(new WitchThrowPotion());
-    // event.item
+    // listener.item
     Initializer.registerEvent(new ItemMerge());
     Initializer.registerEvent(new ItemSpawn());
-    // hanging
+    // listener.hanging
     Initializer.registerEvent(new HangingBreak());
     Initializer.registerEvent(new HangingPlace());
-    // event.inventory
+    // listener.inventory
     Initializer.registerEvent(new Brew());
     Initializer.registerEvent(new CraftItem());
     Initializer.registerEvent(new FurnaceBurn());
@@ -476,15 +484,15 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PrepareItemCraft());
     Initializer.registerEvent(new PrepareResult());
     Initializer.registerEvent(new PrepareSmithing());
-    // event.player.bucket
+    // listener.player.bucket
     Initializer.registerEvent(new PlayerBucketEmpty());
     Initializer.registerEvent(new PlayerBucketEntity());
     Initializer.registerEvent(new PlayerBucketFill());
-    // event.player.interact
+    // listener.player.interact
     Initializer.registerEvent(new PlayerInteract());
     Initializer.registerEvent(new PlayerInteractAtEntity());
     Initializer.registerEvent(new PlayerInteractEntity());
-    // event.player.item
+    // listener.player.item
     Initializer.registerEvent(new PlayerAttemptPickupItem());
     Initializer.registerEvent(new PlayerDropItem());
     Initializer.registerEvent(new PlayerItemBreak());
@@ -493,8 +501,9 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerItemHeld());
     Initializer.registerEvent(new PlayerItemMend());
     Initializer.registerEvent(new PlayerSwapHandItems());
-    // event.player
+    // listener.player
     Initializer.registerEvent(new PlayerAdvancementDone());
+    Initializer.registerEvent(new PlayerArmorChange());
     Initializer.registerEvent(new PlayerChangeBeaconEffect());
     Initializer.registerEvent(new PlayerChangedWorld());
     Initializer.registerEvent(new PlayerChat());
@@ -519,10 +528,9 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerTakeLecternBook());
     Initializer.registerEvent(new PlayerTeleport());
     Initializer.registerEvent(new PlayerToggleSneak());
-    // event.server
+    // listener.server
     Initializer.registerEvent(new ServerCommand());
     Initializer.registerEvent(new ServerListPing());
-
     if (using_QuickShop)
     {
       Initializer.registerEvent(new ShopDelete());

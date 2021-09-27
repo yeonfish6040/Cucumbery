@@ -3,7 +3,7 @@ package com.jho5245.cucumbery.util;
 import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.josautil.KoreanUtils;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -52,6 +52,7 @@ public class MessageUtil
   public static String[] wrapWithQuote(boolean forTabComplete, @NotNull String[] args)
   {
     String input = listToString(" ", args);
+    input = PlaceHolderUtil.evalString(PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), input, null));
     if (input.equals("'") || input.equals("\""))
     {
       return new String[]{(ComponentUtil.serialize(Component.translatable("command.expected.separator")))};
@@ -463,13 +464,13 @@ public class MessageUtil
     sendMessage(audience, newObjects);
   }
 
-  public static void sendWarnOrError(@NotNull SendMessageType type, @NotNull Object audience, @NotNull Object objects)
+  public static void sendWarnOrError(boolean error, @NotNull Object audience, @NotNull Object objects)
   {
-    if (type == SendMessageType.WARN)
+    if (!error)
     {
       sendWarn(audience, objects);
     }
-    if (type == SendMessageType.ERROR)
+    else
     {
       sendError(audience, objects);
     }
@@ -1095,13 +1096,6 @@ public class MessageUtil
             .replace("Ｏ", "O").replace("Ｒ", "R").replace("Ｘ", "X").replace("ａ", "a").replace("ｂ", "b").replace("ｃ", "c").replace("ｄ", "d").replace("ｅ", "e").replace("ｆ", "f").replace("ｋ", "k")
             .replace("ｌ", "l").replace("ｍ", "m").replace("ｎ", "n").replace("ｏ", "o").replace("ｒ", "r").replace("ｘ", "x");
   }
-
-  public enum SendMessageType
-  {
-    WARN,
-    ERROR
-  }
-
 
   public enum N2SType // 컬러 코드 적용 타입
   {

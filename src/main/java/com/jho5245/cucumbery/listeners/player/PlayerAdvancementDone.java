@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.listeners.player;
 
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -16,7 +18,6 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class PlayerAdvancementDone implements Listener
 {
@@ -61,8 +62,11 @@ public class PlayerAdvancementDone implements Listener
                     content = ((TextComponent) arg.children().get(0)).content();
                   }
                   Player p = Bukkit.getServer().getPlayerExact(content);
-                  Component displayName = ComponentUtil.senderComponent(Objects.requireNonNull(p), TextColor.color(255, 204, 0));
-                  newArgs.add(displayName);
+                  if (p != null)
+                  {
+                    Component displayName = SenderComponentUtil.senderComponent(p, Constant.THE_COLOR);
+                    newArgs.add(displayName);
+                  }
                   continue;
                 }
                 catch (Exception ignored)

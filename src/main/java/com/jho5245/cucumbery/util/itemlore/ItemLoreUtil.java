@@ -3,7 +3,7 @@ package com.jho5245.cucumbery.util.itemlore;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.storage.ColorCode;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;
 import net.kyori.adventure.text.Component;
@@ -220,7 +220,6 @@ public class ItemLoreUtil
   /**
    * 아이템에 추가될 마법 부여 TMI
    *
-   * @param itemstack    아이템
    * @param itemMeta     아이템 메타
    * @param material     아이템의 종류
    * @param object       마법
@@ -229,7 +228,7 @@ public class ItemLoreUtil
    */
   @NotNull
   public static List<Component> enchantTMIDescription(
-          ItemStack itemstack, ItemMeta itemMeta, Material material, @NotNull Object object, int enchantLevel)
+          ItemMeta itemMeta, Material material, @NotNull Object object, int enchantLevel)
   {
     List<Component> lore = new ArrayList<>();
     Component component = Component.empty();
@@ -242,7 +241,7 @@ public class ItemLoreUtil
       }
       else
       {
-        component = ComponentUtil.createTranslate("%s %s", Component.translatable(enchant.translationKey()), enchantLevel);
+        component = ComponentUtil.createTranslate("%s %s", Component.translatable(enchant.translationKey()), Component.text(enchantLevel));
       }
       component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
       component = component.color(enchant.isCursed() ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));

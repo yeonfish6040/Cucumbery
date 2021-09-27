@@ -52,6 +52,9 @@ public class ArgumentUtil
       case MANY_ENTITIES -> new EntitySelectorArgument(key != null ? key : "여러 개체", EntitySelector.MANY_ENTITIES);
       case ITEMSTACK -> new ItemStackArgument(key != null ? key : "아이템");
       case LOCATION -> new LocationArgument(key != null ? key : "좌표");
+      case LOCATION_BLOCK -> new LocationArgument(key != null ? key : "좌표", LocationType.BLOCK_POSITION);
+      case LOCATION_2D -> new Location2DArgument(key != null ? key : "좌표");
+      case ROTATION -> new RotationArgument(key != null ? key : "방향");
     };
   }
 
@@ -65,11 +68,14 @@ public class ArgumentUtil
     FLOAT,
     DOUBLE,
     ITEMSTACK,
-    LOCATION,
     MANY_ENTITIES,
     MANY_PLAYERS,
     ONE_ENTITY,
-    ONE_PLAYER
+    ONE_PLAYER,
+    LOCATION,
+    LOCATION_BLOCK,
+    LOCATION_2D,
+    ROTATION,
   }
 
   public static final Argument HIDE_OUTPUT = of(ArgumentType.HIDE_OUTPUT);
@@ -79,4 +85,19 @@ public class ArgumentUtil
   public static final Argument MANY_ENTITIES = of(ArgumentType.MANY_ENTITIES);
   public static final Argument ITEMSTACK = of(ArgumentType.ITEMSTACK);
   public static final Argument LOCATION = of(ArgumentType.LOCATION);
+  public static final Argument LOCATION_BLOCK = of(ArgumentType.LOCATION_BLOCK);
+  public static final Argument ROTATION = of(ArgumentType.ROTATION);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

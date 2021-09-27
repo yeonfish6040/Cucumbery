@@ -18,11 +18,11 @@ public class ItemLoreEnchantRarity
   {
     int enchantSize = itemMeta.getEnchants().size();
     double init = 10d;
-    for (int i = 0; i < enchantSize - 1; i++)
-    {
-      init = init * Math.pow(1.1, 2);
-    }
-    long value = ItemLoreUtil.getItemRarityValue(lore);
+//    for (int i = 0; i < enchantSize - 1; i++)
+//    {
+//      init = init * Math.pow(1.1, 2);
+//    }
+    long value = 0;
     value += enchantSize * (int) init;
     if (itemMeta.hasEnchant(Enchantment.BINDING_CURSE))
     {
@@ -575,12 +575,7 @@ public class ItemLoreEnchantRarity
   {
     int enchantSize = bookMeta.getEnchants().size();
     double init = 10d;
-    for (int i = 0; i < enchantSize - 1; i++)
-    {
-      init = init * Math.pow(1.1, 2);
-    }
-
-    long value = ItemLoreUtil.getItemRarityValue(lore);
+    long value = 0;
     value += enchantSize * (int) init;
     if (bookMeta.hasStoredEnchant(Enchantment.BINDING_CURSE))
     {

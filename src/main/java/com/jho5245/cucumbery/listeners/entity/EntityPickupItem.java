@@ -5,9 +5,10 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -142,7 +143,7 @@ public class EntityPickupItem implements Listener
   {
     if (UserData.SHOW_ACTIONBAR_ON_ITEM_PICKUP.getBoolean(player.getUniqueId()))
     {
-      Component itemStackComponent = ComponentUtil.itemName(itemStack, TextColor.fromHexString("#00ff3c"));
+      Component itemStackComponent = ItemNameUtil.itemName(itemStack, TextColor.fromHexString("#00ff3c"));
       if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
       {
         player.sendActionBar(ComponentUtil.createTranslate("#00ccff;%s을(를) 주웠습니다.", itemStackComponent));

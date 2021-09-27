@@ -2,7 +2,8 @@ package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -54,7 +55,7 @@ public class ItemLore3
             if (isPlaceRestricted)
             {
               description.addAll(Arrays.asList(
-                      ComponentUtil.createTranslate("&7보다 훨씬 더 간편한 %s이다.", ComponentUtil.itemName(Material.SHULKER_BOX)),
+                      ComponentUtil.createTranslate("&7보다 훨씬 더 간편한 %s이다.", ItemNameUtil.itemName(Material.SHULKER_BOX)),
                       ComponentUtil.createTranslate("&7해당 상자는 설치를 할 수 없는 대신"),
                       ComponentUtil.createTranslate("&7%s으로 바로 상자를 열 수 있다.", Component.keybind("key.use").color(NamedTextColor.YELLOW))
               ));
@@ -62,7 +63,7 @@ public class ItemLore3
             else
             {
               description.addAll(Arrays.asList(
-                      ComponentUtil.createTranslate("&7보다 훨씬 더 간편한 %s이다.", ComponentUtil.itemName(Material.SHULKER_BOX)),
+                      ComponentUtil.createTranslate("&7보다 훨씬 더 간편한 %s이다.", ItemNameUtil.itemName(Material.SHULKER_BOX)),
                       ComponentUtil.createTranslate("&7해당 상자는 설치를 할 필요 없이"),
                       ComponentUtil.createTranslate("&7%s으로 바로 상자를 열 수 있다.", Component.keybind("key.use").color(NamedTextColor.YELLOW)),
                       ComponentUtil.createTranslate("&c단, 설치 시 휴대 가능 효과가 사라진다.")
@@ -72,14 +73,14 @@ public class ItemLore3
           else
           {
             description.addAll(Arrays.asList(
-                    ComponentUtil.createTranslate("&7일반 %s와(과) 같으나, 설치한 %s을(를) 부수면", ComponentUtil.itemName(Material.CHEST), ComponentUtil.itemName(Material.SHULKER_BOX)),
+                    ComponentUtil.createTranslate("&7일반 %s와(과) 같으나, 설치한 %s을(를) 부수면", ItemNameUtil.itemName(Material.CHEST), ItemNameUtil.itemName(Material.SHULKER_BOX)),
                     ComponentUtil.createTranslate("&7내용물이 드롭되지 않고 상자 째로 드롭된다.")
             ));
           }
         }
         case ENDER_CHEST -> description.addAll(Arrays.asList(
-                ComponentUtil.createTranslate("&7일반 %s와(과) 같으나, 다른 곳에", ComponentUtil.itemName(Material.CHEST)),
-                ComponentUtil.createTranslate("&7설치된 모든 %s와(과) 내용물을 공유한다.", ComponentUtil.itemName(Material.ENDER_CHEST)),
+                ComponentUtil.createTranslate("&7일반 %s와(과) 같으나, 다른 곳에", ItemNameUtil.itemName(Material.CHEST)),
+                ComponentUtil.createTranslate("&7설치된 모든 %s와(과) 내용물을 공유한다.", ItemNameUtil.itemName(Material.ENDER_CHEST)),
                 ComponentUtil.createTranslate("&7또한 다른 플레이어가 자신의 아이템을 가져갈 수 없다.")
         ));
         case FURNACE -> description.add(
@@ -103,7 +104,7 @@ public class ItemLore3
         ));
         case CRYING_OBSIDIAN -> description.addAll(Arrays.asList(
                 ComponentUtil.createTranslate("&7%s에서 리스폰 지점을 설정할 수 있는", ComponentUtil.createTranslate("&c네더")),
-                ComponentUtil.createTranslate("&7%s을(를) 만들 수 있는 재료이다.", ComponentUtil.itemName(Material.RESPAWN_ANCHOR))
+                ComponentUtil.createTranslate("&7%s을(를) 만들 수 있는 재료이다.", ItemNameUtil.itemName(Material.RESPAWN_ANCHOR))
         ));
         case TARGET -> description.addAll(Arrays.asList(
                 ComponentUtil.createTranslate("&7발사체를 맞추면 전기를 출력한다."),
@@ -113,25 +114,25 @@ public class ItemLore3
                 ComponentUtil.createTranslate("&7고드름은 왜 거꾸로 자랄까? 이 덩굴도 그러지!")
         );
         case RESPAWN_ANCHOR -> description.addAll(Arrays.asList(
-                ComponentUtil.createTranslate("&7%s(으)로 우클릭하여 충전할 수 있다.", ComponentUtil.itemName(Material.GLOWSTONE)),
-                ComponentUtil.createTranslate("&7충전 후 %s을(를) 우클릭하면 리스폰 지점을 설정할 수 있다.", ComponentUtil.itemName(itemStack)),
-                ComponentUtil.createTranslate("&7%s가(이) 아닌 곳에서 리스폰 지점을 설정하면 %s이(가) 폭발한다.", ComponentUtil.createTranslate("&c네더"), ComponentUtil.itemName(itemStack))
+                ComponentUtil.createTranslate("&7%s(으)로 우클릭하여 충전할 수 있다.", ItemNameUtil.itemName(Material.GLOWSTONE)),
+                ComponentUtil.createTranslate("&7충전 후 %s을(를) 우클릭하면 리스폰 지점을 설정할 수 있다.", ItemNameUtil.itemName(itemStack)),
+                ComponentUtil.createTranslate("&7%s가(이) 아닌 곳에서 리스폰 지점을 설정하면 %s이(가) 폭발한다.", ComponentUtil.createTranslate("&c네더"), ItemNameUtil.itemName(itemStack))
         ));
         case LODESTONE -> description.add(
-                ComponentUtil.createTranslate("&7%s(으)로 우클릭하면 해당 %s은(는) 이 %s을(를) 가리키게 된다.", ComponentUtil.itemName(Material.COMPASS), ComponentUtil.itemName(Material.COMPASS), ComponentUtil.itemName(itemStack))
+                ComponentUtil.createTranslate("&7%s(으)로 우클릭하면 해당 %s은(는) 이 %s을(를) 가리키게 된다.", ItemNameUtil.itemName(Material.COMPASS), ItemNameUtil.itemName(Material.COMPASS), ItemNameUtil.itemName(itemStack))
         );
         case STONECUTTER -> description.addAll(Arrays.asList(
-                ComponentUtil.createTranslate("&71개의 재료만으로 %s보다 효율적으로.", ComponentUtil.itemName(Material.CRAFTING_TABLE)),
+                ComponentUtil.createTranslate("&71개의 재료만으로 %s보다 효율적으로.", ItemNameUtil.itemName(Material.CRAFTING_TABLE)),
                 ComponentUtil.createTranslate("&7돌 관련 블록을 반 블록, 계단, 담장으로 제작할 수 있다."),
                 ComponentUtil.createTranslate("&7%s 주민과 상호작용할 수 있는 블록이다.", ComponentUtil.createTranslate("&eentity.minecraft.villager.mason"))
         ));
         case SMOKER -> description.addAll(Arrays.asList(
-                ComponentUtil.createTranslate("&7%s보다 땔감이 2배로 빠르게 소모되는 대신", ComponentUtil.itemName(Material.FURNACE)),
+                ComponentUtil.createTranslate("&7%s보다 땔감이 2배로 빠르게 소모되는 대신", ItemNameUtil.itemName(Material.FURNACE)),
                 ComponentUtil.createTranslate("&75초당 음식 관련 아이템 하나를 구울 수 있다."),
                 ComponentUtil.createTranslate("&7%s 주민과 상호작용할 수 있는 블록이다.", ComponentUtil.createTranslate("&eentity.minecraft.villager.butcher"))
         ));
         case BLAST_FURNACE -> description.addAll(Arrays.asList(
-                ComponentUtil.createTranslate("&7%s보다 땔감이 2배로 빠르게 소모되는 대신", ComponentUtil.itemName(Material.FURNACE)),
+                ComponentUtil.createTranslate("&7%s보다 땔감이 2배로 빠르게 소모되는 대신", ItemNameUtil.itemName(Material.FURNACE)),
                 ComponentUtil.createTranslate("&75초당 광물 관련 아이템 하나를 구울 수 있다."),
                 ComponentUtil.createTranslate("&7%s 주민과 상호작용할 수 있는 블록이다.", ComponentUtil.createTranslate("&eentity.minecraft.villager.armorer"))
         ));
@@ -146,7 +147,7 @@ public class ItemLore3
                 ComponentUtil.createTranslate("&7%s 주민과 상호작용할 수 있는 블록이다.", ComponentUtil.createTranslate("&eentity.minecraft.villager.shepherd"))
         ));
         case LECTERN -> description.addAll(Arrays.asList(
-                ComponentUtil.createTranslate("&7%s을(를) 여러 플레이어와 동시에 읽을 수 있다.", ComponentUtil.itemName(Material.WRITTEN_BOOK)),
+                ComponentUtil.createTranslate("&7%s을(를) 여러 플레이어와 동시에 읽을 수 있다.", ItemNameUtil.itemName(Material.WRITTEN_BOOK)),
                 ComponentUtil.createTranslate("&7%s 주민과 상호작용할 수 있는 블록이다.", ComponentUtil.createTranslate("&eentity.minecraft.villager.librarian"))
         ));
         case GRINDSTONE -> description.addAll(Arrays.asList(
@@ -157,13 +158,13 @@ public class ItemLore3
                 ComponentUtil.createTranslate("&7%s 주민과 상호작용할 수 있는 블록이다.", ComponentUtil.createTranslate("&eentity.minecraft.villager.weaponsmith"))
         ));
         case CARTOGRAPHY_TABLE -> description.addAll(Arrays.asList(
-                ComponentUtil.createTranslate("&7%s을(를) 복제, 확장하거나 잠글 수 있다.", ComponentUtil.itemName(Material.MAP)),
+                ComponentUtil.createTranslate("&7%s을(를) 복제, 확장하거나 잠글 수 있다.", ItemNameUtil.itemName(Material.MAP)),
                 ComponentUtil.createTranslate("&7%s 주민과 상호작용할 수 있는 블록이다.", ComponentUtil.createTranslate("&eentity.minecraft.villager.cartographer"))
         ));
         case COMPOSTER -> description.addAll(Arrays.asList(
                 ComponentUtil.createTranslate("&7퇴비 제작 확률이 있는 아이템을 %s으로 사용하여", Component.keybind("key.use").color(NamedTextColor.YELLOW)),
-                ComponentUtil.createTranslate("&7정해진 확률대로 %s을(를) 한 칸 채울 수 있다.", ComponentUtil.itemName(itemStack)),
-                ComponentUtil.createTranslate("&78칸을 다 채우면 %s을(를) 하나 얻을 수 있다.", ComponentUtil.itemName(Material.BONE_MEAL)),
+                ComponentUtil.createTranslate("&7정해진 확률대로 %s을(를) 한 칸 채울 수 있다.", ItemNameUtil.itemName(itemStack)),
+                ComponentUtil.createTranslate("&78칸을 다 채우면 %s을(를) 하나 얻을 수 있다.", ItemNameUtil.itemName(Material.BONE_MEAL)),
                 ComponentUtil.createTranslate("&7%s 주민과 상호작용할 수 있는 블록이다.", ComponentUtil.createTranslate("&eentity.minecraft.villager.farmer"))
         ));
         case FLETCHING_TABLE -> description.add(

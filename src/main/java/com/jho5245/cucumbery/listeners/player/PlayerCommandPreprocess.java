@@ -4,7 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.PlaceHolderUtil;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -97,6 +97,13 @@ public class PlayerCommandPreprocess implements Listener
           }, 0L);
         }
       }
+    }
+
+    // cucumberify
+    if (Cucumbery.using_CommandAPI && message.startsWith("/give"))
+    {
+      message = "/cgive" + message.substring(5);
+      event.setMessage(message);
     }
     if (Variable.scrollReinforcing.contains(uuid) && !message.equalsIgnoreCase("/강화 quit")
             && !message.equalsIgnoreCase("/강화 realstart") && !message.equalsIgnoreCase("/강화 파괴방지사용")

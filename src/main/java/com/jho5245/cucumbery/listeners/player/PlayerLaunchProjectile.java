@@ -18,7 +18,6 @@ public class PlayerLaunchProjectile implements Listener
     {
       return;
     }
-
     Player player = event.getPlayer();
     ItemStack itemStack = event.getItemStack();
     Projectile projectile = event.getProjectile();

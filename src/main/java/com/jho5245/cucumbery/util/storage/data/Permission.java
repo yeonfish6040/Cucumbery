@@ -134,6 +134,7 @@ public enum Permission
   CMD_QUICKSHOP_ADDON(P + "" + C + "quickshopaddon"),
   CMD_REPEAT(P + "" + C + "repeat"),
   CMD_VIEW_INVNETORY(P + "" + C + "viewinventory"),
+  CMD_CUSTOM_MERCHANT_ADMIN(P + "" + C + "custommerchant.admin"),
 
   OTHER_EVAL(P + "" + "eval"),
   OTHER_PLACEHOLDER(P + "" + "placeholder"),

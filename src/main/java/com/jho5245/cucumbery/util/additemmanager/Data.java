@@ -2,7 +2,8 @@ package com.jho5245.cucumbery.util.additemmanager;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
@@ -45,7 +46,7 @@ public class Data
     this.failure = failure;
     this.amount = amount;
     this.amountComponent = Component.text(amount).color(Constant.THE_COLOR);
-    this.item = ComponentUtil.itemName(given, Constant.THE_COLOR).hoverEvent(given.asHoverEvent());
+    this.item = ItemNameUtil.itemName(given, Constant.THE_COLOR).hoverEvent(given.asHoverEvent());
   }
 
   public void sendFeedback(boolean hideOutput)

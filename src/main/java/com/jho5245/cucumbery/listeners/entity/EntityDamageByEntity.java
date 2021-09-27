@@ -3,12 +3,14 @@ package com.jho5245.cucumbery.listeners.entity;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -71,7 +73,19 @@ public class EntityDamageByEntity implements Listener
         ItemStack weapon = entityEquipment.getItemInMainHand();
         if (ItemStackUtil.itemExists(weapon))
         {
-          Variable.attackerAndWeapon.put(damagerUUID, weapon.clone());
+          final ItemStack weaponClone = weapon.clone();
+          Variable.attackerAndWeapon.put(damagerUUID, weaponClone);
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          {
+            if (Variable.attackerAndWeapon.containsKey(damagerUUID))
+            {
+              ItemStack w = Variable.attackerAndWeapon.get(damagerUUID);
+              if (w.getType() == weaponClone.getType())
+              {
+                Variable.attackerAndWeapon.remove(damagerUUID);
+              }
+            }
+          }, 200L);
         }
         else
         {
@@ -139,6 +153,19 @@ public class EntityDamageByEntity implements Listener
         Variable.victimAndBlockDamager.put(victimUUID, ItemStackUtil.getItemStackFromBlock(blockProjectileSource.getBlock()));
       }
     }
+
+    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+    {
+      if (Variable.victimAndDamager.containsKey(victimUUID))
+      {
+        Entity d = Variable.victimAndDamager.get(victimUUID);
+        if (victim.getLocation().getY() > 0 && d.getLocation().getY() > 0 && Method2.distance(victim.getLocation(), d.getLocation()) > 100)
+        {
+          Variable.victimAndDamager.remove(victimUUID);
+        }
+      }
+    }, 400L);
+
     if (damager instanceof Player player)
     {
       UUID uuid = player.getUniqueId();
@@ -1807,7 +1834,7 @@ public class EntityDamageByEntity implements Listener
       return;
     }
     FileConfiguration config = Cucumbery.config;
-    if (!(entity instanceof Mob mob))
+    if (!(entity instanceof LivingEntity livingEntity))
     {
       return;
     }
@@ -1866,7 +1893,7 @@ public class EntityDamageByEntity implements Listener
     {
       return; // 액션바를 출력 기능이 false이고, 강제 액션바 출력, 강제 PVP 액션바 출력 모두 false라면
     }
-    if (mob.getType() == EntityType.PLAYER)
+    if (livingEntity.getType() == EntityType.PLAYER)
     {
       if (!config.getBoolean("show-actionbar-on-pvp") && !showActionbarForce && !showActionbarPVPForce)
       {
@@ -1876,7 +1903,7 @@ public class EntityDamageByEntity implements Listener
       {
         return; // 기능이 비활성화된 위치에 있으며, 강제 액션바 출력, 강제 PVP 액션바 출력 모두 false라면
       }
-      Player target = (Player) mob;
+      Player target = (Player) livingEntity;
       boolean hideActionbar = UserData.HIDE_ACTIONBAR_ON_ATTACK_PVP_TO_OTHERS.getBoolean(target.getUniqueId());
       if ((!showActionbarPVP || hideActionbar) && !showActionbarForce && !showActionbarPVPForce)
       {
@@ -1896,13 +1923,15 @@ public class EntityDamageByEntity implements Listener
 
     boolean roundNumber = config.getBoolean("actionbar-on-attack-numbers-round");
 
-    AttributeInstance attributeInstance = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+    AttributeInstance attributeInstance = livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
 
     if (attributeInstance == null)
+    {
       return;
+    }
 
 
-    double health = Math.max(0d, mob.getHealth() - finalDamage);
+    double health = Math.max(0d, livingEntity.getHealth() - finalDamage);
     boolean isBeenKilled = health <= 0;
     double maxHealth = attributeInstance.getValue();
     String damageStr = (isBeenKilled ? "&4" : "&6") + (roundNumber ? df.format(finalDamage) : finalDamage);
@@ -1917,11 +1946,11 @@ public class EntityDamageByEntity implements Listener
     {
       if (health <= 0D)
       {
-        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyDeath, ComponentUtil.senderComponent(mob, NamedTextColor.DARK_RED), damageStr, healthStr, maxHealthStr));
+        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyDeath, SenderComponentUtil.senderComponent(livingEntity, NamedTextColor.DARK_RED), damageStr, healthStr, maxHealthStr));
       }
       else
       {
-        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyAttack, ComponentUtil.senderComponent(mob, NamedTextColor.GOLD), damageStr, healthStr, maxHealthStr));
+        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyAttack, SenderComponentUtil.senderComponent(livingEntity, NamedTextColor.GOLD), damageStr, healthStr, maxHealthStr));
       }
     }
     else if (config.getBoolean("play-sound-on-attack-miss"))
@@ -1939,7 +1968,7 @@ public class EntityDamageByEntity implements Listener
       SoundPlay.playSound(player, sound, volume, pitch);
 //      String miss = config.getString("actionbars-on-attack-miss");
       String miss = "&d%s에게 피해를 입힐 수 없습니다. %s / %s";
-      MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(miss, mob, healthStr, maxHealthStr));
+      MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(miss, livingEntity, healthStr, maxHealthStr));
     }
   }
 

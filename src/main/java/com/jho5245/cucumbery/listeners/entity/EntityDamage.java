@@ -10,11 +10,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class EntityDamage implements Listener
 {
@@ -22,6 +25,22 @@ public class EntityDamage implements Listener
 	{
 		if (event.isCancelled())
 			return;
+		Entity entity = event.getEntity();
+		if (entity instanceof LivingEntity livingEntity)
+		{
+			if (livingEntity.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))
+			{
+				PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+				if (potionEffect != null)
+				{
+					int amplifier = potionEffect.getAmplifier();
+					if (amplifier >= 9 && event.getCause() != DamageCause.VOID)
+					{
+						event.setCancelled(true);
+					}
+				}
+			}
+		}
 		this.cancelEntityDamage(event);
 		this.cancelLavaBurnItem(event);
 	}
@@ -53,7 +72,7 @@ public class EntityDamage implements Listener
 		ItemStack item = itemEntity.getItemStack();
 		boolean affectedByPlugin = false;
 		NBTList<String> extraTags = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
-		if (extraTags != null && extraTags.size() > 0)
+		if (extraTags != null && !extraTags.isEmpty())
 		{
 			boolean noFire = false;
 			if (NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.INVULNERABLE.toString()))

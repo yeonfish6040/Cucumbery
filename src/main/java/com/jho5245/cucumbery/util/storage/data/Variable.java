@@ -180,6 +180,8 @@ public class Variable
    */
   public static HashMap<String, YamlConfiguration> blockPlaceData = new HashMap<>();
 
+  public static HashMap<String, YamlConfiguration> customGameRules = new HashMap<>();
+
   /**
    * QuickShop 상점 데이터
    */

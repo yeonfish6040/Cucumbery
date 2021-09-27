@@ -6,6 +6,8 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -75,7 +77,7 @@ public class ItemInfo
       clone3Meta.displayName(null);
       itemStackForTranslationName.setItemMeta(clone3Meta);
       MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : &e" + type.toString() + "&r, 내구도 손상 : &e" + durability + "&r, 개수 : &e" + item.getAmount());
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 번역 이름 : &e", ComponentUtil.itemName(itemStackForTranslationName));
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 번역 이름 : &e", ItemNameUtil.itemName(itemStackForTranslationName));
       MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "미리 보기 : ", ComponentUtil.create("§3이곳에 마우스를 올리세요").hoverEvent(item.asHoverEvent()));
       ItemLore.removeItemLore(itemStackWithoutTMI);
       MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "--------------------------------------------------------------");

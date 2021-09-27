@@ -165,13 +165,11 @@ public class Updater
     return true;
   }
 
-  public static Updater defaultUpdater;
+  public static Updater defaultUpdater = new Updater("https://cucumbery.com/api/builds", "dev");
 
   public static void onEnable()
   {
-    String apiURLString = "https://cucumbery.com/api/builds";
     String channel = "dev"; //OR Config
-    defaultUpdater = new Updater(apiURLString, channel);
     updaterExecutorService.submit(new Runnable()
     {
       @Override

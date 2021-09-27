@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.util.storage.data;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -37,7 +37,7 @@ public class Constant
 
   public static double WARNING_SOUND_VOLUME, WARNING_SOUND_PITCH, ERROR_SOUND_VOLUME, ERROR_SOUND_PITCH;
 
-  public static final TextColor THE_COLOR = TextColor.color(100, 200, 255);
+  public static final TextColor THE_COLOR = TextColor.color(255, 204, 0);
 
   public static final String THE_COLOR_HEX = THE_COLOR.asHexString() + ";";
 

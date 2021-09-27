@@ -3,9 +3,11 @@ package com.jho5245.cucumbery.util;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.ColorUtil.Type;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -181,7 +183,7 @@ public class PlaceHolderUtil
       String displayName = CustomConfig.UserData.DISPLAY_NAME.getString(player.getUniqueId());
       if (displayName == null)
       {
-        displayName = ComponentUtil.serialize(ComponentUtil.senderComponent(player));
+        displayName = ComponentUtil.serialize(SenderComponentUtil.senderComponent(player));
       }
       cmd = cmd.replace("%" + uuid + "_entity_display_name%", displayName);
       cmd = cmd.replace("%" + uuid + "_entity_display_name_strip_color%", MessageUtil.stripColor(displayName));
@@ -205,16 +207,16 @@ public class PlaceHolderUtil
       int offHandAmount = offHandExists ? offHand.getAmount() : 0;
       Material mainHandType = mainHand.getType();
       Material offHandType = offHand.getType();
-      String mainHandDisplay = ComponentUtil.itemName(mainHand).toString();
-      String offHandDisplay = ComponentUtil.itemName(offHand).toString();
+      String mainHandDisplay = ItemNameUtil.itemName(mainHand).toString();
+      String offHandDisplay = ItemNameUtil.itemName(offHand).toString();
       cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_amount%", mainHandAmount + "");
       cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_amount%", offHandAmount + "");
       cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_display%", mainHandDisplay);
       cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_display%", offHandDisplay);
       cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_display_strip_color%", MessageUtil.stripColor(mainHandDisplay));
       cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_display_strip_color%", MessageUtil.stripColor(offHandDisplay));
-      cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_type%", MessageUtil.stripColor(ComponentUtil.itemName(mainHandType).toString()));
-      cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_type%", MessageUtil.stripColor(ComponentUtil.itemName(offHandType).toString()));
+      cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_type%", MessageUtil.stripColor(ItemNameUtil.itemName(mainHandType).toString()));
+      cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_type%", MessageUtil.stripColor(ItemNameUtil.itemName(offHandType).toString()));
     }
 
     return cmd;

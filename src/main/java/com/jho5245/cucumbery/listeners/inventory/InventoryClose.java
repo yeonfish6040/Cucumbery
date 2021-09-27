@@ -6,10 +6,11 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -104,7 +105,7 @@ public class InventoryClose implements Listener
             boolean success = folder.delete();
             if (!success)
             {
-              System.err.println("[Cucumbery] could not delete " + player.getUniqueId().toString() + " folder!");
+              System.err.println("[Cucumbery] could not delete " + player.getUniqueId() + " folder!");
             }
           }
           return;
@@ -250,8 +251,7 @@ public class InventoryClose implements Listener
         }
         if (config.getString("recipes." + recipe + ".extra.display") == null)
         {
-//					String display = recipe + "§e__(" + ComponentUtil.itemName(result) + "§e)";
-          config.set("recipes." + recipe + ".extra.display", recipe);
+          config.set("recipes." + recipe + ".extra.display", MessageUtil.stripColor(ComponentUtil.serialize(ItemNameUtil.itemName(result))));
         }
         config.set("recipes." + recipe + ".result", resultSerial);
         int configSlot = 0;
@@ -300,7 +300,7 @@ public class InventoryClose implements Listener
             if (Method.isTimeUp(item, expireDate))
             {
               int amount = Objects.requireNonNull(item).getAmount();
-              Component text = ComponentUtil.create(MessageUtil.as(Prefix.INFO, "아이템 &b[" + ComponentUtil.itemName(item), ((amount > 1) ? "&r &6" + amount + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
+              Component text = ComponentUtil.create(MessageUtil.as(Prefix.INFO, "아이템 &b[" + ItemNameUtil.itemName(item), ((amount > 1) ? "&r &6" + amount + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
               player.sendMessage(text);
               Objects.requireNonNull(item).setAmount(0);
               player.updateInventory();

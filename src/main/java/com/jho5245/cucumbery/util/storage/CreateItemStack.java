@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.storage;
 
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;

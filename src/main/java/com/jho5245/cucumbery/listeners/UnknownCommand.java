@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.listeners;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;

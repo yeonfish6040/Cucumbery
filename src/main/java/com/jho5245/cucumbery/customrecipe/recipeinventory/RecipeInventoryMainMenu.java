@@ -5,7 +5,7 @@ import com.jho5245.cucumbery.customrecipe.CustomRecipeUtil;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;

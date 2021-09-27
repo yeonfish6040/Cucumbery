@@ -4,11 +4,11 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.listeners.inventory.InventoryClick;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -33,10 +33,13 @@ public class PlayerItemHeld implements Listener
 {
   private final List<Player> cooldown = new ArrayList<>();
 
-  @EventHandler public void onPlayerItemHeld(PlayerItemHeldEvent event)
+  @EventHandler
+  public void onPlayerItemHeld(PlayerItemHeldEvent event)
   {
     if (event.isCancelled())
+    {
       return;
+    }
     Player player = event.getPlayer();
     UUID uuid = player.getUniqueId();
 
@@ -86,7 +89,9 @@ public class PlayerItemHeld implements Listener
     {
       List<String> worldList = Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds");
       if (worldList.contains(player.getLocation().getWorld().getName()))
+      {
         return;
+      }
       if (player.getGameMode() == GameMode.CREATIVE && InventoryClick.check.contains(player))
       {
         ItemStack newItem = player.getInventory().getItem(event.getNewSlot());
@@ -112,9 +117,13 @@ public class PlayerItemHeld implements Listener
           {
             ItemStack hotBarItem = player.getInventory().getItem(i);
             if (ItemStackUtil.itemExists(hotBarItem))
+            {
               hotBars[i] = hotBarItem;
+            }
             else
+            {
               hotBars[i] = new ItemStack(Material.AIR);
+            }
           }
           for (int i = 0; i < hotBars.length; i++)
           {

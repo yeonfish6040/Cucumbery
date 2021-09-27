@@ -1,16 +1,19 @@
 package com.jho5245.cucumbery.customrecipe;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.commands.debug.WHATIS;
+import com.jho5245.cucumbery.commands.debug.CommandWhatIs;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
@@ -979,14 +982,14 @@ public class CustomRecipeUtil
     }
 
     // 바닥에 있는 블록 조건
-    playerValue = ComponentUtil.itemName(world.getBlockAt(locationBlockX, (int) Math.floor(location.getY() - 0.01), locationBlockZ).getType()).toString();
+    playerValue = ItemNameUtil.itemName(world.getBlockAt(locationBlockX, (int) Math.floor(location.getY() - 0.01), locationBlockZ).getType()).toString();
     requireString = "belowblock";
     prefixColor = "rg242,121;";
     configString = config.getString(configSection + requireString);
     try
     {
       Material configMaterial = Material.valueOf(configString);
-      configString = ComponentUtil.itemName(configMaterial).toString();
+      configString = ItemNameUtil.itemName(configMaterial).toString();
     }
     catch (Exception e)
     {
@@ -1072,7 +1075,7 @@ public class CustomRecipeUtil
             {
               requireFound++;
             }
-            String fromTimeString = (fromTime >= 6000 && fromTime < 18000 ? "오후" : "오전") + " " + WHATIS.currentTime(fromTime);
+            String fromTimeString = (fromTime >= 6000 && fromTime < 18000 ? "오후" : "오전") + " " + CommandWhatIs.currentTime(fromTime);
             if (fromMinute != 0)
             {
               fromTimeString = fromTimeString.split("시")[0] + "시 " + fromMinute + "분";
@@ -1128,7 +1131,7 @@ public class CustomRecipeUtil
                 requireFound++;
               }
               // 조건에 만족하지 않아도 시간 설명은 추가
-              String toTimeString = (toTime >= 6000 && toTime < 18000 ? "오후" : "오전") + " " + WHATIS.currentTime(toTime);
+              String toTimeString = (toTime >= 6000 && toTime < 18000 ? "오후" : "오전") + " " + CommandWhatIs.currentTime(toTime);
               if (toMinute != 0)
               {
                 toTimeString = toTimeString.split("시")[0] + "시 " + toMinute + "분";
@@ -1171,7 +1174,7 @@ public class CustomRecipeUtil
       if (validRequireTime.size() > 0)
       {
         int time = (int) world.getTime();
-        String finalValue = (passRequire ? "rgb0,255,84;" : "rgb255,0,84;") + (time >= 6000 && time < 18000 ? "오후" : "오전") + " " + WHATIS.currentTime(time);
+        String finalValue = (passRequire ? "rgb0,255,84;" : "rgb255,0,84;") + (time >= 6000 && time < 18000 ? "오후" : "오전") + " " + CommandWhatIs.currentTime(time);
         if (finalValue.contains("초"))
         {
           String removeSecond;
@@ -1601,59 +1604,51 @@ public class CustomRecipeUtil
                   int statisticsMin = config.getInt(configSection + "statistics." + requireStatistic + "." + requireGeneralStatistic + ".min");
                   int statisticsMax = config.getInt(configSection + "statistics." + requireStatistic + "." + requireGeneralStatistic + ".max");
                   Statistic statistic = Statistic.valueOf(requireGeneralStatistic);
-                  int playerStatistic = player.getStatistic(statistic);
-                  String statisticDisplay = MessageUtil.n2s("rg102,255;" + (statistic) + " : ");
-                  boolean needTimeFormat = false;
-                  boolean isCentiMeter = false;
-                  boolean isCount = true;
-                  boolean isNumber = true;
-                  switch (statistic)
+                  double playerStatistic = player.getStatistic(statistic);
+                  List<Component> args = new ArrayList<>();
+                  Component key = Component.translatable(TranslatableKeyParser.getKey(statistic));
+                  args.add(key);
+                  String statisticName = ComponentUtil.serialize(key);
+                  String suffix = "";
+                  boolean isCount = false;
+                  boolean isNumber = false;
+                  boolean needTimeFormat = statistic.toString().contains("TIME") || statistic.toString().contains("MINUTE");
+                  boolean isRadius = false;
+                  if (statisticName.toString().endsWith("CM"))
                   {
-                    case PLAY_ONE_MINUTE:
-                    case TIME_SINCE_DEATH:
-                    case TIME_SINCE_REST:
-                      needTimeFormat = true;
-                      break;
-                    case AVIATE_ONE_CM:
-                    case BOAT_ONE_CM:
-                    case CLIMB_ONE_CM:
-                    case CROUCH_ONE_CM:
-                    case FALL_ONE_CM:
-                    case FLY_ONE_CM:
-                    case HORSE_ONE_CM:
-                    case MINECART_ONE_CM:
-                    case PIG_ONE_CM:
-                    case SPRINT_ONE_CM:
-                    case STRIDER_ONE_CM:
-                    case SWIM_ONE_CM:
-                    case WALK_ON_WATER_ONE_CM:
-                    case WALK_ONE_CM:
-                    case WALK_UNDER_WATER_ONE_CM:
-                      isCentiMeter = true;
-                      break;
-                    default:
-                      break;
+                    isRadius = true;
+                    playerStatistic /= 100d;
+                    suffix = "m";
                   }
-                  String playerValueString = Constant.Jeongsu.format(playerStatistic) + (isNumber ? "개" : "") + (isCount ? "회" : "");
+                  if (statisticName.endsWith("개수"))
+                  {
+                    suffix = "개";
+                    isCount = true;
+                  }
+                  if (statisticName.endsWith("횟수"))
+                  {
+                    suffix = "회";
+                    isNumber = true;
+                  }
+                  TranslatableComponent statisticDisplay = ComponentUtil.createTranslate("rg102,255;%s : %s");
+                  String playerValueString = Constant.Jeongsu.format(playerStatistic) + suffix;
                   String minValue = Constant.Jeongsu.format(statisticsMin);
                   String maxValue = Constant.Jeongsu.format(statisticsMax);
                   if (needTimeFormat)
                   {
-                    statisticDisplay = statisticDisplay.replace("(틱)", "");
-                    playerValueString = Method.timeFormatMilli((playerStatistic - (playerStatistic % 20)) * 50L);
+                    playerValueString = Method.timeFormatMilli((long) playerStatistic * 50L, false);
                     minValue = Method.timeFormatMilli(statisticsMin * 50L);
                     maxValue = Method.timeFormatMilli(statisticsMax * 50L);
                   }
-                  else if (isCentiMeter)
+                  else if (isRadius)
                   {
-                    statisticDisplay = statisticDisplay.replace("(cm)", "");
                     playerValueString = Constant.Jeongsu.format(playerStatistic / 100d) + "m";
                     minValue = Constant.Jeongsu.format(statisticsMin / 100d) + "m";
                     maxValue = Constant.Jeongsu.format(statisticsMax / 100d) + "m";
                   }
                   // 이상, 이하 문자열 지정
-                  minValue = statisticsMinExists && statisticsMin != 0d ? (minValue + (isNumber ? "개" : "") + (isCount ? "회" : "") + " 이상 ") : "";
-                  maxValue = statisticsMaxExists ? (maxValue + (isNumber ? "개" : "") + (isCount ? "회" : "") + " 이하") : "";
+                  minValue = statisticsMinExists && statisticsMin != 0d ? (minValue + suffix + " 이상 ") : "";
+                  maxValue = statisticsMaxExists ? (maxValue + suffix + " 이하") : "";
                   // 조건 만족 테스트
                   boolean passRequire = (statisticsMinExists && statisticsMaxExists && playerStatistic >= statisticsMin && playerStatistic <= statisticsMax) ||
                           (statisticsMinExists && !statisticsMaxExists && playerStatistic >= statisticsMin) ||
@@ -1664,7 +1659,7 @@ public class CustomRecipeUtil
                   // 조건 만족 문자열 색상
                   String color = getRadiusPercentColor(playerStatistic, statisticsMinExists, statisticsMaxExists, statisticsMin, statisticsMax);
                   // 최종적으로 설명에 추가될 문자열
-                  String finalValue = statisticDisplay + color + playerValueString + " &7" + equalsString + "rgb0,255,84; " + minValue;
+                  String finalValue = color + playerValueString + " &7" + equalsString + "rgb0,255,84; " + minValue;
                   // 최대, 최소 조건이 동일하면 " 이상 " 문자 제거
                   if (statisticsMinExists && statisticsMaxExists && statisticsMin == statisticsMax)
                   {
@@ -1682,7 +1677,8 @@ public class CustomRecipeUtil
                   }
                   if (!finalValue.equals(""))
                   {
-                    requirementsLore.add(ComponentUtil.create(finalValue));
+                    args.add(ComponentUtil.create(finalValue));
+                    requirementsLore.add(statisticDisplay.args(args));
                   }
                   // 조건을 만족하면 true를 넣고 다음 배열의 값 대기
                   requirementGeneralStatistics[statisticsGeneralOrder] = passRequire;
@@ -1721,8 +1717,17 @@ public class CustomRecipeUtil
                       int recipeMax = config.getInt(configSection + "statistics." + requireStatistic + "." + requireEntityStatistic + "." + requireEntityTypeStatistic + ".max");
                       Statistic statistic = Statistic.valueOf(requireEntityStatistic);
                       EntityType entityType = EntityType.valueOf(requireEntityTypeStatistic);
-                      String entityTypeName = (entityType).toString();
-                      String display = statistic.toString();
+                      List<Component> args = new ArrayList<>();
+                      Component entityComponent = Component.translatable(entityType.translationKey());
+                      if (statistic == Statistic.KILL_ENTITY)
+                      {
+                        args.add(ComponentUtil.createTranslate("%s을(를) 죽인 횟수", entityComponent));
+                      }
+                      else if (statistic == Statistic.ENTITY_KILLED_BY)
+                      {
+                        args.add(ComponentUtil.createTranslate("%s에게 죽은 횟수", entityComponent));
+                      }
+                      TranslatableComponent statisticDisplay = ComponentUtil.createTranslate("rgb155,255,89;%s : %s");
                       int playerStatistic = player.getStatistic(statistic, entityType);
                       String color = getRadiusPercentColor(playerStatistic, statisticsMinExists, statisticsMaxExists, recipeMin, recipeMax);
                       boolean passRequire = (statisticsMinExists && statisticsMaxExists && playerStatistic >= recipeMin && playerStatistic <= recipeMax) ||
@@ -1731,21 +1736,14 @@ public class CustomRecipeUtil
                               (!statisticsMinExists && !statisticsMaxExists);
                       if (statisticsMinExists && statisticsMaxExists && recipeMin == recipeMax)
                       {
-                        requirementsLore.add(ComponentUtil.create(
-                                "rgb155,255,89;" + display + " : " + color + Constant.Jeongsu.format(playerStatistic) + "회 &7" + (passRequire ? "=" : "≠") + "rgb0,255,84; " + (Constant.Jeongsu.format(recipeMin) + "회")));
+                        args.add(ComponentUtil.create(color + Constant.Jeongsu.format(playerStatistic) + "회 &7" + (passRequire ? "=" : "≠") + "rgb0,255,84; " + (Constant.Jeongsu.format(recipeMin) + "회")));
+                        requirementsLore.add(statisticDisplay.args(args));
                       }
                       else if (!statisticsMinExists || recipeMin != 0d || statisticsMaxExists)
                       {
-                        requirementsLore.add(ComponentUtil.create("rgb155,255,89;" +
-                                display +
-                                " : " +
-                                color +
-                                Constant.Jeongsu.format(playerStatistic) +
-                                "회 &7" +
-                                (passRequire ? "=" : "≠") +
-                                "rgb0,255,84; " +
-                                (statisticsMinExists && recipeMin != 0d ? (Constant.Jeongsu.format(recipeMin) + "회 이상 ") : "") +
-                                (statisticsMaxExists ? (Constant.Jeongsu.format(recipeMax) + "회 이하") : "")));
+                        args.add(ComponentUtil.create(color + Constant.Jeongsu.format(playerStatistic) + "회 &7" + (passRequire ? "=" : "≠") + "rgb0,255,84; " +
+                                (statisticsMinExists && recipeMin != 0d ? (Constant.Jeongsu.format(recipeMin) + "회 이상 ") : "") + (statisticsMaxExists ? (Constant.Jeongsu.format(recipeMax) + "회 이하") : "")));
+                        requirementsLore.add(statisticDisplay.args(args));
                       }
                       requirementEntityTypeStatistics[statisticsEntityTypeOrder] = passRequire;
                       statisticsEntityTypeOrder++;
@@ -1787,8 +1785,11 @@ public class CustomRecipeUtil
                       int recipeMax = config.getInt(configSection + "statistics." + requireStatistic + "." + requireMaterialStatistic + "." + requireMaterialTypeStatistic + ".max");
                       Statistic statistic = Statistic.valueOf(requireMaterialStatistic);
                       Material material = Material.valueOf(requireMaterialTypeStatistic);
-                      String materialeName = ComponentUtil.itemName(material).toString();
-                      String display = statistic.toString();
+                      List<Component> args = new ArrayList<>();
+                      Component materialComponent = ItemNameUtil.itemName(material);
+                      args.add(materialComponent);
+                      args.add(Component.translatable(TranslatableKeyParser.getKey(statistic)));
+                      TranslatableComponent statisticDisplay = ComponentUtil.createTranslate("rgb105,255,89;%s %s : %s");
                       int playerStatistic = player.getStatistic(statistic, material);
                       String color = getRadiusPercentColor(playerStatistic, statisticsMinExists, statisticsMaxExists, recipeMin, recipeMax);
                       boolean passRequire = (statisticsMinExists && statisticsMaxExists && playerStatistic >= recipeMin && playerStatistic <= recipeMax) ||
@@ -1797,21 +1798,14 @@ public class CustomRecipeUtil
                               (!statisticsMinExists && !statisticsMaxExists);
                       if (statisticsMinExists && statisticsMaxExists && recipeMin == recipeMax)
                       {
-                        requirementsLore.add(ComponentUtil.create(
-                                "rgb155,255,89;" + display + " : " + color + Constant.Jeongsu.format(playerStatistic) + "회 &7" + (passRequire ? "=" : "≠") + "rgb0,255,84; " + (Constant.Jeongsu.format(recipeMin) + "회")));
+                        args.add(ComponentUtil.create(color + Constant.Jeongsu.format(playerStatistic) + "회 &7" + (passRequire ? "=" : "≠") + "rgb0,255,84; " + (Constant.Jeongsu.format(recipeMin) + "회")));
+                        requirementsLore.add(statisticDisplay.args(args));
                       }
                       else if (!statisticsMinExists || recipeMin != 0d || statisticsMaxExists)
                       {
-                        requirementsLore.add(ComponentUtil.create("rgb155,255,89;" +
-                                display +
-                                " : " +
-                                color +
-                                Constant.Jeongsu.format(playerStatistic) +
-                                "회 &7" +
-                                (passRequire ? "=" : "≠") +
-                                "rgb0,255,84; " +
-                                (statisticsMinExists && recipeMin != 0d ? (Constant.Jeongsu.format(recipeMin) + "회 이상 ") : "") +
-                                (statisticsMaxExists ? (Constant.Jeongsu.format(recipeMax) + "회 이하") : "")));
+                        args.add(ComponentUtil.create(color + Constant.Jeongsu.format(playerStatistic) + "회 &7" + (passRequire ? "=" : "≠") + "rgb0,255,84; " +
+                                (statisticsMinExists && recipeMin != 0d ? (Constant.Jeongsu.format(recipeMin) + "회 이상 ") : "") + (statisticsMaxExists ? (Constant.Jeongsu.format(recipeMax) + "회 이하") : "")));
+                        requirementsLore.add(statisticDisplay.args(args));
                       }
                       requirementMaterialTypeStatistics[statisticsMaterialTypeOrder] = passRequire;
                       statisticsMaterialTypeOrder++;

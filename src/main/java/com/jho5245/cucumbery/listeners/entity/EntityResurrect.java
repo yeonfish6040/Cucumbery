@@ -5,10 +5,9 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTList;
@@ -62,9 +61,8 @@ public class EntityResurrect implements Listener
       NBTCompound itemTag = NBTAPI.getMainCompound(totem);
       NBTCompound usageTag = NBTAPI.getCompound(itemTag, CucumberyTag.USAGE_KEY);
       NBTCompound usageResurrectTag = NBTAPI.getCompound(usageTag, CucumberyTag.USAGE_COMMANDS_RESURRECT_KEY);
-      if (livingEntity instanceof Player)
+      if (livingEntity instanceof Player player)
       {
-        Player player = (Player) livingEntity;
         UUID uuid = player.getUniqueId();
         NBTCompound cooldownTag = NBTAPI.getCompound(usageResurrectTag, CucumberyTag.COOLDOWN_KEY);
         if (!CustomConfig.UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()) && cooldownTag != null)
@@ -79,10 +77,7 @@ public class EntityResurrect implements Listener
             String remainTime = Method.timeFormatMilli(nextAvailable - currentTime);
             if (currentTime < nextAvailable)
             {
-              String itemName = ComponentUtil.itemName(totem).toString();
-              Method.playWarnSound(player);
-              MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, totem),
-                      ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + " 사용할 수 없어 사망하였습니다. (남은 시간 : &e" + remainTime + "&r)"));
+              MessageUtil.sendWarn(player, ComponentUtil.createTranslate("아직 %s을(를) 사용할 수 없어 사망하였습니다. (남은 시간 : %s)", totem, "&e" + remainTime));
               event.setCancelled(true);
               return;
             }

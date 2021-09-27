@@ -12,10 +12,257 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class CustomConfig
 {
+  private final File file;
+  private YamlConfiguration config;
+
+  private CustomConfig(File file)
+  {
+    this.file = file;
+    if (!file.exists())
+    {
+      try
+      {
+        if (!file.getParentFile().exists())
+        {
+          boolean success = file.getParentFile().mkdirs();
+          if (!success)
+          {
+            System.out.println("Error1");
+          }
+        }
+        boolean success2 = file.createNewFile();
+        if (!success2)
+        {
+          System.out.println("Error1.1");
+        }
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
+    this.load();
+  }
+
+  private CustomConfig(String path)
+  {
+    this(new File(path));
+  }
+
+  public static CustomConfig getPlayerConfig(UUID uuid)
+  {
+    OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(uuid);
+    CustomConfig customConfig = new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/data/UserData/" + uuid + ".yml");
+    YamlConfiguration config = customConfig.getConfig();
+    List<String> dataKeys = UserData.getKeys();
+    boolean needToUpdate = false;
+    for (String key : config.getKeys(false))
+    {
+      if (Objects.equals(key, UserData.DISPLAY_NAME.getKey()) || Objects.equals(key, UserData.PLAYER_LIST_NAME.getKey()))
+      {
+        continue;
+      }
+      if (!dataKeys.contains(key))
+      {
+        config.set(key, null);
+        needToUpdate = true;
+      }
+    }
+    for (UserData key : UserData.values())
+    {
+      if (key == UserData.DISPLAY_NAME || key == UserData.PLAYER_LIST_NAME)
+      {
+        continue;
+      }
+      if (!config.contains(key.getKey()))
+      {
+        config.set(key.getKey(), key.getDefault());
+        needToUpdate = true;
+      }
+    }
+    String configUUID = config.getString(UserData.UUID.getKey());
+    if (configUUID == null || configUUID.equals("플레이어-UUID"))
+    {
+      config.set(UserData.UUID.getKey(), uuid.toString());
+      needToUpdate = true;
+    }
+    String configId = config.getString(UserData.ID.getKey());
+    if (configId == null || !configId.equals(player.getName()))
+    {
+      config.set(UserData.ID.getKey(), player.getName());
+      needToUpdate = true;
+    }
+    String displayName = config.getString(UserData.DISPLAY_NAME.getKey());
+    if (displayName != null && displayName.equals("플레이어-아이디"))
+    {
+      config.set(UserData.DISPLAY_NAME.getKey(), null);
+      needToUpdate = true;
+    }
+    String playerListName = config.getString(UserData.PLAYER_LIST_NAME.getKey());
+    if (playerListName != null && playerListName.equals("플레이어-아이디"))
+    {
+      config.set(UserData.PLAYER_LIST_NAME.getKey(), null);
+      needToUpdate = true;
+    }
+    if (needToUpdate)
+    {
+      customConfig.saveConfig();
+    }
+    return customConfig;
+  }
+
+  public static CustomConfig getPlayerConfig(OfflinePlayer player)
+  {
+    return CustomConfig.getPlayerConfig(player.getUniqueId());
+  }
+
+  public static CustomConfig getCustomConfig(String path)
+  {
+    return new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/" + path);
+  }
+
+  public static CustomConfig getCustomConfig(File file)
+  {
+    return new CustomConfig(file);
+  }
+
+  public static CustomConfig getCustomConfig(CustomConfigType configType)
+  {
+    CustomConfig customConfig;
+    YamlConfiguration config;
+    boolean hasLeak = false;
+    if (configType == CustomConfigType.ALLPLAYER)
+    {
+      customConfig = new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/data/AllPlayer.yml");
+      config = customConfig.getConfig();
+      if (!config.contains(AllPlayer.CHAT.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.CHAT.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.BLOCK_BREAK.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.BLOCK_BREAK.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.BLOCK_PLACE.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.BLOCK_PLACE.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.ITEM_DROP.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.ITEM_DROP.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.ITEM_PICKUP.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.ITEM_PICKUP.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.ITEM_INTERACT.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.ITEM_INTERACT.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.ITEM_HELD.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.ITEM_HELD.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.ITEM_CONSUME.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.ITEM_CONSUME.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.OPEN_CONTAINER.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.OPEN_CONTAINER.getKey(), false);
+      }
+      if (!config.contains(AllPlayer.MOVE.getKey()))
+      {
+        hasLeak = true;
+        config.set(AllPlayer.MOVE.getKey(), false);
+      }
+    }
+    else
+    {
+      return CustomConfig.getCustomConfig(CustomConfigType.ALLPLAYER);
+    }
+    if (hasLeak)
+    {
+      customConfig.saveConfig();
+    }
+    return customConfig;
+  }
+
+  private void load()
+  {
+    try
+    {
+      this.config = new YamlConfiguration();
+      this.config.load(this.file);
+    }
+    catch (InvalidConfigurationException e)
+    {
+      if (!this.file.getName().endsWith(".log"))
+      {
+        e.printStackTrace();
+      }
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public void saveConfig()
+  {
+    try
+    {
+      this.config.save(this.file);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public void delete()
+  {
+    try
+    {
+      boolean success = this.file.delete();
+      if (!success)
+      {
+        throw new Exception();
+      }
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+  @NotNull
+  public YamlConfiguration getConfig()
+  {
+    return config;
+  }
+
+  public File getFile()
+  {
+    return file;
+  }
+
+
   public enum UserData
   {
     UUID("UUID", "플레이어-UUID"),
@@ -112,6 +359,16 @@ public class CustomConfig
     {
       this.key = key;
       this.defaultValue = defaultValue;
+    }
+
+    public static List<String> getKeys()
+    {
+      List<String> keys = new ArrayList<>();
+      for (UserData key : UserData.values())
+      {
+        keys.add(key.getKey());
+      }
+      return keys;
     }
 
     public String getKey()
@@ -246,248 +503,6 @@ public class CustomConfig
     {
       this.setToggle(player.getUniqueId());
     }
-
-    public static List<String> getKeys()
-    {
-      List<String> keys = new ArrayList<>();
-      for (UserData key : UserData.values())
-      {
-        keys.add(key.getKey());
-      }
-      return keys;
-    }
-  }
-
-  private final File file;
-
-  private YamlConfiguration config;
-
-  private CustomConfig(File file)
-  {
-    this.file = file;
-    if (!file.exists())
-    {
-      try
-      {
-        if (!file.getParentFile().exists())
-        {
-          boolean success = file.getParentFile().mkdirs();
-          if (!success)
-          {
-            System.out.println("Error1");
-          }
-        }
-        boolean success2 = file.createNewFile();
-        if (!success2)
-        {
-          System.out.println("Error1.1");
-        }
-      }
-      catch (Exception e)
-      {
-        e.printStackTrace();
-      }
-    }
-    this.load();
-  }
-
-  private CustomConfig(String path)
-  {
-    this(new File(path));
-  }
-
-  private void load()
-  {
-    try
-    {
-      this.config = new YamlConfiguration();
-      this.config.load(this.file);
-    }
-    catch (InvalidConfigurationException e)
-    {
-      if (!this.file.getName().endsWith(".log"))
-      {
-        e.printStackTrace();
-      }
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
-
-  public void saveConfig()
-  {
-    try
-    {
-      this.config.save(this.file);
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
-
-  public void delete()
-  {
-    try
-    {
-      boolean success = this.file.delete();
-      if (!success)
-      {
-        throw new Exception();
-      }
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
-
-  @NotNull
-  public YamlConfiguration getConfig()
-  {
-    return config;
-  }
-
-  public File getFile()
-  {
-    return file;
-  }
-
-  public static CustomConfig getPlayerConfig(UUID uuid)
-  {
-    OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(uuid);
-    CustomConfig customConfig = new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/data/UserData/" + uuid + ".yml");
-    YamlConfiguration config = customConfig.getConfig();
-    List<String> dataKeys = UserData.getKeys();
-    for (String key : config.getKeys(false))
-    {
-      if (!dataKeys.contains(key))
-      {
-        config.set(key, null);
-      }
-    }
-    for (UserData key : UserData.values())
-    {
-      if (key == UserData.DISPLAY_NAME || key == UserData.PLAYER_LIST_NAME)
-      {
-        continue;
-      }
-      if (!config.contains(key.getKey()))
-      {
-        config.set(key.getKey(), key.getDefault());
-      }
-    }
-    String configUUID = config.getString(UserData.UUID.getKey());
-    if (configUUID == null || configUUID.equals("플레이어-UUID"))
-    {
-      config.set(UserData.UUID.getKey(), uuid.toString());
-    }
-    String configId = config.getString(UserData.ID.getKey());
-    if (configId == null || !configId.equals(player.getName()))
-    {
-      config.set(UserData.ID.getKey(), player.getName());
-    }
-    String displayName = config.getString(UserData.DISPLAY_NAME.getKey());
-    if (displayName != null && displayName.equals("플레이어-아이디"))
-    {
-      config.set(UserData.DISPLAY_NAME.getKey(), null);
-    }
-    String playerListName = config.getString(UserData.PLAYER_LIST_NAME.getKey());
-    if (playerListName != null && playerListName.equals("플레이어-아이디"))
-    {
-      config.set(UserData.PLAYER_LIST_NAME.getKey(), null);
-    }
-    customConfig.saveConfig();
-    return customConfig;
-  }
-
-  public static CustomConfig getPlayerConfig(OfflinePlayer player)
-  {
-    return CustomConfig.getPlayerConfig(player.getUniqueId());
-  }
-
-  public static CustomConfig getCustomConfig(String path)
-  {
-    return new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/" + path);
-  }
-
-  public static CustomConfig getCustomConfig(File file)
-  {
-    return new CustomConfig(file);
-  }
-
-
-  public static CustomConfig getCustomConfig(CustomConfigType configType)
-  {
-    CustomConfig customConfig;
-    YamlConfiguration config;
-    boolean hasLeak = false;
-    if (configType == CustomConfigType.ALLPLAYER)
-    {
-      customConfig = new CustomConfig(Cucumbery.getPlugin().getDataFolder() + "/data/AllPlayer.yml");
-      config = customConfig.getConfig();
-      if (!config.contains(AllPlayer.CHAT.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.CHAT.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.BLOCK_BREAK.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.BLOCK_BREAK.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.BLOCK_PLACE.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.BLOCK_PLACE.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.ITEM_DROP.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.ITEM_DROP.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.ITEM_PICKUP.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.ITEM_PICKUP.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.ITEM_INTERACT.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.ITEM_INTERACT.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.ITEM_HELD.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.ITEM_HELD.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.ITEM_CONSUME.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.ITEM_CONSUME.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.OPEN_CONTAINER.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.OPEN_CONTAINER.getKey(), false);
-      }
-      if (!config.contains(AllPlayer.MOVE.getKey()))
-      {
-        hasLeak = true;
-        config.set(AllPlayer.MOVE.getKey(), false);
-      }
-    }
-    else
-    {
-      return CustomConfig.getCustomConfig(CustomConfigType.ALLPLAYER);
-    }
-    if (hasLeak)
-    {
-      customConfig.saveConfig();
-    }
-    return customConfig;
   }
 
   public enum CustomConfigType

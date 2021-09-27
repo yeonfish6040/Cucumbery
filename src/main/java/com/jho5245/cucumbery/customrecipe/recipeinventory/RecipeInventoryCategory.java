@@ -7,9 +7,10 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -270,7 +271,7 @@ public class RecipeInventoryCategory
         NBTCompound itemTag = NBTAPI.getMainCompound(ingredient);
         NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
         boolean reusable = NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.CUSTOM_RECIPE_REUSABLE) || config.getBoolean("recipes." + recipe + ".ingredients." + j + "." + "reusable");
-        resultLore.add(ComponentUtil.create("&f", ComponentUtil.itemName(ingredient, TextColor.color(255, 255, 255)), "&8 : " + playerAmountColor + playerAmount + " §7/rgb0,255,84; " + amount + (reusable ? " §8[∞]" : "")));
+        resultLore.add(ComponentUtil.create("&f", ItemNameUtil.itemName(ingredient, TextColor.color(255, 255, 255)), "&8 : " + playerAmountColor + playerAmount + " §7/rgb0,255,84; " + amount + (reusable ? " §8[∞]" : "")));
       }
       if (ingredients.isEmpty())
       {

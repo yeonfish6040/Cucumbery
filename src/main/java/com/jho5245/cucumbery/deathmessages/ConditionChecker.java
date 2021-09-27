@@ -1,8 +1,9 @@
 package com.jho5245.cucumbery.deathmessages;
 
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
@@ -154,7 +155,7 @@ public class ConditionChecker
             case ATTACKER_PLAYER_PERMISSION -> check[i] = damagerIsEntity && ((Entity) objectDamager).hasPermission(value);
             case WEAPON_TYPE -> check[i] = weaponExists && pattern.matcher(weapon.getType().toString()).find();
             case WEAPON_NBT -> check[i] = weaponExists && ItemStackUtil.predicateItem(weapon, value);
-            case WEAPON_DISPLAY_NAME -> check[i] = weaponExists && pattern.matcher(ComponentUtil.serialize(ComponentUtil.itemName(weapon))).find();
+            case WEAPON_DISPLAY_NAME -> check[i] = weaponExists && pattern.matcher(ComponentUtil.serialize(ItemNameUtil.itemName(weapon))).find();
             case LAST_TRAMPLED_BLOCK_TYPE -> {
               check[i] = Variable.lastTrampledBlockType.containsKey(victim.getUniqueId()) && pattern.matcher(Variable.lastTrampledBlockType.get(victim.getUniqueId()).toString()).find();
             }

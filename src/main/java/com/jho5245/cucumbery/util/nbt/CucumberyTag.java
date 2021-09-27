@@ -85,6 +85,7 @@ public class CucumberyTag
   public static final String CUSTOM_ITEM_FISHING_LOD_ID = "fishingrod";
   public static final String CUSTOM_ITEM_FISHING_ROD_MULTIPLIER = "Multiplier";
   public static final String CUSTOM_ITEM_FISHING_ROD_MAX_VALUES = "MaxValues";
+  public static final String CUSTOM_ITEM_FISHING_ROD_ALLOW_ON_AIR = "AllowOnAir";
   public static final String CUSTOM_ENCHANTS_KEY = "Enchantments";
   public static final String CUSTOM_ENCHANTS_LEVEL_KEY = "lvl";
   public static final String CUSTOM_ITEM_TAG_KEY = "CustomItemTag";

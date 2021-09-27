@@ -331,6 +331,10 @@ commands:
     description: 주민의 거래 목록 혹은 개체의 인벤토리를 참조합니다.
     usage: /<command> <개체>
     aliases: [viewinv, cviewinv, viewinventory]
+  custommerchant:
+    description: 사용자 지정 주민 거래 시스템 명령어
+    usage: /<command> <create|remove|list|edit> ...
+    aliases: [cmerchant, shopkeeper2, shopkeepers2]
 
 permissions:
   cucumbery.error.hide:

@@ -4,9 +4,10 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -178,7 +179,7 @@ public class PlayerDropItem implements Listener
     if (UserData.SHOW_ACTIONBAR_ON_ITEM_DROP.getBoolean(player.getUniqueId()))
     {
       int amount = item.getAmount();
-      Component itemStackComponent = ComponentUtil.itemName(item, TextColor.fromHexString("#ff9900"));
+      Component itemStackComponent = ItemNameUtil.itemName(item, TextColor.fromHexString("#ff9900"));
       if (amount == 1 && item.getType().getMaxStackSize() == 1)
       {
         player.sendActionBar(ComponentUtil.createTranslate("#ffd900;%s을(를) 버렸습니다.", itemStackComponent));

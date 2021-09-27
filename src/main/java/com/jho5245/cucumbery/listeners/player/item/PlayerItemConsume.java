@@ -6,7 +6,7 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -78,7 +78,7 @@ public class PlayerItemConsume implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemConsumeAlertCooldown2.contains(uuid))
       {
         Variable.itemConsumeAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, "&c섭취 불가!", "&r사용할 수 없는 아이템입니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c섭취 불가!"), ComponentUtil.createTranslate("&r사용할 수 없는 아이템입니다."), 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown2.remove(uuid), 100L);
       }
@@ -95,9 +95,8 @@ public class PlayerItemConsume implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemConsumeAlertCooldown2.contains(uuid))
       {
         Variable.itemConsumeAlertCooldown2.add(uuid);
-        String itemName = (item).toString();
-        MessageUtil.sendTitle(player, "&c섭취 불가!",
-                "&r인벤토리가 가득 찬 상태에서는 &e" + itemName + "&r" + MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + " 섭취할 수 없습니다.", 5, 120, 15);
+        MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c섭취 불가!"),
+                ComponentUtil.createTranslate("&r인벤토리가 가득 찬 상태에서는 %s을(를) 섭취할 수 없습니다.", item), 5, 120, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown2.remove(uuid), 100L);
       }
@@ -226,13 +225,10 @@ public class PlayerItemConsume implements Listener
         YamlConfiguration configPlayerCooldown = Variable.cooldownsItemUsage.get(uuid);
         long nextAvailable = configPlayerCooldown == null ? 0 : configPlayerCooldown.getLong(cooldownTagTag);
         long currentTime = System.currentTimeMillis();
-        String remainTime = Method.timeFormatMilli(nextAvailable - currentTime);
+        String remainTime = "&e" + Method.timeFormatMilli(nextAvailable - currentTime);
         if (currentTime < nextAvailable)
         {
-          String itemName = (item).toString();
-          Method.playWarnSound(player);
-          MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN + "아직 &e"), ComponentUtil.create(itemName, item),
-                  ComponentUtil.create(MessageUtil.getFinalConsonant(itemName, MessageUtil.ConsonantType.을를) + (isSneaking ? "웅크리고 " : "") + " 섭취할 수 없습니다. (남은 시간 : &e" + remainTime + "&r)"));
+          MessageUtil.sendMessage(player, ComponentUtil.createTranslate("아직 %s을(를) " + (isSneaking ? "웅크리고 " : "") + " 섭취할 수 없습니다. (남은 시간 : %s)", item, remainTime));
           event.setCancelled(true);
           return;
         }
