@@ -184,6 +184,12 @@ public class ComponentUtil
         String effectKey = TranslatableKeyParser.getKey(potionEffectType);
         String id = effectKey.substring(17);
         int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
+        boolean isInvincible = potionEffectType.equals(PotionEffectType.DAMAGE_RESISTANCE) && amplifier >= 9;
+        if (isInvincible)
+        {
+          effectKey = "무적";
+          amplifier = 0;
+        }
         boolean hasParticles = potionEffect.hasParticles(), hasIcon = potionEffect.hasIcon(), isAmbient = potionEffect.isAmbient();
         Component concat = Component.translatable(effectKey, Constant.THE_COLOR);
         Component hover = Component.translatable(effectKey);
