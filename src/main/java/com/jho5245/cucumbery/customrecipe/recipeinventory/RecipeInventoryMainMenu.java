@@ -5,13 +5,16 @@ import com.jho5245.cucumbery.customrecipe.CustomRecipeUtil;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -164,11 +167,20 @@ public class RecipeInventoryMainMenu
       {
         categoryItemMeta.addItemFlags(ItemFlag.values());
       }
-      String categoryDisplayName = config.getString("extra.display");
-      categoryItemMeta.displayName(ComponentUtil.create("&e" + (categoryDisplayName != null ? categoryDisplayName : category)));
+      String categoryDisplay = config.getString("extra.display");
+      if (categoryDisplay == null)
+      {
+        categoryDisplay = category;
+      }
+      Component categoryDisplayComp = ComponentUtil.create(categoryDisplay).hoverEvent(null).clickEvent(null);
+      if (categoryDisplayComp.color() == null)
+      {
+        categoryDisplayComp = categoryDisplayComp.color(Constant.THE_COLOR).decoration(TextDecoration.ITALIC, State.FALSE);
+      }
+      categoryItemMeta.displayName(categoryDisplayComp);
       List<Component> categoryItemLore = new ArrayList<>();
       ConfigurationSection recipeList = config.getConfigurationSection("recipes");
-      if (recipeList == null || recipeList.getKeys(false).size() == 0)
+      if (recipeList == null || recipeList.getKeys(false).isEmpty())
       {
         categoryItemLore.add(ComponentUtil.create("§c§o레시피 없음 (혹은 오류 발생)"));
       }
@@ -183,7 +195,7 @@ public class RecipeInventoryMainMenu
         {
           categoryDescription.add(ComponentUtil.create(d));
         }
-        if (categoryDescription.size() > 0)
+        if (!categoryDescription.isEmpty())
         {
           categoryItemLore.addAll(categoryDescription);
         }
@@ -212,7 +224,12 @@ public class RecipeInventoryMainMenu
 //            display = "&e" + ComponentUtil.itemName(item) + "&6" + (amount == 1 ? "" : amount + "개");
             display = recipe;
           }
-          categoryItemLore.add(ComponentUtil.create("§b - §e" + display));
+          Component displayComp = ComponentUtil.create(display).hoverEvent(null).clickEvent(null);
+          if (displayComp.color() == null)
+          {
+            displayComp = displayComp.color(TextColor.color(93, 244, 255)).decoration(TextDecoration.ITALIC, State.FALSE);
+          }
+          categoryItemLore.add(ComponentUtil.create("§b - ", displayComp));
         }
       }
       // 접근 조건 설명 추가

@@ -16,7 +16,9 @@ import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import de.tr7zw.changeme.nbtapi.*;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -27,10 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CommandItemTag implements CommandExecutor
 {
@@ -3389,6 +3388,127 @@ public class CommandItemTag implements CommandExecutor
               MessageUtil.wrongArg(sender, 2, args);
               MessageUtil.commandInfo(sender, label, "food <disable-status-effect|food-level|saturation|nourishment> ...");
               return true;
+            }
+          }
+        }
+        case "customtag" ->{
+          if (args.length < 2)
+          {
+            MessageUtil.shortArg(sender, 3, args);
+            MessageUtil.commandInfo(sender, label, "customtag <list|add|remove> ...");
+            return true;
+          }
+          NBTCompound tmiTag = nbtItem.getCompound(CucumberyTag.KEY_TMI);
+          NBTCompound customTag = NBTAPI.getCompound(tmiTag, CucumberyTag.TMI_CUSTOM_TAGS);
+          NBTCompound vanillaTag = NBTAPI.getCompound(tmiTag, CucumberyTag.TMI_VANILLA_TAGS);
+          switch (args[1])
+          {
+            case "list" -> {
+              if (customTag == null)
+              {
+                if (vanillaTag == null)
+                {
+                  MessageUtil.sendError(player, "no custom neither vanlla tags");
+                  return true;
+                }
+                Set<String> keys = vanillaTag.getKeys();
+                List<String> newKeys = new ArrayList<>();
+                for (String key : keys)
+                {
+                  if (vanillaTag.getBoolean(key))
+                  {
+                    newKeys.add(key);
+                  }
+                }
+                MessageUtil.info(player, "there are ", newKeys.size(), " vanilla tags and no custom tags");
+                MessageUtil.info(player, "&a" + MessageUtil.listToString("&7, &a", Method.listToArray(newKeys)));
+                return true;
+              }
+              Set<String> keys = customTag.getKeys();
+              List<String> newKeys = new ArrayList<>();
+              for (String key : keys)
+              {
+                if (customTag.getBoolean(key))
+                {
+                  newKeys.add(key);
+                }
+              }
+              MessageUtil.info(player,"there are ", newKeys.size(), " custom tags");
+              StringBuilder key = new StringBuilder();
+              List<Component> components = new ArrayList<>();
+              for (String k : newKeys)
+              {
+                key.append("%s, ");
+                components.add(Component.text(k, NamedTextColor.GREEN)
+                        .hoverEvent(ComponentUtil.createTranslate("click to remove %s tag", k))
+                        .clickEvent(ClickEvent.suggestCommand("/itag customtag remove " + k))
+                );
+              }
+              key = new StringBuilder(key.substring(0, key.length() - 2));
+              MessageUtil.info(player, ComponentUtil.createTranslate(key.toString(), components));
+            }
+            case "add" -> {
+              if (args.length < 3)
+              {
+                MessageUtil.shortArg(sender, 3, args);
+                MessageUtil.commandInfo(sender, label, "customtag add <new key>");
+                return true;
+              }
+              String input = args[2];
+              if (tmiTag == null)
+              {
+                tmiTag = nbtItem.addCompound(CucumberyTag.KEY_TMI);
+              }
+              if (customTag == null)
+              {
+                customTag = tmiTag.addCompound(CucumberyTag.TMI_CUSTOM_TAGS);
+              }
+
+              Set<String> keys = customTag.getKeys();
+              if (keys.contains(input) && customTag.getBoolean(input))
+              {
+                  MessageUtil.sendError(player, "there already is tag called ", input);
+                  return true;
+              }
+                customTag.setBoolean(input, true);
+
+              MessageUtil.info(player, "tag " , input, " added");
+              player.getInventory().setItemInMainHand(nbtItem.getItem());
+              Method.updateInventory(player);
+
+
+            }
+            case "remove" -> {
+              if (args.length < 3)
+              {
+                MessageUtil.shortArg(sender, 3, args);
+                MessageUtil.commandInfo(sender, label, "customtag remove <key>");
+                return true;
+              }
+              if (customTag == null)
+              {
+                MessageUtil.sendError(player, "there are no custom tags!");
+                return true;
+              }
+              Set<String> keys = customTag.getKeys();
+              String input = args[2];
+              if (!keys.contains(input))
+              {
+                MessageUtil.sendError(player, "there is no tag called ", input);
+                return true;
+              }
+              customTag.removeKey(input);
+              if (customTag.getKeys().isEmpty())
+              {
+                tmiTag.removeKey(CucumberyTag.TMI_CUSTOM_TAGS);
+              }
+              if (tmiTag.getKeys().isEmpty())
+              {
+                nbtItem.removeKey(CucumberyTag.KEY_TMI);
+              }
+              MessageUtil.info(player, "tag " , input, " removed");
+            player.getInventory().setItemInMainHand(nbtItem.getItem());
+              Method.updateInventory(player);
             }
           }
         }

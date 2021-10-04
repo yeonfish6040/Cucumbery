@@ -319,6 +319,8 @@ public class Cucumbery extends JavaPlugin
     new CommandTeleport2().registerCommand("teleport2", "cucumbery.command.teleport");
     new CommandExplode().registerCommand("explode", "cucumbery.command.explode", "cexplode");
     new CommandVanillaTeleport().registerCommand("teleport", "minecraft.command.teleport", "tp");
+    new CommandSellItem().registerCommand("sellitem", "cucumbery.command.sellitem", "csellitem");
+    new CommandClear2().registerCommand("clear2", "cucumbery.command.clear2", "cclear");
   }
 
   private void registerCommands()

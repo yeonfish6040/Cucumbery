@@ -42,6 +42,10 @@ public class CustomRecipeSupport
             for (String ingredientNumber : ingredients.getKeys(false))
             {
               String ingredientString = ingredients.getString(ingredientNumber + ".item");
+              if (ingredientString == null || ingredientString.startsWith("predicate:"))
+              {
+                continue;
+              }
               ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
               if (usefulLore)
               {

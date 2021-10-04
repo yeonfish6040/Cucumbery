@@ -14,6 +14,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -167,7 +168,7 @@ public class CommandCustomRecipe implements CommandExecutor
         }
         config = Variable.customRecipes.get(args[1]);
         ConfigurationSection recipeConfig = config.getConfigurationSection("recipes." + args[2]);
-        if (recipeConfig == null || recipeConfig.getKeys(false).size() == 0)
+        if (recipeConfig == null || recipeConfig.getKeys(false).isEmpty())
         {
           CustomRecipeUtil.openCreationGUI(player, null, null, null, args[1], args[2], "§레§시§피§ §생§성§3생성");
           return true;
@@ -179,8 +180,19 @@ public class CommandCustomRecipe implements CommandExecutor
         List<Integer> ingredientAmounts = new ArrayList<>();
         for (int i = 0; i < ingredientAmount; i++)
         {
-          ingredient.add(ItemSerializer.deserialize(config.getString("recipes." + args[2] + ".ingredients." + (i + 1) + ".item")));
-          ingredientAmounts.add(config.getInt("recipes." + args[2] + ".ingredients." + (i + 1) + ".amount"));
+          String ingredientString = config.getString("recipes." + args[2] + ".ingredients." + (i + 1) + ".item");
+          if (ingredientString != null)
+          {
+            boolean isPredicate = ingredientString.startsWith("predicate:");
+            ItemStack ingre = isPredicate ? ItemStackUtil.getItemStackPredicate(ingredientString.substring(10)) : ItemSerializer.deserialize(ingredientString);
+            if (isPredicate)
+            {
+              ItemMeta itemMeta = ingre.getItemMeta();
+              itemMeta.displayName(Component.text(ingredientString));
+              ingre.setItemMeta(itemMeta);
+            }
+            ingredient.add(ingre);
+            ingredientAmounts.add(config.getInt("recipes." + args[2] + ".ingredients." + (i + 1) + ".amount"));}
         }
         CustomRecipeUtil.openCreationGUI(player, result, ingredient, ingredientAmounts, args[1], args[2], "§레§시§피§ §편§집§3편집");
         break;

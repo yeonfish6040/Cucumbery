@@ -32,10 +32,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.loot.LootTable;
@@ -54,15 +51,15 @@ public class ItemLore2
 {
   protected static ItemStack setItemLore(@NotNull ItemStack item, ItemMeta itemMeta, List<Component> lore, @Nullable Object params)
   {
-    Player player = null;
-    PrepareItemCraftEvent prepareItemCraftEvent = null;
-    EntityPickupItemEvent entityPickupItemEvent = null;
+ //   Player player = null;
+ //   PrepareItemCraftEvent prepareItemCraftEvent = null;
+//    EntityPickupItemEvent entityPickupItemEvent = null;
     Material type = item.getType();
     NBTItem nbtItem = new NBTItem(item.clone());
     @Nullable NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
-    @Nullable NBTCompoundList customEnchants = itemTag != null ? itemTag.getCompoundList(CucumberyTag.CUSTOM_ENCHANTS_KEY) : null;
+   // @Nullable NBTCompoundList customEnchants = itemTag != null ? itemTag.getCompoundList(CucumberyTag.CUSTOM_ENCHANTS_KEY) : null;
 
-    // 커스텀 인챈트 배열이 있는 경우면 아이템의 인챈트 여부에 관계 없이 바닐라 인챈트 전부 제거
+/*    // 커스텀 인챈트 배열이 있는 경우면 아이템의 인챈트 여부에 관계 없이 바닐라 인챈트 전부 제거
 
     if (customEnchants != null && !customEnchants.isEmpty())
     {
@@ -83,7 +80,7 @@ public class ItemLore2
         nbtItem.removeKey(CucumberyTag.KEY_MAIN);
       }
       itemMeta = nbtItem.getItem().getItemMeta();
-    }
+    }*/
 
 //    if (itemMeta.hasEnchants())
 //    {
@@ -507,7 +504,7 @@ public class ItemLore2
           {
             continue;
           }
-          else if (enchantment.equals(Enchantment.ARROW_INFINITE))
+          if (type != Material.BOW && enchantment.equals(Enchantment.ARROW_INFINITE))
           {
             continue;
           }

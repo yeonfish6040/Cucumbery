@@ -55,6 +55,7 @@ public class ArgumentUtil
       case LOCATION_BLOCK -> new LocationArgument(key != null ? key : "좌표", LocationType.BLOCK_POSITION);
       case LOCATION_2D -> new Location2DArgument(key != null ? key : "좌표");
       case ROTATION -> new RotationArgument(key != null ? key : "방향");
+      case POTION_EFFECT_TYPE -> new PotionEffectArgument(key != null ? key : "효과 유형");
     };
   }
 
@@ -76,6 +77,7 @@ public class ArgumentUtil
     LOCATION_BLOCK,
     LOCATION_2D,
     ROTATION,
+    POTION_EFFECT_TYPE,
   }
 
   public static final Argument HIDE_OUTPUT = of(ArgumentType.HIDE_OUTPUT);
@@ -87,6 +89,7 @@ public class ArgumentUtil
   public static final Argument LOCATION = of(ArgumentType.LOCATION);
   public static final Argument LOCATION_BLOCK = of(ArgumentType.LOCATION_BLOCK);
   public static final Argument ROTATION = of(ArgumentType.ROTATION);
+  public static final Argument POTION_EFFECT_TYPE = of(ArgumentType.POTION_EFFECT_TYPE);
 }
 
 

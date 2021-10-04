@@ -3,10 +3,12 @@ package com.jho5245.cucumbery.util.storage;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
@@ -391,6 +393,7 @@ public class ItemStackUtil
     {
       if (itemEquals(item, iStack, ignoreDurability))
       {
+        if (itemExists(iStack))
         amount += iStack.getAmount();
       }
     }
@@ -407,6 +410,20 @@ public class ItemStackUtil
   public static int countItem(@NotNull Inventory inv, @NotNull ItemStack item)
   {
     return countItem(inv, item, false);
+  }
+
+  public static int countItem(@NotNull Inventory inv, @NotNull String predicate)
+  {
+    int amount = 0;
+    for (ItemStack iStack : inv.getStorageContents())
+    {
+      if (ItemStackUtil.predicateItem(iStack, predicate))
+      {
+        if (itemExists(iStack))
+        amount += iStack.getAmount();
+      }
+    }
+    return amount;
   }
 
   /**
@@ -450,7 +467,6 @@ public class ItemStackUtil
   {
     return countSpace(inv, item, false);
   }
-
 
   /**
    * 목록에 있는 아이템들 중 화로에서 제련할 수 있는 아이템이 있으면 제련된 형태로 바꿔서 반환합니다.
@@ -802,7 +818,95 @@ public class ItemStackUtil
     }
     return block;
   }
+
+  @NotNull
+  private static Material getAnimatedMaterial(@NotNull List<Material> materials)
+  {
+    List<Material> newList = new ArrayList<>(materials);
+    newList.removeIf(m -> !m.isItem() || m.isAir());
+    return newList.get((int) (System.currentTimeMillis() / newList.size() / 2d % 1000d * newList.size() / 1000d));
+  }
+
+  /**
+   * gets an itemstack preview depending on the predicate nbt
+   * @param predicate nbt
+   * @return a previes itemstack
+   */
+  @NotNull
+  public static ItemStack getItemStackPredicate(@NotNull String predicate)
+  {
+    ItemStack itemStack = new ItemStack(Material.PAPER);
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    Component display = ComponentUtil.createTranslate("&aPredicate: %s", predicate);
+    try
+    {
+      NBTContainer nbtContainer = new NBTContainer(predicate);
+      NBTCompound tmi = nbtContainer.getCompound(CucumberyTag.KEY_TMI);
+      NBTCompound vanillaTags = tmi.getCompound(CucumberyTag.TMI_VANILLA_TAGS);
+      boolean containerEmpty = vanillaTags.getBoolean("container_empty");
+      if (vanillaTags.getBoolean("planks"))
+      {
+        display = ComponentUtil.createTranslate("아무 종류의 나무 판자");
+        itemStack.setType(getAnimatedMaterial(Constant.PLANKS));
+      }
+      else if (vanillaTags.getBoolean("wool"))
+      {
+        display = ComponentUtil.createTranslate("아무 종류의 양털");
+        itemStack.setType(getAnimatedMaterial(Constant.WOOL));
+      }
+      else if (vanillaTags.getBoolean("flowers"))
+      {
+        display = ComponentUtil.createTranslate("아무 종류의 꽃");
+        itemStack.setType(getAnimatedMaterial(Constant.FLOWERS));
+      }
+      else if (vanillaTags.getBoolean("small_flowers"))
+      {
+        display = ComponentUtil.createTranslate("아무 종류의 작은 크기의 꽃");
+        itemStack.setType(getAnimatedMaterial(Constant.SMALL_FLOWERS));
+      }
+      else if (vanillaTags.getBoolean("tall_flowers"))
+      {
+        display = ComponentUtil.createTranslate("아무 종류의 큰 크기의 꽃");
+        itemStack.setType(getAnimatedMaterial(Constant.TALL_FLOWERS));
+      }
+      else if (vanillaTags.getBoolean("wither_immune"))
+      {
+        display = ComponentUtil.createTranslate("위더가 부술 수 없는 아무 종류의 블록");
+        itemStack.setType(getAnimatedMaterial(Constant.WITHER_IMMUNE));
+      }
+      else if (vanillaTags.getBoolean("beacon_base_blocks"))
+      {
+        display = ComponentUtil.createTranslate("신호기를 작동시킬 수 있는 아무 블록");
+        itemStack.setType(getAnimatedMaterial(Constant.BEACON_BASE_BLOCKS));
+      }
+      else if (vanillaTags.getBoolean("dyes"))
+      {
+        display = ComponentUtil.createTranslate("아무 염료");
+        itemStack.setType(getAnimatedMaterial(Constant.DYES));
+      }
+      else if (vanillaTags.getBoolean("shulker_boxes"))
+      {
+        display = ComponentUtil.createTranslate(containerEmpty ? "아이템이 들어있지 않은 아무 셜커 상자" : "아무 셜커 상자");
+        itemStack.setType(getAnimatedMaterial(Constant.SHULKER_BOXES));
+      }
+    }
+    catch (Exception e)
+    {
+      display = ComponentUtil.createTranslate("&cInvalid Predicate!: %s", predicate);
+    }
+    itemMeta.displayName(display);
+    itemStack.setItemMeta(itemMeta);
+    ItemLore.setItemLore(itemStack);
+    return itemStack;
+  }
 }
+
+
+
+
+
+
+
 
 
 

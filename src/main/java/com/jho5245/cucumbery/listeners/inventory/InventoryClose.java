@@ -251,7 +251,7 @@ public class InventoryClose implements Listener
         }
         if (config.getString("recipes." + recipe + ".extra.display") == null)
         {
-          config.set("recipes." + recipe + ".extra.display", MessageUtil.stripColor(ComponentUtil.serialize(ItemNameUtil.itemName(result))));
+          config.set("recipes." + recipe + ".extra.display", ComponentUtil.serializeAsJson(ItemNameUtil.itemName(result)));
         }
         config.set("recipes." + recipe + ".result", resultSerial);
         int configSlot = 0;
@@ -265,6 +265,18 @@ public class InventoryClose implements Listener
             ingredient.setAmount(1);
             String ingredientSerial = ItemSerializer.serialize(ingredient);
             int amount = ItemStackUtil.countItem(ingredientInventory, ingredient);
+            if (ItemStackUtil.hasDisplayName(ingredient))
+            {
+              Component display = ingredient.getItemMeta().displayName();
+              if (display instanceof TextComponent textComponent)
+              {
+                String text = textComponent.content();
+                if (text.startsWith("predicate:"))
+                {
+                  ingredientSerial = text;
+                }
+              }
+            }
             config.set("recipes." + recipe + ".ingredients." + configSlot + ".amount", amount);
             if (reusable != null && reusable.length >= configSlot && reusable[configSlot - 1])
             {

@@ -78,6 +78,9 @@ public class ItemLore3
             ));
           }
         }
+        case DIAMOND -> description.add(
+                ComponentUtil.createTranslate("&2와 다이아다")
+        );
         case ENDER_CHEST -> description.addAll(Arrays.asList(
                 ComponentUtil.createTranslate("&7일반 %s와(과) 같으나, 다른 곳에", ItemNameUtil.itemName(Material.CHEST)),
                 ComponentUtil.createTranslate("&7설치된 모든 %s와(과) 내용물을 공유한다.", ItemNameUtil.itemName(Material.ENDER_CHEST)),

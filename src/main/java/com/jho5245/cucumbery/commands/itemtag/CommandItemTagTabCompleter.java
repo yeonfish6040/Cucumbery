@@ -50,7 +50,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
       {
         List<String> list = Method.tabCompleterList(args, "<태그>", "restriction", "customlore", "extratag", "customdurability" + (!Constant.DURABLE_ITEMS.contains(material) ? "(내구도가 있는 아이템 전용)" : ""),
                 "customitemtype", "hideflag", "customrarity", "usage", "expiredate", "tnt" + (material != Material.TNT ? "(TNT 전용)" : ""), "abovecustomlore",
-                "customenchant", "customitem", "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt");
+                "customenchant", "customitem", "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt", "customtag");
         if (args[0].equals("tnt") && material != Material.TNT)
         {
           return Collections.singletonList("해당 태그는 TNT에만 사용할 수 있습니다.");
@@ -1091,6 +1091,38 @@ public class CommandItemTagTabCompleter implements TabCompleter
               return Method.tabCompleterList(args, "[nbt]", true);
           }
         }
+        break;
+      case "customtag":
+        if (length == 2)
+        {
+          return Method.tabCompleterList(args, "args", "list", "add", "remove");
+        }
+        else if (length == 3)
+        {
+          List<String> keys = new ArrayList<>();
+          NBTItem nbtItem = new NBTItem(item);
+          NBTCompound customTags = NBTAPI.getCompound(NBTAPI.getCompound(nbtItem, CucumberyTag.KEY_TMI), CucumberyTag.TMI_CUSTOM_TAGS);
+          if (customTags != null)
+          {
+            for (String key : customTags.getKeys())
+            {
+              if (customTags.getBoolean(key))
+              {
+                keys.add(key);
+              }
+            }
+          }
+          switch (args[1])
+          {
+            case "add" -> {
+              return Method.tabCompleterList(args, "new key", true);
+            }
+            case "remove" -> {
+              return Method.tabCompleterList(args, keys, "key");
+            }
+          }
+        }
+        break;
     }
 
     if (length >= 3 && args[0].equals("food") && args[1].equals("nourishment"))

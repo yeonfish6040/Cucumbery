@@ -341,9 +341,9 @@ public class MessageUtil
             (!(commandSender instanceof BlockCommandSender blockCommandSender) || Boolean.TRUE.equals(blockCommandSender.getBlock().getLocation().getWorld().getGameRuleValue(GameRule.COMMAND_BLOCK_OUTPUT))))
     {
       Component message = setAdminMessage(ComponentUtil.create(objects));
+      sendMessage(collection, message);
       if (!(commandSender instanceof ConsoleCommandSender))
       {
-        sendMessage(collection, message);
         String worldName = location.getWorld().getName();
         int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
         message = message.append(ComponentUtil.create("&7 - " + worldName + ", " + x + ", " + y + ", " + z));

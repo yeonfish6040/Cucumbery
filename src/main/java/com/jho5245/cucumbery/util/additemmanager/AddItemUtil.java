@@ -12,7 +12,7 @@ public class AddItemUtil
 {
 
   @NotNull
-  public static Data addItemResult2(@NotNull CommandSender sender, InventoryHolder inventoryHolder, @NotNull ItemStack itemStack, int amount)
+  public static Data addItemResult2(@NotNull CommandSender sender, @NotNull InventoryHolder inventoryHolder, @NotNull ItemStack itemStack, int amount)
   {
     return addItemResult2(sender, new ArrayList<>(Collections.singletonList(inventoryHolder)), itemStack, amount);
   }

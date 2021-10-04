@@ -7,7 +7,6 @@ import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.ItemInfo;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -16,7 +15,6 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.command.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,7 +25,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class CommandItemStorage implements CommandExecutor, TabCompleter
 {
@@ -322,7 +323,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
           {
             for (String key : itemsSection.getKeys(false))
             {
-              Bukkit.dispatchCommand(sender, "cis get " + args[1] + " " + key + (args.length >= 4 ? (" " + args[3]) : ""));
+              Bukkit.dispatchCommand(sender, "cis get '" + args[1].replace("'", "''") + "' '" + key.replace("'", "''") + "'" + (args.length >= 4 ? (" " + args[3]) : ""));
             }
             return true;
           }
@@ -346,6 +347,8 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
             MessageUtil.sendError(sender, "아이템 목록 &e" + args[1] + "&r에서 해당 아이템(&e" + args[2] + "&r)을 찾을 수 없거나 손상된 아이템입니다.");
             return true;
           }
+          item = item.clone();
+          int amount = item.getAmount();
           if (args.length == 4)
           {
             if (!MessageUtil.isInteger(sender, args[3], true))
@@ -358,36 +361,9 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
               return true;
             }
             item.setAmount(inputAmount);
+            amount = inputAmount;
           }
-          item = item.clone();
-          int amount = item.getAmount();
-          ItemStack lostItem = null;
-          int lostAmount = 0;
-          Collection<ItemStack> lostItems = player.getInventory().addItem(item).values();
-          if (lostItems.size() != 0)
-          {
-            for (ItemStack lost : lostItems)
-            {
-              lostItem = lost;
-            }
-          }
-          String itemName = args[2];
-          String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을를);
-          if (lostItem != null)
-          {
-            lostAmount = lostItem.getAmount();
-            String lostDisplay = (lostAmount == amount ? "&c전부&r(&e총 " + lostAmount + "개&r)" : lostAmount + "개");
-            Component txt = ComponentUtil.create(Prefix.INFO_WARN + "인벤토리가 가득 차서 &e" + itemName + "&r" + finalConsonant + "&e " + lostDisplay + "&r 지급받지 못하였습니다.", item);
-            MessageUtil.sendMessage(player, txt);
-            SoundPlay.playSound(player, Constant.WARNING_SOUND);
-            amount -= lostAmount;
-          }
-          if (amount != 0)
-          {
-            String amountDisplay = (lostAmount == 0 ? amount + "" : amount + "&r(&e" + (amount + lostAmount) + "&r - &e" + lostAmount + "&r)&e");
-            Component txt = ComponentUtil.create(Prefix.INFO_ITEMSTORAGE + "&e" + itemName + "&r" + finalConsonant + "&e " + amountDisplay + "개&r 지급받았습니다.", item);
-            MessageUtil.sendMessage(sender, txt);
-          }
+          AddItemUtil.addItemResult2(sender, player, item, amount).sendFeedback(false);
         }
         else
         {
@@ -769,6 +745,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
     }
     return true;
   }
+
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
@@ -790,15 +767,20 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
         {
           return Collections.singletonList(Prefix.NO_HOLDING_ITEM.toString());
         }
-        if (Variable.itemStorage.size() == 0)
+        if (Variable.itemStorage.isEmpty())
         {
           return Method.tabCompleterList(args, "<새로운 아이템 목록>", true);
         }
-        return Method.tabCompleterList(args, Variable.itemStorage.keySet(), (Variable.itemStorage.containsKey(lastArg) ? "<아이템 목록>" : "<새로운 아이템 목록>"), true);
+        List<String> list = new ArrayList<>(Method.tabCompleterList(args, Variable.itemStorage.keySet(), "<아이템 목록>"));
+        if (!Variable.itemStorage.containsKey(lastArg))
+        {
+          list.addAll(Method.tabCompleterList(args, "<새로운 아이템 목록>", true));
+        }
+        return list;
       }
       else if (args[0].equals("list"))
       {
-        if (Variable.itemStorage.size() == 0)
+        if (Variable.itemStorage.isEmpty())
         {
           return Collections.singletonList("아이템 목록이 하나도 존재하지 않습니다.");
         }
@@ -806,7 +788,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
       }
       else if (Method.equals(args[0], "remove", "get", "info"))
       {
-        if (Variable.itemStorage.size() == 0)
+        if (Variable.itemStorage.isEmpty())
         {
           return Collections.singletonList("아이템 목록이 하나도 존재하지 않습니다.");
         }
@@ -827,7 +809,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
           FileConfiguration config = Variable.itemStorage.get(args[1]);
           if (config == null)
           {
-            return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
+            return Collections.singletonList("'" + args[1] + "'" + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
           }
           ConfigurationSection itemList = config.getConfigurationSection("items");
           if (itemList == null)
@@ -842,14 +824,23 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
           FileConfiguration config = Variable.itemStorage.get(args[1]);
           if (config == null)
           {
-            return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
+            return Collections.singletonList("'" + args[1] + "'"  + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 아이템 목록입니다.");
           }
           ConfigurationSection itemList = config.getConfigurationSection("items");
           if (itemList == null)
           {
             return Collections.singletonList(args[1] + " 아이템 목록에는 유효한 아이템이 없습니다.");
           }
-          return Method.tabCompleterList(args, Method.addAll(itemList.getKeys(false), "--all"), "<아이템>");
+          List<String> list = new ArrayList<>(Method.tabCompleterList(args, Method.addAll(itemList.getKeys(false), "--all"), "<아이템>"));
+          if (itemList.getKeys(false).size() > 1)
+          {
+            if (lastArg.equals("--all"))
+            {
+              list.clear();
+              list.addAll(Method.tabCompleterList(args,  "<" + args[1] + " 아이템 목록의 모든 아이템>", "--all"));
+            }
+          }
+          return list;
         }
         case "store":
           Player player = (Player) sender;

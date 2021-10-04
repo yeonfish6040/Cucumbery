@@ -16,7 +16,6 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
-import org.bukkit.inventory.AbstractHorseInventory;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.BlockProjectileSource;
@@ -87,11 +86,6 @@ public class DeathManager
     if (entity instanceof Snowman snowman && snowman.isDerp())
     {
       success = true;
-    }
-    if (entity instanceof AbstractHorse horse && !(horse instanceof SkeletonHorse))
-    {
-      AbstractHorseInventory inventory = horse.getInventory();
-      success = success || !Method.inventoryEmpty(inventory);
     }
     if (entity instanceof Boss boss && !boss.getLocation().getNearbyPlayers(500d).isEmpty())
     {
@@ -314,10 +308,17 @@ public class DeathManager
           }
         }
         case DROWNING -> {
-          key = "drown";
-          if (entity instanceof WaterMob)
+          if (entity instanceof Snowman || entity instanceof Blaze)
           {
-            key += "_water";
+            key = "melting";
+          }
+          else
+          {
+            key = "drown";
+            if (entity instanceof WaterMob)
+            {
+              key += "_water";
+            }
           }
         }
         case BLOCK_EXPLOSION -> {

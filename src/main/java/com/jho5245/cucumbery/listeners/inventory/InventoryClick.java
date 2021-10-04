@@ -57,7 +57,7 @@ public class InventoryClick implements Listener
 {
   public static List<Player> check = new ArrayList<>();
 
-  private static void removeItem(Player player, String category, FileConfiguration config, String recipe, List<ItemStack> ingredients, List<Integer> ingredientAmounts)
+  private static void removeItem(Player player, String category, FileConfiguration config, String recipe, List<String> ingredientsString, List<ItemStack> ingredients, List<Integer> ingredientAmounts)
   {
     long requireTimeToCraft = config.getLong("recipes." + recipe + ".extra.crafting-time");
     if (requireTimeToCraft > 0)
@@ -78,18 +78,40 @@ public class InventoryClick implements Listener
       if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.CUSTOM_RECIPE_REUSABLE.toString()) && !config.getBoolean("recipes." + recipe + ".ingredients." + (i + 1) + ".reusable"))
       {
         int amount = ingredientAmounts.get(i);
-        int maxStackSize = ingredient.getMaxStackSize();
-        ingredient.setAmount(maxStackSize);
-        int stack = amount / maxStackSize;
-        for (int j = 0; j < stack; j++)
+        String ingredientString = ingredientsString.get(i);
+        for (ItemStack itemStack : player.getInventory())
         {
-          player.getInventory().removeItem(ingredient);
-          amount -= maxStackSize;
-        }
-        if (amount > 0)
-        {
-          ingredient.setAmount(amount);
-          player.getInventory().removeItem(ingredient);
+          if (amount == 0)
+          {
+            break;
+          }
+          if (ingredientString.startsWith("predicate:") && ItemStackUtil.predicateItem(itemStack, ingredientString.substring(10)))
+          {
+            itemStack = itemStack.clone();
+            if (amount < itemStack.getAmount())
+            {
+              itemStack.setAmount(amount);
+            }
+            amount -= itemStack.getAmount();
+            player.getInventory().removeItem(itemStack);
+          }
+          else if (ItemStackUtil.itemEquals(ingredient, itemStack))
+          {
+            int maxStackSize = ingredient.getMaxStackSize();
+            ingredient.setAmount(maxStackSize);
+            int stack = amount / maxStackSize;
+            for (int j = 0; j < stack; j++)
+            {
+              player.getInventory().removeItem(ingredient);
+              amount -= maxStackSize;
+            }
+            if (amount > 0)
+            {
+              ingredient.setAmount(amount);
+              player.getInventory().removeItem(ingredient);
+              amount = 0;
+            }
+          }
         }
       }
     }
@@ -237,10 +259,10 @@ public class InventoryClick implements Listener
         {
           playerInventory.addItem(trueResult);
         }
-        String successMessage = Cucumbery.config.getString("customrecipe.chance-items.success.message");
-        if (successMessage != null && !successMessage.equals("none"))
+        String message = Cucumbery.config.getString("customrecipe.chance-items.success.message");
+        if (message != null && !message.equals("none"))
         {
-          MessageUtil.sendMessage(player, successMessage.replace("%chance%", Constant.Sosu15.format(chance)).replace("%item%", result.toString()));
+          MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, ComponentUtil.createTranslate(message, chance, result));
         }
         List<String> successSounds = Cucumbery.config.getStringList("customrecipe.chance-items.success.sounds");
         for (String successSound : successSounds)
@@ -269,10 +291,10 @@ public class InventoryClick implements Listener
       }
       else
       {
-        String failureMessage = Cucumbery.config.getString("customrecipe.chance-items.failure.message");
-        if (failureMessage != null && !failureMessage.equals("none"))
+        String message = Cucumbery.config.getString("customrecipe.chance-items.failure.message");
+        if (message != null && !message.equals("none"))
         {
-          MessageUtil.sendMessage(player, failureMessage.replace("%chance%", Constant.Sosu15.format(100d - chance)).replace("%item%", result.toString()));
+          MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, ComponentUtil.createTranslate(message, 100d - chance, result));
         }
         List<String> failureSounds = Cucumbery.config.getStringList("customrecipe.chance-items.failure.sounds");
         for (String failureSound : failureSounds)
@@ -2281,6 +2303,7 @@ public class InventoryClick implements Listener
                 }
                 List<Integer> ingredientAmounts = new ArrayList<>();
                 List<ItemStack> ingredients = new ArrayList<>();
+                List<String> ingredientsString = new ArrayList<>();
                 for (int i = 1; i <= 27; i++)
                 {
                   String ingredientString = config.getString("recipes." + recipe + ".ingredients." + i + ".item");
@@ -2288,8 +2311,9 @@ public class InventoryClick implements Listener
                   {
                     break;
                   }
+                  ingredientsString.add(ingredientString);
                   ingredientAmounts.add(config.getInt("recipes." + recipe + ".ingredients." + i + ".amount"));
-                  ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
+                  ItemStack ingredient = ingredientString.startsWith("predicate:") ? ItemStackUtil.getItemStackPredicate(ingredientString.substring(10)) : ItemSerializer.deserialize(ingredientString);
                   if (!ItemStackUtil.itemExists(ingredient))
                   {
                     player.closeInventory();
@@ -2298,7 +2322,7 @@ public class InventoryClick implements Listener
                   }
                   ingredients.add(ingredient);
                 }
-                InventoryClick.removeItem(player, category, config, recipe, ingredients, ingredientAmounts);
+                InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts);
                 InventoryClick.chanceGiveItem(player, category, config, recipe, result);
                 RecipeInventoryCategory.openRecipeInventory(player, mainPage, category, page, false);
               }
@@ -2378,6 +2402,7 @@ public class InventoryClick implements Listener
           }
           List<Integer> ingredientAmounts = new ArrayList<>();
           List<ItemStack> ingredients = new ArrayList<>();
+          List<String> ingredientsString = new ArrayList<>();
           for (int i = 1; i <= 27; i++)
           {
             String ingredientString = config.getString("recipes." + recipe + ".ingredients." + i + ".item");
@@ -2385,8 +2410,9 @@ public class InventoryClick implements Listener
             {
               break;
             }
+            ingredientsString.add(ingredientString);
             ingredientAmounts.add(config.getInt("recipes." + recipe + ".ingredients." + i + ".amount"));
-            ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
+            ItemStack ingredient = ingredientString.startsWith("predicate:") ? ItemStackUtil.getItemStackPredicate(ingredientString.substring(10)) : ItemSerializer.deserialize(ingredientString);
             if (!ItemStackUtil.itemExists(ingredient))
             {
               player.closeInventory();
@@ -2395,7 +2421,7 @@ public class InventoryClick implements Listener
             }
             ingredients.add(ingredient);
           }
-          InventoryClick.removeItem(player, category, config, recipe, ingredients, ingredientAmounts);
+          InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts);
           InventoryClick.chanceGiveItem(player, category, config, recipe, result);
           RecipeInventoryRecipe.openRecipeInventory(player, mainPage, category, categoryPage, recipe, false);
         }

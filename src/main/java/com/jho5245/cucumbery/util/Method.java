@@ -2584,7 +2584,7 @@ public class Method extends SoundPlay
       }
       if (returnValue.isEmpty() && !key.equals("") && !ignoreEmpty)
       {
-        return Collections.singletonList(tabArg +
+        return Collections.singletonList("'" + tabArg + "'" +
                 MessageUtil.getFinalConsonant(tabArg, MessageUtil.ConsonantType.은는) +
                 " 잘못되거나 알 수 없는 " +
                 key.replace("<", "").replace(">", "").replace("[", "").replace("]", "") +

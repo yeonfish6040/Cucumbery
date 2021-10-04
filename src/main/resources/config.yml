@@ -575,14 +575,14 @@ customrecipe:
   # 제작 성공 확률 시스템이 있는 레시피 관련 설정. 모든 값은 "none"으로 지정 시 비활성화 할 수 있음. 소리는 [] 를 입력하여 비활성화 가능.
   chance-items:
     success:
-      message: "&2[&a제작&2] &e%chance%%&r 확률로 &e%item%&r 제작을 성공하였습니다."
+      message: "%s%% 확률로 %s을(를) 제작하였습니다!"
       sounds:
         - ENTITY_FIREWORK_ROCKET_TWINKLE, 1.0, 1.0
         - ENTITY_PLAYER_LEVELUP, 1.0, 1.0
       # 제작을 성공했을 때 실행될 명령어 목록
       commands: []
     failure:
-      message: "&2[&a제작&2] &e%chance%%&r 확률로 &e%item%&r 제작에 실패하였습니다..."
+      message: "%s%% 확률로 %s을(를) 제작하지 못했습니다..."
       sounds:
         - ENTITY_SKELETON_DEATH, 0.5, 0.5
       # 제작을 실패했을 때 실행될 명령어 목록

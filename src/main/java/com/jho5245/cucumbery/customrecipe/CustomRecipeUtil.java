@@ -1940,7 +1940,7 @@ public class CustomRecipeUtil
     gui.setItem(12, deco2);
     gui.setItem(14, deco2);
     gui.setItem(4, CreateItemStack.newItem(Material.BARRIER, 1, "§e로딩중...", true));
-    if (ingredients != null && ingredients.size() > 0 && ingredientAmounts != null && ingredientAmounts.size() > 0)
+    if (ingredients != null && !ingredients.isEmpty() && ingredientAmounts != null && !ingredientAmounts.isEmpty())
     {
       gui.setItem(13, CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "§와§d[편집 방법]", Arrays.asList("§7상단에 결과물 아이템을 넣고", "§7하단 27칸에 레시피의 재료가 되는", "§7아이템을 넣고 바로 아래의 지도 제작대를 클릭하면 됩니다."), true));
       gui.setItem(22, CreateItemStack.newItem(Material.CARTOGRAPHY_TABLE, 1, "§a레시피 편집", "§7클릭하여 레시피를 편집합니다.", true));

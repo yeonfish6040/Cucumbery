@@ -40,7 +40,7 @@ public class JosaFormatter
           new HangulJongSungDetector(),
           new EnglishCapitalJongSungDetector(),
           new EnglishJongSungDetector(),
-          //new EnglishNumberJongSungDetector(), // 일반인이 영어+숫자인 경우 항상 숫자를 영어로 읽는 경우는 드물기 때문에 사용하지 않음.
+          new EnglishNumberJongSungDetector(), // 일반인이 영어+숫자인 경우 항상 숫자를 영어로 읽는 경우는 드물기 때문에 사용하지 않음.
           new EnglishNumberKorStyleJongSungDetector(),
           new NumberJongSungDetector(),
           new HanjaJongSungDetector(),
@@ -793,9 +793,9 @@ public class JosaFormatter
       {
         long number = (long) (parseResult.number);
         // 조 예외 처리 : 조(받침 없음), 십, 백, 천, 만, 억, 경, 현
-        if (number % 1_0000_0000_0000L == 0)
+        if (number % 1_0000_0000_0000L == 0 && number % 1_0000_0000_0000_0000L != 0)
         {
-          return 0;
+          return 1;
         }
       }
 

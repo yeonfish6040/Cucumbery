@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util.storage.data;
 
+import com.destroystokyo.paper.MaterialTags;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -8,12 +9,10 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.Tag;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class Constant
@@ -268,8 +267,6 @@ public class Constant
 
   public static final Set<Material> CROP_BLOCKS = new HashSet<>(Arrays.asList(Material.WHEAT, Material.CARROTS, Material.POTATOES, Material.NETHER_WART, Material.BEETROOTS));
 
-  public static final Set<Material> SHULKER_BOXES = new HashSet<>();
-
   public static final Set<Material> BUCKETS = new HashSet<>(Arrays.asList(Material.BUCKET, Material.WATER_BUCKET, Material.LAVA_BUCKET, Material.MILK_BUCKET, Material.PUFFERFISH_BUCKET,
           Material.SALMON_BUCKET, Material.COD_BUCKET, Material.TROPICAL_FISH_BUCKET, Material.AXOLOTL_BUCKET));
 
@@ -301,11 +298,11 @@ public class Constant
   public static final Set<Material> SAPLINGS = new HashSet<>(
           Arrays.asList(Material.ACACIA_SAPLING, Material.BIRCH_SAPLING, Material.JUNGLE_SAPLING, Material.OAK_SAPLING, Material.SPRUCE_SAPLING, Material.DARK_OAK_SAPLING));
 
-  public static final Set<Material> FLOWERS = new HashSet<>(Arrays.asList(Material.DANDELION, Material.POPPY, Material.BLUE_ORCHID, Material.ALLIUM, Material.AZURE_BLUET, Material.RED_TULIP,
-          Material.ORANGE_TULIP, Material.WHITE_TULIP, Material.PINK_TULIP, Material.OXEYE_DAISY, Material.CORNFLOWER,
-          Material.LILY_OF_THE_VALLEY, Material.WITHER_ROSE, Material.SUNFLOWER, Material.LILAC, Material.ROSE_BUSH, Material.PEONY));
 
   public static final Set<Material> OCCLUDING_BLOCKS = new HashSet<>();
+
+  public static final List<Material> WOOL = new ArrayList<>(), PLANKS = new ArrayList<>(), FLOWERS = new ArrayList<>(), SMALL_FLOWERS = new ArrayList<>(), TALL_FLOWERS = new ArrayList<>(),
+  WITHER_IMMUNE = new ArrayList<>(), BEACON_BASE_BLOCKS = new ArrayList<>(), DYES = new ArrayList<>(), SHULKER_BOXES = new ArrayList<>();
 
   static
   {
@@ -330,17 +327,49 @@ public class Constant
       {
         OCCLUDING_BLOCKS.add(material);
       }
+
+      if (Tag.WOOL.isTagged(material))
+      {
+        WOOL.add(material);
+      }
+      if (Tag.PLANKS.isTagged(material))
+      {
+        PLANKS.add(material);
+      }
+      if (Tag.FLOWERS.isTagged(material))
+      {
+        FLOWERS.add(material);
+      }
+      if (Tag.SMALL_FLOWERS.isTagged(material))
+      {
+        SMALL_FLOWERS.add(material);
+      }
+      if (Tag.TALL_FLOWERS.isTagged(material))
+      {
+        TALL_FLOWERS.add(material);
+      }
+      if (Tag.WITHER_IMMUNE.isTagged(material))
+      {
+        WITHER_IMMUNE.add(material);
+      }
+      if (Tag.BEACON_BASE_BLOCKS.isTagged(material))
+      {
+        BEACON_BASE_BLOCKS.add(material);
+      }
+      if (MaterialTags.DYES.isTagged(material))
+      {
+        DYES.add(material);
+      }
+      if (Tag.SHULKER_BOXES.isTagged(material))
+      {
+        SHULKER_BOXES.add(material);
+      }
     }
     DEFAULT_MODIFIER_ITEMS.addAll(ARMORS);
     DEFAULT_MODIFIER_ITEMS.addAll(SWORDS);
     DEFAULT_MODIFIER_ITEMS.addAll(TOOLS);
     DEFAULT_MODIFIER_ITEMS.add(Material.TRIDENT);
     DEFAULT_MODIFIER_ITEMS.add(Material.TURTLE_HELMET);
-
-    SHULKER_BOXES.addAll(new ArrayList<>(Arrays.asList(Material.BLACK_SHULKER_BOX, Material.BLUE_SHULKER_BOX, Material.BROWN_SHULKER_BOX, Material.CYAN_SHULKER_BOX, Material.GRAY_SHULKER_BOX,
-            Material.GREEN_SHULKER_BOX, Material.LIGHT_BLUE_SHULKER_BOX, Material.LIGHT_GRAY_SHULKER_BOX, Material.LIME_SHULKER_BOX,
-            Material.MAGENTA_SHULKER_BOX, Material.ORANGE_SHULKER_BOX, Material.PINK_SHULKER_BOX, Material.PURPLE_SHULKER_BOX, Material.RED_SHULKER_BOX,
-            Material.WHITE_SHULKER_BOX, Material.YELLOW_SHULKER_BOX, Material.SHULKER_BOX)));
 
     INSTANTLY_BREAKABLE_BLOCKS = new HashSet<>(Arrays.asList(Material.ACACIA_SAPLING, Material.ALLIUM, Material.ATTACHED_MELON_STEM, Material.ATTACHED_PUMPKIN_STEM, Material.AZURE_BLUET,
             Material.BEETROOTS, Material.BIRCH_SAPLING, Material.BLUE_ORCHID, Material.BRAIN_CORAL, Material.BRAIN_CORAL_FAN,

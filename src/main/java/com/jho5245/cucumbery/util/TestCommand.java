@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util;
 
+import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -23,8 +25,11 @@ public class TestCommand implements CommandExecutor, TabCompleter
       return true;
     }
     Player player = (Player) sender;
+    ItemStack itemStack = player.getInventory().getItemInMainHand();
+    player.sendMessage(ItemStackUtil.predicateItem(itemStack, args[0]) + "");
     try
     {
+      if (args.length == 2)
       switch (args[0])
       {
         case "entities" -> {

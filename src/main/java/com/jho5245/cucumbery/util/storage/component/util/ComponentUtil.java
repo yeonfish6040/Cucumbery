@@ -8,6 +8,7 @@ import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -22,6 +23,8 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.parser.JSONParser;
@@ -174,6 +177,40 @@ public class ComponentUtil
       else if (object instanceof Location location)
       {
         component = component.append(LocationComponent.locationComponent(location));
+      }
+      else if (object instanceof PotionEffect potionEffect)
+      {
+        PotionEffectType potionEffectType = potionEffect.getType();
+        String effectKey = TranslatableKeyParser.getKey(potionEffectType);
+        String id = effectKey.substring(17);
+        int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
+        boolean hasParticles = potionEffect.hasParticles(), hasIcon = potionEffect.hasIcon(), isAmbient = potionEffect.isAmbient();
+        Component concat = Component.translatable(effectKey, Constant.THE_COLOR);
+        Component hover = Component.translatable(effectKey);
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", (amplifier + 1)));
+        if (!hasParticles)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.createTranslate("&a입자 숨김"));
+        }
+        if (!hasIcon)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.createTranslate("&a우측 상단 아이콘 숨김"));
+        }
+        if (isAmbient)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.createTranslate("&a우측 상단 효과 빛남"));
+        }
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(Component.text("minecraft:" + id, NamedTextColor.DARK_GRAY));
+        concat = concat.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand(
+                "/ceffect @s minecraft:" + id + " " + duration + " " + amplifier + " " + !hasParticles + " " + !hasIcon + " " + !isAmbient));
+        component = component.append(concat);
       }
       else if (Cucumbery.using_NoteBlockAPI && object instanceof Song song)
       {

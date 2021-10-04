@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.storage.data;
 
 import org.bukkit.Statistic;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 public class TranslatableKeyParser
@@ -58,7 +59,50 @@ public class TranslatableKeyParser
               case RECORD_PLAYED -> "play_record";
               case PLAY_ONE_MINUTE -> "play_time";
               case TRAPPED_CHEST_TRIGGERED -> "trigger_trapped_chest";
-              default -> statistic.toString();
+              default -> statistic.toString().toLowerCase();
             };
+  }
+
+  @NotNull
+  public static String getKey(@NotNull PotionEffectType potionEffectType)
+  {
+/*    if (potionEffectType.equals(PotionEffectType.ABSORPTION) ||
+            potionEffectType.equals(PotionEffectType.BAD_OMEN) ||
+            potionEffectType.equals(PotionEffectType.BLINDNESS) ||
+            potionEffectType.equals(PotionEffectType.CONDUIT_POWER) ||
+    potionEffectType.equals(PotionEffectType.DOLPHINS_GRACE) ||
+    potionEffectType.equals(PotionEffectType.FIRE_RESISTANCE) ||
+    potionEffectType.equals(PotionEffectType.GLOWING) ||
+    potionEffectType.equals(PotionEffectType.HEALTH_BOOST)||
+    potionEffectType.equals(PotionEffectType.HERO_OF_THE_VILLAGE)||
+    potionEffectType.equals(PotionEffectType.HUNGER)||
+    potionEffectType.equals(PotionEffectType.INVISIBILITY)||
+    potionEffectType.equals(PotionEffectType.LEVITATION)||
+    potionEffectType.equals(PotionEffectType.LUCK)||
+    potionEffectType.equals(PotionEffectType.NIGHT_VISION)||
+    potionEffectType.equals(PotionEffectType.POISON)||
+    potionEffectType.equals(PotionEffectType.))
+    {
+      return "effect.minecraft." + potionEffectType.getName().toLowerCase();
+    }*/
+    if (potionEffectType.equals(PotionEffectType.CONFUSION))
+      return "effect.minecraft.nausea";
+    if (potionEffectType.equals(PotionEffectType.DAMAGE_RESISTANCE))
+      return "effect.minecraft.resistance";
+    if (potionEffectType.equals(PotionEffectType.FAST_DIGGING))
+    {
+      return "effect.minecraft.haste";
+    }
+    if (potionEffectType.equals(PotionEffectType.HARM))
+      return "effect.minecraft.instant_damage";
+    if (potionEffectType.equals(PotionEffectType.HEAL))
+      return "effect.minecraft.instant_heal";
+    if (potionEffectType.equals(PotionEffectType.INCREASE_DAMAGE))
+      return "effect.minecraft.strength";
+    if (potionEffectType.equals(PotionEffectType.JUMP))
+      return "effect.minecraft.jump_boost";
+    if (potionEffectType.equals(PotionEffectType.SLOW_DIGGING))
+      return "effect.minecraft.mining_fatigue";
+    return "effect.minecraft." + potionEffectType.getName().toLowerCase();
   }
 }

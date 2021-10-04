@@ -170,7 +170,7 @@ public class EntityComponentUtil
       if (entity instanceof Axolotl axolotl)
       {
         Axolotl.Variant variant = axolotl.getVariant();
-        String variantString = variant.toString().replace("LUCY", "PINK").replace("WILD", "BROWN");
+        String variantString = variant.toString().replace("LUCY", "PINK").replace("WILD", "BROWN").replace("GOLD", "YELLOW");
         Color color = DyeColor.valueOf(variantString).getColor();
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.createTranslate("색상 : %s", Component.translatable("color.minecraft." + variantString.toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));

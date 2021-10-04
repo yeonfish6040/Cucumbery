@@ -52,6 +52,19 @@ public class SenderComponentUtil
   @NotNull
   public static Component senderComponent(@NotNull Object object, @Nullable TextColor defaultColor, boolean hoverTextMode)
   {
+    return senderComponent(object, defaultColor, hoverTextMode, null);
+  }
+  /**
+   * 호버링 텍스트에 들어갈 개체의 좌표와 유형을 나타냅니다. 만약 좌표를 가져올 수 없는 객체라면 그대로 반환합니다.
+   *
+   * @param object        좌표와 유형을 나타낼 개체
+   * @param hoverTextMode false면 그대로 반환
+   * @param extraComponent 추가로 붙일 컴포넌트
+   * @return 좌표와 유형이 나타난 개체 컴포넌트
+   */
+  @NotNull
+  public static Component senderComponent(@NotNull Object object, @Nullable TextColor defaultColor, boolean hoverTextMode, @Nullable Component extraComponent)
+  {
     Component component = senderComponent(object, defaultColor).hoverEvent(null).clickEvent(null);
     if (!hoverTextMode)
     {
@@ -81,6 +94,10 @@ public class SenderComponentUtil
       {
         component = ComponentUtil.createTranslate("&7%s@%s [%s]", component, locationComponent, typeComponent);
       }
+    }
+    if (extraComponent != null)
+    {
+      component = component.append(extraComponent);
     }
     return component;
   }

@@ -7,9 +7,9 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -17,7 +17,10 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -52,7 +55,7 @@ public class RecipeInventoryCategory
     {
       recipeList = config.getConfigurationSection("recipes");
     }
-    exists = exists && recipeList != null && recipeList.getKeys(false).size() > 0;
+    exists = exists && recipeList != null && !recipeList.getKeys(false).isEmpty();
     if (!exists)
     {
       MessageUtil.sendError(player, "커스텀 레시피 목록 &e" + category + "&r에는 레시피가 1개도 없습니다. 현상이 지속적으로 발생한다면, 관리자에게 문의해주세요.");
@@ -103,8 +106,12 @@ public class RecipeInventoryCategory
     {
       categoryDisplay = category;
     }
-    categoryDisplay = categoryDisplay;
-
+    Component categoryDisplayComp = ComponentUtil.create(categoryDisplay).hoverEvent(null).clickEvent(null);
+    if (categoryDisplayComp.color() == null)
+    {
+      categoryDisplayComp = categoryDisplayComp.color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, State.FALSE);
+    }
+    categoryDisplay = ComponentUtil.serialize(categoryDisplayComp);
     Inventory menu = Bukkit.createInventory(
             null, 45, Constant.CANCEL_STRING +
                     Constant.CUSTOM_RECIPE_MENU +
@@ -198,7 +205,7 @@ public class RecipeInventoryCategory
       resultMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
       PersistentDataContainer dataContainer = resultMeta.getPersistentDataContainer();
       Set<NamespacedKey> dataKeys = dataContainer.getKeys();
-      if (dataKeys.size() > 0)
+      if (!dataKeys.isEmpty())
       {
         for (NamespacedKey dataKey : dataKeys)
         {
@@ -215,10 +222,14 @@ public class RecipeInventoryCategory
       {
         display = recipe;
       }
+      Component displayComp = ComponentUtil.create(display).hoverEvent(null).clickEvent(null);
+      if (displayComp.color() == null)
+      {
+        displayComp = displayComp.color(TextColor.color(93, 244, 255)).decoration(TextDecoration.ITALIC, State.FALSE);
+      }
       resultLore.addAll(
-              Arrays.asList(Component.empty(),
-                      ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR),
-                      ComponentUtil.create("gb210,255;레시피 이름 : rgb93,244,255;" + MessageUtil.n2s(display)),
+              Arrays.asList(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR),
+                      ComponentUtil.createTranslate("gb210,255;레시피 이름 : %s", displayComp),
                       Component.empty()));
 
       List<String> description = config.getStringList("recipes." + recipe + ".extra.descriptions.preview");
@@ -244,7 +255,7 @@ public class RecipeInventoryCategory
         }
         ingredientAmounts.add(config.getInt("recipes." + recipe + ".ingredients." + j + ".amount"));
         ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
-        if (!ItemStackUtil.itemExists(ingredient))
+        if (!ItemStackUtil.itemExists(ingredient) && !ingredientString.startsWith("predicate:"))
         {
           result = CreateItemStack.newItem(Material.MUSIC_DISC_11, 1, "&e알 수 없는 아이템", "&c&o손상된 레시피", true);
           break;
@@ -260,9 +271,18 @@ public class RecipeInventoryCategory
           break;
         }
         ingredientAmounts.add(config.getInt("recipes." + recipe + ".ingredients." + j + ".amount"));
+        boolean isPredicate = ingredientString.startsWith("predicate:");
         ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
-        int amount = ingredientAmounts.get(j - 1);
         int playerAmount = ItemStackUtil.countItem(player.getInventory(), ingredient);
+        if (isPredicate)
+        {
+          ingredientString = ingredientString.substring(10);
+          ingredient = ItemStackUtil.getItemStackPredicate(ingredientString);
+          playerAmount = ItemStackUtil.countItem(player.getInventory(), ingredientString);
+        }
+        int amount = ingredientAmounts.get(j - 1);
+        Component itemName = ItemNameUtil.itemName(ingredient, TextColor.color(255, 255, 255));
+
         if (playerAmount >= amount)
         {
           ingredientEnoughArray[j - 1] = true;
@@ -271,7 +291,7 @@ public class RecipeInventoryCategory
         NBTCompound itemTag = NBTAPI.getMainCompound(ingredient);
         NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
         boolean reusable = NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.CUSTOM_RECIPE_REUSABLE) || config.getBoolean("recipes." + recipe + ".ingredients." + j + "." + "reusable");
-        resultLore.add(ComponentUtil.create("&f", ItemNameUtil.itemName(ingredient, TextColor.color(255, 255, 255)), "&8 : " + playerAmountColor + playerAmount + " §7/rgb0,255,84; " + amount + (reusable ? " §8[∞]" : "")));
+        resultLore.add(ComponentUtil.create("&f", itemName, "&8 : " + playerAmountColor + playerAmount + " §7/rgb0,255,84; " + amount + (reusable ? " §8[∞]" : "")));
       }
       if (ingredients.isEmpty())
       {

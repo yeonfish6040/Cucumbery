@@ -7,15 +7,16 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -92,7 +93,7 @@ public class RecipeInventoryRecipe
         break;
       }
       ingredientAmounts.add(config.getInt("recipes." + recipe + ".ingredients." + i + ".amount"));
-      ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
+      ItemStack ingredient = ingredientString.startsWith("predicate:") ? ItemStackUtil.getItemStackPredicate(ingredientString.substring(10)) : ItemSerializer.deserialize(ingredientString);
       if (!ItemStackUtil.itemExists(ingredient))
       {
         MessageUtil.sendError(player, "레시피를 여는데 일시적인 오류가 발생했거나 올바르지 않은 레시피입니다. 현상이 지속적으로 발생한다면, 관리자에게 문의해주세요. (오류 코드 : Material)");
@@ -106,14 +107,24 @@ public class RecipeInventoryRecipe
     {
       categoryDisplay = category;
     }
-    categoryDisplay = MessageUtil.n2s(categoryDisplay);
+    Component categoryDisplayComp = ComponentUtil.create(categoryDisplay).hoverEvent(null).clickEvent(null);
+    if (categoryDisplayComp.color() == null)
+    {
+      categoryDisplayComp = categoryDisplayComp.color(NamedTextColor.DARK_GRAY);
+    }
+    categoryDisplay = ComponentUtil.serialize(categoryDisplayComp);
 
     String recipeDisplay = config.getString("recipes." + recipe + ".extra.display");
     if (recipeDisplay == null)
     {
       recipeDisplay = recipe;
     }
-    recipeDisplay = MessageUtil.n2s(recipeDisplay);
+    Component recipeDisplayComp = ComponentUtil.create(recipeDisplay).hoverEvent(null).clickEvent(null);
+    if (recipeDisplayComp.color() == null)
+    {
+      recipeDisplayComp = recipeDisplayComp.color(NamedTextColor.DARK_GRAY);
+    }
+    recipeDisplay = ComponentUtil.serialize(recipeDisplayComp);
     Inventory menu = Bukkit.createInventory(null, 54, Constant.CANCEL_STRING +
             Method.format("category:" + category, "§") +
             Constant.CUSTOM_RECIPE_CRAFTING_MENU +
@@ -217,14 +228,29 @@ public class RecipeInventoryRecipe
       }
       int amount = ingredientAmounts.get(i);
       ingredient.setAmount(Math.min(64, amount));
+      String ingredientString = config.getString("recipes." + recipe + ".ingredients." + (i + 1) + ".item");
       int playerAmount = ItemStackUtil.countItem(player.getInventory(), ingredient);
+      Component display = ItemNameUtil.itemName(ingredient, TextColor.color(255, 255, 255));
+      if (ingredientString != null && ingredientString.startsWith("predicate:"))
+      {
+        Material type = ingredient.getType();
+        if (!type.isItem() || type == Material.AIR)
+        {
+          ingredient.setType(Material.ENDER_PEARL);
+          itemMeta.displayName(ItemNameUtil.itemName(type));
+        }
+        else
+        {
+          itemMeta.displayName(null);
+        }
+        playerAmount = ItemStackUtil.countItem(player.getInventory(), ingredientString.substring(10));
+      }
       if (playerAmount >= amount)
       {
         ingredientEnoughArray[i] = true;
       }
       String playerAmountColor = CustomRecipeUtil.getPercentColor(playerAmount * 1d / amount);
-      lore.addAll(Arrays.asList(Component.empty(),
-              ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR),
+      lore.addAll(Arrays.asList(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR),
               ComponentUtil.createTranslate("rgb238,172,17;[가지고 있는 재료 개수]"),
               ComponentUtil.create(playerAmountColor + playerAmount + " &7/rgb0,255,84; " + amount)));
       NBTCompound itemTag = NBTAPI.getMainCompound(ingredient);
@@ -236,7 +262,7 @@ public class RecipeInventoryRecipe
         lore.addAll(Arrays.asList(Component.empty(),
                 ComponentUtil.create("rgb153,217,234;[이 아이템은 제작 시 사라지지 않습니다.]")));
       }
-      createButtonLore.add(ComponentUtil.create(ItemNameUtil.itemName(ingredient, TextColor.color(255, 255, 255)), "&8 : " + playerAmountColor + playerAmount + " &7/rgb0,255,84; " + amount + (reusable ? " &8[∞]" : "")));
+      createButtonLore.add(ComponentUtil.create(display, "&8 : " + playerAmountColor + playerAmount + " &7/rgb0,255,84; " + amount + (reusable ? " &8[∞]" : "")));
       itemMeta.lore(lore);
       ingredient.setItemMeta(itemMeta);
       menu.addItem(ingredient);
