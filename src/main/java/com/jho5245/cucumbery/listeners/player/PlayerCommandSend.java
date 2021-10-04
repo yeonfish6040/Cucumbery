@@ -39,9 +39,6 @@ public class PlayerCommandSend implements Listener
 			}
 			if (!player.hasPermission("minecraft.command.msg"))
 			{
-				commands.remove("msg");
-				commands.remove("tell");
-				commands.remove("w");
 				commands.remove("minecraft:msg");
 				commands.remove("minecraft:tell");
 				commands.remove("minecraft:w");
@@ -67,16 +64,6 @@ public class PlayerCommandSend implements Listener
 			{
 				commands.remove("list");
 				commands.remove("minecraft:list");
-			}
-			if (!player.hasPermission("deathmessagesprime.reload"))
-			{
-				commands.remove("dmsg");
-				commands.remove("deathmessagesprime:dmsg");
-			}
-			if (!player.hasPermission("deathmessagesprime.toggle"))
-			{
-				commands.remove("toggledeathmsg");
-				commands.remove("deathmessagesprime:toggledeathmsg");
 			}
 			if (!player.hasPermission("bukkit.command.help"))
 			{
