@@ -185,10 +185,10 @@ public class ComponentUtil
         String id = effectKey.substring(17);
         int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
         boolean isInvincible = potionEffectType.equals(PotionEffectType.DAMAGE_RESISTANCE) && amplifier >= 9;
+        int invincibleLevel = amplifier - 8;
         if (isInvincible)
         {
           effectKey = "무적";
-          amplifier = 0;
         }
         boolean hasParticles = potionEffect.hasParticles(), hasIcon = potionEffect.hasIcon(), isAmbient = potionEffect.isAmbient();
         Component concat = Component.translatable(effectKey, Constant.THE_COLOR);
@@ -196,7 +196,7 @@ public class ComponentUtil
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", (amplifier + 1)));
+        hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", isInvincible ? invincibleLevel : (amplifier + 1)));
         if (!hasParticles)
         {
           hover = hover.append(Component.text("\n"));
