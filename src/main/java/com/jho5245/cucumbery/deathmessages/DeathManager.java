@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.deathmessages;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -16,6 +17,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.BlockProjectileSource;
@@ -47,66 +49,33 @@ public class DeathManager
 
   public static void what(EntityDeathEvent event)
   {
-    Component timeFormat = ComponentUtil.createTranslate("사망 시각 : %s", "&e" + Method.getCurrentTime(Calendar.getInstance(), true, false));
-    DEATH_PREFIX_PVP = DEATH_PREFIX_PVP.hoverEvent(HoverEvent.showText(timeFormat));
-    DEATH_PREFIX = DEATH_PREFIX.hoverEvent(HoverEvent.showText(timeFormat));
     LivingEntity entity = event.getEntity();
-    if (!(entity instanceof Player))
+    if (deathMessageApplicable(entity))
     {
-      if (goBack)
+      if (!(entity instanceof Player))
       {
-        return;
+        if (goBack)
+        {
+          return;
+        }
+        goBack = true;
+        Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                goBack = false, COOLDOWN_IN_TICKS);
       }
-      goBack = true;
-      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              goBack = false, COOLDOWN_IN_TICKS);
-    }
-    // 접두사 기능 붙여넣기
-    boolean usePrefix = Variable.deathMessages.getBoolean("death-messages.prefix.enable");
-    Location location = entity.getLocation();
-    boolean success = entity instanceof Player;
-    boolean isPlayerDeath = event instanceof PlayerDeathEvent;
-    PlayerDeathEvent playerDeathEvent = isPlayerDeath ? (PlayerDeathEvent) event : null;
-    if (entity.customName() != null)
-    {
-      success = success || !location.getNearbyPlayers(100d).isEmpty();
-    }
-    if (entity instanceof Tameable tameable)
-    {
-      success = success || tameable.isTamed();
-    }
-    if (entity instanceof Villager villager)
-    {
-      success = success || !villager.isAdult() || villager.getVillagerExperience() > 0;
-    }
-    if (entity instanceof IronGolem ironGolem)
-    {
-      success = success || ironGolem.isPlayerCreated();
-    }
-    if (entity instanceof Snowman snowman && snowman.isDerp())
-    {
-      success = true;
-    }
-    if (entity instanceof Boss boss && !boss.getLocation().getNearbyPlayers(500d).isEmpty())
-    {
-      success = true;
-    }
-    EntityDamageEvent damageCause = entity.getLastDamageCause();
-    if (damageCause == null)
-    {
-      damageCause = new EntityDamageEvent(entity, EntityDamageEvent.DamageCause.VOID, Double.MAX_VALUE);
-    }
-    EntityDamageEvent.DamageCause cause = damageCause.getCause();
-    if (cause == EntityDamageEvent.DamageCause.VOID)
-    {
-      if (damageCause.getDamage() < 100)
+      Component timeFormat = ComponentUtil.createTranslate("사망 시각 : %s", "&e" + Method.getCurrentTime(Calendar.getInstance(), true, false));
+      DEATH_PREFIX_PVP = DEATH_PREFIX_PVP.hoverEvent(HoverEvent.showText(timeFormat));
+      DEATH_PREFIX = DEATH_PREFIX.hoverEvent(HoverEvent.showText(timeFormat));
+      // 접두사 기능 붙여넣기
+      boolean usePrefix = Variable.deathMessages.getBoolean("death-messages.prefix.enable");
+      Location location = entity.getLocation();
+      boolean isPlayerDeath = event instanceof PlayerDeathEvent;
+      PlayerDeathEvent playerDeathEvent = isPlayerDeath ? (PlayerDeathEvent) event : null;
+      EntityDamageEvent damageCause = entity.getLastDamageCause();
+      if (damageCause == null)
       {
-        success = true;
+        damageCause = new EntityDamageEvent(entity, EntityDamageEvent.DamageCause.VOID, Double.MAX_VALUE);
       }
-    }
-
-    if (success)
-    {
+      EntityDamageEvent.DamageCause cause = damageCause.getCause();
       Component entityComponent = SenderComponentUtil.senderComponent(entity);
       List<Component> args = new ArrayList<>();
       World world = location.getWorld();
@@ -119,8 +88,30 @@ public class DeathManager
       args.add(entityComponent);
       List<Component> extraArgs = new ArrayList<>();
       String key = "";
-      Object damager = getDamager(event);
-      ItemStack weapon = getWeapon(event);
+      @Nullable Object damager = getDamager(event);
+      @Nullable ItemStack weapon = getWeapon(event);
+      if (damager != null)
+      {
+        long time = 0;
+        if (damager instanceof ItemStack itemStack)
+        {
+          time = Variable.blockDamagerAndCurrentTime.get(ItemSerializer.serialize(itemStack));
+        }
+        else if (damager instanceof Entity e)
+        {
+          time = Variable.damagerAndCurrentTime.get(e.getUniqueId());
+        }
+        if (cause == DamageCause.VOID && damageCause.getDamage() < Math.pow(2, 10) && System.currentTimeMillis() - time > 60000)
+        {
+          damager = null;
+          weapon = null;
+        }
+        if (!(cause == DamageCause.VOID && damageCause.getDamage() < Math.pow(2, 10)) && System.currentTimeMillis() - time > 20000)
+        {
+          damager = null;
+          weapon = null;
+        }
+      }
       ItemStack lastTrampledBlock = getLastTrampledBlock(entity.getUniqueId());
       float fallDistance = entity.getFallDistance();
       switch (cause)
@@ -164,12 +155,10 @@ public class DeathManager
             else
             {
               key = "melee";
-              if (entity instanceof Parrot && damager instanceof Player player && damageCause.getDamage() > Math.pow(2, 127))
+              if (entity instanceof Parrot && damager instanceof Player && damageCause.getDamage() > Math.pow(2, 10))
               {
-                ItemStack item = ItemStackUtil.getPlayerUsingItem(player, Material.COOKIE);
-                if (ItemStackUtil.itemExists(item))
+                if (ItemStackUtil.itemExists(weapon))
                 {
-                  weapon = item.clone();
                   key = "parrot_cookie";
                 }
               }
@@ -352,7 +341,7 @@ public class DeathManager
           }
         }
         case VOID -> {
-          if (damageCause.getDamage() > Math.pow(2, 127))
+          if (damageCause.getDamage() > Math.pow(2, 10))
           {
             key = "kill";
             if (entity instanceof Player player)
@@ -470,13 +459,13 @@ public class DeathManager
         {
           args.add(ComponentUtil.create(itemStack));
         }
-        else
+        else if (damager instanceof Entity damagerEntity)
         {
-          args.add(SenderComponentUtil.senderComponent(damager));
+          args.add(SenderComponentUtil.senderComponent(damagerEntity));
           double distance = -1;
           try
           {
-            distance = ((Entity) damager).getLocation().distance(entity.getLocation());
+            distance = damagerEntity.getLocation().distance(entity.getLocation());
           }
           catch (Exception ignored)
           {
@@ -623,6 +612,54 @@ public class DeathManager
         MessageUtil.consoleSendMessage(deathMessageComponent);
       }
     }
+  }
+
+  public static boolean deathMessageApplicable(@NotNull Entity entity)
+  {
+    Location location = entity.getLocation();
+    boolean success = entity instanceof Player;
+    if (entity.customName() != null)
+    {
+      success = success || !location.getNearbyPlayers(100d).isEmpty();
+    }
+    if (entity instanceof Tameable tameable)
+    {
+      success = success || tameable.isTamed();
+    }
+    if (entity instanceof Villager villager)
+    {
+      success = success || !villager.isAdult() || villager.getVillagerExperience() > 0;
+    }
+    if (entity instanceof IronGolem ironGolem)
+    {
+      success = success || ironGolem.isPlayerCreated();
+    }
+    if (entity instanceof Snowman snowman && snowman.isDerp())
+    {
+      success = true;
+    }
+    if (entity instanceof Boss boss && !boss.getLocation().getNearbyPlayers(500d).isEmpty())
+    {
+      success = true;
+    }
+    if (entity instanceof ZombieVillager zombieVillager)
+    {
+      success = success || zombieVillager.isConverting() || zombieVillager.getConversionPlayer() != null;
+    }
+    EntityDamageEvent damageCause = entity.getLastDamageCause();
+    if (damageCause == null)
+    {
+      damageCause = new EntityDamageEvent(entity, EntityDamageEvent.DamageCause.VOID, Double.MAX_VALUE);
+    }
+    EntityDamageEvent.DamageCause cause = damageCause.getCause();
+    if (cause == EntityDamageEvent.DamageCause.VOID)
+    {
+      if (damageCause.getDamage() < 100)
+      {
+        success = true;
+      }
+    }
+    return success;
   }
 
   @Nullable
@@ -784,6 +821,17 @@ public class DeathManager
     Object damagerObject = getDamager(event);
     if (damagerObject instanceof LivingEntity damager)
     {
+      Entity entity = event.getEntity();
+      // parrot cookie weapon
+      EntityDamageEvent damageEvent = entity.getLastDamageCause();
+      if (entity instanceof Parrot && damageEvent != null && damageEvent.getCause() == DamageCause.ENTITY_ATTACK)
+      {
+        ItemStack cookie = ItemSerializer.deserialize(Variable.attackerAndWeaponString.get(damager.getUniqueId()));
+        if (ItemStackUtil.itemExists(cookie) && cookie.getType() == Material.COOKIE)
+        {
+          return cookie;
+        }
+      }
       EntityEquipment entityEquipment = damager.getEquipment();
       if (entityEquipment != null)
       {

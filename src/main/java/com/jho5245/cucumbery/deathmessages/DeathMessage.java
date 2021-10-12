@@ -848,6 +848,16 @@ public enum DeathMessage
   PROJECTILE_COMBAT_UNKNOWN("death-messages.messages.projectile-combat-unknown"),
 
   /**
+   * %1$s이(가) %2$s에게 저격당했습니다
+   */
+  PROJECTILE_COMBAT_SUICIDE("death-messages.messages.projectile-combat-suicide"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
+   */
+  PROJECTILE_COMBAT_SUICIDE_ITEM("death-messages.messages.projectile-combat-suicide-item"),
+
+  /**
    * %1$s이(가) 셜커 탄환에게 살해당했습니다.
    */
   SHULKER_BULLET("death-messages.messages.shulker-bullet"),
@@ -856,7 +866,6 @@ public enum DeathMessage
    * %1$s이(가) %2%s에게 살해당했습니다.
    */
   SHULKER_BULLET_COMBAT("death-messages.messages.shulker-bullet-combat"), // minecraft bug probably?
-
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2%s에게 살해당했습니다.
@@ -867,6 +876,16 @@ public enum DeathMessage
    * %1$s이(가) 어딘가에서 날아온 %2%s에게 살해당했습니다.
    */
   SHULKER_BULLET_COMBAT_UNKNOWN("death-messages.messages.shulker-bullet-combat-unknown"),
+
+  /**
+   * %1$s이(가) %2%s에게 살해당했습니다.
+   */
+  SHULKER_BULLET_COMBAT_SUICIDE("death-messages.messages.shulker-bullet-combat-suicide"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2%s에게 살해당했습니다.
+   */
+  SHULKER_BULLET_COMBAT_SUICIDE_ITEM("death-messages.messages.shulker-bullet-combat-suicide-item"),
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2%s에게 살해당했습니다.
@@ -889,6 +908,16 @@ public enum DeathMessage
   STALAGMITE_COMBAT_ITEM("death-messages.messages.stalagmite-combat-item"),
 
   /**
+   * %1$s이(가) %2$s와(과) 싸우다가 석순에 찔렸습니다
+   */
+  STALAGMITE_COMBAT_SUICIDE("death-messages.messages.stalagmite-combat-suicide"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4%s에 찔렸습니다.
+   */
+  STALAGMITE_COMBAT_SUICIDE_ITEM("death-messages.messages.stalagmite-combat-suicide-item"),
+
+  /**
    * %1$s이(가) 아사했습니다
    */
   STARVE("death-messages.messages.starve"),
@@ -902,6 +931,16 @@ public enum DeathMessage
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다.
    */
   STARVE_COMBAT_ITEM("death-messages.messages.starve-combat-item"),
+
+  /**
+   * %1$s이(가) %2$s과(와) 싸우다가 아사했습니다
+   */
+  STARVE_COMBAT_SUICIDE("death-messages.messages.starve-combat-suicide"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다.
+   */
+  STARVE_COMBAT_SUICIDE_ITEM("death-messages.messages.starve-combat-suicide-item"),
 
   /**
    * %1$s이(가) 쏘여 사망했습니다
@@ -919,6 +958,16 @@ public enum DeathMessage
   STING_COMBAT_ITEM("death-messages.messages.sting-combat-item"),
 
   /**
+   * %1$s이(가) %2$s에게 쏘여 사망했습니다
+   */
+  STING_COMBAT_SUICIDE("death-messages.messages.sting-combat-suicide"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다.
+   */
+  STING_COMBAT_SUICIDE_ITEM("death-messages.messages.sting-combat-suicide-item"),
+
+  /**
    * %1$s이(가) 벽 속에서 질식했습니다
    */
   SUFFOCATION("death-messages.messages.suffocation"),
@@ -932,6 +981,16 @@ public enum DeathMessage
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다.
    */
   SUFFOCATION_COMBAT_ITEM("death-messages.messages.suffocation-combat-item"),
+
+  /**
+   * %1$s이(가) %2$s과(와) 싸우다가 벽 속에서 질식했습니다
+   */
+  SUFFOCATION_COMBAT_SUICIDE("death-messages.messages.suffocation-combat-suicide"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다.
+   */
+  SUFFOCATION_COMBAT_SUICIDE_ITEM("death-messages.messages.suffocation-combat-suicide-item"),
 
   /**
    * %1$s이(가) 자살했습니다.
@@ -964,6 +1023,16 @@ public enum DeathMessage
   SWEET_BERRY_BUSH_COMBAT_ITEM("death-messages.messages.sweet-berry-bush-combat-item"),
 
   /**
+   * %1$s이(가) %2$s에게서 도망치려다 달콤한 열매 덤불에 찔려 죽었습니다
+   */
+  SWEET_BERRY_BUSH_COMBAT_SUICIDE("death-messages.messages.sweet-berry-bush-combat-suicide"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다.
+   */
+  SWEET_BERRY_BUSH_COMBAT_SUICIDE_ITEM("death-messages.messages.sweet-berry-bush-combat-suicide-item"),
+
+  /**
    * %1$s이(가) 누군가를 해치려다 살해당했습니다.
    */
   THORNS("death-messages.messages.thorns"),
@@ -977,6 +1046,16 @@ public enum DeathMessage
    * %1$s이(가) %2$s을(를) 해치려다 %3$s(으)로 살해당했습니다
    */
   THORNS_COMBAT_ITEM("death-messages.messages.thorns-combat-item"),
+
+  /**
+   * %1$s이(가) %2$s을(를) 해치려다 살해당했습니다
+   */
+  THORNS_COMBAT_SUICIDE("death-messages.messages.thorns-combat-suicide"),
+
+  /**
+   * %1$s이(가) %2$s을(를) 해치려다 %3$s(으)로 살해당했습니다
+   */
+  THORNS_COMBAT_ITEM_SUICIDE("death-messages.messages.thorns-combat-suicide-item"),
 
   /**
    * %1$s이(가) 삼지창에게 찔렸습니다
@@ -999,6 +1078,16 @@ public enum DeathMessage
   TRIDENT_COMBAT_UNKNOWN("death-messages.messages.trident-combat-unknown"),
 
   /**
+   * %1$s이(가) %2$s에게 찔렸습니다
+   */
+  TRIDENT_COMBAT_SUICIDE("death-messages.messages.trident-combat-suicide"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다
+   */
+  TRIDENT_COMBAT_SUICIDE_ITEM("death-messages.messages.trident-combat-suicide-item"),
+
+  /**
    * %1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요!
    */
   UNKNOWN("death-messages.messages.unknown"),
@@ -1007,6 +1096,31 @@ public enum DeathMessage
    * %1$s이(가) 세계 밖으로 떨어졌습니다
    */
   VOID("death-messages.messages.void"),
+
+  /**
+   * %1$s은(는) %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
+   */
+  VOID_COMBAT("death-messages.messages.void-combat"),
+
+  /**
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_COMBAT_ITEM("death-messages.messages.void-combat-item"),
+
+  /**
+   * %1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다.
+   */
+  VOID_HIGH("death-messages.messages.void-high"),
+
+  /**
+   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_HIGH_COMBAT("death-messages.messages.void-high-combat"),
+
+  /**
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_HIGH_COMBAT_ITEM("death-messages.messages.void-high-combat-item"),
 
   /**
    * %1$s이(가) %2$s에서 세계 밖으로 떨어졌습니다.+
@@ -1038,31 +1152,6 @@ public enum DeathMessage
    * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
    */
   VOID_BLOCK_HIGH_COMBAT_ITEM("death-messages.messages.void-block-high-combat-item"),
-
-  /**
-   * %1$s은(는) %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
-   */
-  VOID_COMBAT("death-messages.messages.void-combat"),
-
-  /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
-   */
-  VOID_COMBAT_ITEM("death-messages.messages.void-combat-item"),
-
-  /**
-   * %1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다.
-   */
-  VOID_HIGH("death-messages.messages.void-high"),
-
-  /**
-   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
-   */
-  VOID_HIGH_COMBAT("death-messages.messages.void-high-combat"),
-
-  /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
-   */
-  VOID_HIGH_COMBAT_ITEM("death-messages.messages.void-high-combat-item"),
 
   /**
    * %1$s이(가) 사그라졌습니다

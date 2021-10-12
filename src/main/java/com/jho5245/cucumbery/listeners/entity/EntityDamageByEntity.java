@@ -1,15 +1,16 @@
 package com.jho5245.cucumbery.listeners.entity;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.deathmessages.DeathManager;
+import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -56,115 +57,121 @@ public class EntityDamageByEntity implements Listener
     Entity victim = event.getEntity();
     Entity damager = event.getDamager();
     UUID victimUUID = victim.getUniqueId(), damagerUUID = damager.getUniqueId();
-    if (!(damager instanceof LivingEntity) && !(damager instanceof Projectile) && !(damager instanceof AreaEffectCloud))
+    if (DeathManager.deathMessageApplicable(victim))
     {
-      DamageCause cause = event.getCause();
-      switch (cause)
+      if (!(damager instanceof LivingEntity) && !(damager instanceof Projectile) && !(damager instanceof AreaEffectCloud))
       {
-        case CUSTOM, ENTITY_ATTACK, ENTITY_SWEEP_ATTACK -> Variable.victimAndDamager.put(victimUUID, damager);
-      }
-    }
-    if (damager instanceof LivingEntity livingEntity)
-    {
-      Variable.victimAndDamager.put(victimUUID, damager);
-      EntityEquipment entityEquipment = livingEntity.getEquipment();
-      if (entityEquipment != null)
-      {
-        ItemStack weapon = entityEquipment.getItemInMainHand();
-        if (ItemStackUtil.itemExists(weapon))
+        DamageCause cause = event.getCause();
+        switch (cause)
         {
-          final ItemStack weaponClone = weapon.clone();
-          Variable.attackerAndWeapon.put(damagerUUID, weaponClone);
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          case CUSTOM, ENTITY_ATTACK, ENTITY_SWEEP_ATTACK -> {
+            Variable.victimAndDamager.put(victimUUID, damager);
+            Variable.damagerAndCurrentTime.put(damagerUUID, System.currentTimeMillis());
+          }
+        }
+      }
+      if (damager instanceof LivingEntity livingEntity)
+      {
+        Variable.victimAndDamager.put(victimUUID, damager);
+        Variable.damagerAndCurrentTime.put(damagerUUID, System.currentTimeMillis());
+        EntityEquipment entityEquipment = livingEntity.getEquipment();
+        if (entityEquipment != null)
+        {
+          ItemStack weapon = entityEquipment.getItemInMainHand();
+          if (ItemStackUtil.itemExists(weapon))
           {
-            if (Variable.attackerAndWeapon.containsKey(damagerUUID))
+            final ItemStack weaponClone = weapon.clone();
+            Variable.attackerAndWeapon.put(damagerUUID, weaponClone);
+            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
             {
-              ItemStack w = Variable.attackerAndWeapon.get(damagerUUID);
-              if (w.getType() == weaponClone.getType())
+              if (Variable.attackerAndWeapon.containsKey(damagerUUID))
               {
-                Variable.attackerAndWeapon.remove(damagerUUID);
+                ItemStack w = Variable.attackerAndWeapon.get(damagerUUID);
+                if (w.getType() == weaponClone.getType())
+                {
+                  Variable.attackerAndWeapon.remove(damagerUUID);
+                }
               }
-            }
-          }, 200L);
+            }, 200L);
+          }
+          else
+          {
+            Variable.attackerAndWeapon.remove(damagerUUID);
+          }
         }
         else
         {
           Variable.attackerAndWeapon.remove(damagerUUID);
         }
       }
-      else
+      if (damager instanceof Projectile projectile && event.getCause() != EntityDamageEvent.DamageCause.FALL)
       {
-        Variable.attackerAndWeapon.remove(damagerUUID);
-      }
-    }
-    if (damager instanceof Projectile projectile && event.getCause() != EntityDamageEvent.DamageCause.FALL)
-    {
-      ProjectileSource projectileSource = projectile.getShooter();
-      if (projectileSource instanceof LivingEntity livingEntity)
-      {
-        Variable.victimAndDamager.put(victimUUID, livingEntity);
-      }
-      else if (projectileSource instanceof BlockProjectileSource blockProjectileSource)
-      {
-        if (Variable.entityAndSourceLocation.containsKey(projectile.getUniqueId()))
+        ProjectileSource projectileSource = projectile.getShooter();
+        if (projectileSource instanceof LivingEntity livingEntity)
         {
-          Variable.victimAndBlockDamager.put(victimUUID, Variable.blockAttackerAndBlock
-                  .get(Variable.entityAndSourceLocation.get(projectile.getUniqueId())));
+          Variable.victimAndDamager.put(victimUUID, livingEntity);
+          Variable.damagerAndCurrentTime.put(livingEntity.getUniqueId(), System.currentTimeMillis());
+        }
+        else if (projectileSource instanceof BlockProjectileSource blockProjectileSource)
+        {
+          if (Variable.entityAndSourceLocation.containsKey(projectile.getUniqueId()))
+          {
+            ItemStack sourceAsItem = Variable.blockAttackerAndBlock.get(Variable.entityAndSourceLocation.get(projectile.getUniqueId()));
+            Variable.victimAndBlockDamager.put(victimUUID, sourceAsItem);
+            Variable.blockDamagerAndCurrentTime.put(ItemSerializer.serialize(sourceAsItem), System.currentTimeMillis());
+          }
+          else
+          {
+            ItemStack sourceAsItem = ItemStackUtil.getItemStackFromBlock(blockProjectileSource.getBlock());
+            Variable.victimAndBlockDamager.put(victimUUID, sourceAsItem);
+            Variable.blockDamagerAndCurrentTime.put(ItemSerializer.serialize(sourceAsItem), System.currentTimeMillis());
+          }
         }
         else
         {
-          Variable.victimAndBlockDamager.put(victimUUID, ItemStackUtil.getItemStackFromBlock(blockProjectileSource.getBlock()));
+          if (Variable.entityAndSourceLocation.containsKey(projectile.getUniqueId()))
+          {
+            ItemStack sourceAsItem = Variable.blockAttackerAndBlock.get(Variable.entityAndSourceLocation.get(projectile.getUniqueId()));
+            Variable.victimAndBlockDamager.put(victimUUID, sourceAsItem);
+            Variable.blockDamagerAndCurrentTime.put(ItemSerializer.serialize(sourceAsItem), System.currentTimeMillis());
+          }
+          else
+          {
+            Variable.victimAndDamager.put(victimUUID, projectile);
+            Variable.damagerAndCurrentTime.put(projectile.getUniqueId(), System.currentTimeMillis());
+          }
         }
       }
-      else
+      if (damager instanceof AreaEffectCloud areaEffectCloud)
       {
-        if (Variable.entityAndSourceLocation.containsKey(projectile.getUniqueId()))
+        ProjectileSource projectileSource = areaEffectCloud.getSource();
+        if (projectileSource == null)
         {
-          Variable.victimAndBlockDamager.put(victimUUID, Variable.blockAttackerAndBlock
-                  .get(Variable.entityAndSourceLocation.get(projectile.getUniqueId())));
+          if (Variable.entityAndSourceLocation.containsKey(areaEffectCloud.getUniqueId()))
+          {
+            ItemStack sourceAsItem =  Variable.blockAttackerAndBlock.get(Variable.entityAndSourceLocation.get(areaEffectCloud.getUniqueId()));
+            Variable.victimAndBlockDamager.put(victimUUID, sourceAsItem);
+            Variable.blockDamagerAndCurrentTime.put(ItemSerializer.serialize(sourceAsItem), System.currentTimeMillis());
+          }
+          else
+          {
+            Variable.victimAndDamager.put(victimUUID, areaEffectCloud);
+            Variable.damagerAndCurrentTime.put(areaEffectCloud.getUniqueId(), System.currentTimeMillis());
+          }
         }
-        else
+        else if (projectileSource instanceof LivingEntity livingEntity)
         {
-          Variable.victimAndDamager.put(victimUUID, projectile);
+          Variable.victimAndDamager.put(victimUUID, livingEntity);
+          Variable.damagerAndCurrentTime.put(livingEntity.getUniqueId(), System.currentTimeMillis());
+        }
+        else if (projectileSource instanceof BlockProjectileSource blockProjectileSource)
+        {
+          ItemStack sourceAsItem = ItemStackUtil.getItemStackFromBlock(blockProjectileSource.getBlock());
+          Variable.victimAndBlockDamager.put(victimUUID, sourceAsItem);
+          Variable.blockDamagerAndCurrentTime.put(ItemSerializer.serialize(sourceAsItem), System.currentTimeMillis());
         }
       }
     }
-    if (damager instanceof AreaEffectCloud areaEffectCloud)
-    {
-      ProjectileSource projectileSource = areaEffectCloud.getSource();
-      if (projectileSource == null)
-      {
-        if (Variable.entityAndSourceLocation.containsKey(areaEffectCloud.getUniqueId()))
-        {
-          Variable.victimAndBlockDamager.put(victimUUID, Variable.blockAttackerAndBlock
-                  .get(Variable.entityAndSourceLocation.get(areaEffectCloud.getUniqueId())));
-        }
-        else
-        {
-          Variable.victimAndDamager.put(victimUUID, areaEffectCloud);
-        }
-      }
-      else if (projectileSource instanceof LivingEntity livingEntity)
-      {
-        Variable.victimAndDamager.put(victimUUID, livingEntity);
-      }
-      else if (projectileSource instanceof BlockProjectileSource blockProjectileSource)
-      {
-        Variable.victimAndBlockDamager.put(victimUUID, ItemStackUtil.getItemStackFromBlock(blockProjectileSource.getBlock()));
-      }
-    }
-
-    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-    {
-      if (Variable.victimAndDamager.containsKey(victimUUID))
-      {
-        Entity d = Variable.victimAndDamager.get(victimUUID);
-        if (victim.getLocation().getY() > 0 && d.getLocation().getY() > 0 && Method2.distance(victim.getLocation(), d.getLocation()) > 100)
-        {
-          Variable.victimAndDamager.remove(victimUUID);
-        }
-      }
-    }, 400L);
 
     if (damager instanceof Player player)
     {

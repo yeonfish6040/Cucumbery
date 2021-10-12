@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.debug;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -75,7 +76,7 @@ public class CommandCalcDistance implements CommandExecutor, TabCompleter
         MessageUtil.wrongArg(sender, 3, args);
         return true;
       }
-      double distance = player.getLocation().distance(target.getLocation());
+      double distance = Method2.distance(player.getLocation(), target.getLocation(), Boolean.parseBoolean(args[2]));
       MessageUtil.info(sender, "&e" + player.getName() + "&r와(과) &e" + target.getName() + "&r와(과)의 거리는 &e" + Constant.Sosu4.format(distance) + "m&r입니다.");
     }
     else

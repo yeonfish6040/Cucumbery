@@ -1,13 +1,14 @@
 package com.jho5245.cucumbery.listeners.player.interact;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -15,10 +16,7 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -29,7 +27,8 @@ import java.util.UUID;
 
 public class PlayerInteractEntity implements Listener
 {
-  @EventHandler public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
+  @EventHandler
+  public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
   {
     if (event.isCancelled())
     {
@@ -37,7 +36,6 @@ public class PlayerInteractEntity implements Listener
     }
     Player player = event.getPlayer();
     UUID uuid = player.getUniqueId();
-
     // 아이템 섭취 사용에서 사라지지 않을 경우 아이템 소실 방지를 위한 쿨타임
     if (Variable.playerItemConsumeCauseSwapCooldown.contains(uuid))
     {
@@ -53,6 +51,15 @@ public class PlayerInteractEntity implements Listener
     }
     Entity entity = event.getRightClicked();
     EntityType entityType = entity.getType();
+    if (entity instanceof Parrot)
+    {
+      ItemStack cookie = ItemStackUtil.getPlayerUsingItem(player, Material.COOKIE);
+      if (ItemStackUtil.itemExists(cookie))
+      {
+        cookie = cookie.clone();
+        Variable.attackerAndWeaponString.put(player.getUniqueId(), ItemSerializer.serialize(cookie));
+      }
+    }
     if (Variable.scrollReinforcing.contains(uuid))
     {
       event.setCancelled(true);

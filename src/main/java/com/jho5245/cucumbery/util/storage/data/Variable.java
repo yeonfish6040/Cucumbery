@@ -194,9 +194,15 @@ public class Variable
 
   public static HashMap<UUID, Entity> victimAndDamager = new HashMap<>();
 
+  public static HashMap<UUID, Long> damagerAndCurrentTime = new HashMap<>();
+
   public static HashMap<UUID, ItemStack> attackerAndWeapon = new HashMap<>();
 
+  public static HashMap<UUID, String> attackerAndWeaponString = new HashMap<>();
+
   public static HashMap<UUID, ItemStack> victimAndBlockDamager = new HashMap<>();
+
+  public static HashMap<String, Long> blockDamagerAndCurrentTime = new HashMap<>();
 
   public static HashMap<String, ItemStack> blockAttackerAndWeapon = new HashMap<>();
 
