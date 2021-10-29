@@ -573,7 +573,7 @@ public class ItemLore2
         for (EquipmentSlot slot : EquipmentSlot.values())
         {
           Multimap<Attribute, AttributeModifier> attrs = itemMeta.getAttributeModifiers(slot);
-          if (attrs.size() == 0)
+          if (attrs.isEmpty())
           {
             continue;
           }
@@ -1868,10 +1868,16 @@ public class ItemLore2
       lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_CONSUMABLE));
       if (foodTag != null)
       {
-        try
-        {
-          int foodLevel = foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY);
-          double saturation = foodTag.getDouble(CucumberyTag.SATURATION_KEY);
+          Integer foodLevel = foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY);
+          if (foodLevel == null)
+          {
+            foodLevel = 0;
+          }
+          Double saturation = foodTag.getDouble(CucumberyTag.SATURATION_KEY);
+          if (saturation == null)
+          {
+            saturation = 0d;
+          }
           if (foodTag.hasKey(CucumberyTag.NOURISHMENT_KEY))
           {
             nourishment = foodTag.getString(CucumberyTag.NOURISHMENT_KEY);
@@ -1898,13 +1904,6 @@ public class ItemLore2
           {
             lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", (saturation > 0d ? "+" : "") + Constant.Sosu2.format(saturation)));
           }
-        }
-        catch (Exception e)
-        {
-          lore.add(ComponentUtil.createTranslate("rgb235,163,0;든든함 : %s", ComponentUtil.createTranslate(nourishment)));
-          lore.add(ComponentUtil.createTranslate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
-          lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
-        }
       }
       else if (nourishment != null && !nourishment.equals("기본"))
       {

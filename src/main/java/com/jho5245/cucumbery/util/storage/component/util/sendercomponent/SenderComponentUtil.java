@@ -220,7 +220,7 @@ public class SenderComponentUtil
       {
         component = component.color(Constant.THE_COLOR);
       }
-      Component hover = ComponentUtil.create(displayName);
+      Component hover = Component.empty().append(ComponentUtil.create(displayName));
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
       hover = hover.append(Component.text("\n"));

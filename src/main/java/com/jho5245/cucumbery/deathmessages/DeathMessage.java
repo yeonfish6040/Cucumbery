@@ -10,1207 +10,1322 @@ public enum DeathMessage
   /**
    * %1$s이(가) 떨어지는 모루에 짓눌렸습니다
    */
-  ANVIL("death-messages.messages.anvil"),
+  ANVIL,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 떨어지는 모루에 짓눌렸습니다
    */
-  ANVIL_COMBAT("death-messages.messages.anvil-combat"),
+  ANVIL_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 모루에 짓눌렸습니다.
    */
-  ANVIL_COMBAT_ITEM("death-messages.messages.anvil-combat-item"),
+  ANVIL_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 자살을 시도하다가 떨어지는 모루에 짓눌렸습니다.
    */
-  ANVIL_COMBAT_SUICIDE("death-messages.messages.anvil-combat-suicide"),
+  ANVIL_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하며 자살을 시도하다가 떨어지는 모루에 짓눌렸습니다.
    */
-  ANVIL_COMBAT_SUICIDE_ITEM("death-messages.messages.anvil-combat-suicide-item"),
+  ANVIL_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 화살에게 저격당했습니다.
    */
-  ARROW("death-messages.messages.arrow"),
+  ARROW,
 
   /**
    * %1$s이(가) %2$s에게 저격당했습니다
    */
-  ARROW_COMBAT("death-messages.messages.arrow-combat"),
+  ARROW_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
    */
-  ARROW_COMBAT_ITEM("death-messages.messages.arrow-combat-item"),
+  ARROW_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 스스로를 저격했습니다.
    */
-  ARROW_COMBAT_SUICIDE("death-messages.messages.arrow-combat-sucide"),
+  ARROW_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하여 스스로를 저격했습니다.
    */
-  ARROW_COMBAT_SUICIDE_ITEM("death-messages.messages.arrow-combat-suicide-item"),
+  ARROW_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다.
    */
-  ARROW_COMBAT_UNKNOWN("death-messages.messages.arrow-combat-unknown"),
+  ARROW_COMBAT_UNKNOWN,
 
   /**
    * %1$s이(가) %2$s에게 목숨을 빼앗겼습니다
    */
-  BAD_RESPAWN("death-messages.messages.bad-respawn"),
+  BAD_RESPAWN,
 
   /**
    * %1$s이(가) %2$s와(과) 싸우다 %3$s에게 목숨을 빼앗겼습니다.
    */
-  BAD_RESPAWN_COMBAT("death-messages.messages.bad-respawn-combat"),
+  BAD_RESPAWN_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 목숨을 빼앗겼습니다.
    */
-  BAD_RESPAWN_COMBAT_ITEM("death-messages.messages.bad-respawn-combat-item"),
+  BAD_RESPAWN_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %3$s으(로) 자살했습니다.
    */
-  BAD_RESPAWN_COMBAT_SUICIDE("death-messages.messages.bad-respawn-combat-suicide"),
+  BAD_RESPAWN_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하고 %4$s으(로) 자살했습니다.
    */
-  BAD_RESPAWN_COMBAT_SUICIDE_ITEM("death-messages.messages.bad-respawn-combat-suicide-item"),
+  BAD_RESPAWN_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 찔려 사망했습니다
    */
-  CACTUS("death-messages.messages.cactus"),
+  CACTUS,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 선인장에 찔렸습니다
    */
-  CACTUS_COMBAT("death-messages.messages.cactus-combat"),
+  CACTUS_COMBAT,
 
   /**
    * %1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 선인장에 찔렸습니다
    */
-  CACTUS_COMBAT_ITEM("death-messages.messages.cactus-combat-item"),
+  CACTUS_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 스스로를 %3$s에 찔려 죽었습니다.
    */
-  CACTUS_COMBAT_SUICIDE("death-messages.messages.cactus-combat-suicide"),
+  CACTUS_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하고 스스로를 %4$s에 찔려 죽었습니다.
    */
-  CACTUS_COMBAT_SUICIDE_ITEM("death-messages.messages.cactus-combat-suicide-item"),
+  CACTUS_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) %2$s에 닿아 죽었습니다.
    */
-  CONTACT("death-messages.messages.contact"),
+  CONTACT,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 %3$s에 닿아 죽었습니다.
    */
-  CONTACT_COMBAT("death-messages.messages.contact-combat"),
+  CONTACT_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 닿아 죽었습니다.
    */
-  CONTACT_COMBAT_ITEM("death-messages.messages.contact-combat-item"),
+  CONTACT_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 스스로를 %3$s에 닿아 죽었습니다.
    */
-  CONTACT_COMBAT_SUICIDE("death-messages.messages.contact-combat-suicide"),
+  CONTACT_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하고 스스로를 %4$s에 닿아 죽었습니다.
    */
-  CONTACT_COMBAT_SUICIDE_ITEM("death-messages.messages.contact-combat-suicide-item"),
+  CONTACT_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 으깨져버렸습니다
    */
-  CRAMMING("death-messages.messages.cramming"),
+  CRAMMING,
 
   /**
    * %1$s이(가) %2$s에게 짓눌렸습니다
    */
-  CRAMMING_COMBAT("death-messages.messages.cramming-combat"),
+  CRAMMING_COMBAT,
 
   /**
    * %1$s이(가) %3s을(를) 사용한 %2$s과(와) 싸우다 짓눌렸습니다.
    */
-  CRAMMING_COMBAT_ITEM("death-messages.messages.cramming-combat-item"),
+  CRAMMING_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 자살을 시도하다가 %3$s에게 짓눌렸습니다.
    */
-  CRAMMING_COMBAT_SUICIDE("death-messages.messages.cramming-combat"),
+  CRAMMING_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3s을(를) 사용하여 자살을 시도하다가 %4$s에게 짓눌렸습니다.
    */
-  CRAMMING_COMBAT_SUICIDE_ITEM("death-messages.messages.cramming-combat-item"),
+  CRAMMING_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) %2$s에게 어깨빵을 당했습니다.
    */
-  CRAMMING_SOLO("death-messages.messages.cramming-solo"),
+  CRAMMING_SOLO,
 
   /**
    * %1$s이(가) %2$s와(과) 싸우다 %3$s에게 어깨빵을 당했습니다.
    */
-  CRAMMING_SOLO_COMBAT("death-messages.messages.cramming-solo-combat"),
+  CRAMMING_SOLO_COMBAT,
 
   /**
    * %1$s이(가) %3s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 어깨빵을 당했습니다.
    */
-  CRAMMING_SOLO_COMBAT_ITEM("death-messages.messages.cramming-solo-combat-item"),
+  CRAMMING_SOLO_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 자살을 시도하다가 %3$s에게 어깨빵을 당했습니다.
    */
-  CRAMMING_SOLO_COMBAT_SUICIDE("death-messages.messages.cramming-solo-combat-suicide"),
+  CRAMMING_SOLO_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하여 자살을 시도하다가 %4$s에게 어깨빵을 당했습니다.
    */
-  CRAMMING_SOLO_COMBAT_SUICIDE_ITEM("death-messages.messages.cramming-solo-combat-suicide-item"),
+  CRAMMING_SOLO_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 드래곤의 숨결에 구워졌습니다
    */
-  DRAGON_BREATH("death-messages.messages.dragon-breath"),
+  DRAGON_BREATH,
 
   /**
    * %1$s이(가) %2$s 때문에 드래곤의 숨결에 구워졌습니다
    */
-  DRAGON_BREATH_COMBAT("death-messages.messages.dragon-breath-combat"),
+  DRAGON_BREATH_COMBAT,
 
   /**
    * %1$s이(가) %3s을(를) 사용한 %2$s 때문에 드래곤의 숨결에 구워졌습니다.
    */
-  DRAGON_BREATH_COMBAT_ITEM("death-messages.messages.dragon-breath-combat-item"),
+  DRAGON_BREATH_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) 스스로를 드래곤의 숨결에 구웠습니다."
    */
-  DRAGON_BREATH_COMBAT_SUICIDE("death-messages.messages.dragon-breath-combat-suicide"),
+  DRAGON_BREATH_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) %3$s을(를) 사용한 스스로를 드래곤의 숨결에 구웠습니다."
    */
-  DRAGON_BREATH_COMBAT_SUICIDE_ITEM("death-messages.messages.dragon-breath-combat-suicide-item"),
+  DRAGON_BREATH_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 익사했습니다
    */
-  DROWN("death-messages.messages.drown"),
+  DROWN,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 익사했습니다
    */
-  DROWN_COMBAT("death-messages.messages.drown-combat"),
+  DROWN_COMBAT,
 
   /**
    * %1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 익사했습니다.
    */
-  DROWN_COMBAT_ITEM("death-messages.messages.drown-combat-item"),
+  DROWN_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) 물속으로 투신자살했습니다."
    */
-  DROWN_COMBAT_SUICIDE("death-messages.messages.drown-combat-suicide"),
+  DROWN_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) %3$s을(를) 사용하여 익사했습니다."
    */
-  DROWN_COMBAT_SUICIDE_ITEM("death-messages.messages.drown-combat-suicide-item"),
+  DROWN_COMBAT_SUICIDE_ITEM,
+
+  /**
+   * %1$s이(가) 익사했습니다
+   */
+  DROWN_TOGETHER,
+
+  /**
+   * %1$s이(가) %2$s에게서 도망치려다 익사했습니다
+   */
+  DROWN_TOGETHER_COMBAT,
+
+  /**
+   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 익사했습니다.
+   */
+  DROWN_TOGETHER_COMBAT_ITEM,
+
+  /**
+   - "%1$s이(가) 물속으로 투신자살했습니다."
+   */
+  DROWN_TOGETHER_COMBAT_SUICIDE,
+
+  /**
+   - "%1$s이(가) %3$s을(를) 사용하여 익사했습니다."
+   */
+  DROWN_TOGETHER_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 물 밖에서 놀다가 익사했습니다.
    */
-  DROWN_WATER("death-messages.messages.drown-water"),
+  DROWN_WATER,
 
   /**
    * %1$s이(가) %2$s에게서 물 밖으로 도망치려다 익사했습니다
    */
-  DROWN_WATER_COMBAT("death-messages.messages.drown-water-combat"),
+  DROWN_WATER_COMBAT,
 
   /**
    * %1$s이(가) %3s을(를) 사용한 %2$s에게서 물 밖으로 도망치려다 익사했습니다.
    */
-  DROWN_WATER_COMBAT_ITEM("death-messages.messages.drown-water-combat-item"),
+  DROWN_WATER_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) 물 밖에서 자살했습니다."
    */
-  DROWN_WATER_COMBAT_SUICIDE("death-messages.messages.drown-water-combat-suicide"),
+  DROWN_WATER_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하여 물 밖에서 자살했습니다.
    */
-  DROWN_WATER_COMBAT_SUICIDE_ITEM("death-messages.messages.drown-water-combat-suicide-item"),
+  DROWN_WATER_COMBAT_SUICIDE_ITEM,
+
+  /**
+   * %1$s이(가) 물 밖에서 놀다가 익사했습니다.
+   */
+  DROWN_WATER_TOGETHER,
+
+  /**
+   * %1$s이(가) %2$s에게서 물 밖으로 도망치려다 익사했습니다
+   */
+  DROWN_WATER_TOGETHER_COMBAT,
+
+  /**
+   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 물 밖으로 도망치려다 익사했습니다.
+   */
+  DROWN_WATER_TOGHETER_COMBAT_ITEM,
+
+  /**
+   - "%1$s이(가) 물 밖에서 자살했습니다."
+   */
+  DROWN_WATER_TOGETHER_COMBAT_SUICIDE,
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용하여 물 밖에서 자살했습니다.
+   */
+  DROWN_WATER_TOGETHER_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 목이 말라 죽었습니다
    */
-  DRY_OUT("death-messages.messages.dry-out"),
+  DRY_OUT,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 탈수로 죽었습니다
    */
-  DRY_OUT_COMBAT("death-messages.messages.dry-out-combat"),
+  DRY_OUT_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 탈수로 죽었습니다
    */
-  DRY_OUT_COMBAT_ITEM("death-messages.messages.dry-out-combat-item"),
+  DRY_OUT_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) 스스로를 말려비틀어 죽었습니다."
    */
-  DRY_OUT_COMBAT_SUICIDE("death-messages.messages.dry-out-combat-suicide"),
+  DRY_OUT_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) %3$s을(를) 사용하여 스스로를 말려비틀어 죽었습니다."
    */
-  DRY_OUT_COMBAT_SUICIDE_ITEM("death-messages.messages.dry-out-combat-suicide-item"),
+  DRY_OUT_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 운동 에너지를 온몸으로 경험했습니다
    */
-  ELYTRA("death-messages.messages.elytra"),
+  ELYTRA,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 운동 에너지를 온몸으로 느꼈습니다
    */
-  ELYTRA_COMBAT("death-messages.messages.elytra-combat"),
+  ELYTRA_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 운동 에너지를 온몸으로 느꼈습니다.
    */
-  ELYTRA_COMBAT_ITEM("death-messages.messages.elytra-combat-item"),
+  ELYTRA_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) %3$s에 처박아 죽었습니다."
    */
-  ELYTRA_COMBAT_SUICIDE("death-messages.messages.elytra-combat-suicide"),
+  ELYTRA_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) %3$s을(를) 사용하여 %4$s에 처박아 죽었습니다."
    */
-  ELYTRA_COMBAT_SUICIDE_ITEM("death-messages.messages.elytra-combat-suicide-item"),
+  ELYTRA_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) %2$s을(를) 잘못 사용하였습니다.
    */
-  ENDER_PEARL("death-messages.messages.ender-pearl"),
+  ENDER_PEARL,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 %3$s을(를) 잘못 사용하였습니다.
    */
-  ENDER_PEARL_COMBAT("death-messages.messages.ender-pearl-combat"),
+  ENDER_PEARL_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s을(를) 잘못 사용하였습니다.
    */
-  ENDER_PEARL_COMBAT_ITEM("death-messages.messages.ender-pearl-combat-item"),
+  ENDER_PEARL_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) %3$s을(를) 사용하여 자살하였습니다."
    */
-  ENDER_PEARL_COMBAT_SUICIDE("death-messages.messages.ender-pearl-combat-suicide"),
+  ENDER_PEARL_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) %4$s와(과) %3$s을(를) 사용하여 자살하였습니다."
    */
-  ENDER_PEARL_COMBAT_SUICIDE_ITEM("death-messages.messages.ender-pearl-combat-suicide-item"),
+  ENDER_PEARL_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 폭파당했습니다
    */
-  EXPLOSION("death-messages.messages.explosion"),
+  EXPLOSION,
 
   /**
    * %1$s이(가) %2$s에게 폭파당했습니다
    */
-  EXPLOSION_COMBAT("death-messages.messages.explosion-combat"),
+  EXPLOSION_COMBAT,
 
   /**
    * %1$s이(가) %2$s에게 %3$s(으)로 폭파당했습니다
    */
-  EXPLOSION_COMBAT_ITEM("death-messages.messages.explosion-combat-item"),
+  EXPLOSION_COMBAT_ITEM,
 
   /**
    - "%1%s이(가) 자폭하였습니다."
    */
-  EXPLOSION_COMBAT_SUICIDE("death-messages.messages.explosion-combat-suicide"),
+  EXPLOSION_COMBAT_SUICIDE,
 
   /**
    - "%1%s이(가) %3$s을(를) 사용하여 자폭하였습니다."
    */
-  EXPLOSION_COMBAT_SUICIDE_ITEM("death-messages.messages.explosion-combat-suicide-item"),
+  EXPLOSION_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2$s때문에 폭파당했습니다
    */
-  EXPLOSION_COMBAT_UNKNOWN("death-messages.messages.explosion-combat-unknown"),
+  EXPLOSION_COMBAT_UNKNOWN,
 
   /**
    * %1$s이(가) 땅바닥으로 곤두박질쳤습니다
    */
-  FALL("death-messages.messages.fall"),
+  FALL,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 땅바닥으로 곤두박질쳤습니다
    */
-  FALL_COMBAT("death-messages.messages.fall-combat"),
+  FALL_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 땅바닥으로 곤두박질쳤습니다.
    */
-  FALL_COMBAT_ITEM("death-messages.messages.fall-combat-item"),
+  FALL_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) 높지는 않지만 스스로 몸을 던져 죽었습니다."
    */
-  FALL_COMBAT_SUICIDE("death-messages.messages.fall-combat-suicide"),
+  FALL_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 스스로 몸을 던져 죽었습니다."
    */
-  FALL_COMBAT_SUICIDE_ITEM("death-messages.messages.fall-combat-suicide-item"),
+  FALL_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 높은 곳에서 떨어졌습니다
    */
-  FALL_HIGH("death-messages.messages.fall-high"),
+  FALL_HIGH,
 
   /**
    * %1$s은(는) %2$s 때문에 추락을 피하지 못했습니다
    */
-  FALL_HIGH_COMBAT("death-messages.messages.fall-high-combat"),
+  FALL_HIGH_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 높은 곳에서 떨어졌습니다.
    */
-  FALL_HIGH_COMBAT_ITEM("death-messages.messages.fall-high-combat-item"),
+  FALL_HIGH_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) 스스로 몸을 던져 죽었습니다."
    */
-  FALL_HIGH_COMBAT_SUICIDE("death-messages.messages.fall-high-combat-suicide"),
+  FALL_HIGH_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) %3$2을(를) 사용하여 스스로 몸을 던져 죽었습니다."
    */
-  FALL_HIGH_COMBAT_SUICIDE_ITEM("death-messages.messages.fall-high-combat-suicide-item"),
+  FALL_HIGH_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) %2$s에서 땅바닥으로 곤두박질쳤습니다.
    */
-  FALL_BLOCK("death-messages.messages.fall-block"),
+  FALL_BLOCK,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 %3$s에서 땅바닥으로 곤두박질쳤습니다.
    */
-  FALL_BLOCK_COMBAT("death-messages.messages.fall-block-combat"),
+  FALL_BLOCK_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에서 땅바닥으로 곤두박질쳤습니다.
    */
-  FALL_BLOCK_COMBAT_ITEM("death-messages.messages.fall-block-combat-item"),
+  FALL_BLOCK_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) 높지는 않지만 %3$s에서 스스로 몸을 던져 죽었습니다."
    */
-  FALL_BLOCK_COMBAT_SUICIDE("death-messages.messages.fall-block-combat-suicide"),
+  FALL_BLOCK_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다."
    */
-  FALL_BLOCK_COMBAT_SUICIDE_ITEM("death-messages.messages.fall-block-combat-suicide-item"),
+  FALL_BLOCK_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 높은 %2$s에서 떨어졌습니다.
    */
-  FALL_BLOCK_HIGH("death-messages.messages.fall-block-high"),
+  FALL_BLOCK_HIGH,
 
   /**
    * %1$s이(가) %2$s 때문에 높은 %3$s에서 떨어졌습니다.
    */
-  FALL_BLOCK_HIGH_COMBAT("death-messages.messages.fall-block-high-combat"),
+  FALL_BLOCK_HIGH_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 높은 %4$s에서 떨어졌습니다.
    */
-  FALL_BLOCK_HIGH_COMBAT_ITEM("death-messages.messages.fall-block-high-combat-item"),
+  FALL_BLOCK_HIGH_COMBAT_ITEM,
 
   /**
    - "%1$s이(가) %3$s에서 스스로 몸을 던져 죽었습니다."
    */
-  FALL_BLOCK_HIGH_COMBAT_SUICIDE("death-messages.messages.fall-block-high-combat-suicide"),
+  FALL_BLOCK_HIGH_COMBAT_SUICIDE,
 
   /**
    - "%1$s이(가) %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다."
    */
-  FALL_BLOCK_HIGH_COMBAT_SUICIDE_ITEM("death-messages.messages.fall-block-high-combat-suicide-item"),
+  FALL_BLOCK_HIGH_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 떨어지는 블록에 짓눌렸습니다
    */
-  FALLING_BLOCK("death-messages.messages.falling-block"),
+  FALLING_BLOCK,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 떨어지는 블록에 짓눌렸습니다
    */
-  FALLING_BLOCK_COMBAT("death-messages.messages.falling-block-combat"),
+  FALLING_BLOCK_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 짓눌렸습니다.
    */
-  FALLING_BLOCK_COMBAT_ITEM("death-messages.messages.falling-block-combat-item"),
+  FALLING_BLOCK_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 떨어지는 블록에 짓눌렸습니다
    */
-  FALLING_BLOCK_COMBAT_SUICIDE("death-messages.messages.falling-block-combat-suicide"),
+  FALLING_BLOCK_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 짓눌렸습니다.
    */
-  FALLING_BLOCK_COMBAT_SUICIDE_ITEM("death-messages.messages.falling-block-combat-suicide-item"),
+  FALLING_BLOCK_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 떨어지는 종유석에 찔렸습니다
    */
-  FALLING_STALACTITE("death-messages.messages.falling-stalactite"),
+  FALLING_STALACTITE,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 떨어지는 종유석에 찔렸습니다
    */
-  FALLING_STALACTITE_COMBAT("death-messages.messages.falling-stalactite-combat"),
+  FALLING_STALACTITE_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 찔렸습니다. 아야야야.
    */
-  FALLING_STALACTITE_COMBAT_ITEM("death-messages.messages.falling-stalactite-combat-item"),
+  FALLING_STALACTITE_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 불에 타 사망했습니다
    */
-  FIRE("death-messages.messages.fire"),
+  FIRE,
 
   /**
    * %1$s이(가) 화염구에 맞았습니다.
    */
-  FIREBALL("death-messages.messages.fireball"),
+  FIREBALL,
 
   /**
    * %1$s이(가) %2$s이(가) 던진 화염구에 맞았습니다
    */
-  FIREBALL_COMBAT("death-messages.messages.fireball-combat"),
+  FIREBALL_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s이(가) 던진 화염구에 맞았습니다
    */
-  FIREBALL_COMBAT_ITEM("death-messages.messages.fireball-combat-item"),
+  FIREBALL_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2$s에 맞았습니다.
    */
-  FIREBALL_COMBAT_UNKNOWN("death-messages.messages.fireball-combat-unknown"),
+  FIREBALL_COMBAT_UNKNOWN,
 
   /**
    * %1$s이(가) 굉음과 함께 폭사했습니다.
    */
-  FIREWORKS("death-messages.messages.fireworks-combat-item"),
+  FIREWORKS,
 
   /**
    * %1$s이(가) %2$s이(가) 쏜 폭죽 때문에 굉음과 함께 폭사했습니다.
    */
-  FIREWORKS_COMBAT("death-messages.messages.fireworks-combat-item"),
+  FIREWORKS_COMBAT,
 
   /**
    * %1$s이(가) %2$s이(가) 쏜 %3$s 때문에 굉음과 함께 폭사했습니다.
    */
-  FIREWORKS_COMBAT_ITEM("death-messages.messages.fireworks-combat-item"),
+  FIREWORKS_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2$s 때문에 굉음과 함께 폭사했습니다.
    */
-  FIREWORKS_COMBAT_UNKNOWN("death-messages.messages.fireworks-combat-unknown"),
+  FIREWORKS_COMBAT_UNKNOWN,
 
   /**
    * %1$s이(가) 굉음과 함께 폭사했습니다
    */
-  FIREWORKS_CROSSBOW("death-messages.messages.fireworks-crossbow"),
+  FIREWORKS_CROSSBOW,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 굉음과 함께 폭사했습니다
    */
-  FIREWORKS_CROSSBOW_COMBAT("death-messages.messages.fireworks-crossbow-combat"),
+  FIREWORKS_CROSSBOW_COMBAT,
 
   /**
    * %1$s이(가) %2$s이(가) %3$s(으)로 쏜 폭죽 때문에 굉음과 함께 폭사했습니다
    */
-  FIREWORKS_CROSSBOW_COMBAT_ITEM("death-messages.messages.fireworks-crossbow-combat-item"),
+  FIREWORKS_CROSSBOW_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 화염에 휩싸였습니다
    */
-  FIRE_BLOCK("death-messages.messages.fire-block"),
+  FIRE_BLOCK,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 불에 빠졌습니다
    */
-  FIRE_BLOCK_COMBAT("death-messages.messages.fire-block-combat"),
+  FIRE_BLOCK_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 불에 빠졌습니다.
    */
-  FIRE_BLOCK_COMBAT_ITEM("death-messages.messages.fire-block-combat-item"),
+  FIRE_BLOCK_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 바삭하게 구워졌습니다
    */
-  FIRE_COMBAT("death-messages.messages.fire-combat"),
+  FIRE_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 바삭하게 구워졌습니다.
    */
-  FIRE_COMBAT_ITEM("death-messages.messages.fire-combat-item"),
+  FIRE_COMBAT_ITEM,
 
   /**
    * %1$s(이)가 얼어 죽었습니다
    */
-  FREEZE("death-messages.messages.freeze"),
+  FREEZE,
 
   /**
    * %1$s이(가) %2$s 때문에 얼어 죽었습니다
    */
-  FREEZE_COMBAT("death-messages.messages.freeze-combat"),
+  FREEZE_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 얼어 죽었습니다.
    */
-  FREEZE_COMBAT_ITEM("death-messages.messages.freeze-combat-item"),
+  FREEZE_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 사망했습니다
    */
-  GENERIC("death-messages.messages.generic"),
+  GENERIC,
 
   /**
    * %1$s이(가) %2$s 때문에 죽었습니다
    */
-  GENERIC_COMBAT("death-messages.messages.generic-combat"),
+  GENERIC_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 죽었습니다."
    */
-  GENERIC_COMBAT_ITEM("death-messages.messages.generic-combat-item"),
+  GENERIC_COMBAT_ITEM,
 
   /**
    * %1$s이(가) /kill %2$s 당했습니다.
    */
-  KILL("death-messages.messages.kill"),
+  KILL,
 
   /**
    * %1$s이(가) %2$s와(과) 싸우다가 /kill %3$s 당했습니다.
    */
-  KILL_COMBAT("death-messages.messages.kill-combat"),
+  KILL_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 /kill %4$s 당했습니다.
    */
-  KILL_COMBAT_ITEM("death-messages.messages.kill-combat-item"),
+  KILL_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 용암에 빠졌습니다
    */
-  LAVA("death-messages.messages.lava"),
+  LAVA,
 
   /**
    * %1$s이(가) 용암에 빠졌습니다
    */
-  LAVA_CAULDRON("death-messages.messages.lava-cauldron"),
+  LAVA_CAULDRON,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 용암에 빠졌습니다
    */
-  LAVA_CAULDRON_COMBAT("death-messages.messages.lava-cauldron-combat"),
+  LAVA_CAULDRON_COMBAT,
 
   /**
    * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다.
    */
-  LAVA_CAULDRON_COMBAT_ITEM("death-messages.messages.lava-cauldron-combat-item"),
+  LAVA_CAULDRON_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 용암에 빠졌습니다
    */
-  LAVA_COMBAT("death-messages.messages.lava-combat"),
+  LAVA_COMBAT,
 
   /**
    * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다.
    */
-  LAVA_COMBAT_ITEM("death-messages.messages.lava-combat-item"),
+  LAVA_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 벼락을 맞았습니다
    */
-  LIGHTNING_BOLT("death-messages.messages.lightning-bolt"),
+  LIGHTNING_BOLT,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 벼락을 맞았습니다
    */
-  LIGHTNING_BOLT_COMBAT("death-messages.messages.lightning-bolt-combat"),
+  LIGHTNING_BOLT_COMBAT,
 
   /**
    * %1$s이(가) %3$s(을)를 사용한 %2$s과(와) 싸우다가 벼락을 맞았습니다.
    */
-  LIGHTNING_BOLT_COMBAT_ITEM("death-messages.messages.lightning-bolt-combat-item"),
+  LIGHTNING_BOLT_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 마법으로 살해당했습니다
    */
-  MAGIC("death-messages.messages.magic"),
+  MAGIC,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 마법으로 살해당했습니다
    */
-  MAGIC_COMBAT("death-messages.messages.magic-combat"),
+  MAGIC_COMBAT,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 마법으로 살해당했습니다
    */
-  MAGIC_COMBAT_ITEM("death-messages.messages.magic-combat-item"),
+  MAGIC_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2$s 때문에 마법으로 살해당했습니다.
    */
-  MAGIC_COMBAT_UNKNOWN("death-messages.messages.magic-combat-unknown"),
+  MAGIC_COMBAT_UNKNOWN,
 
   /**
    * %1$s이(가) 바닥이 용암인 것을 알아챘습니다
    */
-  MAGMA_BLOCK("death-messages.messages.magma-block"),
+  MAGMA_BLOCK,
 
   /**
    * %1$s이(가) %2$s 때문에 위험 지대에 빠졌습니다
    */
-  MAGMA_BLOCK_COMBAT("death-messages.messages.magma-block-combat"),
+  MAGMA_BLOCK_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 위험 지대에 빠졌습니다.
    */
-  MAGMA_BLOCK_COMBAT_ITEM("death-messages.messages.magma-block-combat-item"),
+  MAGMA_BLOCK_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 사망했습니다
    */
-  MELEE("death-messages.messages.melee"),
+  MELEE,
 
   /**
    * %1$s이(가) %2$s에게 살해당했습니다
    */
-  MELEE_COMBAT("death-messages.messages.melee-combat"),
+  MELEE_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 살해당했습니다
    */
-  MELEE_COMBAT_ITEM("death-messages.messages.melee-combat-item"),
+  MELEE_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 자살했습니다.
    */
-  MELEE_COMBAT_SUICIDE("death-messages.messages.melee-combat-suicide"),
+  MELEE_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하여 자살했습니다.
    */
-  MELEE_COMBAT_SUICIDE_ITEM("death-messages.messages.melee-combat-suicide-item"),
+  MELEE_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 썰렸습니다.
    */
-  MELEE_SWEEP("death-messages.messages.melee-sweep"),
+  MELEE_SWEEP,
 
   /**
    * %1$s이(가) %2$s에게 썰렸습니다.
    */
-  MELEE_SWEEP_COMBAT("death-messages.messages.melee-sweep-combat"),
+  MELEE_SWEEP_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다.
    */
-  MELEE_SWEEP_COMBAT_ITEM("death-messages.messages.melee-sweep-combat-item"),
+  MELEE_SWEEP_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 썰렸습니다.
    */
-  MELEE_SWORD("death-messages.messages.melee-sword"),
+  MELEE_SWORD,
 
   /**
    * %1$s이(가) %2$s에게 썰렸습니다.
    */
-  MELEE_SWORD_COMBAT("death-messages.messages.melee-sword-combat"),
+  MELEE_SWORD_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다.
    */
-  MELEE_SWORD_COMBAT_ITEM("death-messages.messages.melee-sword-combat-item"),
+  MELEE_SWORD_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 자살했습니다.
    */
-  MELEE_SWORD_COMBAT_SUICIDE("death-messages.messages.melee-sword-combat-suicide"),
+  MELEE_SWORD_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하여 자살했습니다.
    */
-  MELEE_SWORD_COMBAT_SUICIDE_ITEM("death-messages.messages.melee-sword-combat-suicide-item"),
+  MELEE_SWORD_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 녹아내렸습니다.
    */
-  MELTING("death-messages.messages.melting"),
+  MELTING,
 
   /**
    * %1$s이(가) %2$s와(과) 싸우다 녹아내렸습니다.
    */
-  MELTING_COMBAT("death-messages.messages.melting-combat"),
+  MELTING_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 녹아내렸습니다.
    */
-  MELTING_COMBAT_ITEM("death-messages.messages.melting-combat-item"),
+  MELTING_COMBAT_ITEM,
 
   /**
    * %2$s이(가) %1$s에게 %3$s을(를) 먹여 죽였습니다.
    */
-  PARROT_COOKIE_COMBAT_ITEM("death-messages.messages.parrot-cookie-combat-item"),
+  PARROT_COOKIE_COMBAT_ITEM,
 
   /**
    *%1$s이(가) 독살당했습니다.
    */
-  POISON("death-messages.messages.poison"),
+  POISON,
 
   /**
    *%1$s이(가) %2$s에게 독살당했습니다.
    */
-  POISON_COMBAT("death-messages.messages.poison-combat"),
+  POISON_COMBAT,
 
   /**
    *%1$s이(가) %3$s을(를) 사용한 %2$s에게 독살당했습니다.
    */
-  POISON_COMBAT_ITEM("death-messages.messages.poison-combat-item"),
+  POISON_COMBAT_ITEM,
 
   /**
    *%1$s이(가) 스스로를 독살하였습니다.
    */
-  POISON_COMBAT_SUICIDE("death-messages.messages.poison-combat-suicide"),
+  POISON_COMBAT_SUICIDE,
 
   /**
    *%1$s이(가) %3$s을(를) 사용하여 스스로를 독살하였습니다.
    */
-  POISON_COMBAT_SUICIDE_ITEM("death-messages.messages.poison-combat-suicide-item"),
+  POISON_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 발사체에게 저격당했습니다.
    */
-  PROJECTILE("death-messages.messages.projectile"),
+  PROJECTILE,
 
   /**
    * %1$s이(가) %2$s에게 저격당했습니다
    */
-  PROJECTILE_COMBAT("death-messages.messages.projectile-combat"),
+  PROJECTILE_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
    */
-  PROJECTILE_COMBAT_ITEM("death-messages.messages.projectile-combat-item"),
+  PROJECTILE_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다.
    */
-  PROJECTILE_COMBAT_UNKNOWN("death-messages.messages.projectile-combat-unknown"),
+  PROJECTILE_COMBAT_UNKNOWN,
 
   /**
    * %1$s이(가) %2$s에게 저격당했습니다
    */
-  PROJECTILE_COMBAT_SUICIDE("death-messages.messages.projectile-combat-suicide"),
+  PROJECTILE_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
    */
-  PROJECTILE_COMBAT_SUICIDE_ITEM("death-messages.messages.projectile-combat-suicide-item"),
+  PROJECTILE_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 셜커 탄환에게 살해당했습니다.
    */
-  SHULKER_BULLET("death-messages.messages.shulker-bullet"),
+  SHULKER_BULLET,
 
   /**
    * %1$s이(가) %2%s에게 살해당했습니다.
    */
-  SHULKER_BULLET_COMBAT("death-messages.messages.shulker-bullet-combat"), // minecraft bug probably?
+  SHULKER_BULLET_COMBAT, // minecraft bug probably?
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2%s에게 살해당했습니다.
    */
-  SHULKER_BULLET_COMBAT_ITEM("death-messages.messages.shulker-bullet-combat-item"),
+  SHULKER_BULLET_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2%s에게 살해당했습니다.
    */
-  SHULKER_BULLET_COMBAT_UNKNOWN("death-messages.messages.shulker-bullet-combat-unknown"),
+  SHULKER_BULLET_COMBAT_UNKNOWN,
 
   /**
    * %1$s이(가) %2%s에게 살해당했습니다.
    */
-  SHULKER_BULLET_COMBAT_SUICIDE("death-messages.messages.shulker-bullet-combat-suicide"),
+  SHULKER_BULLET_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2%s에게 살해당했습니다.
    */
-  SHULKER_BULLET_COMBAT_SUICIDE_ITEM("death-messages.messages.shulker-bullet-combat-suicide-item"),
+  SHULKER_BULLET_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2%s에게 살해당했습니다.
    */
-  SHULKER_BULLET_UNKNOWN("death-messages.messages.shulker-bullet-unknown"),
+  SHULKER_BULLET_UNKNOWN,
 
   /**
    * %1$s이(가) 석순에 찔렸습니다
    */
-  STALAGMITE("death-messages.messages.stalagmite"),
+  STALAGMITE,
 
   /**
    * %1$s이(가) %2$s와(과) 싸우다가 석순에 찔렸습니다
    */
-  STALAGMITE_COMBAT("death-messages.messages.stalagmite-combat"),
+  STALAGMITE_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4%s에 찔렸습니다.
    */
-  STALAGMITE_COMBAT_ITEM("death-messages.messages.stalagmite-combat-item"),
+  STALAGMITE_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s와(과) 싸우다가 석순에 찔렸습니다
    */
-  STALAGMITE_COMBAT_SUICIDE("death-messages.messages.stalagmite-combat-suicide"),
+  STALAGMITE_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4%s에 찔렸습니다.
    */
-  STALAGMITE_COMBAT_SUICIDE_ITEM("death-messages.messages.stalagmite-combat-suicide-item"),
+  STALAGMITE_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 아사했습니다
    */
-  STARVE("death-messages.messages.starve"),
+  STARVE,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 아사했습니다
    */
-  STARVE_COMBAT("death-messages.messages.starve-combat"),
+  STARVE_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다.
    */
-  STARVE_COMBAT_ITEM("death-messages.messages.starve-combat-item"),
+  STARVE_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 아사했습니다
    */
-  STARVE_COMBAT_SUICIDE("death-messages.messages.starve-combat-suicide"),
+  STARVE_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다.
    */
-  STARVE_COMBAT_SUICIDE_ITEM("death-messages.messages.starve-combat-suicide-item"),
+  STARVE_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 쏘여 사망했습니다
    */
-  STING("death-messages.messages.sting"),
+  STING,
 
   /**
    * %1$s이(가) %2$s에게 쏘여 사망했습니다
    */
-  STING_COMBAT("death-messages.messages.sting-combat"),
+  STING_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다.
    */
-  STING_COMBAT_ITEM("death-messages.messages.sting-combat-item"),
+  STING_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s에게 쏘여 사망했습니다
    */
-  STING_COMBAT_SUICIDE("death-messages.messages.sting-combat-suicide"),
+  STING_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다.
    */
-  STING_COMBAT_SUICIDE_ITEM("death-messages.messages.sting-combat-suicide-item"),
+  STING_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 벽 속에서 질식했습니다
    */
-  SUFFOCATION("death-messages.messages.suffocation"),
+  SUFFOCATION,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 벽 속에서 질식했습니다
    */
-  SUFFOCATION_COMBAT("death-messages.messages.suffocation-combat"),
+  SUFFOCATION_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다.
    */
-  SUFFOCATION_COMBAT_ITEM("death-messages.messages.suffocation-combat-item"),
+  SUFFOCATION_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 벽 속에서 질식했습니다
    */
-  SUFFOCATION_COMBAT_SUICIDE("death-messages.messages.suffocation-combat-suicide"),
+  SUFFOCATION_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다.
    */
-  SUFFOCATION_COMBAT_SUICIDE_ITEM("death-messages.messages.suffocation-combat-suicide-item"),
+  SUFFOCATION_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 자살했습니다.
    */
-  SUICIDE("death-messages.messages.suicide"),
+  SUICIDE,
 
   /**
    * %1$s이(가) 자살했습니다.
    */
-  SUICIDE_COMBAT("death-messages.messages.suicide-combat"),
+  SUICIDE_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용하여 자살했습니다.
    */
-  SUICIDE_COMBAT_ITEM("death-messages.messages.suicide-combat-item"),
+  SUICIDE_COMBAT_ITEM,
 
   /**
    * %1$s이(가) 달콤한 열매 덤불에 찔려 죽었습니다
    */
-  SWEET_BERRY_BUSH("death-messages.messages.sweet-berry-bush"),
+  SWEET_BERRY_BUSH,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 달콤한 열매 덤불에 찔려 죽었습니다
    */
-  SWEET_BERRY_BUSH_COMBAT("death-messages.messages.sweet-berry-bush-combat"),
+  SWEET_BERRY_BUSH_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다.
    */
-  SWEET_BERRY_BUSH_COMBAT_ITEM("death-messages.messages.sweet-berry-bush-combat-item"),
+  SWEET_BERRY_BUSH_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s에게서 도망치려다 달콤한 열매 덤불에 찔려 죽었습니다
    */
-  SWEET_BERRY_BUSH_COMBAT_SUICIDE("death-messages.messages.sweet-berry-bush-combat-suicide"),
+  SWEET_BERRY_BUSH_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다.
    */
-  SWEET_BERRY_BUSH_COMBAT_SUICIDE_ITEM("death-messages.messages.sweet-berry-bush-combat-suicide-item"),
+  SWEET_BERRY_BUSH_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 누군가를 해치려다 살해당했습니다.
    */
-  THORNS("death-messages.messages.thorns"),
+  THORNS,
 
   /**
    * %1$s이(가) %2$s을(를) 해치려다 살해당했습니다
    */
-  THORNS_COMBAT("death-messages.messages.thorns-combat"),
+  THORNS_COMBAT,
 
   /**
    * %1$s이(가) %2$s을(를) 해치려다 %3$s(으)로 살해당했습니다
    */
-  THORNS_COMBAT_ITEM("death-messages.messages.thorns-combat-item"),
+  THORNS_COMBAT_ITEM,
 
   /**
    * %1$s이(가) %2$s을(를) 해치려다 살해당했습니다
    */
-  THORNS_COMBAT_SUICIDE("death-messages.messages.thorns-combat-suicide"),
+  THORNS_COMBAT_SUICIDE,
 
   /**
    * %1$s이(가) %2$s을(를) 해치려다 %3$s(으)로 살해당했습니다
    */
-  THORNS_COMBAT_ITEM_SUICIDE("death-messages.messages.thorns-combat-suicide-item"),
+  THORNS_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 삼지창에게 찔렸습니다
    */
-  TRIDENT("death-messages.messages.trident"),
+  TRIDENT,
 
   /**
    * %1$s이(가) %2$s에게 찔렸습니다
    */
-  TRIDENT_COMBAT("death-messages.messages.trident-combat"),
+  TRIDENT_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다
    */
-  TRIDENT_COMBAT_ITEM("death-messages.messages.trident-combat-item"),
+  TRIDENT_COMBAT_ITEM,
+
+  /**
+   * %1$s이(가) %2$s에게 찔렸습니다
+   */
+  TRIDENT_COMBAT_SUICIDE,
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다
+   */
+  TRIDENT_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 어딘가에서 날아온 %2$s에게 찔렸습니다.
    */
-  TRIDENT_COMBAT_UNKNOWN("death-messages.messages.trident-combat-unknown"),
-
-  /**
-   * %1$s이(가) %2$s에게 찔렸습니다
-   */
-  TRIDENT_COMBAT_SUICIDE("death-messages.messages.trident-combat-suicide"),
-
-  /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다
-   */
-  TRIDENT_COMBAT_SUICIDE_ITEM("death-messages.messages.trident-combat-suicide-item"),
+  TRIDENT_COMBAT_UNKNOWN,
 
   /**
    * %1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요!
    */
-  UNKNOWN("death-messages.messages.unknown"),
+  UNKNOWN,
 
   /**
    * %1$s이(가) 세계 밖으로 떨어졌습니다
    */
-  VOID("death-messages.messages.void"),
+  VOID,
 
   /**
    * %1$s은(는) %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
    */
-  VOID_COMBAT("death-messages.messages.void-combat"),
+  VOID_COMBAT,
 
   /**
    * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
    */
-  VOID_COMBAT_ITEM("death-messages.messages.void-combat-item"),
+  VOID_COMBAT_ITEM,
+
+  /**
+   * %1$s은(는) %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
+   */
+  VOID_COMBAT_SUICIDE,
+
+  /**
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다.
    */
-  VOID_HIGH("death-messages.messages.void-high"),
+  VOID_HIGH,
 
   /**
    * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
    */
-  VOID_HIGH_COMBAT("death-messages.messages.void-high-combat"),
+  VOID_HIGH_COMBAT,
 
   /**
    * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
    */
-  VOID_HIGH_COMBAT_ITEM("death-messages.messages.void-high-combat-item"),
+  VOID_HIGH_COMBAT_ITEM,
+
+  /**
+   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_HIGH_COMBAT_SUICIDE,
+
+  /**
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_HIGH_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) %2$s에서 세계 밖으로 떨어졌습니다.+
    *
    */
-  VOID_BLOCK("death-messages.messages.void-block"),
+  VOID_BLOCK,
 
   /**
    * %1$s은(는) %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
    */
-  VOID_BLOCK_COMBAT("death-messages.messages.void-block-combat"),
+  VOID_BLOCK_COMBAT,
 
   /**
    * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
    */
-  VOID_BLOCK_COMBAT_ITEM("death-messages.messages.void-block-combat-item"),
+  VOID_BLOCK_COMBAT_ITEM,
+
+  /**
+   * %1$s은(는) %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
+   */
+  VOID_BLOCK_COMBAT_SUICIDE,
+
+  /**
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_BLOCK_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다.
    */
-  VOID_BLOCK_HIGH("death-messages.messages.void-block-high"),
+  VOID_BLOCK_HIGH,
 
   /**
    * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
    */
-  VOID_BLOCK_HIGH_COMBAT("death-messages.messages.void-block-high-combat"),
+  VOID_BLOCK_HIGH_COMBAT,
 
   /**
    * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
    */
-  VOID_BLOCK_HIGH_COMBAT_ITEM("death-messages.messages.void-block-high-combat-item"),
+  VOID_BLOCK_HIGH_COMBAT_ITEM,
+
+  /**
+   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_BLOCK_HIGH_COMBAT_SUICIDE,
+
+  /**
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   */
+  VOID_BLOCK_HIGH_COMBAT_SUICIDE_ITEM,
 
   /**
    * %1$s이(가) 사그라졌습니다
    */
-  WITHER("death-messages.messages.wither"),
+  WITHER,
 
   /**
    * %1$s이(가) %2$s과(와) 싸우다가 사그라졌습니다
    */
-  WITHER_COMBAT("death-messages.messages.wither-combat"),
+  WITHER_COMBAT,
 
   /**
    * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다.
    */
-  WITHER_COMBAT_ITEM("death-messages.messages.wither-combat-item"),
+  WITHER_COMBAT_ITEM,
+
+  /**
+   * %1$s이(가) %2$s과(와) 싸우다가 사그라졌습니다
+   */
+  WITHER_COMBAT_SUICIDE,
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다.
+   */
+  WITHER_COMBAT_SUICIDE_ITEM,
+
+  /**
+   * %1$s이(가) 해골에게 저격당했습니다
+   */
+  WITHER_SKULL,
 
   /**
    * %1$s이(가) %2$s의 해골에게 저격당했습니다
    */
-  WITHER_SKULL("death-messages.messages.wither-skull"),
+  WITHER_SKULL_COMBAT,
+
+  /**
+   * %1$s이(가) %2$s의 해골에게 저격당했습니다
+   */
+  WITHER_SKULL_COMBAT_ITEM,
+
+  /**
+   * %1$s이(가) %2$s의 해골에게 저격당했습니다
+   */
+  WITHER_SKULL_COMBAT_UNKNOWN,
+
+  /**
+   * %1$s이(가) %2$s의 해골에게 저격당했습니다
+   */
+  WITHER_SKULL_COMBAT_SUICIDE,
+
+  /**
+   * %1$s이(가) %2$s의 해골에게 저격당했습니다
+   */
+  WITHER_SKULL_COMBAT_ITEM_SUICIDE,
 
   /**
    * %1$s이(가) %2$s 밖으로 탈출하려다 질식사했습니다.
    */
-  WORLD_BORDER("death-messages.messages.world-border"),
+  WORLD_BORDER,
 
   /**
    *%1$s이(가) %2$s과(와) 싸우고 %3$s 밖으로 탈출하려다 질식사했습니다.
    */
-  WORLD_BORDER_COMBAT("death-messages.messages.world-border-combat"),
+  WORLD_BORDER_COMBAT,
 
   /**
    *%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우고 %4$s 밖으로 탈출하려다 질식사했습니다.
    */
-  WORLD_BORDER_COMBAT_ITEM("death-messages.messages.world-border-combat-item"),
+  WORLD_BORDER_COMBAT_ITEM,
 
   /**
    *%1$s이(가) %3$s 밖으로 스스로의 몸을 던져 질식사했습니다.
    */
-  WORLD_BORDER_COMBAT_SUICIDE("death-messages.messages.world-border-combat-suicide"),
+  WORLD_BORDER_COMBAT_SUICIDE,
 
   /**
    *%1$s이(가) %3$s을(를) 사용하여 %4$s 밖으로 스스로의 몸을 던져 질식사했습니다.
    */
-  WORLD_BORDER_COMBAT_SUICIDE_ITEM("death-messages.messages.world-border-combat-suicide-item"),
-
-
+  WORLD_BORDER_COMBAT_SUICIDE_ITEM,
   ;
-
-
-  private final String key;
-
-  DeathMessage(String key)
-  {
-    this.key = key;
-  }
 
   public List<String> getKeys()
   {
-    return new ArrayList<>(Variable.deathMessages.getStringList(key));
+    return new ArrayList<>(Variable.deathMessages.getStringList("death-messages.messages." + this.toString().toLowerCase().replace("_", "-")));
   }
 }

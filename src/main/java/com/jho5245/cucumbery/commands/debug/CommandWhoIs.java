@@ -52,7 +52,7 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
       {
         if (sender instanceof Player)
         {
-          Bukkit.getServer().dispatchCommand(sender, "whois " + sender.getName() + " state");
+          Bukkit.getServer().dispatchCommand(sender, "cwhois " + sender.getName() + " state");
           return true;
         }
       }
@@ -60,11 +60,11 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
       {
         if (SelectorUtil.getPlayer(sender, args[0], false) == null)
         {
-          Bukkit.getServer().dispatchCommand(sender, "whois " + args[0] + " offline");
+          Bukkit.getServer().dispatchCommand(sender, "cwhois " + args[0] + " offline");
         }
         else
         {
-          Bukkit.getServer().dispatchCommand(sender, "whois " + args[0] + " state");
+          Bukkit.getServer().dispatchCommand(sender, "cwhois " + args[0] + " state");
         }
         return true;
       }
@@ -145,9 +145,9 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "X : &e" + Constant.Jeongsu.format(spawnPointX));
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Y : &e" + Constant.Jeongsu.format(spawnPointY));
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Z : &e" + Constant.Jeongsu.format(spawnPointZ));
-          if (sender instanceof Player)
+          if (sender instanceof Player p)
           {
-            MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "거리 : &e" + Constant.Sosu4.format(spawnPointLocation.distance(((Player) sender).getLocation())) + "&em");
+            MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "거리 : &e" + Constant.Sosu4.format(Method2.distance(spawnPointLocation, p.getLocation())) + "&em");
           }
         }
         else

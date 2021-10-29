@@ -2211,7 +2211,7 @@ public class Method extends SoundPlay
 
   public static String getCurrentTime(Calendar calendar)
   {
-    return Method.getCurrentTime(calendar, false, true);
+    return Method.getCurrentTime(calendar, true, false);
   }
 
   public static String getCurrentTime(Calendar calendar, boolean all, boolean displayMs)

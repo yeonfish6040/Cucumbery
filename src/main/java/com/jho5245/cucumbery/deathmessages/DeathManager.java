@@ -155,6 +155,10 @@ public class DeathManager
             else
             {
               key = "melee";
+              if (damagerEntity instanceof Bee)
+              {
+                key = "sting";
+              }
               if (entity instanceof Parrot && damager instanceof Player && damageCause.getDamage() > Math.pow(2, 10))
               {
                 if (ItemStackUtil.itemExists(weapon))
@@ -304,9 +308,20 @@ public class DeathManager
           else
           {
             key = "drown";
+            List<Entity> nearbyEntities = entity.getNearbyEntities(3,3,3);
             if (entity instanceof WaterMob)
             {
               key += "_water";
+              nearbyEntities.removeIf(e -> e instanceof WaterMob || e instanceof Axolotl || e instanceof Turtle);
+            }
+            else
+            {
+              nearbyEntities.removeIf(e -> !(e instanceof WaterMob || e instanceof Axolotl || e instanceof Turtle));
+            }
+            if (!nearbyEntities.isEmpty())
+            {
+              extraArgs.add(SenderComponentUtil.senderComponent(nearbyEntities.get(Method.random(0, nearbyEntities.size() - 1))));
+              key += "_together";
             }
           }
         }
@@ -404,7 +419,11 @@ public class DeathManager
             key = "falling_block";
           }
         }
-        case THORNS -> key = "thorns";
+        case THORNS -> {
+          key = "thorns";
+          // 가시 피해로 죽은 사인의 무기는 죽은 자의 무기를 가져온다
+          weapon = Variable.attackerAndWeapon.get(entity.getUniqueId());
+        }
         case DRAGON_BREATH -> key = "dragon_breath";
         case CUSTOM -> key = "generic";
         case FLY_INTO_WALL -> {
@@ -620,7 +639,7 @@ public class DeathManager
     boolean success = entity instanceof Player;
     if (entity.customName() != null)
     {
-      success = success || !location.getNearbyPlayers(100d).isEmpty();
+      success = success || entity.getVehicle() != null || entity instanceof Endermite || !location.getNearbyPlayers(500d).isEmpty();
     }
     if (entity instanceof Tameable tameable)
     {
