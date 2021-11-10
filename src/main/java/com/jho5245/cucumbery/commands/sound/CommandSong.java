@@ -40,9 +40,13 @@ public class CommandSong implements CommandExecutor, TabCompleter
     {
       return true;
     }
-    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    // for console disable quote command feature
+    if (sender instanceof Player)
     {
-      return !(sender instanceof BlockCommandSender);
+      if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+      {
+        return !(sender instanceof BlockCommandSender);
+      }
     }
     if (!Cucumbery.using_NoteBlockAPI)
     {

@@ -110,14 +110,20 @@ public class Initializer
 
   public static void loadLang()
   {
-
     File file = new File(Cucumbery.getPlugin().getDataFolder() + "/lang.yml");
     if (!file.exists())
     {
       Cucumbery.getPlugin().saveResource("lang.yml", false);
     }
     CustomConfig deathMessagesConfig = CustomConfig.getCustomConfig("lang.yml");
-    Variable.lang = deathMessagesConfig.getConfig();
+    ConfigurationSection root = deathMessagesConfig.getConfig().getConfigurationSection("");
+    if (root != null)
+    {
+      for (String key : root.getKeys(true))
+      {
+        Variable.lang.set(key, root.get(key));
+      }
+    }
   }
 
   public static void loadCustomConfigs()

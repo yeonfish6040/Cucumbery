@@ -1233,8 +1233,11 @@ public class ItemLore2
             lore.add(Component.empty());
             lore.add(ComponentUtil.createTranslate("&7지도 ID : %s", "&6" + id));
             lore.add(ComponentUtil.createTranslate("&7축척 : %s", "&6" + scaleString));
-            lore.add(ComponentUtil.createTranslate("&7월드 : %s", "&6" + worldName));
-            lore.add(ComponentUtil.createTranslate("&7지도 중심 좌표 : %s", "x=&6" + centerX + "&7, z=&6" + centerZ));
+            if (Cucumbery.config.getBoolean("use-center-coord-of-map-lore-feature"))
+            {
+              lore.add(ComponentUtil.createTranslate("&7월드 : %s", "&6" + worldName));
+              lore.add(ComponentUtil.createTranslate("&7지도 중심 좌표 : %s", "x=&6" + centerX + "&7, z=&6" + centerZ));
+            }
           }
         }
       }

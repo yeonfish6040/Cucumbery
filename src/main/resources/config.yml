@@ -29,11 +29,10 @@
 # --hex 사용법 예시--
 # #ff0000; 빨간색, 이놈도 #f00; 처럼 써도 작동한다.
 #
-#
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 1
+config-version: 3
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -72,6 +71,31 @@ use-hook-plugins:
 
 # 알 수 없는 명령어 사용 시 뜰 메시지 굳검버리화 해버리기
 use-custom-unknown-command-message: true
+
+# 개체 호버 이벤트 기능 사용 (유형, UUID, 좌표 등)
+use-hover-event-for-entities:
+  # 기능 활성화 여부
+  enabled: true
+  # 개체 유형 표시 여부(플레이어 제외)
+  entity-type: true
+  # 개체 uuid 표시 여부
+  uuid: true
+  # 플레이어의 누적 접속 횟수 표시 여부
+  player-join-count: true
+  # 플레이어의 누적 플레이 시간 표시 여부
+  player-play-time: true
+  # 플레이어의 게임 모드 표시 여부
+  player-game-mode: true
+
+  # 게임 플레이에 영향을 줄 수 있는 정보 표시 여부
+  unfair-play-mode:
+    # 기능 활성화 여부
+    enabled: true
+    # 개체의 최대 HP와 현재 HP 표시 여부
+    hp: true
+    # 개체의 현재 위치 표시 여부
+    location: true
+
 
 # 소리 상수
 sound-const:
@@ -572,7 +596,7 @@ customrecipe:
   # - chat:makes player chat
   # - chat:/command for trigger
   # - opchat:/comand for trigger (with op permission)
-  # 제작 성공 확률 시스템이 있는 레시피 관련 설정. 모든 값은 "none"으로 지정 시 비활성화 할 수 있음. 소리는 [] 를 입력하여 비활성화 가능.
+  # 제작 성공 확률 시스템이 있는 레시피 관련 설정. 모든 값은 'none' 으로 지정 시 비활성화 할 수 있음. 소리는 [] 를 입력하여 비활성화 가능.
   chance-items:
     success:
       message: "%s%% 확률로 %s을(를) 제작하였습니다!"

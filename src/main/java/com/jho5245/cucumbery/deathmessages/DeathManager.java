@@ -106,10 +106,20 @@ public class DeathManager
           damager = null;
           weapon = null;
         }
-        if (!(cause == DamageCause.VOID && damageCause.getDamage() < Math.pow(2, 10)) && System.currentTimeMillis() - time > 20000)
+        if (!(cause == DamageCause.VOID && damageCause.getDamage() < Math.pow(2, 10)))
         {
-          damager = null;
-          weapon = null;
+          long current = System.currentTimeMillis();
+          boolean success = switch (cause)
+                  {
+                    case FALL -> current - time > 20000;
+                    case FIRE, FIRE_TICK -> current - time > 10000;
+                    default -> current - time > 5000;
+                  };
+          if (success)
+          {
+            damager = null;
+            weapon = null;
+          }
         }
       }
       ItemStack lastTrampledBlock = getLastTrampledBlock(entity.getUniqueId());
@@ -308,7 +318,7 @@ public class DeathManager
           else
           {
             key = "drown";
-            List<Entity> nearbyEntities = entity.getNearbyEntities(3,3,3);
+            List<Entity> nearbyEntities = entity.getNearbyEntities(3, 3, 3);
             if (entity instanceof WaterMob)
             {
               key += "_water";

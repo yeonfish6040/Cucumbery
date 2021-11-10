@@ -602,7 +602,7 @@ public class ItemStackUtil
     {
       switch (type)
       {
-        case AIR, CAVE_AIR, VOID_AIR -> newType = Material.BARRIER;
+        default -> newType = Material.BARRIER;
         case WATER, WATER_CAULDRON -> newType = Material.WATER_BUCKET;
         case FIRE, SOUL_FIRE -> newType = Material.FLINT_AND_STEEL;
         case LAVA, LAVA_CAULDRON -> newType = Material.LAVA_BUCKET;
@@ -617,6 +617,10 @@ public class ItemStackUtil
 
     ItemStack itemStack = new ItemStack(newType);
     ItemMeta itemMeta = itemStack.getItemMeta();
+    if (itemMeta == null)
+    {
+      return itemStack;
+    }
     if (type != newType)
     {
       if (type == Material.AIR)

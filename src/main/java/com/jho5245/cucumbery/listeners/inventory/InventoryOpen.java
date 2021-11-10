@@ -6,17 +6,15 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
-import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -258,9 +256,7 @@ public class InventoryOpen implements Listener
             Method.updateInventory(player, item);
             if (Method.isTimeUp(item, expireDate))
             {
-              Component text = ComponentUtil.create(MessageUtil.as(
-                      Prefix.INFO, "아이템 &b[" + ItemNameUtil.itemName(item), (item.getAmount() > 1 ? "&r &6" + item.getAmount() + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
-              player.sendMessage(text);
+              MessageUtil.info(player, ComponentUtil.createTranslate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", item));
               item.setAmount(0);
               player.updateInventory();
               if (player.getOpenInventory().getType() == InventoryType.CRAFTING || player.getOpenInventory().getType() == InventoryType.WORKBENCH)

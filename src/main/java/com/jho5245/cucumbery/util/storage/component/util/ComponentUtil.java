@@ -484,8 +484,6 @@ public class ComponentUtil
         componentArgs.add(arg);
       }
     }
-    Component[] ch = new Component[component.args().size()];
-    ch = componentArgs.toArray(ch);
     component = component.args(componentArgs);
     component = yeet(component.key(), component);
     return component;

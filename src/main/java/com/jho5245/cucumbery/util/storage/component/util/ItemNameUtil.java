@@ -16,6 +16,9 @@ import org.bukkit.inventory.meta.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemNameUtil
 {
   /**
@@ -81,6 +84,22 @@ public class ItemNameUtil
       if (component.decorations().get(TextDecoration.ITALIC) == State.NOT_SET)
       {
         component = component.decoration(TextDecoration.ITALIC, State.TRUE);
+      }
+      List<Component> children = new ArrayList<>(component.children());
+      boolean childrenChanged = false;
+      for (int i = 0; i < children.size(); i++)
+      {
+        Component child = children.get(i);
+        if (child.decorations().get(TextDecoration.ITALIC) == State.NOT_SET)
+        {
+          child = child.decoration(TextDecoration.ITALIC, State.TRUE);
+          childrenChanged = true;
+        }
+        children.set(i, child);
+      }
+      if (childrenChanged)
+      {
+        component = component.children(children);
       }
     }
 

@@ -57,11 +57,11 @@ public class EntityComponentUtil
           String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
           if (prefix != null)
           {
-            nameComponent = ComponentUtil.create(false, prefix, nameComponent);
+            nameComponent = Component.empty().append(ComponentUtil.create(false, prefix)).append(nameComponent);
           }
           if (suffix != null)
           {
-            nameComponent = ComponentUtil.create(false, nameComponent, suffix);
+            nameComponent = nameComponent.append(ComponentUtil.create(false, suffix));
           }
         }
         catch (Exception e)
@@ -119,16 +119,31 @@ public class EntityComponentUtil
       GameMode gameMode = player.getGameMode();
       hover = hover
               .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("ID : %s", Constant.THE_COLOR_HEX + name))
-              .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid))
-              .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("접속 횟수 : %s회", Constant.THE_COLOR_HEX + player.getStatistic(Statistic.LEAVE_GAME) + 1))
-              .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("플레이 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 50L, false)))
-              .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("게임 모드 : %s", ComponentUtil.createTranslate(Constant.THE_COLOR_HEX + "gameMode." + gameMode.toString().toLowerCase())))
-      ;
+              .append(ComponentUtil.createTranslate("ID : %s", Constant.THE_COLOR_HEX + name));
+      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.uuid"))
+      {
+        hover = hover
+                .append(Component.text("\n"))
+                .append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
+      }
+      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.player-join-count"))
+      {
+        hover = hover
+                .append(Component.text("\n"))
+                .append(ComponentUtil.createTranslate("접속 횟수 : %s회", Constant.THE_COLOR_HEX + player.getStatistic(Statistic.LEAVE_GAME) + 1));
+      }
+      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.player-play-time"))
+      {
+        hover = hover
+                .append(Component.text("\n"))
+                .append(ComponentUtil.createTranslate("플레이 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 50L, false)));
+      }
+      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.player-game-mode"))
+      {
+        hover = hover
+                .append(Component.text("\n"))
+                .append(ComponentUtil.createTranslate("게임 모드 : %s", ComponentUtil.createTranslate(Constant.THE_COLOR_HEX + "gameMode." + gameMode.toString().toLowerCase())));
+      }
       click = "/socialmenu " + name;
     }
     if (!(entity instanceof Player))
@@ -151,10 +166,19 @@ public class EntityComponentUtil
       {
         typeComponent = ComponentUtil.createTranslate("%s %s", "아기", typeComponent);
       }
-      hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("유형 : %s", typeComponent.color(Constant.THE_COLOR)));
-      hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
+
+      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.entity-type"))
+      {
+        hover = hover
+                .append(Component.text("\n"))
+                .append(ComponentUtil.createTranslate("유형 : %s", typeComponent.color(Constant.THE_COLOR)));
+      }
+      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.uuid"))
+      {
+        hover = hover
+                .append(Component.text("\n"))
+                .append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
+      }
     }
     if (entity instanceof Rabbit rabbit && rabbit.getRabbitType() != Type.THE_KILLER_BUNNY)
     {
@@ -243,7 +267,7 @@ public class EntityComponentUtil
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("%s의 플레이어들에 대한 평판", nameComponent));
+        hover = hover.append(ComponentUtil.createTranslate("%s의 평판", nameComponent));
         for (UUID targetUUID : uuidSet)
         {
           Object target = Bukkit.getEntity(targetUUID);
@@ -676,21 +700,28 @@ public class EntityComponentUtil
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.createTranslate("경험치 : %s", Constant.THE_COLOR_HEX + experience));
     }
-    Location location = entity.getLocation();
-    hover = hover.append(Component.text("\n"));
-    hover = hover.append(ComponentUtil.createTranslate("좌표 : %s", location));
-    if (entity instanceof Damageable damageable && entity instanceof Attributable attributable)
+
+    if (Cucumbery.config.getBoolean("use-hover-event-for-entities.unfair-play-mode.enabled") && Cucumbery.config.getBoolean("use-hover-event-for-entities.unfair-play-mode.location"))
     {
-      double health = damageable.getHealth();
-      AttributeInstance maxHealthInstance = attributable.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-      if (maxHealthInstance != null)
+      Location location = entity.getLocation();
+      hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.createTranslate("좌표 : %s", location));
+    }
+    if (Cucumbery.config.getBoolean("use-hover-event-for-entities.unfair-play-mode.enabled") && Cucumbery.config.getBoolean("use-hover-event-for-entities.unfair-play-mode.hp"))
+    {
+      if (entity instanceof Damageable damageable && entity instanceof Attributable attributable)
       {
-        double maxHealth = maxHealthInstance.getValue();
-        String color = Method2.getPercentageColor(health, maxHealth);
-        String healthDisplay = color + Constant.Sosu2.format(health);
-        String maxHealthDisplay = "g255;" + Constant.Sosu2.format(maxHealth);
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("HP : %s", ComponentUtil.createTranslate("&7%s / %s", healthDisplay, maxHealthDisplay)));
+        double health = damageable.getHealth();
+        AttributeInstance maxHealthInstance = attributable.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (maxHealthInstance != null)
+        {
+          double maxHealth = maxHealthInstance.getValue();
+          String color = Method2.getPercentageColor(health, maxHealth);
+          String healthDisplay = color + Constant.Sosu2.format(health);
+          String maxHealthDisplay = "g255;" + Constant.Sosu2.format(maxHealth);
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.createTranslate("HP : %s", ComponentUtil.createTranslate("&7%s / %s", healthDisplay, maxHealthDisplay)));
+        }
       }
     }
     if (defaultColor != null && nameComponent.color() == null)
@@ -721,7 +752,10 @@ public class EntityComponentUtil
       hover = hover.append(Component.text("minecraft:" + entity.getType().toString().toLowerCase(), NamedTextColor.DARK_GRAY));
       nameComponent = nameComponent.clickEvent(ClickEvent.suggestCommand(click));
     }
-    nameComponent = nameComponent.hoverEvent(hover);
+    if (Cucumbery.config.getBoolean("use-hover-event-for-entities.enabled"))
+    {
+      nameComponent = nameComponent.hoverEvent(hover);
+    }
     return nameComponent;
   }
 }

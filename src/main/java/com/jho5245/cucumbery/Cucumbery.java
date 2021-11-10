@@ -78,14 +78,13 @@ import java.util.List;
 
 public class Cucumbery extends JavaPlugin
 {
+  public static final int CONFIG_VERSION = 3;
   public static YamlConfiguration config;
   public static boolean using_CommandAPI;
   public static boolean using_Vault_Economy;
   public static boolean using_Vault_Chat;
   public static boolean using_NoteBlockAPI;
   public static boolean using_QuickShop;
-
-  //  public static int CONFIG_VERSION = 1;
   public static boolean using_PlaceHolderAPI;
   public static boolean using_ItemEdit;
   public static boolean using_mcMMO;
@@ -161,6 +160,10 @@ public class Cucumbery extends JavaPlugin
     this.pluginDescriptionFile = this.getDescription();
     this.pluginManager = Bukkit.getServer().getPluginManager();
     this.currentConfigVersion = Cucumbery.config.getInt("config-version");
+    if (currentConfigVersion != CONFIG_VERSION)
+    {
+      MessageUtil.sendWarn(Bukkit.getConsoleSender(), "&c콘픽 구버전이다 마");
+    }
     try
     {
       this.registerItems();

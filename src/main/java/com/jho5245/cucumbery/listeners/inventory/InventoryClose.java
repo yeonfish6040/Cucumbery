@@ -311,9 +311,7 @@ public class InventoryClose implements Listener
             Method.updateInventory(player, item);
             if (Method.isTimeUp(item, expireDate))
             {
-              int amount = Objects.requireNonNull(item).getAmount();
-              Component text = ComponentUtil.create(MessageUtil.as(Prefix.INFO, "아이템 &b[" + ItemNameUtil.itemName(item), ((amount > 1) ? "&r &6" + amount + "개" : "") + "&b]&r의 유효 기간이 지나서 아이템이 제거되었습니다."), item);
-              player.sendMessage(text);
+              MessageUtil.info(player, ComponentUtil.createTranslate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", item));
               Objects.requireNonNull(item).setAmount(0);
               player.updateInventory();
               if (player.getOpenInventory().getType() == InventoryType.CRAFTING || player.getOpenInventory().getType() == InventoryType.WORKBENCH)
