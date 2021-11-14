@@ -1,9 +1,13 @@
 package com.jho5245.cucumbery.util.storage.component.util;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -12,6 +16,8 @@ import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import io.papermc.paper.advancement.AdvancementDisplay;
+import io.papermc.paper.advancement.AdvancementDisplay.Frame;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -21,8 +27,11 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -225,6 +234,35 @@ public class ComponentUtil
         Component concat = Component.text(display).color(Constant.THE_COLOR).hoverEvent(Component.translatable(display));
         component = component.append(concat);
       }
+      else if (object instanceof Advancement advancement)
+      {
+        AdvancementDisplay display = advancement.getDisplay();
+        if (display != null)
+        {
+          Frame frame = display.frame();
+          Component title = display.title();
+          Component description = display.description();
+          if (frame == Frame.CHALLENGE)
+          {
+            title = title.color(TextColor.color(255, 112, 166));
+            description = description.color(NamedTextColor.WHITE);
+          }
+          else if (frame == Frame.GOAL)
+          {
+            title = title.color(TextColor.color(30, 195, 246));
+            description = description.color(TextColor.color(212, 213, 217));
+          }
+          else
+          {
+            title = title.color(TextColor.color(106, 255, 105));
+            description = description.color(TextColor.color(212, 213, 217));
+          }
+          Component concat = createTranslate("chat.square_brackets", title.hoverEvent(title.append(Component.text("\n")).append(description))).color(title.color());
+          String suggest = "/advancement grant @s only " + advancement.getKey().namespace() + ":" + advancement.getKey().value();
+          concat = concat.clickEvent(ClickEvent.suggestCommand(suggest));
+          component = component.append(concat);
+        }
+      }
       else if (object instanceof Number number)
       {
         Component concat = Component.text(Constant.Sosu2.format(number), Constant.THE_COLOR);
@@ -256,6 +294,100 @@ public class ComponentUtil
         {
           string = string.substring(8);
           component = component.append(Component.keybind(string));
+        }
+        else if (string.startsWith("player:"))
+        {
+          Component concat = Component.empty();
+          Player player = SelectorUtil.getPlayer(null, string.substring(7), false);
+          if (player != null)
+          {
+            concat = create(player);
+          }
+          component = component.append(concat);
+        }
+        else if (string.startsWith("players:"))
+        {
+          Component concat = Component.empty();
+          List<Player> players = SelectorUtil.getPlayers(null, string.substring(8), false);
+          if (players != null)
+          {
+            concat = create(players);
+          }
+          component = component.append(concat);
+        }
+        else if (string.startsWith("entity:"))
+        {
+          Component concat = Component.empty();
+          Entity entity = SelectorUtil.getEntity(null, string.substring(7), false);
+          if (entity != null)
+          {
+            concat = create(entity);
+          }
+          component = component.append(concat);
+        }
+        else if (string.startsWith("entities:"))
+        {
+          Component concat = Component.empty();
+          List<Entity> entities = SelectorUtil.getEntities(null, string.substring(9), false);
+          if (entities != null)
+          {
+            concat = create(entities);
+          }
+          component = component.append(concat);
+        }
+        else if (string.startsWith("offline_player:"))
+        {
+          Component concat = Component.empty();
+          OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(null, string.substring("offline_player:".length()), false);
+          if (offlinePlayer != null)
+          {
+            concat = create(offlinePlayer);
+          }
+          component = component.append(concat);
+        }
+        else if (string.startsWith("item:"))
+        {
+          ItemStack itemStack = ItemSerializer.deserialize(string.substring(5));
+          if (!ItemStackUtil.itemExists(itemStack))
+          {
+            itemStack = new ItemStack(Material.STONE);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.displayName(ComponentUtil.createTranslate("&c잘못된 아이템"));
+            itemStack.setItemMeta(itemMeta);
+          }
+          else
+          {
+            ItemLore.setItemLore(itemStack);
+          }
+          component = component.append(create(itemStack));
+        }
+        else if (string.startsWith("items:"))
+        {
+          ItemStack itemStack = ItemSerializer.deserialize(string.substring(5));
+          if (!ItemStackUtil.itemExists(itemStack))
+          {
+            itemStack = new ItemStack(Material.STONE);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.displayName(ComponentUtil.createTranslate("&c잘못된 아이템"));
+            itemStack.setItemMeta(itemMeta);
+          }
+          else
+          {
+            ItemLore.setItemLore(itemStack);
+          }
+          component = component.append(ItemStackComponent.itemStackComponent(itemStack));
+        }
+        else if (string.startsWith("world:"))
+        {
+          World world = Bukkit.getWorld(string.substring(6));
+          if (world != null)
+          {
+            component = component.append(create(world));
+          }
+          else
+          {
+            component = component.append(createTranslate("&c알 수 없는 월드입니다. (%s)", string.substring(6)));
+          }
         }
         else
         {

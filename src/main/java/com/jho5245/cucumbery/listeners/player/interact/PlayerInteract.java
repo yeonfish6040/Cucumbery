@@ -7,10 +7,10 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -97,7 +97,7 @@ public class PlayerInteract implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
       {
         Variable.playerInteractAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(event.getPlayer(), "&c행동 불가!", "&r행동할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c행동 불가!", "&r행동할 권한이 없습니다.", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                 Variable.playerInteractAlertCooldown.remove(uuid), 100L);
@@ -125,7 +125,7 @@ public class PlayerInteract implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
         {
           Variable.playerInteractAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r주로 사용하는 손에 들고 사용할 수 없는 아이템입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c사용 불가!", "주로 사용하는 손에 들고 사용할 수 없는 아이템입니다.", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
         }
@@ -137,7 +137,7 @@ public class PlayerInteract implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
         {
           Variable.playerInteractAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r다른 손에 들고 사용할 수 없는 아이템입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c사용 불가!", "다른 손에 들고 사용할 수 없는 아이템입니다.", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
         }
@@ -153,7 +153,7 @@ public class PlayerInteract implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
       {
         Variable.playerInteractAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(event.getPlayer(), "&c행동 불가!", "&r블록과 상호작용할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c행동 불가!", "&r블록과 상호작용할 권한이 없습니다.", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
       }
@@ -178,7 +178,7 @@ public class PlayerInteract implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
         {
           Variable.playerInteractAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r사용할 수 없는 아이템입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c사용 불가!", "&r사용할 수 없는 아이템입니다.", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
         }
@@ -198,14 +198,14 @@ public class PlayerInteract implements Listener
         if (itemUsageLeftClick)
         {
           Variable.itemUseCooldown.add(uuid);
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemUseCooldown.remove(uuid), UserData.ITEM_USE_DELAY.getInt(player.getUniqueId()));
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemUseCooldown.remove(uuid), UserData.ITEM_USE_DELAY.getInt(uuid));
         }
 
         if (player.isSneaking())
         {
           itemUsageLeftClick = this.itemUsage(event, player, item, hand == EquipmentSlot.HAND, false, true) || itemUsageLeftClick;
           Variable.itemUseCooldown.add(uuid);
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemUseCooldown.remove(uuid), UserData.ITEM_USE_DELAY.getInt(player.getUniqueId()));
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemUseCooldown.remove(uuid), UserData.ITEM_USE_DELAY.getInt(uuid));
         }
 
         if (itemUsageLeftClick)
@@ -229,7 +229,7 @@ public class PlayerInteract implements Listener
         if (itemUsageRightClick)
         {
           Variable.itemUseCooldown.add(uuid);
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemUseCooldown.remove(uuid), UserData.ITEM_USE_DELAY.getInt(player.getUniqueId()));
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemUseCooldown.remove(uuid), UserData.ITEM_USE_DELAY.getInt(uuid));
           event.setCancelled(true);
         }
 
@@ -237,7 +237,7 @@ public class PlayerInteract implements Listener
         {
           itemUsageRightClick = this.itemUsage(event, player, item, hand == EquipmentSlot.HAND, true, true) || itemUsageRightClick;
           Variable.itemUseCooldown.add(uuid);
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemUseCooldown.remove(uuid), UserData.ITEM_USE_DELAY.getInt(player.getUniqueId()));
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemUseCooldown.remove(uuid), UserData.ITEM_USE_DELAY.getInt(uuid));
         }
 
         if (itemUsageRightClick)
@@ -259,7 +259,7 @@ public class PlayerInteract implements Listener
             if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
             {
               Variable.playerInteractAlertCooldown.add(uuid);
-              MessageUtil.sendTitle(event.getPlayer(), "&c장착 불가!", "&r장착할 수 없는 아이템입니다.", 5, 80, 15);
+              MessageUtil.sendTitle(player, "&c장착 불가!", "&r장착할 수 없는 아이템입니다.", 5, 80, 15);
               SoundPlay.playSound(player, Constant.ERROR_SOUND);
               Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
             }
@@ -289,15 +289,15 @@ public class PlayerInteract implements Listener
                 Variable.playerInteractAlertCooldown.add(uuid);
                 if (noStore)
                 {
-                  MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r보관 불가인 책을 독서대에 올릴 수 없습니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r보관 불가인 책을 독서대에 올릴 수 없습니다.", 5, 80, 15);
                 }
                 else if (noTrade)
                 {
-                  MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r캐릭터 귀속인 책을 독서대에 올릴 수 없습니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r캐릭터 귀속인 책을 독서대에 올릴 수 없습니다.", 5, 80, 15);
                 }
                 else
                 {
-                  MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r독서대에 올릴 수 없는 아이템입니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r독서대에 올릴 수 없는 아이템입니다.", 5, 80, 15);
                 }
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
@@ -313,7 +313,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r퇴비통에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", "&r퇴비통에 사용할 수 없는 아이템입니다.", 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -328,7 +328,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r모닥불에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", "&r모닥불에 사용할 수 없는 아이템입니다.", 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -388,7 +388,7 @@ public class PlayerInteract implements Listener
                       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
                       {
                         Variable.playerInteractAlertCooldown.add(uuid);
-                        MessageUtil.sendTitle(event.getPlayer(), "&c탈색 불가!", "&r가마솥에서 탈색할 수 없는 아이템입니다.", 5, 80, 15);
+                        MessageUtil.sendTitle(player, "&c탈색 불가!", "&r가마솥에서 탈색할 수 없는 아이템입니다.", 5, 80, 15);
                         SoundPlay.playSound(player, Constant.ERROR_SOUND);
                         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
                       }
@@ -438,7 +438,7 @@ public class PlayerInteract implements Listener
 
           // 손에 유리병/포션/양동이/물 양동이 들고 블록에 우클릭
           if (itemType == Material.GLASS_BOTTLE || itemType == Material.POTION || itemType == Material.BUCKET || itemType == Material.WATER_BUCKET ||
-          itemType == Material.LAVA_BUCKET || itemType == Material.POWDER_SNOW_BUCKET)
+                  itemType == Material.LAVA_BUCKET || itemType == Material.POWDER_SNOW_BUCKET)
           {
             if (clickedBlockType == Material.CAULDRON || clickedBlockType == Material.WATER_CAULDRON || clickedBlockType == Material.LAVA_CAULDRON || clickedBlockType == Material.POWDER_SNOW_CAULDRON)
             {
@@ -788,40 +788,6 @@ public class PlayerInteract implements Listener
       {
         switch (clickedBlockType)
         {
-          case POTTED_ACACIA_SAPLING:
-          case POTTED_ALLIUM:
-          case POTTED_AZURE_BLUET:
-          case POTTED_BAMBOO:
-          case POTTED_BIRCH_SAPLING:
-          case POTTED_BLUE_ORCHID:
-          case POTTED_BROWN_MUSHROOM:
-          case POTTED_CACTUS:
-          case POTTED_CORNFLOWER:
-          case POTTED_DANDELION:
-          case POTTED_DARK_OAK_SAPLING:
-          case POTTED_DEAD_BUSH:
-          case POTTED_FERN:
-          case POTTED_JUNGLE_SAPLING:
-          case POTTED_LILY_OF_THE_VALLEY:
-          case POTTED_OAK_SAPLING:
-          case POTTED_ORANGE_TULIP:
-          case POTTED_OXEYE_DAISY:
-          case POTTED_PINK_TULIP:
-          case POTTED_POPPY:
-          case POTTED_RED_MUSHROOM:
-          case POTTED_RED_TULIP:
-          case POTTED_SPRUCE_SAPLING:
-          case POTTED_WHITE_TULIP:
-          case POTTED_WITHER_ROSE:
-          case POTTED_CRIMSON_FUNGUS:
-          case POTTED_CRIMSON_ROOTS:
-          case POTTED_WARPED_FUNGUS:
-          case POTTED_WARPED_ROOTS:
-            if (Method.usingLoreFeature(player))
-            {
-              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
-            }
-            break;
           case CAMPFIRE:
           case SOUL_CAMPFIRE:
             if (NBTAPI.isRestricted(player, item, RestrictionType.NO_TRADE))
@@ -830,7 +796,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r캐릭터 귀속 아이템은 " + (clickedBlockType) + "에 사용할 수 없습니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.createTranslate("캐릭터 귀속 아이템은 %s에 사용할 수 없습니다.", clickedBlockType), 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -839,34 +805,15 @@ public class PlayerInteract implements Listener
             break;
           case JUKEBOX:
             boolean noTrade = NBTAPI.isRestricted(player, item, RestrictionType.NO_TRADE), noJukeBox = NBTAPI.isRestricted(player, item, RestrictionType.NO_JUKEBOX);
-            if (noTrade || noJukeBox)
+            if ((noTrade || noJukeBox) && itemType.isRecord())
             {
-              switch (Objects.requireNonNull(item).getType())
+              event.setCancelled(true);
+              if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
-                case MUSIC_DISC_11:
-                case MUSIC_DISC_13:
-                case MUSIC_DISC_BLOCKS:
-                case MUSIC_DISC_CAT:
-                case MUSIC_DISC_CHIRP:
-                case MUSIC_DISC_FAR:
-                case MUSIC_DISC_MALL:
-                case MUSIC_DISC_MELLOHI:
-                case MUSIC_DISC_PIGSTEP:
-                case MUSIC_DISC_STAL:
-                case MUSIC_DISC_STRAD:
-                case MUSIC_DISC_WAIT:
-                case MUSIC_DISC_WARD:
-                  event.setCancelled(true);
-                  if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
-                  {
-                    Variable.playerInteractAlertCooldown.add(uuid);
-                    MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", noTrade ? "캐릭터 귀속 아이템은 주크박스에 사용할 수 없습니다." : "주크박스에 사용할 수 없는 아이템입니다.", 5, 80, 15);
-                    SoundPlay.playSound(player, Constant.ERROR_SOUND);
-                    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
-                  }
-                  break;
-                default:
-                  break;
+                Variable.playerInteractAlertCooldown.add(uuid);
+                MessageUtil.sendTitle(player, "&c사용 불가!", noTrade ? "캐릭터 귀속 아이템은 주크박스에 사용할 수 없습니다." : "주크박스에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+                SoundPlay.playSound(player, Constant.ERROR_SOUND);
+                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
               return;
             }
@@ -878,7 +825,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r화분에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", "&r화분에 사용할 수 없는 아이템입니다.", 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -894,7 +841,7 @@ public class PlayerInteract implements Listener
                 if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
                 {
                   Variable.playerInteractAlertCooldown.add(uuid);
-                  MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r리스폰 정박기에 사용할 수 없는  아이템입니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r리스폰 정박기에 사용할 수 없는  아이템입니다.", 5, 80, 15);
                   SoundPlay.playSound(player, Constant.ERROR_SOUND);
                   Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
                 }
@@ -911,7 +858,7 @@ public class PlayerInteract implements Listener
                 if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
                 {
                   Variable.playerInteractAlertCooldown.add(uuid);
-                  MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r자석석에 사용할 수 없는  아이템입니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r자석석에 사용할 수 없는  아이템입니다.", 5, 80, 15);
                   SoundPlay.playSound(player, Constant.ERROR_SOUND);
                   Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
                 }
@@ -942,17 +889,17 @@ public class PlayerInteract implements Listener
     {
       if ((Cucumbery.config.getBoolean("block-player-trample-soil") && !Method.configContainsLocation(Objects.requireNonNull(block).getLocation(),
               Cucumbery.config.getStringList("no-block-player-trample-soil-worlds"))) ||
-              UserData.TRAMPLE_SOIL_FORCE.getBoolean(player.getUniqueId()))
+              UserData.TRAMPLE_SOIL_FORCE.getBoolean(uuid))
       {
         if (Objects.requireNonNull(block).getType() == Material.FARMLAND)
         {
-          if (UserData.TRAMPLE_SOIL.getBoolean(player.getUniqueId()) || UserData.TRAMPLE_SOIL_FORCE.getBoolean(player.getUniqueId()))
+          if (UserData.TRAMPLE_SOIL.getBoolean(uuid) || UserData.TRAMPLE_SOIL_FORCE.getBoolean(uuid))
           {
             event.setUseInteractedBlock(Event.Result.DENY);
             event.setCancelled(true);
-            if (UserData.TRAMPLE_SOIL_ALERT.getBoolean(player.getUniqueId()) &&
+            if (UserData.TRAMPLE_SOIL_ALERT.getBoolean(uuid) &&
                     !Permission.EVENT_ERROR_HIDE.has(player) &&
-                    !UserData.TRAMPLE_SOIL_NO_ALERT_FORCE.getBoolean(player.getUniqueId()) &&
+                    !UserData.TRAMPLE_SOIL_NO_ALERT_FORCE.getBoolean(uuid) &&
                     !Variable.soilTrampleAlertCooldown.contains(uuid))
             {
               Variable.soilTrampleAlertCooldown.add(uuid);
@@ -1005,7 +952,7 @@ public class PlayerInteract implements Listener
       event.setCancelled(true);
       return false;
     }
-    if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()) && cooldownTag != null)
+    if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(uuid) && cooldownTag != null)
     {
       try
       {
@@ -1080,6 +1027,7 @@ public class PlayerInteract implements Listener
   private void noteBlock(PlayerInteractEvent event, boolean itemExists)
   {
     Player player = event.getPlayer();
+    UUID uuid = player.getUniqueId();
     Action action = event.getAction();
     if (action == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND)
     {
@@ -1091,7 +1039,7 @@ public class PlayerInteract implements Listener
       {
         return;
       }
-      if (!UserData.INVERT_NOTE_BLOCK_PITCH_WHEN_SNEAKING_IN_CREATIVE_MODE.getBoolean(player.getUniqueId()))
+      if (!UserData.INVERT_NOTE_BLOCK_PITCH_WHEN_SNEAKING_IN_CREATIVE_MODE.getBoolean(uuid))
       {
         return;
       }
@@ -1150,7 +1098,7 @@ public class PlayerInteract implements Listener
       {
         return;
       }
-      if (!UserData.PLAY_NOTE_BLOCK_WHEN_SNEAKING_IN_CREATIVE_MODE.getBoolean(player.getUniqueId()))
+      if (!UserData.PLAY_NOTE_BLOCK_WHEN_SNEAKING_IN_CREATIVE_MODE.getBoolean(uuid))
       {
         return;
       }
@@ -1260,7 +1208,7 @@ public class PlayerInteract implements Listener
         MessageUtil.sendWarn(player, "해당 레일건의 필수 태그가 지정되지 않아 사용할 수 없습니다.");
         return;
       }
-      if (!RAILGUN_WHITE_LIST.contains(player.getUniqueId()))
+      if (!RAILGUN_WHITE_LIST.contains(uuid))
       {
         if (piercing > 5)
         {
@@ -1305,7 +1253,7 @@ public class PlayerInteract implements Listener
       {
         cooldownTag = "railgun-default";
       }
-      if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
+      if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(uuid))
       {
         try
         {
@@ -1412,7 +1360,7 @@ public class PlayerInteract implements Listener
                 if (victim.getGameMode() != GameMode.SPECTATOR)
                 {
                   double health = victim.getHealth();
-                  Variable.attackerAndWeapon.put(player.getUniqueId(), item.clone());
+                  Variable.attackerAndWeapon.put(uuid, item.clone());
                   victim.damage(damage, player);
                   if (ignoreInvincible && health == victim.getHealth())
                   {
@@ -1441,7 +1389,7 @@ public class PlayerInteract implements Listener
               else
               {
                 double health = livingEntity.getHealth();
-                Variable.attackerAndWeapon.put(player.getUniqueId(), item.clone());
+                Variable.attackerAndWeapon.put(uuid, item.clone());
                 livingEntity.damage(damage, player);
                 if (ignoreInvincible && health == livingEntity.getHealth())
                 {
@@ -1598,6 +1546,7 @@ public class PlayerInteract implements Listener
   @SuppressWarnings({"unchecked", "all"})
   private void customItemDurability(PlayerInteractEvent event, Player player, @Nullable ItemStack item, int damage)
   {
+    UUID uuid = player.getUniqueId();
     if (!ItemStackUtil.itemExists(item))
     {
       return;
@@ -1641,7 +1590,7 @@ public class PlayerInteract implements Listener
       Damageable duraMeta = (Damageable) itemMeta;
       if (breaking || duraMeta.getDamage() >= item.getType().getMaxDurability())
       {
-        if (UserData.SHOW_ITEM_BREAK_TITLE.getBoolean(player.getUniqueId()) && Cucumbery.config.getBoolean("send-title-on-item-break"))
+        if (UserData.SHOW_ITEM_BREAK_TITLE.getBoolean(uuid) && Cucumbery.config.getBoolean("send-title-on-item-break"))
         {
           if (!Method.configContainsLocation(player.getLocation(), Cucumbery.getPlugin().getConfig().getStringList("no-send-title-on-item-break-worlds")))
           {

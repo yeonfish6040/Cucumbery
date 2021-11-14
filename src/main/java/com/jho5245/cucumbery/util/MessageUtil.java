@@ -383,7 +383,10 @@ public class MessageUtil
    */
   public static void consoleSendMessage(@NotNull Object... objects)
   {
-    MessageUtil.sendMessage(Bukkit.getServer().getConsoleSender(), objects);
+    Object[] newObjects = new Object[objects.length + 1];
+    newObjects[0] = "#52ee52;[Cucumbery] ";
+    System.arraycopy(objects, 0, newObjects, 1, objects.length);
+    sendMessage(Bukkit.getServer().getConsoleSender(), newObjects);
   }
 
   /**

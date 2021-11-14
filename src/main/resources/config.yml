@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 3
+config-version: 5
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -653,3 +653,34 @@ no-use-block-place-data-feature-location:
 
 # NBT에 특정 태그(/itag extratag add preverse_block_nbt)가 있는 블록만 데이터가 보존되게 할 것인가?
 block-place-data-feature-with-specific-tag: true
+
+# 월드 이동 시 뜰 메시지와 타이틀, 실행될 명령어 기능
+world-change:
+  # 기능을 사용할 것인가?
+  enabled: false
+  world_1: # 이동한 월드의 이름
+    message:
+      messages: # 띄울 메시지들 (메시지를 띄우지 않으려면 message: [] 처럼 적거나 아예 제거하면 됨)
+        - "당신은 현재 %player_location_world_display%로 이동했다."
+        - "translate:당신은 현재 %s(으)로 이동했다.;%player_location_world_display%"
+      conditions: # 추가 조건들이다. 안적어도 되며 만약 조건을 만족하지 않으면 메시지가 뜨지 않는다.
+        # 월드 이동 전 월드의 이름
+        before-world: world_from_previous
+        # 요구 퍼미션 노드
+        permission: "foo.bar"
+        # 메시지가 뜰 확률
+        chance: 30.0
+    title: # 띄울 타이틀
+      titles:
+        delay: 10 # 타이틀이 뜨기 전까지의 딜레이(틱 단위)
+        title: "안녕"
+        subtitle: "지옥이 아니라 world_1에 온걸 환영한다."
+        fade-in: 5
+        stay: 80
+        fade-out: 15
+      conditons: {} # 타이틀도 메시지와 마찬가지로 조갼을 부야할 수 있으나, 역시 선택사항이다.
+    command: # 실행될 명령어들, 메시지와 비슷하게 적으면 된다.
+      commamds:
+        - "say test"
+        - "op:tp @r @s"
+      conditons: {} # 명령어도 메시지와 마찬가지로 조갼을 부야할 수 있으나, 역시 선택사항이다.

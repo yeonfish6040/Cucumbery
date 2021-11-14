@@ -57,6 +57,7 @@ import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.Updater;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import net.milkbowl.vault.chat.Chat;
@@ -78,7 +79,7 @@ import java.util.List;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 3;
+  public static final int CONFIG_VERSION = 5;
   public static YamlConfiguration config;
   public static boolean using_CommandAPI;
   public static boolean using_Vault_Economy;
@@ -162,7 +163,8 @@ public class Cucumbery extends JavaPlugin
     this.currentConfigVersion = Cucumbery.config.getInt("config-version");
     if (currentConfigVersion != CONFIG_VERSION)
     {
-      MessageUtil.sendWarn(Bukkit.getConsoleSender(), "&c콘픽 구버전이다 마");
+      MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "&econfig 파일의 버전이 최신 버전과 일치하지 않습니다! 현재 버전 : " + currentConfigVersion + ", 최신 버전 : " + CONFIG_VERSION);
+      MessageUtil.consoleSendMessage(Prefix.INFO, "config 파일을 삭제하고 플러그인을 리로드하여 config 파일을 재생성하시거나 플러그인 파일에 있는 config에서 직접 값을 붙여넣어 주세요.");
     }
     try
     {
@@ -517,6 +519,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerDeath());
     Initializer.registerEvent(new PlayerEditBook());
     Initializer.registerEvent(new PlayerFish());
+    Initializer.registerEvent(new PlayerFlowerPotManipulate());
     Initializer.registerEvent(new PlayerGameModeChange());
     Initializer.registerEvent(new PlayerJoin());
     Initializer.registerEvent(new PlayerLaunchProjectile());

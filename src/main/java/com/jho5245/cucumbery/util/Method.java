@@ -2441,7 +2441,7 @@ public class Method extends SoundPlay
       {
         commands = config.getStringList(packName);
       }
-      configExists = configExists && commands.size() > 0;
+      configExists = configExists && !commands.isEmpty();
       if (!configExists)
       {
         MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않습니다. 관리자에게 문의해주세요. (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
@@ -2522,7 +2522,7 @@ public class Method extends SoundPlay
           }
         }
       }
-      if (commandList.size() == 0)
+      if (commandList.isEmpty())
       {
         MessageUtil.sendError(sender, "해당 명령어 팩에는 명령어가 존재하지 않습니다. 관리자에게 문의해주세요. (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
         return;
