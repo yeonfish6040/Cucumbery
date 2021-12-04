@@ -57,11 +57,11 @@ public class EntityComponentUtil
           String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
           if (prefix != null)
           {
-            nameComponent = Component.empty().append(ComponentUtil.create(false, prefix)).append(nameComponent);
+            nameComponent = ComponentUtil.create(false, prefix, nameComponent);
           }
           if (suffix != null)
           {
-            nameComponent = nameComponent.append(ComponentUtil.create(false, suffix));
+            nameComponent = ComponentUtil.create(false, nameComponent, suffix);
           }
         }
         catch (Exception e)
@@ -724,10 +724,6 @@ public class EntityComponentUtil
         }
       }
     }
-    if (defaultColor != null && nameComponent.color() == null)
-    {
-      nameComponent = nameComponent.color(defaultColor);
-    }
     if (entity instanceof Player player)
     {
       hover = hover
@@ -755,6 +751,10 @@ public class EntityComponentUtil
     if (Cucumbery.config.getBoolean("use-hover-event-for-entities.enabled"))
     {
       nameComponent = nameComponent.hoverEvent(hover);
+    }
+    if (defaultColor != null && nameComponent.color() == null)
+    {
+      nameComponent = nameComponent.color(defaultColor);
     }
     return nameComponent;
   }

@@ -8,6 +8,7 @@ import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -40,14 +41,13 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
     }
     else if (args.length <= 4)
     {
-      boolean isOnline;
       OfflinePlayer player = SelectorUtil.getOfflinePlayer(sender, args[0], true);
       if (player == null)
       {
         return true;
       }
       UUID uuid = player.getUniqueId();
-      isOnline = player.getPlayer() != null;
+      boolean isOnline = player.getPlayer() != null;
       boolean hideMessage = args.length == 4 && args[3].equalsIgnoreCase("true");
       String keyString = args[1];
       UserData key;
@@ -111,7 +111,8 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
                 DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE, SHOW_PREVIEW_COMMAND_BLOCK_COMMAND, NOTIFY_IF_INVENTORY_IS_FULL, NOTIFY_IF_INVENTORY_IS_FULL_FORCE_DISABLE,
                 SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN, FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN, SHOW_COMMAND_BLOCK_EXECUTION_LOCATION, HEALTH_SCALED,
                 COPY_BLOCK_DATA, COPY_BLOCK_DATA_WHEN_SNEAKING, COPY_BLOCK_DATA_FACING, COPY_BLOCK_DATA_WATERLOGGED, DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING,
-                SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE, DISABLE_ITEM_COOLDOWN, GOD_MODE, IMMEDIATE_RESPAWN -> {
+                SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE, DISABLE_ITEM_COOLDOWN, GOD_MODE, IMMEDIATE_RESPAWN,
+                SPECTATOR_MODE, SPECTATOR_MODE_ON_JOIN -> {
           if (!value.equals("true") && !value.equals("false"))
           {
             MessageUtil.wrongBool(sender, 3, args);
@@ -171,9 +172,14 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
             Method.updateInventory((Player) player);
             break;
           case ENTITY_AGGRO:
-            if (!UserData.ENTITY_AGGRO.getBoolean(player))
+          case SPECTATOR_MODE:
+            if (!UserData.ENTITY_AGGRO.getBoolean(player) || UserData.SPECTATOR_MODE.getBoolean(player))
             {
               Player online = (Player) player;
+              if (UserData.SPECTATOR_MODE.getBoolean(player))
+              {
+                online.setGameMode(GameMode.SPECTATOR);
+              }
               for (Entity entity : online.getWorld().getEntities())
               {
                 if (entity instanceof Mob mob)
@@ -254,9 +260,9 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
                         NOTIFY_IF_INVENTORY_IS_FULL, NOTIFY_IF_INVENTORY_IS_FULL_FORCE_DISABLE, SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN, FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN,
                         SHOW_COMMAND_BLOCK_EXECUTION_LOCATION, HEALTH_SCALED, COPY_BLOCK_DATA, COPY_BLOCK_DATA_WHEN_SNEAKING, COPY_BLOCK_DATA_FACING, COPY_BLOCK_DATA_WATERLOGGED,
                         DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE, DISABLE_ITEM_COOLDOWN,
-                        GOD_MODE, IMMEDIATE_RESPAWN -> Method.tabCompleterBoolean(args, "<값>");
+                        GOD_MODE, IMMEDIATE_RESPAWN, SPECTATOR_MODE, SPECTATOR_MODE_ON_JOIN -> Method.tabCompleterBoolean(args, "<값>");
                 case DISPLAY_NAME, PLAYER_LIST_NAME -> Collections.singletonList("닉네임은 닉네임 명령어(/nick, /nickothers)를 사용하여 변경해주세요.");
-                case HEALTH_BAR -> Collections.singletonList("HP바는 hp바 명령어(/shp)를 사용하여 변겨해주세요.");
+                case HEALTH_BAR -> Collections.singletonList("HP바는 hp바 명령어(/shp)를 사용하여 변경해주세요.");
                 case ID, UUID -> Collections.singletonList(args[1] + "(" + key.getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다.");
                 case ITEM_USE_DELAY, ITEM_DROP_DELAY -> Method.tabCompleterIntegerRadius(args, 0, 200, "<틱>");
               };

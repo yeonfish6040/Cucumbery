@@ -1,8 +1,10 @@
 package com.jho5245.cucumbery.listeners.player;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,7 +27,12 @@ public class PlayerDeath implements Listener
     }
 
     Player player = event.getEntity();
-
+    if (UserData.SPECTATOR_MODE.getBoolean(player))
+    {
+      event.setCancelled(true);
+      MessageUtil.info(player, ComponentUtil.createTranslate("관전 모드여서 죽지 않았습니다."));
+      return;
+    }
     if (UserData.GOD_MODE.getBoolean(player))
     {
       event.setCancelled(true);

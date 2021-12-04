@@ -349,6 +349,8 @@ public class CustomConfig
     DISABLE_ITEM_COOLDOWN("아이템-재사용-대기-시간-무시(바닐라-아이템-전용)", false),
     GOD_MODE("무적-모드", false),
     IMMEDIATE_RESPAWN("즉시-리스폰", false),
+    SPECTATOR_MODE("관전-모드", false),
+    SPECTATOR_MODE_ON_JOIN("접속-시-자동-관전-모드-전환", false),
     ;
 
     private final String key;

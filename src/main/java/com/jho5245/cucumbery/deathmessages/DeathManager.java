@@ -11,6 +11,7 @@ import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderC
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.*;
@@ -523,6 +524,19 @@ public class DeathManager
         }
       }
 
+      if (isPlayerDeath)
+      {
+        Component msg = playerDeathEvent.deathMessage();
+        if (msg instanceof TranslatableComponent translatableComponent)
+        {
+          String k = translatableComponent.key();
+          MessageUtil.broadcastDebug(k);
+          if (k.equals("death.fell.accident.water"))
+          {
+            key = "water_accident";
+          }
+        }
+      }
       MessageUtil.broadcastDebug(key);
       DeathMessage deathMessage;
       try

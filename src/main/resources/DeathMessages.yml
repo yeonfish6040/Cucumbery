@@ -625,6 +625,8 @@ death-messages:
     void-block-high-combat-item:
       - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 %4$s을(를) 같이 이고 살 수 없었습니다."
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 높은 %4$s에서 세계 밖으로 떨어졌습니다."
+    water-accident: # meme
+      - "death.fell.accident.water... 이 아니고 %1$s이(가) 물에서 떨어졌습니다."
     wither:
       - "death.attack.wither" # %1$s이(가) 사그라졌습니다
       - "%1$s이(가) 사그라졌습니다"

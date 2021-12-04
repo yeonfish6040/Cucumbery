@@ -37,7 +37,7 @@ config-version: 5
 # 자동 업데이트 기능 설정
 auto-updater:
   # 자동 업데이트 기능 사용
-  enable: true
+  enable: false
   # 업데이트 기준. release 또는 dev... 인데 제작자가 일을 안해서 dev가 더 안정적임
   type: "dev"
 

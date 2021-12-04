@@ -1,6 +1,6 @@
 name: Cucumbery
-version: 1.1-dev
-api-version: 1.17
+version: 1.1.1-dev
+api-version: 1.18
 main: com.jho5245.cucumbery.Cucumbery
 author: jho5245
 description: 굳검버리 플러그인

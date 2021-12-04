@@ -116,7 +116,7 @@ public class SelectorUtil
         sender = Bukkit.getConsoleSender();
       }
       List<Entity> entities = Bukkit.selectEntities(sender, selector);
-      if (entities.size() == 0)
+      if (entities.isEmpty())
       {
         if (notice)
         {
@@ -180,7 +180,7 @@ public class SelectorUtil
         sender = Bukkit.getConsoleSender();
       }
       List<Entity> entities = Bukkit.selectEntities(sender, selector);
-      if (entities.size() == 0)
+      if (entities.isEmpty())
       {
         if (notice)
         {
@@ -263,7 +263,7 @@ public class SelectorUtil
         MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
         return null;
       }
-      return entities.size() > 0 ? entities : null;
+      return !entities.isEmpty() ? entities : null;
     }
     catch (IllegalArgumentException e)
     {

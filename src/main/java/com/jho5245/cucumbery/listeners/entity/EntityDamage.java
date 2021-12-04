@@ -4,13 +4,11 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -26,6 +24,14 @@ public class EntityDamage implements Listener
 		if (event.isCancelled())
 			return;
 		Entity entity = event.getEntity();
+		if (entity instanceof Player player)
+		{
+			if (UserData.SPECTATOR_MODE.getBoolean(player))
+			{
+				event.setCancelled(true);
+				return;
+			}
+		}
 		if (entity instanceof LivingEntity livingEntity)
 		{
 			if (livingEntity.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))

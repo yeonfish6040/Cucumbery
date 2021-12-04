@@ -1,11 +1,13 @@
 package com.jho5245.cucumbery.listeners.player;
 
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.advancement.Advancement;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
@@ -15,6 +17,12 @@ public class PlayerAdvancementDone implements Listener
   @EventHandler
   public void onPlayerAdvancementDone(PlayerAdvancementDoneEvent event)
   {
+    Player player = event.getPlayer();
+    if (UserData.SPECTATOR_MODE.getBoolean(player))
+    {
+      event.message(null);
+      return;
+    }
     Component message = event.message();
     if (message instanceof TranslatableComponent translatableComponent)
     {

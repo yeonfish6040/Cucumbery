@@ -5,8 +5,8 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.SelectorUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -25,7 +25,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
@@ -761,27 +760,25 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
           return true;
         }
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
-        MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "&e" + playerName + "&r의 상태 효과 정보");
-        Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
+        MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate("%s의 상태 효과 정보", player));
+        List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
         if (potionEffects.isEmpty())
         {
-          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "&c&o상태 효과 없음");
+          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, ComponentUtil.createTranslate("&c&o상태 효과 없음"));
         }
         else
         {
-          for (PotionEffect potionEffect : potionEffects)
+          Component message = Component.empty();
+          for (int i = 0; i < potionEffects.size(); i++)
           {
-            String msg = Prefix.INFO_WHOIS.toString();
-            String hasParticle = potionEffect.hasParticles() ? "&r" : "&r, &a입자 숨김";
-            String isAmbient = potionEffect.isAmbient() ? "&r" : "&r, &a우측 상단 효과 빛남";
-            String hasIcon = potionEffect.hasIcon() ? "&r" : "&r, &a우측 상단 아이콘 숨김";
-            int amplifier = potionEffect.getAmplifier();
-            String duration = Method.timeFormatMilli(potionEffect.getDuration() * 50L);
-            PotionEffectType potionEffectType = potionEffect.getType();
-            msg = msg + "효과 이름 : &e" + potionEffectType.getName() + "(" + potionEffectType.getName() + ")&r, 농도 레벨 : &e" + (amplifier + 1) + "단계&r, 지속 시간 : &e" + duration + hasParticle + isAmbient + hasIcon;
-
-            MessageUtil.sendMessage(sender, msg);
+            PotionEffect potionEffect = potionEffects.get(i);
+            message = message.append(ComponentUtil.create(potionEffect).append(ComponentUtil.createTranslate("(%s)", potionEffect.getAmplifier() + 1)));
+            if (i + 1 < potionEffects.size())
+            {
+             message = message.append(ComponentUtil.createTranslate("&7, "));
+            }
           }
+          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, message);
         }
         MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
       }
@@ -871,7 +868,6 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
     }
     return true;
   }
-
 
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {

@@ -2,9 +2,12 @@ package com.jho5245.cucumbery.commands.debug;
 
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.Variable;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -88,14 +91,40 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
                 case CUSTOM -> "사용자 지정";
               };
       String fullTime = MessageUtil.periodRealTimeAndGameTime(world.getFullTime());
-      StringBuilder gamerule = new StringBuilder();
+      Component gamerule = Component.empty();
       for (int i = 0; i < GameRule.values().length; i++)
       {
-        gamerule.append("&e").append(GameRule.values()[i].getName()).append("&r : &e").append(world.getGameRuleValue(GameRule.values()[i])).append("&r, ");
-      }
-      if (gamerule.length() > 2)
-      {
-        gamerule = new StringBuilder(gamerule.substring(0, gamerule.length() - 2));
+        String color = "&" + Integer.toHexString((i + 1) % 2 + 10);
+        GameRule<?> rule = GameRule.values()[i];
+        String ruleString = rule.getName();
+        String key = rule.translationKey();
+        Object value = world.getGameRuleValue(rule);
+        if (value == null)
+        {
+          value = "&ff0000;null";
+        }
+        if (value.equals(true))
+        {
+          value = "&b" + value;
+        }
+        else if (value.equals(false))
+        {
+          value = "&c" + value;
+        }
+        Component component =  ComponentUtil.create(color + ruleString);
+        Component hover = Component.empty().append(ComponentUtil.createTranslate(color + key));
+        String description = Variable.lang.getString(key.replace(".", "-") + "-description");
+        if (description != null)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.translatable(key + ".description"));
+        }
+        component = component.hoverEvent(hover);
+        gamerule = gamerule.append(ComponentUtil.createTranslate("%s : %s", component, value));
+        if (i != GameRule.values().length - 1)
+        {
+          gamerule = gamerule.append(ComponentUtil.create("&7, "));
+        }
       }
       int maxHeight = world.getMaxHeight();
       int monsterSpawnLimit = world.getMonsterSpawnLimit();
@@ -169,7 +198,7 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "경고 시간 : &e" + warningTime);
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "크기(한 변의 길이) : &e" + Constant.Sosu2.format(size));
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "------------");
-      MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "게임룰 : &e" + gamerule);
+      MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "게임룰 : ", gamerule);
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "-------------------------------------------------");
     }
     else

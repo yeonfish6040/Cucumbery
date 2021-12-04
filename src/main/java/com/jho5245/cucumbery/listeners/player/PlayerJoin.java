@@ -5,14 +5,15 @@ import com.jho5245.cucumbery.Initializer;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -117,6 +118,15 @@ public class PlayerJoin implements Listener
     player.playerListName(finalDislay);
     Component displayName = SenderComponentUtil.senderComponent(player);
     String displayNameString = ComponentUtil.serialize(displayName);
+    boolean isSpectator = UserData.SPECTATOR_MODE.getBoolean(player);
+    if (isSpectator && UserData.SPECTATOR_MODE_ON_JOIN.getBoolean(player))
+    {
+      if (player.getGameMode() != GameMode.SPECTATOR)
+      {
+        player.setGameMode(GameMode.SPECTATOR);
+        MessageUtil.info(player, ComponentUtil.createTranslate("관전자여서 게임 모드가 자동으로 관전 모드로 전환되었습니다."));
+      }
+    }
     Location location = player.getLocation();
     List<String> noTellrawWorlds = cfg.getStringList("no-tellraw-feature-on-join-worlds"), noActionbarWorlds = cfg.getStringList("no-actionbar-feature-on-join-worlds");
     boolean enabledTellraw = cfg.getBoolean("use-tellraw-feature-on-join") && !Method.configContainsLocation(location, noTellrawWorlds);
@@ -126,7 +136,7 @@ public class PlayerJoin implements Listener
       event.joinMessage(null);
       MessageUtil.consoleSendMessage("&2[&a입장&2] &rUUID : &e" + uuid + "&r, ID : &e" + name + "&r, Nickname : &e", displayName);
     }
-    if (enabeldActionbar)
+    if (enabeldActionbar && !isSpectator)
     {
       String joinMessageActionbar = MessageUtil.n2s(Objects.requireNonNull(cfg.getString("actionbar-join-message")).replace("%player%", displayNameString));
       for (Player online : Bukkit.getServer().getOnlinePlayers())
@@ -137,7 +147,7 @@ public class PlayerJoin implements Listener
         }
       }
     }
-    if (enabledTellraw)
+    if (enabledTellraw && !isSpectator)
     {
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
@@ -151,7 +161,7 @@ public class PlayerJoin implements Listener
         }
       }
     }
-    if (cfg.getBoolean("play-join-sound") && !Method.configContainsLocation(location, cfg.getStringList("no-play-join-sound-worlds")))
+    if (!isSpectator && cfg.getBoolean("play-join-sound") && !Method.configContainsLocation(location, cfg.getStringList("no-play-join-sound-worlds")))
     {
       Sound sound;
       try

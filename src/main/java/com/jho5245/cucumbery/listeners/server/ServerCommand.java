@@ -49,6 +49,16 @@ public class ServerCommand implements Listener
       event.setCommand(command);
     }
 
+    if (!command.contains("--nocolor"))
+    {
+      command = MessageUtil.n2s(command);
+    }
+    else
+    {
+      command = command.replaceFirst("--nocolor", "");
+    }
+    event.setCommand(command);
+
     // cucumberify
     if (Cucumbery.using_CommandAPI && command.startsWith("/give"))
     {

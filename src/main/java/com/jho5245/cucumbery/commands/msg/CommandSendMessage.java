@@ -34,8 +34,7 @@ public class CommandSendMessage implements CommandExecutor, TabCompleter
 			return true;
 		}
     String msg = MessageUtil.listToString(" ", 1, args.length, args);
-    msg = Method.parseCommandString(target, msg);
-    target.sendMessage(msg);
+    MessageUtil.sendMessage(target, false, msg);
     return true;
   }
 

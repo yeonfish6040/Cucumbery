@@ -40,6 +40,11 @@ public class EntityDeath implements Listener
 
     if (entity instanceof Player player)
     {
+      if (UserData.SPECTATOR_MODE.getBoolean(player))
+      {
+        event.setCancelled(true);
+        return;
+      }
       if (UserData.GOD_MODE.getBoolean(player))
       {
         event.setCancelled(true);

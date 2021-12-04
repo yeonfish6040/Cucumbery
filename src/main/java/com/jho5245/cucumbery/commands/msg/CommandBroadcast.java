@@ -27,7 +27,6 @@ public class CommandBroadcast implements CommandExecutor, TabCompleter
       return true;
     }
     String msg = MessageUtil.listToString(" ", args);
-    msg = Method.parseCommandString(sender, msg);
     if (msg.endsWith("--noconsole"))
     {
       MessageUtil.broadcastPlayer(false, msg.substring(0, msg.length() - 11));

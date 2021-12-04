@@ -27,6 +27,7 @@ public class PlayerQuit implements Listener
   public void onPlayerQuit(PlayerQuitEvent event)
   {
     Player player = event.getPlayer();
+    boolean isSpectator = UserData.SPECTATOR_MODE.getBoolean(player);
     String name = player.getName();
     FileConfiguration cfg = Cucumbery.config;
     Component displayName = SenderComponentUtil.senderComponent(player);
@@ -40,7 +41,7 @@ public class PlayerQuit implements Listener
       event.quitMessage(null);
       MessageUtil.consoleSendMessage("&5[&c퇴장&5] &rUUID : &e" + uuid + "&r, ID : &e" + name + "&r, Nickname : ", displayName);
     }
-    if (enabeldActionbar)
+    if (enabeldActionbar && !isSpectator)
     {
       String quitMessageActionbar = MessageUtil.n2s(Objects.requireNonNull(cfg.getString("actionbar-quit-message")).replace("%player%", ComponentUtil.serialize(displayName)));
       for (Player online : Bukkit.getServer().getOnlinePlayers())
@@ -51,7 +52,7 @@ public class PlayerQuit implements Listener
         }
       }
     }
-    if (enabledTellraw)
+    if (enabledTellraw && isSpectator)
     {
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
@@ -66,7 +67,7 @@ public class PlayerQuit implements Listener
       }
     }
 
-    if (cfg.getBoolean("play-quit-sound") && !Method.configContainsLocation(location, cfg.getStringList("no-play-quit-sound-worlds")))
+    if (!isSpectator && cfg.getBoolean("play-quit-sound") && !Method.configContainsLocation(location, cfg.getStringList("no-play-quit-sound-worlds")))
     {
       Sound sound;
       try

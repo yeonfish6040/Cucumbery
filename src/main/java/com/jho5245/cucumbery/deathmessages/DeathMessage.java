@@ -1374,6 +1374,11 @@ public enum DeathMessage
   VOID_BLOCK_HIGH_COMBAT_SUICIDE_ITEM,
 
   /**
+   * death.fell.accident.water
+   */
+  WATER_ACCIDENT,
+
+  /**
    * %1$s이(가) 사그라졌습니다
    */
   WITHER,

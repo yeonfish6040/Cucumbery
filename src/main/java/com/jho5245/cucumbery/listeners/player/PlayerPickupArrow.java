@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.listeners.player;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,6 +24,11 @@ public class PlayerPickupArrow implements Listener
       return;
     }
     Player player = event.getPlayer();
+    if (UserData.SPECTATOR_MODE.getBoolean(player))
+    {
+      event.setCancelled(true);
+      return;
+    }
     if (Method.usingLoreFeature(player))
     {
       Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->

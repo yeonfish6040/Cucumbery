@@ -25,6 +25,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.translation.Translatable;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
@@ -119,7 +120,6 @@ public class ComponentUtil
         {
           NBTItem nbtItem = new NBTItem(itemStack);
           nbtItem.removeKey("BlockEntityTag");
-          nbtItem.removeKey("BlockStateTag");
           itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
         }
         Component concat = ItemNameUtil.itemName(itemStack, Constant.THE_COLOR);
@@ -258,17 +258,22 @@ public class ComponentUtil
             description = description.color(TextColor.color(212, 213, 217));
           }
           Component concat = createTranslate("chat.square_brackets", title.hoverEvent(title.append(Component.text("\n")).append(description))).color(title.color());
-          String suggest = "/advancement grant @s only " + advancement.getKey().namespace() + ":" + advancement.getKey().value();
+          NamespacedKey namespacedKey = advancement.getKey();
+          String suggest = "/advancement grant @s only " + namespacedKey.namespace() + ":" + namespacedKey.value();
           concat = concat.clickEvent(ClickEvent.suggestCommand(suggest));
           component = component.append(concat);
         }
+      }
+      else if (object instanceof Translatable translatable)
+      {
+        component = component.append(Component.translatable(translatable.translationKey()));
       }
       else if (object instanceof Number number)
       {
         Component concat = Component.text(Constant.Sosu2.format(number), Constant.THE_COLOR);
         component = component.append(concat);
       }
-      else if (objects.length == 1 || !(object instanceof Boolean))
+      else if (!(object instanceof Boolean))
       {
         String string = object.toString();
         if (string.startsWith("translate:"))

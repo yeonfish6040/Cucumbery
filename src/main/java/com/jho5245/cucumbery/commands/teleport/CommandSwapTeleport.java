@@ -3,14 +3,17 @@ package com.jho5245.cucumbery.commands.teleport;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Location;
 import org.bukkit.command.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,20 +50,20 @@ public class CommandSwapTeleport implements CommandExecutor, TabCompleter
         MessageUtil.commandInfo(sender, label, consoleUsage);
         return true;
       }
-      Player player, target;
+      Entity player, target;
       if (args.length == 1)
       {
         player = (Player) sender;
-        target = SelectorUtil.getPlayer(sender, args[0]);
+        target = SelectorUtil.getEntity(sender, args[0]);
       }
       else
       {
-        player = SelectorUtil.getPlayer(sender, args[0]);
+        player = SelectorUtil.getEntity(sender, args[0]);
         if (player == null)
         {
           return true;
         }
-        target = SelectorUtil.getPlayer(sender, args[1]);
+        target = SelectorUtil.getEntity(sender, args[1]);
       }
       if (target == null)
       {
@@ -68,7 +71,7 @@ public class CommandSwapTeleport implements CommandExecutor, TabCompleter
       }
       if (player == target)
       {
-        MessageUtil.sendError(sender, "같은 플레이어의 위치는 서로 맞바꿀 수 없습니다.");
+        MessageUtil.sendError(sender, "같은 개체의 위치는 서로 맞바꿀 수 없습니다.");
         return true;
       }
       if (args.length >= 3 && !MessageUtil.isBoolean(sender, args, 3, true))
@@ -109,14 +112,14 @@ public class CommandSwapTeleport implements CommandExecutor, TabCompleter
       }
       if (!hideOutput)
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, player, "와(과) ", target, "의 위치를 서로 맞바꾸었습니다.");
+        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate("%s와(과) %s의 위치를 서로 맞바꾸었습니다.", player, target));
         if (!player.equals(sender))
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_TELEPORT, sender, "&r이 당신과 ", target, "의 위치를 서로 맞바꾸었습니다.");
+          MessageUtil.sendMessage(player, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다.", sender, target));
         }
         if (!target.equals(sender))
         {
-          MessageUtil.sendMessage(target, Prefix.INFO_TELEPORT, sender, "&r이 당신과 &e", player, "&r의 위치를 서로 맞바꾸었습니다.");
+          MessageUtil.sendMessage(target, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다.", sender, player));
         }
       }
     }
@@ -143,11 +146,14 @@ public class CommandSwapTeleport implements CommandExecutor, TabCompleter
 
     if (length == 1)
     {
-      return Method.tabCompleterPlayer(sender, args);
+      List<String> list = new ArrayList<>();
+      list.addAll(Method.tabCompleterEntity(sender, args, "<개체> <다른 개체> [운동 에너지 보존]"));
+      list.addAll(Method.tabCompleterEntity(sender, args, "<자신과 위치를 맞바꿀 개체>"));
+      return list;
     }
     else if (length == 2)
     {
-      return Method.tabCompleterPlayer(sender, args);
+      return Method.tabCompleterEntity(sender, args,"<다른 개체>");
     }
     else if (length == 3)
     {

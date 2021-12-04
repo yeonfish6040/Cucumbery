@@ -5,9 +5,9 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -36,6 +36,14 @@ public class EntityPickupItem implements Listener
       return;
     }
     LivingEntity entity = event.getEntity();
+    if (entity instanceof Player player)
+    {
+      if (UserData.SPECTATOR_MODE.getBoolean(player))
+      {
+        event.setCancelled(true);
+        return;
+      }
+    }
     Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
     {
       List<Entity> entities = entity.getNearbyEntities(3, 3, 3);
@@ -137,7 +145,6 @@ public class EntityPickupItem implements Listener
       }
     }
   }
-
 
   private void actionbarOnItemPickup(@NotNull Player player, @NotNull ItemStack itemStack, int amount)
   {

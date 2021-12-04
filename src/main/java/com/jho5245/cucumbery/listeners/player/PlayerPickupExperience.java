@@ -19,6 +19,11 @@ public class PlayerPickupExperience implements Listener
       return;
     }
     Player player = event.getPlayer();
+    if (UserData.SPECTATOR_MODE.getBoolean(player))
+    {
+      event.setCancelled(true);
+      return;
+    }
     if (UserData.SHOW_ACTIONBAR_ON_ITEM_PICKUP.getBoolean(player))
     {
       ExperienceOrb experienceOrb = event.getExperienceOrb();
