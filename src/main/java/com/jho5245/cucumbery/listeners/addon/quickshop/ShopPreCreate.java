@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.maxgamer.quickshop.event.ShopPreCreateEvent;
+import org.maxgamer.quickshop.api.event.ShopPreCreateEvent;
 
 public class ShopPreCreate implements Listener
 {

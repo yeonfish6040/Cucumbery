@@ -1,6 +1,9 @@
 package com.jho5245.cucumbery.util.storage.component.util;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.customeffect.DisplayType;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -193,19 +196,13 @@ public class ComponentUtil
         String effectKey = TranslatableKeyParser.getKey(potionEffectType);
         String id = effectKey.substring(17);
         int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
-        boolean isInvincible = potionEffectType.equals(PotionEffectType.DAMAGE_RESISTANCE) && amplifier >= 9;
-        int invincibleLevel = amplifier - 8;
-        if (isInvincible)
-        {
-          effectKey = "무적";
-        }
         boolean hasParticles = potionEffect.hasParticles(), hasIcon = potionEffect.hasIcon(), isAmbient = potionEffect.isAmbient();
         Component concat = Component.translatable(effectKey, Constant.THE_COLOR);
         Component hover = Component.translatable(effectKey);
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", isInvincible ? invincibleLevel : (amplifier + 1)));
+        hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", amplifier + 1));
         if (!hasParticles)
         {
           hover = hover.append(Component.text("\n"));
@@ -225,6 +222,40 @@ public class ComponentUtil
         hover = hover.append(Component.text("minecraft:" + id, NamedTextColor.DARK_GRAY));
         concat = concat.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand(
                 "/ceffect @s minecraft:" + id + " " + duration + " " + amplifier + " " + !hasParticles + " " + !hasIcon + " " + !isAmbient));
+        component = component.append(concat);
+      }
+      else if (object instanceof CustomEffectType effectType)
+      {
+        String key = effectType.translationKey();
+        Component concat = Component.translatable(key, Constant.THE_COLOR);
+        Component hover = Component.translatable(key);
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(effectType.getDescription());
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
+        component = component.append(concat);
+      }
+      else if (object instanceof CustomEffect customEffect)
+      {
+        CustomEffectType effectType = customEffect.getEffectType();
+        String key = effectType.translationKey();
+        int duration = customEffect.getInitDuration();
+        int amplifier = customEffect.getInitAmplifier();
+        Component concat = Component.translatable(key, Constant.THE_COLOR);
+        Component hover = Component.translatable(key);
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(customEffect.getDescription());
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", amplifier + 1));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
+        DisplayType displayType = customEffect.getDisplayType();
+        String click = "/customeffect give @s " + effectType.toString().toLowerCase() + " " + duration + " " + amplifier + " " + displayType.toString().toLowerCase();
+        concat = concat.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand(click));
         component = component.append(concat);
       }
       else if (Cucumbery.using_NoteBlockAPI && object instanceof Song song)

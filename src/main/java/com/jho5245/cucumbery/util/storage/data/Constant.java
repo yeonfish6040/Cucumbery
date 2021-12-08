@@ -30,6 +30,9 @@ public class Constant
   public static final String AIR = "산소량";
 
   public static final String AIR_PREFIX = "§산§소§량§b";
+
+  public static final String SEPARATOR = "&8&m                                ";
+
   public static final String ITEM_LORE_SEPARATOR = "&8&m                                                                ";
 
   public static Sound WARNING_SOUND, ERROR_SOUND;

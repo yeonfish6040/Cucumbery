@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery;
 
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custommerchant.MerchantData;
 import com.jho5245.cucumbery.deathmessages.CustomDeathMessage;
 import com.jho5245.cucumbery.util.ItemSerializer;
@@ -126,10 +127,63 @@ public class Initializer
     }
   }
 
+  public static void loadCustomEffects()
+  {
+    CustomEffectManager.effectMap.clear();
+    File customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects");
+    if (customEffectsFolder.exists())
+    {
+      File[] customEffectFiles = customEffectsFolder.listFiles();
+      if (customEffectFiles == null)
+      {
+        customEffectFiles = new File[]{};
+      }
+      for (File file : customEffectFiles)
+      {
+        String fileName7 = file.getName();
+        if (fileName7.endsWith(".yml"))
+        {
+          fileName7 = fileName7.substring(0, fileName7.length() - 4);
+          if (Method.isUUID(fileName7))
+          {
+            UUID uuid = UUID.fromString(fileName7);
+            CustomConfig customConfig = CustomConfig.getCustomConfig(file);
+            YamlConfiguration config = customConfig.getConfig();
+            CustomEffectManager.load(uuid, config);
+          }
+        }
+      }
+    }customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects/non-players");
+    if (customEffectsFolder.exists())
+    {
+      File[] customEffectFiles = customEffectsFolder.listFiles();
+      if (customEffectFiles == null)
+      {
+        customEffectFiles = new File[]{};
+      }
+      for (File file : customEffectFiles)
+      {
+        String fileName7 = file.getName();
+        if (fileName7.endsWith(".yml"))
+        {
+          fileName7 = fileName7.substring(0, fileName7.length() - 4);
+          if (Method.isUUID(fileName7))
+          {
+            UUID uuid = UUID.fromString(fileName7);
+            CustomConfig customConfig = CustomConfig.getCustomConfig(file);
+            YamlConfiguration config = customConfig.getConfig();
+            CustomEffectManager.load(uuid, config);
+          }
+        }
+      }
+    }
+  }
+
   public static void loadCustomConfigs()
   {
     loadDeathMessagesConfig();
     loadLang();
+    loadCustomEffects();
     Variable.customRecipes.clear();
     Variable.craftingTime.clear();
     Variable.craftsLog.clear();

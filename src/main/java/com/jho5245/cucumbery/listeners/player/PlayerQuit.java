@@ -1,11 +1,13 @@
 package com.jho5245.cucumbery.listeners.player;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
@@ -91,5 +93,11 @@ public class PlayerQuit implements Listener
         }
       }
     }
+
+
+    List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
+    customEffects.removeIf(customEffect -> !customEffect.isKeepOnQuit());
+    CustomEffectManager.clearEffects(player);
+    CustomEffectManager.addEffects(player,  customEffects);
   }
 }

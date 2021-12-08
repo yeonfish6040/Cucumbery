@@ -335,6 +335,9 @@ commands:
     description: 사용자 지정 주민 거래 시스템 명령어
     usage: /<command> <create|remove|list|edit> ...
     aliases: [cmerchant, shopkeeper2, shopkeepers2]
+  customeffect:
+    description: waht
+    usage: /<command> <give|clear|modify> <targets> ...
 
 permissions:
   cucumbery.error.hide:

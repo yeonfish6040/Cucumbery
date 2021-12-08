@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.maxgamer.quickshop.QuickShop;
-import org.maxgamer.quickshop.shop.Shop;
+import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -168,10 +168,10 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           }
         }
         case "type" -> {
-          org.maxgamer.quickshop.shop.ShopType shopType;
+          org.maxgamer.quickshop.api.shop.ShopType shopType;
           try
           {
-            shopType = org.maxgamer.quickshop.shop.ShopType.valueOf(args[5].toUpperCase());
+            shopType = org.maxgamer.quickshop.api.shop.ShopType.valueOf(args[5].toUpperCase());
           }
           catch (Exception e)
           {

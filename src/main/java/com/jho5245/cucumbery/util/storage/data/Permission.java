@@ -135,6 +135,7 @@ public enum Permission
   CMD_REPEAT(P + "" + C + "repeat"),
   CMD_VIEW_INVNETORY(P + "" + C + "viewinventory"),
   CMD_CUSTOM_MERCHANT_ADMIN(P + "" + C + "custommerchant.admin"),
+  CMD_CUSTOM_EFFECT(P + "" + C + "customeffect"),
 
   OTHER_EVAL(P + "" + "eval"),
   OTHER_PLACEHOLDER(P + "" + "placeholder"),

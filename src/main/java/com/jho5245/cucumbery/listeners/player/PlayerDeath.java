@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.listeners.player;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
@@ -25,7 +27,6 @@ public class PlayerDeath implements Listener
     {
       return;
     }
-
     Player player = event.getEntity();
     if (UserData.SPECTATOR_MODE.getBoolean(player))
     {
@@ -36,7 +37,9 @@ public class PlayerDeath implements Listener
     if (UserData.GOD_MODE.getBoolean(player))
     {
       event.setCancelled(true);
+      return;
     }
+
     boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player);
     boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player);
     if (keepInv)
@@ -63,6 +66,11 @@ public class PlayerDeath implements Listener
       }
       drops.removeAll(removals);
     }
+
+    List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
+    customEffects.removeIf(customEffect -> !customEffect.isKeepOnDeath());
+    CustomEffectManager.clearEffects(player);
+    CustomEffectManager.addEffects(player, customEffects);
 
     if (UserData.IMMEDIATE_RESPAWN.getBoolean(player))
     {

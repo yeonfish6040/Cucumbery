@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-import org.maxgamer.quickshop.shop.Shop;
+import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.util.*;
 
@@ -181,7 +181,6 @@ public class Variable
   public static HashMap<String, YamlConfiguration> blockPlaceData = new HashMap<>();
 
   public static HashMap<String, YamlConfiguration> customGameRules = new HashMap<>();
-
   /**
    * QuickShop 상점 데이터
    */

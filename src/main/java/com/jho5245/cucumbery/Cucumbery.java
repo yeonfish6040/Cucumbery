@@ -21,6 +21,7 @@ import com.jho5245.cucumbery.commands.teleport.CommandAdvancedTeleport;
 import com.jho5245.cucumbery.commands.teleport.CommandSwapTeleport;
 import com.jho5245.cucumbery.commands.teleport.CommandTeleport;
 import com.jho5245.cucumbery.commands.teleport.CommandWarp;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.listeners.UnknownCommand;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopDelete;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopItemChange;
@@ -67,12 +68,12 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.maxgamer.quickshop.api.QuickShopAPI;
-import org.maxgamer.quickshop.api.ShopAPI;
-import org.maxgamer.quickshop.shop.Shop;
+import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.io.File;
 import java.util.List;
@@ -192,6 +193,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.saveUserData();
     Initializer.saveBlockPlaceData();
     Initializer.saveItemUsageData();
+    CustomEffectManager.save();
     Initializer.loadBrigadierTabListConfig();
     for (Player player : Bukkit.getOnlinePlayers())
     {
@@ -280,15 +282,12 @@ public class Cucumbery extends JavaPlugin
       {
         try
         {
-          ShopAPI shopAPI = QuickShopAPI.getShopAPI();
-          if (shopAPI != null)
+          Plugin plugin = this.pluginManager.getPlugin("QuickShop");
+          if (plugin instanceof QuickShopAPI shopAPI)
           {
-            List<Shop> shopList = shopAPI.getAllShops();
-            if (shopList != null)
-            {
-              Variable.shops.clear();
-              Variable.shops.addAll(shopList);
-            }
+            List<Shop> shopList = shopAPI.getShopManager().getAllShops();
+            Variable.shops.clear();
+            Variable.shops.addAll(shopList);
           }
         }
         catch (Exception e)
@@ -423,6 +422,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("ckill2", new CommandKill3());
     Initializer.registerCommand("viewinventory", new CommandViewInventory());
     Initializer.registerCommand("custommerchant", new CommandCustomMerchant());
+    Initializer.registerCommand("customeffect", new CommandCustomEffect());
     Initializer.registerCommand("quickshopaddon", new CommandQuickShopAddon());
   }
 
@@ -453,6 +453,7 @@ public class Cucumbery extends JavaPlugin
     // listener.entity
     Initializer.registerEvent(new EntityAddToWorld());
     Initializer.registerEvent(new EntityChangeBlock());
+    Initializer.registerEvent(new EntityCustomEffectRemove());
     Initializer.registerEvent(new EntityDamage());
     Initializer.registerEvent(new EntityDamageByBlock());
     Initializer.registerEvent(new EntityDamageByEntity());
@@ -462,6 +463,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new EntityMount());
     Initializer.registerEvent(new EntityMove());
     Initializer.registerEvent(new EntityPickupItem());
+    Initializer.registerEvent(new EntityRemoveFromWorld());
     Initializer.registerEvent(new EntityResurrect());
     Initializer.registerEvent(new EntityShootBow());
     Initializer.registerEvent(new EntitySpawn());

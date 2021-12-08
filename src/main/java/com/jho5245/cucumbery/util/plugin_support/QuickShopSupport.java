@@ -5,7 +5,7 @@ import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.maxgamer.quickshop.QuickShop;
-import org.maxgamer.quickshop.shop.Shop;
+import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.util.List;
 

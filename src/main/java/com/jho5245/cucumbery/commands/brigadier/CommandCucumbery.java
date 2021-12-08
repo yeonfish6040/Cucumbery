@@ -3,11 +3,15 @@ package com.jho5245.cucumbery.commands.brigadier;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.plugin_support.CustomRecipeSupport;
 import com.jho5245.cucumbery.util.plugin_support.QuickShopSupport;
-import com.jho5245.cucumbery.util.storage.*;
+import com.jho5245.cucumbery.util.storage.CustomConfig;
+import com.jho5245.cucumbery.util.storage.PluginLoader;
+import com.jho5245.cucumbery.util.storage.RecipeChecker;
+import com.jho5245.cucumbery.util.storage.Updater;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -20,7 +24,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
 import org.maxgamer.quickshop.api.QuickShopAPI;
-import org.maxgamer.quickshop.api.ShopAPI;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,6 +56,7 @@ public class CommandCucumbery extends CommandBase
           Initializer.saveUserData();
           Initializer.saveBlockPlaceData();
           Initializer.saveItemUsageData();
+          CustomEffectManager.save();
           Initializer.loadCustomConfigs();
           Initializer.loadPlayersConfig();
 
@@ -61,15 +65,15 @@ public class CommandCucumbery extends CommandBase
             Variable.shops.clear();
             try
             {
-              ShopAPI shopAPI = QuickShopAPI.getShopAPI();
+              QuickShopAPI shopAPI = (QuickShopAPI) Cucumbery.getPlugin().getPluginManager().getPlugin("QuickShop");
               if (shopAPI != null)
               {
-                Variable.shops = shopAPI.getAllShops();
+                Variable.shops.addAll(shopAPI.getShopManager().getAllShops());
               }
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {
-              e.printStackTrace();
+
             }
           }
 

@@ -87,6 +87,7 @@ public enum Prefix
   INFO_JOIN("&a입장", "&2"),
   INFO_QUIT("&c퇴장", "&5"),
   INFO_CUSTOM_MERCHANT("&b사용 자지정 상인", "&9"),
+  INFO_CUSTOM_EFFECT("&b사용 자지정 효과", "&9"),
   ;
 
   private final String text;

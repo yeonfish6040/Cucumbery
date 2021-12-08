@@ -1,5 +1,8 @@
 package com.jho5245.cucumbery.util;
 
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,12 +27,20 @@ public class TestCommand implements CommandExecutor, TabCompleter
     }
     try
     {
-      if (args.length == 2)
+      if (args.length >= 2)
       switch (args[0])
       {
         case "entities" -> {
           List<Entity> entities = SelectorUtil.getEntities(sender, args[1], true);
           MessageUtil.sendMessage(sender, entities != null ? entities : "null");
+          if (entities != null)
+          {
+            CustomEffect customEffect = new CustomEffect(CustomEffectType.MUTE, Integer.parseInt(args[2]), 0);
+            for (Entity entity : entities)
+            {
+              CustomEffectManager.addEffect(entity, customEffect);
+            }
+          }
         }
         case "entity" -> {
           Entity entity = SelectorUtil.getEntity(sender, args[1], true);
@@ -47,7 +58,7 @@ public class TestCommand implements CommandExecutor, TabCompleter
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+
     }
 
     return true;

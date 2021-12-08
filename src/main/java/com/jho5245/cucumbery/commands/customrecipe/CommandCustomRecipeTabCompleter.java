@@ -184,11 +184,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                   }
                   return Method.tabCompleterList(args, Method.addAll(list, "--remove"), "<블록>");
                 case "display":
-                  if (length == 5)
-                  {
-                    return Method.tabCompleterList(args, "<레시피 목록 표시 이름>", true, "<레시피 목록 표시 이름>", "--remove");
-                  }
-                  return Method.tabCompleterList(args, "<레시피 목록 표시 이름>", true);
+                  return Method.tabCompleterList(args, "<레시피 목록 표시 이름>", true, "<레시피 목록 표시 이름>", "--remove");
                 case "foodlevel":
                   return Method.tabCompleterIntegerRadius(args, 0, 20, "<현재 음식 포인트의 최소 조건>", "-1");
                 case "level":
@@ -395,11 +391,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                   return Method.tabCompleterList(args, Method.addAll(list, "--remove"), "<블록>");
                 }
                 case "display":
-                  if (length == 6)
-                  {
-                    return Method.tabCompleterList(args, "<레시피 표시 이름>", true, "<레시피 표시 이름>", "--remove");
-                  }
-                  return Method.tabCompleterList(args, "<레시피 표시 이름>", true);
+                  return Method.tabCompleterList(args, "<레시피 표시 이름>", true, "<레시피 표시 이름>", "--remove");
                 case "chance":
                   return Method.tabCompleterDoubleRadius(args, 0, 100, "<제작 성공 확률(%)>");
                 case "cost":
