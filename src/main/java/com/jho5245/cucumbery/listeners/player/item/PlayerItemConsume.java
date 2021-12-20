@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.listeners.player.item;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -31,10 +33,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerItemConsume implements Listener
 {
@@ -169,7 +168,17 @@ public class PlayerItemConsume implements Listener
       }
     }
 
+    this.customEffect(event);
     this.consumeItemUsage(event, player, item, player.isSneaking());
+  }
+
+  private void customEffect(PlayerItemConsumeEvent event)
+  {
+    Player player = event.getPlayer();
+    List<CustomEffect> customEffects = new ArrayList<>(CustomEffectManager.getEffects(player));
+    customEffects.removeIf(effect -> !effect.isKeepOnMilk());
+    CustomEffectManager.clearEffects(player);
+    CustomEffectManager.addEffects(player, customEffects);
   }
 
   private void consumeItemUsage(PlayerItemConsumeEvent event, Player player, ItemStack item, boolean isSneaking)

@@ -149,6 +149,8 @@ public class Constant
 
   public static final DecimalFormat Sosu1 = new DecimalFormat("#,##0.#");
 
+  public static final DecimalFormat Sosu1Force = new DecimalFormat("#,##0.0");
+
   public static final DecimalFormat Sosu2 = new DecimalFormat("#,##0.##");
 
   public static final DecimalFormat Sosu2Force = new DecimalFormat("#,##0.00");
@@ -673,6 +675,7 @@ public class Constant
     PREVERSE_BLOCK_DATA_TAG("설치 시 블록의 nbt 블록 데이터 보존"),
     PREVERSE_BLOCK_ENTITY_TAG("설치 시 블록의 블록 엔티티 데이터 보존"),
     FORCE_PRESERVE_BLOCK_NBT("채광 시 강제 블록 데이터 복원"),
+    NAME_TAG("플레이어 이름 새겨짐"),
 
     // Invulnerable Tags
 

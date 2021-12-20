@@ -3,13 +3,11 @@ package com.jho5245.cucumbery.util;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
 import com.jho5245.cucumbery.commands.CommandReinforce;
-import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.customeffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.scheduler.CustomEffectScheduler;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryRecipe;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -66,7 +64,6 @@ public class Scheduler
 
       // 관전 중인 개체의 정보 표시
       showSpectatorTargetInfoActionbar();
-      customEffect();
       // 플러그인 실행 시간
       Cucumbery.runTime++;
     }, 0L, 1L);
@@ -103,98 +100,7 @@ public class Scheduler
       CustomEffectManager.save();
     }, 1200L, 20L * 60L * 5L);
     reinforceChancetime();
-  }
-
-  private static void customEffect()
-  {
-    for (World world : Bukkit.getWorlds())
-    {
-      for (Entity entity : world.getEntities())
-      {
-        UUID uuid = entity.getUniqueId();
-        if (!CustomEffectManager.effectMap.containsKey(uuid))
-        {
-          continue;
-        }
-        List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
-        if (customEffects.isEmpty())
-        {
-          continue;
-        }
-        for (CustomEffect customEffect : customEffects)
-        {
-          customEffect.tick();
-          if (customEffect.getDuration() <= 0)
-          {
-            EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, customEffect);
-            Cucumbery.getPlugin().getPluginManager().callEvent(event);
-          }
-        }
-        customEffects.removeIf(effect -> effect.getDuration() <= 0);
-        CustomEffectManager.effectMap.put(uuid, customEffects);
-      }
-    }
-
-    for (World world : Bukkit.getWorlds())
-    {
-      for (Entity entity : world.getEntities())
-      {
-        if (!(entity instanceof Player))
-        {
-          continue;
-        }
-        // not player list but actionbar should be here in future! - because of debug, testing
-        List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity, DisplayType.PLAYER_LIST);
-        if (!customEffects.isEmpty())
-        {
-          StringBuilder s = new StringBuilder();
-          for (CustomEffect customEffect : customEffects)
-          {
-            int duration = customEffect.getDuration();
-            s.append(customEffect.getEffectType().translationKey()).append(":").append(Method.timeFormatMilli(duration * 50L, duration < 200, 1)).append(", ");
-          }
-          if (s.length() >= 2)
-          {
-            s = new StringBuilder(s.substring(0, s.length() - 2));
-          }
-          MessageUtil.sendActionBar(entity, s);
-        }
-      }
-    }
-
-    for (Player player : Bukkit.getOnlinePlayers())
-    {
-      List<CustomEffect> customEffects = CustomEffectManager.getEffects(player, DisplayType.PLAYER_LIST);
-      List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
-      if (!customEffects.isEmpty() || !potionEffects.isEmpty())
-      {
-        Component component = Component.empty();
-        component = component.append(Component.text("\n"));
-        component = component.append(
-                ComponentUtil.createTranslate("&e적용 중인 효과 목록 : %s개", "&2" + (customEffects.size() + potionEffects.size()))
-        );
-        component = component.append(Component.text("\n"));
-        for (PotionEffect potionEffect : potionEffects)
-        {
-          int duration = potionEffect.getDuration();
-          int amplifier = potionEffect.getAmplifier();
-          component = component.append(Component.text("\n"));
-          component = component.append(
-                  ComponentUtil.createTranslate(amplifier == 0 ? "%1$s (%3$s)" : "%1$s %2$s (%3$s)",
-                          potionEffect, "&a" + (amplifier + 1), "&e" + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
-        }
-        for (CustomEffect customEffect : customEffects)
-        {
-          int duration = customEffect.getDuration();
-          int amplifier = customEffect.getAmplifier();
-          component = component.append(Component.text("\n"));
-          component = component.append(
-                  ComponentUtil.createTranslate(amplifier == 0 ? "%1$s (%3$s)" : "%1$s %2$s (%3$s)",
-                          customEffect, "&a" + (amplifier + 1), "&e" + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
-        }
-        player.sendPlayerListFooter(component);
-      }
-    }
+    CustomEffectScheduler.schedule(cucumbery);
   }
 
   private static void showSpectatorTargetInfoActionbar()

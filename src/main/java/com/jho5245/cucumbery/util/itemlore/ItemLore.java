@@ -75,12 +75,25 @@ public class ItemLore
 
     // 이후 아이템의 추가 설명
     ItemLore2.setItemLore(itemStack, itemMeta, defaultLore, params);
+    defaultLore = itemMeta.lore();
 
     // 이후 아이템 최하단의 회색 설명 추가
     ItemLore3.setItemLore(itemStack);
     itemMeta = itemStack.getItemMeta();
-    defaultLore = itemMeta.lore();
-
+    itemStack.setItemMeta(itemMeta);
+    ItemLore4.setItemLore(itemStack);
+    ItemLoreUtil.removeInventoryItemLore(itemStack);
+    itemMeta = itemStack.getItemMeta();
+    if (defaultLore != null && defaultLore.size() > 48)
+    {
+      int remove = 0;
+      while (defaultLore.size() >= 48)
+      {
+        remove++;
+        defaultLore.remove(4);
+      }
+      defaultLore.add(4, ComponentUtil.createTranslate("&7&o설명 %s개 중략...", remove));
+    }
     // 그리고 만약 (+NBT) 설명만 추가되어 있는 아이템이였다면 최하단에 [NBT 태그 복사됨] 설명 추가
     if (hasOnlyNbtTagLore)
     {
@@ -88,11 +101,10 @@ public class ItemLore
       {
         defaultLore.add(Component.empty());
         defaultLore.add(ComponentUtil.createTranslate("#52ee52;&o" + Constant.TMI_LORE_NBT_TAG_COPIED));
-        itemMeta.lore(defaultLore);
       }
     }
+    itemMeta.lore(defaultLore);
     itemStack.setItemMeta(itemMeta);
-    ItemLore4.setItemLore(itemStack);
     return itemStack;
   }
 

@@ -3,6 +3,8 @@ package com.jho5245.cucumbery.listeners.player;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
@@ -147,8 +149,19 @@ public class PlayerJoin implements Listener
         }
       }
     }
-    if (enabledTellraw && !isSpectator)
+    boolean outsider = false;
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.OUTSIDER))
     {
+      @SuppressWarnings("all")
+      int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.OUTSIDER).getAmplifier() + 1;
+      if (Math.random() * 100 < amplifier * 10)
+      {
+        outsider = true;
+      }
+    }
+    if (enabledTellraw && !isSpectator && !outsider)
+    {
+
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
         if (cfg.getBoolean("show-tellraw-to-join-player") || online != player)
@@ -157,6 +170,10 @@ public class PlayerJoin implements Listener
                   UserData.OUTPUT_JOIN_MESSAGE_FORCE.getBoolean(online.getUniqueId())))
           {
             MessageUtil.sendMessage(online, Prefix.INFO_JOIN, ComponentUtil.createTranslate("%s이(가) 입장하셨습니다.", player));
+            if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_BEANS))
+            {
+              MessageUtil.sendMessage(online, Prefix.INFO_JOIN, ComponentUtil.createTranslate("%s이(가) 입장하셨습니다.", player));
+            }
           }
         }
       }

@@ -1,6 +1,10 @@
 package com.jho5245.cucumbery.listeners.entity;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.combat.CombatManager;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -11,11 +15,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
+import org.jetbrains.annotations.Nullable;
 
 public class EntityDamage implements Listener
 {
@@ -32,23 +39,113 @@ public class EntityDamage implements Listener
 				return;
 			}
 		}
-		if (entity instanceof LivingEntity livingEntity)
+		this.cancelEntityDamage(event);
+		this.cancelLavaBurnItem(event);
+		this.customEffect(event);
+	}
+
+	private void customEffect(EntityDamageEvent event)
+	{
+		double damage = event.getDamage();
+		double damageMultiplier = 1d, finalDamageMultiplier = 1d;
+		Entity entity = event.getEntity();
+		@Nullable Object damager = CombatManager.getDamager(event);
+		if (CustomEffectManager.hasEffect(entity, CustomEffectType.INVINCIBLE) || CustomEffectManager.hasEffect(entity, CustomEffectType.RESURRECTION_INVINCIBLE))
 		{
-			if (livingEntity.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))
-			{
-				PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-				if (potionEffect != null)
+			event.setCancelled(true);
+			entity.setFireTicks(-20);
+			return;
+		}
+		if (CustomEffectManager.hasEffect(entity, CustomEffectType.PARROTS_CHEER))
+		{
+			damageMultiplier -= 0.45d;
+		}
+		DamageCause damageCause = event.getCause();
+		switch (damageCause)
+		{
+			case HOT_FLOOR ->{
+				if (CustomEffectManager.hasEffect(entity, CustomEffectType.FROST_WALKER))
 				{
-					int amplifier = potionEffect.getAmplifier();
-					if (amplifier >= 9 && event.getCause() != DamageCause.VOID)
+					event.setCancelled(true);
+					return;
+				}
+			}
+			case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK, CUSTOM -> {
+				if (damager instanceof Entity damagerEntity)
+				{
+					CustomEffect customEffectSharpness = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SHARPNESS);
+					if (customEffectSharpness != null)
 					{
-						event.setCancelled(true);
+						int amplifier = customEffectSharpness.getAmplifier();
+						damage += amplifier + 1.5;
+					}
+					CustomEffect customEffectSmite = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SMITE);
+					if (customEffectSmite != null && (entity instanceof Zombie || entity instanceof ZombieHorse || entity instanceof AbstractSkeleton || entity instanceof Wither))
+					{
+						int amplifier = customEffectSmite.getAmplifier();
+						damage += (amplifier + 1) * 2.5;
+					}
+					CustomEffect customEffectBaneOfArthropods = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BANE_OF_ARTHROPODS);
+					if (customEffectBaneOfArthropods != null && (entity instanceof Spider || entity instanceof Silverfish || entity instanceof Endermite))
+					{
+						int amplifier = customEffectBaneOfArthropods.getAmplifier();
+						damage += (amplifier + 1) * 2.5;
+						((Monster) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20 + Math.random() * (amplifier + 1) * 5), 3));
+					}
+					CustomEffect customEffectBlessOfSans = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BLESS_OF_SANS);
+					if (customEffectBlessOfSans != null)
+					{
+						int amplifier = customEffectBlessOfSans.getAmplifier();
+						damageMultiplier += (amplifier + 1) * 0.1;
+					}
+					CustomEffect customEffectParrotsCheer = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.PARROTS_CHEER);
+					if (customEffectParrotsCheer != null)
+					{
+						damageMultiplier += 0.1d;
+					}
+				}
+			}
+			case FALL -> {
+				if (!(event instanceof EntityDamageByEntityEvent damageByEntityEvent) || !(damageByEntityEvent.getDamager() instanceof EnderPearl))
+				{
+					CustomEffect customEffectFeatherFalling = CustomEffectManager.getEffect(entity, CustomEffectType.FEATHER_FALLING);
+					if (customEffectFeatherFalling != null)
+					{
+						double fallDistance = entity.getFallDistance();
+						int amplifier = customEffectFeatherFalling.getAmplifier();
+						if (fallDistance < (amplifier + 1) * 5 + 3.5d)
+						{
+							event.setCancelled(true);
+							return;
+						}
+						damageMultiplier -= (amplifier + 1) * 0.08;
+					}
+				}
+			}
+			case PROJECTILE -> {
+				if (event instanceof EntityDamageByEntityEvent damageByEntityEvent)
+				{
+					Entity damagerEntity = damageByEntityEvent.getDamager();
+					if (damagerEntity instanceof Projectile projectile)
+					{
+						ProjectileSource projectileSource = projectile.getShooter();
+						if (projectileSource instanceof Entity sourceEntity)
+						{
+							CustomEffect customEffectParrotsCheer = CustomEffectManager.getEffect(sourceEntity, CustomEffectType.PARROTS_CHEER);
+							if (customEffectParrotsCheer != null)
+							{
+								damageMultiplier += 0.1d;
+							}
+						}
 					}
 				}
 			}
 		}
-		this.cancelEntityDamage(event);
-		this.cancelLavaBurnItem(event);
+		finalDamageMultiplier *= damageMultiplier;
+		if (finalDamageMultiplier != 1d || damage != event.getDamage())
+		{
+			event.setDamage(damage * finalDamageMultiplier);
+		}
 	}
 
 	private void cancelEntityDamage(EntityDamageEvent event)

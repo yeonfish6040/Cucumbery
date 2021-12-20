@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.listeners.entity;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -13,10 +15,14 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -56,11 +62,9 @@ public class EntityPickupItem implements Listener
       }
     }, 0L);
 
-    if (entity.getType() == EntityType.PLAYER)
+    if (entity instanceof Player player)
     {
-      Player player = (Player) entity;
       UUID uuid = player.getUniqueId();
-
       // 아이템 섭취 사용에서 사라지지 않을 경우 아이템 소실 방지를 위한 쿨타임
       if (Variable.playerItemConsumeCauseSwapCooldown.contains(uuid))
       {
@@ -138,6 +142,17 @@ public class EntityPickupItem implements Listener
       else
       {
         ItemLore.removeItemLore(itemStack);
+      }
+      if (CustomEffectManager.hasEffect(entity, CustomEffectType.DO_NOT_PICKUP_BUT_THROW_IT))
+      {
+        event.setCancelled(true);
+        Item item = event.getItem();
+        item.setPickupDelay(40);
+        NBTEntity nbtEntity = new NBTEntity(item);
+        nbtEntity.setShort("Age", (short) 0);
+        item.teleport(entity.getEyeLocation());
+        item.setVelocity(entity.getLocation().getDirection().multiply(0.4));
+        return;
       }
       if (!event.isCancelled())
       {

@@ -1,9 +1,9 @@
 package com.jho5245.cucumbery.customeffect;
 
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class CustomEffect
 {
@@ -13,9 +13,16 @@ public class CustomEffect
   private final int initAmplifier;
   private int amplifier;
   private DisplayType displayType;
-  private Component description;
-  private boolean keepOnDeath;
-  private boolean keepOnQuit;
+
+  public CustomEffect(CustomEffectType effectType)
+  {
+    this(effectType, effectType.getDefaultDuration());
+  }
+
+  public CustomEffect(CustomEffectType effectType, int duration)
+  {
+    this(effectType, duration, 0);
+  }
 
   public CustomEffect(CustomEffectType effectType, int duration, int amplifier)
   {
@@ -29,28 +36,6 @@ public class CustomEffect
     this.amplifier = amplifier;
     this.initAmplifier = amplifier;
     this.displayType = displayType;
-    this.keepOnDeath = effectType.isDefaultKeepOnDeath();
-    this.keepOnQuit = effectType.isDefaultKeepOnQuit();
-    boolean isNegative = effectType.isNegative();
-    this.description = switch (effectType)
-            {
-              case MUSHROOM ->
-                      ComponentUtil.createTranslate("%s 확률로 5초마다 인벤토리에 버섯이 들어옵니다.", "&e" + ((amplifier + 1) / 10d) + "%");
-              default -> effectType.getDescription();
-            };
-
-    if (keepOnDeath || !keepOnQuit)
-    {
-      this.description = this.description.append(Component.text("\n"));
-    }
-    if (keepOnDeath)
-    {
-      this.description = this.description.append(Component.text("\n")).append(ComponentUtil.createTranslate("&" + (isNegative ? "c" : "a") + "사망해도 효과가 사라지지 않습니다."));
-    }
-    if (!keepOnQuit)
-    {
-      this.description = this.description.append(Component.text("\n")).append(ComponentUtil.createTranslate("&c접속을 종료하면 효과가 사라집니다."));
-    }
   }
 
   @NotNull
@@ -59,14 +44,15 @@ public class CustomEffect
     return effectType;
   }
 
+  public void tick()
+  {
+    if (this.duration != -1)
+    this.duration--;
+  }
+
   public void setDuration(int duration)
   {
     this.duration = duration;
-  }
-
-  public void tick()
-  {
-    this.duration--;
   }
 
   public int getDuration()
@@ -105,37 +91,64 @@ public class CustomEffect
     this.displayType = displayType;
   }
 
-  @Nullable
+  @NotNull
   public Component getDescription()
   {
+    Component description = switch (effectType)
+            {
+              case CURSE_OF_MUSHROOM ->
+                      ComponentUtil.createTranslate("%s 확률로 5초마다 인벤토리에 버섯이 들어옵니다.", "&e" + ((amplifier + 1) / 10d) + "%");
+              case FEATHER_FALLING ->
+                      ComponentUtil.createTranslate("낙하 피해를 받기 위한 최소 높이가 %sm 증가하고,","&e" + ((amplifier + 1) * 5))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.createTranslate("낙하 피해량이 %s 감소합니다.","&e" + ((amplifier + 1) * 8) + "%"));
+              case BLESS_OF_SANS ->
+                      ComponentUtil.createTranslate("근거리 공격 피해량이 %s 증가합니다.", "&e" + ((amplifier + 1) * 10) + "%");
+              case SHARPNESS ->
+                      ComponentUtil.createTranslate("근거리 공격 피해량이 %s 증가합니다.", "&e" + (amplifier + 1.5));
+              case SMITE ->
+                      ComponentUtil.createTranslate("언데드 개체에게 주는 근거리 공격 피해량이 %s 증가합니다.", "&e" + Constant.Sosu1.format((amplifier + 1) * 2.5));
+              case BANE_OF_ARTHROPODS ->
+                      ComponentUtil.createTranslate("절지동물류 개체에게 주는 근거리 공격 피해량이 %s 증가하고,", "&e" + Constant.Sosu1.format((amplifier + 1) * 2.5))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.createTranslate("%s 효과를 1~%s초간 지급합니다.", ComponentUtil.createTranslate("effect.mineract.slowness"), "&r" + Constant.Sosu1.format((amplifier + 1) * 0.5)));
+              case INSIDER ->
+                      ComponentUtil.createTranslate("채팅이 %s배로 입력되고, 죽을 때 모든 플레이어에게", amplifier + 2)
+                              .append(Component.text("\n"))
+                              .append(ComponentUtil.createTranslate("타이틀로 자신의 데스 메시지를 띄워줍니다."));
+              case OUTSIDER ->
+                      ComponentUtil.createTranslate("%s 확률로 채팅 메시지가 보내지지 않고", "&e" + ((amplifier + 1) * 10) + "%")
+                              .append(Component.text("\n"))
+                              .append(ComponentUtil.createTranslate("입장 메시지, 퇴장 메시지가 뜨지 않습니다."));
+              default -> effectType.getDescription();
+            };
+    description = description.append(effectType.getPropertyDescription());
     return description;
   }
 
   public boolean isKeepOnDeath()
   {
-    return keepOnDeath;
-  }
-
-  public CustomEffect setKeepOnDeath(boolean keepOnDeath)
-  {
-    this.keepOnDeath = keepOnDeath;
-    return this;
+    return this.effectType.isKeepOnDeath();
   }
 
   public boolean isKeepOnQuit()
   {
-    return keepOnQuit;
+    return this.effectType.isKeepOnQuit();
   }
 
-  public CustomEffect setKeepOnQuit(boolean keepOnQuit)
+  public boolean isKeepOnMilk()
   {
-    this.keepOnQuit = keepOnQuit;
-    return this;
+    return this.effectType.isKeepOnMilk();
   }
 
   @NotNull
   public CustomEffect copy()
   {
     return new CustomEffect(this.getEffectType(), this.getDuration(), this.getAmplifier(), this.getDisplayType());
+  }
+
+  public enum DisplayType
+  {
+    ACTION_BAR, PLAYER_LIST, BOSS_BAR, NONE
   }
 }

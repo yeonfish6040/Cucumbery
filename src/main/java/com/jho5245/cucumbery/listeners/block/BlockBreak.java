@@ -2,6 +2,8 @@ package com.jho5245.cucumbery.listeners.block;
 
 import com.destroystokyo.paper.Namespaced;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -9,10 +11,10 @@ import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -47,6 +49,10 @@ public class BlockBreak implements Listener
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onBlockBreak(BlockBreakEvent event)
   {
+    if (event.isCancelled())
+    {
+      return;
+    }
     Player player = event.getPlayer();
     UUID uuid = player.getUniqueId();
     Block block = event.getBlock();
@@ -57,10 +63,6 @@ public class BlockBreak implements Listener
     if (ItemStackUtil.itemExists(item))
     {
       itemMeta = item.getItemMeta();
-    }
-    if (event.isCancelled())
-    {
-      return;
     }
     if (Variable.scrollReinforcing.contains(uuid))
     {
@@ -173,9 +175,23 @@ public class BlockBreak implements Listener
     NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_ENCHANTS_KEY);
 
     Object value = player.getWorld().getGameRuleValue(GameRule.DO_TILE_DROPS);
-    Collection<ItemStack> drops = block.getDrops(item, player);
-    boolean vanilliaDrop = drops.size() > 0 && player.getGameMode() != GameMode.CREATIVE && event.isDropItems() && value != null && value.equals(true);
 
+    boolean isTelekinesis = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.TELEKINESIS.toString()) ||
+            CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS),
+            isSmeltingTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.SMELTING_TOUCH.toString()) ||
+                    CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH),
+            isSilkTouch = CustomEffectManager.hasEffect(player, CustomEffectType.SILK_TOUCH);
+
+    Collection<ItemStack> drops = block.getDrops(item, player);
+    if (isSilkTouch)
+    {
+      ItemStack silk = new ItemStack(Material.STONE);
+      ItemMeta m = silk.getItemMeta();
+      m.addEnchant(Enchantment.SILK_TOUCH, 1, true);
+      silk.setItemMeta(m);
+      drops = block.getDrops(silk, player);
+    }
+    boolean vanilliaDrop = !drops.isEmpty() && player.getGameMode() != GameMode.CREATIVE && event.isDropItems() && value != null && value.equals(true);
     boolean isCoarseTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.COARSE_TOUCH.toString());
 
     if (isCoarseTouch)
@@ -265,22 +281,19 @@ public class BlockBreak implements Listener
     {
       if (event.isDropItems())
       {
-        boolean isTelekinesis = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.TELEKINESIS.toString()), isSmeltingTouch =
-                NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.SMELTING_TOUCH.toString());
         boolean pluginAffected = false;
         List<ItemStack> dropsClone = null;
-        if (isTelekinesis || isSmeltingTouch)
+        if (isTelekinesis || isSmeltingTouch || isSilkTouch)
         {
           List<Double> dropsExp = new ArrayList<>();
-
-          if (isTelekinesis)
+          if (isTelekinesis || isSilkTouch)
           {
             pluginAffected = true;
           }
           if (isSmeltingTouch && !noExpDropDueToForcePreverse)
           {
             dropsClone = ItemStackUtil.getSmeltedResult(player, customDrops, dropsExp);
-            pluginAffected = pluginAffected || dropsExp.size() > 0;
+            pluginAffected = pluginAffected || !dropsExp.isEmpty();
           }
           else
           {
@@ -337,7 +350,6 @@ public class BlockBreak implements Listener
             }
             campfire.update(true, false);
           }
-
           if (pluginAffected)
           {
             event.setDropItems(false);
@@ -406,7 +418,7 @@ public class BlockBreak implements Listener
                 }
                 HashMap<Integer, ItemStack> lostItems = player.getInventory().addItem(dropClone);
                 // 텔레키네시스로 인벤토리에 아이템을 넣었는데 인벤토리 공간이 좁을 경우
-                if (lostItems.size() > 0)
+                if (!lostItems.isEmpty())
                 {
                   for (int i = 0; i < lostItems.size(); i++)
                   {
@@ -420,7 +432,6 @@ public class BlockBreak implements Listener
         }
         if (!pluginAffected && blockPlaceDataApplied)
         {
-
           if (dropsClone == null)
           {
             dropsClone = new ArrayList<>(customDrops);
@@ -675,12 +686,6 @@ public class BlockBreak implements Listener
           player.getInventory().addItem(result);
         }
       }
-    }
-
-    if (blockPlaceData != null)
-    {
-      blockPlaceData.set(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), null);
-      Variable.blockPlaceData.put(location.getWorld().getName(), blockPlaceData);
     }
   }
 }

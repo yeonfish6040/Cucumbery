@@ -1,15 +1,21 @@
 package com.jho5245.cucumbery.listeners.entity;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.deathmessages.DeathManager;
+import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import org.bukkit.EntityEffect;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,6 +39,20 @@ public class EntityDeath implements Listener
     }
 
     LivingEntity entity = event.getEntity();
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.INVINCIBLE))
+    {
+      event.setCancelled(true);
+      return;
+    }
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.RESURRECTION))
+    {
+      event.setCancelled(true);
+      CustomEffectManager.removeEffect(entity, CustomEffectType.RESURRECTION);
+      CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectType.RESURRECTION_INVINCIBLE, 20 * 2));
+      entity.playEffect(EntityEffect.TOTEM_RESURRECT);
+      MessageUtil.info(entity, ComponentUtil.createTranslate("%s 효과로 인해 죽지 않고, 2초간 무적 상태가 됩니다.", CustomEffectType.RESURRECTION));
+      return;
+    }
     if (entity.getScoreboardTags().contains("invincible"))
     {
       event.setCancelled(true);

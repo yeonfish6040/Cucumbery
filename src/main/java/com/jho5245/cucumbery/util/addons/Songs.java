@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -16,66 +17,53 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@SuppressWarnings("all")
 public class Songs
 {
   private static final ExecutorService songsExecutorService = Executors.newFixedThreadPool(1);
   private static final Timer songsLoopTimer = new Timer();
   public static List<String> list = new ArrayList<>();
 
-  public static File download(String name) throws IOException
-  {
-    return download(name, false);
-  }
-
+  @SuppressWarnings("all")
   public static File download(String name, boolean force) throws IOException
   {
-    try
+    if (!name.endsWith(".nbs"))
+    name += ".nbs";
+    File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/songs/" + name);
+    if (!force && file.exists())
     {
-      if (!name.endsWith(".nbs"))
-      name += ".nbs";
-      File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/songs/" + name);
-      if (!force && file.exists())
-      {
-        return file;
-      }
-      else
-      {
-        file.delete();
-        if (!file.getParentFile().exists())
-        {
-          file.getParentFile().mkdirs();
-        }
-        file.createNewFile();
-      }
-
-      URL url = new URL(tranformStyle("https://cucumbery.com/api/songs/" + name + "/download"));
-      HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
-      connection.setRequestMethod("GET");
-      connection.setRequestProperty("User-Agent", "Cucumbery");
-      connection.setConnectTimeout(2000);
-      connection.setReadTimeout(2000);
-      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "Cp1252"));
-      FileOutputStream fis = new FileOutputStream(file);
-      OutputStreamWriter osw = new OutputStreamWriter(fis, "Cp1252");
-      BufferedWriter writer = new BufferedWriter(osw);
-      char[] buffer = new char[1024];
-      int count = 0;
-      while ((count = bufferedReader.read(buffer, 0, 1024)) != -1)
-      {
-        writer.write(buffer, 0, count);
-      }
-      writer.close();
-      osw.close();
-      fis.close();
-      bufferedReader.close();
-
       return file;
     }
-    catch (Exception e)
+    else
     {
-      throw e;
+      file.delete();
+      if (!file.getParentFile().exists())
+      {
+        file.getParentFile().mkdirs();
+      }
+      file.createNewFile();
     }
+
+    URL url = new URL(tranformStyle("https://cucumbery.com/api/songs/" + name + "/download"));
+    HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
+    connection.setRequestMethod("GET");
+    connection.setRequestProperty("User-Agent", "Cucumbery");
+    connection.setConnectTimeout(2000);
+    connection.setReadTimeout(2000);
+    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "Cp1252"));
+    FileOutputStream fis = new FileOutputStream(file);
+    OutputStreamWriter osw = new OutputStreamWriter(fis, "Cp1252");
+    BufferedWriter writer = new BufferedWriter(osw);
+    char[] buffer = new char[1024];
+    int count;
+    while ((count = bufferedReader.read(buffer, 0, 1024)) != -1)
+    {
+      writer.write(buffer, 0, count);
+    }
+    writer.close();
+    osw.close();
+    fis.close();
+    bufferedReader.close();
+    return file;
   }
 
   public static void updateList()
@@ -91,7 +79,7 @@ public class Songs
       int responseCode = connection.getResponseCode();
       if (responseCode == HttpURLConnection.HTTP_OK)
       {
-        Reader inputReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
+        Reader inputReader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
         BufferedReader streamReader = new BufferedReader(inputReader);
         String streamLine;
         StringBuilder content = new StringBuilder();
@@ -104,9 +92,9 @@ public class Songs
         JSONObject object = (JSONObject) parser.parse(content.toString());
         JSONArray array = (JSONArray) object.get("data");
         list.clear();
-        for (int i = 0; i < array.size(); i++)
+        for (Object o : array)
         {
-          String songName = ((JSONObject)array.get(i)).get("name").toString();
+          String songName = ((JSONObject) o).get("name").toString();
           list.add(songName);
         }
       }
@@ -118,19 +106,18 @@ public class Songs
     }
   }
 
-  public static String tranformStyle(String source) throws UnsupportedEncodingException
+  public static String tranformStyle(String source)
   {
     char[] arr = source.toCharArray();
     StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < arr.length; i++)
+    for (char temp : arr)
     {
-      char temp = arr[i];
       if (isSpecial(temp))
       {
-        sb.append(URLEncoder.encode("" + temp, "UTF-8"));
+        sb.append(URLEncoder.encode("" + temp, StandardCharsets.UTF_8));
         continue;
       }
-      sb.append(arr[i]);
+      sb.append(temp);
     }
     String re = sb.toString();
     re = re.replace(" ", "%20");
@@ -140,7 +127,7 @@ public class Songs
   public static boolean isSpecial(char c)
   {
     Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-    if (ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+    return ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
             || ub == Character.UnicodeBlock.HANGUL_JAMO
             || ub == Character.UnicodeBlock.HANGUL_JAMO_EXTENDED_A
             || ub == Character.UnicodeBlock.HANGUL_JAMO_EXTENDED_B
@@ -166,30 +153,19 @@ public class Songs
             || ub == Character.UnicodeBlock.CJK_RADICALS_SUPPLEMENT
             || ub == Character.UnicodeBlock.CJK_STROKES
             || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-            || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS)
-    {
-      return true;
-    }
-    return false;
+            || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS;
   }
 
   public static void onEnable()
   {
-    songsExecutorService.submit(new Runnable()
+    songsExecutorService.submit(() -> songsLoopTimer.schedule(new TimerTask()
     {
       @Override
       public void run()
       {
-        songsLoopTimer.schedule(new TimerTask()
-        {
-          @Override
-          public void run()
-          {
-            updateList();
-          }
-        }, 0, 2000);
+        updateList();
       }
-    });
+    }, 0, 2000));
   }
 
   public static void onDisable()

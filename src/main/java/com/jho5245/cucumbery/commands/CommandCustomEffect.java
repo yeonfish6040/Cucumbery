@@ -1,9 +1,9 @@
 package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.customeffect.DisplayType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
@@ -37,14 +37,14 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     if (length == 0)
     {
       MessageUtil.shortArg(sender, 2, args);
-      MessageUtil.commandInfo(sender, label, "<give|clear|modify> ...");
+      MessageUtil.commandInfo(sender, label, "<give|clear|modify|query> ...");
       return failure;
     }
     if (length == 1)
     {
       switch (args[0])
       {
-        case "give", "modify" ->{
+        case "give", "modify" -> {
           MessageUtil.shortArg(sender, 2, args);
           MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> ...");
           return failure;
@@ -55,7 +55,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
             if (CustomEffectManager.hasEffects(player))
             {
               CustomEffectManager.clearEffects(player);
-              MessageUtil.sendMessage(player, "모든 효과를 제거랬습니다.");
+              MessageUtil.info(player, "모든 효과를 제거했습니다.");
               MessageUtil.sendAdminMessage(player, null, ComponentUtil.createTranslate("[%s: 모든 효과를 제거했습니다.]", player));
             }
             else
@@ -66,13 +66,26 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           else
           {
             MessageUtil.shortArg(sender, 2, args);
-            MessageUtil.commandInfo(sender, label, args[0] + "clear <targets> [effect] [hide output]");
+            MessageUtil.commandInfo(sender, label, "clear <targets> [effect] [hide output]");
+            return failure;
+          }
+        }
+        case "query" -> {
+          if (sender instanceof Player player)
+          {
+            queryEffect(sender, player);
+            return true;
+          }
+          else
+          {
+            MessageUtil.shortArg(sender, 2, args);
+            MessageUtil.commandInfo(sender, label, args[0] + " <target>");
             return failure;
           }
         }
         default -> {
           MessageUtil.wrongArg(sender, 1, args);
-          MessageUtil.commandInfo(sender, label, "<give|clear|modify>");
+          MessageUtil.commandInfo(sender, label, "<give|clear|modify|query> ...");
           return failure;
         }
       }
@@ -99,9 +112,18 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           }
           return clearEffect(sender, entities, null, false) || failure;
         }
+        case "query" -> {
+          Entity entity = SelectorUtil.getEntity(sender, args[1]);
+          if (entity == null)
+          {
+            return failure;
+          }
+          queryEffect(sender, entity);
+          return true;
+        }
         default -> {
           MessageUtil.wrongArg(sender, 1, args);
-          MessageUtil.commandInfo(sender, label, "<give|clear|modify>");
+          MessageUtil.commandInfo(sender, label, "<give|clear|modify|query>");
           return failure;
         }
       }
@@ -126,7 +148,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       switch (args[0])
       {
         case "give" -> {
-          return giveEffect(sender, entities, customEffectType, 30 * 20, 0, customEffectType.getDefaultDisplayType(), false) || failure;
+          return giveEffect(sender, entities, customEffectType, customEffectType.getDefaultDuration(), 0, customEffectType.getDefaultDisplayType(), false) || failure;
         }
         case "clear" -> {
           return clearEffect(sender, entities, customEffectType, false) || failure;
@@ -158,14 +180,26 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       switch (args[0])
       {
         case "give" -> {
-          if (!MessageUtil.isInteger(sender, args[3], true))
+          int duration;
+          if (args[3].equals("max"))
+          {
+            duration = -1;
+          }
+          else if (args[3].equals("default"))
+          {
+            duration = customEffectType.getDefaultDuration();
+          }
+          else if (!MessageUtil.isInteger(sender, args[3], true))
           {
             return failure;
           }
-          int duration = Integer.parseInt(args[3]);
-          if (!MessageUtil.checkNumberSize(sender, duration, 0, Integer.MAX_VALUE))
+          else
           {
-            return failure;
+            duration = Integer.parseInt(args[3]);
+            if (!MessageUtil.checkNumberSize(sender, duration, 1, Integer.MAX_VALUE))
+            {
+              return failure;
+            }
           }
           return giveEffect(sender, entities, customEffectType, duration, 0, customEffectType.getDefaultDisplayType(), false) || failure;
         }
@@ -203,25 +237,131 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       switch (args[0])
       {
         case "give" -> {
-          if (!MessageUtil.isInteger(sender, args[3], true))
+          int duration;
+          if (args[3].equals("max"))
+          {
+            duration = -1;
+          }
+          else if (args[3].equals("default"))
+          {
+            duration = customEffectType.getDefaultDuration();
+          }
+          else if (!MessageUtil.isInteger(sender, args[3], true))
           {
             return failure;
           }
-          if (!MessageUtil.isInteger(sender, args[4], true))
+          else
+          {
+            duration = Integer.parseInt(args[3]);
+            if (!MessageUtil.checkNumberSize(sender, duration, 1, Integer.MAX_VALUE))
+            {
+              return failure;
+            }
+          }
+          int amplifier;
+          if (args[4].equals("max"))
+          {
+            amplifier = customEffectType.getMaxAmplifier();
+          }
+          else if (!MessageUtil.isInteger(sender, args[4], true))
           {
             return failure;
           }
-          int duration = Integer.parseInt(args[3]);
-          if (!MessageUtil.checkNumberSize(sender, duration, 0, Integer.MAX_VALUE))
+          else
           {
-            return failure;
-          }
-          int amplifier = Integer.parseInt(args[4]);
-          if (!MessageUtil.checkNumberSize(sender, amplifier, 0, customEffectType.getMaxAmplifier()))
-          {
-            return failure;
+            amplifier = Integer.parseInt(args[4]);
+            if (!MessageUtil.checkNumberSize(sender, amplifier, 0, customEffectType.getMaxAmplifier()))
+            {
+              return failure;
+            }
           }
           return giveEffect(sender, entities, customEffectType, duration, amplifier, customEffectType.getDefaultDisplayType(), false) || failure;
+        }
+        case "clear" -> {
+          MessageUtil.longArg(sender, 4, args);
+          MessageUtil.commandInfo(sender, label, args[0] + " <targets> [effect] [hide output]");
+          return failure;
+        }
+        case "modify" -> {
+          switch (args[3])
+          {
+
+          }
+          MessageUtil.shortArg(sender, 5, args);
+          MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> <duration|amplifier|display-type> <value>");
+          return failure;
+        }
+      }
+    }
+    if (length == 6)
+    {
+      List<Entity> entities = SelectorUtil.getEntities(sender, args[1]);
+      if (entities == null)
+      {
+        return failure;
+      }
+      CustomEffectType customEffectType;
+      try
+      {
+        customEffectType = CustomEffectType.valueOf(args[2].toUpperCase());
+      }
+      catch (Exception e)
+      {
+        MessageUtil.noArg(sender, Prefix.ARGS_WRONG, args[2]);
+        return failure;
+      }
+      switch (args[0])
+      {
+        case "give" -> {
+          int duration;
+          if (args[3].equals("max"))
+          {
+            duration = -1;
+          }
+          else if (args[3].equals("default"))
+          {
+            duration = customEffectType.getDefaultDuration();
+          }
+          else if (!MessageUtil.isInteger(sender, args[3], true))
+          {
+            return failure;
+          }
+          else
+          {
+            duration = Integer.parseInt(args[3]);
+            if (!MessageUtil.checkNumberSize(sender, duration, 1, Integer.MAX_VALUE))
+            {
+              return failure;
+            }
+          }
+          int amplifier;
+          if (args[4].equals("max"))
+          {
+            amplifier = customEffectType.getMaxAmplifier();
+          }
+          else if (!MessageUtil.isInteger(sender, args[4], true))
+          {
+            return failure;
+          }
+          else
+          {
+            amplifier = Integer.parseInt(args[4]);
+            if (!MessageUtil.checkNumberSize(sender, amplifier, 0, customEffectType.getMaxAmplifier()))
+            {
+              return failure;
+            }
+          }
+          DisplayType displayType;
+          try
+          {
+            displayType = DisplayType.valueOf(args[5].toUpperCase());
+          }
+          catch (Exception e)
+          {
+            MessageUtil.noArg(sender, Prefix.ARGS_WRONG, args[5]);
+            return failure;
+          }
+          return giveEffect(sender, entities, customEffectType, duration, amplifier, displayType, false) || failure;
         }
         case "clear" -> {
           MessageUtil.longArg(sender, 4, args);
@@ -261,7 +401,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       if (!failureEntities.isEmpty())
       {
         MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                ComponentUtil.createTranslate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 더 강한 효과를 가지고 있습니다.)", failureEntities, customEffect));
+                ComponentUtil.createTranslate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과를 받을 수 없는 상태이거나 더 강한 효과를 가지고 있습니다.)", failureEntities, customEffect));
       }
       if (!successEntitiesIsEmpty)
       {
@@ -331,6 +471,17 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     return !successEntitiesIsEmpty;
   }
 
+  public void queryEffect(@NotNull CommandSender sender, @NotNull Entity entity)
+  {
+    if (!CustomEffectManager.hasEffects(entity))
+    {
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.createTranslate("%s은(는) 효과를 가지고 있지 않습니다.", entity));
+      return;
+    }
+    List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
+    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.createTranslate("%s은(는) %s개의 효과를 가지고 있습니다: %s", entity, customEffects.size(), CustomEffectManager.getDisplay(customEffects)));
+  }
+
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
@@ -341,17 +492,25 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
 
     if (length == 1)
     {
-      return Method.tabCompleterList(args, "<인수>", "give", "clear", "modify");
+      return Method.tabCompleterList(args, "<인수>", "give", "clear", "modify", "query");
     }
     else if (length == 2)
     {
       if (Method.equals(args[0], "give", "clear", "modify"))
-      return Method.tabCompleterEntity(sender, args, "<개체>", true);
+      {
+        return Method.tabCompleterEntity(sender, args, "<개체>", true);
+      }
+      if (args[0].equals("query"))
+      {
+        return Method.tabCompleterEntity(sender, args, "[개체]");
+      }
     }
     else if (length == 3)
     {
       if (args[0].equals("give"))
+      {
         return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
+      }
       if (Method.equals(args[0], "clear", "modify"))
       {
         List<Entity> entities = SelectorUtil.getEntities(sender, args[1], false);
@@ -391,7 +550,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       switch (args[0])
       {
         case "give" -> {
-          return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "[지속 시간(틱)]", "max");
+          return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "[지속 시간(틱)]", "max", "default");
         }
         case "modify" -> {
           List<Entity> entities = SelectorUtil.getEntities(sender, args[1], false);
@@ -431,7 +590,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       switch (args[0])
       {
         case "give" -> {
-          return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "[농도 레벨]");
+          return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "[농도 레벨]", "max");
         }
         case "modify" -> {
           List<Entity> entities = SelectorUtil.getEntities(sender, args[1], false);
@@ -455,10 +614,10 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           switch (args[3])
           {
             case "duration" -> {
-              return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "<지속 시간(틱)>", "max");
+              return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "<지속 시간(틱)>", "max", "default");
             }
             case "amplifier" -> {
-              return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "<농도 레벨>");
+              return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "<농도 레벨>", "max");
             }
             case "display-type" -> {
               List<String> list = new ArrayList<>(Method.enumToList(DisplayType.values()));
@@ -487,7 +646,6 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         case "give" -> {
           List<String> list = new ArrayList<>(Method.enumToList(DisplayType.values()));
           list.add(customEffectType.getDefaultDisplayType().toString().toLowerCase() + "(기본값)");
-          list.add("default");
           return Method.tabCompleterList(args, list, "[표시 유형]");
         }
         case "modify" -> {

@@ -2,9 +2,11 @@ package com.jho5245.cucumbery.listeners.player.item;
 
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -32,6 +34,13 @@ public class PlayerAttemptPickupItem implements Listener
       event.setCancelled(true);
       return;
     }
+    Item item = event.getItem();
+    ItemStack itemStack = item.getItemStack();
+    if (NBTAPI.isRestricted(player, itemStack, Constant.RestrictionType.NO_PICKUP))
+    {
+      event.setCancelled(true);
+      return;
+    }
     UUID uuid = player.getUniqueId();
     // 아이템 섭취 사용에서 사라지지 않을 경우 아이템 소실 방지를 위한 쿨타임
     if (Variable.playerItemConsumeCauseSwapCooldown.contains(uuid))
@@ -54,8 +63,6 @@ public class PlayerAttemptPickupItem implements Listener
         return;
       }
     }
-    Item item = event.getItem();
-    ItemStack itemStack = item.getItemStack();
     if (Method.usingLoreFeature(player))
     {
       ItemLore.setItemLore(itemStack);

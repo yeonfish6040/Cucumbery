@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
-@SuppressWarnings("all")
+@SuppressWarnings("unchecked")
 public class PluginLoader
 {
 
@@ -31,7 +31,6 @@ public class PluginLoader
     Map<String, Plugin> names = null;
     Map<String, Command> commands = null;
     Map<Event, SortedSet<RegisteredListener>> listeners = null;
-    boolean reloadlisteners = true;
     try {
       Field pluginsField = Bukkit.getPluginManager().getClass().getDeclaredField("plugins");
       pluginsField.setAccessible(true);
@@ -44,8 +43,7 @@ public class PluginLoader
         listenersField.setAccessible(true);
         listeners = (Map<Event, SortedSet<RegisteredListener>>) listenersField.get(pluginManager);
       }
-      catch (Exception e) {
-        reloadlisteners = false;
+      catch (Exception ignored) {
       }
       Field commandMapField = Bukkit.getPluginManager().getClass().getDeclaredField("commandMap");
       commandMapField.setAccessible(true);

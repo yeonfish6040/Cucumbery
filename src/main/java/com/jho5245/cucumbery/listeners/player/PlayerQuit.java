@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.listeners.player;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
@@ -54,7 +55,18 @@ public class PlayerQuit implements Listener
         }
       }
     }
-    if (enabledTellraw && isSpectator)
+
+    boolean outsider = false;
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.OUTSIDER))
+    {
+      @SuppressWarnings("all")
+      int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.OUTSIDER).getAmplifier() + 1;
+      if (Math.random() * 100 < amplifier * 10)
+      {
+        outsider = true;
+      }
+    }
+    if (enabledTellraw && !isSpectator && !outsider)
     {
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
@@ -64,6 +76,10 @@ public class PlayerQuit implements Listener
                   online.getUniqueId()) || UserData.OUTPUT_QUIT_MESSAGE_FORCE.getBoolean(online.getUniqueId())))
           {
             MessageUtil.sendMessage(online, Prefix.INFO_QUIT, ComponentUtil.createTranslate("%s이(가) 퇴장하셨습니다.", player));
+            if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_BEANS))
+            {
+              MessageUtil.sendMessage(online, Prefix.INFO_QUIT, ComponentUtil.createTranslate("%s이(가) 퇴장하셨습니다.", player));
+            }
           }
         }
       }
@@ -98,6 +114,6 @@ public class PlayerQuit implements Listener
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
     customEffects.removeIf(customEffect -> !customEffect.isKeepOnQuit());
     CustomEffectManager.clearEffects(player);
-    CustomEffectManager.addEffects(player,  customEffects);
+    CustomEffectManager.addEffects(player, customEffects);
   }
 }

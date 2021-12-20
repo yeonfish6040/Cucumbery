@@ -220,8 +220,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
               try
               {
                 File songFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/songs/" + fileName);
-
-                if (!songFile.exists())
+                if (force || !songFile.exists())
                 {
                   List<String> songs = Songs.list;
                   if (songs.contains(fileName))
@@ -263,7 +262,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
                 radioSongPlayer.setAutoDestroy(true);
                 if (!silent)
                 {
-                  MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s을(를) 재생합니다.", song));
+                  MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s을(를) 재생합니다.", song);
                 }
                 for (Player player : Bukkit.getServer().getOnlinePlayers())
                 {
@@ -272,7 +271,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
                     radioSongPlayer.addPlayer(player);
                     if (!silent && !sender.equals(player))
                     {
-                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.createTranslate("%s이(가) %s을(를) 재생합니다.", sender, song));
+                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, "%s이(가) %s을(를) 재생합니다.", sender, song);
                     }
                   }
                 }

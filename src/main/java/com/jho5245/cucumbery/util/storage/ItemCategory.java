@@ -708,7 +708,8 @@ public class ItemCategory
                       MEDIUM_AMETHYST_BUD,
                       LARGE_AMETHYST_BUD,
                       AMETHYST_CLUSTER,
-                      POINTED_DRIPSTONE -> ItemCategoryType.DECORATIONS;
+                      POINTED_DRIPSTONE,
+                      SPORE_BLOSSOM-> ItemCategoryType.DECORATIONS;
               case DISPENSER,
                       NOTE_BLOCK,
                       STICKY_PISTON,

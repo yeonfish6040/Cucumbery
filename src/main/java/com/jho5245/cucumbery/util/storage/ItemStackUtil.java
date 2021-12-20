@@ -270,8 +270,20 @@ public class ItemStackUtil
   @NotNull
   public static ItemStack loredItemStack(@NotNull Material type)
   {
+    return loredItemStack(type, null);
+  }
+
+  /**
+   * 해당하는 물질의 아이템을 설명을 붙여 반환합니다.
+   *
+   * @param type 아이템의 물질
+   * @return 설명이 적힌 아이템
+   */
+  @NotNull
+  public static ItemStack loredItemStack(@NotNull Material type, @Nullable Player player)
+  {
     ItemStack item = new ItemStack(type);
-    ItemLore.setItemLore(item);
+    ItemLore.setItemLore(item, player);
     return item;
   }
 
@@ -394,7 +406,9 @@ public class ItemStackUtil
       if (itemEquals(item, iStack, ignoreDurability))
       {
         if (itemExists(iStack))
-        amount += iStack.getAmount();
+        {
+          amount += iStack.getAmount();
+        }
       }
     }
     return amount;
@@ -420,7 +434,9 @@ public class ItemStackUtil
       if (ItemStackUtil.predicateItem(iStack, predicate))
       {
         if (itemExists(iStack))
-        amount += iStack.getAmount();
+        {
+          amount += iStack.getAmount();
+        }
       }
     }
     return amount;
@@ -481,16 +497,14 @@ public class ItemStackUtil
     List<ItemStack> dropsClone = new ArrayList<>();
     for (ItemStack drop : input)
     {
+      for (Recipe recipe : RecipeChecker.recipes)
       {
-        for (Recipe recipe : RecipeChecker.recipes)
+        if (recipe instanceof FurnaceRecipe furnaceRecipe)
         {
-          if (recipe instanceof FurnaceRecipe furnaceRecipe)
+          if (furnaceRecipe.getInput().getType() == drop.getType())
           {
-            if (furnaceRecipe.getInput().getType() == drop.getType())
-            {
-              drop.setType(furnaceRecipe.getResult().getType());
-              expOutput.add((double) furnaceRecipe.getExperience());
-            }
+            drop.setType(furnaceRecipe.getResult().getType());
+            expOutput.add((double) furnaceRecipe.getExperience());
           }
         }
       }
@@ -833,6 +847,7 @@ public class ItemStackUtil
 
   /**
    * gets an itemstack preview depending on the predicate nbt
+   *
    * @param predicate nbt
    * @return a previes itemstack
    */

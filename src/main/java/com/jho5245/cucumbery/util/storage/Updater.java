@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.storage;
 
 import com.jho5245.cucumbery.Cucumbery;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -15,7 +16,6 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@SuppressWarnings("all")
 public class Updater
 {
   private static final Cucumbery plugin = Cucumbery.getPlugin();
@@ -23,16 +23,59 @@ public class Updater
   private static final String userAgent = "Updater";
   private static final ExecutorService updaterExecutorService = Executors.newFixedThreadPool(1);
   private static final Timer updaterLoopTimer = new Timer();
-
+  public static Updater defaultUpdater = new Updater("https://cucumbery.com/api/builds", "dev");
   private final String api; //http://cherry.wany.io/api/builds
   private final String channel;
-  private String version;
+  private @Nullable String version;
   private File file;
 
   public Updater(String api, String channel)
   {
     this.api = api;
     this.channel = channel;
+  }
+
+  public static void onEnable()
+  {
+    String channel = "dev"; //OR Config
+    updaterExecutorService.submit(() ->
+    {
+      switch (channel)
+      {
+        case "release" -> {
+          updaterLoopTimer.schedule(new TimerTask()
+          {
+            @Override
+            public void run()
+            {
+              if (Cucumbery.config.getBoolean("auto-updater.enable"))
+              {
+                defaultUpdater.updateLatest();
+              }
+            }
+          }, 0, 1000 * 60 * 60);
+        }
+        case "dev" -> {
+          updaterLoopTimer.schedule(new TimerTask()
+          {
+            @Override
+            public void run()
+            {
+              if (Cucumbery.config.getBoolean("auto-updater.enable"))
+              {
+                defaultUpdater.updateLatest();
+              }
+            }
+          }, 0, 1000 * 2);
+        }
+      }
+    });
+  }
+
+  public static void onDisable()
+  {
+    updaterLoopTimer.cancel();
+    updaterExecutorService.shutdownNow();
   }
 
   public void download() throws IOException
@@ -133,8 +176,6 @@ public class Updater
         JSONObject object = (JSONObject) parser.parse(content.toString());
         JSONObject data = (JSONObject) object.get("data");
         this.version = data.get("version").toString();
-        /*JSONObject data = new JSONObject(content).getJSONObject("data");
-        version = data.getString("version");*/
       }
       connection.disconnect();
     }
@@ -150,7 +191,7 @@ public class Updater
     try
     {
       this.getLatestVersion();
-      if (this.version.equals(plugin.getDescription().getVersion()))
+      if (this.version != null && this.version.equals(plugin.getDescription().getVersion()))
       {
         return false;
       }
@@ -163,54 +204,6 @@ public class Updater
     }
 
     return true;
-  }
-
-  public static Updater defaultUpdater = new Updater("https://cucumbery.com/api/builds", "dev");
-
-  public static void onEnable()
-  {
-    String channel = "dev"; //OR Config
-    updaterExecutorService.submit(new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        switch (channel)
-        {
-          case "release":
-          {
-            updaterLoopTimer.schedule(new TimerTask()
-            {
-              @Override
-              public void run()
-              {
-                if (Cucumbery.config.getBoolean("auto-updater.enable"))
-                defaultUpdater.updateLatest();
-              }
-            }, 0, 1000 * 60 * 60);
-            break;
-          }
-          case "dev":
-          {
-            updaterLoopTimer.schedule(new TimerTask()
-            {
-              @Override
-              public void run()
-              {if (Cucumbery.config.getBoolean("auto-updater.enable"))
-                defaultUpdater.updateLatest();
-              }
-            }, 0, 1000 * 2);
-            break;
-          }
-        }
-      }
-    });
-  }
-
-  public static void onDisable()
-  {
-    updaterLoopTimer.cancel();
-    updaterExecutorService.shutdownNow();
   }
 
 }

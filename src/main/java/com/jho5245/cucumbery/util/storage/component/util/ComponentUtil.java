@@ -2,8 +2,8 @@ package com.jho5245.cucumbery.util.storage.component.util;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.customeffect.DisplayType;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -21,6 +21,7 @@ import com.xxmicloxx.NoteBlockAPI.model.Song;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import io.papermc.paper.advancement.AdvancementDisplay.Frame;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -35,6 +36,7 @@ import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -59,6 +61,12 @@ public class ComponentUtil
   private static final Pattern yeet = Pattern.compile("(%s|%[0-9]+\\$s)([^가-힣ㄱ-ㅎA-Za-z0-9]+|)" +
           "(이\\(가\\)|\\(이\\)가|가\\(이\\)|\\(가\\)이|을\\(를\\)|\\(을\\)를|를\\(을\\)|\\(를\\)을|와\\(과\\)|\\(와\\)과|과\\(와\\)|\\(과\\)와|은\\(는\\)|\\(은\\)는|는\\(은\\)|\\(는\\)은|\\(으\\)로|으\\(로\\)|\\(이\\)라|이\\(라\\))");
 
+
+  public static Component create(@NotNull Object... objects)
+  {
+    return create(null, objects);
+  }
+
   /**
    * 컴포넌트를 생성합니다.
    *
@@ -67,13 +75,13 @@ public class ComponentUtil
    */
   @NotNull
   @SuppressWarnings("all")
-  public static Component create(@NotNull Object... objects)
+  public static Component create(@Nullable Player player, @NotNull Object... objects)
   {
     Component component = Component.empty();
     boolean n2s = objects.length > 0 && !objects[0].equals(false);
     for (Object object : objects)
     {
-      Component senderComponent = SenderComponentUtil.senderComponent(object);
+      Component senderComponent = SenderComponentUtil.senderComponent(player, object, Constant.THE_COLOR);
       if (!senderComponent.equals(Component.empty()))
       {
         component = component.append(senderComponent);
@@ -89,14 +97,14 @@ public class ComponentUtil
         component = component.append(concat.children(Collections.emptyList()));
         for (Component child : concat.children())
         {
-          component = component.append(ComponentUtil.create(child));
+          component = component.append(ComponentUtil.create(player, child));
         }
       }
       else if (object instanceof List<?> list)
       {
         for (Object c : list)
         {
-          Component concat = ComponentUtil.create(c);
+          Component concat = ComponentUtil.create(player, c);
           component = component.append(concat);
         }
       }
@@ -105,12 +113,12 @@ public class ComponentUtil
         for (Component c : components)
         {
           Component concat = (Component) c;
-          component = component.append(ComponentUtil.create(concat));
+          component = component.append(ComponentUtil.create(player, concat));
         }
       }
       else if (object instanceof Material material)
       {
-        ItemStack itemStack = ItemStackUtil.loredItemStack(material);
+        ItemStack itemStack = ItemStackUtil.loredItemStack(material, player);
         Component concat = ItemNameUtil.itemName(itemStack, Constant.THE_COLOR);
         concat = concat.hoverEvent(itemStack.asHoverEvent());
         component = component.append(concat);
@@ -124,6 +132,10 @@ public class ComponentUtil
           NBTItem nbtItem = new NBTItem(itemStack);
           nbtItem.removeKey("BlockEntityTag");
           itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
+        }
+        if (player != null)
+        {
+          ItemLore.setItemLore(itemStack, player);
         }
         Component concat = ItemNameUtil.itemName(itemStack, Constant.THE_COLOR);
         if (concat instanceof TextComponent textComponent && textComponent.content().equals(""))
@@ -155,10 +167,12 @@ public class ComponentUtil
         {
           concat = concat.color(Constant.THE_COLOR);
         }
-        concat = concat.clickEvent(ClickEvent.suggestCommand("/whatis " + world.getName()));
+        if (player != null && player.hasPermission("asdf"))
+        {
+          concat = concat.clickEvent(ClickEvent.suggestCommand("/whatis " + world.getName()));
+        }
         int playerCount = world.getPlayerCount();
         Component hover = Component.empty().append(ComponentUtil.create(worldName));
-
         String environmentKey = switch (world.getEnvironment())
                 {
                   case NORMAL -> "오버월드";
@@ -184,6 +198,11 @@ public class ComponentUtil
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.createTranslate("플레이어 수 : %s", ComponentUtil.createTranslate("%s명", Constant.THE_COLOR_HEX + playerCount)));
         concat = concat.hoverEvent(hover.asHoverEvent());
+        if (player == null || player.hasPermission("asdf"))
+        {
+          concat = concat.clickEvent(ClickEvent.suggestCommand(
+                  "/whatis " + world.getName()));
+        }
         component = component.append(concat);
       }
       else if (object instanceof Location location)
@@ -220,19 +239,39 @@ public class ComponentUtil
         }
         hover = hover.append(Component.text("\n"));
         hover = hover.append(Component.text("minecraft:" + id, NamedTextColor.DARK_GRAY));
-        concat = concat.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand(
-                "/ceffect @s minecraft:" + id + " " + duration + " " + amplifier + " " + !hasParticles + " " + !hasIcon + " " + !isAmbient));
+        concat = concat.hoverEvent(hover);
+        if (player == null || player.hasPermission("asdf"))
+        {
+          concat = concat.clickEvent(ClickEvent.suggestCommand(
+                  "/ceffect @s minecraft:" + id + " " + duration + " " + amplifier + " " + !hasParticles + " " + !hasIcon + " " + !isAmbient));
+        }
         component = component.append(concat);
       }
       else if (object instanceof CustomEffectType effectType)
       {
         String key = effectType.translationKey();
-        Component concat = Component.translatable(key, Constant.THE_COLOR);
+        Component concat = Component.translatable(key, effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(key);
         hover = hover.append(Component.text("\n"));
         hover = hover.append(effectType.getDescription());
+        Component propertyDescription = effectType.getPropertyDescription();
+        if (!propertyDescription.equals(Component.empty()))
+        {
+          hover = hover.append(propertyDescription);
+        }
         hover = hover.append(Component.text("\n"));
         hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
+        if (effectType == CustomEffectType.CURSE_OF_BEANS)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
+        }
+        String click = "/customeffect give @s " + effectType.toString().toLowerCase();
+        concat = concat.hoverEvent(hover);
+        if (player == null || player.hasPermission("asdf"))
+        {
+          concat = concat.clickEvent(ClickEvent.suggestCommand(click));
+        }
         component = component.append(concat);
       }
       else if (object instanceof CustomEffect customEffect)
@@ -241,21 +280,55 @@ public class ComponentUtil
         String key = effectType.translationKey();
         int duration = customEffect.getInitDuration();
         int amplifier = customEffect.getInitAmplifier();
-        Component concat = Component.translatable(key, Constant.THE_COLOR);
+        Component concat = Component.translatable(key, effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(key);
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(customEffect.getDescription());
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", amplifier + 1));
+        Component description = customEffect.getDescription();
+        if (!description.equals(Component.empty()))
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(customEffect.getDescription());
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
+          if (effectType == CustomEffectType.CURSE_OF_BEANS)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
+          }
+        }
+        if (duration != -1)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+          if (effectType == CustomEffectType.CURSE_OF_BEANS)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+          }
+        }
+        if (effectType.getMaxAmplifier() != 0)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", amplifier + 1));
+          if (effectType == CustomEffectType.CURSE_OF_BEANS)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", amplifier + 1));
+          }
+        }
         hover = hover.append(Component.text("\n"));
         hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
+        if (effectType == CustomEffectType.CURSE_OF_BEANS)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
+        }
         DisplayType displayType = customEffect.getDisplayType();
-        String click = "/customeffect give @s " + effectType.toString().toLowerCase() + " " + duration + " " + amplifier + " " + displayType.toString().toLowerCase();
-        concat = concat.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand(click));
+        String click = "/customeffect give @s " + effectType.toString().toLowerCase() + " " + (duration != -1 ? duration : "max") + " " + amplifier + " " + displayType.toString().toLowerCase();
+        concat = concat.hoverEvent(hover);
+        if (player == null || player.hasPermission("asdf"))
+        {
+          concat = concat.clickEvent(ClickEvent.suggestCommand(click));
+        }
         component = component.append(concat);
       }
       else if (Cucumbery.using_NoteBlockAPI && object instanceof Song song)
@@ -290,19 +363,17 @@ public class ComponentUtil
           }
           Component concat = createTranslate("chat.square_brackets", title.hoverEvent(title.append(Component.text("\n")).append(description))).color(title.color());
           NamespacedKey namespacedKey = advancement.getKey();
-          String suggest = "/advancement grant @s only " + namespacedKey.namespace() + ":" + namespacedKey.value();
-          concat = concat.clickEvent(ClickEvent.suggestCommand(suggest));
+          if (player == null || player.hasPermission("asdf"))
+          {
+            String suggest = "/advancement grant @s only " + namespacedKey.namespace() + ":" + namespacedKey.value();
+            concat = concat.clickEvent(ClickEvent.suggestCommand(suggest));
+          }
           component = component.append(concat);
         }
       }
       else if (object instanceof Translatable translatable)
       {
         component = component.append(Component.translatable(translatable.translationKey()));
-      }
-      else if (object instanceof Number number)
-      {
-        Component concat = Component.text(Constant.Sosu2.format(number), Constant.THE_COLOR);
-        component = component.append(concat);
       }
       else if (!(object instanceof Boolean))
       {
@@ -334,17 +405,17 @@ public class ComponentUtil
         else if (string.startsWith("player:"))
         {
           Component concat = Component.empty();
-          Player player = SelectorUtil.getPlayer(null, string.substring(7), false);
-          if (player != null)
+          Player player2 = SelectorUtil.getPlayer(player, string.substring(7), false);
+          if (player2 != null)
           {
-            concat = create(player);
+            concat = create(player2);
           }
           component = component.append(concat);
         }
         else if (string.startsWith("players:"))
         {
           Component concat = Component.empty();
-          List<Player> players = SelectorUtil.getPlayers(null, string.substring(8), false);
+          List<Player> players = SelectorUtil.getPlayers(player, string.substring(8), false);
           if (players != null)
           {
             concat = create(players);
@@ -354,7 +425,7 @@ public class ComponentUtil
         else if (string.startsWith("entity:"))
         {
           Component concat = Component.empty();
-          Entity entity = SelectorUtil.getEntity(null, string.substring(7), false);
+          Entity entity = SelectorUtil.getEntity(player, string.substring(7), false);
           if (entity != null)
           {
             concat = create(entity);
@@ -364,7 +435,7 @@ public class ComponentUtil
         else if (string.startsWith("entities:"))
         {
           Component concat = Component.empty();
-          List<Entity> entities = SelectorUtil.getEntities(null, string.substring(9), false);
+          List<Entity> entities = SelectorUtil.getEntities(player, string.substring(9), false);
           if (entities != null)
           {
             concat = create(entities);
@@ -374,7 +445,7 @@ public class ComponentUtil
         else if (string.startsWith("offline_player:"))
         {
           Component concat = Component.empty();
-          OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(null, string.substring("offline_player:".length()), false);
+          OfflinePlayer offlinePlayer = SelectorUtil.getOfflinePlayer(player, string.substring("offline_player:".length()), false);
           if (offlinePlayer != null)
           {
             concat = create(offlinePlayer);
@@ -393,7 +464,7 @@ public class ComponentUtil
           }
           else
           {
-            ItemLore.setItemLore(itemStack);
+            ItemLore.setItemLore(itemStack, player);
           }
           component = component.append(create(itemStack));
         }
@@ -409,7 +480,7 @@ public class ComponentUtil
           }
           else
           {
-            ItemLore.setItemLore(itemStack);
+            ItemLore.setItemLore(itemStack, player);
           }
           component = component.append(ItemStackComponent.itemStackComponent(itemStack));
         }
@@ -431,12 +502,12 @@ public class ComponentUtil
           {
             JSON_PARSER.parse(string);
             Component concat = GsonComponentSerializer.gson().deserialize(string);
-            component = component.append(ComponentUtil.create(concat));
+            component = component.append(ComponentUtil.create(player, concat));
           }
           catch (Error | Exception e)
           {
             Component concat = ComponentUtil.create2(string, n2s);
-            component = component.append(ComponentUtil.create(concat));
+            component = component.append(ComponentUtil.create(player, concat));
           }
         }
       }
@@ -490,9 +561,14 @@ public class ComponentUtil
    * @param value 컴포넌트의 문자열 값
    * @return 텍스트 컴포넌트
    */
-  public static Component create2(String value)
+  public static Component create2(@NotNull String value)
   {
     return ComponentUtil.create2(value, true);
+  }
+
+  public static Component create2(@NotNull String value, boolean n2s)
+  {
+    return create2(null, value, n2s);
   }
 
   /**
@@ -502,11 +578,11 @@ public class ComponentUtil
    * @param n2s   색깔 코드 포맷 여부
    * @return 텍스트 컴포넌트
    */
-  public static Component create2(String value, boolean n2s)
+  public static Component create2(@Nullable Player player, @NotNull String value, boolean n2s)
   {
-    List<TextComponent> components = ComponentUtil.fromLegacyText(value, n2s);
-    TextComponent component = Component.empty();
-    for (TextComponent textComponent : components)
+    List<Component> components = ComponentUtil.fromLegacyText(player, value, n2s);
+    Component component = Component.empty();
+    for (Component textComponent : components)
     {
       component = component.append(textComponent);
     }
@@ -597,6 +673,12 @@ public class ComponentUtil
     return key;
   }
 
+  @NotNull
+  public static TranslatableComponent createTranslate(@NotNull String key, @NotNull Object... args)
+  {
+    return createTranslate(null, key, args);
+  }
+
   /**
    * 번역 컴포넌트를 생성합니다.
    *
@@ -606,14 +688,14 @@ public class ComponentUtil
    */
   @NotNull
   @SuppressWarnings("all")
-  public static TranslatableComponent createTranslate(@NotNull String key, @NotNull Object... args)
+  public static TranslatableComponent createTranslate(@Nullable Player player, @NotNull String key, @NotNull Object... args)
   {
-    boolean n2s = args.length > 0 && !args[0].equals(false);
-    TranslatableComponent component = ComponentUtil.fromLegacyTextTranslate(key, n2s);
+    boolean n2s = args.length > 0 && (args[0] == null || !args[0].equals(false));
+    TranslatableComponent component = ComponentUtil.fromLegacyTextTranslate(player, key, n2s);
     List<Component> componentArgs = new ArrayList<>();
     for (Object obj : args)
     {
-      Component senderComponent = SenderComponentUtil.senderComponent(obj);
+      Component senderComponent = SenderComponentUtil.senderComponent(player, obj, Constant.THE_COLOR);
       if (!senderComponent.equals(Component.empty()))
       {
         if (senderComponent.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
@@ -627,7 +709,7 @@ public class ComponentUtil
       {
         for (Object o : list)
         {
-          Component arg = ComponentUtil.create(n2s, o);
+          Component arg = ComponentUtil.create(player, n2s, o);
           if (arg.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
           {
             arg = arg.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
@@ -639,12 +721,12 @@ public class ComponentUtil
       {
         for (Object value : array)
         {
-          componentArgs.add(ComponentUtil.create(value));
+          componentArgs.add(ComponentUtil.create(player, value));
         }
       }
       if (!(obj instanceof Boolean))
       {
-        Component arg = ComponentUtil.create(n2s, obj);
+        Component arg = ComponentUtil.create(player, n2s, obj);
         if (arg.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
         {
           arg = arg.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
@@ -652,15 +734,22 @@ public class ComponentUtil
         componentArgs.add(arg);
       }
     }
+    if (!componentArgs.isEmpty()) ;
     component = component.args(componentArgs);
     component = yeet(component.key(), component);
     return component;
   }
 
   @SuppressWarnings("unused")
-  private static List<TextComponent> fromLegacyText(@NotNull String message)
+  private static List<Component> fromLegacyText(@NotNull String message)
   {
     return fromLegacyText(message, true);
+  }
+
+  @NotNull
+  private static List<Component> fromLegacyText(@NotNull String message, boolean n2s)
+  {
+    return fromLegacyText(null, message, n2s);
   }
 
   /**
@@ -669,13 +758,14 @@ public class ComponentUtil
    * @param message 구버전 텍스트
    * @return 컴포넌트
    */
-  private static List<TextComponent> fromLegacyText(@NotNull String message, boolean n2s)
+  @NotNull
+  private static List<Component> fromLegacyText(@Nullable Audience audience, @NotNull String message, boolean n2s)
   {
     if (n2s)
     {
       message = MessageUtil.n2s(message);
     }
-    List<TextComponent> components = new ArrayList<>();
+    List<Component> components = new ArrayList<>();
     StringBuilder builder = new StringBuilder();
     TextComponent component = Component.empty();
     Matcher matcher = URL.matcher(message);
@@ -799,6 +889,38 @@ public class ComponentUtil
         }
 
       }
+      else if (audience instanceof Player player && c == '[')
+      {
+        try
+        {
+          PlayerInventory playerInventory = player.getInventory();
+          char next = message.charAt(i + 1);
+          if (next == 'i' && message.charAt(i + 2) == ']')
+          {
+            i += 2;
+            ItemStack itemStack = playerInventory.getItemInMainHand();
+            if (ItemStackUtil.itemExists(itemStack))
+            {
+              if (!builder.isEmpty())
+              {
+                old = component;
+                old = old.content(builder.toString());
+                builder = new StringBuilder();
+                components.add(old);
+              }
+              components.add(ItemStackComponent.itemStackComponent(itemStack, Constant.THE_COLOR));
+            }
+          }
+          else
+          {
+            builder.append(c);
+          }
+        }
+        catch (Exception e)
+        {
+          builder.append(c);
+        }
+      }
       else
       {
         int pos = message.indexOf(32, i);
@@ -839,8 +961,13 @@ public class ComponentUtil
     return components;
   }
 
-  @SuppressWarnings("all")
   private static TranslatableComponent fromLegacyTextTranslate(@NotNull String message, boolean n2s)
+  {
+    return fromLegacyTextTranslate(null, message, n2s);
+  }
+
+  @SuppressWarnings("all")
+  private static TranslatableComponent fromLegacyTextTranslate(@Nullable Audience audience, @NotNull String message, boolean n2s)
   {
     if (n2s)
     {
@@ -866,7 +993,7 @@ public class ComponentUtil
         {
           c = (char) (c + 32);
         }
-        ChatColor format;
+        @Nullable ChatColor format;
         if (c == 'x' && i + 12 < message.length())
         {
           StringBuilder hex = new StringBuilder("#");
@@ -893,7 +1020,7 @@ public class ComponentUtil
 
         if (format != null)
         {
-          if (builder.length() > 0)
+          if (!builder.isEmpty())
           {
             old = component;
             old = old.key(builder.toString());
@@ -954,7 +1081,7 @@ public class ComponentUtil
         {
           if (c == 'p' || c == 'q')
           {
-            if (builder.length() > 0)
+            if (!builder.isEmpty())
             {
               old = component;
               old = old.key(builder.toString());

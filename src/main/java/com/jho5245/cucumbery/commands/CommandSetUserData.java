@@ -112,7 +112,7 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
                 SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN, FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN, SHOW_COMMAND_BLOCK_EXECUTION_LOCATION, HEALTH_SCALED,
                 COPY_BLOCK_DATA, COPY_BLOCK_DATA_WHEN_SNEAKING, COPY_BLOCK_DATA_FACING, COPY_BLOCK_DATA_WATERLOGGED, DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING,
                 SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE, DISABLE_ITEM_COOLDOWN, GOD_MODE, IMMEDIATE_RESPAWN,
-                SPECTATOR_MODE, SPECTATOR_MODE_ON_JOIN -> {
+                SPECTATOR_MODE, SPECTATOR_MODE_ON_JOIN, ANNOUNCE_ADVANCEMENTS, ENTITY_HOVER_EVENT_TMI_MODE -> {
           if (!value.equals("true") && !value.equals("false"))
           {
             MessageUtil.wrongBool(sender, 3, args);
@@ -260,7 +260,7 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
                         NOTIFY_IF_INVENTORY_IS_FULL, NOTIFY_IF_INVENTORY_IS_FULL_FORCE_DISABLE, SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN, FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN,
                         SHOW_COMMAND_BLOCK_EXECUTION_LOCATION, HEALTH_SCALED, COPY_BLOCK_DATA, COPY_BLOCK_DATA_WHEN_SNEAKING, COPY_BLOCK_DATA_FACING, COPY_BLOCK_DATA_WATERLOGGED,
                         DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR, SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE, DISABLE_ITEM_COOLDOWN,
-                        GOD_MODE, IMMEDIATE_RESPAWN, SPECTATOR_MODE, SPECTATOR_MODE_ON_JOIN -> Method.tabCompleterBoolean(args, "<값>");
+                        GOD_MODE, IMMEDIATE_RESPAWN, SPECTATOR_MODE, SPECTATOR_MODE_ON_JOIN, ANNOUNCE_ADVANCEMENTS, ENTITY_HOVER_EVENT_TMI_MODE -> Method.tabCompleterBoolean(args, "<값>");
                 case DISPLAY_NAME, PLAYER_LIST_NAME -> Collections.singletonList("닉네임은 닉네임 명령어(/nick, /nickothers)를 사용하여 변경해주세요.");
                 case HEALTH_BAR -> Collections.singletonList("HP바는 hp바 명령어(/shp)를 사용하여 변경해주세요.");
                 case ID, UUID -> Collections.singletonList(args[1] + "(" + key.getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다.");

@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.listeners.player;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.deathmessages.LastTrampledBlockManager;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -25,7 +27,6 @@ public class PlayerMove implements Listener
   {
     Player player = event.getPlayer();
     UUID uuid = player.getUniqueId();
-    Location from = event.getFrom(), to = event.getTo();
     if (!Permission.EVENT2_ANTI_ALLPLAYER.has(player) && event.hasChangedPosition() && Constant.AllPlayer.MOVE.isEnabled())
     {
       event.setCancelled(true);
@@ -39,7 +40,24 @@ public class PlayerMove implements Listener
       return;
     }
 
+    this.customEffect(event);
     this.getLastTrampledBlock(event);
+  }
+
+  private void customEffect(PlayerMoveEvent event)
+  {
+    Player player = event.getPlayer();
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.STOP))
+    {
+      event.setCancelled(true);
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CONFUSION))
+    {
+      Location from = event.getFrom(), to = event.getTo();
+      float yaw = Math.min(360f, Math.max(-360f, 2 * from.getYaw() - to.getYaw()));
+      float pitch = Math.min(90f, Math.max(-90f, 2 * from.getPitch() - to.getPitch()));
+      event.setTo(new Location(to.getWorld(), to.getX(), to.getY(), to.getZ(), yaw, pitch));
+    }
   }
 
   private void getLastTrampledBlock(PlayerMoveEvent event)

@@ -198,7 +198,7 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "경고 시간 : &e" + warningTime);
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "크기(한 변의 길이) : &e" + Constant.Sosu2.format(size));
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "------------");
-      MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "게임룰 : ", gamerule);
+      MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "게임룰 : %s", gamerule);
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "-------------------------------------------------");
     }
     else

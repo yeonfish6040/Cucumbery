@@ -1,5 +1,8 @@
 package com.jho5245.cucumbery.listeners.player;
 
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
@@ -23,17 +26,40 @@ public class PlayerToggleSneak implements Listener
   @EventHandler
   public void onPlayerToggleSneak(PlayerToggleSneakEvent event)
   {
-    Player player = event.getPlayer();
-    if (player.isSneaking())
+    if (event.isCancelled())
     {
       return;
     }
+    Player player = event.getPlayer();
     this.itemSneakUsage(player, player.getInventory().getItemInMainHand(), true);
     this.itemSneakUsage(player, player.getInventory().getItemInOffHand(), false);
+    this.customEffect(player, event.isSneaking());
+  }
+
+  private void customEffect(Player player, boolean isSneaking)
+  {
+    CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.STOP);
+    if (isSneaking && customEffect != null && customEffect.getDuration() != -1)
+    {
+     int duration = customEffect.getDuration();
+     duration -= 20 * (int) (8d / (customEffect.getAmplifier() + 1));
+     if (duration <= 0)
+     {
+       CustomEffectManager.removeEffect(player, CustomEffectType.STOP);
+     }
+     else
+     {
+       customEffect.setDuration(duration);
+     }
+    }
   }
 
   private void itemSneakUsage(Player player, ItemStack item, boolean mainHand)
   {
+    if (player.isSneaking())
+    {
+      return;
+    }
     UUID uuid = player.getUniqueId();
     NBTCompound itemTag = NBTAPI.getMainCompound(item);
     NBTCompound usageTag = NBTAPI.getCompound(itemTag, CucumberyTag.USAGE_KEY);

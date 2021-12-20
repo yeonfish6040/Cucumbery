@@ -2,8 +2,8 @@ package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
@@ -13,6 +13,8 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,6 +78,8 @@ public class CommandKill2 extends CommandBase
           {
             continue;
           }
+          player.setLastDamageCause(new EntityDamageEvent(player, DamageCause.VOID, Double.MAX_VALUE));
+          player.setLastDamage(Double.MAX_VALUE);
           player.setHealth(0);
           successEntities.add(player);
         }

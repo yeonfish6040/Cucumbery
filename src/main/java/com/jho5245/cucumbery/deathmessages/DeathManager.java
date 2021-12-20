@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.deathmessages;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -77,16 +79,10 @@ public class DeathManager
         damageCause = new EntityDamageEvent(entity, EntityDamageEvent.DamageCause.VOID, Double.MAX_VALUE);
       }
       EntityDamageEvent.DamageCause cause = damageCause.getCause();
-      Component entityComponent = SenderComponentUtil.senderComponent(entity);
-      List<Component> args = new ArrayList<>();
+      List<Object> args = new ArrayList<>();
       World world = location.getWorld();
       String worldName = world.getName();
-      if (!(entity instanceof Player))
-      {
-        entityComponent = entityComponent.clickEvent(ClickEvent.suggestCommand("/atp @s " + worldName + " "
-                + location.getX() + " " + location.getY() + " " + location.getZ() + " " + location.getYaw() + " " + location.getPitch()));
-      }
-      args.add(entityComponent);
+      args.add(entity);
       List<Component> extraArgs = new ArrayList<>();
       String key = "";
       @Nullable Object damager = getDamager(event);
@@ -579,14 +575,19 @@ public class DeathManager
       {
         for (int i = 0; i < args.size(); i++)
         {
-          Component component = args.get(i);
-          if (component.hoverEvent() != null && Objects.requireNonNull(component.hoverEvent()).action() == HoverEvent.Action.SHOW_ITEM)
+          Object o = args.get(i);
+          if (o instanceof Component component)
           {
-            args.set(i, args.get(i).hoverEvent(null));
+            if (component.hoverEvent() != null && Objects.requireNonNull(component.hoverEvent()).action() == HoverEvent.Action.SHOW_ITEM)
+            {
+              args.set(i, component.hoverEvent(null));
+            }
           }
         }
         deathMessageComponent = ComponentUtil.createTranslate("death.attack.message_too_long", ComponentUtil.createTranslate(key, args));
       }
+      final Component insiderComponent = deathMessageComponent;
+      Component insiderPrefix = Component.empty();
       if (usePrefix)
       {
         boolean isPvP = isPlayerDeath && (damager instanceof Player && !entity.equals(damager));
@@ -609,6 +610,7 @@ public class DeathManager
           }
         }
         deathMessageComponent = Component.empty().append(isPvP ? DEATH_PREFIX_PVP : DEATH_PREFIX).append(deathMessageComponent);
+        insiderPrefix = isPvP ? DEATH_PREFIX_PVP : DEATH_PREFIX;
       }
       Variable.victimAndDamager.remove(entity.getUniqueId());
       Variable.victimAndBlockDamager.remove(entity.getUniqueId());
@@ -631,22 +633,33 @@ public class DeathManager
           deathMessageComponent = deathMessageComponent.append(ComponentUtil.createTranslate(message, entity));
         }
       }
-      if (key.equals("none"))
-      {
-        deathMessageComponent = null;
-      }
       if (playerDeathEvent != null)
       {
-        MessageUtil.consoleSendMessage(ComponentUtil.createTranslate("&7죽은 위치 : %s", location));
-        if (event.isCancelled() && deathMessageComponent != null)
-        {
-          MessageUtil.broadcast(deathMessageComponent);
-        }
-        playerDeathEvent.deathMessage(deathMessageComponent);
+        playerDeathEvent.deathMessage(null);
       }
-      else if (deathMessageComponent != null)
+      if (!key.equals("none"))
       {
         MessageUtil.broadcastPlayer(deathMessageComponent);
+        if (CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_BEANS))
+        {
+          for (Player online : Bukkit.getOnlinePlayers())
+          {
+            if (entity != online && !CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_BEANS))
+            {
+              MessageUtil.sendMessage(entity, deathMessageComponent);
+            }
+          }
+        }
+        if (CustomEffectManager.hasEffect(entity, CustomEffectType.INSIDER))
+        {
+          for (Player online : Bukkit.getOnlinePlayers())
+          {
+            if (entity != online)
+            {
+              MessageUtil.sendTitle(online, insiderPrefix, insiderComponent, 5, 100, 15);
+            }
+          }
+        }
         int x = location.getBlockX();
         int y = location.getBlockY();
         int z = location.getBlockZ();

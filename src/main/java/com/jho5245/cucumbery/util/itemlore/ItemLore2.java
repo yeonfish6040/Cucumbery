@@ -18,6 +18,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
+import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
@@ -32,6 +33,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
@@ -51,58 +53,10 @@ public class ItemLore2
 {
   protected static ItemStack setItemLore(@NotNull ItemStack item, ItemMeta itemMeta, List<Component> lore, @Nullable Object params)
   {
- //   Player player = null;
- //   PrepareItemCraftEvent prepareItemCraftEvent = null;
-//    EntityPickupItemEvent entityPickupItemEvent = null;
+    Player player = params instanceof Player p ? p : null;
     Material type = item.getType();
     NBTItem nbtItem = new NBTItem(item.clone());
     @Nullable NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
-   // @Nullable NBTCompoundList customEnchants = itemTag != null ? itemTag.getCompoundList(CucumberyTag.CUSTOM_ENCHANTS_KEY) : null;
-
-/*    // 커스텀 인챈트 배열이 있는 경우면 아이템의 인챈트 여부에 관계 없이 바닐라 인챈트 전부 제거
-
-    if (customEnchants != null && !customEnchants.isEmpty())
-    {
-      customEnchants.removeIf(
-              NBTCompound -> (
-                      Enchantment.getByKey(NamespacedKey.minecraft(
-                              NBTCompound.getString(CucumberyTag.ID_KEY).toLowerCase()
-                      )) != null
-              )
-      );
-      if (customEnchants.isEmpty())
-      {
-        itemTag.removeKey(CucumberyTag.CUSTOM_ENCHANTS_KEY);
-      }
-      if (itemTag.getKeys().isEmpty())
-      {
-        itemTag = null;
-        nbtItem.removeKey(CucumberyTag.KEY_MAIN);
-      }
-      itemMeta = nbtItem.getItem().getItemMeta();
-    }*/
-
-//    if (itemMeta.hasEnchants())
-//    {
-//      if (itemTag == null)
-//      {
-//        itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-//      }
-//      if (customEnchants == null)
-//      {
-//        customEnchants = itemTag.getCompoundList(CucumberyTag.CUSTOM_ENCHANTS_KEY);
-//      }
-//      Map<Enchantment, Integer> enchants = itemMeta.getEnchants();
-//      for (Enchantment enchantment : enchants.keySet())
-//      {
-//        String id = enchantment.getKey().value();
-//        Integer level = enchants.get(enchantment);
-//        NBTCompound enchantCompound = customEnchants.addCompound();
-//        enchantCompound.setString(CucumberyTag.ID_KEY, id);
-//        enchantCompound.setInteger(CucumberyTag.CUSTOM_ENCHANTS_LEVEL_KEY, level);
-//      }
-//      itemMeta = nbtItem.getItem().getItemMeta();
-//    }
     if (lore == null)
     {
       lore = new ArrayList<>();
@@ -140,52 +94,12 @@ public class ItemLore2
       itemMeta = nbtItem.getItem().getItemMeta();
     }
 
-    //    if (player != null && (customLores == null || customLores.size() == 0))
-//    {
-//      switch (type)
-//      {
-//        case DRAGON_HEAD, NETHER_STAR, ELYTRA -> {
-//          if (itemTag == null)
-//          {
-//            itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-//          }
-//          switch (type)
-//          {
-//            case DRAGON_HEAD:
-//            case NETHER_STAR:
-//            case ELYTRA:
-//              if (entityPickupItemEvent != null)
-//              {
-//                if (itemTag == null)
-//                {
-//                  itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-//                }
-//                if (customLores == null)
-//                {
-//                  customLores = itemTag.getStringList(CucumberyTag.CUSTOM_LORE_KEY);
-//                }
-//                customLores.addAll(Arrays.asList("", "&7습득 유저 : &e" + ComponentUtil.serialize(ComponentUtil.senderComponent(player))));
-//              }
-//              break;
-//          }
-//          if (type == Material.DRAGON_HEAD)
-//          {
-//            NBTList<String> extraTags = itemTag != null ? itemTag.getStringList(CucumberyTag.EXTRA_TAGS_KEY) : null;
-//            if (itemTag == null)
-//            {
-//              itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
-//            }
-//            if (extraTags == null)
-//            {
-//              extraTags = itemTag.getStringList(CucumberyTag.EXTRA_TAGS_KEY);
-//            }
-//            extraTags.add(ExtraTag.PREVERSE_BLOCK_NBT.toString());
-//          }
-//          item.setItemMeta(nbtItem.getItem().getItemMeta());
-//          itemMeta = item.getItemMeta();
-//        }
-//      }
-//    }
+    NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
+    if (player != null && NBTAPI.arrayContainsValue(extraTags, ExtraTag.NAME_TAG))
+    {
+      lore.add(Component.empty());
+      lore.add(ComponentUtil.createTranslate("&a새겨진 이름 : %s", player.displayName().hoverEvent(null).clickEvent(null)));
+    }
 
     NBTCompound customRarityTag = NBTAPI.getCompound(itemTag, CucumberyTag.CUSTOM_RARITY_KEY);
     String customRarityBase = NBTAPI.getString(customRarityTag, CucumberyTag.CUSTOM_RARITY_BASE_KEY);
@@ -1410,7 +1324,7 @@ public class ItemLore2
           break;
         }
         NBTCompound debugProperty = nbtItem.getCompound("DebugProperty");
-        if (debugProperty != null && debugProperty.getKeys().size() > 0)
+        if (debugProperty != null && !debugProperty.getKeys().isEmpty())
         {
           lore.add(Component.empty());
           lore.add(ComponentUtil.createTranslate("&9[디버그 속성]"));
@@ -1575,18 +1489,21 @@ public class ItemLore2
             lore.add(customNameLore);
             if (ItemStackUtil.itemExists(ingredient))
             {
+              ItemLore.removeItemLore(ingredient);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(ingredient);
               lore.add(ComponentUtil.createTranslate("&7" + smeltType + " 중인 아이템 : %s", itemStackComponent));
             }
             ItemStack fuel = furnaceInventory.getFuel();
             if (ItemStackUtil.itemExists(fuel))
             {
+              ItemLore.removeItemLore(fuel);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(fuel);
               lore.add(ComponentUtil.createTranslate("&7땔감 아이템 : %s", itemStackComponent));
             }
             ItemStack result = furnaceInventory.getResult();
             if (ItemStackUtil.itemExists(result))
             {
+              ItemLore.removeItemLore(result);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(result);
               lore.add(ComponentUtil.createTranslate("&7결과물 아이템 : %s", itemStackComponent));
             }
@@ -1601,8 +1518,9 @@ public class ItemLore2
             {
               lore.add(Component.empty());
               List<ItemStack> itemStackList = new ArrayList<>();
-              for (ItemStack itemStack : inventory.getContents())
+              for (int i = 0; i < inventory.getSize(); i++)
               {
+                ItemStack itemStack = inventory.getItem(i);
                 if (ItemStackUtil.itemExists(itemStack))
                 {
                   itemStackList.add(itemStack);
@@ -1623,7 +1541,7 @@ public class ItemLore2
                     break;
                   }
                   ItemStack itemStack = itemStackList.get(i);
-                  lore.add(ItemStackComponent.itemStackComponent(itemStack));
+                  lore.add(ItemStackComponent.itemStackComponent(ItemLore.removeItemLore(itemStack)));
                 }
               }
             }
@@ -1655,10 +1573,10 @@ public class ItemLore2
           {
             Long seed = blockEntityTag.getLong("LootTableSeed");
             lore.add(Component.empty());
-            lore.add(ComponentUtil.createTranslate("&7&o루트테이블 : %s", lootTable.getKey()));
+            lore.add(ComponentUtil.createTranslate("&7루트테이블 : %s", lootTable.getKey()));
             if (seed != null)
             {
-              lore.add(ComponentUtil.createTranslate("&7&o시드 : %s", seed));
+              lore.add(ComponentUtil.createTranslate("&7시드 : %s", seed));
             }
           }
         }
@@ -1871,42 +1789,42 @@ public class ItemLore2
       lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_CONSUMABLE));
       if (foodTag != null)
       {
-          Integer foodLevel = foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY);
-          if (foodLevel == null)
-          {
-            foodLevel = 0;
-          }
-          Double saturation = foodTag.getDouble(CucumberyTag.SATURATION_KEY);
-          if (saturation == null)
-          {
-            saturation = 0d;
-          }
-          if (foodTag.hasKey(CucumberyTag.NOURISHMENT_KEY))
-          {
-            nourishment = foodTag.getString(CucumberyTag.NOURISHMENT_KEY);
-            lore.add(ComponentUtil.createTranslate("rgb235,163,0;든든함 : %s", ComponentUtil.createTranslate(nourishment)));
-          }
-          else if (foodLevel != 0 || saturation != 0)
-          {
-            nourishment = ItemStackUtil.getNourishment(foodLevel, saturation);
-            lore.add(ComponentUtil.createTranslate("rgb235,163,0;든든함 : %s", ComponentUtil.createTranslate(nourishment)));
-          }
-          if (!foodTag.hasKey(CucumberyTag.FOOD_LEVEL_KEY))
-          {
-            lore.add(ComponentUtil.createTranslate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
-          }
-          else if (foodLevel != 0)
-          {
-            lore.add(ComponentUtil.createTranslate("rgb255,183,0;음식 포인트 : %s", (foodLevel > 0 ? "+" : "") + foodLevel));
-          }
-          if (!foodTag.hasKey(CucumberyTag.SATURATION_KEY))
-          {
-            lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
-          }
-          else if (saturation != 0d)
-          {
-            lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", (saturation > 0d ? "+" : "") + Constant.Sosu2.format(saturation)));
-          }
+        Integer foodLevel = foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY);
+        if (foodLevel == null)
+        {
+          foodLevel = 0;
+        }
+        Double saturation = foodTag.getDouble(CucumberyTag.SATURATION_KEY);
+        if (saturation == null)
+        {
+          saturation = 0d;
+        }
+        if (foodTag.hasKey(CucumberyTag.NOURISHMENT_KEY))
+        {
+          nourishment = foodTag.getString(CucumberyTag.NOURISHMENT_KEY);
+          lore.add(ComponentUtil.createTranslate("rgb235,163,0;든든함 : %s", ComponentUtil.createTranslate(nourishment)));
+        }
+        else if (foodLevel != 0 || saturation != 0)
+        {
+          nourishment = ItemStackUtil.getNourishment(foodLevel, saturation);
+          lore.add(ComponentUtil.createTranslate("rgb235,163,0;든든함 : %s", ComponentUtil.createTranslate(nourishment)));
+        }
+        if (!foodTag.hasKey(CucumberyTag.FOOD_LEVEL_KEY))
+        {
+          lore.add(ComponentUtil.createTranslate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
+        }
+        else if (foodLevel != 0)
+        {
+          lore.add(ComponentUtil.createTranslate("rgb255,183,0;음식 포인트 : %s", (foodLevel > 0 ? "+" : "") + foodLevel));
+        }
+        if (!foodTag.hasKey(CucumberyTag.SATURATION_KEY))
+        {
+          lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
+        }
+        else if (saturation != 0d)
+        {
+          lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", (saturation > 0d ? "+" : "") + Constant.Sosu2.format(saturation)));
+        }
       }
       else if (nourishment != null && !nourishment.equals("기본"))
       {
@@ -1960,7 +1878,6 @@ public class ItemLore2
     {
       itemMeta.removeItemFlags(ItemFlag.HIDE_UNBREAKABLE);
     }
-
     // 추가 설명으로 인한 아이템의 등급 수치 변경
     long rarity2 = ItemLoreUtil.getItemRarityValue(lore);
     String rarityDisplay = ItemCategory.Rarity.getRarityFromValue(rarity2).getDisplay();

@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.util.itemlore;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.storage.ColorCode;
+import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;
@@ -16,8 +17,12 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -742,6 +747,34 @@ public class ItemLoreUtil
     key = new StringBuilder(key.substring(0, key.length() - 2));
     prefix = prefix.args(ComponentUtil.createTranslate(key.toString(), args));
     lore.add(prefix);
+  }
+
+  /**
+   * 인벤토리에 들어 있는 아이템 설명을 제거하여 nbt 데이터 크기를 줄입니다.(최적화)
+   * @param itemStack 최적화할 아이템 메타
+   */
+  public static void removeInventoryItemLore(@NotNull ItemStack itemStack)
+  {
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    if (itemMeta instanceof BlockStateMeta blockStateMeta)
+    {
+      BlockState blockState = blockStateMeta.getBlockState();
+      if (blockState instanceof InventoryHolder inventoryHolder)
+      {
+        Inventory inventory = inventoryHolder.getInventory();
+        for (int i = 0; i < inventory.getSize(); i++)
+        {
+          ItemStack innerItemStack = inventory.getItem(i);
+          if (ItemStackUtil.itemExists(innerItemStack))
+          {
+            removeInventoryItemLore(innerItemStack);
+            inventory.setItem(i, ItemLore.removeItemLore(innerItemStack));
+          }
+        }
+        blockStateMeta.setBlockState(blockState);
+      }
+      itemStack.setItemMeta(blockStateMeta);
+    }
   }
 }
 

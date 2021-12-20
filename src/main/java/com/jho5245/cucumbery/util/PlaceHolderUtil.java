@@ -218,7 +218,6 @@ public class PlaceHolderUtil
       cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_type%", MessageUtil.stripColor(ItemNameUtil.itemName(mainHandType).toString()));
       cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_type%", MessageUtil.stripColor(ItemNameUtil.itemName(offHandType).toString()));
     }
-
     return cmd;
   }
 
@@ -911,13 +910,13 @@ public class PlaceHolderUtil
         }
         try
         {
-          Entity entity = Bukkit.getServer().getEntity(UUID.fromString(entityUUID));
+          Entity entity = Bukkit.getEntity(UUID.fromString(entityUUID));
           if (entity != null)
           {
             cmd = placeholder(cmd, entity);
           }
         }
-        catch (Exception ignore)
+        catch (Throwable ignore)
         {
         }
       }

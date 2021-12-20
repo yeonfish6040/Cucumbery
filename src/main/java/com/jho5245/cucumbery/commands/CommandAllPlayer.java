@@ -94,6 +94,8 @@ public class CommandAllPlayer implements CommandExecutor, TabCompleter
     }
     return true;
   }
+
+  @NotNull
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))

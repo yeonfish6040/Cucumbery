@@ -77,10 +77,14 @@ import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 5;
+  public static final int CONFIG_VERSION = 6;
+  private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   public static boolean using_CommandAPI;
   public static boolean using_Vault_Economy;
@@ -205,7 +209,19 @@ public class Cucumbery extends JavaPlugin
         MessageUtil.sendWarn(player, "플러그인이 비활성화되어 GUI 창이 닫힙니다.");
       }
     }
+    for (UUID uuid : Variable.customEffectBossBarMap.keySet())
+    {
+      Player player = Bukkit.getPlayer(uuid);
+      if (player != null)
+      {
+        player.hideBossBar(Variable.customEffectBossBarMap.get(uuid));
+      }
+    }
     Updater.onDisable();
+    if (Cucumbery.using_CommandAPI)
+    {
+      brigadierService.shutdownNow();
+    }
     if (Cucumbery.using_NoteBlockAPI)
     {
       if (CommandSong.radioSongPlayer != null)
@@ -221,8 +237,8 @@ public class Cucumbery extends JavaPlugin
           playerRadio.destroy();
         }
       }
+      Songs.onDisable();
     }
-    Songs.onDisable();
   }
 
   private void registerItems()
@@ -241,7 +257,7 @@ public class Cucumbery extends JavaPlugin
     {
       try
       {
-        this.registerBrigadierCommands();
+        brigadierService.submit(this::registerBrigadierCommands);
       }
       catch (Throwable e)
       {
@@ -301,7 +317,6 @@ public class Cucumbery extends JavaPlugin
   private void registerBrigadierCommands()
   {
     new ExtraExecuteArgument().registerArgument();
-    new CommandCucumbery().registerCommand("cucumbery", "cucumbery.command.cucumbery", "ccucumbery");
     new CommandRide().registerCommand("ride", "cucumbery.command.ride", "cride");
     new CommandSudo2().registerCommand("sudo2", "cucumbery.command.sudo2", "csudo2");
     new CommandGive2().registerCommand("cgive", "cucumbery.command.cgive", "cgive", "give2");
@@ -329,6 +344,7 @@ public class Cucumbery extends JavaPlugin
 
   private void registerCommands()
   {
+    Initializer.registerCommand("cucumbery", new CommandCucumbery());
     CommandItemData itemData = new CommandItemData();
     Initializer.registerCommand("itemdata", itemData);
     Initializer.registerCommand("setdata", new CommandSetData());
@@ -424,6 +440,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("custommerchant", new CommandCustomMerchant());
     Initializer.registerCommand("customeffect", new CommandCustomEffect());
     Initializer.registerCommand("quickshopaddon", new CommandQuickShopAddon());
+    Initializer.registerCommand("modifyexplosive", new CommandModifyExplosive());
   }
 
   private void registerEvents()
@@ -443,6 +460,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new BlockPlace());
     Initializer.registerEvent(new BlockPreDispense());
     Initializer.registerEvent(new EntityBlockForm());
+    Initializer.registerEvent(new NotePlay());
     Initializer.registerEvent(new TNTPrime());
     // listener.block.piston
     Initializer.registerEvent(new BlockPistonExtend());
@@ -453,12 +471,14 @@ public class Cucumbery extends JavaPlugin
     // listener.entity
     Initializer.registerEvent(new EntityAddToWorld());
     Initializer.registerEvent(new EntityChangeBlock());
+    Initializer.registerEvent(new EntityCustomEffectApply());
     Initializer.registerEvent(new EntityCustomEffectRemove());
     Initializer.registerEvent(new EntityDamage());
     Initializer.registerEvent(new EntityDamageByBlock());
     Initializer.registerEvent(new EntityDamageByEntity());
     Initializer.registerEvent(new EntityDeath());
     Initializer.registerEvent(new EntityExplode());
+    Initializer.registerEvent(new EntityJump());
     Initializer.registerEvent(new EntityLoadCrossbow());
     Initializer.registerEvent(new EntityMount());
     Initializer.registerEvent(new EntityMove());
@@ -524,6 +544,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerFlowerPotManipulate());
     Initializer.registerEvent(new PlayerGameModeChange());
     Initializer.registerEvent(new PlayerJoin());
+    Initializer.registerEvent(new PlayerJump());
     Initializer.registerEvent(new PlayerLaunchProjectile());
     Initializer.registerEvent(new PlayerLecternPageChange());
     Initializer.registerEvent(new PlayerLoomPatternSelect());
@@ -538,6 +559,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerTakeLecternBook());
     Initializer.registerEvent(new PlayerTeleport());
     Initializer.registerEvent(new PlayerToggleSneak());
+    Initializer.registerEvent(new PlayerToggleSprint());
     // listener.server
     Initializer.registerEvent(new ServerCommand());
     Initializer.registerEvent(new ServerListPing());

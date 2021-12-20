@@ -7,9 +7,9 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -17,6 +17,7 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.NBTType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
@@ -167,7 +168,7 @@ public class BlockPlace implements Listener
           }
           tnt.setSource(player);
           SoundPlay.playSoundLocation(event.getBlock().getLocation(), Sound.ENTITY_CREEPER_PRIMED);
-          int fuseTime = 0;
+          int fuseTime = 80;
           if (tntTag.hasKey(CucumberyTag.TNT_FUSE))
           {
             try
@@ -177,8 +178,20 @@ public class BlockPlace implements Listener
             catch (Exception ignored)
             {
             }
+            tnt.setFuseTicks(fuseTime);
           }
-          tnt.setFuseTicks(fuseTime);
+
+          Boolean fire = tntTag.getBoolean(CucumberyTag.TNT_FIRE);
+          if (fire != null && fire)
+          {
+            tnt.setIsIncendiary(true);
+          }
+
+          if (tntTag.hasKey(CucumberyTag.TNT_EXPLODE_POWER) && tntTag.getType(CucumberyTag.TNT_EXPLODE_POWER) == NBTType.NBTTagDouble)
+          {
+            double explodePower = tntTag.getDouble(CucumberyTag.TNT_EXPLODE_POWER);
+            tnt.setYield((float) explodePower);
+          }
         }
       }
     }

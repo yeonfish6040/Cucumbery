@@ -86,8 +86,8 @@ public enum Prefix
   INFO_SOCIAL("#52CEFF;소셜", "#5D7DC0;"),
   INFO_JOIN("&a입장", "&2"),
   INFO_QUIT("&c퇴장", "&5"),
-  INFO_CUSTOM_MERCHANT("&b사용 자지정 상인", "&9"),
-  INFO_CUSTOM_EFFECT("&b사용 자지정 효과", "&9"),
+  INFO_CUSTOM_MERCHANT("&b상인", "&9"),
+  INFO_CUSTOM_EFFECT("&b효과", "&9"),
   ;
 
   private final String text;

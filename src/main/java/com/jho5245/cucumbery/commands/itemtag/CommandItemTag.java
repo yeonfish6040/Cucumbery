@@ -2545,19 +2545,19 @@ public class CommandItemTag implements CommandExecutor
           if (args.length < 3)
           {
             MessageUtil.shortArg(player, 3, args);
-            MessageUtil.commandInfo(sender, label, "tnt <fuse|ignite|unstable> <값>");
+            MessageUtil.commandInfo(sender, label, "tnt <fuse|ignite|unstable|fire|explode-power> <값>");
             return true;
           }
           if (args.length > 3)
           {
             MessageUtil.longArg(player, 3, args);
-            MessageUtil.commandInfo(sender, label, "tnt <fuse|ignite|unstable> <값>");
+            MessageUtil.commandInfo(sender, label, "tnt <fuse|ignite|unstable|fire|explode-power> <값>");
             return true;
           }
           NBTCompound tntTag = NBTAPI.getCompound(itemTag, CucumberyTag.TNT);
           switch (args[1])
           {
-            case "unstable":
+            case "unstable" -> {
               NBTCompound blockStateTag = nbtItem.getCompound(CucumberyTag.MINECRAFT_BLOCK_STATE_TAG_KEY);
               if (!MessageUtil.isBoolean(sender, args, 3, true))
               {
@@ -2586,13 +2586,13 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 TNT의 unstable 태그 값을 &e" + (!inputBoolean ? "&r삭제하였습니다." : true + "&r으로 설정했습니다."));
               }
-              break;
-            case "ignite":
+            }
+            case "ignite" -> {
               if (!MessageUtil.isBoolean(sender, args, 3, true))
               {
                 return true;
               }
-              inputBoolean = Boolean.parseBoolean(args[2]);
+              boolean inputBoolean = Boolean.parseBoolean(args[2]);
               if (!inputBoolean)
               {
                 if (tntTag == null || !tntTag.hasKey(CucumberyTag.TNT_IGNITE))
@@ -2608,8 +2608,8 @@ public class CommandItemTag implements CommandExecutor
               if (tntTag == null)
               {
                 tntTag = itemTag.addCompound(CucumberyTag.TNT);
+                tntTag.setInteger(CucumberyTag.TNT_FUSE, 80);
               }
-              tntTag.setInteger(CucumberyTag.TNT_FUSE, 80);
               tntTag.setBoolean(CucumberyTag.TNT_IGNITE, inputBoolean);
               if (!inputBoolean)
               {
@@ -2620,8 +2620,8 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는  손에 들고 있는 TNT의 ignite 태그 값을 &e" + (!inputBoolean ? "&r삭제하였습니다." : true + "&r으로 설정했습니다."));
               }
-              break;
-            case "fuse":
+            }
+            case "fuse" -> {
               if (!MessageUtil.isInteger(sender, args[2], true))
               {
                 return true;
@@ -2646,9 +2646,9 @@ public class CommandItemTag implements CommandExecutor
               if (tntTag == null)
               {
                 tntTag = itemTag.addCompound(CucumberyTag.TNT);
+                tntTag.setBoolean(CucumberyTag.TNT_IGNITE, true);
               }
               tntTag.setInteger(CucumberyTag.TNT_FUSE, inputInteger);
-              tntTag.setBoolean(CucumberyTag.TNT_IGNITE, true);
               if (inputInteger == -1)
               {
                 NBTAPI.removeKey(tntTag, CucumberyTag.TNT_IGNITE);
@@ -2658,10 +2658,85 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는  손에 들고 있는 TNT의 fuse 태그 값을 &e" + (inputInteger == -1 ? "&r삭제하였습니다." : inputInteger + "&r으로 설정했습니다."));
               }
-              break;
-            default:
+            }
+            case "fire" -> {
+              if (!MessageUtil.isBoolean(sender, args, 3, true))
+              {
+                return true;
+              }
+              boolean inputBoolean = Boolean.parseBoolean(args[2]);
+              if (!inputBoolean)
+              {
+                if (tntTag == null || !tntTag.hasKey(CucumberyTag.TNT_FIRE))
+                {
+                  MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 TNT에 Fire 태그가 없습니다.");
+                  return true;
+                }
+              }
+              if (itemTag == null)
+              {
+                itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+              }
+              if (tntTag == null)
+              {
+                tntTag = itemTag.addCompound(CucumberyTag.TNT);
+                tntTag.setInteger(CucumberyTag.TNT_FUSE, 80);
+                tntTag.setBoolean(CucumberyTag.TNT_IGNITE, true);
+              }
+              tntTag.setBoolean(CucumberyTag.TNT_FIRE, inputBoolean);
+              if (!inputBoolean)
+              {
+                NBTAPI.removeKey(tntTag, CucumberyTag.TNT_FIRE);
+              }
+              playerInventory.setItemInMainHand(nbtItem.getItem());
+              if (!hideOutput)
+              {
+                MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는  손에 들고 있는 TNT의 Fire 태그 값을 &e" + (!inputBoolean ? "&r삭제하였습니다." : true + "&r으로 설정했습니다."));
+              }
+            }
+            case "explode-power" -> {
+              if (!MessageUtil.isDouble(sender, args[2], true))
+              {
+                return true;
+              }
+              double inputDouble = Double.parseDouble(args[2]);
+              if (!MessageUtil.checkNumberSize(sender, inputDouble, -1d, 500d))
+              {
+                return true;
+              }
+              if (inputDouble == -1)
+              {
+                if (tntTag == null || !tntTag.hasKey(CucumberyTag.TNT_EXPLODE_POWER))
+                {
+                  MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 TNT에 ExplodePower 태그가 없습니다.");
+                  return true;
+                }
+              }
+              if (itemTag == null)
+              {
+                itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+              }
+              if (tntTag == null)
+              {
+                tntTag = itemTag.addCompound(CucumberyTag.TNT);
+                tntTag.setInteger(CucumberyTag.TNT_FUSE, 80);
+                tntTag.setBoolean(CucumberyTag.TNT_IGNITE, true);
+              }
+              tntTag.setDouble(CucumberyTag.TNT_EXPLODE_POWER, inputDouble);
+              if (inputDouble == -1d)
+              {
+                NBTAPI.removeKey(tntTag, CucumberyTag.TNT_EXPLODE_POWER);
+              }
+              playerInventory.setItemInMainHand(nbtItem.getItem());
+              if (!hideOutput)
+              {
+                MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 TNT의 ExplodePower 태그 값을 &e" + (inputDouble == -1 ? "&r삭제하였습니다." : inputDouble + "&r으로 설정했습니다."));
+              }
+            }
+            default -> {
               MessageUtil.wrongArg(sender, 2, args);
-              MessageUtil.commandInfo(sender, label, "tnt <fuse|ignite|unstable> <값>");
+              MessageUtil.commandInfo(sender, label, "tnt <fuse|ignite|unstable|fire|explode-power> <값>");
+            }
           }
         }
         case "customenchant" -> {

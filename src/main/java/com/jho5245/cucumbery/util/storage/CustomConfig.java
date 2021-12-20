@@ -351,6 +351,8 @@ public class CustomConfig
     IMMEDIATE_RESPAWN("즉시-리스폰", false),
     SPECTATOR_MODE("관전-모드", false),
     SPECTATOR_MODE_ON_JOIN("접속-시-자동-관전-모드-전환", false),
+    ANNOUNCE_ADVANCEMENTS("발전-과제-달성-메시지-띄움", true),
+    ENTITY_HOVER_EVENT_TMI_MODE("개체-호버-이벤트-TMI-모드", false),
     ;
 
     private final String key;

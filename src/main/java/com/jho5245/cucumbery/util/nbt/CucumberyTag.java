@@ -77,6 +77,8 @@ public class CucumberyTag
   public static final String TNT = "tnt";
   public static final String TNT_IGNITE = "ignite";
   public static final String TNT_FUSE = "fuse";
+  public static final String TNT_FIRE = "Fire";
+  public static final String TNT_EXPLODE_POWER = "ExplodePower";
   public static final String FOOD_KEY = "Food";
   public static final String FOOD_LEVEL_KEY = "FoodLevel";
   public static final String SATURATION_KEY = "Saturation";

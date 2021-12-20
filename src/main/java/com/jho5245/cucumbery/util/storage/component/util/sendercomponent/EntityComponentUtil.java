@@ -7,6 +7,7 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.TropicalFishLore;
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -44,8 +45,9 @@ import java.util.*;
 public class EntityComponentUtil
 {
   @NotNull
-  public static Component entityComponent(@NotNull Entity entity, @Nullable TextColor defaultColor)
+  public static Component entityComponent(@Nullable Player p, @NotNull Entity entity, @Nullable TextColor defaultColor)
   {
+    boolean tmiMode = p != null && UserData.ENTITY_HOVER_EVENT_TMI_MODE.getBoolean(p);
     Component nameComponent;
     if (entity instanceof Player player)
     {
@@ -120,25 +122,25 @@ public class EntityComponentUtil
       hover = hover
               .append(Component.text("\n"))
               .append(ComponentUtil.createTranslate("ID : %s", Constant.THE_COLOR_HEX + name));
-      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.uuid"))
+      if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.uuid"))
       {
         hover = hover
                 .append(Component.text("\n"))
                 .append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
       }
-      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.player-join-count"))
+      if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.player-join-count"))
       {
         hover = hover
                 .append(Component.text("\n"))
                 .append(ComponentUtil.createTranslate("접속 횟수 : %s회", Constant.THE_COLOR_HEX + player.getStatistic(Statistic.LEAVE_GAME) + 1));
       }
-      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.player-play-time"))
+      if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.player-play-time"))
       {
         hover = hover
                 .append(Component.text("\n"))
                 .append(ComponentUtil.createTranslate("플레이 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 50L, false)));
       }
-      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.player-game-mode"))
+      if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.player-game-mode"))
       {
         hover = hover
                 .append(Component.text("\n"))
@@ -167,13 +169,13 @@ public class EntityComponentUtil
         typeComponent = ComponentUtil.createTranslate("%s %s", "아기", typeComponent);
       }
 
-      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.entity-type"))
+      if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.entity-type"))
       {
         hover = hover
                 .append(Component.text("\n"))
                 .append(ComponentUtil.createTranslate("유형 : %s", typeComponent.color(Constant.THE_COLOR)));
       }
-      if (Cucumbery.config.getBoolean("use-hover-event-for-entities.uuid"))
+      if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.uuid"))
       {
         hover = hover
                 .append(Component.text("\n"))
@@ -748,7 +750,7 @@ public class EntityComponentUtil
       hover = hover.append(Component.text("minecraft:" + entity.getType().toString().toLowerCase(), NamedTextColor.DARK_GRAY));
       nameComponent = nameComponent.clickEvent(ClickEvent.suggestCommand(click));
     }
-    if (Cucumbery.config.getBoolean("use-hover-event-for-entities.enabled"))
+    if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.enabled"))
     {
       nameComponent = nameComponent.hoverEvent(hover);
     }

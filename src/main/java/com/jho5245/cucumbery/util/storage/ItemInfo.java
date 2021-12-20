@@ -83,11 +83,11 @@ public class ItemInfo
       MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "--------------------------------------------------------------");
 
       String serial = ItemSerializer.serialize(itemStackWithoutTMI);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT(Cucumbery 기본 아이템 설명 태그 제외) : ", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사")
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT(Cucumbery 기본 아이템 설명 태그 제외) : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사")
               .hoverEvent(HoverEvent.showText(ComponentUtil.create2(serial.replace("\"", "&r\""))))
               .clickEvent(ClickEvent.copyToClipboard(serial)));
       serial = ItemSerializer.serialize(item);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT : ", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사")
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사")
               .hoverEvent(HoverEvent.showText(ComponentUtil.create2(serial.replace("\"", "&r\""))))
               .clickEvent(ClickEvent.copyToClipboard(serial)));
       MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "--------------------------------------------------------------");

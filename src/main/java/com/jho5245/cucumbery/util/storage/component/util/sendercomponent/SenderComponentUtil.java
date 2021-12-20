@@ -112,6 +112,19 @@ public class SenderComponentUtil
   @NotNull
   public static Component senderComponent(@NotNull Object object, @Nullable TextColor defaultColor)
   {
+    return senderComponent(null, object, defaultColor);
+  }
+
+  /**
+   * 콘솔, 명령 블록, 개체, 플레이어, 접속 중이지 않은 플레이어의 정보를 표시할 컴포넌트를 반환합니다.
+   *
+   * @param object       정보를 가져올 오브젝트
+   * @param defaultColor 해당 개체의 컴포넌트에 색상이 없을 때 기본 색상
+   * @return 해당 오브젝트의 정보를 가진 컴포넌트
+   */
+  @NotNull
+  public static Component senderComponent(@Nullable Player player, @NotNull Object object, @Nullable TextColor defaultColor)
+  {
     if (Cucumbery.using_CommandAPI && object instanceof NativeProxyCommandSender sender)
     {
       CommandSender caller = sender.getCaller(), callee = sender.getCallee();
@@ -209,7 +222,7 @@ public class SenderComponentUtil
     }
     else if (object instanceof Entity entity)
     {
-      return EntityComponentUtil.entityComponent(entity, defaultColor);
+      return EntityComponentUtil.entityComponent(player, entity, defaultColor);
     }
     else if (object instanceof OfflinePlayer offlinePlayer)
     {

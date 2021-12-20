@@ -9,6 +9,8 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -53,6 +55,8 @@ public class CommandKill3 implements CommandExecutor, TabCompleter
         if (!player.isDead())
         {
           double health = player.getHealth();
+          player.setLastDamageCause(new EntityDamageEvent(player, DamageCause.VOID, Double.MAX_VALUE));
+          player.setLastDamage(Double.MAX_VALUE);
           player.setHealth(0);
           if (player.getHealth() != health)
           {

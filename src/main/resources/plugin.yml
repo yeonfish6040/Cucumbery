@@ -7,6 +7,9 @@ description: 굳검버리 플러그인
 softdepend: [CommandAPI, Vault, NoteBlockAPI, QuickShop, PlaceHolderAPI, ItemEdit, mcMMO]
 
 commands:
+  cucumbery:
+    description: 플러그인 메인 명령어입니다.
+    usage: /<command> <version|reload|reloadplugin|reloaddata|update>
   itemdata:
     description: 주로 사용하는 손에 들고 있는 아이템의 정보를 봅니다.
     usage: /<command> [플레이어]
@@ -338,6 +341,11 @@ commands:
   customeffect:
     description: waht
     usage: /<command> <give|clear|modify> <targets> ...
+    aliases: [effect3, ceffect2]
+  modifyexplosive:
+    description: 폭발물의 불 번짐 여부나 폭발 강도를 수정합니다.
+    usage: /<command> <폭발물> <fire|explode_radius> <값> [명령어 출력 숨김 여부]
+    aliases: [editbomb]
 
 permissions:
   cucumbery.error.hide:

@@ -2,10 +2,12 @@ package com.jho5245.cucumbery.util;
 
 import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.josautil.KoreanUtils;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
@@ -290,7 +292,7 @@ public class MessageUtil
         }
       }
     }
-    if (audience instanceof Audience)
+    if (audience instanceof Audience a)
     {
       Component message;
       if (objects.length == 1 && objects[0] instanceof Component component)
@@ -301,8 +303,60 @@ public class MessageUtil
       {
         message = ComponentUtil.create(objects);
       }
-      ((Audience) audience).sendMessage(message);
+      a.sendMessage(message);
+      if (a instanceof Entity entity && CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_BEANS))
+      {
+        a.sendMessage(message);
+      }
     }
+  }
+
+  public static void sendMessage(@NotNull Object audience, @NotNull String key)
+  {
+    sendMessage(audience, (Prefix) null, key, true);
+  }
+
+  public static void sendMessage(@NotNull Object audience, @NotNull String key, @NotNull Object... args)
+  {
+    sendMessage(audience, null, key, args);
+  }
+
+  public static void sendMessage(@NotNull Object audience, @NotNull Prefix prefix, @NotNull String key)
+  {
+    sendMessage(audience, prefix, key, true);
+  }
+
+  /**
+   * 메시지를 보냅니다.
+   *
+   * @param audience 메시지를 받는 대상
+   * @param prefix   메시지 접두사
+   * @param key      메시지 키 값
+   * @param args     메시지의 매개 변수
+   */
+  public static void sendMessage(@NotNull Object audience, @Nullable Prefix prefix, @NotNull String key, @NotNull Object... args)
+  {
+    Player p = audience instanceof Player player ? player : null;
+    Component component = ComponentUtil.createTranslate(p, key, args);
+    if (prefix != null)
+    {
+      component = ComponentUtil.create(prefix, component);
+    }
+    sendMessage(audience, component);
+  }
+
+  public static void sendWarn(@NotNull Object audience, @NotNull String key)
+  {
+    sendWarn(audience, key, true);
+  }
+
+  public static void sendWarn(@NotNull Object audience, @NotNull String key, @NotNull Object... args)
+  {
+    if (Cucumbery.config.getBoolean("sound-const.warning-sound.enable"))
+    {
+      SoundPlay.playWarnSound(audience);
+    }
+    sendMessage(audience, Prefix.INFO_WARN, key, args);
   }
 
   /**

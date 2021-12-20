@@ -5,11 +5,11 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -23,6 +23,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.*;
+import org.bukkit.Note.Tone;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -80,17 +81,50 @@ public class Method extends SoundPlay
 
   public static String timeFormatMilli(long ms, boolean showMs)
   {
-    return Method.timeFormatMilli(ms, showMs, 2);
+    return Method.timeFormatMilli(ms, showMs, 2, false);
+  }
+
+  public static String timeFormatMilli(long ms, boolean showMs, int decimalSize)
+  {
+    return timeFormatMilli(ms, showMs, decimalSize, false);
   }
 
   @SuppressWarnings("all")
-  public static String timeFormatMilli(long ms, boolean showMs, int decimalSize)
+  public static String timeFormatMilli(long ms, boolean showMs, int decimalSize, boolean shorten)
   {
     if (ms == 0 || (!showMs && ms < 1000))
     {
       return "0초";
     }
     long mills = ms;
+    if (shorten)
+    {
+      if (mills >= 1000L * 60 * 60 * 24 * 365)
+      {
+        return Constant.Sosu1Force.format(1d * mills / (1000L * 60 * 60 * 24 * 365)) + "년";
+      }
+      if (mills >= 1000L * 60 * 60 * 24)
+      {
+        return Constant.Sosu1Force.format(1d * mills / (1000L * 60 * 60 * 24)) + "일";
+      }
+      if (mills >= 1000L * 60 * 999)
+      {
+        return Constant.Sosu1Force.format(1d * mills / (1000L * 60 * 60)) + "시간";
+      }
+      if (mills >= 1000L * 60 * 10)
+      {
+        return Constant.Jeongsu.format(Math.floor(1d * mills / (1000L * 60))) + "분";
+      }
+      if (mills >= 1000L * 60)
+      {
+        return Constant.Sosu1Force.format(1d * mills / (1000L * 60)) + "분";
+      }
+      if (mills >= 1000L * 10)
+      {
+        return Constant.Jeongsu.format(1d * mills / 1000L) + "초";
+      }
+      return Constant.Sosu1Force.format(1d * mills / 1000L) + "초";
+    }
     long year = mills / (1000L * 60 * 60 * 24 * 365);
     mills %= (1000L * 60 * 60 * 24 * 365);
     long day = mills / (1000L * 60 * 60 * 24);
@@ -113,7 +147,7 @@ public class Method extends SoundPlay
           displaySec = Constant.Jeongsu.format(sec);
           break;
         case 1:
-          displaySec = Constant.Sosu1.format(sec);
+          displaySec = Constant.Sosu1Force.format(sec);
           break;
         default:
         case 2:
@@ -3487,5 +3521,71 @@ public class Method extends SoundPlay
   {
     COMMAND,
     SCROLL
+  }
+
+  public static float getPitchFromNote(@NotNull Note note)
+  {
+    int octave = note.getOctave();
+    Tone tone = note.getTone();
+    boolean isSharped = note.isSharped();
+    switch (octave)
+    {
+      case 0 -> {
+        switch (tone)
+        {
+          case G -> {
+            return isSharped ? 0.561231F : 0.529732F;
+          }
+          case A -> {
+            return isSharped ? 0.629961F : 0.594604F;
+          }
+          case B -> {
+            return 0.667420F;
+          }
+          case C -> {
+            return isSharped ? 0.749154F : 0.707107F;
+          }
+          case D -> {
+            return isSharped ? 0.840896F : 0.793701F;
+          }
+          case E -> {
+            return 0.890899F;
+          }
+          case F -> {
+            return isSharped ? 0.5F : 0.943874F;
+          }
+        }
+      }
+      case 1 -> {
+        switch (tone)
+        {
+          case G -> {
+            return isSharped ? 1.122462F : 1.059463F;
+          }
+          case A -> {
+            return isSharped ? 1.259921F : 1.189207F;
+          }
+          case B -> {
+            return 1.334840F;
+          }
+          case C -> {
+            return isSharped ? 1.498307F : 1.414214F;
+          }
+          case D -> {
+            return isSharped ? 1.681793F : 1.587401F;
+          }
+          case E -> {
+            return 1.781797F;
+          }
+          case F -> {
+            return isSharped ? 1F : 1.887749F;
+          }
+        }
+      }
+      case 2 -> {
+        return 2F;
+      }
+    }
+    return 0F;
   }
 }

@@ -1,7 +1,8 @@
 package com.jho5245.cucumbery.listeners.entity;
 
 import com.jho5245.cucumbery.customeffect.CustomEffect;
-import com.jho5245.cucumbery.customeffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
@@ -16,7 +17,7 @@ public class EntityCustomEffectRemove implements Listener
   {
     Entity entity = event.getEntity();
     CustomEffect customEffect = event.getCustomEffect();
-    if (customEffect.getDisplayType() == DisplayType.PLAYER_LIST && entity instanceof Player player && player.getActivePotionEffects().isEmpty())
+    if (entity instanceof Player player && customEffect.getDisplayType() == DisplayType.PLAYER_LIST && CustomEffectManager.getEffects(entity, DisplayType.PLAYER_LIST).size() <= 1)
     {
       player.sendPlayerListFooter(Component.empty());
     }

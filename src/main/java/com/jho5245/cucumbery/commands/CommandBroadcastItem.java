@@ -188,7 +188,7 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
           }
         }
       }
-      Component prefix = ComponentUtil.create(player, " : ");
+      Component prefix = ComponentUtil.create(null, player, " : ");
       List<Component> txt = new ArrayList<>();
       txt.add(prefix);
       StringBuilder builder = new StringBuilder();

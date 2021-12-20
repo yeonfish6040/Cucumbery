@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.player.interact;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.listeners.block.NotePlay;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -1064,28 +1065,31 @@ public class PlayerInteract implements Listener
         noteBlock.setNote(noteBlock.getNote().flattened());
       }
       block.setBlockData(noteBlock);
-      for (Player online : Bukkit.getServer().getOnlinePlayers())
+      if (!NotePlay.customNoteBlockSound(block))
       {
-        if (player.getWorld().equals(online.getWorld()))
+        for (Player online : Bukkit.getServer().getOnlinePlayers())
         {
-          online.playNote(block.getLocation(), noteBlock.getInstrument(), noteBlock.getNote());
+          if (player.getWorld().equals(online.getWorld()))
+          {
+            online.playNote(block.getLocation(), noteBlock.getInstrument(), noteBlock.getNote());
+          }
         }
+        int pitchNum = 0;
+        String bds = noteBlock.getAsString();
+        String pattern = "note=([0-9]{1,2})";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(bds);
+        if (m.find())
+        {
+          pitchNum = Integer.parseInt(m.group(1));
+        }
+        Location loc = block.getLocation();
+        loc.setX(loc.getX() + 0.5);
+        loc.setY(loc.getY() + 1.25);
+        loc.setZ(loc.getZ() + 0.5);
+        double colorNum = 0.041667 * pitchNum;
+        block.getWorld().spawnParticle(Particle.NOTE, loc, 0, colorNum, 0, 0, 1);
       }
-      int pitchNum = 0;
-      String bds = noteBlock.getAsString();
-      String pattern = "note=([0-9]{1,2})";
-      Pattern r = Pattern.compile(pattern);
-      Matcher m = r.matcher(bds);
-      if (m.find())
-      {
-        pitchNum = Integer.parseInt(m.group(1));
-      }
-      Location loc = block.getLocation();
-      loc.setX(loc.getX() + 0.5);
-      loc.setY(loc.getY() + 1.25);
-      loc.setZ(loc.getZ() + 0.5);
-      double colorNum = 0.041667 * pitchNum;
-      block.getWorld().spawnParticle(Particle.NOTE, loc, 0, colorNum, 0, 0, 1);
     }
     else if (action == Action.LEFT_CLICK_BLOCK)
     {
@@ -1108,29 +1112,33 @@ public class PlayerInteract implements Listener
         return;
       }
       event.setCancelled(true);
-      NoteBlock noteBlock = (NoteBlock) block.getBlockData();
-      for (Player online : Bukkit.getServer().getOnlinePlayers())
+      // Custom Note Block Sound
+      if (!NotePlay.customNoteBlockSound(block))
       {
-        if (player.getWorld().equals(online.getWorld()))
+        NoteBlock noteBlock = (NoteBlock) block.getBlockData();
+        for (Player online : Bukkit.getServer().getOnlinePlayers())
         {
-          online.playNote(block.getLocation(), noteBlock.getInstrument(), noteBlock.getNote());
+          if (player.getWorld().equals(online.getWorld()))
+          {
+            online.playNote(block.getLocation(), noteBlock.getInstrument(), noteBlock.getNote());
+          }
         }
+        int pitchNum = 0;
+        String bds = noteBlock.getAsString();
+        String pattern = "note=([0-9]{1,2})";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(bds);
+        if (m.find())
+        {
+          pitchNum = Integer.parseInt(m.group(1));
+        }
+        Location loc = block.getLocation();
+        loc.setX(loc.getX() + 0.5);
+        loc.setY(loc.getY() + 1.25);
+        loc.setZ(loc.getZ() + 0.5);
+        double colorNum = 0.041667 * pitchNum;
+        block.getWorld().spawnParticle(Particle.NOTE, loc, 0, colorNum, 0, 0, 1);
       }
-      int pitchNum = 0;
-      String bds = noteBlock.getAsString();
-      String pattern = "note=([0-9]{1,2})";
-      Pattern r = Pattern.compile(pattern);
-      Matcher m = r.matcher(bds);
-      if (m.find())
-      {
-        pitchNum = Integer.parseInt(m.group(1));
-      }
-      Location loc = block.getLocation();
-      loc.setX(loc.getX() + 0.5);
-      loc.setY(loc.getY() + 1.25);
-      loc.setZ(loc.getZ() + 0.5);
-      double colorNum = 0.041667 * pitchNum;
-      block.getWorld().spawnParticle(Particle.NOTE, loc, 0, colorNum, 0, 0, 1);
     }
   }
 

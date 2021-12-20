@@ -27,6 +27,11 @@ public class TestCommand implements CommandExecutor, TabCompleter
     }
     try
     {
+      if (sender instanceof Player player)
+      {
+        Entity left = player.getShoulderEntityLeft(), right = player.getShoulderEntityRight();
+        MessageUtil.sendMessage(player,"left : %s, right : %s", left != null ? left : "null", right != null ? right : "null");
+      }
       if (args.length >= 2)
       switch (args[0])
       {
@@ -60,7 +65,6 @@ public class TestCommand implements CommandExecutor, TabCompleter
     {
 
     }
-
     return true;
   }
 

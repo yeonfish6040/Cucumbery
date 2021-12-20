@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.listeners.player;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
@@ -40,7 +41,7 @@ public class PlayerDeath implements Listener
       return;
     }
 
-    boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player);
+    boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY);
     boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player);
     if (keepInv)
     {

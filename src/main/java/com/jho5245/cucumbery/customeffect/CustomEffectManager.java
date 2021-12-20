@@ -1,8 +1,10 @@
 package com.jho5245.cucumbery.customeffect;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectApplyEvent;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -31,7 +33,7 @@ public class CustomEffectManager
     UUID uuid = entity.getUniqueId();
     if (!effectMap.containsKey(uuid))
     {
-      effectMap.put(uuid, Collections.emptyList());
+      return Collections.emptyList();
     }
     return effectMap.get(uuid);
   }
@@ -74,19 +76,18 @@ public class CustomEffectManager
     return true;
   }
 
-  public static boolean addEffects(@NotNull Entity entity, @NotNull List<CustomEffect> effects)
+  public static void addEffects(@NotNull Entity entity, @NotNull List<CustomEffect> effects)
   {
-    return addEffects(entity, effects, false);
+    addEffects(entity, effects, false);
   }
 
-  public static boolean addEffects(@NotNull Entity entity, @NotNull List<CustomEffect> effects, boolean force)
+  public static void addEffects(@NotNull Entity entity, @NotNull List<CustomEffect> effects, boolean force)
   {
     boolean success = true;
     for (CustomEffect customEffect : effects)
     {
       success = success && addEffect(entity, customEffect, force);
     }
-    return success;
   }
 
   public static boolean removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType)
@@ -176,7 +177,7 @@ public class CustomEffectManager
         {
           if (!file.delete())
           {
-         //   MessageUtil.sendError(Bukkit.getConsoleSender(), "could not delete wjat");
+            MessageUtil.sendError(Bukkit.getConsoleSender(), "could not delete wjat");
           }
          // MessageUtil.broadcastDebug("&cdelete:" + uuid);
         }
@@ -212,6 +213,7 @@ public class CustomEffectManager
         int amplifier = customEffect.getAmplifier();
         config.set("effects." + effectType + ".duration", duration);
         config.set("effects." + effectType + ".amplifier", amplifier);
+        config.set("effects." + effectType + ".display-type", customEffect.getDisplayType().toString());
       }
       customConfig.saveConfig();
     }
@@ -219,12 +221,7 @@ public class CustomEffectManager
     {
       Entity entity = Bukkit.getEntity(uuid);
       boolean isPlayer = Bukkit.getOfflinePlayer(uuid).hasPlayedBefore();
-      boolean remove = effectMap.get(uuid).isEmpty() || (!isPlayer && entity == null);
-      if (remove)
-      {
-      //  MessageUtil.broadcastDebug("remove from cache : " + uuid);
-      }
-      return remove;
+      return effectMap.get(uuid).isEmpty() || (!isPlayer && entity == null);
     });
   }
 
@@ -239,9 +236,18 @@ public class CustomEffectManager
         try
         {
           CustomEffectType customEffectType = CustomEffectType.valueOf(typeString);
+          DisplayType displayType;
+          try
+          {
+            displayType = DisplayType.valueOf(root.getString(typeString + ".display-type"));
+          }
+          catch (Throwable ignored)
+          {
+            displayType = customEffectType.getDefaultDisplayType();
+          }
           int duration = root.getInt(typeString + ".duration");
           int amplifier = root.getInt(typeString + ".amplifier");
-          CustomEffect customEffect = new CustomEffect(customEffectType, duration, amplifier);
+          CustomEffect customEffect = new CustomEffect(customEffectType, duration, amplifier, displayType);
           customEffects.add(customEffect);
         }
         catch (Exception e)
@@ -251,5 +257,27 @@ public class CustomEffectManager
       }
       effectMap.put(uuid, customEffects);
     }
+  }
+
+  @NotNull
+  public static Component getDisplay(@NotNull List<CustomEffect> customEffects)
+  {
+    StringBuilder key = new StringBuilder();
+    List<Component> arguments = new ArrayList<>();
+    for (CustomEffect customEffect : customEffects)
+    {
+      int duration = customEffect.getDuration();
+      int amplifier = customEffect.getAmplifier();
+      arguments.add(
+              ComponentUtil.createTranslate(amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s", customEffect,
+                      (duration != -1 && duration != customEffect.getInitDuration() - 1) ?
+                      " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")":
+                              ""
+                      , amplifier + 1)
+      );
+      key.append("%s, ");
+    }
+    key = new StringBuilder(key.substring(0, key.length() - 2));
+    return ComponentUtil.createTranslate(key.toString(), arguments);
   }
 }

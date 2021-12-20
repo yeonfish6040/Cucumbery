@@ -1,8 +1,7 @@
-package com.jho5245.cucumbery.commands.brigadier;
+package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
-import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -14,39 +13,45 @@ import com.jho5245.cucumbery.util.storage.RecipeChecker;
 import com.jho5245.cucumbery.util.storage.Updater;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Permission;
+import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.Argument;
-import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.command.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
+import org.jetbrains.annotations.NotNull;
 import org.maxgamer.quickshop.api.QuickShopAPI;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class CommandCucumbery extends CommandBase
+public class CommandCucumbery implements CommandExecutor, TabCompleter
 {
-  private final List<Argument> arguments = new ArrayList<>();
-
+  public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
-    arguments.add(new MultiLiteralArgument("reload", "reloaddata", "reloadplugin", "reloadplugin2", "version", "update", "update-quickshop-item", "update-customrecipe-item", "purge-user-data-files"));
-  }
-
-  public void registerCommand(String command, String permission, String... aliases)
-  {
-    CommandAPICommand commandAPICommand = getCommandBase(command, permission, aliases);
-    commandAPICommand = commandAPICommand.withArguments(arguments);
-    commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+    if (!Method.hasPermission(sender, Permission.CMD_MAINCOMMAND, true))
     {
-      String arg = (String) args[0];
-      switch (arg)
+      return true;
+    }
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
+    {
+      return !(sender instanceof BlockCommandSender);
+    }
+    if (args.length == 0)
+    {
+      MessageUtil.shortArg(sender, 1, args);
+      MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
+      return true;
+    }
+    else if (args.length == 1)
+    {
+      switch (args[0])
       {
         case "reload":
           MessageUtil.broadcastDebug(ComponentUtil.createTranslate("%s이(가) /cucumbery reload 명령어 사용", sender));
@@ -131,9 +136,10 @@ public class CommandCucumbery extends CommandBase
           break;
         case "update":
           MessageUtil.broadcastDebug(ComponentUtil.createTranslate("%s이(가) /cucumbery update 명령어 사용", sender));
+          MessageUtil.sendMessage(sender, Prefix.INFO, "최신 버전인지 확인합니다...");
           if (Updater.defaultUpdater.updateLatest())
           {
-            MessageUtil.info(sender, ComponentUtil.createTranslate("Cucumbery 플러그인 업데이트 완료"));
+            MessageUtil.info(sender, ComponentUtil.createTranslate("최신 Cucumbery 플러그인을 찾았습니다. 업데이트를 시작합니다..."));
           }
           else
           {
@@ -144,7 +150,7 @@ public class CommandCucumbery extends CommandBase
           if (!Cucumbery.using_QuickShop)
           {
             MessageUtil.sendError(sender, "&eQuickShop&r 플러그인을 사용하고 있지 않습니다.");
-            return;
+            return true;
           }
           int size = QuickShopSupport.updateQuickShopItems();
           MessageUtil.info(sender, "&eQuickShop&r의 모든 상점 아이템을 업데이트 하였습니다. (총 " + size + "개)");
@@ -161,7 +167,7 @@ public class CommandCucumbery extends CommandBase
             if (files == null)
             {
               MessageUtil.sendError(sender, "제거할 유저 데이터가 존재하지 않습니다.");
-              return;
+              return true;
             }
             int removeSize = 0;
             for (File file : files)
@@ -206,7 +212,29 @@ public class CommandCucumbery extends CommandBase
           }
           break;
       }
-    });
-    commandAPICommand.register();
+    }
+    else
+    {
+      MessageUtil.longArg(sender, 1, args);
+      MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
+      return true;
+    }
+    return true;
+  }
+
+  @NotNull
+  public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
+  {
+    if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
+    {
+      return Collections.singletonList(args[0]);
+    }
+    int length = args.length;
+
+    if (length == 1)
+    {
+      return Method.tabCompleterList(args, "인수", "reload", "reloaddata", "reloadplugin", "version", "update", "update-quickshop-item", "update-customrecipe-item", "purge-user-data-files");
+    }
+    return Collections.singletonList(Prefix.ARGS_LONG.toString());
   }
 }

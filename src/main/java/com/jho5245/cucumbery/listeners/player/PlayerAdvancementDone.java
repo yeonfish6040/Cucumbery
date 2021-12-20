@@ -18,7 +18,7 @@ public class PlayerAdvancementDone implements Listener
   public void onPlayerAdvancementDone(PlayerAdvancementDoneEvent event)
   {
     Player player = event.getPlayer();
-    if (UserData.SPECTATOR_MODE.getBoolean(player))
+    if (UserData.SPECTATOR_MODE.getBoolean(player) || !UserData.ANNOUNCE_ADVANCEMENTS.getBoolean(player))
     {
       event.message(null);
       return;

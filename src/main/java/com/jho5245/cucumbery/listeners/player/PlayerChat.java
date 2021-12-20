@@ -1,19 +1,22 @@
 package com.jho5245.cucumbery.listeners.player;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.PlaceHolderUtil;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,13 +25,13 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerChat implements Listener
 {
- @EventHandler
+  @EventHandler
   public void onPlayerChat(AsyncChatEvent event)
   {
     if (event.isCancelled())
@@ -112,7 +115,7 @@ public class PlayerChat implements Listener
       if (Variable.playerChatNoSpamAlertCooldown.contains(uuid))
       {
         event.setCancelled(true);
-        MessageUtil.sendTitle(player, "&c채팅 불가!", "&r채팅은 &e"+Constant.Sosu2.format(chatCooldown/20d)+"초&r 마다 가능합니다.", 5, 60, 15);
+        MessageUtil.sendTitle(player, "&c채팅 불가!", "&r채팅은 &e" + Constant.Sosu2.format(chatCooldown / 20d) + "초&r 마다 가능합니다.", 5, 60, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         return;
       }
@@ -124,7 +127,7 @@ public class PlayerChat implements Listener
         if (message.equals(Variable.playerChatSameMessageSpamAlertCooldown.get(uuid)))
         {
           event.setCancelled(true);
-          MessageUtil.sendTitle(player, "&c채팅 불가!", "&r같은 메시지를 &e"+Constant.Sosu2.format(chatCooldown/20d)+"초&r 이내에 채팅할 수 없습니다.", 5, 60, 15);
+          MessageUtil.sendTitle(player, "&c채팅 불가!", "&r같은 메시지를 &e" + Constant.Sosu2.format(chatCooldown / 20d) + "초&r 이내에 채팅할 수 없습니다.", 5, 60, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           return;
         }
@@ -132,14 +135,15 @@ public class PlayerChat implements Listener
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerChatSameMessageSpamAlertCooldown.remove(uuid), chatCooldown);
       }
     }
-    ItemStack itemStack = player.getInventory().getItemInMainHand();
-    if (message.contains("[i]") && ItemStackUtil.itemExists(itemStack))
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.OUTSIDER))
     {
-      event.setCancelled(true);
-      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              player.chat("/bitem " + ComponentUtil.serialize(event.originalMessage())),
-              0L);
-      return;
+      @SuppressWarnings("all")
+      int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.OUTSIDER).getAmplifier() + 1;
+      if (Math.random() * 100 < amplifier * 10)
+      {
+        event.setCancelled(true);
+        return;
+      }
     }
     if (Cucumbery.config.getBoolean("play-sound-on-chat"))
     {
@@ -151,6 +155,23 @@ public class PlayerChat implements Listener
         }
       }
     }
+    int chatRepeat = 1;
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_BEANS))
+    {
+      chatRepeat++;
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.INSIDER))
+    {
+      chatRepeat *= Objects.requireNonNull(CustomEffectManager.getEffect(player, CustomEffectType.INSIDER)).getAmplifier() + 2;
+    }
+    if (chatRepeat > 1)
+    {
+      Audience audience = Audience.audience(event.viewers());
+      for (int i = 1; i < chatRepeat; i++)
+      {
+        audience.sendMessage(event.renderer().render(player, player.displayName(), event.message(), Audience.audience(event.viewers())));
+      }
+    }
   }
 
   @EventHandler(ignoreCancelled = true)
@@ -159,7 +180,17 @@ public class PlayerChat implements Listener
     Player player = event.getPlayer();
     Component senderComponent = SenderComponentUtil.senderComponent(player);
     player.displayName(player.displayName().hoverEvent(senderComponent.hoverEvent()));
+
     String message = ComponentUtil.serialize(event.message());
+    if (message.contains("[i]"))
+    {
+      if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
+      {
+        event.setCancelled(true);
+        MessageUtil.sendError(player, ComponentUtil.createTranslate("주로 사용하는 손에 아이템을 들고 있어야 아이템 확성기를 사용할 수 있습니다."));
+        return;
+      }
+    }
     /* 채팅을 칠때 해당 권한이 있으면 컬러 채팅으로 변환 */
     if (Permission.OTHER_PLACEHOLDER.has(player))
     {
@@ -202,6 +233,6 @@ public class PlayerChat implements Listener
         message = MessageUtil.stripColor(message);
       }
     }
-    event.message(ComponentUtil.create2(message, false));
+    event.message(ComponentUtil.create2(player, message, false));
   }
 }

@@ -91,7 +91,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
             {
               return Collections.singletonList("해당 태그는 TNT에만 사용할 수 있습니다.");
             }
-            return Method.tabCompleterList(args, "<인수>", "unstable", "ignite", "fuse");
+            return Method.tabCompleterList(args, "<인수>", "unstable", "ignite", "fuse", "fire", "explode-power");
           case "customenchant":
             return Method.tabCompleterList(args, "<인수>", "list", "add", "remove");
           case "customitem":
@@ -197,6 +197,10 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 return Method.tabCompleterBoolean(args, "<설치 즉시 점화 여부>");
               case "fuse":
                 return Method.tabCompleterIntegerRadius(args, 0, Integer.MAX_VALUE, "<점화 시간(틱)>", "-1");
+              case "fire":
+                return Method.tabCompleterBoolean(args, "<폭발 시 불 번짐 여부>");
+              case "explode-power":
+                return Method.tabCompleterDoubleRadius(args, 0, 500, "<폭발 강도>", "-1", "-1(초기화)");
             }
             break;
           case "customenchant":

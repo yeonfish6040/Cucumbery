@@ -1,10 +1,14 @@
 package com.jho5245.cucumbery.listeners;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.command.UnknownCommandEvent;
@@ -16,8 +20,14 @@ public class UnknownCommand implements Listener
   {
     if (Cucumbery.config.getBoolean("use-custom-unknown-command-message"))
     {
-      event.message(ComponentUtil.create(Prefix.INFO_ERROR, Component.translatable("commands.help.failed")));
+      event.message(ComponentUtil.create(Prefix.INFO_ERROR, Cucumbery.config.getString("custom-unknown-command-message","translate:commands.help.failed")));
       Method.playErrorSound(event.getSender());
+    }
+    CommandSender sender = event.getSender();
+    Component message = event.message();
+    if (message != null && sender instanceof Player player && CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_BEANS))
+    {
+      player.sendMessage(message);
     }
   }
 }
