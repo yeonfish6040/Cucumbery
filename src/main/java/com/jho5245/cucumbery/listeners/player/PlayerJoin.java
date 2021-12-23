@@ -126,7 +126,7 @@ public class PlayerJoin implements Listener
       if (player.getGameMode() != GameMode.SPECTATOR)
       {
         player.setGameMode(GameMode.SPECTATOR);
-        MessageUtil.info(player, ComponentUtil.createTranslate("관전자여서 게임 모드가 자동으로 관전 모드로 전환되었습니다."));
+        MessageUtil.info(player, ComponentUtil.translate("관전자여서 게임 모드가 자동으로 관전 모드로 전환되었습니다."));
       }
     }
     Location location = player.getLocation();
@@ -169,11 +169,7 @@ public class PlayerJoin implements Listener
           if ((UserData.SHOW_JOIN_MESSAGE_FORCE.getBoolean(uuid) || UserData.SHOW_JOIN_MESSAGE.getBoolean(uuid)) && (UserData.OUTPUT_JOIN_MESSAGE.getBoolean(online.getUniqueId()) ||
                   UserData.OUTPUT_JOIN_MESSAGE_FORCE.getBoolean(online.getUniqueId())))
           {
-            MessageUtil.sendMessage(online, Prefix.INFO_JOIN, ComponentUtil.createTranslate("%s이(가) 입장하셨습니다.", player));
-            if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_BEANS))
-            {
-              MessageUtil.sendMessage(online, Prefix.INFO_JOIN, ComponentUtil.createTranslate("%s이(가) 입장하셨습니다.", player));
-            }
+            MessageUtil.sendMessage(online, Prefix.INFO_JOIN, ComponentUtil.translate("%s이(가) 입장하셨습니다.", player));
           }
         }
       }

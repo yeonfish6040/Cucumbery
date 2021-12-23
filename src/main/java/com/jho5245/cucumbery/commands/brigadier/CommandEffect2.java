@@ -182,7 +182,7 @@ public class CommandEffect2 extends CommandBase
             hover = hover.append(Component.text("\n"));
             if (i == 30)
             {
-              hover = hover.append(ComponentUtil.createTranslate("&7&o" + (failureEntities.stream().allMatch(Predicates.instanceOf(Player.class)::apply)
+              hover = hover.append(ComponentUtil.translate("&7&o" + (failureEntities.stream().allMatch(Predicates.instanceOf(Player.class)::apply)
                       ? "외 %s명 더..." : "container.shulkerBox.more"), Component.text(failureEntities.size() - 30)));
               break;
             }
@@ -194,8 +194,8 @@ public class CommandEffect2 extends CommandBase
               duraString = duraString.substring(0, duraString.length() - 5) + "...";
             }
             Component extra = applied != null ?
-                    ComponentUtil.createTranslate("&7 - %s, %s단계", Constant.THE_COLOR_HEX + duraString, (applied.getAmplifier() + 1)) :
-                    ComponentUtil.createTranslate("&e - 효과 면역 개체");
+                    ComponentUtil.translate("&7 - %s, %s단계", Constant.THE_COLOR_HEX + duraString, (applied.getAmplifier() + 1)) :
+                    ComponentUtil.translate("&e - 효과 면역 개체");
             Component concat = SenderComponentUtil.senderComponent(entity, Constant.THE_COLOR, true, extra);
             hover = hover.append(concat);
           }
@@ -205,35 +205,35 @@ public class CommandEffect2 extends CommandBase
           Entity entity = failureEntities.iterator().next();
           hover = hover.append(Component.text("\n"));
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("&7" + TranslatableKeyParser.getKey(potionEffectType)));
+          hover = hover.append(ComponentUtil.translate("&7" + TranslatableKeyParser.getKey(potionEffectType)));
           LivingEntity livingEntity = entity instanceof LivingEntity ? (LivingEntity) entity : null;
           PotionEffect applied = livingEntity != null ? livingEntity.getPotionEffect(potionEffectType) : null;
           hover = hover.append(Component.text("\n"));
           if (applied != null)
           {
-            hover = hover.append(ComponentUtil.createTranslate("&7지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(applied.getDuration() * 50L)));
+            hover = hover.append(ComponentUtil.translate("&7지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(applied.getDuration() * 50L)));
             hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.createTranslate("&7기존 농도 레벨 : %s단계", (applied.getAmplifier() + 1)));
-            hover = hover.append(ComponentUtil.createTranslate("&7 > 부여될 농도 레벨 : %s단계", (amplifier + 1)));
+            hover = hover.append(ComponentUtil.translate("&7기존 농도 레벨 : %s단계", (applied.getAmplifier() + 1)));
+            hover = hover.append(ComponentUtil.translate("&7 > 부여될 농도 레벨 : %s단계", (amplifier + 1)));
           }
           else
           {
-            hover = hover.append(ComponentUtil.createTranslate("&e효과 면역 개체"));
+            hover = hover.append(ComponentUtil.translate("&e효과 면역 개체"));
           }
         }
         failureEntitiesComponent = failureEntitiesComponent.hoverEvent(hover);
         MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                ComponentUtil.createTranslate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과에 면역이 있거나 더 강한 효과를 가지고 있습니다.)", failureEntitiesComponent, potionEffect));
+                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과에 면역이 있거나 더 강한 효과를 가지고 있습니다.)", failureEntitiesComponent, potionEffect));
       }
       if (!successEntitiesIsEmpty)
       {
-        MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s 효과를 적용했습니다.", successEntities, potionEffect));
+        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다.", successEntities, potionEffect));
         if (!(successEntities.size() == 1 && successEntities.get(0).equals(sender.getCallee())))
         {
-          MessageUtil.info(successEntities, ComponentUtil.createTranslate("%1$s이(가) 당신에게 %2$s 효과를 적용했습니다.", sender, potionEffect));
+          MessageUtil.info(successEntities, ComponentUtil.translate("%1$s이(가) 당신에게 %2$s 효과를 적용했습니다.", sender, potionEffect));
         }
         MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                ComponentUtil.createTranslate("[%s: %s에게 %s 효과를 적용했습니다.]", sender, successEntities, potionEffect));
+                ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다.]", sender, successEntities, potionEffect));
       }
     }
     else if (successEntities.isEmpty() && sender.getCallee() instanceof BlockCommandSender)

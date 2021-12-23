@@ -112,7 +112,7 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
           value = "&c" + value;
         }
         Component component =  ComponentUtil.create(color + ruleString);
-        Component hover = Component.empty().append(ComponentUtil.createTranslate(color + key));
+        Component hover = Component.empty().append(ComponentUtil.translate(color + key));
         String description = Variable.lang.getString(key.replace(".", "-") + "-description");
         if (description != null)
         {
@@ -120,7 +120,7 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
           hover = hover.append(Component.translatable(key + ".description"));
         }
         component = component.hoverEvent(hover);
-        gamerule = gamerule.append(ComponentUtil.createTranslate("%s : %s", component, value));
+        gamerule = gamerule.append(ComponentUtil.translate("%s : %s", component, value));
         if (i != GameRule.values().length - 1)
         {
           gamerule = gamerule.append(ComponentUtil.create("&7, "));

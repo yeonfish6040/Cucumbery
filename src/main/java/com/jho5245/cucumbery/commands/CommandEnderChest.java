@@ -38,7 +38,7 @@ public class CommandEnderChest implements CommandExecutor, TabCompleter
         return true;
       }
       player.openInventory(player.getEnderChest());
-      MessageUtil.sendMessage(player, Prefix.INFO_ENDERCHEST, ComponentUtil.createTranslate("엔더 상자를 엽니다."));
+      MessageUtil.sendMessage(player, Prefix.INFO_ENDERCHEST, ComponentUtil.translate("엔더 상자를 엽니다."));
       SoundPlay.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS);
     }
     else if (args.length == 1)
@@ -52,15 +52,15 @@ public class CommandEnderChest implements CommandExecutor, TabCompleter
       {
         player.openInventory(target.getEnderChest());
         SoundPlay.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS);
-        MessageUtil.sendMessage(player, Prefix.INFO_ENDERCHEST, ComponentUtil.createTranslate("%s의 엔더 상자를 엽니다.", target));
+        MessageUtil.sendMessage(player, Prefix.INFO_ENDERCHEST, ComponentUtil.translate("%s의 엔더 상자를 엽니다.", target));
         return true;
       }
       target.openInventory(target.getEnderChest());
       SoundPlay.playSound(target, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ENDERCHEST, ComponentUtil.createTranslate("%s에게 %s의 엔더 상자를 열어주었습니다.", target, target));
+      MessageUtil.sendMessage(sender, Prefix.INFO_ENDERCHEST, ComponentUtil.translate("%s에게 %s의 엔더 상자를 열어주었습니다.", target, target));
       if (!target.equals(sender))
       {
-        MessageUtil.sendMessage(target, Prefix.INFO_ENDERCHEST, ComponentUtil.createTranslate("%s이(가) %s의 엔더 상자를 열어주었습니다.", sender, target));
+        MessageUtil.sendMessage(target, Prefix.INFO_ENDERCHEST, ComponentUtil.translate("%s이(가) %s의 엔더 상자를 열어주었습니다.", sender, target));
       }
     }
     else if (args.length <= 3)
@@ -87,10 +87,10 @@ public class CommandEnderChest implements CommandExecutor, TabCompleter
       if (!hideOutput)
       {
         SoundPlay.playSound(target, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS);
-        MessageUtil.sendMessage(sender, Prefix.INFO_ENDERCHEST, ComponentUtil.createTranslate("%s에게 %s의 엔더 상자를 열어주었습니다.", target, target2));
+        MessageUtil.sendMessage(sender, Prefix.INFO_ENDERCHEST, ComponentUtil.translate("%s에게 %s의 엔더 상자를 열어주었습니다.", target, target2));
         if (!target.equals(sender))
         {
-          MessageUtil.sendMessage(target, Prefix.INFO_ENDERCHEST, ComponentUtil.createTranslate("%s이(가) 당신에게 %s의 엔더 상자를 열어주었습니다.", sender, target2));
+          MessageUtil.sendMessage(target, Prefix.INFO_ENDERCHEST, ComponentUtil.translate("%s이(가) 당신에게 %s의 엔더 상자를 열어주었습니다.", sender, target2));
         }
       }
     }

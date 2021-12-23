@@ -65,21 +65,21 @@ public class ItemLore
       case CHEAT_ONLY -> itemGroup = Component.translatable("selectWorld.cheats");
       default -> itemGroup = Component.translatable("selectWorld.versionUnknown");
     }
-    Component itemGroupComponent = ComponentUtil.createTranslate("&7아이템 종류 : [%s]", itemGroup);
+    Component itemGroupComponent = ComponentUtil.translate("&7아이템 종류 : [%s]", itemGroup);
     defaultLore.add(itemGroupComponent);
     // 그 다음 3번째 설명에는 아이템의 등급을 추가
-    Component itemRarityComponent = ComponentUtil.createTranslate("&7아이템 등급 : %s", ComponentUtil.createTranslate(rarity.getDisplay()));
+    Component itemRarityComponent = ComponentUtil.translate("&7아이템 등급 : %s", ComponentUtil.translate(rarity.getDisplay()));
     defaultLore.add(itemRarityComponent);
     itemMeta.lore(defaultLore);
     itemStack.setItemMeta(itemMeta);
 
     // 이후 아이템의 추가 설명
     ItemLore2.setItemLore(itemStack, itemMeta, defaultLore, params);
-    defaultLore = itemMeta.lore();
 
     // 이후 아이템 최하단의 회색 설명 추가
     ItemLore3.setItemLore(itemStack);
     itemMeta = itemStack.getItemMeta();
+    defaultLore = itemMeta.lore();
     itemStack.setItemMeta(itemMeta);
     ItemLore4.setItemLore(itemStack);
     ItemLoreUtil.removeInventoryItemLore(itemStack);
@@ -92,7 +92,7 @@ public class ItemLore
         remove++;
         defaultLore.remove(4);
       }
-      defaultLore.add(4, ComponentUtil.createTranslate("&7&o설명 %s개 중략...", remove));
+      defaultLore.add(4, ComponentUtil.translate("&7&o설명 %s개 중략...", remove));
     }
     // 그리고 만약 (+NBT) 설명만 추가되어 있는 아이템이였다면 최하단에 [NBT 태그 복사됨] 설명 추가
     if (hasOnlyNbtTagLore)
@@ -100,7 +100,7 @@ public class ItemLore
       if (defaultLore != null)
       {
         defaultLore.add(Component.empty());
-        defaultLore.add(ComponentUtil.createTranslate("#52ee52;&o" + Constant.TMI_LORE_NBT_TAG_COPIED));
+        defaultLore.add(ComponentUtil.translate("#52ee52;&o" + Constant.TMI_LORE_NBT_TAG_COPIED));
       }
     }
     itemMeta.lore(defaultLore);

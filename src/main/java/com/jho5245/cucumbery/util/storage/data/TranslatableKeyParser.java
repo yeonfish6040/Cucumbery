@@ -56,6 +56,7 @@ public class TranslatableKeyParser
               case HOPPER_INSPECTED -> "inspect_hopper";
               case ITEM_ENCHANTED -> "enchant_item";
               case NOTEBLOCK_PLAYED -> "play_noteblock";
+              case NOTEBLOCK_TUNED -> "tune_noteblock";
               case RECORD_PLAYED -> "play_record";
               case PLAY_ONE_MINUTE -> "play_time";
               case TRAPPED_CHEST_TRIGGERED -> "trigger_trapped_chest";

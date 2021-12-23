@@ -77,7 +77,7 @@ public class CommandSetData implements CommandExecutor, TabCompleter
             }
             clone.setAmount(amount);
             player.getInventory().setItemInMainHand(clone);
-            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 개수를 %s개로 설정하였습니다.", amount).hoverEvent(item.asHoverEvent()));
+            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 개수를 %s개로 설정하였습니다.", amount).hoverEvent(item.asHoverEvent()));
             player.sendMessage(txt);
             return true;
           case "durability":
@@ -96,7 +96,7 @@ public class CommandSetData implements CommandExecutor, TabCompleter
             clone.setItemMeta(duraMeta);
             player.getInventory().setItemInMainHand(clone);
             Method.updateInventory(player);
-            txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 내구도를 %s(으)로 설정하였습니다.", durability).hoverEvent(item.asHoverEvent()));
+            txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 내구도를 %s(으)로 설정하였습니다.", durability).hoverEvent(item.asHoverEvent()));
             player.sendMessage(txt);
             return true;
           case "material":
@@ -141,11 +141,11 @@ public class CommandSetData implements CommandExecutor, TabCompleter
             }
             if (ItemStackUtil.itemExists(item))
             {
-              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정하였습니다.", type).hoverEvent(item.asHoverEvent()));
+              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정하였습니다.", type).hoverEvent(item.asHoverEvent()));
             }
             else
             {
-              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.createTranslate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정하였습니다.", type).hoverEvent(new ItemStack(type).asHoverEvent()));
+              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정하였습니다.", type).hoverEvent(new ItemStack(type).asHoverEvent()));
             }
             player.sendMessage(txt);
             return true;

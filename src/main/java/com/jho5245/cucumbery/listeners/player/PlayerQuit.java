@@ -66,6 +66,16 @@ public class PlayerQuit implements Listener
         outsider = true;
       }
     }
+
+    String quitMessage = "%s이(가) 퇴장하셨습니다.";
+    switch (event.getReason())
+    {
+      case DISCONNECTED -> quitMessage = "%s이(가) 퇴장하셨습니다.";
+      case KICKED -> quitMessage = player.isBanned() ? "%s이(가) 서버에서 정지당했습니다." : "%s이(가) 서버에서 강퇴당했습니다.";
+      case TIMED_OUT -> quitMessage = "%s이(가) 시간이 초과되어 서버에서 강퇴당했습니다.";
+      case ERRONEOUS_STATE -> quitMessage = "%s이(가) 오류나서 터졌습니다.";
+    }
+
     if (enabledTellraw && !isSpectator && !outsider)
     {
       for (Player online : Bukkit.getServer().getOnlinePlayers())
@@ -75,11 +85,7 @@ public class PlayerQuit implements Listener
           if (UserData.SHOW_QUIT_MESSAGE_FORCE.getBoolean(player.getUniqueId()) || (UserData.SHOW_QUIT_MESSAGE.getBoolean(player.getUniqueId()) && UserData.OUTPUT_QUIT_MESSAGE.getBoolean(
                   online.getUniqueId()) || UserData.OUTPUT_QUIT_MESSAGE_FORCE.getBoolean(online.getUniqueId())))
           {
-            MessageUtil.sendMessage(online, Prefix.INFO_QUIT, ComponentUtil.createTranslate("%s이(가) 퇴장하셨습니다.", player));
-            if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_BEANS))
-            {
-              MessageUtil.sendMessage(online, Prefix.INFO_QUIT, ComponentUtil.createTranslate("%s이(가) 퇴장하셨습니다.", player));
-            }
+            MessageUtil.sendMessage(online, Prefix.INFO_QUIT, ComponentUtil.translate(quitMessage, player));
           }
         }
       }

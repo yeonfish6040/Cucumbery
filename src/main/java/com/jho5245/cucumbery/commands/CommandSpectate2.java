@@ -145,24 +145,24 @@ public class CommandSpectate2 implements CommandExecutor, TabCompleter
       failurePlayers.removeAll(successPlayers);
       if (!failurePlayers.isEmpty())
       {
-        MessageUtil.sendWarnOrError(successPlayers.isEmpty(), sender, ComponentUtil.createTranslate("%s은(는) %s을(를) 관전시킬 수 없습니다.", failurePlayers, target));
+        MessageUtil.sendWarnOrError(successPlayers.isEmpty(), sender, ComponentUtil.translate("%s은(는) %s을(를) 관전시킬 수 없습니다.", failurePlayers, target));
       }
       if (!successPlayers.isEmpty())
       {
         if (spectators.size() == 1 && sender.equals(successPlayers.get(0)))
         {
-          MessageUtil.info(sender, ComponentUtil.createTranslate("%s을(를) 관전합니다.", target));
-          MessageUtil.info(target, ComponentUtil.createTranslate("%s이(가) 당신을 관전합니다.", sender));
-          MessageUtil.sendAdminMessage(sender, Collections.singletonList(target), ComponentUtil.createTranslate("[%s: %s을(를) 관전합니다.]", sender, target));
+          MessageUtil.info(sender, ComponentUtil.translate("%s을(를) 관전합니다.", target));
+          MessageUtil.info(target, ComponentUtil.translate("%s이(가) 당신을 관전합니다.", sender));
+          MessageUtil.sendAdminMessage(sender, Collections.singletonList(target), ComponentUtil.translate("[%s: %s을(를) 관전합니다.]", sender, target));
         }
         else
         {
           List<Permissible> exceptions = new ArrayList<>(successPlayers);
           exceptions.add(target);
-          MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s을(를) 관전시킵니다.", successPlayers, target));
-          MessageUtil.info(successPlayers, ComponentUtil.createTranslate("%s이(가) 당신에게 %s을(를) 관전시켰습니다.", sender, target));
-          MessageUtil.info(target, ComponentUtil.createTranslate("%s에 의해 %s이(가) 당신을 관전합니다.", sender, successPlayers));
-          MessageUtil.sendAdminMessage(sender, exceptions, ComponentUtil.createTranslate("[%s: %s에게 %s을(를) 관전시켰습니다.]", sender, successPlayers, target));
+          MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s을(를) 관전시킵니다.", successPlayers, target));
+          MessageUtil.info(successPlayers, ComponentUtil.translate("%s이(가) 당신에게 %s을(를) 관전시켰습니다.", sender, target));
+          MessageUtil.info(target, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 관전합니다.", sender, successPlayers));
+          MessageUtil.sendAdminMessage(sender, exceptions, ComponentUtil.translate("[%s: %s에게 %s을(를) 관전시켰습니다.]", sender, successPlayers, target));
         }
       }
     }

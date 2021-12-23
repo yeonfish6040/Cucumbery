@@ -125,19 +125,25 @@ public class CreateItemStack
   @NotNull
   public static ItemStack create(@NotNull Material type, @Nullable Component name)
   {
-    return create(type, 1, name, null, true);
+    return create(type, 1, name, (List<Component>) null, true);
   }
 
   @NotNull
   public static ItemStack create(@NotNull Material type, @Nullable Component name, boolean hideItemFlag)
   {
-    return create(type, 1, name, null, hideItemFlag);
+    return create(type, 1, name, (List<Component>) null, hideItemFlag);
   }
 
   @NotNull
   public static ItemStack create(@NotNull Material type, int amount, @Nullable Component name, boolean hideItemFlag)
   {
-    return create(type, amount, name, null, hideItemFlag);
+    return create(type, amount, name, (List<Component>) null, hideItemFlag);
+  }
+
+  @NotNull
+  public static ItemStack create(@NotNull Material type, int amount, @Nullable Component name, @Nullable Component singleLore, boolean hideItemFlag)
+  {
+    return create(type, amount, name, Collections.singletonList(singleLore), hideItemFlag);
   }
 
   @NotNull

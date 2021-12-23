@@ -5,6 +5,7 @@ main: com.jho5245.cucumbery.Cucumbery
 author: jho5245
 description: 굳검버리 플러그인
 softdepend: [CommandAPI, Vault, NoteBlockAPI, QuickShop, PlaceHolderAPI, ItemEdit, mcMMO]
+website: https://cucumbery.com/
 
 commands:
   cucumbery:

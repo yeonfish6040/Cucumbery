@@ -252,9 +252,9 @@ public class CommandAdvancedTeleport implements CommandExecutor, TabCompleter
                           Constant.Sosu4.format(yaw) +
                           "&r, &e" +
                           Constant.Sosu4.format(pitch));
-          MessageUtil.sendMessage(target, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate(" 위치로 텔레포트 시켰습니다."));
+          MessageUtil.sendMessage(target, Prefix.INFO_TELEPORT, ComponentUtil.translate(" 위치로 텔레포트 시켰습니다."));
         }
-        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate("%s을(를)", nameComponent));
+        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s을(를)", nameComponent));
         MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT,
                 "&e" +
                         world.getName() +
@@ -268,7 +268,7 @@ public class CommandAdvancedTeleport implements CommandExecutor, TabCompleter
                         Constant.Sosu4.format(yaw) +
                         "&r, &e" +
                         Constant.Sosu4.format(pitch));
-        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate("위치로 텔레포트 시켰습니다."));
+        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.translate("위치로 텔레포트 시켰습니다."));
       }
     }
     else

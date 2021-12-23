@@ -32,7 +32,7 @@ public class PlayerDeath implements Listener
     if (UserData.SPECTATOR_MODE.getBoolean(player))
     {
       event.setCancelled(true);
-      MessageUtil.info(player, ComponentUtil.createTranslate("관전 모드여서 죽지 않았습니다."));
+      MessageUtil.info(player, ComponentUtil.translate("관전 모드여서 죽지 않았습니다."));
       return;
     }
     if (UserData.GOD_MODE.getBoolean(player))
@@ -52,6 +52,11 @@ public class PlayerDeath implements Listener
     {
       event.setKeepLevel(true);
       event.setDroppedExp(0);
+    }
+
+    if (!keepInv && CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_INVENTORY))
+    {
+      event.setKeepInventory(false);
     }
 
     if (!event.getKeepInventory())

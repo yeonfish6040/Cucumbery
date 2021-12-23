@@ -337,7 +337,7 @@ public class MessageUtil
   public static void sendMessage(@NotNull Object audience, @Nullable Prefix prefix, @NotNull String key, @NotNull Object... args)
   {
     Player p = audience instanceof Player player ? player : null;
-    Component component = ComponentUtil.createTranslate(p, key, args);
+    Component component = ComponentUtil.translate(p, key, args);
     if (prefix != null)
     {
       component = ComponentUtil.create(prefix, component);

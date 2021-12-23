@@ -49,10 +49,10 @@ public class CommandCustomMerchant implements CommandExecutor, TabCompleter
       HashMap<String, MerchantData> merchants = MerchantData.merchantDataHashMap;
       if (merchants.isEmpty())
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.createTranslate("유효한 상점이 없습니다."));
+        MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.translate("유효한 상점이 없습니다."));
         return true;
       }
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.createTranslate("상점 개수 : %s개", merchants.size()));
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.translate("상점 개수 : %s개", merchants.size()));
       List<Component> arguments = new ArrayList<>();
       StringBuilder key = new StringBuilder("&7");
       for (String id : merchants.keySet())
@@ -66,10 +66,10 @@ public class CommandCustomMerchant implements CommandExecutor, TabCompleter
         if (!display.equals(id))
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("이름 : %s", ComponentUtil.create(display)));
+          hover = hover.append(ComponentUtil.translate("이름 : %s", ComponentUtil.create(display)));
         }
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("레시피 개수 : %s개", merchantRecipes.size()));
+        hover = hover.append(ComponentUtil.translate("레시피 개수 : %s개", merchantRecipes.size()));
         for (int i = 0; i < merchantRecipes.size(); i++)
         {
           if (i + 1 != merchantRecipes.size())
@@ -78,7 +78,7 @@ public class CommandCustomMerchant implements CommandExecutor, TabCompleter
           }
           if (i == 20)
           {
-            hover = hover.append(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", Component.text(merchantRecipes.size() - 20)));
+            hover = hover.append(ComponentUtil.translate("&7&ocontainer.shulkerBox.more", Component.text(merchantRecipes.size() - 20)));
             break;
           }
           MerchantRecipe merchantRecipe = merchantRecipes.get(i);
@@ -92,12 +92,12 @@ public class CommandCustomMerchant implements CommandExecutor, TabCompleter
             ingredientsComponent.add(ItemStackComponent.itemStackComponent(ingredient, Constant.THE_COLOR));
           }
           recipeKey = new StringBuilder(recipeKey.substring(0, recipeKey.length() - 2));
-          hover = hover.append(ComponentUtil.createTranslate("[%s] 재료 : %s", ItemStackComponent.itemStackComponent(result, Constant.THE_COLOR), ComponentUtil.createTranslate(recipeKey.toString()).args(ingredientsComponent)));
+          hover = hover.append(ComponentUtil.translate("[%s] 재료 : %s", ItemStackComponent.itemStackComponent(result, Constant.THE_COLOR), ComponentUtil.translate(recipeKey.toString()).args(ingredientsComponent)));
         }
         arguments.add(argument.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand("/cmerchant open " + id)));
       }
       key = new StringBuilder(key.substring(0, key.length() - 2));
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.createTranslate(key.toString(), arguments));
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.translate(key.toString(), arguments));
       return true;
     }
     else

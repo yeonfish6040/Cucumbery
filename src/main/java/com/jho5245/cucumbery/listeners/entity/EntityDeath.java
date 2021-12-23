@@ -50,7 +50,7 @@ public class EntityDeath implements Listener
       CustomEffectManager.removeEffect(entity, CustomEffectType.RESURRECTION);
       CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectType.RESURRECTION_INVINCIBLE, 20 * 2));
       entity.playEffect(EntityEffect.TOTEM_RESURRECT);
-      MessageUtil.info(entity, ComponentUtil.createTranslate("%s 효과로 인해 죽지 않고, 2초간 무적 상태가 됩니다.", CustomEffectType.RESURRECTION));
+      MessageUtil.info(entity, ComponentUtil.translate("%s 효과로 인해 죽지 않고, 2초간 무적 상태가 됩니다.", CustomEffectType.RESURRECTION));
       return;
     }
     if (entity.getScoreboardTags().contains("invincible"))

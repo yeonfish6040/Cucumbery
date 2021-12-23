@@ -28,7 +28,7 @@ public class PlayerPickupExperience implements Listener
     {
       ExperienceOrb experienceOrb = event.getExperienceOrb();
       int experience = experienceOrb.getExperience();
-      MessageUtil.sendActionBar(player, ComponentUtil.createTranslate("&b%s을(를) 주웠습니다.", ComponentUtil.createTranslate("&e경험치 %s", experience)));
+      MessageUtil.sendActionBar(player, ComponentUtil.translate("&b%s을(를) 주웠습니다.", ComponentUtil.translate("&e경험치 %s", experience)));
     }
   }
 }

@@ -31,9 +31,7 @@ public class Constant
 
   public static final String AIR_PREFIX = "§산§소§량§b";
 
-  public static final String SEPARATOR = "&8&m                                ";
-
-  public static final String ITEM_LORE_SEPARATOR = "&8&m                                                                ";
+  public static final String SEPARATOR = "&8&m                                                                ";
 
   public static Sound WARNING_SOUND, ERROR_SOUND;
 
@@ -71,12 +69,12 @@ public class Constant
 
   public static final String ITEM_MODIFIERS_BRACKET = "rgb235,170,41;[%s]";
 
-  public static final Component ITEM_MODIFIERS_CHEST = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.chest"));
-  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.feet"));
-  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.head"));
-  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.legs"));
-  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.mainhand"));
-  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.createTranslate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.offhand"));
+  public static final Component ITEM_MODIFIERS_CHEST = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.chest"));
+  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.feet"));
+  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.head"));
+  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.legs"));
+  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.mainhand"));
+  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.offhand"));
 
   // ItemLore 기능 관련 상수
 
@@ -630,6 +628,7 @@ public class Constant
     BANNER_PATTERN_ITEM("현수막 무늬의 무늬 설명 숨김"),
     CUSTOM_NAME("바닥에 떨어뜨렸을 때 네임 태그 숨김"),
     BLOCK_DATA("블록 데이터 태그 숨김"),
+    BLOCK_STATE("블록 엔티티 태그 숨김"),
     RESTRICTION("사용 제한 태그 숨김"),
     MUSIC_DISC("곡 설명 숨김"),
     TOTEM_OF_UNDYING("불사의 토템 설명 숨김"),

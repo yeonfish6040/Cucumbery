@@ -39,6 +39,12 @@ public class PlayerChat implements Listener
       return;
     }
     Player player = event.getPlayer();
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.MUTE))
+    {
+      event.setCancelled(true);
+      MessageUtil.sendMessage(player, Prefix.INFO, "채팅을 할 수 없는 상태입니다.");
+      return;
+    }
     UUID uuid = player.getUniqueId();
     String message = ComponentUtil.serialize(event.message());
     if (message.startsWith("\\cmd "))
@@ -187,7 +193,7 @@ public class PlayerChat implements Listener
       if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
       {
         event.setCancelled(true);
-        MessageUtil.sendError(player, ComponentUtil.createTranslate("주로 사용하는 손에 아이템을 들고 있어야 아이템 확성기를 사용할 수 있습니다."));
+        MessageUtil.sendError(player, ComponentUtil.translate("주로 사용하는 손에 아이템을 들고 있어야 아이템 확성기를 사용할 수 있습니다."));
         return;
       }
     }

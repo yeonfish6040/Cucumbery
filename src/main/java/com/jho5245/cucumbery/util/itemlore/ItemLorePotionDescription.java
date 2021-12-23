@@ -16,71 +16,71 @@ import java.util.List;
 
 public class ItemLorePotionDescription
 {
-  public static final Component ABSORPTION = ComponentUtil.createTranslate("effect.minecraft.night_vision");
+  public static final Component ABSORPTION = ComponentUtil.translate("effect.minecraft.night_vision");
 
-  public static final Component BAD_OMEN = ComponentUtil.createTranslate("effect.minecraft.bad_omen");
+  public static final Component BAD_OMEN = ComponentUtil.translate("effect.minecraft.bad_omen");
 
-  public static final Component BLINDNESS = ComponentUtil.createTranslate("effect.minecraft.blindness");
+  public static final Component BLINDNESS = ComponentUtil.translate("effect.minecraft.blindness");
 
-  public static final Component CONDUIT_POWER = ComponentUtil.createTranslate("effect.minecraft.conduit_power");
+  public static final Component CONDUIT_POWER = ComponentUtil.translate("effect.minecraft.conduit_power");
 
-  public static final Component DOLPHINS_GRACE = ComponentUtil.createTranslate("effect.minecraft.dolphins_grace");
+  public static final Component DOLPHINS_GRACE = ComponentUtil.translate("effect.minecraft.dolphins_grace");
 
-  public static final Component FIRE_RESISTANCE = ComponentUtil.createTranslate("effect.minecraft.fire_resistance");
+  public static final Component FIRE_RESISTANCE = ComponentUtil.translate("effect.minecraft.fire_resistance");
 
-  public static final Component GLOWING = ComponentUtil.createTranslate("effect.minecraft.glowing");
+  public static final Component GLOWING = ComponentUtil.translate("effect.minecraft.glowing");
 
-  public static final Component HASTE = ComponentUtil.createTranslate("effect.minecraft.haste");
+  public static final Component HASTE = ComponentUtil.translate("effect.minecraft.haste");
 
-  public static final Component HEALTH_BOOST = ComponentUtil.createTranslate("effect.minecraft.health_boost");
+  public static final Component HEALTH_BOOST = ComponentUtil.translate("effect.minecraft.health_boost");
 
-  public static final Component HERO_OF_THE_VILLAGE = ComponentUtil.createTranslate("effect.minecraft.hero_of_the_village");
+  public static final Component HERO_OF_THE_VILLAGE = ComponentUtil.translate("effect.minecraft.hero_of_the_village");
 
-  public static final Component HUNGER = ComponentUtil.createTranslate("effect.minecraft.hunger");
+  public static final Component HUNGER = ComponentUtil.translate("effect.minecraft.hunger");
 
-  public static final Component INSTANT_DAMAGE = ComponentUtil.createTranslate("effect.minecraft.instant_damage");
+  public static final Component INSTANT_DAMAGE = ComponentUtil.translate("effect.minecraft.instant_damage");
 
-  public static final Component INSTANT_HEALTH = ComponentUtil.createTranslate("effect.minecraft.instant_health");
+  public static final Component INSTANT_HEALTH = ComponentUtil.translate("effect.minecraft.instant_health");
 
-  public static final Component INVISIBILTY = ComponentUtil.createTranslate("effect.minecraft.invisibility");
+  public static final Component INVISIBILTY = ComponentUtil.translate("effect.minecraft.invisibility");
 
-  public static final Component JUMP_BOOST = ComponentUtil.createTranslate("effect.minecraft.jump_boost");
+  public static final Component JUMP_BOOST = ComponentUtil.translate("effect.minecraft.jump_boost");
 
-  public static final Component LEVITATION = ComponentUtil.createTranslate("effect.minecraft.levitation");
+  public static final Component LEVITATION = ComponentUtil.translate("effect.minecraft.levitation");
 
-  public static final Component LUCK = ComponentUtil.createTranslate("effect.minecraft.luck");
+  public static final Component LUCK = ComponentUtil.translate("effect.minecraft.luck");
 
-  public static final Component MINING_FATIGUE = ComponentUtil.createTranslate("effect.minecraft.mining_fatigue");
+  public static final Component MINING_FATIGUE = ComponentUtil.translate("effect.minecraft.mining_fatigue");
 
-  public static final Component NAUSEA = ComponentUtil.createTranslate("effect.minecraft.nausea");
+  public static final Component NAUSEA = ComponentUtil.translate("effect.minecraft.nausea");
 
-  public static final Component NIGHT_VISION = ComponentUtil.createTranslate("effect.minecraft.night_vision");
+  public static final Component NIGHT_VISION = ComponentUtil.translate("effect.minecraft.night_vision");
 
-  public static final Component POISON = ComponentUtil.createTranslate("effect.minecraft.poison");
+  public static final Component POISON = ComponentUtil.translate("effect.minecraft.poison");
 
-  public static final Component REGENERATION = ComponentUtil.createTranslate("effect.minecraft.regeneration");
+  public static final Component REGENERATION = ComponentUtil.translate("effect.minecraft.regeneration");
 
-  public static final Component RESISTANCE = ComponentUtil.createTranslate("effect.minecraft.resistance");
+  public static final Component RESISTANCE = ComponentUtil.translate("effect.minecraft.resistance");
 
-  public static final Component SATURATION = ComponentUtil.createTranslate("effect.minecraft.saturation");
+  public static final Component SATURATION = ComponentUtil.translate("effect.minecraft.saturation");
 
-  public static final Component SLOW_FALLING = ComponentUtil.createTranslate("effect.minecraft.slow_falling");
+  public static final Component SLOW_FALLING = ComponentUtil.translate("effect.minecraft.slow_falling");
 
-  public static final Component SLOWNESS = ComponentUtil.createTranslate("effect.minecraft.slowness");
+  public static final Component SLOWNESS = ComponentUtil.translate("effect.minecraft.slowness");
 
-  public static final Component SPEED = ComponentUtil.createTranslate("effect.minecraft.speed");
+  public static final Component SPEED = ComponentUtil.translate("effect.minecraft.speed");
 
-  public static final Component STRENGTH = ComponentUtil.createTranslate("effect.minecraft.strength");
+  public static final Component STRENGTH = ComponentUtil.translate("effect.minecraft.strength");
 
-  public static final Component UNLUCK = ComponentUtil.createTranslate("effect.minecraft.unluck");
+  public static final Component UNLUCK = ComponentUtil.translate("effect.minecraft.unluck");
 
-  public static final Component WATER_BREATHING = ComponentUtil.createTranslate("effect.minecraft.water_breathing");
+  public static final Component WATER_BREATHING = ComponentUtil.translate("effect.minecraft.water_breathing");
 
-  public static final Component WEAKNESS = ComponentUtil.createTranslate("effect.minecraft.weakness");
+  public static final Component WEAKNESS = ComponentUtil.translate("effect.minecraft.weakness");
 
-  public static final Component WITHER = ComponentUtil.createTranslate("effect.minecraft.wither");
+  public static final Component WITHER = ComponentUtil.translate("effect.minecraft.wither");
 
-  public static final Component NONE = ComponentUtil.createTranslate("&7effect.none");
+  public static final Component NONE = ComponentUtil.translate("&7effect.none");
 
   @NotNull
   public static Component getComponent(@NotNull PotionEffectType potionEffectType)
@@ -232,15 +232,15 @@ public class ItemLorePotionDescription
     List<Component> args = new ArrayList<>();
     args.add(ComponentUtil.create(Constant.Sosu2.format(chance) + "%"));
     args.add(effect);
-    args.add(ComponentUtil.createTranslate("%s단계", "" + (amplifier)));
+    args.add(ComponentUtil.translate("%s단계", "" + (amplifier)));
     Component arg = null;
     if (year > 0)
     {
-      arg = ComponentUtil.create(" (" + year).append(ComponentUtil.createTranslate("년").append(ComponentUtil.create(day != 0 || hour != 0 || min != 0 || sec != 0d ? " " : ")")));
+      arg = ComponentUtil.create(" (" + year).append(ComponentUtil.translate("년").append(ComponentUtil.create(day != 0 || hour != 0 || min != 0 || sec != 0d ? " " : ")")));
     }
     if (day > 0)
     {
-      Component tmp = (ComponentUtil.create((year != 0 ? "" : " (") + day).append(ComponentUtil.createTranslate("일").append(ComponentUtil.create(hour != 0 || min != 0 || sec != 0d ? " " : ")"))));
+      Component tmp = (ComponentUtil.create((year != 0 ? "" : " (") + day).append(ComponentUtil.translate("일").append(ComponentUtil.create(hour != 0 || min != 0 || sec != 0d ? " " : ")"))));
       if (arg == null)
       {
         arg = tmp;
@@ -252,7 +252,7 @@ public class ItemLorePotionDescription
     }
     if (hour > 0)
     {
-      Component tmp = ComponentUtil.create((year != 0 || day != 0 ? "" : " (") + hour).append(ComponentUtil.createTranslate("시간").append(ComponentUtil.create(min != 0 || sec != 0d ? " " : ")")));
+      Component tmp = ComponentUtil.create((year != 0 || day != 0 ? "" : " (") + hour).append(ComponentUtil.translate("시간").append(ComponentUtil.create(min != 0 || sec != 0d ? " " : ")")));
       if (arg == null)
       {
         arg = tmp;
@@ -264,7 +264,7 @@ public class ItemLorePotionDescription
     }
     if (min > 0)
     {
-      Component tmp = ComponentUtil.create((year != 0 || day != 0 || hour != 0 ? "" : " (") + min).append(ComponentUtil.createTranslate("분").append(ComponentUtil.create(sec != 0d ? " " : ")")));
+      Component tmp = ComponentUtil.create((year != 0 || day != 0 || hour != 0 ? "" : " (") + min).append(ComponentUtil.translate("분").append(ComponentUtil.create(sec != 0d ? " " : ")")));
       if (arg == null)
       {
         arg = tmp;
@@ -276,7 +276,7 @@ public class ItemLorePotionDescription
     }
     if (sec > 0)
     {
-      Component tmp = ComponentUtil.create((year != 0 || day != 0 || hour != 0 || min != 0 ? "" : " (") + Constant.Sosu2.format(sec)).append(ComponentUtil.createTranslate("초").append(ComponentUtil.create(")")));
+      Component tmp = ComponentUtil.create((year != 0 || day != 0 || hour != 0 || min != 0 ? "" : " (") + Constant.Sosu2.format(sec)).append(ComponentUtil.translate("초").append(ComponentUtil.create(")")));
       if (arg == null)
       {
         arg = tmp;
@@ -291,7 +291,7 @@ public class ItemLorePotionDescription
       args.add(arg);
     }
 
-    return ComponentUtil.createTranslate("rgb255,97,144;%s 확률로 %s %s%s 적용").args(args);
+    return ComponentUtil.translate("rgb255,97,144;%s 확률로 %s %s%s 적용").args(args);
   }
 
   @NotNull
@@ -308,7 +308,7 @@ public class ItemLorePotionDescription
 
   public static List<Component> getPotionList(ItemStack item)
   {
-    List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT)));
+    List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
     PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
     PotionType potionType = potionMeta.getBasePotionData().getType();
     if (potionMeta.getCustomEffects().size() != 0)
@@ -525,7 +525,7 @@ public class ItemLorePotionDescription
 
   public static List<Component> getSplashPotionList(ItemStack item)
   {
-    List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT)));
+    List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
     PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
     PotionType potionType = potionMeta.getBasePotionData().getType();
     if (potionMeta.getCustomEffects().size() != 0)
@@ -742,7 +742,7 @@ public class ItemLorePotionDescription
 
   public static List<Component> getLingeringPotionList(ItemStack item)
   {
-    List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT)));
+    List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
     PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
     PotionType potionType = potionMeta.getBasePotionData().getType();
     if (potionMeta.getCustomEffects().size() != 0)
@@ -959,7 +959,7 @@ public class ItemLorePotionDescription
 
   public static List<Component> getTippedArrowList(ItemStack item)
   {
-    List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT)));
+    List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
     PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
     PotionType potionType = potionMeta.getBasePotionData().getType();
     if (potionMeta.getCustomEffects().size() != 0)

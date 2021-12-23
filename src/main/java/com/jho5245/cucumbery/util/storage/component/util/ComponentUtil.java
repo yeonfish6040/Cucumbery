@@ -3,9 +3,11 @@ package com.jho5245.cucumbery.util.storage.component.util;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -181,22 +183,22 @@ public class ComponentUtil
                   case CUSTOM -> "사용자 지정";
                 };
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("유형 : %s", Component.translatable(environmentKey).color(Constant.THE_COLOR)));
+        hover = hover.append(ComponentUtil.translate("유형 : %s", Component.translatable(environmentKey).color(Constant.THE_COLOR)));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("ID : %s", Constant.THE_COLOR_HEX + world.getName()));
+        hover = hover.append(ComponentUtil.translate("ID : %s", Constant.THE_COLOR_HEX + world.getName()));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + world.getUID()));
+        hover = hover.append(ComponentUtil.translate("UUID : %s", Constant.THE_COLOR_HEX + world.getUID()));
         hover = hover.append(Component.text("\n"));
         Location spawnLocation = world.getSpawnLocation();
-        hover = hover.append(ComponentUtil.createTranslate("스폰 포인트 : %s",
-                ComponentUtil.createTranslate("&7%s, %s, %s", Constant.THE_COLOR_HEX + spawnLocation.getBlockX(), Constant.THE_COLOR_HEX + spawnLocation.getBlockY(), Constant.THE_COLOR_HEX + spawnLocation.getBlockX())
+        hover = hover.append(ComponentUtil.translate("스폰 포인트 : %s",
+                ComponentUtil.translate("&7%s, %s, %s", Constant.THE_COLOR_HEX + spawnLocation.getBlockX(), Constant.THE_COLOR_HEX + spawnLocation.getBlockY(), Constant.THE_COLOR_HEX + spawnLocation.getBlockX())
         ));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("난이도 : %s", ComponentUtil.createTranslate(Constant.THE_COLOR_HEX + world.getDifficulty().translationKey())));
+        hover = hover.append(ComponentUtil.translate("난이도 : %s", ComponentUtil.translate(Constant.THE_COLOR_HEX + world.getDifficulty().translationKey())));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("Y축 제한 범위 : %s", Constant.THE_COLOR_HEX + world.getMinHeight() + "~" + world.getMaxHeight()));
+        hover = hover.append(ComponentUtil.translate("Y축 제한 범위 : %s", Constant.THE_COLOR_HEX + world.getMinHeight() + "~" + world.getMaxHeight()));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("플레이어 수 : %s", ComponentUtil.createTranslate("%s명", Constant.THE_COLOR_HEX + playerCount)));
+        hover = hover.append(ComponentUtil.translate("플레이어 수 : %s", ComponentUtil.translate("%s명", Constant.THE_COLOR_HEX + playerCount)));
         concat = concat.hoverEvent(hover.asHoverEvent());
         if (player == null || player.hasPermission("asdf"))
         {
@@ -216,26 +218,26 @@ public class ComponentUtil
         String id = effectKey.substring(17);
         int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
         boolean hasParticles = potionEffect.hasParticles(), hasIcon = potionEffect.hasIcon(), isAmbient = potionEffect.isAmbient();
-        Component concat = Component.translatable(effectKey, Constant.THE_COLOR);
+        Component concat = Component.translatable(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(effectKey);
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+        hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", amplifier + 1));
+        hover = hover.append(ComponentUtil.translate("농도 레벨 : %s단계", amplifier + 1));
         if (!hasParticles)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("&a입자 숨김"));
+          hover = hover.append(ComponentUtil.translate("&a입자 숨김"));
         }
         if (!hasIcon)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("&a우측 상단 아이콘 숨김"));
+          hover = hover.append(ComponentUtil.translate("&a우측 상단 아이콘 숨김"));
         }
         if (isAmbient)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("&a우측 상단 효과 빛남"));
+          hover = hover.append(ComponentUtil.translate("&a우측 상단 효과 빛남"));
         }
         hover = hover.append(Component.text("\n"));
         hover = hover.append(Component.text("minecraft:" + id, NamedTextColor.DARK_GRAY));
@@ -259,7 +261,10 @@ public class ComponentUtil
         {
           hover = hover.append(propertyDescription);
         }
-        hover = hover.append(Component.text("\n"));
+        if (!effectType.getDescription().equals(Component.empty()))
+        {
+          hover = hover.append(Component.text("\n"));
+        }
         hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
         if (effectType == CustomEffectType.CURSE_OF_BEANS)
         {
@@ -298,21 +303,21 @@ public class ComponentUtil
         if (duration != -1)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+          hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
           if (effectType == CustomEffectType.CURSE_OF_BEANS)
           {
             hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.createTranslate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+            hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
           }
         }
         if (effectType.getMaxAmplifier() != 0)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", amplifier + 1));
+          hover = hover.append(ComponentUtil.translate("농도 레벨 : %s단계", amplifier + 1));
           if (effectType == CustomEffectType.CURSE_OF_BEANS)
           {
             hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.createTranslate("농도 레벨 : %s단계", amplifier + 1));
+            hover = hover.append(ComponentUtil.translate("농도 레벨 : %s단계", amplifier + 1));
           }
         }
         hover = hover.append(Component.text("\n"));
@@ -361,7 +366,7 @@ public class ComponentUtil
             title = title.color(TextColor.color(106, 255, 105));
             description = description.color(TextColor.color(212, 213, 217));
           }
-          Component concat = createTranslate("chat.square_brackets", title.hoverEvent(title.append(Component.text("\n")).append(description))).color(title.color());
+          Component concat = translate("chat.square_brackets", title.hoverEvent(title.append(Component.text("\n")).append(description))).color(title.color());
           NamespacedKey namespacedKey = advancement.getKey();
           if (player == null || player.hasPermission("asdf"))
           {
@@ -389,7 +394,7 @@ public class ComponentUtil
             newArray[i - 1] = split[i];
           }
           split = newArray;
-          Component concat = ComponentUtil.createTranslate(string, split);
+          Component concat = ComponentUtil.translate(string, split);
           component = component.append(ComponentUtil.create(concat));
         }
         else if (string.startsWith("selector:"))
@@ -459,7 +464,7 @@ public class ComponentUtil
           {
             itemStack = new ItemStack(Material.STONE);
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.displayName(ComponentUtil.createTranslate("&c잘못된 아이템"));
+            itemMeta.displayName(ComponentUtil.translate("&c잘못된 아이템"));
             itemStack.setItemMeta(itemMeta);
           }
           else
@@ -475,7 +480,7 @@ public class ComponentUtil
           {
             itemStack = new ItemStack(Material.STONE);
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.displayName(ComponentUtil.createTranslate("&c잘못된 아이템"));
+            itemMeta.displayName(ComponentUtil.translate("&c잘못된 아이템"));
             itemStack.setItemMeta(itemMeta);
           }
           else
@@ -493,7 +498,7 @@ public class ComponentUtil
           }
           else
           {
-            component = component.append(createTranslate("&c알 수 없는 월드입니다. (%s)", string.substring(6)));
+            component = component.append(translate("&c알 수 없는 월드입니다. (%s)", string.substring(6)));
           }
         }
         else
@@ -595,9 +600,9 @@ public class ComponentUtil
    * @param key 컴포넌트의 키 값
    * @return 번역 컴포넌트
    */
-  public static TranslatableComponent createTranslate(String key)
+  public static TranslatableComponent translate(String key)
   {
-    return ComponentUtil.createTranslate(key, true);
+    return ComponentUtil.translate(key, true);
   }
 
   @NotNull
@@ -659,7 +664,12 @@ public class ComponentUtil
       try
       {
         String a3 = matcher.group(3);
-        String replacer = MessageUtil.getFinalConsonant(split[loop], MessageUtil.ConsonantType.valueOf(a3.replace("(", "").replace(")", "")));
+        ConsonantType consonantType = MessageUtil.ConsonantType.valueOf(a3.replace("(", "").replace(")", ""));
+        if (Cucumbery.config.getBoolean("use-gusenited-consonant-grammar"))
+        {
+          consonantType = ConsonantType.values()[(int) (Math.random() * ConsonantType.values().length)];
+        }
+        String replacer = MessageUtil.getFinalConsonant(split[loop], consonantType);
         if (!a3.equals(replacer))
         {
           key = key.replaceFirst(a3.replace("(", "\\(").replace(")", "\\)"), replacer);
@@ -674,9 +684,9 @@ public class ComponentUtil
   }
 
   @NotNull
-  public static TranslatableComponent createTranslate(@NotNull String key, @NotNull Object... args)
+  public static TranslatableComponent translate(@NotNull String key, @NotNull Object... args)
   {
-    return createTranslate(null, key, args);
+    return translate(null, key, args);
   }
 
   /**
@@ -688,7 +698,7 @@ public class ComponentUtil
    */
   @NotNull
   @SuppressWarnings("all")
-  public static TranslatableComponent createTranslate(@Nullable Player player, @NotNull String key, @NotNull Object... args)
+  public static TranslatableComponent translate(@Nullable Player player, @NotNull String key, @NotNull Object... args)
   {
     boolean n2s = args.length > 0 && (args[0] == null || !args[0].equals(false));
     TranslatableComponent component = ComponentUtil.fromLegacyTextTranslate(player, key, n2s);
@@ -944,7 +954,7 @@ public class ComponentUtil
           component = component.content(urlString);
           String url = urlString.startsWith("http") ? urlString : "http://" + urlString;
           component = component.clickEvent(ClickEvent.openUrl(url));
-          component = component.hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 연결합니다.", Component.text(url).color(NamedTextColor.YELLOW))));
+          component = component.hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 연결합니다.", Component.text(url).color(NamedTextColor.YELLOW))));
           components.add(component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.TRUE));
           i += pos - i - 1;
           component = old;
@@ -1301,7 +1311,7 @@ public class ComponentUtil
           }
         }
         key = new StringBuilder(key.substring(0, key.length() - 2));
-        Component translate = ComponentUtil.createTranslate(key.toString(), args);
+        Component translate = ComponentUtil.translate(key.toString(), args);
         pattern.append(ComponentUtil.serialize(translate));
       }
       catch (Exception ignored)

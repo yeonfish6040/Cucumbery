@@ -37,16 +37,16 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     if (length == 0)
     {
       MessageUtil.shortArg(sender, 2, args);
-      MessageUtil.commandInfo(sender, label, "<give|clear|modify|query> ...");
+      MessageUtil.commandInfo(sender, label, "<give|clear|query> ...");
       return failure;
     }
     if (length == 1)
     {
       switch (args[0])
       {
-        case "give", "modify" -> {
+        case "give" -> {
           MessageUtil.shortArg(sender, 2, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> ...");
+          MessageUtil.commandInfo(sender, label, args[0] + " <개체> <효과> [지속 시간(틱)] [강도] [표시 유형] [명령어 출력 숨김 여부]");
           return failure;
         }
         case "clear" -> {
@@ -56,7 +56,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
             {
               CustomEffectManager.clearEffects(player);
               MessageUtil.info(player, "모든 효과를 제거했습니다.");
-              MessageUtil.sendAdminMessage(player, null, ComponentUtil.createTranslate("[%s: 모든 효과를 제거했습니다.]", player));
+              MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: 모든 효과를 제거했습니다.]", player));
             }
             else
             {
@@ -66,7 +66,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           else
           {
             MessageUtil.shortArg(sender, 2, args);
-            MessageUtil.commandInfo(sender, label, "clear <targets> [effect] [hide output]");
+            MessageUtil.commandInfo(sender, label, args[0] + " <개체> [효과] [명령어 출력 숨김 여부]");
             return failure;
           }
         }
@@ -79,13 +79,13 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           else
           {
             MessageUtil.shortArg(sender, 2, args);
-            MessageUtil.commandInfo(sender, label, args[0] + " <target>");
+            MessageUtil.commandInfo(sender, label, args[0] + " <개체>");
             return failure;
           }
         }
         default -> {
           MessageUtil.wrongArg(sender, 1, args);
-          MessageUtil.commandInfo(sender, label, "<give|clear|modify|query> ...");
+          MessageUtil.commandInfo(sender, label, "<give|clear|query> ...");
           return failure;
         }
       }
@@ -96,12 +96,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       {
         case "give" -> {
           MessageUtil.shortArg(sender, 3, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> [duration] [amplifier] [display-type] [hide output]");
-          return failure;
-        }
-        case "modify" -> {
-          MessageUtil.shortArg(sender, 5, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> <duration|amplifier|display-type> <value> [hide output]");
+          MessageUtil.commandInfo(sender, label, args[0] + " <개체> <효과> [지속 시간(틱)] [강도] [표시 유형] [명령어 출력 숨김 여부]");
           return failure;
         }
         case "clear" -> {
@@ -123,7 +118,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         }
         default -> {
           MessageUtil.wrongArg(sender, 1, args);
-          MessageUtil.commandInfo(sender, label, "<give|clear|modify|query>");
+          MessageUtil.commandInfo(sender, label, "<give|clear|query> ...");
           return failure;
         }
       }
@@ -152,11 +147,6 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         }
         case "clear" -> {
           return clearEffect(sender, entities, customEffectType, false) || failure;
-        }
-        case "modify" -> {
-          MessageUtil.shortArg(sender, 5, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> <duration|amplifier|display-type> <value>");
-          return failure;
         }
       }
     }
@@ -209,11 +199,6 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
             return failure;
           }
           return clearEffect(sender, entities, customEffectType, Boolean.parseBoolean(args[3])) || failure;
-        }
-        case "modify" -> {
-          MessageUtil.shortArg(sender, 5, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> <duration|amplifier|display-type> <value>");
-          return failure;
         }
       }
     }
@@ -279,16 +264,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         }
         case "clear" -> {
           MessageUtil.longArg(sender, 4, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> [effect] [hide output]");
-          return failure;
-        }
-        case "modify" -> {
-          switch (args[3])
-          {
-
-          }
-          MessageUtil.shortArg(sender, 5, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> <duration|amplifier|display-type> <value>");
+          MessageUtil.commandInfo(sender, label, args[0] + " [개체] [효과 종류] [명령어 출력 숨김 여부]");
           return failure;
         }
       }
@@ -365,16 +341,88 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         }
         case "clear" -> {
           MessageUtil.longArg(sender, 4, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> [effect] [hide output]");
+          MessageUtil.commandInfo(sender, label, args[0] + " [개체] [효과 종류] [명령어 출력 숨김 여부]");
           return failure;
         }
-        case "modify" -> {
-          switch (args[3])
+      }
+    }
+    if (length == 7)
+    {
+      List<Entity> entities = SelectorUtil.getEntities(sender, args[1]);
+      if (entities == null)
+      {
+        return failure;
+      }
+      CustomEffectType customEffectType;
+      try
+      {
+        customEffectType = CustomEffectType.valueOf(args[2].toUpperCase());
+      }
+      catch (Exception e)
+      {
+        MessageUtil.noArg(sender, Prefix.ARGS_WRONG, args[2]);
+        return failure;
+      }
+      switch (args[0])
+      {
+        case "give" -> {
+          int duration;
+          if (args[3].equals("max"))
           {
-
+            duration = -1;
           }
-          MessageUtil.shortArg(sender, 5, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <targets> <effect> <duration|amplifier|display-type> <value>");
+          else if (args[3].equals("default"))
+          {
+            duration = customEffectType.getDefaultDuration();
+          }
+          else if (!MessageUtil.isInteger(sender, args[3], true))
+          {
+            return failure;
+          }
+          else
+          {
+            duration = Integer.parseInt(args[3]);
+            if (!MessageUtil.checkNumberSize(sender, duration, 1, Integer.MAX_VALUE))
+            {
+              return failure;
+            }
+          }
+          int amplifier;
+          if (args[4].equals("max"))
+          {
+            amplifier = customEffectType.getMaxAmplifier();
+          }
+          else if (!MessageUtil.isInteger(sender, args[4], true))
+          {
+            return failure;
+          }
+          else
+          {
+            amplifier = Integer.parseInt(args[4]);
+            if (!MessageUtil.checkNumberSize(sender, amplifier, 0, customEffectType.getMaxAmplifier()))
+            {
+              return failure;
+            }
+          }
+          DisplayType displayType;
+          try
+          {
+            displayType = DisplayType.valueOf(args[5].toUpperCase());
+          }
+          catch (Exception e)
+          {
+            MessageUtil.noArg(sender, Prefix.ARGS_WRONG, args[5]);
+            return failure;
+          }
+          if (!MessageUtil.isBoolean(sender, args, 7, true))
+          {
+            return failure;
+          }
+          return giveEffect(sender, entities, customEffectType, duration, amplifier, displayType, Boolean.parseBoolean(args[6])) || failure;
+        }
+        case "clear" -> {
+          MessageUtil.longArg(sender, 4, args);
+          MessageUtil.commandInfo(sender, label, args[0] + " [개체] [효과 종류] [명령어 출력 숨김 여부]");
           return failure;
         }
       }
@@ -401,13 +449,13 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       if (!failureEntities.isEmpty())
       {
         MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                ComponentUtil.createTranslate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과를 받을 수 없는 상태이거나 더 강한 효과를 가지고 있습니다.)", failureEntities, customEffect));
+                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과를 받을 수 없는 상태이거나 더 강한 효과를 가지고 있습니다.)", failureEntities, customEffect));
       }
       if (!successEntitiesIsEmpty)
       {
-        MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s 효과를 적용했습니다.", successEntities, customEffect));
-        MessageUtil.info(successEntities, ComponentUtil.createTranslate("%s이(가) 당신에게 %s 효과를 적용했습니다.", sender, customEffect));
-        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.createTranslate("[%s: %s에게 %s 효과를 적용했습니다.]", sender, successEntities, customEffect));
+        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다.", successEntities, customEffect));
+        MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신에게 %s 효과를 적용했습니다.", sender, customEffect));
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다.]", sender, successEntities, customEffect));
       }
     }
     return !successEntitiesIsEmpty;
@@ -444,27 +492,27 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         if (all)
         {
           MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.createTranslate("%s은(는) 효과를 가지고 있지 않습니다.", failureEntities));
+                  ComponentUtil.translate("%s은(는) 효과를 가지고 있지 않습니다.", failureEntities));
         }
         else
         {
           MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.createTranslate("%s은(는) %s 효과를 가지고 있지 않습니다.", failureEntities, customEffectType));
+                  ComponentUtil.translate("%s은(는) %s 효과를 가지고 있지 않습니다.", failureEntities, customEffectType));
         }
       }
       if (!successEntitiesIsEmpty)
       {
         if (all)
         {
-          MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 모든 효과를 제거했습니다.", successEntities));
-          MessageUtil.info(successEntities, ComponentUtil.createTranslate("%s이(가) 당신의 모든 효과를 제거했습니다.", sender));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.createTranslate("[%s: %s의 모든 효과를 제거했습니다.]", sender, successEntities));
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 모든 효과를 제거했습니다.", successEntities));
+          MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신의 모든 효과를 제거했습니다.", sender));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 모든 효과를 제거했습니다.]", sender, successEntities));
         }
         else
         {
-          MessageUtil.info(sender, ComponentUtil.createTranslate("%s의 %s 효과를 제거했습니다.", successEntities, customEffectType));
-          MessageUtil.info(successEntities, ComponentUtil.createTranslate("%s이(가) 당신의 %s 효과를 제거했습니다.", sender, customEffectType));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.createTranslate("[%s: %s의 %s 효과를 제거했습니다.]", sender, successEntities, customEffectType));
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 %s 효과를 제거했습니다.", successEntities, customEffectType));
+          MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신의 %s 효과를 제거했습니다.", sender, customEffectType));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 %s 효과를 제거했습니다.]", sender, successEntities, customEffectType));
         }
       }
     }
@@ -475,11 +523,11 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
   {
     if (!CustomEffectManager.hasEffects(entity))
     {
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.createTranslate("%s은(는) 효과를 가지고 있지 않습니다.", entity));
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 효과를 가지고 있지 않습니다.", entity));
       return;
     }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
-    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.createTranslate("%s은(는) %s개의 효과를 가지고 있습니다: %s", entity, customEffects.size(), CustomEffectManager.getDisplay(customEffects)));
+    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) %s개의 효과를 가지고 있습니다: %s", entity, customEffects.size(), CustomEffectManager.getDisplay(customEffects)));
   }
 
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
@@ -492,11 +540,11 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
 
     if (length == 1)
     {
-      return Method.tabCompleterList(args, "<인수>", "give", "clear", "modify", "query");
+      return Method.tabCompleterList(args, "<인수>", "give", "clear", "query");
     }
     else if (length == 2)
     {
-      if (Method.equals(args[0], "give", "clear", "modify"))
+      if (Method.equals(args[0], "give", "clear"))
       {
         return Method.tabCompleterEntity(sender, args, "<개체>", true);
       }
@@ -507,41 +555,41 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     }
     else if (length == 3)
     {
-      if (args[0].equals("give"))
+      switch (args[0])
       {
-        return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
-      }
-      if (Method.equals(args[0], "clear", "modify"))
-      {
-        List<Entity> entities = SelectorUtil.getEntities(sender, args[1], false);
-        if (entities == null)
-        {
-          return Collections.singletonList(Prefix.NO_ENTITY.toString());
+        case "give" -> {
+          return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
         }
-        List<String> list = new ArrayList<>();
-        for (Entity entity : entities)
-        {
-          List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
-          for (CustomEffect customEffect : customEffects)
+        case "clear" -> {
+          List<Entity> entities = SelectorUtil.getEntities(sender, args[1], false);
+          if (entities == null)
           {
-            String effect = customEffect.getEffectType().toString().toLowerCase();
-            list.add(effect);
+            return Collections.singletonList(Prefix.NO_ENTITY.toString());
           }
+          List<String> list = new ArrayList<>();
+          for (Entity entity : entities)
+          {
+            List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
+            for (CustomEffect customEffect : customEffects)
+            {
+              String effect = customEffect.getEffectType().toString().toLowerCase();
+              list.add(effect);
+            }
+          }
+          if (list.isEmpty())
+          {
+            return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.translate("%s에게 효과가 없습니다.", entities))));
+          }
+          return Method.tabCompleterList(args, list, "[효과]");
         }
-        if (list.isEmpty())
-        {
-          return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.createTranslate("%s에게 효과가 없습니다.", entities))));
-        }
-        return Method.tabCompleterList(args, list, args[0].equals("clear") ? "[효과]" : "<효과>");
       }
     }
     else if (length == 4)
     {
       String effect = args[2];
-      CustomEffectType customEffectType;
       try
       {
-        customEffectType = CustomEffectType.valueOf(effect.toUpperCase());
+        CustomEffectType.valueOf(effect.toUpperCase());
       }
       catch (Exception e)
       {
@@ -552,26 +600,8 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         case "give" -> {
           return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "[지속 시간(틱)]", "max", "default");
         }
-        case "modify" -> {
-          List<Entity> entities = SelectorUtil.getEntities(sender, args[1], false);
-          if (entities == null)
-          {
-            return Collections.singletonList(Prefix.NO_ENTITY.toString());
-          }
-          boolean atLeastOne = false;
-          for (Entity entity : entities)
-          {
-            if (CustomEffectManager.hasEffect(entity, customEffectType))
-            {
-              atLeastOne = true;
-              break;
-            }
-          }
-          if (!atLeastOne)
-          {
-            return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.createTranslate("%s에게 %s 효과가 없습니다.", entities, customEffectType))));
-          }
-          return Method.tabCompleterList(args, "<인수>", "duration", "amplifier", "display-type");
+        case "clear" -> {
+          return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
     }
@@ -587,46 +617,9 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       {
         return Collections.singletonList(effect + MessageUtil.getFinalConsonant(effect, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다.");
       }
-      switch (args[0])
+      if ("give".equals(args[0]))
       {
-        case "give" -> {
-          return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "[농도 레벨]", "max");
-        }
-        case "modify" -> {
-          List<Entity> entities = SelectorUtil.getEntities(sender, args[1], false);
-          if (entities == null)
-          {
-            return Collections.singletonList(Prefix.NO_ENTITY.toString());
-          }
-          boolean atLeastOne = false;
-          for (Entity entity : entities)
-          {
-            if (CustomEffectManager.hasEffect(entity, customEffectType))
-            {
-              atLeastOne = true;
-              break;
-            }
-          }
-          if (!atLeastOne)
-          {
-            return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.createTranslate("%s에게 %s 효과가 없습니다.", entities, customEffectType))));
-          }
-          switch (args[3])
-          {
-            case "duration" -> {
-              return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "<지속 시간(틱)>", "max", "default");
-            }
-            case "amplifier" -> {
-              return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "<농도 레벨>", "max");
-            }
-            case "display-type" -> {
-              List<String> list = new ArrayList<>(Method.enumToList(DisplayType.values()));
-              list.add(customEffectType.getDefaultDisplayType().toString().toLowerCase() + "(기본값)");
-              list.add("default");
-              return Method.tabCompleterList(args, list, "<표시 유형>");
-            }
-          }
-        }
+        return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "[농도 레벨]", "max");
       }
     }
     else if (length == 6)
@@ -641,37 +634,11 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       {
         return Collections.singletonList(effect + MessageUtil.getFinalConsonant(effect, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다.");
       }
-      switch (args[0])
+      if ("give".equals(args[0]))
       {
-        case "give" -> {
-          List<String> list = new ArrayList<>(Method.enumToList(DisplayType.values()));
-          list.add(customEffectType.getDefaultDisplayType().toString().toLowerCase() + "(기본값)");
-          return Method.tabCompleterList(args, list, "[표시 유형]");
-        }
-        case "modify" -> {
-          List<Entity> entities = SelectorUtil.getEntities(sender, args[1], false);
-          if (entities == null)
-          {
-            return Collections.singletonList(Prefix.NO_ENTITY.toString());
-          }
-          boolean atLeastOne = false;
-          for (Entity entity : entities)
-          {
-            if (CustomEffectManager.hasEffect(entity, customEffectType))
-            {
-              atLeastOne = true;
-              break;
-            }
-          }
-          if (!atLeastOne)
-          {
-            return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.createTranslate("%s에게 %s 효과가 없습니다.", entities, customEffectType))));
-          }
-          if (Method.equals(args[2], "duration", "amplifier", "display-type"))
-          {
-            return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
-          }
-        }
+        List<String> list = new ArrayList<>(Method.enumToList(DisplayType.values()));
+        list.add(customEffectType.getDefaultDisplayType().toString().toLowerCase() + "(기본값)");
+        return Method.tabCompleterList(args, list, "[표시 유형]");
       }
     }
     else if (length == 7)

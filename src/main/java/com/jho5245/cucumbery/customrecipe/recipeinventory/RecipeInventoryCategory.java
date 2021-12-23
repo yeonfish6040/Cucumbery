@@ -228,8 +228,8 @@ public class RecipeInventoryCategory
         displayComp = displayComp.color(TextColor.color(93, 244, 255)).decoration(TextDecoration.ITALIC, State.FALSE);
       }
       resultLore.addAll(
-              Arrays.asList(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR),
-                      ComponentUtil.createTranslate("gb210,255;레시피 이름 : %s", displayComp),
+              Arrays.asList(ComponentUtil.create(Constant.SEPARATOR),
+                      ComponentUtil.translate("gb210,255;레시피 이름 : %s", displayComp),
                       Component.empty()));
 
       List<String> description = config.getStringList("recipes." + recipe + ".extra.descriptions.preview");

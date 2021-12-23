@@ -101,7 +101,7 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
           }
         }
       }
-      MessageUtil.broadcastPlayer(Prefix.INFO_ITEMSTORAGE, ComponentUtil.createTranslate("%s이(가) %s을(를) 채팅창에 올렸습니다.", player, ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR)));
+      MessageUtil.broadcastPlayer(Prefix.INFO_ITEMSTORAGE, ComponentUtil.translate("%s이(가) %s을(를) 채팅창에 올렸습니다.", player, ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR)));
       return true;
     }
     if (!msg.contains("[i]") && !msg.contains("[i1]") && !msg.contains("[i2]") && !msg.contains("[i3]") && !msg.contains("[i4]") && !msg.contains("[i5]") && !msg.contains("[i6]") && !msg.contains(
@@ -138,10 +138,10 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
           }
         }
       }
-      MessageUtil.broadcastPlayer(ComponentUtil.createTranslate("%s : %s",
+      MessageUtil.broadcastPlayer(ComponentUtil.translate("%s : %s",
               false,
               player,
-              ComponentUtil.createTranslate(msg.replace("[i]", "%1$s"), false, ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR))));
+              ComponentUtil.translate(msg.replace("[i]", "%1$s"), false, ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR))));
     }
     else
     {
@@ -159,7 +159,7 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
       {
         if (msg.contains("[i" + i + "]") && !ItemStackUtil.itemExists(inv.getItem(i - 1)))
         {
-          MessageUtil.sendError(player, ComponentUtil.createTranslate("%s에 아이템을 들고 있지 않습니다.", ComponentUtil.createTranslate("&e%s번째 단축바 슬롯", i)));
+          MessageUtil.sendError(player, ComponentUtil.translate("%s에 아이템을 들고 있지 않습니다.", ComponentUtil.translate("&e%s번째 단축바 슬롯", i)));
           return true;
         }
       }

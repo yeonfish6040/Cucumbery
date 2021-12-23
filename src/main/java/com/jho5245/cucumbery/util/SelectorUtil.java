@@ -53,10 +53,10 @@ public class SelectorUtil
         {
           if (!sender.hasPermission("asdf"))
           {
-            MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+            MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
             return null;
           }
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.entities"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.player.entities"));
         }
         return null;
       }
@@ -66,16 +66,16 @@ public class SelectorUtil
         {
           if (!sender.hasPermission("asdf"))
           {
-            MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+            MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
             return null;
           }
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.toomany"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.player.toomany"));
         }
         return null;
       }
       if (!sender.hasPermission("asdf"))
       {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.notfound.player"));
+        MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.notfound.player"));
         return null;
       }
       return (Player) entities.get(0);
@@ -86,7 +86,7 @@ public class SelectorUtil
       {
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.notfound.player"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.notfound.player"));
           return null;
         }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
@@ -130,16 +130,16 @@ public class SelectorUtil
         {
           if (!sender.hasPermission("asdf"))
           {
-            MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+            MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
             return null;
           }
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.toomany"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.toomany"));
         }
         return null;
       }
       if (!sender.hasPermission("asdf"))
       {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
         return null;
       }
       return entities.get(0);
@@ -150,7 +150,7 @@ public class SelectorUtil
       {
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
           return null;
         }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
@@ -194,10 +194,10 @@ public class SelectorUtil
         {
           if (!sender.hasPermission("asdf"))
           {
-            MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+            MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
             return null;
           }
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.entities"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.player.entities"));
         }
         return null;
       }
@@ -211,7 +211,7 @@ public class SelectorUtil
       }
       if (!sender.hasPermission("asdf"))
       {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
         return null;
       }
       return players;
@@ -222,7 +222,7 @@ public class SelectorUtil
       {
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
           return null;
         }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
@@ -260,7 +260,7 @@ public class SelectorUtil
       }
       if (!sender.hasPermission("asdf"))
       {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
         return null;
       }
       return !entities.isEmpty() ? entities : null;
@@ -271,7 +271,7 @@ public class SelectorUtil
       {
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
           return null;
         }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
@@ -312,12 +312,12 @@ public class SelectorUtil
       {
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
           return null;
         }
         if (notice)
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.entities"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.player.entities"));
         }
         return null;
       }
@@ -331,7 +331,7 @@ public class SelectorUtil
       }
       if (!sender.hasPermission("asdf"))
       {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
         return null;
       }
       return players;
@@ -342,7 +342,7 @@ public class SelectorUtil
       {
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
           return null;
         }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
@@ -389,12 +389,12 @@ public class SelectorUtil
       {
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
           return null;
         }
         if (notice)
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.entities"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.player.entities"));
         }
         return null;
       }
@@ -402,18 +402,18 @@ public class SelectorUtil
       {
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
           return null;
         }
         if (notice)
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.player.toomany"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.player.toomany"));
         }
         return null;
       }
       if (!sender.hasPermission("asdf"))
       {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+        MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
         return null;
       }
       return (Player) entities.get(0);
@@ -425,7 +425,7 @@ public class SelectorUtil
 
         if (!sender.hasPermission("asdf"))
         {
-          MessageUtil.sendError(sender, ComponentUtil.createTranslate("argument.entity.selector.not_allowed"));
+          MessageUtil.sendError(sender, ComponentUtil.translate("argument.entity.selector.not_allowed"));
           return null;
         }
         MessageUtil.sendError(sender, errorMessage(sender, selector, e));
@@ -437,7 +437,7 @@ public class SelectorUtil
   @NotNull
   public static Component errorMessage(@Nullable CommandSender sender, @NotNull String selector, @NotNull IllegalArgumentException e)
   {
-    return ComponentUtil.createTranslate(getErrorKey(sender, selector, e));
+    return ComponentUtil.translate(getErrorKey(sender, selector, e));
   }
 
   @NotNull

@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.block;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.PlaceHolderUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.NoteBlock;
@@ -17,20 +18,6 @@ import java.util.regex.Pattern;
 
 public class NotePlay implements Listener
 {
-  @EventHandler
-  public void onNotePlay(NotePlayEvent event)
-  {
-    if (event.isCancelled())
-    {
-      return;
-    }
-    Block block = event.getBlock();
-    if (customNoteBlockSound(block))
-    {
-      event.setCancelled(true);
-    }
-  }
-
   public static boolean customNoteBlockSound(@NotNull Block block)
   {
     Location location = block.getLocation();
@@ -40,14 +27,20 @@ public class NotePlay implements Listener
       String newSoundString = Cucumbery.config.getString("custom-note-block-sound.sounds." + belowBlock.getType());
       if (newSoundString != null)
       {
-        Sound newSound;
+        if (newSoundString.startsWith("placeholder:"))
+        {
+          newSoundString = newSoundString.substring("placeholder:".length());
+          newSoundString = PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), newSoundString, null);
+        }
+        boolean vaillnaSound = false;
+        Sound newSound = null;
         try
         {
           newSound = Sound.valueOf(newSoundString);
+          vaillnaSound = true;
         }
-        catch (Exception e)
+        catch (Exception ignored)
         {
-          return false;
         }
         NoteBlock noteBlock = (NoteBlock) block.getBlockData();
         Note note = noteBlock.getNote();
@@ -62,14 +55,43 @@ public class NotePlay implements Listener
         }
         double colorNum = 0.041667 * pitchNum;
         block.getWorld().spawnParticle(Particle.NOTE, location.add(0.5, 2.25, 0.5), 0, colorNum, 0, 0, 1);
-        Collection<Player> players = location.getNearbyPlayers(30);
+        Collection<Player> players = location.getWorld().getPlayers();
         for (Player player : players)
         {
-          player.playSound(location, newSound, SoundCategory.RECORDS, 1F, Method.getPitchFromNote(note));
+          try
+          {
+            if (vaillnaSound)
+            {
+              player.playSound(location, newSound, SoundCategory.RECORDS, 3F, Method.getPitchFromNote(note));
+            }
+            else
+            {
+              player.playSound(location, newSoundString, SoundCategory.RECORDS, 3F, Method.getPitchFromNote(note));
+            }
+          }
+          catch (Exception e)
+          {
+            break;
+          }
+
         }
         return true;
       }
     }
     return false;
+  }
+
+  @EventHandler
+  public void onNotePlay(NotePlayEvent event)
+  {
+    if (event.isCancelled())
+    {
+      return;
+    }
+    Block block = event.getBlock();
+    if (customNoteBlockSound(block))
+    {
+      event.setCancelled(true);
+    }
   }
 }

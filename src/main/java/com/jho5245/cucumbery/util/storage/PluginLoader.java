@@ -22,7 +22,8 @@ import java.util.SortedSet;
 public class PluginLoader
 {
 
-  public static void unload() {
+  public static void unload()
+  {
     Plugin plugin = Cucumbery.getPlugin();
     String name = plugin.getName();
     PluginManager pluginManager = Bukkit.getPluginManager();
@@ -31,19 +32,22 @@ public class PluginLoader
     Map<String, Plugin> names = null;
     Map<String, Command> commands = null;
     Map<Event, SortedSet<RegisteredListener>> listeners = null;
-    try {
+    try
+    {
       Field pluginsField = Bukkit.getPluginManager().getClass().getDeclaredField("plugins");
       pluginsField.setAccessible(true);
       plugins = (List<Plugin>) pluginsField.get(pluginManager);
       Field lookupNamesField = Bukkit.getPluginManager().getClass().getDeclaredField("lookupNames");
       lookupNamesField.setAccessible(true);
       names = (Map<String, Plugin>) lookupNamesField.get(pluginManager);
-      try {
+      try
+      {
         Field listenersField = Bukkit.getPluginManager().getClass().getDeclaredField("listeners");
         listenersField.setAccessible(true);
         listeners = (Map<Event, SortedSet<RegisteredListener>>) listenersField.get(pluginManager);
       }
-      catch (Exception ignored) {
+      catch (Exception ignored)
+      {
       }
       Field commandMapField = Bukkit.getPluginManager().getClass().getDeclaredField("commandMap");
       commandMapField.setAccessible(true);
@@ -52,27 +56,36 @@ public class PluginLoader
       knownCommandsField.setAccessible(true);
       commands = (Map<String, Command>) knownCommandsField.get(commandMap);
     }
-    catch (Exception e) {
+    catch (Exception e)
+    {
       e.printStackTrace();
     }
     pluginManager.disablePlugin(plugin);
-    if (plugins != null) {
+    if (plugins != null)
+    {
       plugins.remove(plugin);
     }
-    if (names != null) {
+    if (names != null)
+    {
       names.remove(name);
     }
-    if (listeners != null) {
-      for (SortedSet<RegisteredListener> set : listeners.values()) {
+    if (listeners != null)
+    {
+      for (SortedSet<RegisteredListener> set : listeners.values())
+      {
         set.removeIf(value -> value.getPlugin() == plugin);
       }
     }
-    if (commandMap != null) {
-      for (Iterator<Map.Entry<String, Command>> it = commands.entrySet().iterator(); it.hasNext(); ) {
+    if (commandMap != null)
+    {
+      for (Iterator<Map.Entry<String, Command>> it = commands.entrySet().iterator(); it.hasNext(); )
+      {
         Map.Entry<String, Command> entry = it.next();
-        if (entry.getValue() instanceof PluginCommand) {
+        if (entry.getValue() instanceof PluginCommand)
+        {
           PluginCommand c = (PluginCommand) entry.getValue();
-          if (c.getPlugin() == plugin) {
+          if (c.getPlugin() == plugin)
+          {
             c.unregister(commandMap);
             it.remove();
           }
@@ -80,8 +93,10 @@ public class PluginLoader
       }
     }
     ClassLoader cl = plugin.getClass().getClassLoader();
-    if (cl instanceof URLClassLoader) {
-      try {
+    if (cl instanceof URLClassLoader)
+    {
+      try
+      {
         Field pluginField = cl.getClass().getDeclaredField("plugin");
         pluginField.setAccessible(true);
         pluginField.set(cl, null);
@@ -89,31 +104,39 @@ public class PluginLoader
         pluginInitField.setAccessible(true);
         pluginInitField.set(cl, null);
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
         e.printStackTrace();
       }
-      try {
+      try
+      {
         ((URLClassLoader) cl).close();
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
         e.printStackTrace();
       }
     }
     //System.gc();
   }
 
-  public static void load(File file) {
+  public static void load(File file)
+  {
     Plugin plugin = null;
-    if (!file.isFile()) {
+    if (!file.isFile())
+    {
       return;
     }
-    try {
+    try
+    {
       plugin = Bukkit.getPluginManager().loadPlugin(file);
     }
-    catch (Exception e) {
+    catch (Exception e)
+    {
       e.printStackTrace();
     }
-    if (plugin == null) {
+    if (plugin == null)
+    {
       return;
     }
     plugin.onLoad();

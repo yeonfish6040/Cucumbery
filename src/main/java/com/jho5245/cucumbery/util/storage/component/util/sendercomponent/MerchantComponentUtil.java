@@ -26,15 +26,15 @@ public class MerchantComponentUtil
     if (!recipes.isEmpty())
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR));
+      hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("거래 목록 : %s개", recipes.size()));
+      hover = hover.append(ComponentUtil.translate("거래 목록 : %s개", recipes.size()));
       for (int i = 0; i < recipes.size(); i++)
       {
         hover = hover.append(Component.text("\n"));
         if (i == 20)
         {
-          hover = hover.append(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", Component.text(recipes.size() - 20)));
+          hover = hover.append(ComponentUtil.translate("&7&ocontainer.shulkerBox.more", Component.text(recipes.size() - 20)));
           break;
         }
         MerchantRecipe recipe = recipes.get(i);
@@ -56,11 +56,11 @@ public class MerchantComponentUtil
           ingredientArgs.add(ItemStackComponent.itemStackComponent(ingredient));
         }
         ingredientDisplay = new StringBuilder(ingredientDisplay.substring(0, ingredientDisplay.length() - 2));
-        recipeArgs.add(ComponentUtil.createTranslate(ingredientDisplay.toString()).args(ingredientArgs));
+        recipeArgs.add(ComponentUtil.translate(ingredientDisplay.toString()).args(ingredientArgs));
         recipeArgs.add(ItemStackComponent.itemStackComponent(result));
         recipeArgs.add(Component.text(use));
         recipeArgs.add(Component.text(maxUse));
-        Component component = ComponentUtil.createTranslate(recipeDisplay).args(recipeArgs);
+        Component component = ComponentUtil.translate(recipeDisplay).args(recipeArgs);
         ItemMeta itemMeta = result.getItemMeta();
         if (itemMeta.hasEnchants())
         {
@@ -80,13 +80,13 @@ public class MerchantComponentUtil
             }
             if (level > 1 || enchantment.getMaxLevel() != 1)
             {
-              enchant = ComponentUtil.createTranslate("%s %s", enchant, level);
+              enchant = ComponentUtil.translate("%s %s", enchant, level);
             }
             enchantArgs.add(enchant);
             enchantDisplay.append("%s, ");
           }
           enchantDisplay = new StringBuilder(enchantDisplay.substring(0, enchantDisplay.length() - 2));
-          component = component.append(ComponentUtil.createTranslate(enchantDisplay.toString()).args(enchantArgs));
+          component = component.append(ComponentUtil.translate(enchantDisplay.toString()).args(enchantArgs));
         }
         if (itemMeta instanceof EnchantmentStorageMeta storageMeta)
         {
@@ -106,13 +106,13 @@ public class MerchantComponentUtil
             }
             if (level > 1 || enchantment.getMaxLevel() != 1)
             {
-              enchant = ComponentUtil.createTranslate("%s %s", enchant, level);
+              enchant = ComponentUtil.translate("%s %s", enchant, level);
             }
             enchantArgs.add(enchant);
             enchantDisplay.append("%s, ");
           }
           enchantDisplay = new StringBuilder(enchantDisplay.substring(0, enchantDisplay.length() - 2));
-          component = component.append(ComponentUtil.createTranslate(enchantDisplay.toString()).args(enchantArgs));
+          component = component.append(ComponentUtil.translate(enchantDisplay.toString()).args(enchantArgs));
         }
         if (unavailable)
         {
@@ -121,7 +121,7 @@ public class MerchantComponentUtil
         hover = hover.append(component);
       }
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR));
+      hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
     }
     return hover;
   }

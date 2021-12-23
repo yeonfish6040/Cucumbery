@@ -3,15 +3,16 @@ package com.jho5245.cucumbery.listeners.player.item;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -59,7 +60,7 @@ public class PlayerItemConsume implements Listener
       }
       return;
     }
-    if (!Permission.EVENT2_ANTI_ALLPLAYER.has(player) && Constant.AllPlayer.ITEM_CONSUME.isEnabled())
+    if (Permission.EVENT2_ANTI_ALLPLAYER.has(player) && Constant.AllPlayer.ITEM_CONSUME.isEnabled())
     {
       event.setCancelled(true);
       if (!Variable.itemConsumeAlertCooldown.contains(uuid))
@@ -77,7 +78,7 @@ public class PlayerItemConsume implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemConsumeAlertCooldown2.contains(uuid))
       {
         Variable.itemConsumeAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c섭취 불가!"), ComponentUtil.createTranslate("&r사용할 수 없는 아이템입니다."), 5, 80, 15);
+        MessageUtil.sendTitle(player, ComponentUtil.translate("&c섭취 불가!"), ComponentUtil.translate("&r사용할 수 없는 아이템입니다."), 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown2.remove(uuid), 100L);
       }
@@ -94,13 +95,20 @@ public class PlayerItemConsume implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemConsumeAlertCooldown2.contains(uuid))
       {
         Variable.itemConsumeAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c섭취 불가!"),
-                ComponentUtil.createTranslate("&r인벤토리가 가득 찬 상태에서는 %s을(를) 섭취할 수 없습니다.", item), 5, 120, 15);
+        MessageUtil.sendTitle(player, ComponentUtil.translate("&c섭취 불가!"),
+                ComponentUtil.translate("&r인벤토리가 가득 찬 상태에서는 %s을(를) 섭취할 수 없습니다.", item), 5, 120, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown2.remove(uuid), 100L);
       }
       return;
     }
+
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_CONSUMPTION))
+    {
+      event.setCancelled(true);
+      return;
+    }
+
     // 아이템 사용 후 자동 지급되는 아이템에 아이템 설명 추가
     if (player.getGameMode() != GameMode.CREATIVE && (type == Material.MILK_BUCKET || type == Material.POTION || type == Material.MUSHROOM_STEW
             || type == Material.RABBIT_STEW || type == Material.SUSPICIOUS_STEW || type == Material.BEETROOT_SOUP || type == Material.HONEY_BOTTLE))
@@ -175,10 +183,14 @@ public class PlayerItemConsume implements Listener
   private void customEffect(PlayerItemConsumeEvent event)
   {
     Player player = event.getPlayer();
-    List<CustomEffect> customEffects = new ArrayList<>(CustomEffectManager.getEffects(player));
-    customEffects.removeIf(effect -> !effect.isKeepOnMilk());
-    CustomEffectManager.clearEffects(player);
-    CustomEffectManager.addEffects(player, customEffects);
+    ItemStack itemStack = event.getItem();
+    if (itemStack.getType() == Material.MILK_BUCKET)
+    {
+      List<CustomEffect> customEffects = new ArrayList<>(CustomEffectManager.getEffects(player));
+      customEffects.removeIf(effect -> !effect.isKeepOnMilk());
+      CustomEffectManager.clearEffects(player);
+      CustomEffectManager.addEffects(player, customEffects);
+    }
   }
 
   private void consumeItemUsage(PlayerItemConsumeEvent event, Player player, ItemStack item, boolean isSneaking)
@@ -233,7 +245,7 @@ public class PlayerItemConsume implements Listener
         String remainTime = "&e" + Method.timeFormatMilli(nextAvailable - currentTime);
         if (currentTime < nextAvailable)
         {
-          MessageUtil.sendWarn(player, ComponentUtil.createTranslate("아직 %s을(를) " + (isSneaking ? "웅크리고 " : "") + "섭취할 수 없습니다. (남은 시간 : %s)", item, remainTime));
+          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) " + (isSneaking ? "웅크리고 " : "") + "섭취할 수 없습니다. (남은 시간 : %s)", item, remainTime));
           event.setCancelled(true);
           return;
         }

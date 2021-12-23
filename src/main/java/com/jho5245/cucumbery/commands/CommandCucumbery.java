@@ -54,7 +54,7 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
       switch (args[0])
       {
         case "reload":
-          MessageUtil.broadcastDebug(ComponentUtil.createTranslate("%s이(가) /cucumbery reload 명령어 사용", sender));
+          MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reload 명령어 사용", sender));
           Cucumbery.getPlugin().registerConfig();
           Cucumbery.getPlugin().reloadConfig();
           Cucumbery.config = (YamlConfiguration) Cucumbery.getPlugin().getConfig();
@@ -115,18 +115,18 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
           MessageUtil.info(sender, "모든 콘픽 파일을 리로드하였습니다.");
           break;
         case "reloaddata":
-          MessageUtil.broadcastDebug(ComponentUtil.createTranslate("%s이(가) /cucumbery reloaddata 명령어 사용", sender));
+          MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloaddata 명령어 사용", sender));
           Bukkit.reloadData();
           MessageUtil.info(sender, "서버 데이터 파일을 리로드하였습니다.");
           break;
         case "reloadplugin":
-          MessageUtil.broadcastDebug(ComponentUtil.createTranslate("%s이(가) /cucumbery reloadplugin 명령어 사용", sender));
+          MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin 명령어 사용", sender));
           PluginLoader.unload();
           PluginLoader.load(Cucumbery.file);
           MessageUtil.info(sender, "플러그인을 리로드하였습니다.");
           break;
         case "reloadplugin2":
-          MessageUtil.broadcastDebug(ComponentUtil.createTranslate("%s이(가) /cucumbery reloadplugin2 명령어 사용", sender));
+          MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin2 명령어 사용", sender));
           Bukkit.getServer().getPluginManager().disablePlugin(Cucumbery.getPlugin());
           Bukkit.getServer().getPluginManager().enablePlugin(Cucumbery.getPlugin());
           MessageUtil.info(sender, "플러그인을 리로드하였습니다. 2");
@@ -135,15 +135,15 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
           MessageUtil.info(sender, "플러그인 버전 : &e" + Cucumbery.getPlugin().getDescription().getVersion());
           break;
         case "update":
-          MessageUtil.broadcastDebug(ComponentUtil.createTranslate("%s이(가) /cucumbery update 명령어 사용", sender));
+          MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery update 명령어 사용", sender));
           MessageUtil.sendMessage(sender, Prefix.INFO, "최신 버전인지 확인합니다...");
           if (Updater.defaultUpdater.updateLatest())
           {
-            MessageUtil.info(sender, ComponentUtil.createTranslate("최신 Cucumbery 플러그인을 찾았습니다. 업데이트를 시작합니다..."));
+            MessageUtil.info(sender, ComponentUtil.translate("최신 Cucumbery 플러그인을 찾았습니다. 업데이트를 시작합니다..."));
           }
           else
           {
-            MessageUtil.sendError(sender, ComponentUtil.createTranslate("이미 최신 버전입니다."));
+            MessageUtil.sendError(sender, ComponentUtil.translate("이미 최신 버전입니다."));
           }
           break;
         case "update-quickshop-item":

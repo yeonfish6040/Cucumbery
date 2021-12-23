@@ -797,7 +797,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.createTranslate("캐릭터 귀속 아이템은 %s에 사용할 수 없습니다.", clickedBlockType), 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.translate("캐릭터 귀속 아이템은 %s에 사용할 수 없습니다.", clickedBlockType), 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -965,7 +965,7 @@ public class PlayerInteract implements Listener
         String remainTime = "&e" + Method.timeFormatMilli(nextAvailable - currentTime);
         if (currentTime < nextAvailable)
         {
-          MessageUtil.sendWarn(player, ComponentUtil.createTranslate("아직 %s을(를) " + usageTypeString + " 사용할 수 없습니다. (남은 시간 : %s)", item, remainTime));
+          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) " + usageTypeString + " 사용할 수 없습니다. (남은 시간 : %s)", item, remainTime));
           event.setCancelled(true);
           return false;
         }
@@ -1055,6 +1055,7 @@ public class PlayerInteract implements Listener
         return;
       }
       event.setCancelled(true);
+      player.incrementStatistic(Statistic.NOTEBLOCK_TUNED);
       NoteBlock noteBlock = (NoteBlock) block.getBlockData();
       if (noteBlock.getNote().equals(Note.sharp(0, Tone.F)))
       {
@@ -1112,6 +1113,7 @@ public class PlayerInteract implements Listener
         return;
       }
       event.setCancelled(true);
+      player.incrementStatistic(Statistic.NOTEBLOCK_PLAYED);
       // Custom Note Block Sound
       if (!NotePlay.customNoteBlockSound(block))
       {
@@ -1350,7 +1352,7 @@ public class PlayerInteract implements Listener
           {
             if (!ignoreInvincible && !alreadyWarned)
             {
-              MessageUtil.sendWarn(player, ComponentUtil.createTranslate("%s에게는 피해를 입힐 수 없다.", entity));
+              MessageUtil.sendWarn(player, ComponentUtil.translate("%s에게는 피해를 입힐 수 없다.", entity));
             }
             alreadyWarned = true;
           }
@@ -1602,8 +1604,8 @@ public class PlayerInteract implements Listener
         {
           if (!Method.configContainsLocation(player.getLocation(), Cucumbery.getPlugin().getConfig().getStringList("no-send-title-on-item-break-worlds")))
           {
-            MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c장비 파괴됨!"),
-                    ComponentUtil.createTranslate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다.", item), 5, 100, 15);
+            MessageUtil.sendTitle(player, ComponentUtil.translate("&c장비 파괴됨!"),
+                    ComponentUtil.translate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다.", item), 5, 100, 15);
           }
         }
         Method.itemBreakParticle(player, item);

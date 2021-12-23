@@ -69,7 +69,7 @@ public class Data
         newList.add(entity);
       }
     }
-    MessageUtil.sendAdminMessage(sender, newList, ComponentUtil.createTranslate("[%s: %s에게 %s을(를) %s개 지급하였습니다.]", sender, targets, item, amountComponent));
+    MessageUtil.sendAdminMessage(sender, newList, ComponentUtil.translate("[%s: %s에게 %s을(를) %s개 지급하였습니다.]", sender, targets, item, amountComponent));
 
     if (!failure.isEmpty())
     {
@@ -79,7 +79,7 @@ public class Data
       {
         UUID target = failure.get(i);
         int lostAmount = lostAmounts.get(target);
-        hover = hover.append(ComponentUtil.createTranslate("%s : %s개 (%s - %s)",
+        hover = hover.append(ComponentUtil.translate("%s : %s개 (%s - %s)",
                 target, Component.text(amount - lostAmount).color(Constant.THE_COLOR), amountComponent, Component.text(lostAmount).color(Constant.THE_COLOR)));
         if (i + 1 != failure.size())
         {
@@ -93,12 +93,12 @@ public class Data
       }
       if (sender instanceof Player player)
       {
-        Component message = ComponentUtil.createTranslate("받은 아이템 개수 상태 (마우스를 올려서 보기)");
+        Component message = ComponentUtil.translate("받은 아이템 개수 상태 (마우스를 올려서 보기)");
         MessageUtil.info(player, message.hoverEvent(hover));
       }
       else if (Cucumbery.using_CommandAPI && sender instanceof NativeProxyCommandSender proxyCommandSender && proxyCommandSender.getCallee() instanceof Player player)
       {
-        Component message = ComponentUtil.createTranslate("받은 아이템 개수 상태 (마우스를 올려서 보기)");
+        Component message = ComponentUtil.translate("받은 아이템 개수 상태 (마우스를 올려서 보기)");
         MessageUtil.info(player, message.hoverEvent(hover));
       }
     }

@@ -3,21 +3,23 @@ package com.jho5245.cucumbery.customeffect;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectApplyEvent;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreApplyEvent;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -56,15 +58,15 @@ public class CustomEffectManager
     if (!force && hasEffect(entity, effect.getEffectType()))
     {
       CustomEffect customEffect = getEffect(entity, effect.getEffectType());
-      if (customEffect != null && (customEffect.getAmplifier() > effect.getAmplifier() && customEffect.getDuration() > effect.getDuration()))
+      if (customEffect.getAmplifier() > effect.getAmplifier() && customEffect.getDuration() > effect.getDuration())
       {
         return false;
       }
     }
     effect = effect.copy();
-    EntityCustomEffectApplyEvent event = new EntityCustomEffectApplyEvent(entity, effect);
-    Cucumbery.getPlugin().getPluginManager().callEvent(event);
-    if (event.isCancelled())
+    EntityCustomEffectPreApplyEvent preApplyEvent = new EntityCustomEffectPreApplyEvent(entity, effect);
+    Cucumbery.getPlugin().getPluginManager().callEvent(preApplyEvent);
+    if (preApplyEvent.isCancelled())
     {
       return false;
     }
@@ -73,6 +75,8 @@ public class CustomEffectManager
     customEffects.removeIf(e -> e.getEffectType() == finalEffect.getEffectType());
     customEffects.add(effect);
     effectMap.put(entity.getUniqueId(), customEffects);
+    EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect);
+    Cucumbery.getPlugin().getPluginManager().callEvent(applyEvent);
     return true;
   }
 
@@ -146,9 +150,22 @@ public class CustomEffectManager
     return effectMap.containsKey(entity.getUniqueId()) && !getEffects(entity).isEmpty();
   }
 
-  @Nullable
-  public static CustomEffect getEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType)
+  /**
+   * 개체의 효과를 가져옵니다. <p>{@link CustomEffectManager#hasEffect(Entity, CustomEffectType)}가 true인지 먼저 확인해야 합니다.
+   *
+   * @param entity     효과를 가져올 개체
+   * @param effectType 효과의 종류
+   * @return 개체의 효과
+   * @throws IllegalStateException 개체가 효과를 가지고 있지 않으면 발생
+   */
+  @NotNull
+  public static CustomEffect getEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType) throws IllegalStateException
   {
+    Material material;
+    if (!hasEffect(entity, effectType))
+    {
+      throw new IllegalStateException();
+    }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
     for (CustomEffect customEffect : customEffects)
     {
@@ -157,7 +174,7 @@ public class CustomEffectManager
         return customEffect;
       }
     }
-    return null;
+    throw new IllegalStateException();
   }
 
   public static void save()
@@ -179,12 +196,12 @@ public class CustomEffectManager
           {
             MessageUtil.sendError(Bukkit.getConsoleSender(), "could not delete wjat");
           }
-         // MessageUtil.broadcastDebug("&cdelete:" + uuid);
+          // MessageUtil.broadcastDebug("&cdelete:" + uuid);
         }
         continue;
       }
       CustomConfig customConfig = CustomConfig.getCustomConfig("data/CustomEffects/" + (isPlayer ? "" : "non-players/") + uuid + ".yml");
-     // MessageUtil.broadcastDebug("&asave:" + uuid + ", " + customEffects.size());
+      // MessageUtil.broadcastDebug("&asave:" + uuid + ", " + customEffects.size());
       YamlConfiguration config = customConfig.getConfig();
       if (entity != null)
       {
@@ -211,6 +228,10 @@ public class CustomEffectManager
         CustomEffectType effectType = customEffect.getEffectType();
         int duration = customEffect.getDuration();
         int amplifier = customEffect.getAmplifier();
+        int initDuration = customEffect.getInitDuration();
+        int initAmplifier = customEffect.getInitAmplifier();
+        config.set("effects." + effectType + ".init-duration", initDuration);
+        config.set("effects." + effectType + ".init-amplifier", initAmplifier);
         config.set("effects." + effectType + ".duration", duration);
         config.set("effects." + effectType + ".amplifier", amplifier);
         config.set("effects." + effectType + ".display-type", customEffect.getDisplayType().toString());
@@ -247,12 +268,16 @@ public class CustomEffectManager
           }
           int duration = root.getInt(typeString + ".duration");
           int amplifier = root.getInt(typeString + ".amplifier");
-          CustomEffect customEffect = new CustomEffect(customEffectType, duration, amplifier, displayType);
+          int initDuration = root.getInt(typeString + ".init-duration");
+          int initAmplifier = root.getInt(typeString + ".init-amplifier");
+          CustomEffect customEffect = new CustomEffect(customEffectType, initDuration, initAmplifier, displayType);
+          customEffect.setDuration(duration);
+          customEffect.setAmplifier(amplifier);
           customEffects.add(customEffect);
         }
-        catch (Exception e)
+        catch (Exception ignored)
         {
-          MessageUtil.sendWarn(Bukkit.getConsoleSender(), Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.createTranslate("invalid custom effect type: %s, for %s(%s)", typeString, uuid, uuid.toString()));
+
         }
       }
       effectMap.put(uuid, customEffects);
@@ -269,15 +294,89 @@ public class CustomEffectManager
       int duration = customEffect.getDuration();
       int amplifier = customEffect.getAmplifier();
       arguments.add(
-              ComponentUtil.createTranslate(amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s", customEffect,
+              ComponentUtil.translate(amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s", customEffect,
                       (duration != -1 && duration != customEffect.getInitDuration() - 1) ?
-                      " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")":
+                              " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")" :
                               ""
                       , amplifier + 1)
       );
       key.append("%s, ");
     }
     key = new StringBuilder(key.substring(0, key.length() - 2));
-    return ComponentUtil.createTranslate(key.toString(), arguments);
+    return ComponentUtil.translate(key.toString(), arguments);
+  }
+
+  @NotNull
+  public static Component getVanillaDisplay(@NotNull Collection<PotionEffect> potionEffects)
+  {
+    StringBuilder key = new StringBuilder();
+    List<Component> arguments = new ArrayList<>();
+    for (PotionEffect potionEffect : potionEffects)
+    {
+      int duration = potionEffect.getDuration();
+      int amplifier = potionEffect.getAmplifier();
+      arguments.add(
+              ComponentUtil.translate(amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s", potionEffect,
+                      " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")"
+                      , amplifier + 1)
+      );
+      key.append("%s, ");
+    }
+    key = new StringBuilder(key.substring(0, key.length() - 2));
+    return ComponentUtil.translate(key.toString(), arguments);
+  }
+
+  @SuppressWarnings("all")
+  public static boolean isVanillaNegative(@NotNull PotionEffectType potionEffectType)
+  {
+    if (potionEffectType.equals(PotionEffectType.SLOW))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.SLOW_DIGGING))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.HARM))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.BLINDNESS))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.HUNGER))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.WEAKNESS))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.POISON))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.WITHER))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.GLOWING))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.LEVITATION))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.UNLUCK))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.BAD_OMEN))
+    {
+      return true;
+    }
+    return false;
   }
 }

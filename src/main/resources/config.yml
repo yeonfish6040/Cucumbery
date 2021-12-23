@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 7
+config-version: 9
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -695,3 +695,15 @@ custom-note-block-sound:
   sounds:
     AMETHYST_BLOCK: BLOCK_AMETHYST_BLOCK_BREAK
     AMETHYST_CLUSTER: BLOCK_AMETHYST_CLUSTER_BREAK
+    # 랜덤 소리 기능
+    #TNT: 'placeholder:%randomkeys;ENTITY_GENERIC_EXPLODE;ENTITY_CREEPER_DEATH%'
+    TNT: ENTITY_GENERIC_EXPLODE
+    EMERALD_ORE: ENTITY_EXPERIENCE_ORB_PICKUP
+    DEEPSLATE_EMERALD_ORE: ENTITY_EXPERIENCE_ORB_PICKUP
+    RAW_IRON_BLOCK: ENTITY_IRON_GOLEM_HURT
+
+# 구센 조사 문법 사용 (이스터 에그)
+use-gusenited-consonant-grammar: false
+
+# 일반적으로 커스텀 효과는 보스바에 표시되는데, 마인크래프트 자체 포션 효과도 보스바에 같이 표시되게 할 것인가?
+show-vanilla-potion-effects-on-bossbar: true

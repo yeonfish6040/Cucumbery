@@ -33,9 +33,9 @@ public class MetasasisScheduler
         {
           continue;
         }
-        CustomEffect customEffectMetasasis = CustomEffectManager.getEffect(entity, CustomEffectType.METASASIS);
-        if (customEffectMetasasis != null)
+        if (CustomEffectManager.hasEffect(entity, CustomEffectType.METASASIS))
         {
+          CustomEffect customEffectMetasasis = CustomEffectManager.getEffect(entity, CustomEffectType.METASASIS);
           int amplifier = customEffectMetasasis.getInitAmplifier();
           double radius = 2d + Math.pow(amplifier + 1d, 2d) * 0.0008;
           List<Entity> nearbyEntities = entity.getNearbyEntities(radius, radius, radius);

@@ -1,4 +1,4 @@
-package com.jho5245.cucumbery.listeners.entity;
+package com.jho5245.cucumbery.listeners.entity.damage;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

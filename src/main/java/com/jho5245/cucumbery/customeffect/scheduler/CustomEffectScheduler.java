@@ -6,7 +6,7 @@ import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.customeffect.scheduler.metasasis.MetasasisScheduler;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreRemoveEvent;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -17,8 +17,12 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.*;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.InventoryView.Property;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +35,7 @@ public class CustomEffectScheduler
       tick();
       display();
       axolotlsGrace();
+      trollInventoryProperty();
     }, 0L, 1L);
     MetasasisScheduler.schedule(cucumbery);
   }
@@ -47,17 +52,24 @@ public class CustomEffectScheduler
         {
           continue;
         }
+        List<CustomEffect> removed = new ArrayList<>();
         for (CustomEffect customEffect : customEffects)
         {
           customEffect.tick();
           if (customEffect.getDuration() == 0)
           {
-            EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, customEffect);
+            EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, customEffect);
             Cucumbery.getPlugin().getPluginManager().callEvent(event);
+            removed.add(customEffect);
           }
         }
         customEffects.removeIf(effect -> effect.getDuration() == 0);
         CustomEffectManager.effectMap.put(uuid, customEffects);
+        for (CustomEffect remove : removed)
+        {
+          EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, remove);
+          Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        }
       }
     }
   }
@@ -73,7 +85,8 @@ public class CustomEffectScheduler
         MessageUtil.sendActionBar(player, CustomEffectManager.getDisplay(customEffects));
       }
       customEffects = CustomEffectManager.getEffects(player, DisplayType.BOSS_BAR);
-      if (customEffects.isEmpty())
+      boolean showPotionEffect = Cucumbery.config.getBoolean("show-vanilla-potion-effects-on-bossbar") && !player.getActivePotionEffects().isEmpty();
+      if (!showPotionEffect && customEffects.isEmpty())
       {
         if (Variable.customEffectBossBarMap.containsKey(uuid))
         {
@@ -89,7 +102,20 @@ public class CustomEffectScheduler
           Variable.customEffectBossBarMap.put(uuid, bossBar);
         }
         BossBar bossBar = Variable.customEffectBossBarMap.get(uuid);
-        bossBar.name(CustomEffectManager.getDisplay(customEffects));
+        Component display = Component.empty();
+        if (!customEffects.isEmpty())
+        {
+          display = display.append(CustomEffectManager.getDisplay(customEffects));
+        }
+        if (showPotionEffect)
+        {
+          if (!customEffects.isEmpty())
+          {
+            display = display.append(Component.text(", "));
+          }
+          display = display.append(CustomEffectManager.getVanillaDisplay(player.getActivePotionEffects()));
+        }
+        bossBar.name(display);
         player.showBossBar(bossBar);
       }
       customEffects = CustomEffectManager.getEffects(player, DisplayType.PLAYER_LIST);
@@ -98,7 +124,7 @@ public class CustomEffectScheduler
         Component component = Component.empty();
         component = component.append(Component.text("\n"));
         component = component.append(
-                ComponentUtil.createTranslate("&e적용 중인 효과 목록 : %s개", "&2" + customEffects.size())
+                ComponentUtil.translate("&e적용 중인 효과 목록 : %s개", "&2" + customEffects.size())
         );
         component = component.append(Component.text("\n"));
         for (CustomEffect customEffect : customEffects)
@@ -107,9 +133,9 @@ public class CustomEffectScheduler
           int amplifier = customEffect.getAmplifier();
           component = component.append(Component.text("\n"));
           component = component.append(
-                  ComponentUtil.createTranslate(amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s", customEffect,
+                  ComponentUtil.translate(amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s", customEffect,
                           (duration != -1 && duration != customEffect.getInitDuration() - 1) ?
-                                  " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")":
+                                  " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")" :
                                   ""
                           , amplifier + 1)
           );
@@ -141,6 +167,27 @@ public class CustomEffectScheduler
             CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectType.PARROTS_CHEER));
             break;
           }
+        }
+      }
+    }
+  }
+
+  private static void trollInventoryProperty()
+  {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      InventoryView inventoryView = player.getOpenInventory();
+      if (inventoryView.getType() == InventoryType.CRAFTING)
+      {
+        continue;
+      }
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.TROLL_INVENTORY_PROPERTY))
+      {
+        int min = CustomEffectManager.hasEffect(player, CustomEffectType.TROLL_INVENTORY_PROPERTY_MIN) ? CustomEffectManager.getEffect(player, CustomEffectType.TROLL_INVENTORY_PROPERTY_MIN).getAmplifier() : 0;
+        CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.TROLL_INVENTORY_PROPERTY);
+        for (Property property : Property.values())
+        {
+          player.setWindowProperty(property, Method.random(min, customEffect.getAmplifier()));
         }
       }
     }

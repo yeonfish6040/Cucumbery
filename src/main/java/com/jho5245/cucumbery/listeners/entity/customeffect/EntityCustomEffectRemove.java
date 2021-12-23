@@ -1,4 +1,4 @@
-package com.jho5245.cucumbery.listeners.entity;
+package com.jho5245.cucumbery.listeners.entity.customeffect;
 
 import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
@@ -17,7 +17,7 @@ public class EntityCustomEffectRemove implements Listener
   {
     Entity entity = event.getEntity();
     CustomEffect customEffect = event.getCustomEffect();
-    if (entity instanceof Player player && customEffect.getDisplayType() == DisplayType.PLAYER_LIST && CustomEffectManager.getEffects(entity, DisplayType.PLAYER_LIST).size() <= 1)
+    if (entity instanceof Player player && customEffect.getDisplayType() == DisplayType.PLAYER_LIST && CustomEffectManager.getEffects(entity, DisplayType.PLAYER_LIST).isEmpty())
     {
       player.sendPlayerListFooter(Component.empty());
     }

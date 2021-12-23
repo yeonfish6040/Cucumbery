@@ -23,6 +23,7 @@ import com.jho5245.cucumbery.commands.teleport.CommandTeleport;
 import com.jho5245.cucumbery.commands.teleport.CommandWarp;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.listeners.UnknownCommand;
+import com.jho5245.cucumbery.listeners.addon.noteblockapi.SongEnd;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopDelete;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopItemChange;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopPreCreate;
@@ -33,6 +34,13 @@ import com.jho5245.cucumbery.listeners.block.piston.BlockPistonRetract;
 import com.jho5245.cucumbery.listeners.enchantment.EnchantItem;
 import com.jho5245.cucumbery.listeners.enchantment.PrepareItemEnchant;
 import com.jho5245.cucumbery.listeners.entity.*;
+import com.jho5245.cucumbery.listeners.entity.customeffect.EntityCustomEffectApply;
+import com.jho5245.cucumbery.listeners.entity.customeffect.EntityCustomEffectPreApply;
+import com.jho5245.cucumbery.listeners.entity.customeffect.EntityCustomEffectPreRemove;
+import com.jho5245.cucumbery.listeners.entity.customeffect.EntityCustomEffectRemove;
+import com.jho5245.cucumbery.listeners.entity.damage.EntityDamage;
+import com.jho5245.cucumbery.listeners.entity.damage.EntityDamageByBlock;
+import com.jho5245.cucumbery.listeners.entity.damage.EntityDamageByEntity;
 import com.jho5245.cucumbery.listeners.entity.item.ItemMerge;
 import com.jho5245.cucumbery.listeners.entity.item.ItemSpawn;
 import com.jho5245.cucumbery.listeners.hanging.HangingBreak;
@@ -53,7 +61,7 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.Scheduler;
 import com.jho5245.cucumbery.util.TestCommand;
 import com.jho5245.cucumbery.util.addons.Songs;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.Updater;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -83,7 +91,7 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 6;
+  public static final int CONFIG_VERSION = 9;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   public static boolean using_CommandAPI;
@@ -132,7 +140,7 @@ public class Cucumbery extends JavaPlugin
     MessageUtil.broadcastDebug("Cucumbery 플러그인 활성화");
     for (Player online : Bukkit.getOnlinePlayers())
     {
-      if (CustomConfig.UserData.SHOW_PLUGIN_DEV_DEBUG_MESSAGE.getBoolean(online))
+      if (UserData.SHOW_PLUGIN_DEV_DEBUG_MESSAGE.getBoolean(online))
       {
         SoundPlay.playSound(online, Sound.BLOCK_WOODEN_DOOR_OPEN);
       }
@@ -447,6 +455,7 @@ public class Cucumbery extends JavaPlugin
   {
     // listener
     Initializer.registerEvent(new UnknownCommand());
+
     // listener.block
     Initializer.registerEvent(new BlockBreak());
     Initializer.registerEvent(new BlockBurn());
@@ -462,20 +471,18 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new EntityBlockForm());
     Initializer.registerEvent(new NotePlay());
     Initializer.registerEvent(new TNTPrime());
+
     // listener.block.piston
     Initializer.registerEvent(new BlockPistonExtend());
     Initializer.registerEvent(new BlockPistonRetract());
+
     // listener.enchantment
     Initializer.registerEvent(new EnchantItem());
     Initializer.registerEvent(new PrepareItemEnchant());
+
     // listener.entity
     Initializer.registerEvent(new EntityAddToWorld());
     Initializer.registerEvent(new EntityChangeBlock());
-    Initializer.registerEvent(new EntityCustomEffectApply());
-    Initializer.registerEvent(new EntityCustomEffectRemove());
-    Initializer.registerEvent(new EntityDamage());
-    Initializer.registerEvent(new EntityDamageByBlock());
-    Initializer.registerEvent(new EntityDamageByEntity());
     Initializer.registerEvent(new EntityDeath());
     Initializer.registerEvent(new EntityExplode());
     Initializer.registerEvent(new EntityJump());
@@ -493,12 +500,24 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new LingeringPotionSplash());
     Initializer.registerEvent(new VillagerAcquireTrade());
     Initializer.registerEvent(new WitchThrowPotion());
+    // listener.entity.customeffect
+    Initializer.registerEvent(new EntityCustomEffectApply());
+    Initializer.registerEvent(new EntityCustomEffectPreApply());
+    Initializer.registerEvent(new EntityCustomEffectPreRemove());
+    Initializer.registerEvent(new EntityCustomEffectRemove());
+    // listener.entity.damage
+    Initializer.registerEvent(new EntityDamage());
+    Initializer.registerEvent(new EntityDamageByBlock());
+    Initializer.registerEvent(new EntityDamageByEntity());
+
     // listener.item
     Initializer.registerEvent(new ItemMerge());
     Initializer.registerEvent(new ItemSpawn());
+
     // listener.hanging
     Initializer.registerEvent(new HangingBreak());
     Initializer.registerEvent(new HangingPlace());
+
     // listener.inventory
     Initializer.registerEvent(new Brew());
     Initializer.registerEvent(new CraftItem());
@@ -513,23 +532,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PrepareItemCraft());
     Initializer.registerEvent(new PrepareResult());
     Initializer.registerEvent(new PrepareSmithing());
-    // listener.player.bucket
-    Initializer.registerEvent(new PlayerBucketEmpty());
-    Initializer.registerEvent(new PlayerBucketEntity());
-    Initializer.registerEvent(new PlayerBucketFill());
-    // listener.player.interact
-    Initializer.registerEvent(new PlayerInteract());
-    Initializer.registerEvent(new PlayerInteractAtEntity());
-    Initializer.registerEvent(new PlayerInteractEntity());
-    // listener.player.item
-    Initializer.registerEvent(new PlayerAttemptPickupItem());
-    Initializer.registerEvent(new PlayerDropItem());
-    Initializer.registerEvent(new PlayerItemBreak());
-    Initializer.registerEvent(new PlayerItemConsume());
-    Initializer.registerEvent(new PlayerItemDamage());
-    Initializer.registerEvent(new PlayerItemHeld());
-    Initializer.registerEvent(new PlayerItemMend());
-    Initializer.registerEvent(new PlayerSwapHandItems());
+
     // listener.player
     Initializer.registerEvent(new PlayerAdvancementDone());
     Initializer.registerEvent(new PlayerArmorChange());
@@ -560,15 +563,38 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerTeleport());
     Initializer.registerEvent(new PlayerToggleSneak());
     Initializer.registerEvent(new PlayerToggleSprint());
+    // listener.player.bucket
+    Initializer.registerEvent(new PlayerBucketEmpty());
+    Initializer.registerEvent(new PlayerBucketEntity());
+    Initializer.registerEvent(new PlayerBucketFill());
+    // listener.player.interact
+    Initializer.registerEvent(new PlayerInteract());
+    Initializer.registerEvent(new PlayerInteractAtEntity());
+    Initializer.registerEvent(new PlayerInteractEntity());
+    // listener.player.item
+    Initializer.registerEvent(new PlayerAttemptPickupItem());
+    Initializer.registerEvent(new PlayerDropItem());
+    Initializer.registerEvent(new PlayerItemBreak());
+    Initializer.registerEvent(new PlayerItemConsume());
+    Initializer.registerEvent(new PlayerItemDamage());
+    Initializer.registerEvent(new PlayerItemHeld());
+    Initializer.registerEvent(new PlayerItemMend());
+    Initializer.registerEvent(new PlayerSwapHandItems());
     // listener.server
     Initializer.registerEvent(new ServerCommand());
     Initializer.registerEvent(new ServerListPing());
+    // listener.addon.quickshop
     if (using_QuickShop)
     {
       Initializer.registerEvent(new ShopDelete());
       Initializer.registerEvent(new ShopItemChange());
       Initializer.registerEvent(new ShopPreCreate());
       Initializer.registerEvent(new ShopPriceChange());
+    }
+    // listener.addon.noteblockapi
+    if (using_NoteBlockAPI)
+    {
+      Initializer.registerEvent(new SongEnd());
     }
   }
 

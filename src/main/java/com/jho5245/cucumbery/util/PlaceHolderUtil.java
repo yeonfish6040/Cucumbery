@@ -87,7 +87,7 @@ public class PlaceHolderUtil
 
   private static final Pattern PATTERN_WEATHER = Pattern.compile("%weather_(.*)");
 
-  private static final Pattern PATTERN_RANDOM_KEYS = Pattern.compile("%randomkeys_(.*)");
+  private static final Pattern PATTERN_RANDOM_KEYS = Pattern.compile("%randomkeys;(.*)");
 
   private static final Pattern PATTERN_UUID_TO_INT_ARRAY = Pattern.compile("%uuid_to_int_array_(.*)");
 
@@ -207,16 +207,16 @@ public class PlaceHolderUtil
       int offHandAmount = offHandExists ? offHand.getAmount() : 0;
       Material mainHandType = mainHand.getType();
       Material offHandType = offHand.getType();
-      String mainHandDisplay = ItemNameUtil.itemName(mainHand).toString();
-      String offHandDisplay = ItemNameUtil.itemName(offHand).toString();
+      String mainHandDisplay = ComponentUtil.serialize(ItemNameUtil.itemName(mainHand));
+      String offHandDisplay = ComponentUtil.serialize(ItemNameUtil.itemName(offHand));
       cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_amount%", mainHandAmount + "");
       cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_amount%", offHandAmount + "");
       cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_display%", mainHandDisplay);
       cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_display%", offHandDisplay);
       cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_display_strip_color%", MessageUtil.stripColor(mainHandDisplay));
       cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_display_strip_color%", MessageUtil.stripColor(offHandDisplay));
-      cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_type%", MessageUtil.stripColor(ItemNameUtil.itemName(mainHandType).toString()));
-      cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_type%", MessageUtil.stripColor(ItemNameUtil.itemName(offHandType).toString()));
+      cmd = cmd.replace("%" + uuid + "_entity_inventory_main_hand_type%", MessageUtil.stripColor(ComponentUtil.serialize(ItemNameUtil.itemName(mainHandType))));
+      cmd = cmd.replace("%" + uuid + "_entity_inventory_off_hand_type%", MessageUtil.stripColor(ComponentUtil.serialize(ItemNameUtil.itemName(offHandType))));
     }
     return cmd;
   }
@@ -646,9 +646,9 @@ public class PlaceHolderUtil
             {
               params = params.split("%")[0];
             }
-            String[] split = params.split("_");
+            String[] split = params.split(";");
             int random = Method.random(1, split.length);
-            cmd = cmd.replace("%randomkeys_" + params + "%", split[random - 1]);
+            cmd = cmd.replace("%randomkeys;" + params + "%", split[random - 1]);
           }
         }
         catch (Exception ignored)

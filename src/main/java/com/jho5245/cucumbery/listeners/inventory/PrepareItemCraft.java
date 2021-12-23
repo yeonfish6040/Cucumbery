@@ -1,17 +1,17 @@
 package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -39,9 +39,11 @@ public class PrepareItemCraft implements Listener
       {
         ItemStack originalResult = event.getView().getItem(0);
         if (!ItemStackUtil.itemExists(originalResult)) // 제작 결과물 아이템이 존재하지 않으면 조합 불가 방벽을 보여주지 않음
+        {
           return;
+        }
         ItemStack result = Cucumbery.config.getBoolean("blind-result-when-crafting-with-uncraftable-item") ? null
-                : CreateItemStack.newItem(Material.BARRIER, 1, Constant.NO_CRAFT_ITEM_DISPLAYNAME, "&7아이템을 조합할 권한이 없습니다.", true);
+                : CreateItemStack.create(Material.BARRIER, 1, ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME), ComponentUtil.translate("&7아이템을 조합할 권한이 없습니다."), true);
         if (!Permission.EVENT_ITEM_CRAFT.has(player))
         {
           event.getView().setItem(0, result);
@@ -58,12 +60,19 @@ public class PrepareItemCraft implements Listener
       {
         ItemStack originalResult = event.getView().getItem(0);
         if (!ItemStackUtil.itemExists(originalResult)) // 제작 결과물 아이템이 존재하지 않으면 조합 불가 방벽을 보여주지 않음
+        {
           return;
-        ItemStack result = CreateItemStack.newItem(Material.BARRIER, 1, Constant.NO_CRAFT_ITEM_DISPLAYNAME, MessageUtil.n2s("&c조합 재료 아이템들 중에서 조합이 불가능한 아이템이 존재합니다."), true);
+        }
+        ItemStack result = CreateItemStack.create(Material.BARRIER, 1,
+                ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME),
+                ComponentUtil.translate("&c조합 재료 아이템들 중에서 조합이 불가능한 아이템이 존재합니다."),
+                true);
         ItemMeta itemMeta = result.getItemMeta();
-        List<String> lores = itemMeta.getLore();
+        List<Component> lores = itemMeta.lore();
         if (lores == null)
+        {
           lores = new ArrayList<>();
+        }
         if (event.getInventory().getType() == InventoryType.CRAFTING)
         {
           ItemStack item1 = event.getView().getItem(1);
@@ -76,7 +85,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item1 != null)
             {
-              lores.add(MessageUtil.n2s("&e왼쪽 윗칸 아이템 (" + ComponentUtil.serialize(item1.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e왼쪽 윗칸 아이템 (%s)", item1));
             }
           }
           if (NBTAPI.isRestricted(item2, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item2, RestrictionType.NO_CRAFT_IN_INVENTORY))
@@ -84,7 +93,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item2 != null)
             {
-              lores.add(MessageUtil.n2s("&e오른쪽 윗칸 아이템 (" + ComponentUtil.serialize(item2.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e오른쪽 윗칸 아이템 (%s)", item2));
             }
           }
           if (NBTAPI.isRestricted(item3, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item3, RestrictionType.NO_CRAFT_IN_INVENTORY))
@@ -92,7 +101,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item3 != null)
             {
-              lores.add(MessageUtil.n2s("&e왼쪽 아랫칸 아이템 (" + ComponentUtil.serialize(item3.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e왼쪽 아랫칸 아이템 (%s)", item3));
             }
           }
           if (NBTAPI.isRestricted(item4, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item4, RestrictionType.NO_CRAFT_IN_INVENTORY))
@@ -100,17 +109,21 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item4 != null)
             {
-              lores.add(MessageUtil.n2s("&e오른쪽 아랫칸 아이템 (" + ComponentUtil.serialize(item4.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e오른쪽 아랫칸 아이템 (%s)", item4));
             }
           }
           if (yes)
           {
-            itemMeta.setLore(lores);
+            itemMeta.lore(lores);
             result.setItemMeta(itemMeta);
             if (Cucumbery.config.getBoolean("blind-result-when-crafting-with-uncraftable-item"))
+            {
               event.getView().setItem(0, null);
+            }
             else
+            {
               event.getView().setItem(0, result);
+            }
             return;
           }
         }
@@ -131,7 +144,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item1 != null)
             {
-              lores.add(MessageUtil.n2s("&e왼쪽 윗칸 아이템 (" + ComponentUtil.serialize(item1.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e왼쪽 윗칸 아이템 (%s)", item1));
             }
           }
           if (NBTAPI.isRestricted(item2, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item2, RestrictionType.NO_CRAFT_IN_CRAFTING_TABLE))
@@ -139,7 +152,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item2 != null)
             {
-              lores.add(MessageUtil.n2s("&e중앙 윗칸 아이템 (" + ComponentUtil.serialize(item2.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e중앙 윗칸 아이템 (%s)", item2));
             }
           }
           if (NBTAPI.isRestricted(item3, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item3, RestrictionType.NO_CRAFT_IN_CRAFTING_TABLE))
@@ -147,7 +160,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item3 != null)
             {
-              lores.add(MessageUtil.n2s("&e오른쪽 윗칸 아이템 (" + ComponentUtil.serialize(item3.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e오른쪽 윗칸 아이템 (%s)", item3));
             }
           }
           if (NBTAPI.isRestricted(item4, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item4, RestrictionType.NO_CRAFT_IN_CRAFTING_TABLE))
@@ -155,7 +168,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item4 != null)
             {
-              lores.add(MessageUtil.n2s("&e왼쪽 중앙 아이템 (" + ComponentUtil.serialize(item4.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e왼쪽 중앙 아이템 (%s)", item4));
             }
           }
           if (NBTAPI.isRestricted(item5, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item5, RestrictionType.NO_CRAFT_IN_CRAFTING_TABLE))
@@ -163,7 +176,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item5 != null)
             {
-              lores.add(MessageUtil.n2s("&e중앙 아이템 (" + ComponentUtil.serialize(item5.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e중앙 아이템 (%s)", item5));
             }
           }
           if (NBTAPI.isRestricted(item6, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item6, RestrictionType.NO_CRAFT_IN_CRAFTING_TABLE))
@@ -171,7 +184,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item6 != null)
             {
-              lores.add(MessageUtil.n2s("&e오른쪽 중앙 아이템 (" + ComponentUtil.serialize(item6.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e오른쪽 중앙 아이템 (%s)", item6));
             }
           }
           if (NBTAPI.isRestricted(item7, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item7, RestrictionType.NO_CRAFT_IN_CRAFTING_TABLE))
@@ -179,7 +192,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item7 != null)
             {
-              lores.add(MessageUtil.n2s("&e왼쪽 아랫칸 아이템 (" + ComponentUtil.serialize(item7.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e왼쪽 아랫칸 아이템 (%s)", item7));
             }
           }
           if (NBTAPI.isRestricted(item8, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item8, RestrictionType.NO_CRAFT_IN_CRAFTING_TABLE))
@@ -187,7 +200,7 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item8 != null)
             {
-              lores.add(MessageUtil.n2s("&e중앙 아랫칸 아이템 (" + ComponentUtil.serialize(item8.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e중앙 아랫칸 아이템 (%s)", item8));
             }
           }
           if (NBTAPI.isRestricted(item9, RestrictionType.NO_CRAFT) || NBTAPI.isRestricted(item9, RestrictionType.NO_CRAFT_IN_CRAFTING_TABLE))
@@ -195,17 +208,21 @@ public class PrepareItemCraft implements Listener
             yes = true;
             if (item9 != null)
             {
-              lores.add(MessageUtil.n2s("&e오른쪽 아랫칸 아이템 (" + ComponentUtil.serialize(item9.displayName()) + "&e)"));
+              lores.add(ComponentUtil.translate("&e오른쪽 아랫칸 아이템 (%s)", item9));
             }
           }
           if (yes)
           {
-            itemMeta.setLore(lores);
+            itemMeta.lore(lores);
             result.setItemMeta(itemMeta);
             if (Cucumbery.config.getBoolean("blind-result-when-crafting-with-uncraftable-item"))
+            {
               event.getView().setItem(0, null);
+            }
             else
+            {
               event.getView().setItem(0, result);
+            }
             return;
           }
         }
@@ -217,10 +234,14 @@ public class PrepareItemCraft implements Listener
   private void itemLore(PrepareItemCraftEvent event, Player player)
   {
     if (!Method.usingLoreFeature(player))
+    {
       return;
+    }
     ItemStack result = event.getView().getItem(0);
     if (!ItemStackUtil.itemExists(result))
+    {
       return;
+    }
     ItemLore.setItemLore(result, event);
   }
 }

@@ -99,16 +99,16 @@ public class CommandExplode extends CommandBase
   @NotNull
   private Component explosionComponent(float power, boolean setFire, boolean breakBlocks, @Nullable Entity source)
   {
-    Component explosionComponent = ComponentUtil.createTranslate("폭발").color(Constant.THE_COLOR);
-    Component hover = ComponentUtil.createTranslate("강도 : %s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(power));
+    Component explosionComponent = ComponentUtil.translate("폭발").color(Constant.THE_COLOR);
+    Component hover = ComponentUtil.translate("강도 : %s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(power));
     hover = hover.append(Component.text("\n"));
-    hover = hover.append(ComponentUtil.createTranslate("블록 파괴 여부 : %s", Constant.THE_COLOR_HEX + breakBlocks));
+    hover = hover.append(ComponentUtil.translate("블록 파괴 여부 : %s", Constant.THE_COLOR_HEX + breakBlocks));
     hover = hover.append(Component.text("\n"));
-    hover = hover.append(ComponentUtil.createTranslate("불 번짐 여부 : %s", Constant.THE_COLOR_HEX + setFire));
+    hover = hover.append(ComponentUtil.translate("불 번짐 여부 : %s", Constant.THE_COLOR_HEX + setFire));
     if (source != null)
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("폭발 출처 : %s", SenderComponentUtil.senderComponent(source, null, true)));
+      hover = hover.append(ComponentUtil.translate("폭발 출처 : %s", SenderComponentUtil.senderComponent(source, null, true)));
     }
     return explosionComponent.hoverEvent(hover);
   }
@@ -136,8 +136,8 @@ public class CommandExplode extends CommandBase
     if (!hideOutput)
     {
       Component explosionComponent = explosionComponent(power, setFire, breakBlocks, source);
-      MessageUtil.info(sender, ComponentUtil.createTranslate("%s에 %s을(를) 일으켰습니다.", location, explosionComponent));
-      MessageUtil.sendAdminMessage(sender, null, ComponentUtil.createTranslate("[%s: %s에 %s을(를) 일으켰습니다.]", sender, location, explosionComponent));
+      MessageUtil.info(sender, ComponentUtil.translate("%s에 %s을(를) 일으켰습니다.", location, explosionComponent));
+      MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s에 %s을(를) 일으켰습니다.]", sender, location, explosionComponent));
     }
     if (!world.createExplosion(location, power, setFire, breakBlocks, source))
     {

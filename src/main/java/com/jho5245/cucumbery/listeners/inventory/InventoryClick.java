@@ -262,7 +262,7 @@ public class InventoryClick implements Listener
         String message = Cucumbery.config.getString("customrecipe.chance-items.success.message");
         if (message != null && !message.equals("none"))
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, ComponentUtil.createTranslate(message, chance, result));
+          MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, ComponentUtil.translate(message, chance, result));
         }
         List<String> successSounds = Cucumbery.config.getStringList("customrecipe.chance-items.success.sounds");
         for (String successSound : successSounds)
@@ -294,7 +294,7 @@ public class InventoryClick implements Listener
         String message = Cucumbery.config.getString("customrecipe.chance-items.failure.message");
         if (message != null && !message.equals("none"))
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, ComponentUtil.createTranslate(message, 100d - chance, result));
+          MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, ComponentUtil.translate(message, 100d - chance, result));
         }
         List<String> failureSounds = Cucumbery.config.getStringList("customrecipe.chance-items.failure.sounds");
         for (String failureSound : failureSounds)

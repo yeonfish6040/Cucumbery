@@ -147,7 +147,7 @@ public class PlayerInteractEntity implements Listener
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           if (item != null)
           {
-            MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.createTranslate("%s은(는) %s에게 사용할 수 없습니다.", item, entity), 5, 80, 15);
+            MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.translate("%s은(는) %s에게 사용할 수 없습니다.", item, entity), 5, 80, 15);
           }
           Variable.playerInteractAtEntityRestrictedItemAlertCooldown.add(uuid);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityRestrictedItemAlertCooldown.remove(uuid), 100L);

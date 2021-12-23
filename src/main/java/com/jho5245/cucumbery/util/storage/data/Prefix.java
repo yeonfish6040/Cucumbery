@@ -115,10 +115,10 @@ public enum Prefix
   {
     if (!this.color.equals(""))
     {
-      return ComponentUtil.createTranslate(color + BRACKET, n2s,
-              ComponentUtil.createTranslate(text)).hoverEvent(HoverEvent.showText(Component.text(Method.getCurrentTime(Calendar.getInstance(), true, false))));
+      return ComponentUtil.translate(color + BRACKET, n2s,
+              ComponentUtil.translate(text)).hoverEvent(HoverEvent.showText(Component.text(Method.getCurrentTime(Calendar.getInstance(), true, false))));
     }
-    return ComponentUtil.createTranslate(text, n2s);
+    return ComponentUtil.translate(text, n2s);
   }
 
   @Override

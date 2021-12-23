@@ -130,6 +130,7 @@ public class BlockBreak implements Listener
         }
       }
     }
+
     if (NBTAPI.isRestricted(player, item, Constant.RestrictionType.NO_BREAK))
     {
       event.setCancelled(true);
@@ -172,6 +173,12 @@ public class BlockBreak implements Listener
       }
     }
 
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_CREATIVITY) || CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_CREATIVITY_BREAK))
+    {
+      event.setCancelled(true);
+      return;
+    }
+
     NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_ENCHANTS_KEY);
 
     Object value = player.getWorld().getGameRuleValue(GameRule.DO_TILE_DROPS);
@@ -181,11 +188,10 @@ public class BlockBreak implements Listener
             isSmeltingTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.SMELTING_TOUCH.toString()) ||
                     CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH),
             isSilkTouch = CustomEffectManager.hasEffect(player, CustomEffectType.SILK_TOUCH);
-
     Collection<ItemStack> drops = block.getDrops(item, player);
     if (isSilkTouch)
     {
-      ItemStack silk = new ItemStack(Material.STONE);
+      ItemStack silk = new ItemStack(ItemStackUtil.itemExists(item) ? item.getType() : Material.STONE);
       ItemMeta m = silk.getItemMeta();
       m.addEnchant(Enchantment.SILK_TOUCH, 1, true);
       silk.setItemMeta(m);
@@ -201,7 +207,7 @@ public class BlockBreak implements Listener
 
     boolean isUnskilledTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.UNSKILLED_TOUCH.toString());
 
-    if (isUnskilledTouch)
+    if (isUnskilledTouch || isSilkTouch)
     {
       event.setExpToDrop(0);
     }

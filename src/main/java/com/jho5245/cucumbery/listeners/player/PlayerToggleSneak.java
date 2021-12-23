@@ -38,19 +38,23 @@ public class PlayerToggleSneak implements Listener
 
   private void customEffect(Player player, boolean isSneaking)
   {
-    CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.STOP);
-    if (isSneaking && customEffect != null && customEffect.getDuration() != -1)
+    if (isSneaking && CustomEffectManager.hasEffect(player, CustomEffectType.STOP))
     {
-     int duration = customEffect.getDuration();
-     duration -= 20 * (int) (8d / (customEffect.getAmplifier() + 1));
-     if (duration <= 0)
-     {
-       CustomEffectManager.removeEffect(player, CustomEffectType.STOP);
-     }
-     else
-     {
-       customEffect.setDuration(duration);
-     }
+      CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.STOP);
+      int duration = customEffect.getDuration();
+      if (duration != -1)
+      {
+        duration -= 20 * (int) (8d / (customEffect.getAmplifier() + 1));
+        if (duration <= 0)
+        {
+          CustomEffectManager.removeEffect(player, CustomEffectType.STOP);
+        }
+        else
+        {
+          customEffect.setDuration(duration);
+        }
+      }
+
     }
   }
 

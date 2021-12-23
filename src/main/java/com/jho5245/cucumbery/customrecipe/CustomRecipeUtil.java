@@ -1630,7 +1630,7 @@ public class CustomRecipeUtil
                     suffix = "회";
                     isNumber = true;
                   }
-                  TranslatableComponent statisticDisplay = ComponentUtil.createTranslate("rg102,255;%s : %s");
+                  TranslatableComponent statisticDisplay = ComponentUtil.translate("rg102,255;%s : %s");
                   String playerValueString = Constant.Jeongsu.format(playerStatistic) + suffix;
                   String minValue = Constant.Jeongsu.format(statisticsMin);
                   String maxValue = Constant.Jeongsu.format(statisticsMax);
@@ -1721,13 +1721,13 @@ public class CustomRecipeUtil
                       Component entityComponent = Component.translatable(entityType.translationKey());
                       if (statistic == Statistic.KILL_ENTITY)
                       {
-                        args.add(ComponentUtil.createTranslate("%s을(를) 죽인 횟수", entityComponent));
+                        args.add(ComponentUtil.translate("%s을(를) 죽인 횟수", entityComponent));
                       }
                       else if (statistic == Statistic.ENTITY_KILLED_BY)
                       {
-                        args.add(ComponentUtil.createTranslate("%s에게 죽은 횟수", entityComponent));
+                        args.add(ComponentUtil.translate("%s에게 죽은 횟수", entityComponent));
                       }
-                      TranslatableComponent statisticDisplay = ComponentUtil.createTranslate("rgb155,255,89;%s : %s");
+                      TranslatableComponent statisticDisplay = ComponentUtil.translate("rgb155,255,89;%s : %s");
                       int playerStatistic = player.getStatistic(statistic, entityType);
                       String color = getRadiusPercentColor(playerStatistic, statisticsMinExists, statisticsMaxExists, recipeMin, recipeMax);
                       boolean passRequire = (statisticsMinExists && statisticsMaxExists && playerStatistic >= recipeMin && playerStatistic <= recipeMax) ||
@@ -1789,7 +1789,7 @@ public class CustomRecipeUtil
                       Component materialComponent = ItemNameUtil.itemName(material);
                       args.add(materialComponent);
                       args.add(Component.translatable(TranslatableKeyParser.getKey(statistic)));
-                      TranslatableComponent statisticDisplay = ComponentUtil.createTranslate("rgb105,255,89;%s %s : %s");
+                      TranslatableComponent statisticDisplay = ComponentUtil.translate("rgb105,255,89;%s %s : %s");
                       int playerStatistic = player.getStatistic(statistic, material);
                       String color = getRadiusPercentColor(playerStatistic, statisticsMinExists, statisticsMaxExists, recipeMin, recipeMax);
                       boolean passRequire = (statisticsMinExists && statisticsMaxExists && playerStatistic >= recipeMin && playerStatistic <= recipeMax) ||

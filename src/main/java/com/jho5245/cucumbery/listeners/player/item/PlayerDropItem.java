@@ -1,12 +1,14 @@
 package com.jho5245.cucumbery.listeners.player.item;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
@@ -77,7 +79,7 @@ public class PlayerDropItem implements Listener
       }
       return;
     }
-    if (!Permission.EVENT2_ANTI_ALLPLAYER.has(player) && AllPlayer.ITEM_DROP.isEnabled())
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_DROP) || (!Permission.EVENT2_ANTI_ALLPLAYER.has(player) && AllPlayer.ITEM_DROP.isEnabled()))
     {
       event.setCancelled(true);
       if (!Variable.itemDropAlertCooldown.contains(uuid))
@@ -134,6 +136,11 @@ public class PlayerDropItem implements Listener
       }
       return;
     }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_DROP))
+    {
+      event.setCancelled(true);
+      return;
+    }
     if (player.getOpenInventory().getType() == InventoryType.SHULKER_BOX
             && player.getOpenInventory().getTitle().contains(Constant.ITEM_PORTABLE_SHULKER_BOX_GUI) && Constant.SHULKER_BOXES.contains(item.getType()))
     {
@@ -182,11 +189,11 @@ public class PlayerDropItem implements Listener
       Component itemStackComponent = ItemNameUtil.itemName(item, TextColor.fromHexString("#ff9900"));
       if (amount == 1 && item.getType().getMaxStackSize() == 1)
       {
-        player.sendActionBar(ComponentUtil.createTranslate("#ffd900;%s을(를) 버렸습니다.", itemStackComponent));
+        player.sendActionBar(ComponentUtil.translate("#ffd900;%s을(를) 버렸습니다.", itemStackComponent));
       }
       else
       {
-        player.sendActionBar(ComponentUtil.createTranslate("#ffd900;%s을(를) %s개 버렸습니다.", itemStackComponent, "#ff9900;" + amount));
+        player.sendActionBar(ComponentUtil.translate("#ffd900;%s을(를) %s개 버렸습니다.", itemStackComponent, "#ff9900;" + amount));
       }
     }
     if (UserData.LISTEN_ITEM_DROP.getBoolean(player.getUniqueId()))

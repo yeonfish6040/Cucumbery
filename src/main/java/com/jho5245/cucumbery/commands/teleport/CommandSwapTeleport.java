@@ -112,14 +112,14 @@ public class CommandSwapTeleport implements CommandExecutor, TabCompleter
       }
       if (!hideOutput)
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate("%s와(과) %s의 위치를 서로 맞바꾸었습니다.", player, target));
+        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s와(과) %s의 위치를 서로 맞바꾸었습니다.", player, target));
         if (!player.equals(sender))
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다.", sender, target));
+          MessageUtil.sendMessage(player, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다.", sender, target));
         }
         if (!target.equals(sender))
         {
-          MessageUtil.sendMessage(target, Prefix.INFO_TELEPORT, ComponentUtil.createTranslate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다.", sender, player));
+          MessageUtil.sendMessage(target, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다.", sender, player));
         }
       }
     }

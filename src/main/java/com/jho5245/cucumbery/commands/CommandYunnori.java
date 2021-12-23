@@ -40,12 +40,12 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       Player player = (Player) sender;
       if (player.getScoreboardTags().contains("observer"))
       {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("옵저버는 윷을 던질 수 없습니다."));
+        MessageUtil.sendError(sender, ComponentUtil.translate("옵저버는 윷을 던질 수 없습니다."));
         return true;
       }
       if (throwing)
       {
-        MessageUtil.sendError(sender, ComponentUtil.createTranslate("윷을 던지고 있을땐 잠시 기다려 주세요."));
+        MessageUtil.sendError(sender, ComponentUtil.translate("윷을 던지고 있을땐 잠시 기다려 주세요."));
         return true;
       }
       throwing = true;
@@ -124,8 +124,8 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       SoundPlay.playSound(player, Sound.ENTITY_GENERIC_EXPLODE, 1F, 2F);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, "----------------------------------------");
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
-              ComponentUtil.createTranslate("%s님 %s %s",
-                      SenderComponentUtil.senderComponent(sender), ComponentUtil.createTranslate("&7낙..."), ComponentUtil.createTranslate("턴을 날려부려쓰..")));
+              ComponentUtil.translate("%s님 %s %s",
+                      SenderComponentUtil.senderComponent(sender), ComponentUtil.translate("&7낙..."), ComponentUtil.translate("턴을 날려부려쓰..")));
     }
   }
 
@@ -141,8 +141,8 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       SoundPlay.playSound(player, Sound.ENTITY_VILLAGER_NO);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, "----------------------------------------");
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
-              ComponentUtil.createTranslate("%s님 %s %s",
-                      SenderComponentUtil.senderComponent(sender), ComponentUtil.createTranslate("&7빽도!"), ComponentUtil.createTranslate("뒤로 한 칸!")));
+              ComponentUtil.translate("%s님 %s %s",
+                      SenderComponentUtil.senderComponent(sender), ComponentUtil.translate("&7빽도!"), ComponentUtil.translate("뒤로 한 칸!")));
     }
   }
 
@@ -158,8 +158,8 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       SoundPlay.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, "----------------------------------------");
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
-              ComponentUtil.createTranslate("%s님 %s %s",
-                      SenderComponentUtil.senderComponent(sender), ComponentUtil.createTranslate("도!"), ComponentUtil.createTranslate("앞으로 한 칸!")));
+              ComponentUtil.translate("%s님 %s %s",
+                      SenderComponentUtil.senderComponent(sender), ComponentUtil.translate("도!"), ComponentUtil.translate("앞으로 한 칸!")));
     }
   }
 
@@ -175,8 +175,8 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       SoundPlay.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, "----------------------------------------");
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
-              ComponentUtil.createTranslate("%s님 %s %s",
-                      SenderComponentUtil.senderComponent(sender), ComponentUtil.createTranslate("개!"), ComponentUtil.createTranslate("앞으로 두 칸!")));
+              ComponentUtil.translate("%s님 %s %s",
+                      SenderComponentUtil.senderComponent(sender), ComponentUtil.translate("개!"), ComponentUtil.translate("앞으로 두 칸!")));
     }
   }
 
@@ -192,8 +192,8 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       SoundPlay.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, "----------------------------------------");
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
-              ComponentUtil.createTranslate("%s님 %s %s",
-                      SenderComponentUtil.senderComponent(sender), ComponentUtil.createTranslate("걸이요!"), ComponentUtil.createTranslate("앞으로 세 칸!")));
+              ComponentUtil.translate("%s님 %s %s",
+                      SenderComponentUtil.senderComponent(sender), ComponentUtil.translate("걸이요!"), ComponentUtil.translate("앞으로 세 칸!")));
     }
   }
 
@@ -205,15 +205,15 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       {
         continue;
       }
-      MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&a윷이요!"),
-              ComponentUtil.createTranslate("#52ee52;앞으로 네 칸!").append(ComponentUtil.createTranslate(" &a&l한 번 더!")),
+      MessageUtil.sendTitle(player, ComponentUtil.translate("&a윷이요!"),
+              ComponentUtil.translate("#52ee52;앞으로 네 칸!").append(ComponentUtil.translate(" &a&l한 번 더!")),
               2, 40, 2);
       SoundPlay.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1F, 1F);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, "----------------------------------------");
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
-              ComponentUtil.createTranslate("%s님 %s %s",
-                      SenderComponentUtil.senderComponent(sender), ComponentUtil.createTranslate("&a윷이요!"), ComponentUtil.createTranslate("#52ee52;앞으로 네 칸!")));
-      MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, ComponentUtil.createTranslate("&a&l한 번 더!"));
+              ComponentUtil.translate("%s님 %s %s",
+                      SenderComponentUtil.senderComponent(sender), ComponentUtil.translate("&a윷이요!"), ComponentUtil.translate("#52ee52;앞으로 네 칸!")));
+      MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, ComponentUtil.translate("&a&l한 번 더!"));
     }
   }
 
@@ -225,15 +225,15 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       {
         continue;
       }
-      MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&b모!!!"),
-              ComponentUtil.createTranslate("앞으로 다섯 칸!").append(ComponentUtil.createTranslate(" &a&l한 번 더!")),
+      MessageUtil.sendTitle(player, ComponentUtil.translate("&b모!!!"),
+              ComponentUtil.translate("앞으로 다섯 칸!").append(ComponentUtil.translate(" &a&l한 번 더!")),
               2, 40, 2);
       SoundPlay.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1F, 1F);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, "----------------------------------------");
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
-              ComponentUtil.createTranslate("%s님 %s %s",
-                      SenderComponentUtil.senderComponent(sender), ComponentUtil.createTranslate("&b모!!!"), ComponentUtil.createTranslate("&c앞으로 다섯 칸!")));
-      MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, ComponentUtil.createTranslate("&r&a&l한 번 더!"));
+              ComponentUtil.translate("%s님 %s %s",
+                      SenderComponentUtil.senderComponent(sender), ComponentUtil.translate("&b모!!!"), ComponentUtil.translate("&c앞으로 다섯 칸!")));
+      MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, ComponentUtil.translate("&r&a&l한 번 더!"));
     }
   }
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)

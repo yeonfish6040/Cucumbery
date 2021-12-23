@@ -1,4 +1,4 @@
-package com.jho5245.cucumbery.listeners.entity;
+package com.jho5245.cucumbery.listeners.entity.damage;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.combat.CombatManager;
@@ -73,33 +73,32 @@ public class EntityDamage implements Listener
 			case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK, CUSTOM -> {
 				if (damager instanceof Entity damagerEntity)
 				{
-					CustomEffect customEffectSharpness = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SHARPNESS);
-					if (customEffectSharpness != null)
+					if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.SHARPNESS))
 					{
+						CustomEffect customEffectSharpness = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SHARPNESS);
 						int amplifier = customEffectSharpness.getAmplifier();
 						damage += amplifier + 1.5;
 					}
-					CustomEffect customEffectSmite = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SMITE);
-					if (customEffectSmite != null && (entity instanceof Zombie || entity instanceof ZombieHorse || entity instanceof AbstractSkeleton || entity instanceof Wither))
+					if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.SMITE) && (entity instanceof Zombie || entity instanceof ZombieHorse || entity instanceof AbstractSkeleton || entity instanceof Wither))
 					{
+						CustomEffect customEffectSmite = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SMITE);
 						int amplifier = customEffectSmite.getAmplifier();
 						damage += (amplifier + 1) * 2.5;
 					}
-					CustomEffect customEffectBaneOfArthropods = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BANE_OF_ARTHROPODS);
-					if (customEffectBaneOfArthropods != null && (entity instanceof Spider || entity instanceof Silverfish || entity instanceof Endermite))
+					if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.BANE_OF_ARTHROPODS) && (entity instanceof Spider || entity instanceof Silverfish || entity instanceof Endermite))
 					{
+						CustomEffect customEffectBaneOfArthropods = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BANE_OF_ARTHROPODS);
 						int amplifier = customEffectBaneOfArthropods.getAmplifier();
 						damage += (amplifier + 1) * 2.5;
 						((Monster) entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20 + Math.random() * (amplifier + 1) * 5), 3));
 					}
-					CustomEffect customEffectBlessOfSans = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BLESS_OF_SANS);
-					if (customEffectBlessOfSans != null)
+					if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.BLESS_OF_SANS))
 					{
+						CustomEffect customEffectBlessOfSans = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BLESS_OF_SANS);
 						int amplifier = customEffectBlessOfSans.getAmplifier();
 						damageMultiplier += (amplifier + 1) * 0.1;
 					}
-					CustomEffect customEffectParrotsCheer = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.PARROTS_CHEER);
-					if (customEffectParrotsCheer != null)
+					if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.PARROTS_CHEER))
 					{
 						damageMultiplier += 0.1d;
 					}
@@ -108,9 +107,9 @@ public class EntityDamage implements Listener
 			case FALL -> {
 				if (!(event instanceof EntityDamageByEntityEvent damageByEntityEvent) || !(damageByEntityEvent.getDamager() instanceof EnderPearl))
 				{
-					CustomEffect customEffectFeatherFalling = CustomEffectManager.getEffect(entity, CustomEffectType.FEATHER_FALLING);
-					if (customEffectFeatherFalling != null)
+					if (CustomEffectManager.hasEffect(entity, CustomEffectType.FEATHER_FALLING))
 					{
+						CustomEffect customEffectFeatherFalling = CustomEffectManager.getEffect(entity, CustomEffectType.FEATHER_FALLING);
 						double fallDistance = entity.getFallDistance();
 						int amplifier = customEffectFeatherFalling.getAmplifier();
 						if (fallDistance < (amplifier + 1) * 5 + 3.5d)
@@ -131,8 +130,7 @@ public class EntityDamage implements Listener
 						ProjectileSource projectileSource = projectile.getShooter();
 						if (projectileSource instanceof Entity sourceEntity)
 						{
-							CustomEffect customEffectParrotsCheer = CustomEffectManager.getEffect(sourceEntity, CustomEffectType.PARROTS_CHEER);
-							if (customEffectParrotsCheer != null)
+							if (CustomEffectManager.hasEffect(sourceEntity, CustomEffectType.PARROTS_CHEER))
 							{
 								damageMultiplier += 0.1d;
 							}

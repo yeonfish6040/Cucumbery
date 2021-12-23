@@ -19,11 +19,11 @@ public class EntityMount implements Listener
     Entity entity = event.getEntity();
     if (entity instanceof Player player)
     {
-      MessageUtil.sendActionBar(player, ComponentUtil.createTranslate("mount.onboard", Component.keybind("key.sneak")));
+      MessageUtil.sendActionBar(player, ComponentUtil.translate("mount.onboard", Component.keybind("key.sneak")));
       for (int i = 0; i < 5; i++)
       {
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                MessageUtil.sendActionBar(player, ComponentUtil.createTranslate("mount.onboard", Component.keybind("key.sneak"))), i);
+                MessageUtil.sendActionBar(player, ComponentUtil.translate("mount.onboard", Component.keybind("key.sneak"))), i);
       }
     }
   }

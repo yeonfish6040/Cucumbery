@@ -89,12 +89,12 @@ public class CommandDamage extends CommandBase
         if (damager == null)
         {
           MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.createTranslate("%s에게 피해를 입힐 수 없습니다. " + failureReason, failureEntities));
+                  ComponentUtil.translate("%s에게 피해를 입힐 수 없습니다. " + failureReason, failureEntities));
         }
         else
         {
           MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.createTranslate("%s에게 %s을(를) 가해 개체로 하는 피해를 입힐 수 없습니다. " + failureReason, failureEntities, damager));
+                  ComponentUtil.translate("%s에게 %s을(를) 가해 개체로 하는 피해를 입힐 수 없습니다. " + failureReason, failureEntities, damager));
         }
       }
       if (!successEntitiesIsEmpty)
@@ -102,15 +102,15 @@ public class CommandDamage extends CommandBase
         String damageString = Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage);
         if (damager == null)
         {
-          MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s만큼의 피해를 주었습니다.", successEntities, damageString));
+          MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s만큼의 피해를 주었습니다.", successEntities, damageString));
           MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                  ComponentUtil.createTranslate("[%s: %s에게 %s만큼의 피해를 주었습니다.]", sender, successEntities, damageString));
+                  ComponentUtil.translate("[%s: %s에게 %s만큼의 피해를 주었습니다.]", sender, successEntities, damageString));
         }
         else
         {
-          MessageUtil.info(sender, ComponentUtil.createTranslate("%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.", successEntities, damager, damageString));
+          MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.", successEntities, damager, damageString));
           MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                  ComponentUtil.createTranslate("[%s: %s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.]", sender, successEntities, damager, damageString));
+                  ComponentUtil.translate("[%s: %s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.]", sender, successEntities, damager, damageString));
         }
       }
     }

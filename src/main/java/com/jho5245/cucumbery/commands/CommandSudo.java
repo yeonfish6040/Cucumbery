@@ -54,21 +54,21 @@ public class CommandSudo implements CommandExecutor, TabCompleter
       {
         if (op)
         {
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", targets));
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.translate("%s에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", targets));
           MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
           if (!(sender instanceof Player player && targets.contains(player)))
           {
-            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s이(가) 당신에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", sender));
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.translate("%s이(가) 당신에게 다음 명령어를 오피 권한으로 강제로 시행합니다.", sender));
             MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, "&e/" + command);
           }
         }
         else
         {
-          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s에게 다음 명령어를 강제로 시행합니다.", targets));
+          MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, ComponentUtil.translate("%s에게 다음 명령어를 강제로 시행합니다.", targets));
           MessageUtil.sendMessage(sender, Prefix.INFO_SUDO, "&e/" + command);
           if (!(sender instanceof Player player && targets.contains(player)))
           {
-            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.createTranslate("%s이(가) 당신에게 다음 명령어를 강제로 시행합니다.", sender));
+            MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, ComponentUtil.translate("%s이(가) 당신에게 다음 명령어를 강제로 시행합니다.", sender));
             MessageUtil.sendMessage(targets, Prefix.INFO_SUDO, "&e/" + command);
           }
         }

@@ -2070,8 +2070,8 @@ public class CommandItemTag implements CommandExecutor
                   {
                     String command = commandsTag.get(i);
                     MessageUtil.sendMessage(player, Prefix.INFO_SETDATA,
-                            ComponentUtil.createTranslate("%s번째 명령어 : %s", "&e" + (i + 1), ComponentUtil.create2(command.replace("§", "&"), false))
-                                    .hoverEvent(ComponentUtil.createTranslate("클릭하여 %s번째 명령어를 수정합니다.", "&e" + (i + 1)))
+                            ComponentUtil.translate("%s번째 명령어 : %s", "&e" + (i + 1), ComponentUtil.create2(command.replace("§", "&"), false))
+                                    .hoverEvent(ComponentUtil.translate("클릭하여 %s번째 명령어를 수정합니다.", "&e" + (i + 1)))
                                     .clickEvent(ClickEvent.suggestCommand("/itag usage command " + itemUsageType.toString().toLowerCase() + " set " + (i + 1) + " " + command.replace("§", "&")))
                     );
                   }
@@ -3515,12 +3515,12 @@ public class CommandItemTag implements CommandExecutor
               {
                 key.append("%s, ");
                 components.add(Component.text(k, NamedTextColor.GREEN)
-                        .hoverEvent(ComponentUtil.createTranslate("click to remove %s tag", k))
+                        .hoverEvent(ComponentUtil.translate("click to remove %s tag", k))
                         .clickEvent(ClickEvent.suggestCommand("/itag customtag remove " + k))
                 );
               }
               key = new StringBuilder(key.substring(0, key.length() - 2));
-              MessageUtil.info(player, ComponentUtil.createTranslate(key.toString(), components));
+              MessageUtil.info(player, ComponentUtil.translate(key.toString(), components));
             }
             case "add" -> {
               if (args.length < 3)

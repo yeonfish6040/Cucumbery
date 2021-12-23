@@ -1,4 +1,4 @@
-package com.jho5245.cucumbery.listeners.entity;
+package com.jho5245.cucumbery.listeners.entity.damage;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.deathmessages.DeathManager;
@@ -1953,11 +1953,11 @@ public class EntityDamageByEntity implements Listener
     {
       if (health <= 0D)
       {
-        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyDeath, SenderComponentUtil.senderComponent(livingEntity, NamedTextColor.DARK_RED), damageStr, healthStr, maxHealthStr));
+        MessageUtil.sendActionBar(player, ComponentUtil.translate(keyDeath, SenderComponentUtil.senderComponent(livingEntity, NamedTextColor.DARK_RED), damageStr, healthStr, maxHealthStr));
       }
       else
       {
-        MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(keyAttack, SenderComponentUtil.senderComponent(livingEntity, NamedTextColor.GOLD), damageStr, healthStr, maxHealthStr));
+        MessageUtil.sendActionBar(player, ComponentUtil.translate(keyAttack, SenderComponentUtil.senderComponent(livingEntity, NamedTextColor.GOLD), damageStr, healthStr, maxHealthStr));
       }
     }
     else if (config.getBoolean("play-sound-on-attack-miss"))
@@ -1975,7 +1975,7 @@ public class EntityDamageByEntity implements Listener
       SoundPlay.playSound(player, sound, volume, pitch);
 //      String miss = config.getString("actionbars-on-attack-miss");
       String miss = "&d%s에게 피해를 입힐 수 없습니다. %s / %s";
-      MessageUtil.sendActionBar(player, ComponentUtil.createTranslate(miss, livingEntity, healthStr, maxHealthStr));
+      MessageUtil.sendActionBar(player, ComponentUtil.translate(miss, livingEntity, healthStr, maxHealthStr));
     }
   }
 

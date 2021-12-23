@@ -4,9 +4,9 @@ import com.jho5245.cucumbery.customeffect.CustomEffect;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public class EntityCustomEffectApplyEvent extends EntityCustomEffectEvent
+public class EntityCustomEffectPreRemoveEvent extends EntityCustomEffectEvent
 {
-  public EntityCustomEffectApplyEvent(@NotNull Entity what, @NotNull CustomEffect customEffect)
+  public EntityCustomEffectPreRemoveEvent(@NotNull Entity what, @NotNull CustomEffect customEffect)
   {
     super(what, customEffect);
   }

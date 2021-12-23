@@ -33,21 +33,21 @@ import java.util.*;
 
 public class DeathManager
 {
-  public static final Component BAD_RESPAWM_POINT = ComponentUtil.createTranslate("chat.square_brackets", ComponentUtil.createTranslate("death.attack.badRespawnPoint.link"))
+  public static final Component BAD_RESPAWM_POINT = ComponentUtil.translate("chat.square_brackets", ComponentUtil.translate("death.attack.badRespawnPoint.link"))
           .hoverEvent(HoverEvent.showText(Component.text("MC-28723"))).clickEvent(ClickEvent.openUrl("https://bugs.mojang.com/browse/MCPE-28723"));
-  public static final Component downloadURL = ComponentUtil.createTranslate("&9&l여기")
-          .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://cucumbery.com/api/builds/dev/latest/download")))
+  public static final Component downloadURL = ComponentUtil.translate("&9&l여기")
+          .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 이동합니다.", "&ehttps://cucumbery.com/api/builds/dev/latest/download")))
           .clickEvent(ClickEvent.openUrl("https://cucumbery.com/api/builds/dev/latest/download"));
-  public static final Component reportBugURL = ComponentUtil.createTranslate("&9&l여기")
-          .hoverEvent(HoverEvent.showText(ComponentUtil.createTranslate("클릭하여 %s 주소로 이동합니다.", "&ehttps://github.com/jho5245/Cucumbery/issues/new")))
+  public static final Component reportBugURL = ComponentUtil.translate("&9&l여기")
+          .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 이동합니다.", "&ehttps://github.com/jho5245/Cucumbery/issues/new")))
           .clickEvent(ClickEvent.openUrl("https://github.com/jho5245/Cucumbery/issues/new"));
   public static final int MAXIMUM_COMPONENT_SERIAL_LENGTH = 100000;
   private static final int COOLDOWN_IN_TICKS = 5;
   public static String BRACKET = Variable.deathMessages.getString("death-messages.prefix.bracket", "&6[%s]");
-  public static Component DEATH_PREFIX = ComponentUtil.createTranslate(
-          BRACKET, ComponentUtil.createTranslate(Variable.deathMessages.getString("death-messages.prefix.death")));
-  public static Component DEATH_PREFIX_PVP = ComponentUtil.createTranslate(
-          BRACKET, ComponentUtil.createTranslate(Variable.deathMessages.getString("death-messages.prefix.pvp")));
+  public static Component DEATH_PREFIX = ComponentUtil.translate(
+          BRACKET, ComponentUtil.translate(Variable.deathMessages.getString("death-messages.prefix.death")));
+  public static Component DEATH_PREFIX_PVP = ComponentUtil.translate(
+          BRACKET, ComponentUtil.translate(Variable.deathMessages.getString("death-messages.prefix.pvp")));
   private static boolean goBack = false;
 
   public static void what(EntityDeathEvent event)
@@ -65,7 +65,7 @@ public class DeathManager
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                 goBack = false, COOLDOWN_IN_TICKS);
       }
-      Component timeFormat = ComponentUtil.createTranslate("사망 시각 : %s", "&e" + Method.getCurrentTime(Calendar.getInstance(), true, false));
+      Component timeFormat = ComponentUtil.translate("사망 시각 : %s", "&e" + Method.getCurrentTime(Calendar.getInstance(), true, false));
       DEATH_PREFIX_PVP = DEATH_PREFIX_PVP.hoverEvent(HoverEvent.showText(timeFormat));
       DEATH_PREFIX = DEATH_PREFIX.hoverEvent(HoverEvent.showText(timeFormat));
       // 접두사 기능 붙여넣기
@@ -168,7 +168,7 @@ public class DeathManager
               }
               if (entity instanceof Parrot && damager instanceof Player && damageCause.getDamage() > Math.pow(2, 10))
               {
-                if (ItemStackUtil.itemExists(weapon))
+                if (ItemStackUtil.itemExists(weapon) && weapon.getType() == Material.COOKIE)
                 {
                   key = "parrot_cookie";
                 }
@@ -247,9 +247,9 @@ public class DeathManager
             double size = worldBorder.getSize();
             Component hover = Component.translatable("세계 경계");
             hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.createTranslate("크기 : %s", size));
+            hover = hover.append(ComponentUtil.translate("크기 : %s", size));
             hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.createTranslate("중심 좌표 : %s", center));
+            hover = hover.append(ComponentUtil.translate("중심 좌표 : %s", center));
             worldBorderComponent = worldBorderComponent.hoverEvent(hover);
             extraArgs.add(worldBorderComponent);
           }
@@ -570,7 +570,7 @@ public class DeathManager
         key = keys.get(random);
       }
       args.addAll(extraArgs);
-      @Nullable Component deathMessageComponent = ComponentUtil.createTranslate(key, args);
+      @Nullable Component deathMessageComponent = ComponentUtil.translate(key, args);
       if (ComponentUtil.serializeAsJson(deathMessageComponent).length() > MAXIMUM_COMPONENT_SERIAL_LENGTH)
       {
         for (int i = 0; i < args.size(); i++)
@@ -584,7 +584,7 @@ public class DeathManager
             }
           }
         }
-        deathMessageComponent = ComponentUtil.createTranslate("death.attack.message_too_long", ComponentUtil.createTranslate(key, args));
+        deathMessageComponent = ComponentUtil.translate("death.attack.message_too_long", ComponentUtil.translate(key, args));
       }
       final Component insiderComponent = deathMessageComponent;
       Component insiderPrefix = Component.empty();
@@ -620,7 +620,9 @@ public class DeathManager
       {
         if (damager instanceof Entity e)
         {
+          MessageUtil.broadcastDebug(e);
           Variable.attackerAndWeapon.remove(e.getUniqueId());
+          Variable.attackerAndWeaponString.remove(e.getUniqueId());
         }
       }
       // 모든 플레이어에게 데스메시지 보냄
@@ -630,7 +632,7 @@ public class DeathManager
         if (!cancelledMessages.isEmpty())
         {
           String message = cancelledMessages.get(Method.random(0, cancelledMessages.size() - 1));
-          deathMessageComponent = deathMessageComponent.append(ComponentUtil.createTranslate(message, entity));
+          deathMessageComponent = deathMessageComponent.append(ComponentUtil.translate(message, entity));
         }
       }
       if (playerDeathEvent != null)
@@ -644,9 +646,9 @@ public class DeathManager
         {
           for (Player online : Bukkit.getOnlinePlayers())
           {
-            if (entity != online && !CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_BEANS))
+            if (entity != online && !CustomEffectManager.hasEffect(online, CustomEffectType.CURSE_OF_BEANS))
             {
-              MessageUtil.sendMessage(entity, deathMessageComponent);
+              MessageUtil.sendMessage(online, deathMessageComponent);
             }
           }
         }

@@ -98,7 +98,7 @@ public class ItemLore2
     if (player != null && NBTAPI.arrayContainsValue(extraTags, ExtraTag.NAME_TAG))
     {
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate("&a새겨진 이름 : %s", player.displayName().hoverEvent(null).clickEvent(null)));
+      lore.add(ComponentUtil.translate("&a새겨진 이름 : %s", player.displayName().hoverEvent(null).clickEvent(null)));
     }
 
     NBTCompound customRarityTag = NBTAPI.getCompound(itemTag, CucumberyTag.CUSTOM_RARITY_KEY);
@@ -202,7 +202,7 @@ public class ItemLore2
       if (!hideDurability)
       {
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate("rgb225,100,205;내구도 : %s / %s", Component.text("∞"), Component.text("∞")));
+        lore.add(ComponentUtil.translate("rgb225,100,205;내구도 : %s / %s", Component.text("∞"), Component.text("∞")));
       }
       itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
     }
@@ -278,8 +278,8 @@ public class ItemLore2
         {
           lore.add(Component.empty());
           String color = Method2.getPercentageColor(currentDurability, maxDurability);
-          lore.add(ComponentUtil.createTranslate("&e내구도 : %s",
-                  ComponentUtil.createTranslate("&7%s / %s", color + Constant.Jeongsu.format(currentDurability), "g255;" + Constant.Jeongsu.format(maxDurability))));
+          lore.add(ComponentUtil.translate("&e내구도 : %s",
+                  ComponentUtil.translate("&7%s / %s", color + Constant.Jeongsu.format(currentDurability), "g255;" + Constant.Jeongsu.format(maxDurability))));
         }
       }
 
@@ -317,7 +317,7 @@ public class ItemLore2
         if (duraMeta.getDamage() != 0)
         {
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&6내구도 손상 : %s", duraMeta.getDamage() + ""));
+          lore.add(ComponentUtil.translate("&6내구도 손상 : %s", duraMeta.getDamage() + ""));
         }
       }
     }
@@ -378,7 +378,7 @@ public class ItemLore2
       ItemLoreUtil.setItemRarityValue(lore, -penalty);
 
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate("rgb203,164,12;누적 모루 합성 횟수 : %s", ComponentUtil.createTranslate("&e%s회", anvilUsedTime + "")));
+      lore.add(ComponentUtil.translate("rgb203,164,12;누적 모루 합성 횟수 : %s", ComponentUtil.translate("&e%s회", anvilUsedTime + "")));
     }
 
     boolean hideEnchant = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.ENCHANTS.toString());
@@ -436,7 +436,7 @@ public class ItemLore2
         if (!enchantLore.isEmpty())
         {
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_ENCHANTED));
+          lore.add(ComponentUtil.translate(Constant.ITEM_LORE_ENCHANTED));
           lore.addAll(enchantLore);
         }
       }
@@ -450,7 +450,7 @@ public class ItemLore2
       {
         itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_STORED_ENCHANT));
+        lore.add(ComponentUtil.translate(Constant.ITEM_LORE_STORED_ENCHANT));
         for (Enchantment enchant : Enchantment.values())
         {
           if (((EnchantmentStorageMeta) itemMeta).hasStoredEnchant(enchant))
@@ -517,7 +517,7 @@ public class ItemLore2
                 amount *= 100D;
               }
               String operationString = ItemLoreUtil.operationValue(operation);
-              Component component = ComponentUtil.createTranslate("rgb255,142,82;%s : %s",
+              Component component = ComponentUtil.translate("rgb255,142,82;%s : %s",
                       Component.translatable(attribute.translationKey()), (amount > 0 ? "+" : "") + Constant.Sosu2.format(amount) + operationString);
               lore.add(component);
             }
@@ -541,83 +541,83 @@ public class ItemLore2
         {
           case WOODEN_AXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+6"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3.2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.2"));
             break;
           case STONE_AXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+8"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3.2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.2"));
             break;
           case IRON_AXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+8"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3.1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.1"));
             break;
           case DIAMOND_AXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+8"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case GOLDEN_AXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+6"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case WOODEN_PICKAXE:
           case GOLDEN_PICKAXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+1"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
             break;
           case STONE_PICKAXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+2"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
             break;
           case IRON_PICKAXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
             break;
           case DIAMOND_PICKAXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+4"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
             break;
           case WOODEN_SHOVEL:
           case GOLDEN_SHOVEL:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+1.5"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+1.5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case STONE_SHOVEL:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+2.5"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+2.5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case IRON_SHOVEL:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+3.5"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3.5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case DIAMOND_SHOVEL:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+4.5"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4.5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case WOODEN_HOE:
           case GOLDEN_HOE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case STONE_HOE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2"));
             break;
           case IRON_HOE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-1"));
             break;
           case DIAMOND_HOE:
           case NETHERITE_HOE:
@@ -625,147 +625,147 @@ public class ItemLore2
             break;
           case WOODEN_SWORD:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
             break;
           case STONE_SWORD:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+4"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
             break;
           case IRON_SWORD:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+5"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
             break;
           case DIAMOND_SWORD:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+6"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
             break;
           case GOLDEN_SWORD:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
             break;
           case TRIDENT:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+8"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.9"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.9"));
             break;
           case LEATHER_HELMET:
             lore.add(helmet);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+1"));
             break;
           case LEATHER_CHESTPLATE:
             lore.add(chestplate);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
             break;
           case LEATHER_LEGGINGS:
             lore.add(leggings);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
             break;
           case LEATHER_BOOTS:
           case CHAINMAIL_BOOTS:
           case GOLDEN_BOOTS:
             lore.add(boots);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+1"));
             break;
           case CHAINMAIL_HELMET:
           case TURTLE_HELMET:
           case IRON_HELMET:
           case GOLDEN_HELMET:
             lore.add(helmet);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
             break;
           case CHAINMAIL_CHESTPLATE:
           case GOLDEN_CHESTPLATE:
             lore.add(chestplate);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+5"));
             break;
           case CHAINMAIL_LEGGINGS:
             lore.add(leggings);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+4"));
             break;
           case IRON_CHESTPLATE:
             lore.add(chestplate);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+6"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
             break;
           case IRON_LEGGINGS:
             lore.add(leggings);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+5"));
             break;
           case IRON_BOOTS:
             lore.add(boots);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
             break;
           case GOLDEN_LEGGINGS:
             lore.add(leggings);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
             break;
           case DIAMOND_HELMET:
             lore.add(helmet);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armorToughness, "+2"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
             break;
           case DIAMOND_CHESTPLATE:
             lore.add(chestplate);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+8"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armorToughness, "+2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
             break;
           case DIAMOND_LEGGINGS:
             lore.add(leggings);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+6"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armorToughness, "+2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
             break;
           case DIAMOND_BOOTS:
             lore.add(boots);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armorToughness, "+2"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
             break;
           case NETHERITE_AXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+9"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+9"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case NETHERITE_PICKAXE:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+5"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
             break;
           case NETHERITE_SHOVEL:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+5.5"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5.5"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
             break;
           case NETHERITE_SWORD:
             lore.add(mainHand);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", damage, "+7"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+7"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
             break;
           case NETHERITE_HELMET:
             lore.add(helmet);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armorToughness, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
             break;
           case NETHERITE_CHESTPLATE:
             lore.add(chestplate);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+8"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armorToughness, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+8"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
             break;
           case NETHERITE_LEGGINGS:
             lore.add(leggings);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+6"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armorToughness, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
             break;
           case NETHERITE_BOOTS:
             lore.add(boots);
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armor, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", armorToughness, "+3"));
-            lore.add(ComponentUtil.createTranslate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
+            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
             break;
           default:
             break;
@@ -782,6 +782,9 @@ public class ItemLore2
     boolean hideBookTag = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.BOOK_TAG.toString());
     boolean hideMusicDisc = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.MUSIC_DISC.toString());
     boolean hideTotemOfUndying = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.TOTEM_OF_UNDYING.toString());
+    boolean hideBlockData = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.BLOCK_DATA);
+    boolean hideBlockState = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.BLOCK_STATE);
+
 
     // 음식 추가 상태 효과
 
@@ -793,46 +796,46 @@ public class ItemLore2
       switch (type)
       {
         case GOLDEN_APPLE:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.REGENERATION, 5 * 20, 2),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 1)));
           break;
         case ENCHANTED_GOLDEN_APPLE:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.REGENERATION, 20 * 20, 2),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 4),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.RESISTANCE, 5 * 60 * 20, 1),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.FIRE_RESISTANCE, 5 * 60 * 20, 1)));
           break;
         case POISONOUS_POTATO:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
                   ItemLorePotionDescription.getDescription(60d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
           break;
         case SPIDER_EYE:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
           break;
         case PUFFERFISH:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.HUNGER, 15 * 20, 3),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.NAUSEA, 15 * 20, 2),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 60 * 20, 4)));
           break;
         case ROTTEN_FLESH:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
                   ItemLorePotionDescription.getDescription(80d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
           break;
         case CHICKEN:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
                   ItemLorePotionDescription.getDescription(30d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
           break;
         case HONEY_BOTTLE:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
-                  ComponentUtil.createTranslate("rgb255,97,144;%s 확률로 %s 효과 제거", ComponentUtil.create("100%"), ItemLorePotionDescription.getComponent(PotionEffectType.POISON))));
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+                  ComponentUtil.translate("rgb255,97,144;%s 확률로 %s 효과 제거", ComponentUtil.create("100%"), ItemLorePotionDescription.getComponent(PotionEffectType.POISON))));
           break;
         case MILK_BUCKET:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT),
-                  ComponentUtil.createTranslate("rgb255,97,144;%s 확률로 모든 효과 제거", "100%")));
+          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+                  ComponentUtil.translate("rgb255,97,144;%s 확률로 모든 효과 제거", "100%")));
           break;
         default:
           break;
@@ -951,7 +954,7 @@ public class ItemLore2
       }
       case SPECTRAL_ARROW -> {
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT));
+        lore.add(ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT));
         lore.add(ItemLorePotionDescription.getDescription(ItemLorePotionDescription.GLOWING, 10 * 20));
       }
       case WRITABLE_BOOK -> {
@@ -966,7 +969,7 @@ public class ItemLore2
           int pageCount = bookMeta.getPageCount();
           ItemLoreUtil.setItemRarityValue(lore, pageCount);
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&7쪽수 : %s", ComponentUtil.createTranslate("&6%s장", pageCount)));
+          lore.add(ComponentUtil.translate("&7쪽수 : %s", ComponentUtil.translate("&6%s장", pageCount)));
         }
       }
       case WRITTEN_BOOK -> {
@@ -981,9 +984,9 @@ public class ItemLore2
         ItemLoreUtil.setItemRarityValue(lore, pageCount);
         BookMeta.Generation g = bookMeta.getGeneration();
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate("&7저자 : %s", author != null ? author : ComponentUtil.createTranslate("알 수 없음")));
-        lore.add(ComponentUtil.createTranslate("&7출판 : %s", ComponentUtil.createTranslate("&6book.generation." + (g != null ? g.ordinal() : "0"))));
-        lore.add(ComponentUtil.createTranslate("&7쪽수 : %s", ComponentUtil.createTranslate("&6%s장", pageCount)));
+        lore.add(ComponentUtil.translate("&7저자 : %s", author != null ? author : ComponentUtil.translate("알 수 없음")));
+        lore.add(ComponentUtil.translate("&7출판 : %s", ComponentUtil.translate("&6book.generation." + (g != null ? g.ordinal() : "0"))));
+        lore.add(ComponentUtil.translate("&7쪽수 : %s", ComponentUtil.translate("&6%s장", pageCount)));
       }
       case WHITE_BANNER, BLACK_BANNER, BLUE_BANNER, BROWN_BANNER, CYAN_BANNER, GRAY_BANNER, GREEN_BANNER, LIGHT_BLUE_BANNER, LIGHT_GRAY_BANNER
               , LIME_BANNER, MAGENTA_BANNER, ORANGE_BANNER, PURPLE_BANNER, PINK_BANNER, RED_BANNER, YELLOW_BANNER -> {
@@ -993,7 +996,7 @@ public class ItemLore2
           bannerMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
           List<Pattern> patterns = bannerMeta.getPatterns();
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("#D0DCDE;[현수막 무늬 목록]"));
+          lore.add(ComponentUtil.translate("#D0DCDE;[현수막 무늬 목록]"));
           for (Pattern pattern : patterns)
           {
             ItemLoreUtil.setItemRarityValue(lore, +10);
@@ -1023,12 +1026,16 @@ public class ItemLore2
                     .replace("_middle", "").replace("stripe_small", "small_stripes")
                     .replace("_mirror", "") + "." +
                     pattern.getColor().toString().toLowerCase();
-            lore.add(ComponentUtil.createTranslate(patternTranslate.replace("stripe.", "stripe_middle.")));
+            lore.add(ComponentUtil.translate(patternTranslate.replace("stripe.", "stripe_middle.")));
           }
           if (bannerMeta.numberOfPatterns() > 6)
           {
             ItemLoreUtil.setItemRarityValue(lore, 20L * bannerMeta.numberOfPatterns());
           }
+        }
+        else
+        {
+          itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         }
       }
       case SHIELD -> {
@@ -1038,7 +1045,7 @@ public class ItemLore2
           itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
           List<Pattern> patterns = bannerMeta.getPatterns();
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("#D0DCDE;[방패 무늬 목록]"));
+          lore.add(ComponentUtil.translate("#D0DCDE;[방패 무늬 목록]"));
           for (Pattern pattern : patterns)
           {
             ItemLoreUtil.setItemRarityValue(lore, +10);
@@ -1068,12 +1075,16 @@ public class ItemLore2
                     .replace("_middle", "").replace("stripe_small", "small_stripes")
                     .replace("_mirror", "") + "." +
                     pattern.getColor().toString().toLowerCase();
-            lore.add(ComponentUtil.createTranslate(patternTranslate.replace("stripe.", "stripe_middle.")));
+            lore.add(ComponentUtil.translate(patternTranslate.replace("stripe.", "stripe_middle.")));
           }
           if (bannerMeta.numberOfPatterns() > 6)
           {
             ItemLoreUtil.setItemRarityValue(lore, 20L * bannerMeta.numberOfPatterns());
           }
+        }
+        else
+        {
+          itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         }
       }
       case TROPICAL_FISH_BUCKET -> {
@@ -1089,25 +1100,25 @@ public class ItemLore2
           DyeColor patternColor = bucketMeta.getPatternColor();
           if (key.contains("predefined"))
           {
-            arg = ComponentUtil.createTranslate("&6" + key);
+            arg = ComponentUtil.translate("&6" + key);
           }
           else
           {
             String bodyColorKey = "color.minecraft." + bodyColor.toString().toLowerCase();
             String patternColorKey = "color.minecraft." + patternColor.toString().toLowerCase();
-            arg = ComponentUtil.createTranslate("&6" + bodyColorKey);
+            arg = ComponentUtil.translate("&6" + bodyColorKey);
             if (bodyColor != patternColor)
             {
-              arg = arg.append(ComponentUtil.create(", ").append(ComponentUtil.createTranslate("&6" + patternColorKey)));
+              arg = arg.append(ComponentUtil.create(", ").append(ComponentUtil.translate("&6" + patternColorKey)));
             }
-            arg = arg.append(ComponentUtil.create(" ")).append(ComponentUtil.createTranslate("&6" + key));
+            arg = arg.append(ComponentUtil.create(" ")).append(ComponentUtil.translate("&6" + key));
           }
-          lore.add(ComponentUtil.createTranslate("&7물고기 종 : %s", arg));
+          lore.add(ComponentUtil.translate("&7물고기 종 : %s", arg));
         }
       }
       case SUSPICIOUS_STEW -> {
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_STATUS_EFFECT));
+        lore.add(ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT));
         SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) itemMeta;
         if (!stewMeta.hasCustomEffects())
         {
@@ -1145,12 +1156,12 @@ public class ItemLore2
           {
             String worldName = Method.getWorldDisplayName(world);
             lore.add(Component.empty());
-            lore.add(ComponentUtil.createTranslate("&7지도 ID : %s", "&6" + id));
-            lore.add(ComponentUtil.createTranslate("&7축척 : %s", "&6" + scaleString));
+            lore.add(ComponentUtil.translate("&7지도 ID : %s", "&6" + id));
+            lore.add(ComponentUtil.translate("&7축척 : %s", "&6" + scaleString));
             if (Cucumbery.config.getBoolean("use-center-coord-of-map-lore-feature"))
             {
-              lore.add(ComponentUtil.createTranslate("&7월드 : %s", "&6" + worldName));
-              lore.add(ComponentUtil.createTranslate("&7지도 중심 좌표 : %s", "x=&6" + centerX + "&7, z=&6" + centerZ));
+              lore.add(ComponentUtil.translate("&7월드 : %s", "&6" + worldName));
+              lore.add(ComponentUtil.translate("&7지도 중심 좌표 : %s", "x=&6" + centerX + "&7, z=&6" + centerZ));
             }
           }
         }
@@ -1179,21 +1190,21 @@ public class ItemLore2
           lore.add(Component.empty());
           if (power >= 0 && power <= 127)
           {
-            lore.add(ComponentUtil.createTranslate("&7체공 시간 : %s", ComponentUtil.createTranslate("&6약 ").append(ComponentUtil.createTranslate("&6%s초", "" + (0.5d * (power + 1d) + 0.3)))));
+            lore.add(ComponentUtil.translate("&7체공 시간 : %s", ComponentUtil.translate("&6약 ").append(ComponentUtil.translate("&6%s초", "" + (0.5d * (power + 1d) + 0.3)))));
           }
           else if (power == 255)
           {
-            lore.add(ComponentUtil.createTranslate("&7체공 시간 : %s", ComponentUtil.createTranslate("&6약 ").append(ComponentUtil.createTranslate("&6%s초", "0.3"))));
+            lore.add(ComponentUtil.translate("&7체공 시간 : %s", ComponentUtil.translate("&6약 ").append(ComponentUtil.translate("&6%s초", "0.3"))));
           }
           else
           {
-            lore.add(ComponentUtil.createTranslate("&7체공 시간 : %s", ComponentUtil.createTranslate("&6즉시 폭발")));
+            lore.add(ComponentUtil.translate("&7체공 시간 : %s", ComponentUtil.translate("&6즉시 폭발")));
           }
 
           if (fireworkMeta.hasEffects())
           {
             lore.add(Component.empty());
-            lore.add(ComponentUtil.createTranslate("&e[폭죽 효과 목록]"));
+            lore.add(ComponentUtil.translate("&e[폭죽 효과 목록]"));
 
             int effectSize = fireworkMeta.getEffectsSize();
             for (int i = 0; i < fireworkMeta.getEffectsSize(); i++)
@@ -1205,12 +1216,12 @@ public class ItemLore2
                 {
                   if (i == 3)
                   {
-                    lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", Component.text(skipped)));
+                    lore.add(ComponentUtil.translate("&7&ocontainer.shulkerBox.more", Component.text(skipped)));
                   }
                   continue;
                 }
               }
-              Component add = ComponentUtil.createTranslate("&3&m          %s          ", ComponentUtil.createTranslate("&m&q[%s]", ComponentUtil.createTranslate("&9%s번째 효과", i + 1)));
+              Component add = ComponentUtil.translate("&3&m          %s          ", ComponentUtil.translate("&m&q[%s]", ComponentUtil.translate("&9%s번째 효과", i + 1)));
               lore.add(add);
               FireworkEffect fireworkEffect = fireworkMeta.getEffects().get(i);
               ItemLoreUtil.addFireworkEffectLore(lore, fireworkEffect);
@@ -1227,7 +1238,7 @@ public class ItemLore2
           ItemStack chargedProjectile = crossbowMeta.getChargedProjectiles().get(0).clone();
           if (ItemStackUtil.itemExists(chargedProjectile))
           {
-            lore.addAll(ItemStackUtil.getItemInfoAsComponents(chargedProjectile, ComponentUtil.createTranslate("&e[발사체]"), true));
+            lore.addAll(ItemStackUtil.getItemInfoAsComponents(chargedProjectile, ComponentUtil.translate("&e[발사체]"), true));
           }
           else
           {
@@ -1248,7 +1259,7 @@ public class ItemLore2
           {
             consumable = consumable.clone();
             lore.add(Component.empty());
-            lore.addAll(ItemStackUtil.getItemInfoAsComponents(consumable, ComponentUtil.createTranslate("&e[발사체]"), true));
+            lore.addAll(ItemStackUtil.getItemInfoAsComponents(consumable, ComponentUtil.translate("&e[발사체]"), true));
           }
         }
       }
@@ -1258,7 +1269,7 @@ public class ItemLore2
         Color color = leatherArmorMeta.getColor();
         int red = color.getRed(), green = color.getGreen(), blue = color.getBlue();
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate("#a88932;[%s의 색상]", ItemNameUtil.itemName(item)));
+        lore.add(ComponentUtil.translate("#a88932;[%s의 색상]", ItemNameUtil.itemName(item)));
         lore.add(ComponentUtil.create2("rgb" + red + "," + green + "," + blue + ";#" +
                 Integer.toHexString(0x100 | red).substring(1) + Integer.toHexString(0x100 | green).substring(1) + Integer.toHexString(0x100 | blue).substring(1)));
       }
@@ -1268,39 +1279,42 @@ public class ItemLore2
         {
           Location lodestoneLocation = compassMeta.getLodestone();
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", ItemNameUtil.itemName(Material.LODESTONE)));
+          lore.add(ComponentUtil.translate("#BEBABA;[%s의 좌표]", ItemNameUtil.itemName(Material.LODESTONE)));
           lore.add(LocationComponent.locationComponent(lodestoneLocation));
         }
         else if (compassMeta.isLodestoneTracked())
         {
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("#BEBABA;[%s의 좌표]", ItemNameUtil.itemName(Material.LODESTONE)));
-          lore.add(ComponentUtil.createTranslate("#BD443C;자석석이 " + (Math.random() * 100d > 10d ? "" : "&m미국감&q") + "분실됨"));
+          lore.add(ComponentUtil.translate("#BEBABA;[%s의 좌표]", ItemNameUtil.itemName(Material.LODESTONE)));
+          lore.add(ComponentUtil.translate("#BD443C;자석석이 " + (Math.random() * 100d > 10d ? "" : "&m미국감&q") + "분실됨"));
         }
       }
       case NOTE_BLOCK -> {
-        NBTCompound blockStateTag = nbtItem.getCompound(CucumberyTag.MINECRAFT_BLOCK_STATE_TAG_KEY);
-        if (blockStateTag == null)
+        if (!hideBlockData)
         {
-          break;
-        }
-        String instrument = blockStateTag.getString("instrument");
-        String note = blockStateTag.getString("note");
-        lore.add(Component.empty());
-        if (instrument != null && !instrument.equals(""))
-        {
-          lore.add(ComponentUtil.createTranslate("&e악기 : %s", instrument));
-        }
-        if (note != null)
-        {
-          try
+          NBTCompound blockStateTag = nbtItem.getCompound(CucumberyTag.MINECRAFT_BLOCK_STATE_TAG_KEY);
+          if (blockStateTag == null)
           {
-            String noteString = ItemStackUtil.getNoteString(Integer.parseInt(note));
-            lore.add(ComponentUtil.createTranslate("&e음높이 : %s", noteString));
+            break;
           }
-          catch (Exception ignored)
+          String instrument = blockStateTag.getString("instrument");
+          String note = blockStateTag.getString("note");
+          lore.add(Component.empty());
+          if (instrument != null && !instrument.equals(""))
           {
+            lore.add(ComponentUtil.translate("&e악기 : %s", instrument));
+          }
+          if (note != null)
+          {
+            try
+            {
+              String noteString = ItemStackUtil.getNoteString(Integer.parseInt(note));
+              lore.add(ComponentUtil.translate("&e음높이 : %s", noteString));
+            }
+            catch (Exception ignored)
+            {
 
+            }
           }
         }
       }
@@ -1308,15 +1322,15 @@ public class ItemLore2
               PIGLIN_BANNER_PATTERN, SKULL_BANNER_PATTERN -> {
         itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate("&e무늬 : %s", ComponentUtil.createTranslate("&7" + type.translationKey() + ".desc")));
+        lore.add(ComponentUtil.translate("&e무늬 : %s", ComponentUtil.translate("&7" + type.translationKey() + ".desc")));
       }
       case MUSIC_DISC_11, MUSIC_DISC_13, MUSIC_DISC_BLOCKS, MUSIC_DISC_CAT, MUSIC_DISC_CHIRP,
               MUSIC_DISC_FAR, MUSIC_DISC_MALL, MUSIC_DISC_MELLOHI, MUSIC_DISC_PIGSTEP, MUSIC_DISC_STAL,
               MUSIC_DISC_STRAD, MUSIC_DISC_WAIT, MUSIC_DISC_WARD -> {
         itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate("&e작곡가 : %s", "&7" + (type == Material.MUSIC_DISC_PIGSTEP ? "Lena Raine" : "C418")));
-        lore.add(ComponentUtil.createTranslate("&e곡 : %s", "&7" + (type == Material.MUSIC_DISC_PIGSTEP ? "PigStep" : type.toString().toLowerCase().split("music_disc_")[1])));
+        lore.add(ComponentUtil.translate("&e작곡가 : %s", "&7" + (type == Material.MUSIC_DISC_PIGSTEP ? "Lena Raine" : "C418")));
+        lore.add(ComponentUtil.translate("&e곡 : %s", "&7" + (type == Material.MUSIC_DISC_PIGSTEP ? "PigStep" : type.toString().toLowerCase().split("music_disc_")[1])));
       }
       case DEBUG_STICK -> {
         if (NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.DEBUG_STICK.toString()))
@@ -1327,7 +1341,7 @@ public class ItemLore2
         if (debugProperty != null && !debugProperty.getKeys().isEmpty())
         {
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&9[디버그 속성]"));
+          lore.add(ComponentUtil.translate("&9[디버그 속성]"));
           for (String key : debugProperty.getKeys())
           {
             String value = debugProperty.getString(key);
@@ -1340,7 +1354,7 @@ public class ItemLore2
             {
               itemType = ItemNameUtil.itemName(Material.STONE);
             }
-            lore.add(ComponentUtil.createTranslate("&7%s : %s", itemType, "&e" + value));
+            lore.add(ComponentUtil.translate("&7%s : %s", itemType, "&e" + value));
           }
         }
       }
@@ -1348,10 +1362,10 @@ public class ItemLore2
 
     if (itemMeta instanceof BlockStateMeta blockStateMeta)
     {
-      if (blockStateMeta.hasBlockState())
+      itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+      if (!hideBlockState && blockStateMeta.hasBlockState())
       {
         NBTCompound blockEntityTag = nbtItem.getCompound("BlockEntityTag");
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         BlockState blockState = blockStateMeta.getBlockState();
         Component customName = blockState instanceof Nameable nameable ? nameable.customName() : null;
         if (customName == null)
@@ -1385,13 +1399,13 @@ public class ItemLore2
           case BEEHIVE -> colorPrefix = "#CAA863;";
           case FURNACE, BLAST_FURNACE, SMOKER, DROPPER, DISPENSER, HOPPER -> colorPrefix = "#978E87;";
         }
-        Component customNameLore = ComponentUtil.createTranslate(colorPrefix + "[%s의 내용물]", customName);
+        Component customNameLore = ComponentUtil.translate(colorPrefix + "[%s의 내용물]", customName);
 
         if (blockState instanceof Sign sign)
         {
           boolean isGlowingText = sign.isGlowingText();
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&9" + (isGlowingText ? "&l" : "") + "[%s의 내용]", customName));
+          lore.add(ComponentUtil.translate("&9" + (isGlowingText ? "&l" : "") + "[%s의 내용]", customName));
 
           DyeColor dyeColor = sign.getColor();
           Color color = dyeColor != null ? dyeColor.getColor() : null;
@@ -1412,7 +1426,7 @@ public class ItemLore2
             if (!(line.equals(Component.empty())))
             {
               hasAtleastOne = true;
-              lore.add(ComponentUtil.createTranslate("&7%s번째 텍스트 : %s", (i + 1), line));
+              lore.add(ComponentUtil.translate("&7%s번째 텍스트 : %s", (i + 1), line));
             }
           }
 
@@ -1425,15 +1439,15 @@ public class ItemLore2
         if (blockState instanceof Lockable lockable && lockable.isLocked())
         {
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&7잠금 태그 : %s", ComponentUtil.create2(lockable.getLock(), false)));
+          lore.add(ComponentUtil.translate("&7잠금 태그 : %s", ComponentUtil.create2(lockable.getLock(), false)));
         }
         if (blockState instanceof BrewingStand brewingStand)
         {
           int brewingTime = brewingStand.getBrewingTime();
           int fuelLevel = brewingStand.getFuelLevel();
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&6양조 완료까지 남은 시간 : %s", ComponentUtil.createTranslate("&e%s초", Constant.Sosu2.format(brewingTime / 20D))));
-          lore.add(ComponentUtil.createTranslate("&6남은 땔감 : %s", "&e" + fuelLevel));
+          lore.add(ComponentUtil.translate("&6양조 완료까지 남은 시간 : %s", ComponentUtil.translate("&e%s초", Constant.Sosu2.format(brewingTime / 20D))));
+          lore.add(ComponentUtil.translate("&6남은 땔감 : %s", "&e" + fuelLevel));
         }
         if (blockState instanceof Campfire campfire)
         {
@@ -1449,11 +1463,11 @@ public class ItemLore2
               int cookTime = campfire.getCookTime(i);
               int cookTimeTotal = campfire.getCookTimeTotal(i);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(itemStack);
-              lore.add(ComponentUtil.createTranslate("&7%s번째 아이템 : %s, 조리 진행도 : %s / %s (%s)",
+              lore.add(ComponentUtil.translate("&7%s번째 아이템 : %s, 조리 진행도 : %s / %s (%s)",
                       i + 1,
-                      itemStackComponent, ComponentUtil.createTranslate("&e%s초", Constant.Sosu2.format(cookTime / 20d)),
-                      ComponentUtil.createTranslate("&6%s초", Constant.Sosu2.format(cookTimeTotal / 20d)),
-                      ComponentUtil.createTranslate("&a%s%%", Constant.Sosu2.format(100d * cookTime / cookTimeTotal))));
+                      itemStackComponent, ComponentUtil.translate("&e%s초", Constant.Sosu2.format(cookTime / 20d)),
+                      ComponentUtil.translate("&6%s초", Constant.Sosu2.format(cookTimeTotal / 20d)),
+                      ComponentUtil.translate("&a%s%%", Constant.Sosu2.format(100d * cookTime / cookTimeTotal))));
             }
           }
 
@@ -1472,16 +1486,22 @@ public class ItemLore2
           {
             smeltType = "조리";
           }
-          short burnTime = furnace.getBurnTime();
-          short cookTime = furnace.getCookTime();
           int cookTimeTotal = furnace.getCookTimeTotal();
           if (cookTimeTotal != 0)
           {
+            short burnTime = furnace.getBurnTime();
+            short cookTime = furnace.getCookTime();
+            double speed = furnace.getCookSpeedMultiplier();
             lore.add(Component.empty());
-            lore.add(ComponentUtil.createTranslate("&7" + smeltType + " 진행도 : %s / %s (%s)",
-                    ComponentUtil.createTranslate("%s초", Constant.Sosu2.format(cookTime / 20d)),
-                    ComponentUtil.createTranslate("%s초", Constant.Sosu2.format(cookTimeTotal / 20d)),
-                    ComponentUtil.createTranslate("%s%%", Constant.Sosu2.format(100d * cookTime / cookTimeTotal))));
+            lore.add(ComponentUtil.translate("&7땔감 지속 시간 : %s초", Constant.Sosu2.format(burnTime / 20d)));
+            if (speed != 1d)
+            {
+              lore.add(ComponentUtil.translate("&7" + smeltType + " 진행 속도 : %s배", Constant.Sosu2.format(speed)));
+            }
+            lore.add(ComponentUtil.translate("&7" + smeltType + " 진행도 : %s / %s (%s)",
+                    ComponentUtil.translate("%s초", Constant.Sosu2.format(cookTime / 20d)),
+                    ComponentUtil.translate("%s초", Constant.Sosu2.format(cookTimeTotal / 20d)),
+                    ComponentUtil.translate("%s%%", Constant.Sosu2.format(100d * cookTime / cookTimeTotal))));
           }
           if (!Method.inventoryEmpty(furnaceInventory))
           {
@@ -1491,21 +1511,21 @@ public class ItemLore2
             {
               ItemLore.removeItemLore(ingredient);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(ingredient);
-              lore.add(ComponentUtil.createTranslate("&7" + smeltType + " 중인 아이템 : %s", itemStackComponent));
+              lore.add(ComponentUtil.translate("&7" + smeltType + " 중인 아이템 : %s", itemStackComponent));
             }
             ItemStack fuel = furnaceInventory.getFuel();
             if (ItemStackUtil.itemExists(fuel))
             {
               ItemLore.removeItemLore(fuel);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(fuel);
-              lore.add(ComponentUtil.createTranslate("&7땔감 아이템 : %s", itemStackComponent));
+              lore.add(ComponentUtil.translate("&7땔감 아이템 : %s", itemStackComponent));
             }
             ItemStack result = furnaceInventory.getResult();
             if (ItemStackUtil.itemExists(result))
             {
               ItemLore.removeItemLore(result);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(result);
-              lore.add(ComponentUtil.createTranslate("&7결과물 아이템 : %s", itemStackComponent));
+              lore.add(ComponentUtil.translate("&7결과물 아이템 : %s", itemStackComponent));
             }
           }
         }
@@ -1537,7 +1557,7 @@ public class ItemLore2
                 {
                   if (i == 9)
                   {
-                    lore.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", Component.text(itemStackList.size() - i)));
+                    lore.add(ComponentUtil.translate("&7&ocontainer.shulkerBox.more", Component.text(itemStackList.size() - i)));
                     break;
                   }
                   ItemStack itemStack = itemStackList.get(i);
@@ -1550,20 +1570,20 @@ public class ItemLore2
         catch (Exception e)
         {
           lore.add(Component.empty());
-          lore.add(ComponentUtil.createTranslate("&7일해라 페이퍼 오류 안고치니"));
+          lore.add(ComponentUtil.translate("&7일해라 페이퍼 오류 안고치니"));
         }
         if (blockState instanceof Beehive beehive)
         {
-          customNameLore = ComponentUtil.createTranslate(colorPrefix + "[%s의 벌들]", customName);
+          customNameLore = ComponentUtil.translate(colorPrefix + "[%s의 벌들]", customName);
           int beeCount = beehive.getEntityCount(), maxBeeCount = beehive.getMaxEntities();
           lore.add(Component.empty());
           lore.add(customNameLore);
-          lore.add(ComponentUtil.createTranslate("#b07c15;벌 %s", beeCount == 0 ? "없음" : "#e6ac6d;" + beeCount + "마리"));
+          lore.add(ComponentUtil.translate("#b07c15;벌 %s", beeCount == 0 ? "없음" : "#e6ac6d;" + beeCount + "마리"));
           NBTCompound flowerPos = blockEntityTag.getCompound("FlowerPos");
           if (flowerPos != null)
           {
-            lore.add(ComponentUtil.createTranslate("#b07c15;꽃 좌표 : %s",
-                    ComponentUtil.createTranslate("#b07c15;%s, %s, %s", "#e6ac6d;" + flowerPos.getInteger("X"), flowerPos.getInteger("Y"), flowerPos.getInteger("Z"))));
+            lore.add(ComponentUtil.translate("#b07c15;꽃 좌표 : %s",
+                    ComponentUtil.translate("#b07c15;%s, %s, %s", "#e6ac6d;" + flowerPos.getInteger("X"), flowerPos.getInteger("Y"), flowerPos.getInteger("Z"))));
           }
         }
         if (blockState instanceof Lootable lootable)
@@ -1573,10 +1593,10 @@ public class ItemLore2
           {
             Long seed = blockEntityTag.getLong("LootTableSeed");
             lore.add(Component.empty());
-            lore.add(ComponentUtil.createTranslate("&7루트테이블 : %s", lootTable.getKey()));
+            lore.add(ComponentUtil.translate("&7루트테이블 : %s", lootTable.getKey()));
             if (seed != null)
             {
-              lore.add(ComponentUtil.createTranslate("&7시드 : %s", seed));
+              lore.add(ComponentUtil.translate("&7시드 : %s", seed));
             }
           }
         }
@@ -1585,21 +1605,17 @@ public class ItemLore2
           ItemStack record = jukebox.getRecord();
           if (ItemStackUtil.itemExists(record))
           {
-            lore.addAll(ItemStackUtil.getItemInfoAsComponents(record, ComponentUtil.createTranslate("&e[음반]"), true));
+            lore.addAll(ItemStackUtil.getItemInfoAsComponents(record, ComponentUtil.translate("&e[음반]"), true));
           }
         }
-      }
-      else
-      {
-        itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
       }
     }
 
     NBTCompound blockStateTag = nbtItem.getCompound(CucumberyTag.MINECRAFT_BLOCK_STATE_TAG_KEY);
-    if (type != Material.NOTE_BLOCK && blockStateTag != null && !blockStateTag.getKeys().isEmpty())
+    if (!hideBlockData && type != Material.NOTE_BLOCK && blockStateTag != null && !blockStateTag.getKeys().isEmpty())
     {
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate("&b[블록 데이터 태그]"));
+      lore.add(ComponentUtil.translate("&b[블록 데이터 태그]"));
       for (String key : blockStateTag.getKeys())
       {
         String value = blockStateTag.getString(key);
@@ -1619,7 +1635,7 @@ public class ItemLore2
             }
           }
         }
-        lore.add(ComponentUtil.createTranslate("&7%s : %s", "&b" + key, "&e" + value));
+        lore.add(ComponentUtil.translate("&7%s : %s", "&b" + key, "&e" + value));
       }
     }
 
@@ -1628,7 +1644,7 @@ public class ItemLore2
       itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
       Set<Namespaced> destroyableKeys = itemMeta.getDestroyableKeys();
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate("&6[%s]", ComponentUtil.createTranslate("item.canBreak")));
+      lore.add(ComponentUtil.translate("&6[%s]", ComponentUtil.translate("item.canBreak")));
       for (Namespaced key : destroyableKeys)
       {
         if (key.getNamespace().equals("minecraft"))
@@ -1639,7 +1655,7 @@ public class ItemLore2
           }
           catch (Exception e)
           {
-            lore.add(ComponentUtil.createTranslate("&7" + key.toString()));
+            lore.add(ComponentUtil.translate("&7" + key.toString()));
           }
         }
       }
@@ -1653,7 +1669,7 @@ public class ItemLore2
       itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
       Set<Namespaced> destroyableKeys = itemMeta.getPlaceableKeys();
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate("&6[%s]", ComponentUtil.createTranslate("item.canPlace")));
+      lore.add(ComponentUtil.translate("&6[%s]", ComponentUtil.translate("item.canPlace")));
       for (Namespaced key : destroyableKeys)
       {
         if (key.getNamespace().equals("minecraft"))
@@ -1664,7 +1680,7 @@ public class ItemLore2
           }
           catch (Exception e)
           {
-            lore.add(ComponentUtil.createTranslate("&7" + key.toString()));
+            lore.add(ComponentUtil.translate("&7" + key.toString()));
           }
         }
       }
@@ -1684,8 +1700,8 @@ public class ItemLore2
       )
       {
         lore.add(Component.empty());
-        lore.add(ComponentUtil.createTranslate("&b[이스터 에그]"));
-        lore.add(ComponentUtil.createTranslate("&7%s가 가장 좋아하는 만렙 낚싯대! 낚시하시져", "&a오이"));
+        lore.add(ComponentUtil.translate("&b[이스터 에그]"));
+        lore.add(ComponentUtil.translate("&7%s가 가장 좋아하는 만렙 낚싯대! 낚시하시져", "&a오이"));
       }
     }
 
@@ -1694,7 +1710,7 @@ public class ItemLore2
             && !NBTAPI.isRestrictedFinal(item, RestrictionType.NO_PLACE))
     {
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_PLACABLE));
+      lore.add(ComponentUtil.translate(Constant.ITEM_LORE_PLACABLE));
     }
 
     if (RecipeChecker.hasCraftingRecipe(type) && !NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.CRAFTABLE.toString()))
@@ -1707,15 +1723,15 @@ public class ItemLore2
         lore.add(Component.empty());
         if (!noCraftInventory && !noCraftCraftingTable)
         {
-          lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_MATERIAL_CRAFTABLE));
+          lore.add(ComponentUtil.translate(Constant.ITEM_LORE_MATERIAL_CRAFTABLE));
         }
         else if (!noCraftCraftingTable)
         {
-          lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_CRAFTING_TABLE));
+          lore.add(ComponentUtil.translate(Constant.ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_CRAFTING_TABLE));
         }
         else
         {
-          lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_INVENTORY));
+          lore.add(ComponentUtil.translate(Constant.ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_INVENTORY));
         }
       }
     }
@@ -1724,7 +1740,7 @@ public class ItemLore2
             && (!NBTAPI.isRestricted(item, RestrictionType.NO_BREW) || NBTAPI.getRestrictionOverridePermission(item, RestrictionType.NO_BREW) != null))
     {
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_MATERIAL_BREWABLE));
+      lore.add(ComponentUtil.translate(Constant.ITEM_LORE_MATERIAL_BREWABLE));
     }
 
     boolean noFurnace = NBTAPI.isRestrictedFinal(item, RestrictionType.NO_FURNACE);
@@ -1761,22 +1777,22 @@ public class ItemLore2
         available = available.substring(0, available.length() - 2);
         if (type.isEdible())
         {
-          lore.add(ComponentUtil.createTranslate("#F07447;[" + available + "에서만 조리 가능]"));
+          lore.add(ComponentUtil.translate("#F07447;[" + available + "에서만 조리 가능]"));
         }
         else
         {
-          lore.add(ComponentUtil.createTranslate("rgb255,79,48;[" + available + "에서만 제련 가능]"));
+          lore.add(ComponentUtil.translate("rgb255,79,48;[" + available + "에서만 제련 가능]"));
         }
       }
       else
       {
         if (type.isEdible())
         {
-          lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_MATERIAL_SMELTABLE_COOK));
+          lore.add(ComponentUtil.translate(Constant.ITEM_LORE_MATERIAL_SMELTABLE_COOK));
         }
         else
         {
-          lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_MATERIAL_SMELTABLE));
+          lore.add(ComponentUtil.translate(Constant.ITEM_LORE_MATERIAL_SMELTABLE));
         }
       }
     }
@@ -1786,7 +1802,7 @@ public class ItemLore2
     {
       String nourishment = ItemStackUtil.getNourishment(type);
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_CONSUMABLE));
+      lore.add(ComponentUtil.translate(Constant.ITEM_LORE_CONSUMABLE));
       if (foodTag != null)
       {
         Integer foodLevel = foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY);
@@ -1802,35 +1818,35 @@ public class ItemLore2
         if (foodTag.hasKey(CucumberyTag.NOURISHMENT_KEY))
         {
           nourishment = foodTag.getString(CucumberyTag.NOURISHMENT_KEY);
-          lore.add(ComponentUtil.createTranslate("rgb235,163,0;든든함 : %s", ComponentUtil.createTranslate(nourishment)));
+          lore.add(ComponentUtil.translate("rgb235,163,0;든든함 : %s", ComponentUtil.translate(nourishment)));
         }
         else if (foodLevel != 0 || saturation != 0)
         {
           nourishment = ItemStackUtil.getNourishment(foodLevel, saturation);
-          lore.add(ComponentUtil.createTranslate("rgb235,163,0;든든함 : %s", ComponentUtil.createTranslate(nourishment)));
+          lore.add(ComponentUtil.translate("rgb235,163,0;든든함 : %s", ComponentUtil.translate(nourishment)));
         }
         if (!foodTag.hasKey(CucumberyTag.FOOD_LEVEL_KEY))
         {
-          lore.add(ComponentUtil.createTranslate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
+          lore.add(ComponentUtil.translate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
         }
         else if (foodLevel != 0)
         {
-          lore.add(ComponentUtil.createTranslate("rgb255,183,0;음식 포인트 : %s", (foodLevel > 0 ? "+" : "") + foodLevel));
+          lore.add(ComponentUtil.translate("rgb255,183,0;음식 포인트 : %s", (foodLevel > 0 ? "+" : "") + foodLevel));
         }
         if (!foodTag.hasKey(CucumberyTag.SATURATION_KEY))
         {
-          lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
+          lore.add(ComponentUtil.translate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
         }
         else if (saturation != 0d)
         {
-          lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", (saturation > 0d ? "+" : "") + Constant.Sosu2.format(saturation)));
+          lore.add(ComponentUtil.translate("rgb255,183,0;포화도 : %s", (saturation > 0d ? "+" : "") + Constant.Sosu2.format(saturation)));
         }
       }
       else if (nourishment != null && !nourishment.equals("기본"))
       {
-        lore.add(ComponentUtil.createTranslate("rgb235,163,0;든든함 : %s", ComponentUtil.createTranslate(nourishment)));
-        lore.add(ComponentUtil.createTranslate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
-        lore.add(ComponentUtil.createTranslate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
+        lore.add(ComponentUtil.translate("rgb235,163,0;든든함 : %s", ComponentUtil.translate(nourishment)));
+        lore.add(ComponentUtil.translate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
+        lore.add(ComponentUtil.translate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
       }
     }
 
@@ -1838,23 +1854,23 @@ public class ItemLore2
             && !NBTAPI.isRestrictedFinal(item, RestrictionType.NO_SMELT))
     {
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_FUEL));
-      lore.add(ComponentUtil.createTranslate("rgb232,99,79;지속 시간 : %s"
-              , ComponentUtil.createTranslate("%s초", Component.text(Constant.Sosu2.format(ItemStackUtil.getFuelTimeInSecond(type))))));
+      lore.add(ComponentUtil.translate(Constant.ITEM_LORE_FUEL));
+      lore.add(ComponentUtil.translate("rgb232,99,79;지속 시간 : %s"
+              , ComponentUtil.translate("%s초", Component.text(Constant.Sosu2.format(ItemStackUtil.getFuelTimeInSecond(type))))));
     }
 
     if (Constant.COMPOSTABLE_ITEMS.contains(type) && !NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.COMPOSTABLE.toString())
             && !NBTAPI.isRestrictedFinal(item, RestrictionType.NO_COMPOSTER))
     {
       lore.add(Component.empty());
-      lore.add(ComponentUtil.createTranslate(Constant.ITEM_LORE_MATERIAL_COMPOSTABLE, Component.text(Constant.Sosu2.format(ItemStackUtil.getCompostChance(type)) + "%")));
+      lore.add(ComponentUtil.translate(Constant.ITEM_LORE_MATERIAL_COMPOSTABLE, Component.text(Constant.Sosu2.format(ItemStackUtil.getCompostChance(type)) + "%")));
     }
 
     // CucumberyItemTag - CustomItemType
     String customItemType = NBTAPI.getString(itemTag, CucumberyTag.CUSTOM_ITEM_TYPE_KEY);
     if (customItemType != null)
     {
-      lore.set(1, ComponentUtil.createTranslate("&7아이템 종류 : [%s]", customItemType));
+      lore.set(1, ComponentUtil.translate("&7아이템 종류 : [%s]", customItemType));
     }
     // CucumberyItemTag - CustomRarity
     if (customRarityTag != null && customRarityTag.hasKey(CucumberyTag.VALUE_KEY))
@@ -1881,7 +1897,7 @@ public class ItemLore2
     // 추가 설명으로 인한 아이템의 등급 수치 변경
     long rarity2 = ItemLoreUtil.getItemRarityValue(lore);
     String rarityDisplay = ItemCategory.Rarity.getRarityFromValue(rarity2).getDisplay();
-    Component itemRarityComponent = ComponentUtil.createTranslate("&7아이템 등급 : %s", ComponentUtil.createTranslate(rarityDisplay));
+    Component itemRarityComponent = ComponentUtil.translate("&7아이템 등급 : %s", ComponentUtil.translate(rarityDisplay));
     lore.set(2, itemRarityComponent);
     itemMeta.lore(lore);
     item.setItemMeta(itemMeta);

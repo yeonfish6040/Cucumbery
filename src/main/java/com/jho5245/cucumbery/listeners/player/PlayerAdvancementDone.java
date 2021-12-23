@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import org.bukkit.GameMode;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,7 @@ public class PlayerAdvancementDone implements Listener
   public void onPlayerAdvancementDone(PlayerAdvancementDoneEvent event)
   {
     Player player = event.getPlayer();
-    if (UserData.SPECTATOR_MODE.getBoolean(player) || !UserData.ANNOUNCE_ADVANCEMENTS.getBoolean(player))
+    if (player.getGameMode() == GameMode.SPECTATOR || UserData.SPECTATOR_MODE.getBoolean(player) || !UserData.ANNOUNCE_ADVANCEMENTS.getBoolean(player))
     {
       event.message(null);
       return;
@@ -37,7 +38,7 @@ public class PlayerAdvancementDone implements Listener
                   default -> Prefix.INFO_ADVANCEMENT;
                 }).get();
         String key = translatableComponent.key();
-        event.message(Component.empty().append(prefix).append(ComponentUtil.createTranslate(key, event.getPlayer(), advancement)));
+        event.message(Component.empty().append(prefix).append(ComponentUtil.translate(key, event.getPlayer(), advancement)));
       }
     }
   }

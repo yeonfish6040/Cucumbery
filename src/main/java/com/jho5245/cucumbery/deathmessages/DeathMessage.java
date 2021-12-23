@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.deathmessages;
 
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1459,6 +1460,7 @@ public enum DeathMessage
   WORLD_BORDER_COMBAT_SUICIDE_ITEM,
   ;
 
+  @NotNull
   public List<String> getKeys()
   {
     return new ArrayList<>(Variable.deathMessages.getStringList("death-messages.messages." + this.toString().toLowerCase().replace("_", "-")));

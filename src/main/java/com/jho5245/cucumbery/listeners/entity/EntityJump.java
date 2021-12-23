@@ -21,6 +21,12 @@ public class EntityJump implements Listener
       {
         sittable.setSitting(!sittable.isSitting());
       }
+      return;
+    }
+
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_JUMPING))
+    {
+      event.setCancelled(true);
     }
   }
 }

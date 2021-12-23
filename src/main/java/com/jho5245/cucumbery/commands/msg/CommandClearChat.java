@@ -40,7 +40,7 @@ public class CommandClearChat implements CommandExecutor, TabCompleter
       {
         MessageUtil.broadcastPlayer("§c§l§e§a§r§c§h§a§t");
       }
-      MessageUtil.broadcastPlayer(Prefix.INFO_CLEARCHAT, ComponentUtil.createTranslate("%s이(가) " + easterEgg, sender));
+      MessageUtil.broadcastPlayer(Prefix.INFO_CLEARCHAT, ComponentUtil.translate("%s이(가) " + easterEgg, sender));
       if (!(sender instanceof Player))
       {
         MessageUtil.sendMessage(sender, Prefix.INFO_CLEARCHAT, "채팅창을 청소하였습니다.");

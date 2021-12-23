@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.text.Component;
@@ -88,11 +89,11 @@ public class SenderComponentUtil
       Component locationComponent = LocationComponent.locationComponent(location);
       if (object instanceof Player player && !player.getName().equals(ComponentUtil.serialize(player.displayName())))
       {
-        component = ComponentUtil.createTranslate("&7%s@%s [%s/%s]", component, locationComponent, player.getName(), typeComponent);
+        component = ComponentUtil.translate("&7%s@%s [%s/%s]", component, locationComponent, player.getName(), typeComponent);
       }
       else
       {
-        component = ComponentUtil.createTranslate("&7%s@%s [%s]", component, locationComponent, typeComponent);
+        component = ComponentUtil.translate("&7%s@%s [%s]", component, locationComponent, typeComponent);
       }
     }
     if (extraComponent != null)
@@ -172,15 +173,15 @@ public class SenderComponentUtil
           return senderComponent(entities.get(0), defaultColor);
         }
         boolean isPlayer = entities.stream().allMatch(Predicates.instanceOf(Player.class)::apply);
-        Component component = ComponentUtil.createTranslate(isPlayer ? "플레이어 %s명" : "개체 %s개", Component.text(list.size())).color(defaultColor);
-        Component hover = ComponentUtil.createTranslate(isPlayer ? "플레이어 %s명" : "개체 %s개", Component.text(list.size()));
+        Component component = ComponentUtil.translate(isPlayer ? "플레이어 %s명" : "개체 %s개", Component.text(list.size())).color(defaultColor);
+        Component hover = ComponentUtil.translate(isPlayer ? "플레이어 %s명" : "개체 %s개", Component.text(list.size()));
         for (int i = 0; i < entities.size(); i++)
         {
           hover = hover.append(Component.text("\n"));
           Entity entity = entities.get(i);
           if (i == 30)
           {
-            hover = hover.append(ComponentUtil.createTranslate("&7&o" + (isPlayer ? "외 %s명 더..." : "container.shulkerBox.more"), Component.text(entities.size() - 30)));
+            hover = hover.append(ComponentUtil.translate("&7&o" + (isPlayer ? "외 %s명 더..." : "container.shulkerBox.more"), Component.text(entities.size() - 30)));
             break;
           }
           hover = hover.append(senderComponent(entity, defaultColor, true));
@@ -189,34 +190,36 @@ public class SenderComponentUtil
         return component;
       }
     }
-    if (object instanceof ConsoleCommandSender)
+    if (object instanceof ConsoleCommandSender commandSender)
     {
-      Component component = ComponentUtil.createTranslate("&d서버");
-      Component hover = Component.empty().append(ComponentUtil.createTranslate("&d서버"));
+      Component component = ComponentUtil.translate("&d서버");
+      Component hover = Component.empty().append(ComponentUtil.translate("&d서버"));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("유형 : %s", Constant.THE_COLOR_HEX + Bukkit.getServer().getName()));
+      hover = hover.append(ComponentUtil.translate("유형 : %s", Constant.THE_COLOR_HEX + Bukkit.getName()));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("버전 : %s", Constant.THE_COLOR_HEX + Bukkit.getServer().getVersion()));
+      hover = hover.append(ComponentUtil.translate("버전 : %s", Constant.THE_COLOR_HEX + Bukkit.getVersion()));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("접속 인원 : %s", Constant.THE_COLOR_HEX + Bukkit.getServer().getOnlinePlayers().size()));
+      hover = hover.append(ComponentUtil.translate("접속 인원 : %s명", Constant.THE_COLOR_HEX + Bukkit.getOnlinePlayers().size()));
+      hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.translate("월드 수 : %s개", Constant.THE_COLOR_HEX + Bukkit.getWorlds().size()));
       return component.hoverEvent(hover).clickEvent(ClickEvent.runCommand("/version"));
     }
     else if (object instanceof BlockCommandSender blockCommandSender)
     {
       Block block = blockCommandSender.getBlock();
       Location location = block.getLocation();
-      String name = blockCommandSender.getName();
-      Component component = ComponentUtil.create(name);
+      Component name = blockCommandSender.name();
+      Component component = name.equals(Component.text("@")) ? ItemNameUtil.itemName(block.getType()) : name;
       if (component.color() == null)
       {
         component = component.color(NamedTextColor.LIGHT_PURPLE);
       }
 
-      Component hover = ComponentUtil.create(name);
+      Component hover = name.equals(Component.text("@")) ? ItemNameUtil.itemName(block.getType()).hoverEvent(null).clickEvent(null).color(null) : Component.empty().append(name.hoverEvent(null).clickEvent(null));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("유형 : %s", block.getType()));
+      hover = hover.append(ComponentUtil.translate("유형 : %s", block.getType()));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("좌표 : %s", location));
+      hover = hover.append(ComponentUtil.translate("좌표 : %s", location));
       int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
       return component.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand("/atp @s " + location.getWorld().getName() + " " + (x + 0.5) + " " + (y + 1) + " " + (z + 0.5) + " ~ 180"));
     }
@@ -234,8 +237,14 @@ public class SenderComponentUtil
         component = component.color(Constant.THE_COLOR);
       }
       Component hover = Component.empty().append(ComponentUtil.create(displayName));
+      String name = offlinePlayer.getName();
+      if (name != null)
+      {
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("ID : %s", Constant.THE_COLOR_HEX + name));
+      }
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
+      hover = hover.append(ComponentUtil.translate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
       hover = hover.append(Component.text("\n"));
       hover = hover.append(Component.translatable("chat.copy.click"));
       component = component.hoverEvent(HoverEvent.showText(hover));

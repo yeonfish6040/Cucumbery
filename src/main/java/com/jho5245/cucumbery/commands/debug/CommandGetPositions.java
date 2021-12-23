@@ -56,7 +56,7 @@ public class CommandGetPositions implements CommandExecutor, TabCompleter
         {
           continue;
         }
-        MessageUtil.info(sender, ComponentUtil.createTranslate("%s : %s", player, loc));
+        MessageUtil.info(sender, ComponentUtil.translate("%s : %s", player, loc));
       }
     }
     else

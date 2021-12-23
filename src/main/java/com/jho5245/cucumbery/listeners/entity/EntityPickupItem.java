@@ -42,6 +42,7 @@ public class EntityPickupItem implements Listener
       return;
     }
     LivingEntity entity = event.getEntity();
+    UUID uuid = entity.getUniqueId();
     if (entity instanceof Player player)
     {
       if (UserData.SPECTATOR_MODE.getBoolean(player))
@@ -50,21 +51,24 @@ public class EntityPickupItem implements Listener
         return;
       }
     }
-    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_PICKUP))
     {
-      List<Entity> entities = entity.getNearbyEntities(3, 3, 3);
-      for (Entity entity1 : entities)
+      event.setCancelled(true);
+      if (entity instanceof Player player)
       {
-        if (entity1 instanceof Item item)
+        if (!Variable.itemPickupAlertCooldown.contains(uuid))
         {
-          Method.updateItem(item);
+          Variable.itemPickupAlertCooldown.add(uuid);
+          MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 주울 수 없는 상태입니다.");
+          SoundPlay.playSound(player, Constant.ERROR_SOUND);
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown.remove(uuid), 100L);
         }
       }
-    }, 0L);
+      return;
+    }
 
     if (entity instanceof Player player)
     {
-      UUID uuid = player.getUniqueId();
       // 아이템 섭취 사용에서 사라지지 않을 경우 아이템 소실 방지를 위한 쿨타임
       if (Variable.playerItemConsumeCauseSwapCooldown.contains(uuid))
       {
@@ -72,13 +76,13 @@ public class EntityPickupItem implements Listener
         return;
       }
       // 아이템 줍기 모드가 비활성화 되어 있을때
-      if (UserData.ITEM_PICKUP_MODE.getString(player.getUniqueId()).equals("disabled"))
+      if (UserData.ITEM_PICKUP_MODE.getString(uuid).equals("disabled"))
       {
         event.setCancelled(true);
         return;
       }
       // 아이템 줍기 모드가 시프트 드롭일때 시프트 상태가 아니면
-      else if (UserData.ITEM_PICKUP_MODE.getString(player.getUniqueId()).equals("sneak"))
+      else if (UserData.ITEM_PICKUP_MODE.getString(uuid).equals("sneak"))
       {
         if (!player.isSneaking())
         {
@@ -129,12 +133,30 @@ public class EntityPickupItem implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemPickupAlertCooldown2.contains(uuid))
         {
           Variable.itemPickupAlertCooldown2.add(uuid);
-          MessageUtil.sendTitle(player, ComponentUtil.createTranslate("&c줍기 불가!"), ComponentUtil.createTranslate("주울 수 없는 아이템입니다. (%s)", itemStack), 5, 40, 15);
+          MessageUtil.sendTitle(player, ComponentUtil.translate("&c줍기 불가!"), ComponentUtil.translate("주울 수 없는 아이템입니다. (%s)", itemStack), 5, 40, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown2.remove(uuid), 100L);
         }
         return;
       }
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_PICKUP))
+      {
+        event.setCancelled(true);
+        return;
+      }
+
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+      {
+        List<Entity> entities = entity.getNearbyEntities(3, 3, 3);
+        for (Entity entity1 : entities)
+        {
+          if (entity1 instanceof Item item)
+          {
+            Method.updateItem(item);
+          }
+        }
+      }, 0L);
+
       if (Method.usingLoreFeature(player))
       {
         ItemLore.setItemLore(itemStack, event);
@@ -168,11 +190,11 @@ public class EntityPickupItem implements Listener
       Component itemStackComponent = ItemNameUtil.itemName(itemStack, TextColor.fromHexString("#00ff3c"));
       if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
       {
-        player.sendActionBar(ComponentUtil.createTranslate("#00ccff;%s을(를) 주웠습니다.", itemStackComponent));
+        player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) 주웠습니다.", itemStackComponent));
       }
       else
       {
-        player.sendActionBar(ComponentUtil.createTranslate("#00ccff;%s을(를) %s개 주웠습니다.", itemStackComponent, "#00ff3c;" + amount));
+        player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) %s개 주웠습니다.", itemStackComponent, "#00ff3c;" + amount));
       }
     }
   }

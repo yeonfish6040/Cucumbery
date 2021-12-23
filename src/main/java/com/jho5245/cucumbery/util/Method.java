@@ -253,6 +253,13 @@ public class Method extends SoundPlay
     }
   }
 
+  /**
+   * min 이상, max 이하의 랜덤한 정수를 반환합니다.
+   * <p>만약 min이 max보다 클 경우 min을 반환합니다.
+   * @param min 랜덤 숫자의 최솟값
+   * @param max 랜덤 숫자의 최댓값
+   * @return min 이상, max 이하의 랜덤한 정수
+   */
   public static int random(int min, int max)
   {
     if (min >= max)
@@ -1874,7 +1881,7 @@ public class Method extends SoundPlay
     int amount = item.getAmount() + mergeAmount;
     if (amount > 1)
     {
-      component = ComponentUtil.createTranslate("%s (%s)", component, Constant.THE_COLOR_HEX + amount);
+      component = ComponentUtil.translate("%s (%s)", component, Constant.THE_COLOR_HEX + amount);
     }
 
     itemEntity.customName(component);
@@ -2885,7 +2892,7 @@ public class Method extends SoundPlay
   {
     if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("minecraft.command.selector"))
     {
-      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
     }
     List<String> list = new ArrayList<>(tabCompleterEntity(sender, args[args.length - 1]));
     list.add("@e");
@@ -2898,22 +2905,22 @@ public class Method extends SoundPlay
         List<Entity> entities = Bukkit.selectEntities(sender, args[args.length - 1]);
         if (entities.isEmpty())
         {
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.notfound.entity")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.notfound.entity")));
         }
         if (!multiple && entities.size() > 1)
         {
           if (!sender.hasPermission("minecraft.command.selector"))
           {
-            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
           }
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.toomany")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.toomany")));
         }
       }
       catch (IllegalArgumentException e)
       {
         if (!sender.hasPermission("minecraft.command.selector"))
         {
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
         }
         return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
       }
@@ -2935,7 +2942,7 @@ public class Method extends SoundPlay
   {
     if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("minecraft.command.selector"))
     {
-      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
     }
     List<String> list = tabCompleterEntity(sender, args[args.length - 1], true);
     List<String> returnList = Method.tabCompleterList(args, list, key, true);
@@ -2947,30 +2954,30 @@ public class Method extends SoundPlay
         List<Entity> entities = Bukkit.selectEntities(sender, args[args.length - 1]);
         if (entities.isEmpty())
         {
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.notfound.player")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.notfound.player")));
         }
         if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)))
         {
           if (!sender.hasPermission("minecraft.command.selector"))
           {
-            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
           }
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.entities")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.player.entities")));
         }
         if (!multiple && entities.size() > 1)
         {
           if (!sender.hasPermission("minecraft.command.selector"))
           {
-            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
           }
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.toomany")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.player.toomany")));
         }
       }
       catch (IllegalArgumentException e)
       {
         if (!sender.hasPermission("minecraft.command.selector"))
         {
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
         }
         return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
       }
@@ -2992,7 +2999,7 @@ public class Method extends SoundPlay
   {
     if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("minecraft.command.selector"))
     {
-      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+      return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
     }
     List<String> list = new ArrayList<>(tabCompleterEntity(sender, args[args.length - 1], true));
     for (String nickName : Variable.nickNames)
@@ -3011,30 +3018,30 @@ public class Method extends SoundPlay
         List<Entity> entities = Bukkit.selectEntities(sender, args[args.length - 1]);
         if (entities.isEmpty())
         {
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.notfound.player")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.notfound.player")));
         }
         if (!entities.stream().allMatch(Predicates.instanceOf(Player.class)))
         {
           if (!sender.hasPermission("minecraft.command.selector"))
           {
-            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
           }
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.entities")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.player.entities")));
         }
         if (!multiple && entities.size() > 1)
         {
           if (!sender.hasPermission("minecraft.command.selector"))
           {
-            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+            return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
           }
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.player.toomany")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.player.toomany")));
         }
       }
       catch (IllegalArgumentException e)
       {
         if (!sender.hasPermission("minecraft.command.selector"))
         {
-          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.createTranslate("argument.entity.selector.not_allowed")));
+          return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
         }
         return Collections.singletonList(SelectorUtil.getErrorMessage(sender, args[args.length - 1], e));
       }
@@ -3294,7 +3301,7 @@ public class Method extends SoundPlay
         if (currentTime < nextAvailable)
         {
           playWarnSound(player);
-          MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN, ComponentUtil.createTranslate("아직 %s을(를) 우클릭 사용할 수 없습니다. (남은 시간 : %s)", item, "&e" + remainTime)));
+          MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN, ComponentUtil.translate("아직 %s을(를) 우클릭 사용할 수 없습니다. (남은 시간 : %s)", item, "&e" + remainTime)));
           return true;
         }
         if (configPlayerCooldown == null)

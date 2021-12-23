@@ -67,7 +67,7 @@ public class ItemInfo
     {
       if (!ItemStackUtil.itemExists(item))
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : &e" + "AIR" + "&r, 내구도 손상 : &e" + -1 + "&r, 개수 : &e" + 0);
+        MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : %s, 내구도 손상 : %s, 개수 : %s", "air", -1, 0);
         return;
       }
       int durability = ((Damageable) item.getItemMeta()).getDamage();
@@ -76,18 +76,18 @@ public class ItemInfo
       ItemMeta clone3Meta = itemStackForTranslationName.getItemMeta();
       clone3Meta.displayName(null);
       itemStackForTranslationName.setItemMeta(clone3Meta);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : &e" + type.toString() + "&r, 내구도 손상 : &e" + durability + "&r, 개수 : &e" + item.getAmount());
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 번역 이름 : &e", ItemNameUtil.itemName(itemStackForTranslationName));
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "미리 보기 : ", ComponentUtil.create("§3이곳에 마우스를 올리세요").hoverEvent(item.asHoverEvent()));
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : %s, 내구도 손상 : %s, 개수 : %s", type.toString().toLowerCase(), durability, item.getAmount());
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 번역 이름 : %s", ItemNameUtil.itemName(itemStackForTranslationName));
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "미리 보기 : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요").hoverEvent(item.asHoverEvent()));
       ItemLore.removeItemLore(itemStackWithoutTMI);
       MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "--------------------------------------------------------------");
 
       String serial = ItemSerializer.serialize(itemStackWithoutTMI);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT(Cucumbery 기본 아이템 설명 태그 제외) : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사")
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT(Cucumbery 기본 아이템 설명 태그 제외) : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사)")
               .hoverEvent(HoverEvent.showText(ComponentUtil.create2(serial.replace("\"", "&r\""))))
               .clickEvent(ClickEvent.copyToClipboard(serial)));
       serial = ItemSerializer.serialize(item);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사")
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사)")
               .hoverEvent(HoverEvent.showText(ComponentUtil.create2(serial.replace("\"", "&r\""))))
               .clickEvent(ClickEvent.copyToClipboard(serial)));
       MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "--------------------------------------------------------------");
@@ -118,7 +118,7 @@ public class ItemInfo
           }
           else
           {
-            component = ComponentUtil.createTranslate("%s %s", Component.translatable(enchantment.translationKey()), level);
+            component = ComponentUtil.translate("%s %s", Component.translatable(enchantment.translationKey()), level);
           }
           component = component.color(isCursed ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
           message = message.append(component).append(Component.text(" "));
@@ -149,7 +149,7 @@ public class ItemInfo
             }
             else
             {
-              component = ComponentUtil.createTranslate("%s %s", Component.translatable(enchantment.translationKey()), level);
+              component = ComponentUtil.translate("%s %s", Component.translatable(enchantment.translationKey()), level);
             }
             component = component.color(isCursed ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
             message = message.append(component).append(Component.text(" "));

@@ -101,15 +101,15 @@ public class EntityComponentUtil
       }
       if (entity instanceof MushroomCow mushroomCow && mushroomCow.getVariant() == MushroomCow.Variant.BROWN)
       {
-        nameComponent = ComponentUtil.createTranslate("%s %s", Component.translatable("color.minecraft.brown"), nameComponent);
+        nameComponent = ComponentUtil.translate("%s %s", Component.translatable("color.minecraft.brown"), nameComponent);
       }
       if (entity instanceof Villager villager)
       {
-        nameComponent = ComponentUtil.createTranslate(entity.getType().translationKey() + "." + villager.getProfession().toString().toLowerCase());
+        nameComponent = ComponentUtil.translate(entity.getType().translationKey() + "." + villager.getProfession().toString().toLowerCase());
       }
       if (entity instanceof Ageable ageable && !ageable.isAdult())
       {
-        nameComponent = ComponentUtil.createTranslate("%s %s", "아기", nameComponent);
+        nameComponent = ComponentUtil.translate("%s %s", "아기", nameComponent);
       }
     }
     UUID uuid = entity.getUniqueId();
@@ -121,30 +121,30 @@ public class EntityComponentUtil
       GameMode gameMode = player.getGameMode();
       hover = hover
               .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("ID : %s", Constant.THE_COLOR_HEX + name));
+              .append(ComponentUtil.translate("ID : %s", Constant.THE_COLOR_HEX + name));
       if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.uuid"))
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
+                .append(ComponentUtil.translate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
       }
       if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.player-join-count"))
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("접속 횟수 : %s회", Constant.THE_COLOR_HEX + player.getStatistic(Statistic.LEAVE_GAME) + 1));
+                .append(ComponentUtil.translate("접속 횟수 : %s회", Constant.THE_COLOR_HEX + player.getStatistic(Statistic.LEAVE_GAME) + 1));
       }
       if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.player-play-time"))
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("플레이 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 50L, false)));
+                .append(ComponentUtil.translate("플레이 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 50L, false)));
       }
       if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.player-game-mode"))
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("게임 모드 : %s", ComponentUtil.createTranslate(Constant.THE_COLOR_HEX + "gameMode." + gameMode.toString().toLowerCase())));
+                .append(ComponentUtil.translate("게임 모드 : %s", ComponentUtil.translate(Constant.THE_COLOR_HEX + "gameMode." + gameMode.toString().toLowerCase())));
       }
       click = "/socialmenu " + name;
     }
@@ -162,37 +162,37 @@ public class EntityComponentUtil
       Component typeComponent = Component.translatable(key);
       if (entity instanceof MushroomCow mushroomCow && mushroomCow.getVariant() == MushroomCow.Variant.BROWN)
       {
-        typeComponent = ComponentUtil.createTranslate("%s %s", Component.translatable("color.minecraft.brown"), typeComponent);
+        typeComponent = ComponentUtil.translate("%s %s", Component.translatable("color.minecraft.brown"), typeComponent);
       }
       if (entity instanceof Ageable ageable && !ageable.isAdult())
       {
-        typeComponent = ComponentUtil.createTranslate("%s %s", "아기", typeComponent);
+        typeComponent = ComponentUtil.translate("%s %s", "아기", typeComponent);
       }
 
       if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.entity-type"))
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("유형 : %s", typeComponent.color(Constant.THE_COLOR)));
+                .append(ComponentUtil.translate("유형 : %s", typeComponent.color(Constant.THE_COLOR)));
       }
       if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.uuid"))
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
+                .append(ComponentUtil.translate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
       }
     }
     if (entity instanceof Rabbit rabbit && rabbit.getRabbitType() != Type.THE_KILLER_BUNNY)
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("종 : %s", Constant.THE_COLOR_HEX + rabbit.getRabbitType().toString().toLowerCase().replace("_", " ")));
+      hover = hover.append(ComponentUtil.translate("종 : %s", Constant.THE_COLOR_HEX + rabbit.getRabbitType().toString().toLowerCase().replace("_", " ")));
     }
     if (entity instanceof Parrot parrot)
     {
       Variant variant = parrot.getVariant();
       Color color = DyeColor.valueOf(variant.toString()).getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("색상 : %s", Component.translatable("color.minecraft." + variant.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+      hover = hover.append(ComponentUtil.translate("색상 : %s", Component.translatable("color.minecraft." + variant.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
     }
     if (entity instanceof Axolotl axolotl)
     {
@@ -200,32 +200,32 @@ public class EntityComponentUtil
       String variantString = variant.toString().replace("LUCY", "PINK").replace("WILD", "BROWN").replace("GOLD", "YELLOW");
       Color color = DyeColor.valueOf(variantString).getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("색상 : %s", Component.translatable("color.minecraft." + variantString.toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+      hover = hover.append(ComponentUtil.translate("색상 : %s", Component.translatable("color.minecraft." + variantString.toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
     }
     if (entity instanceof Wolf wolf)
     {
       DyeColor collarColor = wolf.getCollarColor();
       Color color = collarColor.getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("목줄 색상 : %s", Component.translatable("color.minecraft." + collarColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+      hover = hover.append(ComponentUtil.translate("목줄 색상 : %s", Component.translatable("color.minecraft." + collarColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
     }
     if (entity instanceof Cat cat)
     {
       Cat.Type type = cat.getCatType();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("종 : %s", Constant.THE_COLOR_HEX + type.toString().toLowerCase().replace("_", " ")));
+      hover = hover.append(ComponentUtil.translate("종 : %s", Constant.THE_COLOR_HEX + type.toString().toLowerCase().replace("_", " ")));
       DyeColor collarColor = cat.getCollarColor();
       Color color = collarColor.getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("목줄 색상 : %s", Component.translatable("color.minecraft." + collarColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+      hover = hover.append(ComponentUtil.translate("목줄 색상 : %s", Component.translatable("color.minecraft." + collarColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
     }
     if (entity instanceof Panda panda)
     {
       Gene mainGene = panda.getMainGene(), hiddenGene = panda.getHiddenGene();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("주전자 : %s", Constant.THE_COLOR_HEX + mainGene.toString().toLowerCase()));
+      hover = hover.append(ComponentUtil.translate("주전자 : %s", Constant.THE_COLOR_HEX + mainGene.toString().toLowerCase()));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("부전자 : %s", Constant.THE_COLOR_HEX + hiddenGene.toString().toLowerCase()));
+      hover = hover.append(ComponentUtil.translate("부전자 : %s", Constant.THE_COLOR_HEX + hiddenGene.toString().toLowerCase()));
     }
     if (entity instanceof Snowman snowman && snowman.isDerp())
     {
@@ -239,7 +239,7 @@ public class EntityComponentUtil
       {
         Color color = dyeColor.getColor();
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("색상 : %s", Component.translatable("color.minecraft." + dyeColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+        hover = hover.append(ComponentUtil.translate("색상 : %s", Component.translatable("color.minecraft." + dyeColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
       }
     }
     if (entity instanceof Villager villager)
@@ -249,27 +249,27 @@ public class EntityComponentUtil
       if (profession != Profession.NONE)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("직업 : %s", ComponentUtil.createTranslate(key)));
+        hover = hover.append(ComponentUtil.translate("직업 : %s", ComponentUtil.translate(key)));
       }
       int villagerExperience = villager.getVillagerExperience();
       if (villagerExperience > 0)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("레벨 : %s (%s)",
+        hover = hover.append(ComponentUtil.translate("레벨 : %s (%s)",
                 Component.translatable("merchant.level." + villager.getVillagerLevel()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + villagerExperience));
       }
       Villager.Type villagerType = villager.getVillagerType();
       Biome biome = Biome.valueOf(villagerType.toString().replace("SNOW", "SNOWY_TUNDRA"));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("기후 : %s", Component.translatable("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
+      hover = hover.append(ComponentUtil.translate("기후 : %s", Component.translatable("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
       Map<UUID, Reputation> reputationMap = villager.getReputations();
       Set<UUID> uuidSet = reputationMap.keySet();
       if (!uuidSet.isEmpty())
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR));
+        hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("%s의 평판", nameComponent));
+        hover = hover.append(ComponentUtil.translate("%s의 평판", nameComponent));
         for (UUID targetUUID : uuidSet)
         {
           Object target = Bukkit.getEntity(targetUUID);
@@ -285,7 +285,7 @@ public class EntityComponentUtil
           sum -= reputation.getReputation(ReputationType.MAJOR_NEGATIVE);
           sum -= reputation.getReputation(ReputationType.MINOR_NEGATIVE);
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("%s : %s", target, Constant.THE_COLOR_HEX + sum));
+          hover = hover.append(ComponentUtil.translate("%s : %s", target, Constant.THE_COLOR_HEX + sum));
         }
       }
     }
@@ -301,7 +301,7 @@ public class EntityComponentUtil
         ItemStack item = entityEquipment.getItemInMainHand();
         if (ItemStackUtil.itemExists(item))
         {
-          List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.createTranslate("&e[%s이(가) 물고 있는 아이템]", nameComponent), true);
+          List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.translate("&e[%s이(가) 물고 있는 아이템]", nameComponent), true);
           for (Component lor : lore)
           {
             hover = hover.append(Component.text("\n"));
@@ -320,7 +320,7 @@ public class EntityComponentUtil
         blockDataMeta.setBlockData(blockData);
         item.setItemMeta(blockDataMeta);
         ItemLore.setItemLore(item);
-        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.createTranslate("&e[들고 있는 아이템]"), true);
+        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.translate("&e[들고 있는 아이템]"), true);
         for (Component lor : lore)
         {
           hover = hover.append(Component.text("\n"));
@@ -334,24 +334,24 @@ public class EntityComponentUtil
       if (targetBlock != null)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("목표 습격 지점 : %s", targetBlock.getLocation()));
+        hover = hover.append(ComponentUtil.translate("목표 습격 지점 : %s", targetBlock.getLocation()));
       }
     }
     if (entity instanceof PufferFish pufferFish)
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("크기 : %s", Constant.THE_COLOR_HEX + pufferFish.getPuffState()));
+      hover = hover.append(ComponentUtil.translate("크기 : %s", Constant.THE_COLOR_HEX + pufferFish.getPuffState()));
     }
     if (entity instanceof TropicalFish tropicalFish)
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("종 : %s",
+      hover = hover.append(ComponentUtil.translate("종 : %s",
               Component.translatable(TropicalFishLore.getTropicalFishKey(tropicalFish.getBodyColor(), tropicalFish.getPatternColor(), tropicalFish.getPattern())).color(Constant.THE_COLOR)));
     }
     if (entity instanceof Phantom phantom)
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("크기 : %s", Constant.THE_COLOR_HEX + phantom.getSize()));
+      hover = hover.append(ComponentUtil.translate("크기 : %s", Constant.THE_COLOR_HEX + phantom.getSize()));
       UUID spawningEntityUUID = phantom.getSpawningEntity();
       if (spawningEntityUUID != null)
       {
@@ -359,14 +359,14 @@ public class EntityComponentUtil
         if (spawningEntity != null)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("잠 안자서 얘 소환한 놈 : %s", spawningEntity));
+          hover = hover.append(ComponentUtil.translate("잠 안자서 얘 소환한 놈 : %s", spawningEntity));
         }
       }
     }
     if (entity instanceof Goat goat && goat.isScreaming())
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("&e빠아아아아아악"));
+      hover = hover.append(ComponentUtil.translate("&e빠아아아아아악"));
     }
     if (entity instanceof AbstractHorse abstractHorse)
     {
@@ -374,37 +374,37 @@ public class EntityComponentUtil
       if (movementSpeedInstance != null)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("이동 속도 : 약 %sm/s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(movementSpeedInstance.getValue() * 43)));
+        hover = hover.append(ComponentUtil.translate("이동 속도 : 약 %sm/s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(movementSpeedInstance.getValue() * 43)));
       }
       double jumpStrength = abstractHorse.getJumpStrength();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("점프 강도 : %sm", Constant.THE_COLOR_HEX + Constant.Sosu2.format(jumpStrength * 2)));
+      hover = hover.append(ComponentUtil.translate("점프 강도 : %sm", Constant.THE_COLOR_HEX + Constant.Sosu2.format(jumpStrength * 2)));
     }
     if (entity instanceof Horse horse)
     {
       Horse.Color horseColor = horse.getColor();
       Style horseStyle = horse.getStyle();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("색상 : %s", Constant.THE_COLOR_HEX + horseColor.toString().toLowerCase().replace("_", " ")));
+      hover = hover.append(ComponentUtil.translate("색상 : %s", Constant.THE_COLOR_HEX + horseColor.toString().toLowerCase().replace("_", " ")));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("종 : %s", Constant.THE_COLOR_HEX + horseStyle.toString().toLowerCase().replace("_", " ")));
+      hover = hover.append(ComponentUtil.translate("종 : %s", Constant.THE_COLOR_HEX + horseStyle.toString().toLowerCase().replace("_", " ")));
     }
     if (entity instanceof Llama llama)
     {
       Llama.Color llamaColor = llama.getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("색상 : %s", Constant.THE_COLOR_HEX + llamaColor.toString().toLowerCase().replace("_", " ")));
+      hover = hover.append(ComponentUtil.translate("색상 : %s", Constant.THE_COLOR_HEX + llamaColor.toString().toLowerCase().replace("_", " ")));
     }
     if (entity instanceof Slime slime)
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("크기 : %s", Constant.THE_COLOR_HEX + slime.getSize()));
+      hover = hover.append(ComponentUtil.translate("크기 : %s", Constant.THE_COLOR_HEX + slime.getSize()));
     }
     if (entity instanceof Turtle turtle)
     {
       Location home = turtle.getHome();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("집 좌표 : %s", home));
+      hover = hover.append(ComponentUtil.translate("집 좌표 : %s", home));
     }
     if (entity instanceof Vex vex)
     {
@@ -412,7 +412,7 @@ public class EntityComponentUtil
       if (mob != null)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("소환수 : %s", mob));
+        hover = hover.append(ComponentUtil.translate("소환수 : %s", mob));
       }
     }
     if (entity instanceof Witch witch)
@@ -420,7 +420,7 @@ public class EntityComponentUtil
       ItemStack drinkingPotion = witch.getDrinkingPotion();
       if (ItemStackUtil.itemExists(drinkingPotion))
       {
-        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(drinkingPotion, ComponentUtil.createTranslate("&e[%s(이)가 마시고 있는 물약]", nameComponent), true);
+        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(drinkingPotion, ComponentUtil.translate("&e[%s(이)가 마시고 있는 물약]", nameComponent), true);
         for (Component lor : lore)
         {
           hover = hover.append(Component.text("\n"));
@@ -435,18 +435,18 @@ public class EntityComponentUtil
       if (profession != Profession.NONE)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("직업 : %s", ComponentUtil.createTranslate(key)));
+        hover = hover.append(ComponentUtil.translate("직업 : %s", ComponentUtil.translate(key)));
       }
       Villager.Type villagerType = zombieVillager.getVillagerType();
       Biome biome = Biome.valueOf(villagerType.toString().replace("SNOW", "SNOWY_TUNDRA"));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("기후 : %s", Component.translatable("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
+      hover = hover.append(ComponentUtil.translate("기후 : %s", Component.translatable("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
 
       OfflinePlayer offlinePlayer = zombieVillager.getConversionPlayer();
       if (offlinePlayer != null)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("치료 지원자 : %s", offlinePlayer));
+        hover = hover.append(ComponentUtil.translate("치료 지원자 : %s", offlinePlayer));
       }
     }
     if (entity instanceof Tameable tameable && tameable.isTamed())
@@ -455,7 +455,7 @@ public class EntityComponentUtil
       if (animalTamer != null)
       {
         hover = hover.append(Component.text("\n"));
-        Component component = ComponentUtil.createTranslate("주인 : %s", animalTamer);
+        Component component = ComponentUtil.translate("주인 : %s", animalTamer);
         hover = hover.append(component);
       }
     }
@@ -468,7 +468,7 @@ public class EntityComponentUtil
         if (breedCauseEntity != null)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("사육사 : %s", breedCauseEntity));
+          hover = hover.append(ComponentUtil.translate("사육사 : %s", breedCauseEntity));
         }
       }
     }
@@ -478,18 +478,18 @@ public class EntityComponentUtil
       if (!command.isEmpty())
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("명령어 : %s", Component.text(command).color(Constant.THE_COLOR)));
+        hover = hover.append(ComponentUtil.translate("명령어 : %s", Component.text(command).color(Constant.THE_COLOR)));
       }
     }
     if (entity instanceof PoweredMinecart poweredMinecart)
     {
       int fuel = poweredMinecart.getFuel();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("연료 : %s", Component.text(fuel).color(Constant.THE_COLOR)));
+      hover = hover.append(ComponentUtil.translate("연료 : %s", Component.text(fuel).color(Constant.THE_COLOR)));
     }
     if (entity instanceof InventoryHolder inventoryHolder && !(inventoryHolder instanceof LivingEntity))
     {
-      Component customNameLore = ComponentUtil.createTranslate("[%s의 내용물]", nameComponent);
+      Component customNameLore = ComponentUtil.translate("[%s의 내용물]", nameComponent);
       Inventory inventory = inventoryHolder.getInventory();
       if (!Method.inventoryEmpty(inventory))
       {
@@ -520,7 +520,7 @@ public class EntityComponentUtil
             if (i == 9)
             {
               hover = hover.append(Component.text("\n"));
-              hover = hover.append(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", itemStackList.size() - i));
+              hover = hover.append(ComponentUtil.translate("&7&ocontainer.shulkerBox.more", itemStackList.size() - i));
               break;
             }
             hover = hover.append(Component.text("\n"));
@@ -534,11 +534,11 @@ public class EntityComponentUtil
     {
       ProjectileSource projectileSource = projectile.getShooter();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("격수 : %s", projectileSource != null ? projectileSource : ComponentUtil.createTranslate("&c없음")));
+      hover = hover.append(ComponentUtil.translate("격수 : %s", projectileSource != null ? projectileSource : ComponentUtil.translate("&c없음")));
       if (projectile instanceof ThrownPotion thrownPotion)
       {
         ItemStack item = thrownPotion.getItem();
-        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.createTranslate("&e[아이템]"), true);
+        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.translate("&e[아이템]"), true);
         for (Component lor : lore)
         {
           hover = hover.append(Component.text("\n"));
@@ -548,7 +548,7 @@ public class EntityComponentUtil
       if (projectile instanceof ThrowableProjectile throwableProjectile)
       {
         ItemStack item = throwableProjectile.getItem();
-        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.createTranslate("&e[아이템]"), true);
+        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.translate("&e[아이템]"), true);
         for (Component lor : lore)
         {
           hover = hover.append(Component.text("\n"));
@@ -558,7 +558,7 @@ public class EntityComponentUtil
       if (projectile instanceof AbstractArrow abstractArrow && !(abstractArrow instanceof Trident))
       {
         ItemStack itemStack = abstractArrow.getItemStack();
-        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(itemStack, ComponentUtil.createTranslate("&e[아이템]"), true);
+        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(itemStack, ComponentUtil.translate("&e[아이템]"), true);
         for (Component lor : lore)
         {
           hover = hover.append(Component.text("\n"));
@@ -571,7 +571,7 @@ public class EntityComponentUtil
         if (hookedEntity != null)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("걸린 개체 : %s", hookedEntity));
+          hover = hover.append(ComponentUtil.translate("걸린 개체 : %s", hookedEntity));
         }
       }
       if (projectile instanceof ShulkerBullet shulkerBullet)
@@ -580,7 +580,7 @@ public class EntityComponentUtil
         if (target != null)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("목표 개체 : %s", target));
+          hover = hover.append(ComponentUtil.translate("목표 개체 : %s", target));
         }
       }
       if (projectile instanceof Firework firework)
@@ -592,12 +592,12 @@ public class EntityComponentUtil
           if (spawningEntity != null)
           {
             hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.createTranslate("폭죽을 쏜 개체 : %s" + spawningEntity));
+            hover = hover.append(ComponentUtil.translate("폭죽을 쏜 개체 : %s" + spawningEntity));
           }
         }
         ItemStack item = new ItemStack(Material.FIREWORK_ROCKET);
         item.setItemMeta(firework.getFireworkMeta());
-        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.createTranslate("&e[아이템]"), true);
+        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.translate("&e[아이템]"), true);
         for (Component lor : lore)
         {
           hover = hover.append(Component.text("\n"));
@@ -609,9 +609,9 @@ public class EntityComponentUtil
     {
       float yield = explosive.getYield();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("폭발 강도 : %s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(yield)));
+      hover = hover.append(ComponentUtil.translate("폭발 강도 : %s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(yield)));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("불 번짐 여부 : %s" + Constant.THE_COLOR_HEX + explosive.isIncendiary()));
+      hover = hover.append(ComponentUtil.translate("불 번짐 여부 : %s" + Constant.THE_COLOR_HEX + explosive.isIncendiary()));
     }
     if (entity instanceof TNTPrimed tntPrimed)
     {
@@ -619,21 +619,21 @@ public class EntityComponentUtil
       if (fuseTicks > 0)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("폭발 대기 시간 : %s", Method.timeFormatMilli(fuseTicks * 50)));
+        hover = hover.append(ComponentUtil.translate("폭발 대기 시간 : %s", Method.timeFormatMilli(fuseTicks * 50)));
       }
       Entity source = tntPrimed.getSource();
       if (source != null)
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("불 붙인 개체 : %s", source));
+        hover = hover.append(ComponentUtil.translate("불 붙인 개체 : %s", source));
       }
     }
     if (entity instanceof EnderSignal enderSignal)
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("목표 지점 : %s", enderSignal.getTargetLocation()));
+      hover = hover.append(ComponentUtil.translate("목표 지점 : %s", enderSignal.getTargetLocation()));
       ItemStack item = enderSignal.getItem();
-      List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.createTranslate("&e[아이템]"), true);
+      List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.translate("&e[아이템]"), true);
       for (Component lor : lore)
       {
         hover = hover.append(Component.text("\n"));
@@ -643,12 +643,12 @@ public class EntityComponentUtil
     if (entity instanceof Painting painting)
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("종류 : %s", Constant.THE_COLOR_HEX + painting.getArt().toString().toLowerCase().replace("_", " ")));
+      hover = hover.append(ComponentUtil.translate("종류 : %s", Constant.THE_COLOR_HEX + painting.getArt().toString().toLowerCase().replace("_", " ")));
     }
     if (entity instanceof Item item)
     {
       ItemStack itemStack = item.getItemStack();
-      List<Component> lore = ItemStackUtil.getItemInfoAsComponents(itemStack, ComponentUtil.createTranslate("&e[아이템]"), true);
+      List<Component> lore = ItemStackUtil.getItemInfoAsComponents(itemStack, ComponentUtil.translate("&e[아이템]"), true);
       for (Component lor : lore)
       {
         hover = hover.append(Component.text("\n"));
@@ -660,7 +660,7 @@ public class EntityComponentUtil
       ItemStack item = itemFrame.getItem();
       if (ItemStackUtil.itemExists(item))
       {
-        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.createTranslate("&e[아이템]"), true);
+        List<Component> lore = ItemStackUtil.getItemInfoAsComponents(item, ComponentUtil.translate("&e[아이템]"), true);
         for (Component lor : lore)
         {
           hover = hover.append(Component.text("\n"));
@@ -670,12 +670,12 @@ public class EntityComponentUtil
       if (itemFrame.isFixed())
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("&a&o고정됨"));
+        hover = hover.append(ComponentUtil.translate("&a&o고정됨"));
       }
       if (!itemFrame.isVisible())
       {
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.createTranslate("&7&o투명함"));
+        hover = hover.append(ComponentUtil.translate("&7&o투명함"));
       }
     }
     if (entity instanceof FallingBlock fallingBlock)
@@ -689,7 +689,7 @@ public class EntityComponentUtil
         blockDataMeta.setBlockData(blockData);
         itemStack.setItemMeta(blockDataMeta);
       }
-      List<Component> lore = ItemStackUtil.getItemInfoAsComponents(itemStack, ComponentUtil.createTranslate("&e[아이템]"), true);
+      List<Component> lore = ItemStackUtil.getItemInfoAsComponents(itemStack, ComponentUtil.translate("&e[아이템]"), true);
       for (Component lor : lore)
       {
         hover = hover.append(Component.text("\n"));
@@ -700,14 +700,14 @@ public class EntityComponentUtil
     {
       int experience = experienceOrb.getExperience();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("경험치 : %s", Constant.THE_COLOR_HEX + experience));
+      hover = hover.append(ComponentUtil.translate("경험치 : %s", Constant.THE_COLOR_HEX + experience));
     }
 
     if (Cucumbery.config.getBoolean("use-hover-event-for-entities.unfair-play-mode.enabled") && Cucumbery.config.getBoolean("use-hover-event-for-entities.unfair-play-mode.location"))
     {
       Location location = entity.getLocation();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.createTranslate("좌표 : %s", location));
+      hover = hover.append(ComponentUtil.translate("좌표 : %s", location));
     }
     if (Cucumbery.config.getBoolean("use-hover-event-for-entities.unfair-play-mode.enabled") && Cucumbery.config.getBoolean("use-hover-event-for-entities.unfair-play-mode.hp"))
     {
@@ -722,7 +722,7 @@ public class EntityComponentUtil
           String healthDisplay = color + Constant.Sosu2.format(health);
           String maxHealthDisplay = "g255;" + Constant.Sosu2.format(maxHealth);
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.createTranslate("HP : %s", ComponentUtil.createTranslate("&7%s / %s", healthDisplay, maxHealthDisplay)));
+          hover = hover.append(ComponentUtil.translate("HP : %s", ComponentUtil.translate("&7%s / %s", healthDisplay, maxHealthDisplay)));
         }
       }
     }
@@ -730,18 +730,18 @@ public class EntityComponentUtil
     {
       hover = hover
               .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("현재 시각 : %s", Constant.THE_COLOR_HEX + Method.getCurrentTime(Calendar.getInstance())));
+              .append(ComponentUtil.translate("현재 시각 : %s", Constant.THE_COLOR_HEX + Method.getCurrentTime(Calendar.getInstance())));
       if (player.isOp() || player.hasPermission("asdf"))
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.createTranslate("#52ee52;관리자입니다."));
+                .append(ComponentUtil.translate("#52ee52;관리자입니다."));
       }
       hover = hover
               .append(Component.text("\n"))
-              .append(ComponentUtil.create(Constant.ITEM_LORE_SEPARATOR))
+              .append(ComponentUtil.create(Constant.SEPARATOR))
               .append(Component.text("\n"))
-              .append(ComponentUtil.createTranslate("클릭하여 소셜 메뉴 열기 : %s", "&7/socialmenu " + player.getName()));
+              .append(ComponentUtil.translate("클릭하여 소셜 메뉴 열기 : %s", "&7/socialmenu " + player.getName()));
       nameComponent = nameComponent.clickEvent(ClickEvent.runCommand(click));
     }
     else

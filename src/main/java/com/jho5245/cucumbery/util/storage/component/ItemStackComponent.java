@@ -67,6 +67,6 @@ public class ItemStackComponent
       return itemName;
     }
 
-    return ComponentUtil.createTranslate("&o&q%s %s", itemName, ComponentUtil.createTranslate("%s개", Component.text(amount)).color(defaultColor)).color(itemName.color()).hoverEvent(itemStack.asHoverEvent());
+    return ComponentUtil.translate("&o&q%s %s", itemName, ComponentUtil.translate("%s개", Component.text(amount)).color(defaultColor)).color(itemName.color()).hoverEvent(itemStack.asHoverEvent());
   }
 }

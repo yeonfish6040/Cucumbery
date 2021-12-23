@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.listeners.block;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -109,6 +111,11 @@ public class BlockPlace implements Listener
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockPlaceAlertCooldown2.remove(uuid), 100L);
       }
+      return;
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_CREATIVITY) || CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_CREATIVITY_PLACE))
+    {
+      event.setCancelled(true);
       return;
     }
     NBTCompound itemTag = NBTAPI.getMainCompound(item);

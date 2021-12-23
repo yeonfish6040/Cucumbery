@@ -639,7 +639,7 @@ public class ItemStackUtil
     {
       if (type == Material.AIR)
       {
-        itemMeta.displayName(ComponentUtil.createTranslate("벽").color(Constant.THE_COLOR).decoration(TextDecoration.ITALIC, State.FALSE));
+        itemMeta.displayName(ComponentUtil.translate("벽").color(Constant.THE_COLOR).decoration(TextDecoration.ITALIC, State.FALSE));
       }
       else
       {
@@ -676,9 +676,9 @@ public class ItemStackUtil
     }
     if (!lore.isEmpty())
     {
-      lore.add(ComponentUtil.create2(Constant.ITEM_LORE_SEPARATOR));
+      lore.add(ComponentUtil.create2(Constant.SEPARATOR));
     }
-    lore.add(ComponentUtil.createTranslate("&f좌표 : %s", LocationComponent.locationComponent(location)));
+    lore.add(ComponentUtil.translate("&f좌표 : %s", LocationComponent.locationComponent(location)));
     itemMeta.lore(lore);
     itemStack.setItemMeta(itemMeta);
     return itemStack;
@@ -759,7 +759,7 @@ public class ItemStackUtil
     List<Component> components = new ArrayList<>();
     if (separator)
     {
-      components.add(ComponentUtil.create2(Constant.ITEM_LORE_SEPARATOR));
+      components.add(ComponentUtil.create2(Constant.SEPARATOR));
     }
     if (tag != null)
     {
@@ -775,7 +775,7 @@ public class ItemStackUtil
         {
           if (i == 50)
           {
-            components.add(ComponentUtil.createTranslate("&7&ocontainer.shulkerBox.more", lore.size() - i));
+            components.add(ComponentUtil.translate("&7&ocontainer.shulkerBox.more", lore.size() - i));
             break;
           }
           components.add(lore.get(i));
@@ -791,7 +791,7 @@ public class ItemStackUtil
     }
     if (separator)
     {
-      components.add(ComponentUtil.create2(Constant.ITEM_LORE_SEPARATOR));
+      components.add(ComponentUtil.create2(Constant.SEPARATOR));
     }
     return components;
   }
@@ -856,7 +856,7 @@ public class ItemStackUtil
   {
     ItemStack itemStack = new ItemStack(Material.PAPER);
     ItemMeta itemMeta = itemStack.getItemMeta();
-    Component display = ComponentUtil.createTranslate("&aPredicate: %s", predicate);
+    Component display = ComponentUtil.translate("&aPredicate: %s", predicate);
     try
     {
       NBTContainer nbtContainer = new NBTContainer(predicate);
@@ -865,53 +865,53 @@ public class ItemStackUtil
       boolean containerEmpty = vanillaTags.getBoolean("container_empty");
       if (vanillaTags.getBoolean("planks"))
       {
-        display = ComponentUtil.createTranslate("아무 종류의 나무 판자");
+        display = ComponentUtil.translate("아무 종류의 나무 판자");
         itemStack.setType(getAnimatedMaterial(Constant.PLANKS));
       }
       else if (vanillaTags.getBoolean("wool"))
       {
-        display = ComponentUtil.createTranslate("아무 종류의 양털");
+        display = ComponentUtil.translate("아무 종류의 양털");
         itemStack.setType(getAnimatedMaterial(Constant.WOOL));
       }
       else if (vanillaTags.getBoolean("flowers"))
       {
-        display = ComponentUtil.createTranslate("아무 종류의 꽃");
+        display = ComponentUtil.translate("아무 종류의 꽃");
         itemStack.setType(getAnimatedMaterial(Constant.FLOWERS));
       }
       else if (vanillaTags.getBoolean("small_flowers"))
       {
-        display = ComponentUtil.createTranslate("아무 종류의 작은 크기의 꽃");
+        display = ComponentUtil.translate("아무 종류의 작은 크기의 꽃");
         itemStack.setType(getAnimatedMaterial(Constant.SMALL_FLOWERS));
       }
       else if (vanillaTags.getBoolean("tall_flowers"))
       {
-        display = ComponentUtil.createTranslate("아무 종류의 큰 크기의 꽃");
+        display = ComponentUtil.translate("아무 종류의 큰 크기의 꽃");
         itemStack.setType(getAnimatedMaterial(Constant.TALL_FLOWERS));
       }
       else if (vanillaTags.getBoolean("wither_immune"))
       {
-        display = ComponentUtil.createTranslate("위더가 부술 수 없는 아무 종류의 블록");
+        display = ComponentUtil.translate("위더가 부술 수 없는 아무 종류의 블록");
         itemStack.setType(getAnimatedMaterial(Constant.WITHER_IMMUNE));
       }
       else if (vanillaTags.getBoolean("beacon_base_blocks"))
       {
-        display = ComponentUtil.createTranslate("신호기를 작동시킬 수 있는 아무 블록");
+        display = ComponentUtil.translate("신호기를 작동시킬 수 있는 아무 블록");
         itemStack.setType(getAnimatedMaterial(Constant.BEACON_BASE_BLOCKS));
       }
       else if (vanillaTags.getBoolean("dyes"))
       {
-        display = ComponentUtil.createTranslate("아무 염료");
+        display = ComponentUtil.translate("아무 염료");
         itemStack.setType(getAnimatedMaterial(Constant.DYES));
       }
       else if (vanillaTags.getBoolean("shulker_boxes"))
       {
-        display = ComponentUtil.createTranslate(containerEmpty ? "아이템이 들어있지 않은 아무 셜커 상자" : "아무 셜커 상자");
+        display = ComponentUtil.translate(containerEmpty ? "아이템이 들어있지 않은 아무 셜커 상자" : "아무 셜커 상자");
         itemStack.setType(getAnimatedMaterial(Constant.SHULKER_BOXES));
       }
     }
     catch (Exception e)
     {
-      display = ComponentUtil.createTranslate("&cInvalid Predicate!: %s", predicate);
+      display = ComponentUtil.translate("&cInvalid Predicate!: %s", predicate);
     }
     itemMeta.displayName(display);
     itemStack.setItemMeta(itemMeta);
