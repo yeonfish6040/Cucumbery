@@ -790,56 +790,69 @@ public class ItemLore2
 
     NBTCompound foodTag = NBTAPI.getCompound(itemTag, CucumberyTag.FOOD_KEY);
 
+    List<Component> foodLore = new ArrayList<>();
+
     if (!hideStatusEffects && (!NBTAPI.isRestricted(item, RestrictionType.NO_CONSUME) || NBTAPI.getRestrictionOverridePermission(item, RestrictionType.NO_CONSUME) != null)
             && (foodTag == null || !foodTag.hasKey(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY) || !foodTag.getBoolean(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY)))
     {
       switch (type)
       {
         case GOLDEN_APPLE:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(Arrays.asList(
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.REGENERATION, 5 * 20, 2),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 1)));
           break;
         case ENCHANTED_GOLDEN_APPLE:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(Arrays.asList(
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.REGENERATION, 20 * 20, 2),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 4),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.RESISTANCE, 5 * 60 * 20, 1),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.FIRE_RESISTANCE, 5 * 60 * 20, 1)));
           break;
         case POISONOUS_POTATO:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(List.of(
                   ItemLorePotionDescription.getDescription(60d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
           break;
         case SPIDER_EYE:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(List.of(
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
           break;
         case PUFFERFISH:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(Arrays.asList(
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.HUNGER, 15 * 20, 3),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.NAUSEA, 15 * 20, 2),
                   ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 60 * 20, 4)));
           break;
         case ROTTEN_FLESH:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(List.of(
                   ItemLorePotionDescription.getDescription(80d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
           break;
         case CHICKEN:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(List.of(
                   ItemLorePotionDescription.getDescription(30d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
           break;
         case HONEY_BOTTLE:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(List.of(
                   ComponentUtil.translate("rgb255,97,144;%s 확률로 %s 효과 제거", ComponentUtil.create("100%"), ItemLorePotionDescription.getComponent(PotionEffectType.POISON))));
           break;
         case MILK_BUCKET:
-          lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT),
+          foodLore.addAll(List.of(
                   ComponentUtil.translate("rgb255,97,144;%s 확률로 모든 효과 제거", "100%")));
           break;
         default:
           break;
       }
+    }
+
+    if (ItemStackUtil.isEdible(type) && type != Material.POTION)
+    {
+      foodLore.addAll(ItemLorePotionDescription.getCustomEffectList(item));
+    }
+
+    if (!foodLore.isEmpty())
+    {
+      lore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
+      lore.addAll(foodLore);
     }
 
     switch (type)

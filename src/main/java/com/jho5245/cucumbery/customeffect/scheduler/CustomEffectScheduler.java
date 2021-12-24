@@ -3,17 +3,23 @@ package com.jho5245.cucumbery.customeffect.scheduler;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.CustomEffectGUI;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.customeffect.scheduler.metasasis.MetasasisScheduler;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreRemoveEvent;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.CreateGUI;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.bossbar.BossBar.Overlay;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.*;
@@ -67,7 +73,7 @@ public class CustomEffectScheduler
         CustomEffectManager.effectMap.put(uuid, customEffects);
         for (CustomEffect remove : removed)
         {
-          EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, remove);
+          EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, remove);
           Cucumbery.getPlugin().getPluginManager().callEvent(event);
         }
       }
@@ -82,7 +88,7 @@ public class CustomEffectScheduler
       List<CustomEffect> customEffects = CustomEffectManager.getEffects(player, DisplayType.ACTION_BAR);
       if (!customEffects.isEmpty())
       {
-        MessageUtil.sendActionBar(player, CustomEffectManager.getDisplay(customEffects));
+        MessageUtil.sendActionBar(player, CustomEffectManager.getDisplay(customEffects, customEffects.size() <= 10));
       }
       customEffects = CustomEffectManager.getEffects(player, DisplayType.BOSS_BAR);
       boolean showPotionEffect = Cucumbery.config.getBoolean("show-vanilla-potion-effects-on-bossbar") && !player.getActivePotionEffects().isEmpty();
@@ -96,6 +102,7 @@ public class CustomEffectScheduler
       }
       else
       {
+        int size = customEffects.size() + player.getActivePotionEffects().size();
         if (!Variable.customEffectBossBarMap.containsKey(uuid))
         {
           BossBar bossBar = BossBar.bossBar(Component.empty(), 1f, BossBar.Color.GREEN, Overlay.PROGRESS);
@@ -105,7 +112,7 @@ public class CustomEffectScheduler
         Component display = Component.empty();
         if (!customEffects.isEmpty())
         {
-          display = display.append(CustomEffectManager.getDisplay(customEffects));
+          display = display.append(CustomEffectManager.getDisplay(customEffects, size <= 10));
         }
         if (showPotionEffect)
         {
@@ -113,7 +120,7 @@ public class CustomEffectScheduler
           {
             display = display.append(Component.text(", "));
           }
-          display = display.append(CustomEffectManager.getVanillaDisplay(player.getActivePotionEffects()));
+          display = display.append(CustomEffectManager.getVanillaDisplay(player.getActivePotionEffects(), size <= 10));
         }
         bossBar.name(display);
         player.showBossBar(bossBar);
@@ -141,6 +148,13 @@ public class CustomEffectScheduler
           );
         }
         player.sendPlayerListFooter(component);
+      }
+
+      InventoryView inventoryView = player.getOpenInventory();
+      Component title = inventoryView.title();
+      if (CreateGUI.isGUITitle(title) && title instanceof TranslatableComponent translatableComponent && translatableComponent.args().get(1) instanceof TextComponent textComponent && textComponent.content().equals(Constant.POTION_EFFECTS))
+      {
+        CustomEffectGUI.openGUI(player, false);
       }
     }
   }

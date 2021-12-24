@@ -79,7 +79,7 @@ public class PlayerDropItem implements Listener
       }
       return;
     }
-    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_DROP) || (!Permission.EVENT2_ANTI_ALLPLAYER.has(player) && AllPlayer.ITEM_DROP.isEnabled()))
+    if (!Permission.EVENT2_ANTI_ALLPLAYER.has(player) && AllPlayer.ITEM_DROP.isEnabled())
     {
       event.setCancelled(true);
       if (!Variable.itemDropAlertCooldown.contains(uuid))

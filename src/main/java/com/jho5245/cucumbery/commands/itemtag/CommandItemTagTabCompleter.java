@@ -1,5 +1,7 @@
 package com.jho5245.cucumbery.commands.itemtag;
 
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.TabCompleterUtil;
@@ -7,6 +9,8 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.ItemCategory;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ItemUsageType;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -31,7 +35,9 @@ public class CommandItemTagTabCompleter implements TabCompleter
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
     if (!(sender instanceof Player player))
+    {
       return Collections.emptyList();
+    }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
     {
       return Collections.singletonList(args[0]);
@@ -44,13 +50,15 @@ public class CommandItemTagTabCompleter implements TabCompleter
       return Collections.singletonList(Prefix.NO_HOLDING_ITEM.toString());
     }
     Material material = item.getType();
+    final boolean isPotionType = material == Material.POTION || material == Material.SPLASH_POTION || material == Material.LINGERING_POTION || material == Material.TIPPED_ARROW || ItemStackUtil.isEdible(material);
     switch (length)
     {
       case 1:
       {
         List<String> list = Method.tabCompleterList(args, "<태그>", "restriction", "customlore", "extratag", "customdurability" + (!Constant.DURABLE_ITEMS.contains(material) ? "(내구도가 있는 아이템 전용)" : ""),
                 "customitemtype", "hideflag", "customrarity", "usage", "expiredate", "tnt" + (material != Material.TNT ? "(TNT 전용)" : ""), "abovecustomlore",
-                "customenchant", "customitem", "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt", "customtag");
+                "customenchant", "customitem", "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt", "customtag", "potion" +
+                        (isPotionType ? "" : "(음식 또는 포션 유형의 아이템 전용)"));
         if (args[0].equals("tnt") && material != Material.TNT)
         {
           return Collections.singletonList("해당 태그는 TNT에만 사용할 수 있습니다.");
@@ -62,6 +70,10 @@ public class CommandItemTagTabCompleter implements TabCompleter
         if (args[0].equals("food") && !ItemStackUtil.isEdible(material))
         {
           return Collections.singletonList("해당 태그는 먹을 수 있는 아이템에만 사용할 수 있습니다.");
+        }
+        if (args[0].equals("potion") && !isPotionType)
+        {
+          return Collections.singletonList("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다.");
         }
         return list;
       }
@@ -105,6 +117,12 @@ public class CommandItemTagTabCompleter implements TabCompleter
             return Method.tabCompleterList(args, "<인수>", "disable-status-effect" + (hasEffects ? "" : "(상태 효과에 영향을 줄 수 있는 아이템 전용)"), "food-level", "saturation", "nourishment");
           case "nbt":
             return Method.tabCompleterList(args, "<인수>", "set", "remove", "merge");
+          case "potion":
+            if (!isPotionType)
+            {
+              return Collections.singletonList("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다.");
+            }
+            return Method.tabCompleterList(args, "<인수>", "list", "add", "remove", "set");
         }
         break;
       case 3:
@@ -315,6 +333,33 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 return Method.tabCompleterList(args, returnValue, "<태그>");
             }
             break;
+          case "potion":
+            if (!isPotionType)
+            {
+              return Collections.singletonList("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다.");
+            }
+            switch (args[1])
+            {
+              case "remove" -> {
+                NBTCompoundList nbtCompoundList = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_EFFECTS);
+                if (nbtCompoundList == null || nbtCompoundList.isEmpty())
+                {
+                  return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ItemNameUtil.itemName(item))) + "에는 효과가 없습니다.");
+                }
+                return Method.tabCompleterIntegerRadius(args, 1, nbtCompoundList.size(), "[줄]");
+              }
+              case "set" -> {
+                NBTCompoundList nbtCompoundList = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_EFFECTS);
+                if (nbtCompoundList == null || nbtCompoundList.isEmpty())
+                {
+                  return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ItemNameUtil.itemName(item))) + "에는 효과가 없습니다.");
+                }
+                return Method.tabCompleterIntegerRadius(args, 1, nbtCompoundList.size(), "<줄>");
+              }
+              case "add" -> {
+                return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
+              }
+            }
         }
         break;
       case 4:
@@ -443,6 +488,20 @@ public class CommandItemTagTabCompleter implements TabCompleter
               }
             }
             break;
+          case "potion":
+            if (!isPotionType)
+            {
+              return Collections.singletonList("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다.");
+            }
+            switch (args[1])
+            {
+              case "set" -> {
+                return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
+              }
+              case "add" -> {
+                return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "[지속 시간(틱)]", "max", "default");
+              }
+            }
         }
         break;
       case 5:
@@ -778,8 +837,99 @@ public class CommandItemTagTabCompleter implements TabCompleter
               }
             }
             break;
+          case "potion":
+            if (!isPotionType)
+            {
+              return Collections.singletonList("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다.");
+            }
+            switch (args[1])
+            {
+              case "set" -> {
+                return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "[지속 시간(틱)]", "max", "default");
+              }
+              case "add" -> {
+                String effect = args[2];
+                CustomEffectType customEffectType;
+                try
+                {
+                  customEffectType = CustomEffectType.valueOf(effect.toUpperCase());
+                }
+                catch (Exception e)
+                {
+                  return Collections.singletonList(effect + MessageUtil.getFinalConsonant(effect, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다.");
+                }
+                return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "[농도 레벨]", "max");
+              }
+            }
         }
         break;
+      case 6:
+      {
+        if (args[0].equals("potion"))
+        {
+          if (!isPotionType)
+          {
+            return Collections.singletonList("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다.");
+          }
+          switch (args[1])
+          {
+            case "set" -> {
+              String effect = args[3];
+              CustomEffectType customEffectType;
+              try
+              {
+                customEffectType = CustomEffectType.valueOf(effect.toUpperCase());
+              }
+              catch (Exception e)
+              {
+                return Collections.singletonList(effect + MessageUtil.getFinalConsonant(effect, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다.");
+              }
+              return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "[농도 레벨]", "max");
+            }
+            case "add" -> {
+              String effect = args[2];
+              CustomEffectType customEffectType;
+              try
+              {
+                customEffectType = CustomEffectType.valueOf(effect.toUpperCase());
+              }
+              catch (Exception e)
+              {
+                return Collections.singletonList(effect + MessageUtil.getFinalConsonant(effect, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다.");
+              }
+              List<String> list = new ArrayList<>(Method.enumToList(DisplayType.values()));
+              list.add(customEffectType.getDefaultDisplayType().toString().toLowerCase() + "(기본값)");
+              return Method.tabCompleterList(args, list, "[표시 유형]");
+            }
+          }
+        }
+      }
+      case 7:
+      {
+        if (args[0].equals("potion"))
+        {
+          if (!isPotionType)
+          {
+            return Collections.singletonList("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다.");
+          }
+          if (args[1].equals("set"))
+          {
+            String effect = args[3];
+            CustomEffectType customEffectType;
+            try
+            {
+              customEffectType = CustomEffectType.valueOf(effect.toUpperCase());
+            }
+            catch (Exception e)
+            {
+              return Collections.singletonList(effect + MessageUtil.getFinalConsonant(effect, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다.");
+            }
+            List<String> list = new ArrayList<>(Method.enumToList(DisplayType.values()));
+            list.add(customEffectType.getDefaultDisplayType().toString().toLowerCase() + "(기본값)");
+            return Method.tabCompleterList(args, list, "[표시 유형]");
+          }
+        }
+      }
     }
 
     switch (args[0])

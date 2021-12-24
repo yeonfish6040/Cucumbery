@@ -56,10 +56,7 @@ import com.jho5245.cucumbery.listeners.player.interact.PlayerInteractEntity;
 import com.jho5245.cucumbery.listeners.player.item.*;
 import com.jho5245.cucumbery.listeners.server.ServerCommand;
 import com.jho5245.cucumbery.listeners.server.ServerListPing;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.Scheduler;
-import com.jho5245.cucumbery.util.TestCommand;
+import com.jho5245.cucumbery.util.*;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
@@ -211,7 +208,7 @@ public class Cucumbery extends JavaPlugin
     {
       InventoryView inventoryView = player.getOpenInventory();
       String title = ComponentUtil.serialize(inventoryView.title());
-      if (title.contains(Constant.GUI_SUFFIX))
+      if (title.contains(Constant.GUI_SUFFIX) || CreateGUI.isGUITitle(inventoryView.title()))
       {
         player.closeInventory();
         MessageUtil.sendWarn(player, "플러그인이 비활성화되어 GUI 창이 닫힙니다.");
@@ -490,6 +487,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new EntityMount());
     Initializer.registerEvent(new EntityMove());
     Initializer.registerEvent(new EntityPickupItem());
+    Initializer.registerEvent(new EntityPotionEffect());
     Initializer.registerEvent(new EntityRemoveFromWorld());
     Initializer.registerEvent(new EntityResurrect());
     Initializer.registerEvent(new EntityShootBow());
@@ -498,6 +496,8 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new ExperienceOrbMerge());
     Initializer.registerEvent(new ExplosionPrime());
     Initializer.registerEvent(new LingeringPotionSplash());
+    Initializer.registerEvent(new PotionSplash());
+    Initializer.registerEvent(new ProjectileLaunch());
     Initializer.registerEvent(new VillagerAcquireTrade());
     Initializer.registerEvent(new WitchThrowPotion());
     // listener.entity.customeffect
@@ -543,6 +543,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerCommandSend());
     Initializer.registerEvent(new PlayerDeath());
     Initializer.registerEvent(new PlayerEditBook());
+    Initializer.registerEvent(new PlayerElytraBoost());
     Initializer.registerEvent(new PlayerFish());
     Initializer.registerEvent(new PlayerFlowerPotManipulate());
     Initializer.registerEvent(new PlayerGameModeChange());

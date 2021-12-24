@@ -2,16 +2,15 @@ package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.customrecipe.CustomRecipeUtil;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryRecipe;
 import com.jho5245.cucumbery.gui.GUI;
 import com.jho5245.cucumbery.gui.GUI.GUIType;
-import com.jho5245.cucumbery.util.ItemSerializer;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.Method2;
+import com.jho5245.cucumbery.util.*;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -48,6 +47,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.*;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -1791,7 +1791,8 @@ public class InventoryClick implements Listener
       event.setCancelled(true);
       return;
     }
-    if (event.getView().getTitle().startsWith(Constant.CANCEL_STRING))
+    Component title = event.getView().title();
+    if (event.getView().getTitle().startsWith(Constant.CANCEL_STRING) || CreateGUI.isGUITitle(title))
     {
       event.setCancelled(true);
     }
@@ -1832,6 +1833,44 @@ public class InventoryClick implements Listener
     }
 
     int s = event.getSlot();
+
+    if (CreateGUI.isGUITitle(title))
+    {
+      String key = ((TextComponent) ((TranslatableComponent) title).args().get(1)).content();
+      switch (key)
+      {
+        case Constant.POTION_EFFECTS -> {
+          if (event.getClick() == ClickType.RIGHT)
+          {
+            String removeEffect = NBTAPI.getString(new NBTItem(item), "removeEffect");
+            if (removeEffect != null)
+            {
+              try
+              {
+                if (removeEffect.startsWith("potion:"))
+                {
+                  removeEffect = removeEffect.substring("potion:".length());
+                  PotionEffectType potionEffectType = PotionEffectType.getByName(removeEffect);
+                  if (potionEffectType != null)
+                  {
+                    player.removePotionEffect(potionEffectType);
+                  }
+                }
+                if (removeEffect.startsWith("custom:"))
+                {
+                  removeEffect = removeEffect.substring("custom:".length());
+                  CustomEffectManager.removeEffect(player, CustomEffectType.valueOf(removeEffect));
+                }
+              }
+              catch (Exception ignored)
+              {
+
+              }
+            }
+          }
+        }
+      }
+    }
 
     if (invName.equalsIgnoreCase(Constant.CANCEL_STRING + Constant.MAIN_MENU))
     {

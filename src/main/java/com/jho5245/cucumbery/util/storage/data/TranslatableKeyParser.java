@@ -86,6 +86,8 @@ public class TranslatableKeyParser
     {
       return "effect.minecraft." + potionEffectType.getName().toLowerCase();
     }*/
+    if (potionEffectType.equals(PotionEffectType.SLOW))
+      return "effect.minecraft.slowness";
     if (potionEffectType.equals(PotionEffectType.CONFUSION))
       return "effect.minecraft.nausea";
     if (potionEffectType.equals(PotionEffectType.DAMAGE_RESISTANCE))

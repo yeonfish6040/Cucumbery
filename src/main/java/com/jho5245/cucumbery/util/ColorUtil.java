@@ -137,13 +137,10 @@ public class ColorUtil
           lightness = Integer.parseInt(m1.group(7) + "") / 100.0;
         }
 
-        System.out.println(hue + " " + saturation + " " + lightness);
-
         double r, g, b;
 
         if (saturation == 0)
         {
-          System.out.println(0);
           r = lightness;
           g = lightness;
           b = lightness;

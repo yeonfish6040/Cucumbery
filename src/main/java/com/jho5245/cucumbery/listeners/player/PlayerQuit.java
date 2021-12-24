@@ -116,10 +116,7 @@ public class PlayerQuit implements Listener
       }
     }
 
-
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
     customEffects.removeIf(customEffect -> !customEffect.isKeepOnQuit());
-    CustomEffectManager.clearEffects(player);
-    CustomEffectManager.addEffects(player, customEffects);
   }
 }

@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
@@ -192,6 +193,10 @@ public class Constant
   public static final String GUI_NO_ITEM_LORE_FEATURE = "§아§이§템§ §설§명§ §없§음" + GUI_SUFFIX;
 
   public static final String CANCEL_STRING = "§클§릭§캔§슬" + GUI_SUFFIX;
+
+  public static final TranslatableComponent GUI_PREFIX = Component.translatable("%1$s").args(Component.empty(), Component.empty(), Component.text(CANCEL_STRING));
+
+  public static final String POTION_EFFECTS = "potion_effects";
 
   public static final String TRASH_CAN = "§쓰§레§기§통" + GUI_SUFFIX;
 

@@ -606,7 +606,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
           {
             if (!hideOutput)
             {
-              MessageUtil.sendMessage(sender, Prefix.INFO_ERROR, "아이템을 지급할 수 없습니다. &e", target, "은(는) 이미 ", ComponentUtil.create(args[2]).hoverEvent(origin.asHoverEvent()) + " 슬롯에 아이템을 가지고 있습니다.");
+              MessageUtil.sendMessage(sender, Prefix.INFO_ERROR, "아이템을 지급할 수 없습니다. %s은(는) 이미 %s 슬롯에 아이템을 가지고 있습니다.", target, ComponentUtil.create(args[2]).hoverEvent(origin.asHoverEvent()));
               if (sender instanceof Player)
               {
                 Method.playSound(sender, Constant.ERROR_SOUND, Constant.ERROR_SOUND_VOLUME, Constant.ERROR_SOUND_PITCH);
@@ -619,7 +619,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
           {
             if (override && itemExists)
             {
-              MessageUtil.sendMessage(sender, Prefix.INFO_WARN, "이미 ", target + " 의 " + ComponentUtil.create(args[2]).hoverEvent(origin.asHoverEvent()) + " 슬롯에 아이템이 존재하여 덮어씌웠습니다.");
+              MessageUtil.sendMessage(sender, Prefix.INFO_WARN, "이미 %s의 %s 슬롯에 아이템이 존재하여 덮어씌웠습니다.", target, ComponentUtil.create(args[2]).hoverEvent(origin.asHoverEvent()));
               if (sender instanceof Player)
               {
                 Method.playSound(sender, Constant.WARNING_SOUND, Constant.WARNING_SOUND_VOLUME, Constant.WARNING_SOUND_PITCH);

@@ -1,5 +1,8 @@
 package com.jho5245.cucumbery.commands.itemtag;
 
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.MessageUtil.N2SType;
@@ -3466,7 +3469,7 @@ public class CommandItemTag implements CommandExecutor
             }
           }
         }
-        case "customtag" ->{
+        case "customtag" -> {
           if (args.length < 2)
           {
             MessageUtil.shortArg(sender, 3, args);
@@ -3508,7 +3511,7 @@ public class CommandItemTag implements CommandExecutor
                   newKeys.add(key);
                 }
               }
-              MessageUtil.info(player,"there are ", newKeys.size(), " custom tags");
+              MessageUtil.info(player, "there are ", newKeys.size(), " custom tags");
               StringBuilder key = new StringBuilder();
               List<Component> components = new ArrayList<>();
               for (String k : newKeys)
@@ -3542,12 +3545,12 @@ public class CommandItemTag implements CommandExecutor
               Set<String> keys = customTag.getKeys();
               if (keys.contains(input) && customTag.getBoolean(input))
               {
-                  MessageUtil.sendError(player, "there already is tag called ", input);
-                  return true;
+                MessageUtil.sendError(player, "there already is tag called ", input);
+                return true;
               }
-                customTag.setBoolean(input, true);
+              customTag.setBoolean(input, true);
 
-              MessageUtil.info(player, "tag " , input, " added");
+              MessageUtil.info(player, "tag ", input, " added");
               player.getInventory().setItemInMainHand(nbtItem.getItem());
               Method.updateInventory(player);
 
@@ -3581,9 +3584,162 @@ public class CommandItemTag implements CommandExecutor
               {
                 nbtItem.removeKey(CucumberyTag.KEY_TMI);
               }
-              MessageUtil.info(player, "tag " , input, " removed");
-            player.getInventory().setItemInMainHand(nbtItem.getItem());
+              MessageUtil.info(player, "tag ", input, " removed");
+              player.getInventory().setItemInMainHand(nbtItem.getItem());
               Method.updateInventory(player);
+            }
+          }
+        }
+        case "potion" -> {
+          final boolean isPotionType = material == Material.POTION || material == Material.SPLASH_POTION || material == Material.LINGERING_POTION || material == Material.TIPPED_ARROW || ItemStackUtil.isEdible(material);
+          if (!isPotionType)
+          {
+            MessageUtil.sendError(sender, ComponentUtil.translate("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다."));
+            return true;
+          }
+          if (args.length < 2)
+          {
+            MessageUtil.shortArg(sender, 2, args);
+            MessageUtil.commandInfo(sender, label, " potion <list|add|remove|set>");
+            return true;
+          }
+          NBTCompoundList potionListTag = NBTAPI.getCompoundList(itemTag, CucumberyTag.CUSTOM_EFFECTS);
+          switch (args[1])
+          {
+            case "list" -> {
+              if (args.length > 2)
+              {
+                MessageUtil.longArg(sender, 2, args);
+                MessageUtil.commandInfo(sender, label, " potion list");
+                return true;
+              }
+              if (potionListTag == null || potionListTag.isEmpty())
+              {
+                MessageUtil.sendError(sender, ComponentUtil.translate("%s에는 포션 태그가 없습니다.", item));
+                return true;
+              }
+              MessageUtil.info(sender, ComponentUtil.translate("%s에는 포션 태그가 %s개 있습니다.", item, potionListTag.size()));
+              for (int i = 0; i < potionListTag.size(); i++)
+              {
+                NBTCompound nbtCompound = potionListTag.get(i);
+                try
+                {
+                  CustomEffectType customEffectType = CustomEffectType.valueOf(nbtCompound.getString(CucumberyTag.CUSTOM_EFFECTS_ID));
+                  int duration = nbtCompound.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION), amplifier = nbtCompound.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER);
+                  String displayType = nbtCompound.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE);
+                  Component component = ComponentUtil.create(new CustomEffect(customEffectType, duration, amplifier, DisplayType.valueOf(displayType)));
+                  MessageUtil.info(sender, component, ComponentUtil.translate("(%s)", displayType));
+                }
+                catch (Exception e)
+                {
+                  MessageUtil.info(sender, ComponentUtil.translate("잘못된 포션 태그입니다: %s", nbtCompound.toString()));
+                }
+              }
+            }
+            case "remove" -> {
+
+            }
+            case "set" -> {
+
+            }
+            case "add" -> {
+              if (args.length > 6)
+              {
+                MessageUtil.longArg(sender, 6, args);
+                MessageUtil.commandInfo(sender, label, " potion add <효과> [지속 시간(틱)] [농도 레벨] [표시 유형]");
+                return true;
+              }
+              CustomEffectType customEffectType;
+              try
+              {
+                customEffectType = CustomEffectType.valueOf(args[2].toUpperCase());
+              }
+              catch (Exception e)
+              {
+                MessageUtil.wrongArg(sender, 3, args);
+                return true;
+              }
+              if (potionListTag != null)
+              {
+                for (NBTCompound nbtCompound : potionListTag)
+                {
+                  String id = nbtCompound.getString(CucumberyTag.ID_KEY);
+                  if (customEffectType.toString().equals(id))
+                  {
+                    MessageUtil.sendError(sender, ComponentUtil.translate("%s에는 이미 %s 효과가 있습니다.", item, customEffectType));
+                    return true;
+                  }
+                }
+              }
+              int duration = customEffectType.getDefaultDuration(), amplifier = 0;
+              DisplayType displayType = customEffectType.getDefaultDisplayType();
+              if (args.length >= 4)
+              {
+                if (args[3].equals("max"))
+                {
+                  duration = -1;
+                }
+                else if (MessageUtil.isInteger(sender, args[3], true))
+                {
+                  duration = Integer.parseInt(args[3]);
+                }
+                else
+                {
+                  return true;
+                }
+                if (!args[3].equals("max") && !MessageUtil.checkNumberSize(sender, duration, 1, Integer.MAX_VALUE, true))
+                {
+                  return true;
+                }
+              }
+              if (args.length >= 5)
+              {
+                if (args[4].equals("max"))
+                {
+                  amplifier = customEffectType.getMaxAmplifier();
+                }
+                else if (MessageUtil.isInteger(sender, args[4], true))
+                {
+                  amplifier = Integer.parseInt(args[4]);
+                }
+                else
+                {
+                  return true;
+                }
+                if (!args[4].equals("max") && !MessageUtil.checkNumberSize(sender, amplifier, 0, customEffectType.getMaxAmplifier(), true))
+                {
+                  return true;
+                }
+              }
+              if (args.length == 6)
+              {
+                try
+                {
+                  displayType = DisplayType.valueOf(args[5].toUpperCase());
+                }
+                catch (Exception e)
+                {
+                  MessageUtil.wrongArg(sender, 5, args);
+                  return true;
+                }
+              }
+              if (itemTag == null)
+              {
+                itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+              }
+              if (potionListTag == null)
+              {
+                potionListTag = itemTag.getCompoundList(CucumberyTag.CUSTOM_EFFECTS);
+              }
+              NBTCompound nbtCompound = new NBTContainer();
+              nbtCompound.setString(CucumberyTag.CUSTOM_EFFECTS_ID, customEffectType.toString());
+              nbtCompound.setInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION, duration);
+              nbtCompound.setInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER, amplifier);
+              nbtCompound.setString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE, displayType.toString());
+              potionListTag.addCompound(nbtCompound);
+              playerInventory.setItemInMainHand(nbtItem.getItem());
+              Method.updateInventory(player);
+              MessageUtil.info(sender, ComponentUtil.translate("%s에 %s 효과를 추가하였습니다. (총 %s개 효과 보유)", nbtItem.getItem(), new CustomEffect(customEffectType, duration, amplifier, displayType), potionListTag.size()));
             }
           }
         }

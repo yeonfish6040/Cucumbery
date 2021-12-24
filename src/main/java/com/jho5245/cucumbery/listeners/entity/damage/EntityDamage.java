@@ -1,15 +1,19 @@
 package com.jho5245.cucumbery.listeners.entity.damage;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.combat.CombatManager;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Variable;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
@@ -22,7 +26,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-import org.jetbrains.annotations.Nullable;
 
 public class EntityDamage implements Listener
 {
@@ -49,7 +52,6 @@ public class EntityDamage implements Listener
 		double damage = event.getDamage();
 		double damageMultiplier = 1d, finalDamageMultiplier = 1d;
 		Entity entity = event.getEntity();
-		@Nullable Object damager = CombatManager.getDamager(event);
 		if (CustomEffectManager.hasEffect(entity, CustomEffectType.INVINCIBLE) || CustomEffectManager.hasEffect(entity, CustomEffectType.RESURRECTION_INVINCIBLE))
 		{
 			event.setCancelled(true);
@@ -71,8 +73,9 @@ public class EntityDamage implements Listener
 				}
 			}
 			case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK, CUSTOM -> {
-				if (damager instanceof Entity damagerEntity)
+				if (event instanceof EntityDamageByEntityEvent damageByEntityEvent)
 				{
+					Entity damagerEntity = damageByEntityEvent.getDamager();
 					if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.SHARPNESS))
 					{
 						CustomEffect customEffectSharpness = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SHARPNESS);
@@ -135,14 +138,51 @@ public class EntityDamage implements Listener
 								damageMultiplier += 0.1d;
 							}
 						}
+						if (projectile instanceof AbstractArrow arrow)
+						{
+							ItemStack itemStack = Variable.projectile.get(arrow.getUniqueId());
+							MessageUtil.broadcastDebug(itemStack);
+							NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(itemStack), CucumberyTag.CUSTOM_EFFECTS);
+							if (potionsTag != null && !potionsTag.isEmpty())
+							{
+								for (NBTCompound potionTag : potionsTag)
+								{
+									try
+									{
+										CustomEffectManager.addEffect(entity, new CustomEffect(
+														CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase()),
+														potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
+														potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
+														DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())
+										));
+									}
+									catch (Exception ignored)
+									{
+
+									}
+								}
+							}
+						}
 					}
 				}
 			}
+			case FLY_INTO_WALL -> {
+				if (CustomEffectManager.hasEffect(entity, CustomEffectType.KINETIC_RESISTANCE))
+				{
+					CustomEffect customEffect = CustomEffectManager.getEffect(entity, CustomEffectType.KINETIC_RESISTANCE);
+					int amplifier = customEffect.getAmplifier();
+					damageMultiplier -= (amplifier + 1) * 0.1;
+				}
+			}
+		}
+		if (damageMultiplier <0d)
+		{
+			damageMultiplier = 0d;
 		}
 		finalDamageMultiplier *= damageMultiplier;
 		if (finalDamageMultiplier != 1d || damage != event.getDamage())
 		{
-			event.setDamage(damage * finalDamageMultiplier);
+			event.setDamage(Math.max(0d, damage * finalDamageMultiplier));
 		}
 	}
 

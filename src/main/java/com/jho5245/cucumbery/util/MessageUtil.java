@@ -303,6 +303,10 @@ public class MessageUtil
       {
         message = ComponentUtil.create(objects);
       }
+      if (a instanceof ConsoleCommandSender)
+      {
+        message = ComponentUtil.create("#52ee52;[Cucumbery] ", message);
+      }
       a.sendMessage(message);
       if (a instanceof Entity entity && CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_BEANS))
       {
@@ -437,10 +441,7 @@ public class MessageUtil
    */
   public static void consoleSendMessage(@NotNull Object... objects)
   {
-    Object[] newObjects = new Object[objects.length + 1];
-    newObjects[0] = "#52ee52;[Cucumbery] ";
-    System.arraycopy(objects, 0, newObjects, 1, objects.length);
-    sendMessage(Bukkit.getServer().getConsoleSender(), newObjects);
+    sendMessage(Bukkit.getServer().getConsoleSender(), objects);
   }
 
   /**

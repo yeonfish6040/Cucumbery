@@ -2,6 +2,8 @@ package com.jho5245.cucumbery.listeners.player.interact;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.listeners.block.NotePlay;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -1290,6 +1292,31 @@ public class PlayerInteract implements Listener
       this.customItemDurability(event, player, item, 1);
       SoundPlay.playSoundLocation(player.getLocation(), Sound.ENTITY_BLAZE_HURT, 1F, 2F);
       Location origin = reverse ? player.getLocation().add(0d, 0.6, 0d) : player.getEyeLocation();
+      double random1 = Math.random(), random2 = Math.random();
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.IDIOT_SHOOTER))
+      {
+        double modifier = (CustomEffectManager.getEffect(player, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1) * 5d;
+        double newYaw = origin.getYaw() + (random1 * modifier - (modifier / 2d));
+        if (newYaw < 0)
+        {
+          newYaw += 360;
+        }
+        if (newYaw > 360)
+        {
+          newYaw -= 360;
+        }
+        double newPitch = origin.getPitch() + (random2 * modifier - (modifier / 2d));
+        if (newPitch < -90)
+        {
+          newPitch = -180 - newPitch;
+        }
+        if (newPitch > 90)
+        {
+          newPitch = 180 - newPitch;
+        }
+        origin.setPitch((float) newPitch);
+        origin.setYaw((float) newYaw);
+      }
       boolean isZero = density <= 0D;
       Vector step;
       if (isZero)
@@ -1323,6 +1350,30 @@ public class PlayerInteract implements Listener
         }
       }
       origin = player.getEyeLocation();
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.IDIOT_SHOOTER))
+      {
+        double modifier = (CustomEffectManager.getEffect(player, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1) * 5d;
+        double newYaw = origin.getYaw() + (random1 * modifier - (modifier / 2d));
+        if (newYaw < 0)
+        {
+          newYaw += 360;
+        }
+        if (newYaw > 360)
+        {
+          newYaw -= 360;
+        }
+        double newPitch = origin.getPitch() + (random2 * modifier - (modifier / 2d));
+        if (newPitch < -90)
+        {
+          newPitch = -180 - newPitch;
+        }
+        if (newPitch > 90)
+        {
+          newPitch = 180 - newPitch;
+        }
+        origin.setPitch((float) newPitch);
+        origin.setYaw((float) newYaw);
+      }
       step = origin.getDirection().multiply(0.125D * (reverse ? -1d : 1d));
       int current = 0;
       boolean alreadyWarned = false;

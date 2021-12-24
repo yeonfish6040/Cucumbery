@@ -40,13 +40,14 @@ public class EntitySpawn implements Listener
       UUID projectileUUID = projectile.getUniqueId();
       ProjectileSource projectileSource = projectile.getShooter();
       if (projectileSource instanceof BlockProjectileSource blockProjectileSource)
-      Variable.entityAndSourceLocation.put(projectileUUID, blockProjectileSource.getBlock().getLocation().toString());
+      {
+        Variable.entityAndSourceLocation.put(projectileUUID, blockProjectileSource.getBlock().getLocation().toString());
+      }
       if (projectile instanceof ThrowableProjectile throwableProjectile)
       {
         ItemStack item = throwableProjectile.getItem();
         if (projectileSource instanceof LivingEntity livingEntity)
         {
-          if (!Variable.attackerAndWeapon.containsKey(livingEntity.getUniqueId()))
           Variable.attackerAndWeapon.put(livingEntity.getUniqueId(), item.clone());
         }
         else if (projectileSource instanceof BlockProjectileSource blockProjectileSource)
@@ -63,7 +64,6 @@ public class EntitySpawn implements Listener
         ItemStack item = Method.usingLoreFeature(projectile.getLocation()) ? ItemLore.setItemLore(abstractArrow.getItemStack()) : abstractArrow.getItemStack();
         if (projectileSource instanceof LivingEntity livingEntity)
         {
-          if (!Variable.attackerAndWeapon.containsKey(livingEntity.getUniqueId()))
           Variable.attackerAndWeapon.put(livingEntity.getUniqueId(), item.clone());
         }
         else if (projectileSource instanceof BlockProjectileSource blockProjectileSource)

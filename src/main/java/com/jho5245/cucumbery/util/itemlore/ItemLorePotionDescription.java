@@ -1,7 +1,12 @@
 package com.jho5245.cucumbery.util.itemlore;
 
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -311,7 +316,8 @@ public class ItemLorePotionDescription
     List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
     PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
     PotionType potionType = potionMeta.getBasePotionData().getType();
-    if (potionMeta.getCustomEffects().size() != 0)
+    List<Component> customEffects = getCustomEffectList(item);
+    if (!potionMeta.getCustomEffects().isEmpty() || !customEffects.isEmpty())
     {
       for (PotionEffect potionEffect : potionMeta.getCustomEffects())
       {
@@ -320,6 +326,7 @@ public class ItemLorePotionDescription
       if (potionType == PotionType.AWKWARD || potionType == PotionType.MUNDANE || potionType == PotionType.THICK || potionType == PotionType.UNCRAFTABLE
               || potionType == PotionType.WATER)
       {
+        lore.addAll(customEffects);
         return lore;
       }
     }
@@ -520,6 +527,7 @@ public class ItemLorePotionDescription
       default:
         break;
     }
+    lore.addAll(customEffects);
     return lore;
   }
 
@@ -528,7 +536,8 @@ public class ItemLorePotionDescription
     List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
     PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
     PotionType potionType = potionMeta.getBasePotionData().getType();
-    if (potionMeta.getCustomEffects().size() != 0)
+    List<Component> customEffects = getCustomEffectList(item);
+    if (!potionMeta.getCustomEffects().isEmpty() || !customEffects.isEmpty())
     {
       for (PotionEffect potionEffect : potionMeta.getCustomEffects())
       {
@@ -537,6 +546,7 @@ public class ItemLorePotionDescription
       if (potionType == PotionType.AWKWARD || potionType == PotionType.MUNDANE || potionType == PotionType.THICK || potionType == PotionType.UNCRAFTABLE
               || potionType == PotionType.WATER)
       {
+        lore.addAll(customEffects);
         return lore;
       }
     }
@@ -737,6 +747,7 @@ public class ItemLorePotionDescription
       default:
         break;
     }
+    lore.addAll(customEffects);
     return lore;
   }
 
@@ -745,7 +756,8 @@ public class ItemLorePotionDescription
     List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
     PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
     PotionType potionType = potionMeta.getBasePotionData().getType();
-    if (potionMeta.getCustomEffects().size() != 0)
+    List<Component> customEffects = getCustomEffectList(item);
+    if (!potionMeta.getCustomEffects().isEmpty() || !customEffects.isEmpty())
     {
       for (PotionEffect potionEffect : potionMeta.getCustomEffects())
       {
@@ -754,6 +766,7 @@ public class ItemLorePotionDescription
       if (potionType == PotionType.AWKWARD || potionType == PotionType.MUNDANE || potionType == PotionType.THICK || potionType == PotionType.UNCRAFTABLE
               || potionType == PotionType.WATER)
       {
+        lore.addAll(customEffects);
         return lore;
       }
     }
@@ -954,6 +967,7 @@ public class ItemLorePotionDescription
       default:
         break;
     }
+    lore.addAll(customEffects);
     return lore;
   }
 
@@ -962,7 +976,8 @@ public class ItemLorePotionDescription
     List<Component> lore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT)));
     PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
     PotionType potionType = potionMeta.getBasePotionData().getType();
-    if (potionMeta.getCustomEffects().size() != 0)
+    List<Component> customEffects = getCustomEffectList(item);
+    if (!potionMeta.getCustomEffects().isEmpty() || !customEffects.isEmpty())
     {
       for (PotionEffect potionEffect : potionMeta.getCustomEffects())
       {
@@ -971,6 +986,7 @@ public class ItemLorePotionDescription
       if (potionType == PotionType.AWKWARD || potionType == PotionType.MUNDANE || potionType == PotionType.THICK || potionType == PotionType.UNCRAFTABLE
               || potionType == PotionType.WATER)
       {
+        lore.addAll(customEffects);
         return lore;
       }
     }
@@ -1171,6 +1187,31 @@ public class ItemLorePotionDescription
       default:
         break;
     }
+    lore.addAll(customEffects);
     return lore;
+  }
+
+  @NotNull
+  public static List<Component> getCustomEffectList(@NotNull ItemStack item)
+  {
+    List<Component> list = new ArrayList<>();
+    NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_EFFECTS);
+    if (potionsTag != null)
+    {
+      for (NBTCompound potionTag : potionsTag)
+      {
+        try
+        {
+          Component effect = ComponentUtil.create(CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase())).color(null);
+          int duration = potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION), amplifier = potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER);
+          list.add(getDescription(effect, duration, amplifier + 1));
+        }
+        catch (Exception ignored)
+        {
+
+        }
+      }
+    }
+    return list;
   }
 }

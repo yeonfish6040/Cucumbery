@@ -765,10 +765,17 @@ public class ItemLoreUtil
         for (int i = 0; i < inventory.getSize(); i++)
         {
           ItemStack innerItemStack = inventory.getItem(i);
-          if (ItemStackUtil.itemExists(innerItemStack))
+          try
           {
-            removeInventoryItemLore(innerItemStack);
-            inventory.setItem(i, ItemLore.removeItemLore(innerItemStack));
+            if (ItemStackUtil.itemExists(innerItemStack))
+            {
+              removeInventoryItemLore(innerItemStack);
+              inventory.setItem(i, ItemLore.removeItemLore(innerItemStack));
+            }
+          }
+          catch (Exception ignored)
+          {
+
           }
         }
         blockStateMeta.setBlockState(blockState);

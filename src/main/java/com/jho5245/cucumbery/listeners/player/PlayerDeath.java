@@ -75,8 +75,6 @@ public class PlayerDeath implements Listener
 
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
     customEffects.removeIf(customEffect -> !customEffect.isKeepOnDeath());
-    CustomEffectManager.clearEffects(player);
-    CustomEffectManager.addEffects(player, customEffects);
 
     if (UserData.IMMEDIATE_RESPAWN.getBoolean(player))
     {

@@ -218,9 +218,10 @@ public class DeathManager
                 key = "fireball";
               }
             }
-            else if (damagerEntity instanceof ShulkerBullet)
+            else if (damagerEntity instanceof ShulkerBullet shulkerBullet)
             {
               key = "shulker_bullet";
+              extraArgs.add(ComponentUtil.create(shulkerBullet));
             }
             else if (damagerEntity instanceof AbstractArrow)
             {
@@ -904,18 +905,17 @@ public class DeathManager
         if (areaEffectCloud != null)
         {
           weapon = Variable.projectile.get(areaEffectCloud.getUniqueId());
-
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                   Variable.projectile.remove(areaEffectCloud.getUniqueId()), areaEffectCloud.getDuration());
+        }
+        if (Variable.attackerAndWeapon.containsKey(damager.getUniqueId()))
+        {
+          return Variable.attackerAndWeapon.get(damager.getUniqueId());
         }
         if (projectile != null)
         {
           weapon = Variable.projectile.get(projectile.getUniqueId());
           Variable.projectile.remove(projectile.getUniqueId());
-        }
-        if (weapon == null && Variable.attackerAndWeapon.containsKey(damager.getUniqueId()))
-        {
-          return Variable.attackerAndWeapon.get(damager.getUniqueId());
         }
         return weapon;
       }

@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.CustomEffectGUI;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
@@ -521,13 +522,18 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
 
   public void queryEffect(@NotNull CommandSender sender, @NotNull Entity entity)
   {
+    if (sender instanceof Player player && entity.equals(player))
+    {
+      CustomEffectGUI.openGUI(player, true);
+      return;
+    }
     if (!CustomEffectManager.hasEffects(entity))
     {
       MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 효과를 가지고 있지 않습니다.", entity));
       return;
     }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
-    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) %s개의 효과를 가지고 있습니다: %s", entity, customEffects.size(), CustomEffectManager.getDisplay(customEffects)));
+    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) %s개의 효과를 가지고 있습니다: %s", entity, customEffects.size(), CustomEffectManager.getDisplay(customEffects, true)));
   }
 
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)

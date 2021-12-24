@@ -58,7 +58,9 @@ public class CustomEffectManager
     if (!force && hasEffect(entity, effect.getEffectType()))
     {
       CustomEffect customEffect = getEffect(entity, effect.getEffectType());
-      if (customEffect.getAmplifier() > effect.getAmplifier() && customEffect.getDuration() > effect.getDuration())
+      int originDura = customEffect.getDuration(), newDura = effect.getDuration();
+      int originAmpl = customEffect.getAmplifier(), newAmpl = effect.getAmplifier();
+      if (!(newAmpl > originAmpl || (originAmpl == newAmpl && newDura > originDura)))
       {
         return false;
       }
@@ -285,16 +287,19 @@ public class CustomEffectManager
   }
 
   @NotNull
-  public static Component getDisplay(@NotNull List<CustomEffect> customEffects)
+  public static Component getDisplay(@NotNull List<CustomEffect> customEffects, boolean showDuration)
   {
+    customEffects = new ArrayList<>(customEffects);
+    customEffects.removeIf(e -> e.getEffectType().isHidden());
     StringBuilder key = new StringBuilder();
     List<Component> arguments = new ArrayList<>();
     for (CustomEffect customEffect : customEffects)
     {
       int duration = customEffect.getDuration();
       int amplifier = customEffect.getAmplifier();
+      String key2 = showDuration ? (amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s") : "%1$s";
       arguments.add(
-              ComponentUtil.translate(amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s", customEffect,
+              ComponentUtil.translate(key2, customEffect,
                       (duration != -1 && duration != customEffect.getInitDuration() - 1) ?
                               " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")" :
                               ""
@@ -307,7 +312,7 @@ public class CustomEffectManager
   }
 
   @NotNull
-  public static Component getVanillaDisplay(@NotNull Collection<PotionEffect> potionEffects)
+  public static Component getVanillaDisplay(@NotNull Collection<PotionEffect> potionEffects, boolean showDuration)
   {
     StringBuilder key = new StringBuilder();
     List<Component> arguments = new ArrayList<>();
@@ -315,8 +320,10 @@ public class CustomEffectManager
     {
       int duration = potionEffect.getDuration();
       int amplifier = potionEffect.getAmplifier();
+      String key2 = showDuration ? (amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s") : "%1$s";
       arguments.add(
-              ComponentUtil.translate(amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s", potionEffect,
+              ComponentUtil.translate(key2,
+                      potionEffect,
                       " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")"
                       , amplifier + 1)
       );
@@ -330,6 +337,10 @@ public class CustomEffectManager
   public static boolean isVanillaNegative(@NotNull PotionEffectType potionEffectType)
   {
     if (potionEffectType.equals(PotionEffectType.SLOW))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.CONFUSION))
     {
       return true;
     }

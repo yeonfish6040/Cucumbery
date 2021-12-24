@@ -4,8 +4,10 @@ import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.Translatable;
+import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -80,15 +82,15 @@ public enum CustomEffectType implements Translatable
   /**
    * 날카로움
    */
-  SHARPNESS,
+  SHARPNESS(255),
   /**
    * 강타
    */
-  SMITE,
+  SMITE(255),
   /**
    * 살충
    */
-  BANE_OF_ARTHROPODS,
+  BANE_OF_ARTHROPODS(255),
   /**
    * 정지
    */
@@ -165,6 +167,27 @@ public enum CustomEffectType implements Translatable
    * 점프 불가능
    */
   CURSE_OF_JUMPING(true, true, true),
+  /**
+   * 운동 에너지 저항
+   */
+  KINETIC_RESISTANCE(9),
+  /**
+   * 겉날개 부스터
+   */
+  ELYTRA_BOOSTER(9),
+  /**
+   * 공중 부양 저항
+   */
+  LEVITATION_RESISTACNE(9),
+  /**
+   * 치즈 실험
+   */
+  CHESSE_EXPERIMENT(false, true, true),
+  /**
+   * 똥손
+   */
+  IDIOT_SHOOTER(19,true, true, true),
+
 
 
 
@@ -259,6 +282,11 @@ public enum CustomEffectType implements Translatable
               case CURSE_OF_PICKUP -> "줍기 불가능";
               case CURSE_OF_DROP -> "버리기 불가능";
               case CURSE_OF_JUMPING -> "점프 불가능";
+              case KINETIC_RESISTANCE -> "운동 에너지 저항";
+              case ELYTRA_BOOSTER -> "겉날개 부스터";
+              case LEVITATION_RESISTACNE -> "공중 부양 저항";
+              case CHESSE_EXPERIMENT -> "치즈 실험";
+              case IDIOT_SHOOTER -> "똥손";
 
 
 
@@ -353,10 +381,24 @@ public enum CustomEffectType implements Translatable
                       .append(ComponentUtil.translate("아이템을 제련된 형태로 바꿔줍니다."));
       case CURSE_OF_INVENTORY -> ComponentUtil.translate("죽으면 가지고 있는 모든 아이템을 떨어뜨립니다.");
       case CURSE_OF_CREATIVITY -> ComponentUtil.translate("블록을 설치하거나 파괴할 수 없습니다.");
+      case CURSE_OF_CREATIVITY_BREAK -> ComponentUtil.translate("블록을 파괴할 수 없습니다.");
+      case CURSE_OF_CREATIVITY_PLACE -> ComponentUtil.translate("블록을 설치할 수 없습니다.");
       case CURSE_OF_CONSUMPTION -> ComponentUtil.translate("음식이나 포션을 사용할 수 없습니다.");
       case CURSE_OF_PICKUP -> ComponentUtil.translate("아이템을 주울 수 없습니다.");
       case CURSE_OF_DROP -> ComponentUtil.translate("아이템을 버릴 수 없습니다.");
       case CURSE_OF_JUMPING -> ComponentUtil.translate("점프를 할 수 없습니다.");
+      case KINETIC_RESISTANCE ->
+              ComponentUtil.translate("겉날개 활강 중 블록에 부딪혀서 받는 피해량이 감소됩니다.")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("낙하 피해량은 감소되지 않습니다."));
+      case ELYTRA_BOOSTER -> ComponentUtil.translate("겉날개 활강 중 폭죽으로 가속할 때")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("일정 확률로 폭죽을 소비하지 않습니다."));
+      case LEVITATION_RESISTACNE -> ComponentUtil.translate("셜커에게 공격받아도 일정 확률로")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("공중 부양 상태 효과가 적용되지 않습니다."));
+      case CHESSE_EXPERIMENT -> ComponentUtil.translate("우유를 마시면 효과가 사라지지 않고 멀미가 30초간 생깁니다.");
+      case IDIOT_SHOOTER -> ComponentUtil.translate("발사체가 이상한 방향으로 날아갑니다.");
 
       default -> Component.empty();
     };
@@ -444,6 +486,27 @@ public enum CustomEffectType implements Translatable
               case INSIDER -> Collections.singletonList(CustomEffectType.OUTSIDER);
               case OUTSIDER -> Collections.singletonList(CustomEffectType.INSIDER);
               default -> Collections.emptyList();
+            };
+  }
+
+  @SuppressWarnings("all")
+  public boolean isHidden()
+  {
+    return switch (this)
+            {
+              case TROLL_INVENTORY_PROPERTY_MIN -> true;
+              default -> false;
+            };
+  }
+
+  @Nullable
+  public Color getColor()
+  {
+    return switch (this)
+            {
+              case MUTE -> Color.fromRGB(200, 100, 100);
+              case AWKWARD, MUNDANE, NORMAL, NOTHING -> Color.fromRGB(10, 50, 255);
+              default -> null;
             };
   }
 }

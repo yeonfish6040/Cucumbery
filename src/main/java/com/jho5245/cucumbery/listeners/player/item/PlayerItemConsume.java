@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.player.item;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
@@ -19,6 +20,7 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -184,12 +186,38 @@ public class PlayerItemConsume implements Listener
   {
     Player player = event.getPlayer();
     ItemStack itemStack = event.getItem();
+    NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(itemStack), CucumberyTag.CUSTOM_EFFECTS);
+    if (potionsTag != null)
+    {
+      for (NBTCompound potionTag : potionsTag)
+      {
+        try
+        {
+          CustomEffectManager.addEffect(player, new CustomEffect(
+                  CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase()),
+                  potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
+                  potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
+                  DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())
+          ));
+        }
+        catch (Exception ignored)
+        {
+
+        }
+      }
+    }
     if (itemStack.getType() == Material.MILK_BUCKET)
     {
-      List<CustomEffect> customEffects = new ArrayList<>(CustomEffectManager.getEffects(player));
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.CHESSE_EXPERIMENT))
+      {
+        if (player.getActivePotionEffects().isEmpty())
+        {
+          player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 30, 0));
+        }
+        return;
+      }
+      List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
       customEffects.removeIf(effect -> !effect.isKeepOnMilk());
-      CustomEffectManager.clearEffects(player);
-      CustomEffectManager.addEffects(player, customEffects);
     }
   }
 
