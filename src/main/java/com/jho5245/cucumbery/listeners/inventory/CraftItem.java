@@ -22,10 +22,8 @@ public class CraftItem implements Listener
       return;
     }
     HumanEntity humanEntity = event.getView().getPlayer();
-    if (humanEntity instanceof Player)
+    if (humanEntity instanceof Player player)
     {
-      Player player = (Player) humanEntity;
-
       // 아이템을 제작하고 남은 아이템(양동이, 유리병 등)의 아이템 설명 업데이트
       InventoryType inventoryType = event.getInventory().getType();
       if (inventoryType == InventoryType.WORKBENCH || inventoryType == InventoryType.CRAFTING)
@@ -50,7 +48,6 @@ public class CraftItem implements Listener
             }, 0L);
           }
         }
-
         if (hasRemaingItem)
         {
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->

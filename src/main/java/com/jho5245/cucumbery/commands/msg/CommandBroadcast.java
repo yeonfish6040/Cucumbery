@@ -31,6 +31,10 @@ public class CommandBroadcast implements CommandExecutor, TabCompleter
     {
       MessageUtil.broadcastPlayer(false, msg.substring(0, msg.length() - 11));
     }
+    else if (msg.endsWith("--noplayer"))
+    {
+      MessageUtil.consoleSendMessage(false, msg.substring(0, msg.length() - 10));
+    }
     else
     {
       MessageUtil.broadcastPlayer(false, msg);

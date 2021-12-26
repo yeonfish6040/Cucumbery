@@ -206,18 +206,44 @@ public class PlayerItemConsume implements Listener
         }
       }
     }
+    if (Cucumbery.config.getBoolean("use-no-effect-potions-weirdly"))
+    {
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.AWKWARD))
+      {
+        CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.AWKWARD);
+        int duration = customEffect.getDuration(), amplifier = customEffect.getAmplifier();
+        if (itemStack.getType() == Material.GOLDEN_CARROT)
+        {
+          CustomEffectManager.removeEffect(player, CustomEffectType.AWKWARD);
+          player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, duration, amplifier));
+        }
+        if (itemStack.getType() == Material.PUFFERFISH)
+        {
+          CustomEffectManager.removeEffect(player, CustomEffectType.AWKWARD);
+          player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, duration, amplifier));
+        }
+      }
+    }
     if (itemStack.getType() == Material.MILK_BUCKET)
     {
-      if (CustomEffectManager.hasEffect(player, CustomEffectType.CHESSE_EXPERIMENT))
+      Boolean disableVanillaEffectChange = NBTAPI.getBoolean(NBTAPI.getCompound(NBTAPI.getMainCompound(itemStack), CucumberyTag.FOOD_KEY), CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY);
+      if (disableVanillaEffectChange == null || !disableVanillaEffectChange)
       {
-        if (player.getActivePotionEffects().isEmpty())
+        boolean hasCheese = CustomEffectManager.hasEffect(player, CustomEffectType.CHEESE_EXPERIMENT);
+        if (hasCheese)
         {
-          player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 30, 0));
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 30, 0));
+            if (Math.random() < 0.8)
+            {
+              player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 20 * 30, 0));
+            }
+          }, 0L);
         }
-        return;
+        List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
+        customEffects.removeIf(effect -> !effect.isKeepOnMilk());
       }
-      List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
-      customEffects.removeIf(effect -> !effect.isKeepOnMilk());
     }
   }
 

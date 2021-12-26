@@ -59,23 +59,6 @@ public class EntitySpawn implements Listener
           Variable.projectile.put(projectileUUID, item.clone());
         }
       }
-      else if (projectile instanceof AbstractArrow abstractArrow)
-      {
-        ItemStack item = Method.usingLoreFeature(projectile.getLocation()) ? ItemLore.setItemLore(abstractArrow.getItemStack()) : abstractArrow.getItemStack();
-        if (projectileSource instanceof LivingEntity livingEntity)
-        {
-          Variable.attackerAndWeapon.put(livingEntity.getUniqueId(), item.clone());
-        }
-        else if (projectileSource instanceof BlockProjectileSource blockProjectileSource)
-        {
-          Variable.projectile.put(projectileUUID, Variable.blockAttackerAndWeapon.get(blockProjectileSource.getBlock().getLocation().toString()));
-          //Variable.blockAttackerAndWeapon.put(blockProjectileSource.getBlock().getLocation().toString(), item.clone());
-        }
-        else
-        {
-          Variable.projectile.put(projectileUUID, item.clone());
-        }
-      }
       else if (projectile instanceof ThrownPotion thrownPotion)
       {
         ItemStack item = thrownPotion.getItem();
@@ -129,7 +112,8 @@ public class EntitySpawn implements Listener
           Variable.entityAndSourceLocation.put(projectileUUID, key);
         }
       }
-    }/*
+    }
+    /*
     if (entity instanceof TNTPrimed tntPrimed)
     {
       if (tntPrimed.getSource() == null)

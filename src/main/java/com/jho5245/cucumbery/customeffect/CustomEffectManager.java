@@ -60,7 +60,7 @@ public class CustomEffectManager
       CustomEffect customEffect = getEffect(entity, effect.getEffectType());
       int originDura = customEffect.getDuration(), newDura = effect.getDuration();
       int originAmpl = customEffect.getAmplifier(), newAmpl = effect.getAmplifier();
-      if (!(newAmpl > originAmpl || (originAmpl == newAmpl && newDura > originDura)))
+      if (!(newAmpl > originAmpl || (originAmpl == newAmpl && (newDura == -1 || (originDura != -1 && newDura > originDura)))))
       {
         return false;
       }
@@ -297,11 +297,64 @@ public class CustomEffectManager
     {
       int duration = customEffect.getDuration();
       int amplifier = customEffect.getAmplifier();
-      String key2 = showDuration ? (amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s") : "%1$s";
+      boolean isInfinite = duration == -1, less10Sec = duration > 0 && duration < 200, less1Min = duration > 0 && duration < 1200;
+      boolean ampleZero = amplifier == 0;
+      // showDuration = 효과 개수 < 10
+
+      // 지속 시간이 1분 이하거나 효과 10개 미만이며, 농도 레벨이 0
+      // 농도 레벨이 0이 아님
+      String key2;
+      if (isInfinite) // 지속 시간 무제한
+      {
+        if (ampleZero)
+        {
+          key2 = "%1$s";
+        }
+        else
+        {
+          key2 = "%1$s %3$s";
+        }
+      }
+      else if (!less1Min) // 지속 시간 1분 이상
+      {
+        if (showDuration)
+        {
+          if (ampleZero)
+          {
+            key2 = "%1$s%2$s";
+          }
+          else
+          {
+            key2 = "%1$s %3$s%2$s";
+          }
+        }
+        else
+        {
+          if (ampleZero)
+          {
+            key2 = "%1$s》";
+          }
+          else
+          {
+            key2 = "%1$s》%3$s";
+          }
+        }
+      }
+      else // 지속 시간 1분 미만
+      {
+        if (ampleZero)
+        {
+          key2 = "%1$s%2$s";
+        }
+        else
+        {
+          key2 = "%1$s %3$s%2$s";
+        }
+      }
       arguments.add(
               ComponentUtil.translate(key2, customEffect,
                       (duration != -1 && duration != customEffect.getInitDuration() - 1) ?
-                              " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")" :
+                              " (" + Method.timeFormatMilli(duration * 50L, less10Sec, 1, true) + ")" :
                               ""
                       , amplifier + 1)
       );
@@ -320,7 +373,60 @@ public class CustomEffectManager
     {
       int duration = potionEffect.getDuration();
       int amplifier = potionEffect.getAmplifier();
-      String key2 = showDuration ? (amplifier == 0 ? "%1$s%2$s" : "%1$s %3$s%2$s") : "%1$s";
+      boolean isInfinite = duration > 20 * 60 * 60 * 24 * 365, less10Sec = duration > 0 && duration < 200, less1Min = duration > 0 && duration < 1200;
+      boolean ampleZero = amplifier == 0;
+      // showDuration = 효과 개수 < 10
+
+      // 지속 시간이 1분 이하거나 효과 10개 미만이며, 농도 레벨이 0
+      // 농도 레벨이 0이 아님
+      String key2;
+      if (isInfinite) // 지속 시간 무제한
+      {
+        if (ampleZero)
+        {
+          key2 = "%1$s";
+        }
+        else
+        {
+          key2 = "%1$s %3$s";
+        }
+      }
+      else if (!less1Min) // 지속 시간 1분 이상
+      {
+        if (showDuration)
+        {
+          if (ampleZero)
+          {
+            key2 = "%1$s%2$s";
+          }
+          else
+          {
+            key2 = "%1$s %3$s%2$s";
+          }
+        }
+        else
+        {
+          if (ampleZero)
+          {
+            key2 = "%1$s》";
+          }
+          else
+          {
+            key2 = "%1$s》%3$s";
+          }
+        }
+      }
+      else // 지속 시간 1분 미만
+      {
+        if (ampleZero)
+        {
+          key2 = "%1$s%2$s";
+        }
+        else
+        {
+          key2 = "%1$s %3$s%2$s";
+        }
+      }
       arguments.add(
               ComponentUtil.translate(key2,
                       potionEffect,

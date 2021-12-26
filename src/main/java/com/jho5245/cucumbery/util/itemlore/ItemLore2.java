@@ -20,6 +20,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -414,6 +415,10 @@ public class ItemLore2
         }
         for (Enchantment enchantment : itemMeta.getEnchants().keySet())
         {
+          if (enchantment.equals(CustomEnchant.GLOW))
+          {
+            continue;
+          }
           if (type == Material.BOW && enchantment.equals(Enchantment.RIPTIDE))
           {
             continue;
@@ -1838,19 +1843,19 @@ public class ItemLore2
           nourishment = ItemStackUtil.getNourishment(foodLevel, saturation);
           lore.add(ComponentUtil.translate("rgb235,163,0;든든함 : %s", ComponentUtil.translate(nourishment)));
         }
-        if (!foodTag.hasKey(CucumberyTag.FOOD_LEVEL_KEY))
+        if (!foodTag.hasKey(CucumberyTag.FOOD_LEVEL_KEY) && ItemStackUtil.getFoodLevel(type) != 0)
         {
           lore.add(ComponentUtil.translate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
         }
-        else if (foodLevel != 0)
+        else if (foodLevel != null && foodLevel != 0)
         {
           lore.add(ComponentUtil.translate("rgb255,183,0;음식 포인트 : %s", (foodLevel > 0 ? "+" : "") + foodLevel));
         }
-        if (!foodTag.hasKey(CucumberyTag.SATURATION_KEY))
+        if (!foodTag.hasKey(CucumberyTag.SATURATION_KEY) && ItemStackUtil.getSaturation(type) != 0d)
         {
           lore.add(ComponentUtil.translate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
         }
-        else if (saturation != 0d)
+        else if (saturation != null && saturation != 0d)
         {
           lore.add(ComponentUtil.translate("rgb255,183,0;포화도 : %s", (saturation > 0d ? "+" : "") + Constant.Sosu2.format(saturation)));
         }

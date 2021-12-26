@@ -188,10 +188,15 @@ public class Updater
 
   public boolean updateLatest()
   {
+    return updateLatest(false);
+  }
+
+  public boolean updateLatest(boolean force)
+  {
     try
     {
       this.getLatestVersion();
-      if (this.version != null && this.version.equals(plugin.getDescription().getVersion()))
+      if (!force && this.version != null && this.version.equals(plugin.getDescription().getVersion()))
       {
         return false;
       }
@@ -205,5 +210,4 @@ public class Updater
 
     return true;
   }
-
 }

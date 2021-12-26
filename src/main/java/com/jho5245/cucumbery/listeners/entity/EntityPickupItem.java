@@ -27,6 +27,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -173,7 +174,17 @@ public class EntityPickupItem implements Listener
         NBTEntity nbtEntity = new NBTEntity(item);
         nbtEntity.setShort("Age", (short) 0);
         item.teleport(entity.getEyeLocation());
-        item.setVelocity(entity.getLocation().getDirection().multiply(0.4));
+        double amplifier = 0.4 * Math.pow(8, 0.1 * CustomEffectManager.getEffect(entity, CustomEffectType.DO_NOT_PICKUP_BUT_THROW_IT).getAmplifier());
+        Vector vector = entity.getLocation().getDirection().multiply(amplifier);
+        if (CustomEffectManager.hasEffect(entity, CustomEffectType.IDIOT_SHOOTER))
+        {
+          double modifier = (CustomEffectManager.getEffect(entity, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1) / 10d;
+          item.setVelocity(vector.add(new Vector(Math.random() * modifier - (modifier / 2d), Math.random() * modifier - (modifier / 2d), Math.random() * modifier - (modifier / 2d))));
+        }
+        else
+        {
+          item.setVelocity(vector);
+        }
         return;
       }
       if (!event.isCancelled())

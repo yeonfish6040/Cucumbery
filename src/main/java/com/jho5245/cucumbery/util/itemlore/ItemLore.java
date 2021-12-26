@@ -1,20 +1,22 @@
 package com.jho5245.cucumbery.util.itemlore;
 
+import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.ItemCategory;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTItem;
-import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +47,58 @@ public class ItemLore
       return itemStack;
     }
     Material type = itemStack.getType();
+    NBTCompoundList potionsTag = NBTAPI.getCompoundList(itemTagReadOnly, CucumberyTag.CUSTOM_EFFECTS);
+    if (Cucumbery.config.getBoolean("use-no-effect-potions-weirdly") && itemStack.getItemMeta() instanceof PotionMeta potionMeta && potionsTag == null)
+    {
+      PotionType potionType = potionMeta.getBasePotionData().getType();
+      CustomEffectType customEffectType = switch (potionType)
+              {
+                case AWKWARD -> CustomEffectType.AWKWARD;
+                case MUNDANE -> CustomEffectType.MUNDANE;
+                case THICK -> CustomEffectType.THICK;
+                case UNCRAFTABLE -> CustomEffectType.UNCRAFTABLE;
+                default -> null;
+              };
+      if (customEffectType != null)
+      {
+        NBTItem nbtItem = new NBTItem(itemStack, true);
+        NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
+        if (itemTag == null)
+        {
+          itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+        }
+        potionsTag = itemTag.getCompoundList(CucumberyTag.CUSTOM_EFFECTS);
+        NBTContainer nbtContainer = new NBTContainer();
+        if (type == Material.LINGERING_POTION)
+        {
+          nbtContainer.setInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION, 20 * 45);
+        }
+        else if (type == Material.TIPPED_ARROW)
+        {
+          nbtContainer.setInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION, 10 * 45);
+        }
+        else
+        {
+          nbtContainer.setInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION, 20 * 60 * 3);
+        }
+        nbtContainer.setInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER, 0);
+        nbtContainer.setString(CucumberyTag.CUSTOM_EFFECTS_ID, customEffectType.toString());
+        nbtContainer.setString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE, customEffectType.getDefaultDisplayType().toString());
+        potionsTag.addCompound(nbtContainer);
+        if (type == Material.SPLASH_POTION || type == Material.LINGERING_POTION)
+        {
+          NBTCompoundList vanillaPotions = nbtItem.getCompoundList("CustomPotionEffects");
+          if (vanillaPotions.isEmpty())
+          {
+            NBTContainer vanillaPotion = new NBTContainer();
+            vanillaPotion.setByte("Id", (byte) (potionType == PotionType.UNCRAFTABLE ? 10 : 16));
+            vanillaPotion.setInteger("Duration", 0);
+            vanillaPotions.addCompound(vanillaPotion);
+          }
+          nbtItem.setInteger("CustomPotionColor", potionType == PotionType.UNCRAFTABLE ? 15007977 : 3298470);
+        }
+      }
+    }
     boolean hasOnlyNbtTagLore = ItemLoreUtil.hasOnlyNbtTagLore(itemStack);
     // 아이템의 등급
     ItemCategory.Rarity rarity = ItemCategory.getItemRarirty(type);

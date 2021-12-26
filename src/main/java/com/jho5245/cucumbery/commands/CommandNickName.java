@@ -72,7 +72,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
           ItemStack item = player.getInventory().getItemInMainHand();
           if (!ItemStackUtil.itemExists(item))
           {
-            nickName = ComponentUtil.create(inputName);
+            nickName = ComponentUtil.create(false, inputName);
           }
           else
           {
@@ -81,7 +81,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         }
         else
         {
-          nickName = ComponentUtil.create(inputName);
+          nickName = ComponentUtil.create(false, inputName);
         }
 
         boolean off = args.length == 2 && args[1].equalsIgnoreCase("--off");
@@ -161,7 +161,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         }
         else
         {
-          MessageUtil.sendMessage(player, false, Prefix.INFO_NICK, "%s을 %s(으)로 변경하였습니다.", type + " 닉네임", finalNickname);
+          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 %s(으)로 변경하였습니다.", type + " 닉네임", finalNickname);
         }
         Variable.nickNames.remove(originDisplay);
         Variable.nickNames.remove(originList);
@@ -210,7 +210,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
       String nickName = MessageUtil.listToString(" ", 3, args.length, args);
       nickName = MessageUtil.listToString(MessageUtil.splitEscape(nickName, '+'));
       boolean off = args.length == 4 && args[3].equalsIgnoreCase("--off");
-      Component finalNickname = off ? null : ComponentUtil.create(nickName);
+      Component finalNickname = off ? null : ComponentUtil.create(false, nickName);
       String nicknameSerialJson = off ? null : ComponentUtil.serializeAsJson(finalNickname);
       String nicknameSerial = off ? null : ComponentUtil.serialize(finalNickname);
       if (nickName.length() > 4096)
@@ -259,9 +259,9 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         type = "채팅";
         if (isOnline)
         {
-          target.displayName(off ? null : ComponentUtil.create(nickName));
+          target.displayName(finalNickname);
         }
-        UserData.DISPLAY_NAME.set(uuid, finalNickname);
+        UserData.DISPLAY_NAME.set(uuid, nicknameSerialJson);
         Variable.nickNames.remove(originDisplay);
         Variable.cachedUUIDs.remove(originDisplay);
         if (!off)
@@ -277,9 +277,9 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         type = "목록";
         if (isOnline)
         {
-          target.playerListName(off ? null : ComponentUtil.create(nickName));
+          target.playerListName(finalNickname);
         }
-        UserData.PLAYER_LIST_NAME.set(uuid, finalNickname);
+        UserData.PLAYER_LIST_NAME.set(uuid, nicknameSerialJson);
         Variable.nickNames.remove(originList);
         Variable.cachedUUIDs.remove(originList);
         if (!off)
@@ -306,7 +306,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
           }
           else
           {
-            MessageUtil.sendMessage(target, false, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 %s(으)로 변경하였습니다.", sender, type + " 닉네임", finalNickname);
+            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 %s(으)로 변경하였습니다.", sender, type + " 닉네임", finalNickname);
           }
         }
         if (off)
@@ -315,7 +315,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         }
         else
         {
-          MessageUtil.sendMessage(sender, false, Prefix.INFO_NICK, "%s의 %s을 %s(으)로 변경하였습니다.", offlinePlayer, type + " 닉네임", finalNickname);
+          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 %s(으)로 변경하였습니다.", offlinePlayer, type + " 닉네임", finalNickname);
         }
       }
       File nickNamesFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/Nicknames.yml");

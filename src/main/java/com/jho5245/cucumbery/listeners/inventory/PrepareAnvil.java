@@ -40,9 +40,8 @@ public class PrepareAnvil implements Listener
       return;
     }
     HumanEntity humanEntity = event.getView().getPlayer();
-    if (humanEntity instanceof Player)
+    if (humanEntity instanceof Player player)
     {
-      Player player = (Player) humanEntity;
       AnvilInventory anvilInventory = event.getInventory();
       ItemStack firstItem = anvilInventory.getItem(0), secondItem = anvilInventory.getItem(1), resultItem = anvilInventory.getItem(2);
       String firstItemName = null;
@@ -297,7 +296,7 @@ public class PrepareAnvil implements Listener
         resultItem = nbtItem.getItem();
         Damageable duraMeta = (Damageable) resultItem.getItemMeta();
         duraMeta.setDamage(resultDamage);
-        resultItem.setItemMeta((ItemMeta) duraMeta);
+        resultItem.setItemMeta(duraMeta);
         ItemLore.setItemLore(resultItem);
         event.setResult(resultItem);
       }

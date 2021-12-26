@@ -90,11 +90,11 @@ public class DeathManager
       if (damager != null)
       {
         long time = 0;
-        if (damager instanceof ItemStack itemStack)
+        if (damager instanceof ItemStack itemStack && Variable.blockDamagerAndCurrentTime.containsKey(ItemSerializer.serialize(itemStack)))
         {
           time = Variable.blockDamagerAndCurrentTime.get(ItemSerializer.serialize(itemStack));
         }
-        else if (damager instanceof Entity e)
+        else if (damager instanceof Entity e && Variable.damagerAndCurrentTime.containsKey(e.getUniqueId()))
         {
           time = Variable.damagerAndCurrentTime.get(e.getUniqueId());
         }

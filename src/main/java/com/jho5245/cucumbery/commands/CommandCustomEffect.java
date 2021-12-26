@@ -74,7 +74,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         case "query" -> {
           if (sender instanceof Player player)
           {
-            queryEffect(sender, player);
+            queryEffect(sender, player, true);
             return true;
           }
           else
@@ -114,7 +114,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           {
             return failure;
           }
-          queryEffect(sender, entity);
+          queryEffect(sender, entity, false);
           return true;
         }
         default -> {
@@ -520,9 +520,9 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     return !successEntitiesIsEmpty;
   }
 
-  public void queryEffect(@NotNull CommandSender sender, @NotNull Entity entity)
+  public void queryEffect(@NotNull CommandSender sender, @NotNull Entity entity, boolean gui)
   {
-    if (sender instanceof Player player && entity.equals(player))
+    if (sender instanceof Player player && gui)
     {
       CustomEffectGUI.openGUI(player, true);
       return;

@@ -20,7 +20,7 @@ public class EntityAddToWorld implements Listener
 
   private void experienceOrbDisplay(Entity entity)
   {
-    if (!(entity instanceof ExperienceOrb))
+    if (!(entity instanceof ExperienceOrb experienceOrb))
     {
       return;
     }
@@ -28,8 +28,6 @@ public class EntityAddToWorld implements Listener
     {
       return;
     }
-
-    ExperienceOrb experienceOrb = (ExperienceOrb) entity;
 
     if (!Method.configContainsLocation(experienceOrb.getLocation(), Cucumbery.config.getStringList("no-display-xp-orb-value-worlds")))
     {

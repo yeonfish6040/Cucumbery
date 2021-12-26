@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.customeffect;
 
+import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.util.ColorUtil;
 import com.jho5245.cucumbery.util.ColorUtil.Type;
 import com.jho5245.cucumbery.util.CreateGUI;
@@ -85,7 +86,10 @@ public class CustomEffectGUI
         menu.setItem(i, null);
       }
     }
-    boolean isEmpty = !CustomEffectManager.hasEffects(player) && player.getActivePotionEffects().isEmpty();
+    List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
+    customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE);
+    Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
+    boolean isEmpty = customEffects.isEmpty() && potionEffects.isEmpty();
     if (isEmpty)
     {
       menu.setItem(22, CreateItemStack.create(Material.RED_STAINED_GLASS_PANE, 1, ComponentUtil.translate("&c효과 없음!"),
@@ -93,7 +97,6 @@ public class CustomEffectGUI
     }
     else
     {
-      List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
       for (int i = 0; i < customEffects.size(); i++)
       {
         CustomEffect customEffect = customEffects.get(i);
@@ -120,7 +123,6 @@ public class CustomEffectGUI
         }
         menu.addItem(itemStack);
       }
-      Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
       for (PotionEffect potionEffect : potionEffects)
       {
         if (menu.firstEmpty() == -1)
@@ -217,11 +219,6 @@ public class CustomEffectGUI
         lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
       }
     }
-    lore.add(ComponentUtil.create("&8cucumbery:" + effectType.toString().toLowerCase()));
-    if (effectType == CustomEffectType.CURSE_OF_BEANS)
-    {
-      lore.add(ComponentUtil.create("&8cucumbery:" + effectType.toString().toLowerCase()));
-    }
     if (!effectType.isNegative())
     {
       lore.add(Component.empty());
@@ -241,14 +238,12 @@ public class CustomEffectGUI
   {
     List<Component> lore = new ArrayList<>();
 
-
     PotionEffectType potionEffectType = potionEffect.getType();
     String effectKey = TranslatableKeyParser.getKey(potionEffectType);
     String id = effectKey.substring(17);
     int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
     lore.add(ComponentUtil.translate("&f지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
     lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
-    lore.add(ComponentUtil.create("&8minecraft:" + id.toString().toLowerCase()));
     if (!CustomEffectManager.isVanillaNegative(potionEffect.getType()))
     {
       lore.add(Component.empty());

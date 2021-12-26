@@ -1,6 +1,9 @@
 package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -20,6 +23,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -35,6 +40,28 @@ public class PrepareItemCraft implements Listener
     if (humanEntity.getType() == EntityType.PLAYER)
     {
       Player player = (Player) humanEntity;
+      Inventory inventory = event.getInventory();
+      InventoryView inventoryView = event.getView();
+      InventoryType inventoryType = inventory.getType();
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.UNCRAFTABLE) && ItemStackUtil.itemExists(inventoryView.getItem(0)))
+      {
+        CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.UNCRAFTABLE);
+        int amplifier = customEffect.getAmplifier();
+        ItemStack result = Cucumbery.config.getBoolean("blind-result-when-crafting-with-uncraftable-item") ? null : CreateItemStack.create(Material.BARRIER, 1,
+                ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME),
+                ComponentUtil.translate("&c아이템을 제작할 수 없습니다."),
+                true);
+        if (inventoryType == InventoryType.CRAFTING && (amplifier == 0 || amplifier == 2))
+        {
+          inventoryView.setItem(0, result);
+          return;
+        }
+        if (inventoryType == InventoryType.WORKBENCH && (amplifier == 1 || amplifier == 2))
+        {
+          inventoryView.setItem(0, result);
+          return;
+        }
+      }
       if (!Cucumbery.config.getBoolean("grant-default-permission-to-players"))
       {
         ItemStack originalResult = event.getView().getItem(0);

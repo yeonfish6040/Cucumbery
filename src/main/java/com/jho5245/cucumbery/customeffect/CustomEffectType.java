@@ -102,7 +102,7 @@ public enum CustomEffectType implements Translatable
   /**
    * 줍지 마, 던져!
    */
-  DO_NOT_PICKUP_BUT_THROW_IT(false, true, true),
+  DO_NOT_PICKUP_BUT_THROW_IT(9, false, true, true),
   /**
    * 인싸
    */
@@ -182,11 +182,15 @@ public enum CustomEffectType implements Translatable
   /**
    * 치즈 실험
    */
-  CHESSE_EXPERIMENT(false, true, true),
+  CHEESE_EXPERIMENT(false, true, true),
   /**
    * 똥손
    */
   IDIOT_SHOOTER(19,true, true, true),
+
+  DEBUG_WATCHER(true, true, false),
+
+  CUCUMBERY_UPDATER(1, true, true, false),
 
 
 
@@ -199,8 +203,8 @@ public enum CustomEffectType implements Translatable
   NOTHING,
   AWKWARD,
   MUNDANE,
-  NORMAL,
-  UNCRAFTABLE,
+  THICK,
+  UNCRAFTABLE(2, false, true, true),
   ;
 
   private final int maxAmplifier;
@@ -285,16 +289,18 @@ public enum CustomEffectType implements Translatable
               case KINETIC_RESISTANCE -> "운동 에너지 저항";
               case ELYTRA_BOOSTER -> "겉날개 부스터";
               case LEVITATION_RESISTACNE -> "공중 부양 저항";
-              case CHESSE_EXPERIMENT -> "치즈 실험";
+              case CHEESE_EXPERIMENT -> "치즈 실험";
               case IDIOT_SHOOTER -> "똥손";
+              case DEBUG_WATCHER -> "디버그 염탐";
+              case CUCUMBERY_UPDATER -> "즉시 큐컴버리 업데이트";
 
 
 
 
               case NOTHING -> "아무것도 아님";
-              case NORMAL -> "평범함";
               case AWKWARD -> "어색함";
-              case MUNDANE -> "진함";
+              case MUNDANE -> "평범함";
+              case THICK -> "진함";
               case UNCRAFTABLE -> "제작 불가능함";
             };
   }
@@ -354,7 +360,9 @@ public enum CustomEffectType implements Translatable
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("좌우이동, 웅크리기를 할 때마다 지속 시간이 6초씩 감소합니다."));
       case KEEP_INVENTORY -> ComponentUtil.translate("죽어도 아이템을 떨어뜨리지 않습니다.");
-      case DO_NOT_PICKUP_BUT_THROW_IT -> ComponentUtil.translate("아이템을 줍는 대신 던집니다.");
+      case DO_NOT_PICKUP_BUT_THROW_IT -> ComponentUtil.translate("아이템을 줍는 대신 던집니다.")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("농도 레벨이 높을 수록 더 멀리 던집니다."));
       case INSIDER ->
               ComponentUtil.translate("채팅이 여러번 입력되고, 죽을 때 모든 플레이어에게")
               .append(Component.text("\n"))
@@ -397,8 +405,16 @@ public enum CustomEffectType implements Translatable
       case LEVITATION_RESISTACNE -> ComponentUtil.translate("셜커에게 공격받아도 일정 확률로")
               .append(Component.text("\n"))
               .append(ComponentUtil.translate("공중 부양 상태 효과가 적용되지 않습니다."));
-      case CHESSE_EXPERIMENT -> ComponentUtil.translate("우유를 마시면 효과가 사라지지 않고 멀미가 30초간 생깁니다.");
+      case CHEESE_EXPERIMENT -> ComponentUtil.translate("우유를 마시면 효과가 사라지고 멀미가 30초간 지속됩니다.")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("또한, 80% 확률로 허기가 30초 지속됩니다."));
       case IDIOT_SHOOTER -> ComponentUtil.translate("발사체가 이상한 방향으로 날아갑니다.");
+      case DEBUG_WATCHER -> ComponentUtil.translate("플러그인 디버그 메시지를 볼 수 있게 됩니다.");
+      case CUCUMBERY_UPDATER -> ComponentUtil.translate("큐컴버리 플러그인을 업데이트합니다.");
+      case MUNDANE -> ComponentUtil.translate("평범하다...");
+      case AWKWARD -> ComponentUtil.translate("어... 그게.. 어색? 해 진다? 라고 생각? 합니다");
+      case THICK -> ComponentUtil.translate("채팅이 진해집니다.");
+      case UNCRAFTABLE -> ComponentUtil.translate("아이템을 제작할 수 없습니다.");
 
       default -> Component.empty();
     };
@@ -457,7 +473,7 @@ public enum CustomEffectType implements Translatable
     return switch (this)
             {
               // 우유 마시면 사라짐
-              case CONFUSION, NOTHING, NORMAL, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING -> false;
+              case CONFUSION, NOTHING, THICK, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING, CHEESE_EXPERIMENT -> false;
               default -> true;
             };
   }
@@ -466,7 +482,7 @@ public enum CustomEffectType implements Translatable
   {
     return switch (this)
             {
-              case RESURRECTION -> -1;
+              case RESURRECTION, CUCUMBERY_UPDATER -> -1;
               case RESURRECTION_INVINCIBLE -> 20 * 2;
               case PARROTS_CHEER -> 20 * 5;
               case STOP -> 20 * 10;
@@ -505,7 +521,7 @@ public enum CustomEffectType implements Translatable
     return switch (this)
             {
               case MUTE -> Color.fromRGB(200, 100, 100);
-              case AWKWARD, MUNDANE, NORMAL, NOTHING -> Color.fromRGB(10, 50, 255);
+              case AWKWARD, MUNDANE, THICK, NOTHING -> Color.fromRGB(10, 50, 255);
               default -> null;
             };
   }

@@ -44,6 +44,8 @@ public class EntityShootBow implements Listener
       ItemStack consumable = event.getConsumable();
       if (ItemStackUtil.itemExists(consumable))
       {
+        consumable = consumable.clone();
+        ItemLore.setItemLore(consumable);
         Variable.projectile.put(projectile.getUniqueId(), consumable);
       }
       Variable.attackerAndWeapon.put(livingEntity.getUniqueId(), item);

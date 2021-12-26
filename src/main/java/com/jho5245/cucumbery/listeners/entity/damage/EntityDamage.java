@@ -5,7 +5,6 @@ import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -141,7 +140,6 @@ public class EntityDamage implements Listener
 						if (projectile instanceof AbstractArrow arrow)
 						{
 							ItemStack itemStack = Variable.projectile.get(arrow.getUniqueId());
-							MessageUtil.broadcastDebug(itemStack);
 							NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(itemStack), CucumberyTag.CUSTOM_EFFECTS);
 							if (potionsTag != null && !potionsTag.isEmpty())
 							{

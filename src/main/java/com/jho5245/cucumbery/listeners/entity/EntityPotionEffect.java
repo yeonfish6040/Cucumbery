@@ -42,10 +42,10 @@ public class EntityPotionEffect implements Listener
         event.setCancelled(true);
       }
     }
-    if (entity instanceof Player player && cause == Cause.MILK && CustomEffectManager.hasEffect(player, CustomEffectType.CHESSE_EXPERIMENT))
+    if (entity instanceof Player player && cause == Cause.MILK && CustomEffectManager.hasEffect(player, CustomEffectType.CHEESE_EXPERIMENT))
     {
+      CustomEffectManager.removeEffect(player, CustomEffectType.CHEESE_EXPERIMENT);
       event.setCancelled(true);
-      player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 30, 0));
     }
   }
 }

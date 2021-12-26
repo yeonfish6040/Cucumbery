@@ -16,6 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -476,7 +477,7 @@ public class MessageUtil
    */
   public static void sendDebug(@NotNull Player player, @NotNull Object... objects)
   {
-    if (CustomConfig.UserData.SHOW_PLUGIN_DEV_DEBUG_MESSAGE.getBoolean(player))
+    if (CustomConfig.UserData.SHOW_PLUGIN_DEV_DEBUG_MESSAGE.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.DEBUG_WATCHER))
     {
       Object[] msg = new Object[objects.length + 1];
       msg[0] = Prefix.INFO_DEBUG;
@@ -1153,6 +1154,20 @@ public class MessageUtil
             .replace("Ａ", "A").replace("Ｂ", "B").replace("Ｃ", "C").replace("Ｄ", "D").replace("Ｅ", "E").replace("Ｆ", "F").replace("Ｋ", "K").replace("Ｌ", "L").replace("Ｍ", "M").replace("Ｎ", "N")
             .replace("Ｏ", "O").replace("Ｒ", "R").replace("Ｘ", "X").replace("ａ", "a").replace("ｂ", "b").replace("ｃ", "c").replace("ｄ", "d").replace("ｅ", "e").replace("ｆ", "f").replace("ｋ", "k")
             .replace("ｌ", "l").replace("ｍ", "m").replace("ｎ", "n").replace("ｏ", "o").replace("ｒ", "r").replace("ｘ", "x");
+  }
+
+  @NotNull
+  public static Component boldify(@NotNull Component component)
+  {
+    component = component.decoration(TextDecoration.BOLD, State.TRUE);
+    List<Component> children = new ArrayList<>(component.children());
+    for (int i = 0; i < children.size(); i++)
+    {
+      Component child = children.get(i);
+      children.set(i, boldify(child));
+    }
+    component = component.children(children);
+    return component;
   }
 
   public enum N2SType // 컬러 코드 적용 타입

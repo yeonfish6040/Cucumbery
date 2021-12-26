@@ -7,6 +7,7 @@ import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreApplyEvent;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -28,6 +29,11 @@ public class EntityCustomEffectPreApply implements Listener
       return;
     }
     if (customEffectType == CustomEffectType.PARROTS_CHEER && !(entity instanceof AnimalTamer && entity instanceof Damageable))
+    {
+      event.setCancelled(true);
+    }
+
+    if (customEffectType == CustomEffectType.CUCUMBERY_UPDATER && !(entity instanceof Player))
     {
       event.setCancelled(true);
     }

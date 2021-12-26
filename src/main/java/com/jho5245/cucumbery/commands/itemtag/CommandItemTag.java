@@ -3637,7 +3637,49 @@ public class CommandItemTag implements CommandExecutor
               }
             }
             case "remove" -> {
+              if (args.length > 3)
+              {
+                MessageUtil.longArg(sender, 6, args);
+                MessageUtil.commandInfo(sender, label, " potion remove [줄]");
+                return true;
+              }
+              if (potionListTag == null || potionListTag.isEmpty())
+              {
+                MessageUtil.sendError(sender, ComponentUtil.translate("%s에는 포션 태그가 없습니다.", item));
+                return true;
+              }
+              int line = potionListTag.size();
+              if (args.length == 3)
+              {
+                if (!MessageUtil.isInteger(sender, args[2], true))
+                {
+                  return true;
+                }
+                line = Integer.parseInt(args[2]);
+              }
+              if (!MessageUtil.checkNumberSize(sender, line, 1, potionListTag.size(), true))
+              {
+                return true;
+              }
+              CustomEffect customEffect = null;
+              try
+              {
+                NBTCompound potionTag = potionListTag.get(line - 1);
+                customEffect = new CustomEffect(
+                        CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase()),
+                        potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
+                        potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
+                        DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())
+                );
+              }
+              catch (Exception ignored)
+              {
 
+              }
+              potionListTag.remove(line - 1);
+              playerInventory.setItemInMainHand(nbtItem.getItem());
+              Method.updateInventory(player);
+              MessageUtil.info(sender, ComponentUtil.translate("%s에 있는 %s번째 효과(%s)를 제거하였습니다. (남은 효과 개수 : %s개)", item, line, customEffect != null ? customEffect : ComponentUtil.translate("&c잘못된 효과입니다!"), potionListTag.size()));
             }
             case "set" -> {
 

@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectApplyEvent;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.Updater;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,7 @@ public class EntityCustomEffectApply implements Listener
     Entity entity = event.getEntity();
     CustomEffect customEffect = event.getCustomEffect();
     int duration = customEffect.getDuration();
+    int amplifier = customEffect.getAmplifier();
     CustomEffectType customEffectType = customEffect.getEffectType();
     List<CustomEffectType> conflictEffects = customEffectType.getConflictEffects();
     for (CustomEffectType conflictEffect : conflictEffects)
@@ -41,6 +43,12 @@ public class EntityCustomEffectApply implements Listener
     if (customEffectType == CustomEffectType.MUTE)
     {
       MessageUtil.sendMessage(entity, Prefix.INFO, duration != -1 ? "%s 동안 채팅 금지 당하셨습니다." : "채팅 금지 당하셨습니다.", Method.timeFormatMilli(duration * 50L, false, 0));
+    }
+
+    if (customEffectType == CustomEffectType.CUCUMBERY_UPDATER)
+    {
+      CustomEffectManager.removeEffect(entity, CustomEffectType.CUCUMBERY_UPDATER);
+      Updater.defaultUpdater.updateLatest(amplifier == 1);
     }
   }
 }

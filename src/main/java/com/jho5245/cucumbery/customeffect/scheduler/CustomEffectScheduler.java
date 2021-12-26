@@ -9,10 +9,10 @@ import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.customeffect.scheduler.metasasis.MetasasisScheduler;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreRemoveEvent;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
+import com.jho5245.cucumbery.util.CreateGUI;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.CreateGUI;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.bossbar.BossBar;
@@ -26,6 +26,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.InventoryView.Property;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class CustomEffectScheduler
       display();
       axolotlsGrace();
       trollInventoryProperty();
+      stop();
     }, 0L, 1L);
     MetasasisScheduler.schedule(cucumbery);
   }
@@ -202,6 +204,23 @@ public class CustomEffectScheduler
         for (Property property : Property.values())
         {
           player.setWindowProperty(property, Method.random(min, customEffect.getAmplifier()));
+        }
+      }
+    }
+  }
+
+  private static void stop()
+  {
+    for (World world : Bukkit.getWorlds())
+    {
+      for (Entity entity : world.getEntities())
+      {
+        if (CustomEffectManager.hasEffect(entity, CustomEffectType.STOP))
+        {
+          if (!(entity instanceof LivingEntity))
+          {
+            entity.setVelocity(new Vector(0, 0.04, 0));
+          }
         }
       }
     }

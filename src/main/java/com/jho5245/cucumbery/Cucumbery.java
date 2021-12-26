@@ -65,6 +65,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -88,7 +89,7 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 9;
+  public static final int CONFIG_VERSION = 13;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   public static boolean using_CommandAPI;
@@ -223,6 +224,7 @@ public class Cucumbery extends JavaPlugin
       }
     }
     Updater.onDisable();
+    CustomEnchant.onDisable();
     if (Cucumbery.using_CommandAPI)
     {
       brigadierService.shutdownNow();
@@ -258,6 +260,7 @@ public class Cucumbery extends JavaPlugin
     {
       e.printStackTrace();
     }
+    CustomEnchant.onEnable();
     if (using_CommandAPI)
     {
       try
@@ -340,7 +343,7 @@ public class Cucumbery extends JavaPlugin
     new CommandReplaceEntity().registerCommand("replaceentity", "cucumbery.command.replaceentity", "creplaceentity");
     new CommandRepeat2().registerCommand("crepeat", "cucumbery.command.repeat", "repeat2");
     new CommandData2().registerCommand("cdata", "cucumbery.command.data", "data2");
-    new CommandTeleport2().registerCommand("teleport2", "cucumbery.command.teleport");
+    new CommandTeleport2().registerCommand("teleport2", "cucumbery.command.teleport", "tp2");
     new CommandExplode().registerCommand("explode", "cucumbery.command.explode", "cexplode");
     new CommandVanillaTeleport().registerCommand("teleport", "minecraft.command.teleport", "tp");
     new CommandSellItem().registerCommand("sellitem", "cucumbery.command.sellitem", "csellitem");
@@ -478,7 +481,9 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PrepareItemEnchant());
 
     // listener.entity
+    Initializer.registerEvent(new AreaEffectCloudApply());
     Initializer.registerEvent(new EntityAddToWorld());
+    Initializer.registerEvent(new EntityBreed());
     Initializer.registerEvent(new EntityChangeBlock());
     Initializer.registerEvent(new EntityDeath());
     Initializer.registerEvent(new EntityExplode());

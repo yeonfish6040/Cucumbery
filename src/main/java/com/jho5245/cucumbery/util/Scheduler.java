@@ -64,6 +64,8 @@ public class Scheduler
 
       // 관전 중인 개체의 정보 표시
       showSpectatorTargetInfoActionbar();
+      // 커스텀 인챈트
+      customEnchant();
       // 플러그인 실행 시간
       Cucumbery.runTime++;
     }, 0L, 1L);
@@ -101,6 +103,31 @@ public class Scheduler
     }, 1200L, 20L * 60L * 5L);
     reinforceChancetime();
     CustomEffectScheduler.schedule(cucumbery);
+  }
+
+  private static void customEnchant()
+  {
+    for (World world : Bukkit.getWorlds())
+    {
+      for (Entity entity : world.getEntities())
+      {
+        if (!(entity instanceof LivingEntity livingEntity))
+        {
+          continue;
+        }
+        EntityEquipment equipment = livingEntity.getEquipment();
+        if (equipment == null)
+        {
+          continue;
+        }
+        ItemStack helmet = equipment.getHelmet();
+        if (!ItemStackUtil.itemExists(helmet))
+        {
+          continue;
+        }
+        ItemMeta itemMeta = helmet.getItemMeta();
+      }
+    }
   }
 
   private static void showSpectatorTargetInfoActionbar()

@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 9
+config-version: 13
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -707,3 +707,12 @@ use-gusenited-consonant-grammar: false
 
 # 일반적으로 커스텀 효과는 보스바에 표시되는데, 마인크래프트 자체 포션 효과도 보스바에 같이 표시되게 할 것인가?
 show-vanilla-potion-effects-on-bossbar: true
+
+# 효과가 없는 포션들(평험한, 어색한, 진한 포션)에 특정 효과를 추가할 것인가?
+# 기존 마인크래프트에는 해당 포션에는 효과가 없지만 효과를 제공하게 함.
+# 추가로, 해당 효과가 있는 상태에서 특정 음식을 먹으면 양조 조합법과 같은 결과의 포션 효과를 적용받을 수 있음
+# (예: 어색한 포션을 마시고 황금 당근을 먹으면 야간 투시가 걸림)
+use-no-effect-potions-weirdly: true
+
+# 커스텀 인챈트 기능 사용(/itag customenchant 명령어가 아닌 마크 고유의 인챈트)
+use-custom-enchant-features: true

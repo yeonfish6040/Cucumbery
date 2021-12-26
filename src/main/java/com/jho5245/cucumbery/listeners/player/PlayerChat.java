@@ -240,5 +240,10 @@ public class PlayerChat implements Listener
       }
     }
     event.message(ComponentUtil.create2(player, message, false));
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.THICK))
+    {
+      event.message(MessageUtil.boldify(event.message()));
+    }
   }
+
 }
