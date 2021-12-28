@@ -15,6 +15,7 @@ import com.jho5245.cucumbery.commands.itemtag.CommandItemTagTabCompleter;
 import com.jho5245.cucumbery.commands.msg.CommandBroadcast;
 import com.jho5245.cucumbery.commands.msg.CommandClearChat;
 import com.jho5245.cucumbery.commands.msg.CommandSendMessage;
+import com.jho5245.cucumbery.commands.msg.CommandSendToast;
 import com.jho5245.cucumbery.commands.sound.CommandPlaySound;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.commands.teleport.CommandAdvancedTeleport;
@@ -449,6 +450,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("customeffect", new CommandCustomEffect());
     Initializer.registerCommand("quickshopaddon", new CommandQuickShopAddon());
     Initializer.registerCommand("modifyexplosive", new CommandModifyExplosive());
+    Initializer.registerCommand("sendtoast", new CommandSendToast());
   }
 
   private void registerEvents()

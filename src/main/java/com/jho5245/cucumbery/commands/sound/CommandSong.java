@@ -179,6 +179,52 @@ public class CommandSong implements CommandExecutor, TabCompleter
               MessageUtil.info(sender, "/" + label + " " + args[0]);
               return true;
             }
+            case "pause" -> {
+              if (args.length > 3)
+              {
+                MessageUtil.longArg(sender, 1, args);
+                MessageUtil.info(sender, "/" + label + " " + args[0] + " [toggle|on|off] [명령어 출력 숨김 여부]");
+                return true;
+              }
+              if (!MessageUtil.isBoolean(sender, args, 3, true))
+              {
+                return true;
+              }
+              boolean hideOutput = args.length == 3 && args[2].equals("true");
+              if (radioSongPlayer == null || song == null)
+              {
+                MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다.");
+                return true;
+              }
+              boolean playing = radioSongPlayer.isPlaying();
+              switch (args[1])
+              {
+                case "on" -> playing = true;
+                case "off" -> playing = false;
+                case "toggle" -> playing = !playing;
+                default -> {
+                  MessageUtil.wrongArg(sender, 2, args);
+                  return true;
+                }
+              }
+              radioSongPlayer.setPlaying(playing);
+              if (!hideOutput)
+              {
+                String display = !playing ? "중지" : "재개";
+                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 재생을 " + display + "하였습니다.", song));
+                for (Player player : Bukkit.getServer().getOnlinePlayers())
+                {
+                  if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
+                  {
+                    if (!sender.equals(player))
+                    {
+                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) %s의 재생을 " + display + "하였습니다.", sender, song));
+                    }
+                  }
+                }
+                return true;
+              }
+            }
             case "play" -> {
               String fileName = MessageUtil.listToString(" ", 1, args.length, args);
 
@@ -186,6 +232,11 @@ public class CommandSong implements CommandExecutor, TabCompleter
               if (force)
               {
                 fileName = fileName.replace("--force", "");
+              }
+              boolean stop = fileName.contains("--stop");
+              if (stop)
+              {
+                fileName = fileName.replace("--stop", "");
               }
               boolean disable10Octave = fileName.contains("--no10");
               if (disable10Octave)
@@ -212,6 +263,12 @@ public class CommandSong implements CommandExecutor, TabCompleter
               catch (Exception e)
               {
                 category = SoundCategory.RECORDS;
+              }
+              if (!stop && radioSongPlayer != null)
+              {
+                MessageUtil.sendError(sender, ComponentUtil.translate("노래가 이미 재생중이여서 재생할 수 없습니다."));
+                MessageUtil.info(sender, ComponentUtil.translate("'/csong stop' 명령어로 노래를 멈추거나 '노래이름--stop'을 입력하면 이미 재생중인 노래를 멈추고 재생할 수 있습니다."));
+                return true;
               }
               boolean random = fileName.startsWith("--random");
               if (random && !Songs.list.isEmpty())
@@ -296,6 +353,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
           }
         }
+        break;
       case "csong2":
         if (args.length < 2)
         {
@@ -483,18 +541,29 @@ public class CommandSong implements CommandExecutor, TabCompleter
       {
         return Method.tabCompleterList(args, "<인수>", "play", "stop", "info", "listening", "pause");
       }
-      else if (args[0].equals("play"))
+      if (length == 2)
       {
-        if (args.length == 2)
+        switch (args[0])
         {
-          Variable.songFiles.addAll(Songs.list);
-          if (!Variable.songFiles.isEmpty())
-          {
-            Variable.songFiles.add("--random");
+          case "pause" -> {
+            return Method.tabCompleterList(args, "[인수]", "on", "toggle", "off");
           }
-          return Method.tabCompleterList(args, Variable.songFiles, "<노래 파일>", true);
+          case "play" -> {
+            Variable.songFiles.addAll(Songs.list);
+            if (!Variable.songFiles.isEmpty())
+            {
+              Variable.songFiles.add("--random");
+            }
+            return Method.tabCompleterList(args, Variable.songFiles, "<노래 파일>", true);
+          }
         }
-        return Method.tabCompleterList(args, "<노래 파일>", true);
+      }
+      if (length == 3)
+      {
+        if ("pause".equals(args[0]))
+        {
+          return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+        }
       }
     }
     else if (name.equals("csong2") && Method.hasPermission(sender, Permission.CMD_SONG, false))

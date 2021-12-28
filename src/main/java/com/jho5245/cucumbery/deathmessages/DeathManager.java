@@ -200,6 +200,10 @@ public class DeathManager
             }
             else if (damagerEntity instanceof Fireball fireball)
             {
+              if (!(fireball instanceof SizedFireball))
+              {
+                extraArgs.add(SenderComponentUtil.senderComponent(fireball));
+              }
               if (fireball instanceof DragonFireball)
               {
                 key = "dragon_fireball";
@@ -207,7 +211,12 @@ public class DeathManager
               else if (fireball instanceof SizedFireball sizedFireball)
               {
                 key = "fireball";
-                extraArgs.add(ComponentUtil.create(sizedFireball.getDisplayItem()));
+                ItemStack itemStack = sizedFireball.getDisplayItem().clone();
+                if (Method.usingLoreFeature(entity.getLocation()))
+                {
+                  ItemLore.setItemLore(itemStack);
+                }
+                extraArgs.add(ComponentUtil.create(itemStack));
               }
               else if (fireball instanceof WitherSkull)
               {
@@ -527,14 +536,14 @@ public class DeathManager
         if (msg instanceof TranslatableComponent translatableComponent)
         {
           String k = translatableComponent.key();
-          MessageUtil.broadcastDebug(k);
+         // MessageUtil.broadcastDebug(k);
           if (k.equals("death.fell.accident.water"))
           {
             key = "water_accident";
           }
         }
       }
-      MessageUtil.broadcastDebug(key);
+      //MessageUtil.broadcastDebug(key);
       DeathMessage deathMessage;
       try
       {
@@ -621,7 +630,7 @@ public class DeathManager
       {
         if (damager instanceof Entity e)
         {
-          MessageUtil.broadcastDebug(e);
+          //MessageUtil.broadcastDebug(e);
           Variable.attackerAndWeapon.remove(e.getUniqueId());
           Variable.attackerAndWeaponString.remove(e.getUniqueId());
         }
@@ -730,7 +739,6 @@ public class DeathManager
     }
     return null;
   }
-
 
   @Nullable
   protected static Object getDamager(EntityDeathEvent event)

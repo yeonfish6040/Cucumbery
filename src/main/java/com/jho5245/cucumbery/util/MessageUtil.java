@@ -11,6 +11,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
+import io.papermc.paper.advancement.AdvancementDisplay.Frame;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -18,10 +19,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
 import net.kyori.adventure.title.Title;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -362,6 +360,21 @@ public class MessageUtil
       SoundPlay.playWarnSound(audience);
     }
     sendMessage(audience, Prefix.INFO_WARN, key, args);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static void sendToast(@NotNull Object audience, @NotNull Component title, @NotNull Material type, @NotNull Frame frame)
+  {
+    if (audience instanceof Player player)
+    {
+      NamespacedKey namespacedKey = NamespacedKey.minecraft("z-cucumbery-toast-" + System.currentTimeMillis());
+      new ToastMessage(namespacedKey, title, type, frame).showTo(player);
+    }
+    else if (audience instanceof Collection<?> collection && collection.stream().allMatch(Predicates.instanceOf(Player.class)::apply))
+    {
+      NamespacedKey namespacedKey = NamespacedKey.minecraft("z-cucumbery-toast-" + System.currentTimeMillis());
+      new ToastMessage(namespacedKey, title, type, frame).showTo((Collection<? extends Player>) collection);
+    }
   }
 
   /**

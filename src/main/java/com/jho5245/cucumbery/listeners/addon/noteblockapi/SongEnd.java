@@ -11,7 +11,6 @@ public class SongEnd implements Listener
   @EventHandler
   public void onSongEnd(SongEndEvent event)
   {
-    MessageUtil.broadcastDebug("노래 끝남 : ", event.getSongPlayer().getSong());
     if (CommandSong.radioSongPlayer != null)
     {
       CommandSong.radioSongPlayer.setPlaying(false);

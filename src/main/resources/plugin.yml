@@ -347,6 +347,10 @@ commands:
     description: 폭발물의 불 번짐 여부나 폭발 강도를 수정합니다.
     usage: /<command> <폭발물> <fire|explode_radius> <값> [명령어 출력 숨김 여부]
     aliases: [editbomb]
+  sendtoast:
+    description: 플레이어에게 토스트 메시지를 보냅니다.
+    usage: /<command> <플레이어> <메시지> [아이템] [유형]
+    aliases: [csendtoast]
 
 permissions:
   cucumbery.error.hide:

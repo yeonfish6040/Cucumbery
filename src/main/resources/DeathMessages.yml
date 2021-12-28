@@ -303,20 +303,24 @@ death-messages:
     falling-stalactite-combat-suicide-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 찔렸습니다. 아야야야."
     fireball:
-      - "%1$s이(가) 화염구에 맞았습니다."
-      - "%1$s이(가) 화염구에 맞아 터졌습니다."
+      - "%1$s이(가) %1$s에 맞았습니다."
+      - "%1$s이(가) %1$s에 맞아 터졌습니다."
     fireball-combat:
-      - "death.attack.fireball" # %1$s이(가) %2$s이(가) 던진 화염구에 맞았습니다
-      - "%1$s이(가) %2$s이(가) 던진 화염구에 맞아 터졌습니다."
+      #- "death.attack.fireball" # %1$s이(가) %2$s이(가) 던진 화염구에 맞았습니다
+      - "%1$s이(가) %2$s이(가) 쏜 %3$s에 맞았습니다."
+      - "%1$s이(가) %2$s이(가) 쏜 %3$s에 맞아 터졌습니다."
     fireball-combat-item:
-      - "death.attack.fireball.item" # %1$s이(가) %3$s을(를) 사용한 %2$s이(가) 던진 화염구에 맞았습니다
-      - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 던진 화염구에 맞아 터졌습니다."
+      #- "death.attack.fireball.item" # %1$s이(가) %3$s을(를) 사용한 %2$s이(가) 던진 화염구에 맞았습니다
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 쏜 %4$s에 맞았습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 쏜 %4$s에 맞아 터졌습니다."
     fireball-combat-suicide:
-      - "death.attack.fireball" # %1$s이(가) %2$s이(가) 던진 화염구에 맞았습니다
-      - "%1$s이(가) %2$s이(가) 던진 화염구에 맞아 터졌습니다."
+      #- "death.attack.fireball" # %1$s이(가) %2$s이(가) 던진 화염구에 맞았습니다
+      - "%1$s이(가) %2$s이(가) 쏜 %3$s에 맞았습니다."
+      - "%1$s이(가) %2$s이(가) 쏜 %3$s에 맞아 터졌습니다."
     fireball-combat-suicide-item:
-      - "death.attack.fireball.item" # %1$s이(가) %3$s을(를) 사용한 %2$s이(가) 던진 화염구에 맞았습니다
-      - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 던진 화염구에 맞아 터졌습니다."
+      #- "death.attack.fireball.item" # %1$s이(가) %3$s을(를) 사용한 %2$s이(가) 던진 화염구에 맞았습니다
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 쏜 %4$s에 맞았습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 쏜 %4$s에 맞아 터졌습니다."
     fireball-combat-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s에 맞았습니다."
       - "%1$s이(가) 어딘가에서 날아온 %2$s에 맞아 터졌습니다."
@@ -636,11 +640,14 @@ death-messages:
     wither-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다."
     wither-skull:
-      - "death.attack.witherSkull" # %1$s이(가) %2$s의 해골에게 저격당했습니다
+      #- "death.attack.witherSkull" # %1$s이(가) %2$s의 해골에게 저격당했습니다
+      - "%1$s이(가) %2$s에게 저격당했습니다"
     wither-skull-combat:
       - "%1$s이(가) %2$s이(가) 발사한 %3$s에게 저격당했습니다."
     wither-skull-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 발사한 %4$s에게 저격당했습니다."
+    wither-skull-combat-unknown:
+      - "%1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다"
     world-border:
       - "%1$s이(가) %2$s 밖으로 탈출하려다 질식사했습니다."
     world-border-combat:
