@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import io.papermc.paper.advancement.AdvancementDisplay.Frame;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -24,7 +25,7 @@ public record ToastMessage(NamespacedKey id, Component title, Material type,
   public ToastMessage(@NotNull NamespacedKey id, @NotNull Component title, @NotNull Material type, @NotNull Frame frame)
   {
     this.id = id;
-    this.title = title;
+    this.title = ComponentUtil.stripEvent(title);
     this.type = type;
     this.frame = frame;
   }

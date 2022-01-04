@@ -3619,9 +3619,8 @@ public class CommandItemTag implements CommandExecutor
                 return true;
               }
               MessageUtil.info(sender, ComponentUtil.translate("%s에는 포션 태그가 %s개 있습니다.", item, potionListTag.size()));
-              for (int i = 0; i < potionListTag.size(); i++)
+              for (NBTCompound nbtCompound : potionListTag)
               {
-                NBTCompound nbtCompound = potionListTag.get(i);
                 try
                 {
                   CustomEffectType customEffectType = CustomEffectType.valueOf(nbtCompound.getString(CucumberyTag.CUSTOM_EFFECTS_ID));
@@ -3688,7 +3687,7 @@ public class CommandItemTag implements CommandExecutor
               if (args.length > 6)
               {
                 MessageUtil.longArg(sender, 6, args);
-                MessageUtil.commandInfo(sender, label, " potion add <효과> [지속 시간(틱)] [농도 레벨] [표시 유형]");
+                MessageUtil.commandInfo(sender, label, " potion add <효과> [지속 시간(초)] [농도 레벨] [표시 유형]");
                 return true;
               }
               CustomEffectType customEffectType;
@@ -3701,37 +3700,25 @@ public class CommandItemTag implements CommandExecutor
                 MessageUtil.wrongArg(sender, 3, args);
                 return true;
               }
-              if (potionListTag != null)
-              {
-                for (NBTCompound nbtCompound : potionListTag)
-                {
-                  String id = nbtCompound.getString(CucumberyTag.ID_KEY);
-                  if (customEffectType.toString().equals(id))
-                  {
-                    MessageUtil.sendError(sender, ComponentUtil.translate("%s에는 이미 %s 효과가 있습니다.", item, customEffectType));
-                    return true;
-                  }
-                }
-              }
               int duration = customEffectType.getDefaultDuration(), amplifier = 0;
               DisplayType displayType = customEffectType.getDefaultDisplayType();
               if (args.length >= 4)
               {
-                if (args[3].equals("max"))
+                if (args[3].equals("infinite"))
                 {
                   duration = -1;
                 }
-                else if (MessageUtil.isInteger(sender, args[3], true))
+                else if (!args[3].equals("default"))
                 {
-                  duration = Integer.parseInt(args[3]);
-                }
-                else
-                {
-                  return true;
-                }
-                if (!args[3].equals("max") && !MessageUtil.checkNumberSize(sender, duration, 1, Integer.MAX_VALUE, true))
-                {
-                  return true;
+                  if (MessageUtil.isDouble(sender, args[3], true))
+                  {
+                    double input = Double.parseDouble(args[3]);
+                    if (!MessageUtil.checkNumberSize(sender, input, 0.05, Integer.MAX_VALUE / 20d, true))
+                    {
+                      return true;
+                    }
+                    duration = (int) (input * 20);
+                  }
                 }
               }
               if (args.length >= 5)
@@ -3743,12 +3730,12 @@ public class CommandItemTag implements CommandExecutor
                 else if (MessageUtil.isInteger(sender, args[4], true))
                 {
                   amplifier = Integer.parseInt(args[4]);
+                  if (!MessageUtil.checkNumberSize(sender, amplifier, 0, customEffectType.getMaxAmplifier(), true))
+                  {
+                    return true;
+                  }
                 }
                 else
-                {
-                  return true;
-                }
-                if (!args[4].equals("max") && !MessageUtil.checkNumberSize(sender, amplifier, 0, customEffectType.getMaxAmplifier(), true))
                 {
                   return true;
                 }
@@ -3763,6 +3750,19 @@ public class CommandItemTag implements CommandExecutor
                 {
                   MessageUtil.wrongArg(sender, 5, args);
                   return true;
+                }
+              }
+              if (potionListTag != null)
+              {
+                for (NBTCompound nbtCompound : potionListTag)
+                {
+                  String id = nbtCompound.getString(CucumberyTag.ID_KEY);
+                  Integer origiAamplifier = nbtCompound.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER);
+                  if (customEffectType.toString().equals(id) && origiAamplifier != null && origiAamplifier.equals(amplifier))
+                  {
+                    MessageUtil.sendError(sender, ComponentUtil.translate("%s에는 이미 %s 효과가 있습니다.", item, customEffectType));
+                    return true;
+                  }
                 }
               }
               if (itemTag == null)

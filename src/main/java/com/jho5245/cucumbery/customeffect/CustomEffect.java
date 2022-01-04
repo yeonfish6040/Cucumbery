@@ -121,7 +121,7 @@ public class CustomEffect
               case ELYTRA_BOOSTER -> ComponentUtil.translate("겉날개 활강 중 폭죽으로 가속할 때")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("%s 확률로 폭죽을 소비하지 않습니다.", "&e" + ((amplifier + 1) * 10) + "%"));
-              case LEVITATION_RESISTACNE -> ComponentUtil.translate("셜커에게 공격받아도 %s 확률로", "&e" + ((amplifier + 1) * 10) + "%")
+              case LEVITATION_RESISTANCE -> ComponentUtil.translate("셜커에게 공격받아도 %s 확률로", "&e" + ((amplifier + 1) * 10) + "%")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("공중 부양 상태 효과가 적용되지 않습니다."));
               case UNCRAFTABLE -> switch (amplifier)
@@ -130,6 +130,8 @@ public class CustomEffect
                         case 1 -> ComponentUtil.translate("제작대에서 아이템을 제작할 수 없습니다.");
                         default -> ComponentUtil.translate("아이템을 제작할 수 없습니다.");
                       };
+              case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 주는 피해량이 %s 증가합니다.", "&e" + ((amplifier + 2) * 5) + "%");
+              case DODGE -> ComponentUtil.translate("%s 확률로 공격을 회피합니다.", "&e" + (amplifier + 1) + "%");
               default -> effectType.getDescription();
             };
     description = ComponentUtil.create(description, effectType.getPropertyDescription());
@@ -155,6 +157,22 @@ public class CustomEffect
   public CustomEffect copy()
   {
     return new CustomEffect(this.getEffectType(), this.getDuration(), this.getAmplifier(), this.getDisplayType());
+  }
+
+  public boolean isHidden()
+  {
+    return this.effectType.isHidden();
+  }
+
+  @SuppressWarnings("all")
+  public boolean isTimeHidden()
+  {
+    return isTimeHiddenWhenFull() || this.duration == -1 || this.effectType.isTimeHidden();
+  }
+
+  public boolean isTimeHiddenWhenFull()
+  {
+    return this.effectType.isTimeHiddenWhenFull() && this.duration + 1 >= this.initDuration;
   }
 
   public enum DisplayType

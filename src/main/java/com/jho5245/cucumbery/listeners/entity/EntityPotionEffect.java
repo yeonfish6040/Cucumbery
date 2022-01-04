@@ -33,9 +33,9 @@ public class EntityPotionEffect implements Listener
 //    MessageUtil.broadcastDebug("entity-", entity, ", action:" + action + ", cause:" + cause, ", type:", potionEffectType,
 //            ComponentUtil.translate(", old:%s, new:%s, override:%s", oldEffect != null ? oldEffect : "null", newEffect != null ? newEffect : "null", override + ""));
 
-    if (CustomEffectManager.hasEffect(entity, CustomEffectType.LEVITATION_RESISTACNE) && potionEffectType.equals(PotionEffectType.LEVITATION) && cause == Cause.ATTACK)
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.LEVITATION_RESISTANCE) && potionEffectType.equals(PotionEffectType.LEVITATION) && cause == Cause.ATTACK)
     {
-      CustomEffect customEffect = CustomEffectManager.getEffect(entity, CustomEffectType.LEVITATION_RESISTACNE);
+      CustomEffect customEffect = CustomEffectManager.getEffect(entity, CustomEffectType.LEVITATION_RESISTANCE);
       int amplifier = customEffect.getAmplifier() + 1;
       if (Math.random() * 10d < amplifier)
       {

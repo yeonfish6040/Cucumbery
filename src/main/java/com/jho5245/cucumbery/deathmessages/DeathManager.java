@@ -489,6 +489,10 @@ public class DeathManager
         case DRYOUT -> key = "dry_out";
         case FREEZE -> key = "freeze";
       }
+      if (Variable.darknessTerrorFlag.contains(entity.getUniqueId()))
+      {
+        key = "custom_darkness_terror";
+      }
       if (damager != null)
       {
         if (damager instanceof ItemStack itemStack)

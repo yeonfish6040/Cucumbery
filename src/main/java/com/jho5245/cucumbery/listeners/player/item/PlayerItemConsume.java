@@ -215,12 +215,12 @@ public class PlayerItemConsume implements Listener
         if (itemStack.getType() == Material.GOLDEN_CARROT)
         {
           CustomEffectManager.removeEffect(player, CustomEffectType.AWKWARD);
-          player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, duration, amplifier));
+          player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, duration == -1 ? Integer.MAX_VALUE : duration, amplifier));
         }
         if (itemStack.getType() == Material.PUFFERFISH)
         {
           CustomEffectManager.removeEffect(player, CustomEffectType.AWKWARD);
-          player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, duration, amplifier));
+          player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, duration == -1 ? Integer.MAX_VALUE : duration, amplifier));
         }
       }
     }

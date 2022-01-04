@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.customeffect.VanillaEffectDescription;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
@@ -211,6 +212,22 @@ public class ComponentUtil
       {
         component = component.append(LocationComponent.locationComponent(location));
       }
+      else if (object instanceof PotionEffectType potionEffectType)
+      {
+        String effectKey = TranslatableKeyParser.getKey(potionEffectType);
+        String id = effectKey.substring(17);
+        Component concat = Component.translatable(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
+        Component hover = Component.translatable(effectKey);
+        hover = hover.append(VanillaEffectDescription.getDescription(potionEffectType));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(Component.text("minecraft:" + id, NamedTextColor.DARK_GRAY));
+        concat = concat.hoverEvent(hover);
+        if (player == null || player.hasPermission("asdf"))
+        {
+          concat = concat.clickEvent(ClickEvent.suggestCommand("/ceffect @s minecraft:" + id));
+        }
+        component = component.append(concat);
+      }
       else if (object instanceof PotionEffect potionEffect)
       {
         PotionEffectType potionEffectType = potionEffect.getType();
@@ -220,6 +237,9 @@ public class ComponentUtil
         boolean hasParticles = potionEffect.hasParticles(), hasIcon = potionEffect.hasIcon(), isAmbient = potionEffect.isAmbient();
         Component concat = Component.translatable(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(effectKey);
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(VanillaEffectDescription.getDescription(potionEffect));
+        hover = hover.append(Component.text("\n"));
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
         hover = hover.append(Component.text("\n"));
@@ -288,19 +308,17 @@ public class ComponentUtil
         Component concat = Component.translatable(key, effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(key);
         Component description = customEffect.getDescription();
+        boolean isFinite = duration != -1, isAmplifiable = effectType.getMaxAmplifier() > 0;
         if (!description.equals(Component.empty()))
         {
           hover = hover.append(Component.text("\n"));
           hover = hover.append(customEffect.getDescription());
-          hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
-          if (effectType == CustomEffectType.CURSE_OF_BEANS)
+          if (isFinite || isAmplifiable)
           {
             hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.create(Constant.SEPARATOR));
           }
         }
-        if (duration != -1)
+        if (isFinite)
         {
           hover = hover.append(Component.text("\n"));
           hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
@@ -309,8 +327,13 @@ public class ComponentUtil
             hover = hover.append(Component.text("\n"));
             hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
           }
+          if (customEffect.isTimeHidden())
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.translate("&e지속 시간이 표기되지 않는 효과입니다."));
+          }
         }
-        if (effectType.getMaxAmplifier() != 0)
+        if (isAmplifiable)
         {
           hover = hover.append(Component.text("\n"));
           hover = hover.append(ComponentUtil.translate("농도 레벨 : %s단계", amplifier + 1));
@@ -328,7 +351,7 @@ public class ComponentUtil
           hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
         }
         DisplayType displayType = customEffect.getDisplayType();
-        String click = "/customeffect give @s " + effectType.toString().toLowerCase() + " " + (duration != -1 ? duration : "max") + " " + amplifier + " " + displayType.toString().toLowerCase();
+        String click = "/customeffect give @s " + effectType.toString().toLowerCase() + " " + (duration != -1 ? duration / 20d : "infinite") + " " + amplifier + " " + displayType.toString().toLowerCase();
         concat = concat.hoverEvent(hover);
         if (player == null || player.hasPermission("asdf"))
         {
@@ -726,6 +749,7 @@ public class ComponentUtil
           }
           componentArgs.add(arg);
         }
+        continue;
       }
       if (obj instanceof Object[] array)
       {
@@ -733,6 +757,7 @@ public class ComponentUtil
         {
           componentArgs.add(ComponentUtil.create(player, value));
         }
+        continue;
       }
       if (!(obj instanceof Boolean))
       {
@@ -744,8 +769,10 @@ public class ComponentUtil
         componentArgs.add(arg);
       }
     }
-    if (!componentArgs.isEmpty()) ;
-    component = component.args(componentArgs);
+    if (!componentArgs.isEmpty())
+    {
+      component = component.args(componentArgs);
+    }
     component = yeet(component.key(), component);
     return component;
   }
@@ -1349,4 +1376,60 @@ public class ComponentUtil
             && component.decoration(TextDecoration.OBFUSCATED) == TextDecoration.State.NOT_SET
             && component.decoration(TextDecoration.UNDERLINED) == TextDecoration.State.NOT_SET;
   }
+
+  /**
+   * 컴포넌트의 호버 이벤트와 클릭 이벤트를 제거하여 반환합니다.
+   *
+   * @param component 이벤트를 제거할 컴포넌트
+   * @return 이벤트가 제거된 컴포넌트
+   */
+  @NotNull
+  public static Component stripEvent(@NotNull Component component)
+  {
+    List<Component> children = new ArrayList<>(component.children());
+    for (int i = 0; i < children.size(); i++)
+    {
+      children.set(i, stripEvent(children.get(i)));
+    }
+    component = component.clickEvent(null).hoverEvent(null).children(children).insertion(null);
+    if (component instanceof TranslatableComponent translatableComponent)
+    {
+      List<Component> args = new ArrayList<>(translatableComponent.args());
+      for (int i = 0; i < args.size(); i++)
+      {
+        args.set(i, stripEvent(args.get(i)));
+      }
+      component = translatableComponent.args(args);
+    }
+    return component;
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

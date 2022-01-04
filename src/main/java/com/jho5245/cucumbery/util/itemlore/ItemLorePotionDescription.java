@@ -1,15 +1,13 @@
 package com.jho5245.cucumbery.util.itemlore;
 
-import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -228,78 +226,16 @@ public class ItemLorePotionDescription
   @NotNull
   public static Component getDescription(double chance, @NotNull Component effect, long duration, int amplifier)
   {
-    long millis = duration * 50L;
-    long year = millis / (1000L * 60 * 60 * 24 * 365);
-    millis %= (1000L * 60 * 60 * 24 * 365);
-    long day = millis / (1000L * 60 * 60 * 24);
-    millis %= (1000L * 60 * 60 * 24);
-    long hour = millis / (1000L * 60 * 60);
-    millis %= (1000L * 60 * 60);
-    long min = millis / (1000L * 60);
-    millis %= (1000L * 60);
-    double sec = millis / 1000D;
     List<Component> args = new ArrayList<>();
     args.add(ComponentUtil.create(Constant.Sosu2.format(chance) + "%"));
     args.add(effect);
-    args.add(ComponentUtil.translate("%s단계", "" + (amplifier)));
-    Component arg = null;
-    if (year > 0)
+    if (amplifier > 1)
+    args.add(Component.text(amplifier));
+    if (duration > 0)
     {
-      arg = ComponentUtil.create(" (" + year).append(ComponentUtil.translate("년").append(ComponentUtil.create(day != 0 || hour != 0 || min != 0 || sec != 0d ? " " : ")")));
+      args.add(ComponentUtil.create(" (" + Method.timeFormatMilli(duration * 50, true, 2) + ")"));
     }
-    if (day > 0)
-    {
-      Component tmp = (ComponentUtil.create((year != 0 ? "" : " (") + day).append(ComponentUtil.translate("일").append(ComponentUtil.create(hour != 0 || min != 0 || sec != 0d ? " " : ")"))));
-      if (arg == null)
-      {
-        arg = tmp;
-      }
-      else
-      {
-        arg = arg.append(tmp);
-      }
-    }
-    if (hour > 0)
-    {
-      Component tmp = ComponentUtil.create((year != 0 || day != 0 ? "" : " (") + hour).append(ComponentUtil.translate("시간").append(ComponentUtil.create(min != 0 || sec != 0d ? " " : ")")));
-      if (arg == null)
-      {
-        arg = tmp;
-      }
-      else
-      {
-        arg = arg.append(tmp);
-      }
-    }
-    if (min > 0)
-    {
-      Component tmp = ComponentUtil.create((year != 0 || day != 0 || hour != 0 ? "" : " (") + min).append(ComponentUtil.translate("분").append(ComponentUtil.create(sec != 0d ? " " : ")")));
-      if (arg == null)
-      {
-        arg = tmp;
-      }
-      else
-      {
-        arg = arg.append(tmp);
-      }
-    }
-    if (sec > 0)
-    {
-      Component tmp = ComponentUtil.create((year != 0 || day != 0 || hour != 0 || min != 0 ? "" : " (") + Constant.Sosu2.format(sec)).append(ComponentUtil.translate("초").append(ComponentUtil.create(")")));
-      if (arg == null)
-      {
-        arg = tmp;
-      }
-      else
-      {
-        arg = arg.append(tmp);
-      }
-    }
-    if (arg != null)
-    {
-      args.add(arg);
-    }
-    return ComponentUtil.translate("rgb255,97,144;%s 확률로 %s %s%s 적용").args(args);
+    return ComponentUtil.translate(amplifier > 1 ? "rgb255,97,144;%1$s 확률로 %2$s %3$s단계%4$s 적용" : "rgb255,97,144;%1$s 확률로 %2$s%3$s 적용", args);
   }
 
   @NotNull

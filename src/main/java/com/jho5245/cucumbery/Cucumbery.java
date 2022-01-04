@@ -12,10 +12,7 @@ import com.jho5245.cucumbery.commands.hp.CommandHealthScale;
 import com.jho5245.cucumbery.commands.hp.CommandMaxHealthPoint;
 import com.jho5245.cucumbery.commands.itemtag.CommandItemTag;
 import com.jho5245.cucumbery.commands.itemtag.CommandItemTagTabCompleter;
-import com.jho5245.cucumbery.commands.msg.CommandBroadcast;
-import com.jho5245.cucumbery.commands.msg.CommandClearChat;
-import com.jho5245.cucumbery.commands.msg.CommandSendMessage;
-import com.jho5245.cucumbery.commands.msg.CommandSendToast;
+import com.jho5245.cucumbery.commands.msg.*;
 import com.jho5245.cucumbery.commands.sound.CommandPlaySound;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.commands.teleport.CommandAdvancedTeleport;
@@ -90,7 +87,7 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 13;
+  public static final int CONFIG_VERSION = 14;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   public static boolean using_CommandAPI;
@@ -224,6 +221,18 @@ public class Cucumbery extends JavaPlugin
         player.hideBossBar(Variable.customEffectBossBarMap.get(uuid));
       }
     }
+    for (UUID uuid : Variable.sendBossBarMap.keySet())
+    {
+      Player player = Bukkit.getPlayer(uuid);
+      if (player != null)
+      {
+        List<BossBarMessage> bossBarMessages = Variable.sendBossBarMap.get(uuid);
+        for (BossBarMessage bossBarMessage : bossBarMessages)
+        {
+          player.hideBossBar(bossBarMessage.getBossBar());
+        }
+      }
+    }
     Updater.onDisable();
     CustomEnchant.onDisable();
     if (Cucumbery.using_CommandAPI)
@@ -246,6 +255,10 @@ public class Cucumbery extends JavaPlugin
         }
       }
       Songs.onDisable();
+    }
+    for (Player onlone : Bukkit.getOnlinePlayers())
+    {
+      onlone.hideBossBar(Scheduler.serverRadio);
     }
   }
 
@@ -451,6 +464,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("quickshopaddon", new CommandQuickShopAddon());
     Initializer.registerCommand("modifyexplosive", new CommandModifyExplosive());
     Initializer.registerCommand("sendtoast", new CommandSendToast());
+    Initializer.registerCommand("sendbossbar", new CommandSendBossbar());
   }
 
   private void registerEvents()

@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 13
+config-version: 14
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -385,6 +385,13 @@ no-spam:
     - world_1
     - world_2,-10~10,-100~100,-1000~1000
     - world_3,10~10,-10~-10,10~10
+  # 채팅 도배 방지 커스텀 효과 기능 사용(쿨타임과 사용 월드는 동일하며 같은 메시지 도배 방지 기능은 적용 안됨)
+  buff: true
+  # 아아템 확성기 도배 방지 기능
+  item-megaphone:
+    enable: true
+    cooldown-in-ticks: 200
+
 
 # 사냥(또는 PVP)을 할때 액션바가 뜨게 할 것인가? - boolean
 show-actionbar-on-attack: true

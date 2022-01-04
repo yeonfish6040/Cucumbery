@@ -157,10 +157,47 @@ public class ItemLore
         defaultLore.add(ComponentUtil.translate("#52ee52;&o" + Constant.TMI_LORE_NBT_TAG_COPIED));
       }
     }
-    itemMeta.lore(defaultLore);
+    if (defaultLore != null)
+    {
+      for (int i = 0; i < defaultLore.size(); i++)
+      {
+        defaultLore.set(i, ComponentUtil.stripEvent(defaultLore.get(i)));
+      }
+      itemMeta.lore(defaultLore);
+    }
+    Component displayName = itemMeta.displayName();
+    if (displayName != null)
+    {
+      itemMeta.displayName(ComponentUtil.stripEvent(ComponentUtil.create(displayName)));
+    }
     itemStack.setItemMeta(itemMeta);
     return itemStack;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   @NotNull

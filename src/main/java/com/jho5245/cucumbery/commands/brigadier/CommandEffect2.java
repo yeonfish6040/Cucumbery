@@ -34,9 +34,7 @@ public class CommandEffect2 extends CommandBase
 {
   private final Argument OVERRIDE = new BooleanArgument("기존 효과 제거");
 
-  private final Argument DURATION_TICK = new IntegerArgument("지속 시간(틱)", 1, Integer.MAX_VALUE);
-
-  private final Argument DURATION = new TimeArgument("지속 시간");
+  private final Argument DURATION_SECOND = new DoubleArgument("지속 시간(초)", 0.05, Integer.MAX_VALUE / 20d);
 
   private final Argument INFINITE_DURATION = new MultiLiteralArgument("infinite");
 
@@ -54,62 +52,33 @@ public class CommandEffect2 extends CommandBase
   private final List<Argument> list1_2 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, OVERRIDE);
   private final List<Argument> list1_3 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, OVERRIDE, HIDE_OUTPUT);
 
-  private final List<Argument> list2_1 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION);
-  private final List<Argument> list2_2 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, OVERRIDE);
-  private final List<Argument> list2_3 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, OVERRIDE, HIDE_OUTPUT);
-  private final List<Argument> list2_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK);
-  private final List<Argument> list2_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, OVERRIDE);
-  private final List<Argument> list2_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument> list2_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND);
+  private final List<Argument> list2_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, OVERRIDE);
+  private final List<Argument> list2_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, OVERRIDE, HIDE_OUTPUT);
   private final List<Argument> list2_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION);
   private final List<Argument> list2_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, OVERRIDE);
   private final List<Argument> list2_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, OVERRIDE, HIDE_OUTPUT);
 
-  private final List<Argument> list3_1 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER);
-  private final List<Argument> list3_2 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER, OVERRIDE);
-  private final List<Argument> list3_3 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER, OVERRIDE, HIDE_OUTPUT);
-  private final List<Argument> list3_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER);
-  private final List<Argument> list3_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER, OVERRIDE);
-  private final List<Argument> list3_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument> list3_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER);
+  private final List<Argument> list3_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, OVERRIDE);
+  private final List<Argument> list3_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, OVERRIDE, HIDE_OUTPUT);
   private final List<Argument> list3_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER);
   private final List<Argument> list3_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, OVERRIDE);
   private final List<Argument> list3_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, OVERRIDE, HIDE_OUTPUT);
 
-  private final List<Argument> list4_1 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER, PROPERTY);
-  private final List<Argument> list4_2 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER, PROPERTY, OVERRIDE);
-  private final List<Argument> list4_3 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER, PROPERTY, OVERRIDE, HIDE_OUTPUT);
-  private final List<Argument> list4_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER, PROPERTY);
-  private final List<Argument> list4_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER, PROPERTY, OVERRIDE);
-  private final List<Argument> list4_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER, PROPERTY, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument> list4_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY);
+  private final List<Argument> list4_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY, OVERRIDE);
+  private final List<Argument> list4_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY, OVERRIDE, HIDE_OUTPUT);
   private final List<Argument> list4_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY);
   private final List<Argument> list4_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY, OVERRIDE);
   private final List<Argument> list4_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY, OVERRIDE, HIDE_OUTPUT);
 
-  private final List<Argument> list5_1 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT);
-  private final List<Argument> list5_2 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE);
-  private final List<Argument> list5_3 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE, HIDE_OUTPUT);
-  private final List<Argument> list5_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT);
-  private final List<Argument> list5_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE);
-  private final List<Argument> list5_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_TICK, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument> list5_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT);
+  private final List<Argument> list5_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE);
+  private final List<Argument> list5_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE, HIDE_OUTPUT);
   private final List<Argument> list5_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT);
   private final List<Argument> list5_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE);
   private final List<Argument> list5_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE, HIDE_OUTPUT);
-/*  @NotNull
-  public static String getPropertyFromBooleans(boolean hideParticles, boolean hideIcon, boolean hideAmbient)
-  {
-    if (!hideParticles && !hideAmbient && !hideIcon)
-    {
-      return "show-all";
-    }
-    if (hideParticles)
-    {
-      if (hideIcon && hideAmbient)
-      {
-        return "hide-all";
-      }
-      return "hide-particle";
-    }
-    return "default";
-  }*/
 
   /**
    * gets booleans from property
@@ -281,42 +250,12 @@ public class CommandEffect2 extends CommandBase
 
     {
       commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list2_1);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], 0, "default", false, false);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list2_2);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], 0, "default", (Boolean) args[3], false);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list2_3);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], 0, "default", (Boolean) args[3], (Boolean) args[4]);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
       commandAPICommand = commandAPICommand.withArguments(list2_4);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], 0, "default", false, false);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), 0, "default", false, false);
       });
       commandAPICommand.register();
 
@@ -326,7 +265,7 @@ public class CommandEffect2 extends CommandBase
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], 0, "default", (Boolean) args[3], false);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), 0, "default", (Boolean) args[3], false);
       });
       commandAPICommand.register();
 
@@ -336,7 +275,7 @@ public class CommandEffect2 extends CommandBase
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], 0, "default", (Boolean) args[3], (Boolean) args[4]);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), 0, "default", (Boolean) args[3], (Boolean) args[4]);
       });
       commandAPICommand.register();
 
@@ -373,42 +312,12 @@ public class CommandEffect2 extends CommandBase
 
     {
       commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list3_1);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], "default", false, false);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list3_2);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], "default", (Boolean) args[4], false);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list3_3);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], "default", (Boolean) args[4], (Boolean) args[5]);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
       commandAPICommand = commandAPICommand.withArguments(list3_4);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], "default", false, false);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], "default", false, false);
       });
       commandAPICommand.register();
 
@@ -418,7 +327,7 @@ public class CommandEffect2 extends CommandBase
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], "default", (Boolean) args[4], false);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], "default", (Boolean) args[4], false);
       });
       commandAPICommand.register();
 
@@ -428,7 +337,7 @@ public class CommandEffect2 extends CommandBase
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], "default", (Boolean) args[4], (Boolean) args[5]);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], "default", (Boolean) args[4], (Boolean) args[5]);
       });
       commandAPICommand.register();
 
@@ -465,42 +374,12 @@ public class CommandEffect2 extends CommandBase
 
     {
       commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list4_1);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (String) args[4], false, false);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list4_2);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (String) args[4], (Boolean) args[5], false);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list4_3);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (String) args[4], (Boolean) args[5], (Boolean) args[6]);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
       commandAPICommand = commandAPICommand.withArguments(list4_4);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (String) args[4], false, false);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], (String) args[4], false, false);
       });
       commandAPICommand.register();
 
@@ -510,7 +389,7 @@ public class CommandEffect2 extends CommandBase
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (String) args[4], (Boolean) args[5], false);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], (String) args[4], (Boolean) args[5], false);
       });
       commandAPICommand.register();
 
@@ -520,7 +399,7 @@ public class CommandEffect2 extends CommandBase
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (String) args[4], (Boolean) args[5], (Boolean) args[6]);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], (String) args[4], (Boolean) args[5], (Boolean) args[6]);
       });
       commandAPICommand.register();
 
@@ -557,42 +436,12 @@ public class CommandEffect2 extends CommandBase
 
     {
       commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list5_1);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], false, false);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list5_2);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], (Boolean) args[7], false);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
-      commandAPICommand = commandAPICommand.withArguments(list5_3);
-      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-      {
-        Collection<Entity> entities = (Collection<Entity>) args[0];
-        PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], (Boolean) args[7], (Boolean) args[8]);
-      });
-      commandAPICommand.register();
-
-      commandAPICommand = getCommandBase(command, permission, aliases);
       commandAPICommand = commandAPICommand.withArguments(list5_4);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], false, false);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], false, false);
       });
       commandAPICommand.register();
 
@@ -602,7 +451,7 @@ public class CommandEffect2 extends CommandBase
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], (Boolean) args[7], false);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], (Boolean) args[7], false);
       });
       commandAPICommand.register();
 
@@ -612,7 +461,7 @@ public class CommandEffect2 extends CommandBase
       {
         Collection<Entity> entities = (Collection<Entity>) args[0];
         PotionEffectType potionEffectType = (PotionEffectType) args[1];
-        giveEffect(sender, entities, potionEffectType, (Integer) args[2], (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], (Boolean) args[7], (Boolean) args[8]);
+        giveEffect(sender, entities, potionEffectType, (int) ((Double) args[2] * 20), (Integer) args[3], (Boolean) args[4], (Boolean) args[5], (Boolean) args[6], (Boolean) args[7], (Boolean) args[8]);
       });
       commandAPICommand.register();
 

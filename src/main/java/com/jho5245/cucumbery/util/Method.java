@@ -12,10 +12,7 @@ import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
-import com.jho5245.cucumbery.util.storage.data.Constant;
-import com.jho5245.cucumbery.util.storage.data.Permission;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.*;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
@@ -101,29 +98,29 @@ public class Method extends SoundPlay
     {
       if (mills >= 1000L * 60 * 60 * 24 * 365)
       {
-        return Constant.Sosu1Force.format(1d * mills / (1000L * 60 * 60 * 24 * 365)) + "년";
+        return Constant.Sosu1ForceFloor.format(1d * mills / (1000L * 60 * 60 * 24 * 365)) + "년";
       }
       if (mills >= 1000L * 60 * 60 * 24)
       {
-        return Constant.Sosu1Force.format(1d * mills / (1000L * 60 * 60 * 24)) + "일";
+        return Constant.Sosu1ForceFloor.format(1d * mills / (1000L * 60 * 60 * 24)) + "일";
       }
       if (mills >= 1000L * 60 * 999)
       {
-        return Constant.Sosu1Force.format(1d * mills / (1000L * 60 * 60)) + "시간";
+        return Constant.Sosu1ForceFloor.format(1d * mills / (1000L * 60 * 60)) + "시간";
       }
       if (mills >= 1000L * 60 * 10)
       {
-        return Constant.Jeongsu.format(Math.floor(1d * mills / (1000L * 60))) + "분";
+        return Constant.JeongsuFloor.format(Math.floor(1d * mills / (1000L * 60))) + "분";
       }
       if (mills >= 1000L * 60)
       {
-        return Constant.Sosu1Force.format(1d * mills / (1000L * 60)) + "분";
+        return Constant.Sosu1ForceFloor.format(1d * mills / (1000L * 60)) + "분";
       }
       if (mills >= 1000L * 10)
       {
-        return Constant.Jeongsu.format(1d * mills / 1000L) + "초";
+        return Constant.JeongsuFloor.format(1d * mills / 1000L) + "초";
       }
-      return Constant.Sosu1Force.format(1d * mills / 1000L) + "초";
+      return Constant.Sosu1ForceFloor.format(1d * mills / 1000L) + "초";
     }
     long year = mills / (1000L * 60 * 60 * 24 * 365);
     mills %= (1000L * 60 * 60 * 24 * 365);
@@ -1467,12 +1464,15 @@ public class Method extends SoundPlay
 
   public static List<String> enumToList(Enum<?>[] array)
   {
-    String[] keyArray = Arrays.stream(array).map(Enum::toString).toArray(String[]::new);
-    for (int i = 0; i < keyArray.length; i++)
+    List<String> list = new ArrayList<>();
+    for (Enum<?> e : array)
     {
-      keyArray[i] = keyArray[i].toLowerCase();
+      if (!(e instanceof EnumHideable enumHideable) || !enumHideable.isHiddenEnum())
+      {
+        list.add(e.toString().toLowerCase());
+      }
     }
-    return Method.arrayToList(keyArray);
+    return list;
   }
 
   @NotNull
@@ -2664,7 +2664,7 @@ public class Method extends SoundPlay
 
   public static List<String> tabCompleterList(String[] args, Enum<?>[] array, String key, boolean ignoreEmpty)
   {
-    return Method.tabCompleterList(args, Method.enumToList(array), key, ignoreEmpty);
+    return Method.tabCompleterList(args, enumToList(array), key, ignoreEmpty);
   }
 
   public static List<String> tabCompleterIntegerRadius(String[] args, int from, int to, String key)

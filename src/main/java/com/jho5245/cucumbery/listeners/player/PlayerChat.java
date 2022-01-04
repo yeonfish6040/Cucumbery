@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.listeners.player;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
@@ -114,6 +115,12 @@ public class PlayerChat implements Listener
       }
       return;
     }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_CHAT))
+    {
+      event.setCancelled(true);
+      MessageUtil.sendWarn(player, ComponentUtil.translate("채팅 쿨타임 상태입니다. 속도를 늦춰주세요."));
+      return;
+    }
     Location location = player.getLocation();
     if (!Permission.EVENT_CHAT_SPAM.has(player) && Cucumbery.config.getBoolean("no-spam.enable") && !Method.configContainsLocation(location, Cucumbery.config.getStringList("no-spam.no-worlds")))
     {
@@ -140,10 +147,13 @@ public class PlayerChat implements Listener
         Variable.playerChatSameMessageSpamAlertCooldown.put(uuid, message);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerChatSameMessageSpamAlertCooldown.remove(uuid), chatCooldown);
       }
+      if (chatCooldown > 0 && Cucumbery.config.getBoolean("no-spam.buff"))
+      {
+        CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.COOLDOWN_CHAT, chatCooldown));
+      }
     }
     if (CustomEffectManager.hasEffect(player, CustomEffectType.OUTSIDER))
     {
-      @SuppressWarnings("all")
       int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.OUTSIDER).getAmplifier() + 1;
       if (Math.random() * 100 < amplifier * 10)
       {
@@ -195,6 +205,24 @@ public class PlayerChat implements Listener
         event.setCancelled(true);
         MessageUtil.sendError(player, ComponentUtil.translate("주로 사용하는 손에 아이템을 들고 있어야 아이템 확성기를 사용할 수 있습니다."));
         return;
+      }
+      else
+      {
+        if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ITEM_MEGAPHONE))
+        {
+          event.setCancelled(true);
+          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다."));
+          return;
+        }
+        if (!Permission.EVENT_CHAT_SPAM.has(player) && Cucumbery.config.getBoolean("no-spam.item-megaphone.enable"))
+        {
+          int cooldown = Cucumbery.config.getInt("no-spam.item-megaphone.cooldown-in-ticks");
+          if (cooldown > 0)
+          {
+            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                    CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.COOLDOWN_ITEM_MEGAPHONE, cooldown)), 0L);
+          }
+        }
       }
     }
     /* 채팅을 칠때 해당 권한이 있으면 컬러 채팅으로 변환 */

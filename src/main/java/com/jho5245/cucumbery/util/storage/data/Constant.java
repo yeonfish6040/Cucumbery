@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.Tag;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -146,9 +147,13 @@ public class Constant
 
   public static final DecimalFormat Jeongsu = new DecimalFormat("#,##0");
 
+  public static final DecimalFormat JeongsuFloor = new DecimalFormat("#,##0");
+
   public static final DecimalFormat Sosu1 = new DecimalFormat("#,##0.#");
 
   public static final DecimalFormat Sosu1Force = new DecimalFormat("#,##0.0");
+
+  public static final DecimalFormat Sosu1ForceFloor = new DecimalFormat("#,##0.0");
 
   public static final DecimalFormat Sosu2 = new DecimalFormat("#,##0.##");
 
@@ -161,6 +166,12 @@ public class Constant
   public static final DecimalFormat Sosu4 = new DecimalFormat("#,##0.####");
 
   public static final DecimalFormat Sosu15 = new DecimalFormat("#,##0.###############");
+
+  static
+  {
+    Sosu1ForceFloor.setRoundingMode(RoundingMode.FLOOR);
+    JeongsuFloor.setRoundingMode(RoundingMode.FLOOR);
+  }
 
   public static String Sosu5Force(double input)
   {

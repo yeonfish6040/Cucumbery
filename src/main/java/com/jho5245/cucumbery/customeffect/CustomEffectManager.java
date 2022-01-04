@@ -60,7 +60,7 @@ public class CustomEffectManager
       CustomEffect customEffect = getEffect(entity, effect.getEffectType());
       int originDura = customEffect.getDuration(), newDura = effect.getDuration();
       int originAmpl = customEffect.getAmplifier(), newAmpl = effect.getAmplifier();
-      if (!(newAmpl > originAmpl || (originAmpl == newAmpl && (newDura == -1 || (originDura != -1 && newDura > originDura)))))
+      if (!(originAmpl != newAmpl || newDura == -1 || (originDura != -1 && originDura < newDura)))
       {
         return false;
       }
@@ -68,13 +68,18 @@ public class CustomEffectManager
     effect = effect.copy();
     EntityCustomEffectPreApplyEvent preApplyEvent = new EntityCustomEffectPreApplyEvent(entity, effect);
     Cucumbery.getPlugin().getPluginManager().callEvent(preApplyEvent);
-    if (preApplyEvent.isCancelled())
+    if (preApplyEvent.isCancelled() && !force)
     {
       return false;
     }
     ArrayList<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
     @NotNull CustomEffect finalEffect = effect;
-    customEffects.removeIf(e -> e.getEffectType() == finalEffect.getEffectType());
+    customEffects.removeIf(customEffect ->
+    {
+      int originAmpl = customEffect.getAmplifier(), newAmpl = finalEffect.getAmplifier();
+      int originDura = customEffect.getDuration(), newDura = finalEffect.getDuration();
+      return customEffect.getEffectType() == finalEffect.getEffectType() && originAmpl == newAmpl && (force || newDura == -1 || (originDura != -1 && originDura < newDura));
+    });
     customEffects.add(effect);
     effectMap.put(entity.getUniqueId(), customEffects);
     EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect);
@@ -106,6 +111,17 @@ public class CustomEffectManager
     customEffects.removeIf(effect -> effect.getEffectType() == effectType);
     effectMap.put(entity.getUniqueId(), customEffects);
     return true;
+  }
+
+  public static void removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType, int amplifier)
+  {
+    if (!hasEffect(entity, effectType))
+    {
+      return;
+    }
+    List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
+    customEffects.removeIf(effect -> effect.getEffectType() == effectType && effect.getAmplifier() == amplifier);
+    effectMap.put(entity.getUniqueId(), customEffects);
   }
 
   public static boolean clearEffects(@NotNull Entity entity)
@@ -169,12 +185,20 @@ public class CustomEffectManager
       throw new IllegalStateException();
     }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
+    CustomEffect returnEffect = null;
     for (CustomEffect customEffect : customEffects)
     {
       if (customEffect.getEffectType() == effectType)
       {
-        return customEffect;
+        if (returnEffect == null || returnEffect.getAmplifier() < customEffect.getAmplifier())
+        {
+          returnEffect = customEffect;
+        }
       }
+    }
+    if (returnEffect != null)
+    {
+      return returnEffect;
     }
     throw new IllegalStateException();
   }
@@ -225,18 +249,20 @@ public class CustomEffectManager
         config.set("info.location.pitch", location.getPitch());
       }
       config.set("effects", null);
-      for (CustomEffect customEffect : customEffects)
+      for (int i = 0; i < customEffects.size(); i++)
       {
+        CustomEffect customEffect = customEffects.get(i);
         CustomEffectType effectType = customEffect.getEffectType();
         int duration = customEffect.getDuration();
         int amplifier = customEffect.getAmplifier();
         int initDuration = customEffect.getInitDuration();
         int initAmplifier = customEffect.getInitAmplifier();
-        config.set("effects." + effectType + ".init-duration", initDuration);
-        config.set("effects." + effectType + ".init-amplifier", initAmplifier);
-        config.set("effects." + effectType + ".duration", duration);
-        config.set("effects." + effectType + ".amplifier", amplifier);
-        config.set("effects." + effectType + ".display-type", customEffect.getDisplayType().toString());
+        config.set("effects." + i + ".type", effectType.toString());
+        config.set("effects." + i + ".init-duration", initDuration);
+        config.set("effects." + i + ".init-amplifier", initAmplifier);
+        config.set("effects." + i + ".duration", duration);
+        config.set("effects." + i + ".amplifier", amplifier);
+        config.set("effects." + i + ".display-type", customEffect.getDisplayType().toString());
       }
       customConfig.saveConfig();
     }
@@ -258,13 +284,13 @@ public class CustomEffectManager
       {
         try
         {
-          CustomEffectType customEffectType = CustomEffectType.valueOf(typeString);
+          CustomEffectType customEffectType = CustomEffectType.valueOf(root.getString(typeString + ".type"));
           DisplayType displayType;
           try
           {
             displayType = DisplayType.valueOf(root.getString(typeString + ".display-type"));
           }
-          catch (Throwable ignored)
+          catch (Throwable e)
           {
             displayType = customEffectType.getDefaultDisplayType();
           }
@@ -289,16 +315,22 @@ public class CustomEffectManager
   @NotNull
   public static Component getDisplay(@NotNull List<CustomEffect> customEffects, boolean showDuration)
   {
-    customEffects = new ArrayList<>(customEffects);
-    customEffects.removeIf(e -> e.getEffectType().isHidden());
     StringBuilder key = new StringBuilder();
     List<Component> arguments = new ArrayList<>();
     for (CustomEffect customEffect : customEffects)
     {
       int duration = customEffect.getDuration();
+      int initDuration = customEffect.getInitDuration();
       int amplifier = customEffect.getAmplifier();
       boolean isInfinite = duration == -1, less10Sec = duration > 0 && duration < 200, less1Min = duration > 0 && duration < 1200;
       boolean ampleZero = amplifier == 0;
+      int remain = 255 - (duration % 20 * 10 + 56);
+      String timePrefixColor = initDuration > 200 && (initDuration > 20 * 60 || duration * 1d / initDuration <= 0.2) && less10Sec ?
+              (customEffect.getEffectType().isNegative() ?
+                      ("rgb" + remain + ",255," + remain + ";") :
+                      ("rgb255," + remain + "," + remain + ";")
+              )
+              : "";
       // showDuration = 효과 개수 < 10
 
       // 지속 시간이 1분 이하거나 효과 10개 미만이며, 농도 레벨이 0
@@ -353,10 +385,10 @@ public class CustomEffectManager
       }
       arguments.add(
               ComponentUtil.translate(key2, customEffect,
-                      (duration != -1 && duration != customEffect.getInitDuration() - 1) ?
-                              " (" + Method.timeFormatMilli(duration * 50L, less10Sec, 1, true) + ")" :
+                      !customEffect.isTimeHidden() ?
+                              timePrefixColor + " (" + Method.timeFormatMilli(duration * 50L, less10Sec, 1, true) + ")" :
                               ""
-                      , amplifier + 1)
+                      , "rgb200,200,30;" + (amplifier + 1))
       );
       key.append("%s, ");
     }
@@ -375,6 +407,10 @@ public class CustomEffectManager
       int amplifier = potionEffect.getAmplifier();
       boolean isInfinite = duration > 20 * 60 * 60 * 24 * 365, less10Sec = duration > 0 && duration < 200, less1Min = duration > 0 && duration < 1200;
       boolean ampleZero = amplifier == 0;
+      int remain = 255 - (duration % 20 * 10 + 56);
+      String timePrefixColor = CustomEffectManager.isVanillaNegative(potionEffect.getType()) ?
+              (less10Sec ? "rgb" + remain + ",255," + remain + ";" : "") :
+              (less10Sec ? "rgb255," + remain + "," + remain + ";" : "");
       // showDuration = 효과 개수 < 10
 
       // 지속 시간이 1분 이하거나 효과 10개 미만이며, 농도 레벨이 0
@@ -430,8 +466,8 @@ public class CustomEffectManager
       arguments.add(
               ComponentUtil.translate(key2,
                       potionEffect,
-                      " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")"
-                      , amplifier + 1)
+                      timePrefixColor + " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")"
+                      , "rgb200,200,30;" + (amplifier + 1))
       );
       key.append("%s, ");
     }

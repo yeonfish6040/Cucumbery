@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.util;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
 import com.jho5245.cucumbery.commands.CommandReinforce;
+import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.scheduler.CustomEffectScheduler;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryCategory;
@@ -20,8 +21,14 @@ import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.xxmicloxx.NoteBlockAPI.model.Song;
+import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.bossbar.BossBar.Overlay;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -41,10 +48,13 @@ import java.util.*;
 
 public class Scheduler
 {
+  public static final BossBar serverRadio = BossBar.bossBar(Component.empty(), 0, BossBar.Color.GREEN, Overlay.PROGRESS);
   /**
    * 플레이어가 플레이어를 관전 중일 때 표시할 영양 게이지 텍스트
    */
   private static final String EXHAUSTION_GUAGE = "▁▂▃▄▅▆▇█";
+  private static boolean delay = false, delay2 = false;
+  public static int fileNameLength = -1;
 
   @SuppressWarnings("all")
   public static void Schedule(Cucumbery cucumbery)
@@ -66,6 +76,10 @@ public class Scheduler
       showSpectatorTargetInfoActionbar();
       // 커스텀 인챈트
       customEnchant();
+      serverRadio();
+
+      // sendBossBar
+      BossBarMessage.tick();
       // 플러그인 실행 시간
       Cucumbery.runTime++;
     }, 0L, 1L);
@@ -103,6 +117,97 @@ public class Scheduler
     }, 1200L, 20L * 60L * 5L);
     reinforceChancetime();
     CustomEffectScheduler.schedule(cucumbery);
+  }
+
+  private static void serverRadio()
+  {
+    if (!Cucumbery.using_NoteBlockAPI || CommandSong.radioSongPlayer == null || CommandSong.song == null)
+    {
+      for (Player onlone : Bukkit.getOnlinePlayers())
+      {
+        onlone.hideBossBar(serverRadio);
+      }
+      return;
+    }
+    RadioSongPlayer radio = CommandSong.radioSongPlayer;
+    Song song = CommandSong.song;
+    short current = radio.getTick(), max = song.getLength();
+    float ratio = Math.min(1f, Math.max(0f, 1f * current / max));
+    float speed = song.getSpeed();
+
+      if (!delay)
+      {
+        delay = true;
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> delay = false, (long) (200 / speed));
+        BossBar.Color[] colors = BossBar.Color.values();
+        int ordinal = serverRadio.color().ordinal();
+        if (ordinal + 1 >= colors.length)
+        {
+          ordinal = 0;
+        }
+        else
+        {
+          ordinal++;
+        }
+        serverRadio.color(colors[ordinal]);
+      }
+    String songName = song.getPath().getName();
+    songName = songName.substring(0, songName.length() - 4);
+    final String originalName = songName;
+    if (songName.length() > 32)
+    {
+      final String extendName = originalName + "      " + originalName;
+      if (fileNameLength < 31 || fileNameLength > extendName.length())
+      {
+        fileNameLength = 31;
+      }
+      songName = extendName.substring(fileNameLength - 31, fileNameLength);
+      if (!delay2)
+      {
+        delay2 = true;
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> delay2 = false, 8L);
+        fileNameLength++;
+        if (fileNameLength > extendName.length())
+        {
+          fileNameLength = originalName.length() + 1;
+        }
+      }
+    }
+    else
+    {
+      fileNameLength = -1;
+    }
+
+    TextColor textColor = switch (serverRadio.color())
+            {
+              case PINK -> NamedTextColor.LIGHT_PURPLE;
+              case BLUE -> NamedTextColor.DARK_AQUA;
+              case RED -> NamedTextColor.RED;
+              case GREEN -> NamedTextColor.GREEN;
+              case YELLOW -> NamedTextColor.YELLOW;
+              case PURPLE -> NamedTextColor.DARK_PURPLE;
+              case WHITE -> NamedTextColor.WHITE;
+            };
+    @SuppressWarnings("all")
+    String repeatMode = switch (radio.getRepeatMode())
+            {
+              case NO -> "Playing";
+              default -> "Repeating";
+            };
+    serverRadio.progress(ratio).name(ComponentUtil.translate("♬ %s",
+            Component.text(songName, NamedTextColor.WHITE), Constant.JeongsuFloor.format(ratio * 100d) + "%", Constant.Sosu2.format(speed)).color(textColor));
+
+    for (Player online : Bukkit.getOnlinePlayers())
+    {
+      if (UserData.LISTEN_GLOBAL.getBoolean(online))
+      {
+        online.showBossBar(serverRadio);
+      }
+      else
+      {
+        online.hideBossBar(serverRadio);
+      }
+    }
   }
 
   private static void customEnchant()

@@ -131,6 +131,7 @@ public enum Permission
   CMD_CUSTOM_EFFECT(C + "customeffect"),
   CMD_MODIFY_EXPLOSIVE(C + "modifyexplosive"),
   CMD_SEND_TOAST(C + "sendtoast"),
+  CMD_SEND_BOSSBAR(C + "sendbossbar"),
 
   OTHER_EVAL("eval"),
   OTHER_PLACEHOLDER("placeholder"),

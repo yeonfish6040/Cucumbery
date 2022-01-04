@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.commands.sound;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.Scheduler;
 import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
@@ -227,7 +228,11 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
             case "play" -> {
               String fileName = MessageUtil.listToString(" ", 1, args.length, args);
-
+              boolean console = sender instanceof ConsoleCommandSender && fileName.contains("--console");
+              if (console)
+              {
+                fileName = fileName.replace("--console", "");
+              }
               boolean force = fileName.contains("--force");
               if (force)
               {
@@ -266,8 +271,11 @@ public class CommandSong implements CommandExecutor, TabCompleter
               }
               if (!stop && radioSongPlayer != null)
               {
-                MessageUtil.sendError(sender, ComponentUtil.translate("노래가 이미 재생중이여서 재생할 수 없습니다."));
-                MessageUtil.info(sender, ComponentUtil.translate("'/csong stop' 명령어로 노래를 멈추거나 '노래이름--stop'을 입력하면 이미 재생중인 노래를 멈추고 재생할 수 있습니다."));
+                if (!console)
+                {
+                  MessageUtil.sendError(sender, ComponentUtil.translate("노래가 이미 재생중이여서 재생할 수 없습니다."));
+                  MessageUtil.info(sender, ComponentUtil.translate("'/csong stop' 명령어로 노래를 멈추거나 '노래이름--stop'을 입력하면 이미 재생중인 노래를 멈추고 재생할 수 있습니다."));
+                }
                 return true;
               }
               boolean random = fileName.startsWith("--random");
@@ -314,6 +322,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
                   MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다.");
                   return true;
                 }
+
                 radioSongPlayer = new RadioSongPlayer(song);
                 radioSongPlayer.setCategory(category);
                 radioSongPlayer.setEnable10Octave(!disable10Octave);
@@ -326,6 +335,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
                 {
                   MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s을(를) 재생합니다.", song);
                 }
+                Scheduler.fileNameLength = -1;
                 for (Player player : Bukkit.getServer().getOnlinePlayers())
                 {
                   if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
@@ -373,7 +383,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             if (args.length < 4)
             {
               MessageUtil.shortArg(sender, 4, args);
-              MessageUtil.commandInfo(sender, label, player.getName() + " play <명령어 출력 숨김 여부> <노래(.nbs 확장자 제외)>");
+              MessageUtil.commandInfo(sender, label, player.getName() + " play <명령어 출력 숨김 여부> <노래 파일 이름>");
               return true;
             }
             if (!MessageUtil.isBoolean(sender, args, 3, true))

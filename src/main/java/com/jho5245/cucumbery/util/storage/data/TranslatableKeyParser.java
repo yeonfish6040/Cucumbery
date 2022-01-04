@@ -67,25 +67,6 @@ public class TranslatableKeyParser
   @NotNull
   public static String getKey(@NotNull PotionEffectType potionEffectType)
   {
-/*    if (potionEffectType.equals(PotionEffectType.ABSORPTION) ||
-            potionEffectType.equals(PotionEffectType.BAD_OMEN) ||
-            potionEffectType.equals(PotionEffectType.BLINDNESS) ||
-            potionEffectType.equals(PotionEffectType.CONDUIT_POWER) ||
-    potionEffectType.equals(PotionEffectType.DOLPHINS_GRACE) ||
-    potionEffectType.equals(PotionEffectType.FIRE_RESISTANCE) ||
-    potionEffectType.equals(PotionEffectType.GLOWING) ||
-    potionEffectType.equals(PotionEffectType.HEALTH_BOOST)||
-    potionEffectType.equals(PotionEffectType.HERO_OF_THE_VILLAGE)||
-    potionEffectType.equals(PotionEffectType.HUNGER)||
-    potionEffectType.equals(PotionEffectType.INVISIBILITY)||
-    potionEffectType.equals(PotionEffectType.LEVITATION)||
-    potionEffectType.equals(PotionEffectType.LUCK)||
-    potionEffectType.equals(PotionEffectType.NIGHT_VISION)||
-    potionEffectType.equals(PotionEffectType.POISON)||
-    potionEffectType.equals(PotionEffectType.))
-    {
-      return "effect.minecraft." + potionEffectType.getName().toLowerCase();
-    }*/
     if (potionEffectType.equals(PotionEffectType.SLOW))
       return "effect.minecraft.slowness";
     if (potionEffectType.equals(PotionEffectType.CONFUSION))

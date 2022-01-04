@@ -1458,6 +1458,11 @@ public enum DeathMessage
    *%1$s이(가) %3$s을(를) 사용하여 %4$s 밖으로 스스로의 몸을 던져 질식사했습니다.
    */
   WORLD_BORDER_COMBAT_SUICIDE_ITEM,
+
+  /**
+   * %1$s이(가) 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다.
+   */
+  CUSTOM_DARKNESS_TERROR,
   ;
 
   @NotNull

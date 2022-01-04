@@ -1,18 +1,22 @@
 package com.jho5245.cucumbery.commands;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -76,6 +80,20 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
     }
     if (msg.equals(""))
     {
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ITEM_MEGAPHONE))
+      {
+        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다."));
+        return true;
+      }
+      if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player) && Cucumbery.config.getBoolean("no-spam.item-megaphone.enable"))
+      {
+        int cooldown = Cucumbery.config.getInt("no-spam.item-megaphone.cooldown-in-ticks");
+        if (cooldown > 0)
+        {
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                  CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.COOLDOWN_ITEM_MEGAPHONE, cooldown)), 0L);
+        }
+      }
       if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player))
       {
         int cooldown = Cucumbery.config.getInt("broadcastitem-cooldown");
@@ -113,6 +131,20 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
     if (!msg.contains("[i1]") && !msg.contains("[i2]") && !msg.contains("[i3]") && !msg.contains("[i4]") && !msg.contains("[i5]") && !msg.contains("[i6]") && !msg.contains("[i7]") && !msg.contains(
             "[i8]") && !msg.contains("[i9]"))
     {
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ITEM_MEGAPHONE))
+      {
+        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다."));
+        return true;
+      }
+      if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player) && Cucumbery.config.getBoolean("no-spam.item-megaphone.enable"))
+      {
+        int cooldown = Cucumbery.config.getInt("no-spam.item-megaphone.cooldown-in-ticks");
+        if (cooldown > 0)
+        {
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                  CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.COOLDOWN_ITEM_MEGAPHONE, cooldown)), 0L);
+        }
+      }
       if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player))
       {
         int cooldown = Cucumbery.config.getInt("broadcastitem-cooldown");
@@ -161,6 +193,20 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
         {
           MessageUtil.sendError(player, ComponentUtil.translate("%s에 아이템을 들고 있지 않습니다.", ComponentUtil.translate("&e%s번째 단축바 슬롯", i)));
           return true;
+        }
+      }
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ITEM_MEGAPHONE))
+      {
+        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다."));
+        return true;
+      }
+      if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player) && Cucumbery.config.getBoolean("no-spam.item-megaphone.enable"))
+      {
+        int cooldown = Cucumbery.config.getInt("no-spam.item-megaphone.cooldown-in-ticks");
+        if (cooldown > 0)
+        {
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                  CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.COOLDOWN_ITEM_MEGAPHONE, cooldown)), 0L);
         }
       }
       if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player))

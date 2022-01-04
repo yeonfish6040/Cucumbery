@@ -1837,35 +1837,43 @@ public class InventoryClick implements Listener
     if (CreateGUI.isGUITitle(title))
     {
       String key = ((TextComponent) ((TranslatableComponent) title).args().get(1)).content();
-      switch (key)
+      if (Constant.POTION_EFFECTS.equals(key))
       {
-        case Constant.POTION_EFFECTS -> {
-          if (event.getClick() == ClickType.RIGHT)
+        if (event.getClick() == ClickType.RIGHT)
+        {
+          NBTItem nbtItem = new NBTItem(item);
+          String removeEffect = nbtItem.getString("removeEffect");
+          if (removeEffect != null)
           {
-            String removeEffect = NBTAPI.getString(new NBTItem(item), "removeEffect");
-            if (removeEffect != null)
+            try
             {
-              try
+              if (removeEffect.startsWith("potion:"))
               {
-                if (removeEffect.startsWith("potion:"))
+                removeEffect = removeEffect.substring("potion:".length());
+                PotionEffectType potionEffectType = PotionEffectType.getByName(removeEffect);
+                if (potionEffectType != null)
                 {
-                  removeEffect = removeEffect.substring("potion:".length());
-                  PotionEffectType potionEffectType = PotionEffectType.getByName(removeEffect);
-                  if (potionEffectType != null)
-                  {
-                    player.removePotionEffect(potionEffectType);
-                  }
-                }
-                if (removeEffect.startsWith("custom:"))
-                {
-                  removeEffect = removeEffect.substring("custom:".length());
-                  CustomEffectManager.removeEffect(player, CustomEffectType.valueOf(removeEffect));
+                  player.removePotionEffect(potionEffectType);
                 }
               }
-              catch (Exception ignored)
+              if (removeEffect.startsWith("custom:"))
               {
+                removeEffect = removeEffect.substring("custom:".length());
+                CustomEffectType effectType = CustomEffectType.valueOf(removeEffect);
+                Integer amplifier = nbtItem.getInteger("removeEffectAmplifier");
+                if (amplifier == null)
+                {
+                  CustomEffectManager.removeEffect(player, effectType);
+                }
+                else
+                {
+                  CustomEffectManager.removeEffect(player, effectType, amplifier);
+                }
+              }
+            }
+            catch (Exception ignored)
+            {
 
-              }
             }
           }
         }

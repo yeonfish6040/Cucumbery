@@ -179,6 +179,14 @@ public class BlockBreak implements Listener
       return;
     }
 
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.DARKNESS_TERROR) && Math.random() < 0.05)
+    {
+      Variable.darknessTerrorFlag.add(player.getUniqueId());
+      MessageUtil.sendActionBar(player, "&c아야! 너무 어두워서 블록을 캐다가 파편에 맞았습니다!");
+      player.damage(1);
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), ()-> Variable.darknessTerrorFlag.remove(player.getUniqueId()), 10L);
+    }
+
     NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_ENCHANTS_KEY);
 
     Object value = player.getWorld().getGameRuleValue(GameRule.DO_TILE_DROPS);

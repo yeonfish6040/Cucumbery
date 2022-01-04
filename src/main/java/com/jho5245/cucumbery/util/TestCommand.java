@@ -3,7 +3,10 @@ package com.jho5245.cucumbery.util;
 import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import net.kyori.adventure.bossbar.BossBar.Color;
+import net.kyori.adventure.bossbar.BossBar.Overlay;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,6 +30,11 @@ public class TestCommand implements CommandExecutor, TabCompleter
     }
     try
     {
+      if (sender instanceof Player player)
+      {
+        player.sendMessage("test");
+        new BossBarMessage(ComponentUtil.create(args[0]), 20 * 10, Color.GREEN, Overlay.PROGRESS, null).show(Collections.singletonList(player));
+      }
       if (args.length >= 2)
       switch (args[0])
       {

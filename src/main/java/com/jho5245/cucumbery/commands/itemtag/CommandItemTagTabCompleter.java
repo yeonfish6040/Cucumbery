@@ -499,7 +499,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
               }
               case "add" -> {
-                return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "[지속 시간(틱)]", "max", "default");
+                return Method.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]", "infinite", "default");
               }
             }
         }
@@ -845,7 +845,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
             switch (args[1])
             {
               case "set" -> {
-                return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "[지속 시간(틱)]", "max", "default");
+                return Method.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]", "infinite", "default");
               }
               case "add" -> {
                 String effect = args[2];

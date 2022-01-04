@@ -813,7 +813,7 @@ public class MessageUtil
   public static void sendTitle(@NotNull Object player, @Nullable Object[] title, @Nullable Object[] subTitle, int fadeIn, int stay, int fadeOut)
   {
     @SuppressWarnings("all")
-    Title t = Title.title(ComponentUtil.create(title), subTitle != null ? ComponentUtil.create(subTitle) : Component.empty(),
+    Title t = Title.title(ComponentUtil.stripEvent(ComponentUtil.create(title)), subTitle != null ? ComponentUtil.stripEvent(ComponentUtil.create(subTitle)) : Component.empty(),
             Title.Times.of(Duration.ofMillis(fadeIn * 50L), Duration.ofMillis(stay * 50L), Duration.ofMillis(fadeOut * 50L)));
     if (player instanceof Audience audience)
     {
@@ -825,7 +825,7 @@ public class MessageUtil
   {
     if (player instanceof Audience audience)
     {
-      audience.sendActionBar(ComponentUtil.create(objects));
+      audience.sendActionBar(ComponentUtil.stripEvent(ComponentUtil.create(objects)));
     }
   }
 
@@ -1092,8 +1092,8 @@ public class MessageUtil
   {
     try
     {
-      Double.parseDouble(a);
-      return true;
+      double d = Double.parseDouble(a);
+      return !Double.isNaN(d) && !Double.isInfinite(d);
     }
     catch (Exception e)
     {
@@ -1172,14 +1172,13 @@ public class MessageUtil
   @NotNull
   public static Component boldify(@NotNull Component component)
   {
-    component = component.decoration(TextDecoration.BOLD, State.TRUE);
     List<Component> children = new ArrayList<>(component.children());
     for (int i = 0; i < children.size(); i++)
     {
       Component child = children.get(i);
       children.set(i, boldify(child));
     }
-    component = component.children(children);
+    component = component.decoration(TextDecoration.BOLD, State.TRUE).children(children);
     return component;
   }
 

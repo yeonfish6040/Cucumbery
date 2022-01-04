@@ -87,7 +87,7 @@ public class CustomEffectGUI
       }
     }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
-    customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE);
+    customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE || effect.isHidden());
     Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
     boolean isEmpty = customEffects.isEmpty() && potionEffects.isEmpty();
     if (isEmpty)
@@ -116,10 +116,11 @@ public class CustomEffectGUI
         potionMeta.setColor(color != null ? color : Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
         potionMeta.lore(customEffectLore(customEffect));
         itemStack.setItemMeta(potionMeta);
-        if (!effectType.isNegative())
+        if (effectType.isRightClickRemovable())
         {
           NBTItem nbtItem = new NBTItem(itemStack, true);
           nbtItem.setString("removeEffect", "custom:" + effectType);
+          nbtItem.setInteger("removeEffectAmplifier", customEffect.getAmplifier());
         }
         menu.addItem(itemStack);
       }
@@ -166,6 +167,7 @@ public class CustomEffectGUI
     int duration = customEffect.getDuration();
     int amplifier = customEffect.getAmplifier();
     Component description = customEffect.getDescription();
+    boolean isFinite = duration != -1, isAmplifiable = effectType.getMaxAmplifier() > 0, isTimeHidden = effectType.isTimeHidden();
     if (!description.equals(Component.empty()))
     {
       try
@@ -197,13 +199,16 @@ public class CustomEffectGUI
       {
         e.printStackTrace();
       }
-      lore.add(ComponentUtil.create(Constant.SEPARATOR));
-      if (effectType == CustomEffectType.CURSE_OF_BEANS)
+      if ((isFinite && !isTimeHidden) || isAmplifiable)
       {
-        lore.add(ComponentUtil.create(Constant.SEPARATOR));
+        lore.add(Component.empty());
+        if (effectType == CustomEffectType.CURSE_OF_BEANS)
+        {
+          lore.add(Component.empty());
+        }
       }
     }
-    if (duration != -1)
+    if (isFinite && !isTimeHidden)
     {
       lore.add(ComponentUtil.translate("&f지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
       if (effectType == CustomEffectType.CURSE_OF_BEANS)
@@ -211,7 +216,7 @@ public class CustomEffectGUI
         lore.add(ComponentUtil.translate("&f지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
       }
     }
-    if (effectType.getMaxAmplifier() != 0)
+    if (isAmplifiable)
     {
       lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
       if (effectType == CustomEffectType.CURSE_OF_BEANS)
@@ -219,7 +224,7 @@ public class CustomEffectGUI
         lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
       }
     }
-    if (!effectType.isNegative())
+    if (effectType.isRightClickRemovable())
     {
       lore.add(Component.empty());
       if (effectType == CustomEffectType.CURSE_OF_BEANS)
@@ -241,8 +246,13 @@ public class CustomEffectGUI
     PotionEffectType potionEffectType = potionEffect.getType();
     String effectKey = TranslatableKeyParser.getKey(potionEffectType);
     String id = effectKey.substring(17);
+    lore.add(VanillaEffectDescription.getDescription(potionEffect).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, State.FALSE));
     int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
-    lore.add(ComponentUtil.translate("&f지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
+    lore.add(Component.empty());
+    if (duration <= 20 * 60 * 60 * 24 * 365)
+    {
+      lore.add(ComponentUtil.translate("&f지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
+    }
     lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
     if (!CustomEffectManager.isVanillaNegative(potionEffect.getType()))
     {

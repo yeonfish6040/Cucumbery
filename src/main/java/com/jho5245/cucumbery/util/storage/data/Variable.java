@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util.storage.data;
 
+import com.jho5245.cucumbery.util.BossBarMessage;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -215,4 +216,8 @@ public class Variable
   public static HashMap<UUID, Material> lastTrampledBlockType = new HashMap<>();
 
   public static HashMap<UUID, BossBar> customEffectBossBarMap = new HashMap<>();
+
+  public static HashMap<UUID, List<BossBarMessage>> sendBossBarMap = new HashMap<>();
+
+  public static Set<UUID> darknessTerrorFlag = new HashSet<>();
 }
