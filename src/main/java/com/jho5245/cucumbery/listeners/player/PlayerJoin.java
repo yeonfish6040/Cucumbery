@@ -11,6 +11,7 @@ import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
@@ -97,7 +98,7 @@ public class PlayerJoin implements Listener
     {
       playerListName = player.getName();
     }
-    finalDislay = ComponentUtil.create(playerListName).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    finalDislay = ComponentUtil.create(playerListName);
     if (Cucumbery.using_Vault_Chat)
     {
       try
@@ -117,7 +118,7 @@ public class PlayerJoin implements Listener
         e.printStackTrace();
       }
     }
-    player.playerListName(finalDislay);
+    player.playerListName(finalDislay.hoverEvent(null).clickEvent(null).insertion(null));
     Component displayName = SenderComponentUtil.senderComponent(player);
     String displayNameString = ComponentUtil.serialize(displayName);
     boolean isSpectator = UserData.SPECTATOR_MODE.getBoolean(player);
@@ -136,32 +137,31 @@ public class PlayerJoin implements Listener
     if (enabeldActionbar || enabledTellraw)
     {
       event.joinMessage(null);
-      MessageUtil.consoleSendMessage("&2[&a입장&2] &rUUID : &e" + uuid + "&r, ID : &e" + name + "&r, Nickname : &e", displayName);
+      MessageUtil.consoleSendMessage(Prefix.INFO_JOIN, "%s - %s(%s)", Constant.THE_COLOR_HEX + uuid, Constant.THE_COLOR_HEX + name, displayName);
     }
     if (enabeldActionbar && !isSpectator)
     {
-      String joinMessageActionbar = MessageUtil.n2s(Objects.requireNonNull(cfg.getString("actionbar-join-message")).replace("%player%", displayNameString));
+      String joinMessageActionbar = cfg.getString("actionbar-join-message", "%player%이(가) 입장하셨습니다.").replace("%player%", "%s");
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
         if (online != player)
         {
-          MessageUtil.sendActionBar(online, joinMessageActionbar);
+          MessageUtil.sendActionBar(online, joinMessageActionbar, displayName);
         }
       }
     }
     boolean outsider = false;
     if (CustomEffectManager.hasEffect(player, CustomEffectType.OUTSIDER))
     {
-      @SuppressWarnings("all")
       int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.OUTSIDER).getAmplifier() + 1;
       if (Math.random() * 100 < amplifier * 10)
       {
         outsider = true;
       }
     }
+    CustomEffectManager.removeEffect(player, CustomEffectType.INVINCIBLE_PLUGIN_RELOAD);
     if (enabledTellraw && !isSpectator && !outsider)
     {
-
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
         if (cfg.getBoolean("show-tellraw-to-join-player") || online != player)
@@ -169,7 +169,7 @@ public class PlayerJoin implements Listener
           if ((UserData.SHOW_JOIN_MESSAGE_FORCE.getBoolean(uuid) || UserData.SHOW_JOIN_MESSAGE.getBoolean(uuid)) && (UserData.OUTPUT_JOIN_MESSAGE.getBoolean(online.getUniqueId()) ||
                   UserData.OUTPUT_JOIN_MESSAGE_FORCE.getBoolean(online.getUniqueId())))
           {
-            MessageUtil.sendMessage(online, Prefix.INFO_JOIN, ComponentUtil.translate("%s이(가) 입장하셨습니다.", player));
+            MessageUtil.sendMessage(online, Prefix.INFO_JOIN, "%s이(가) 입장하셨습니다.", player);
           }
         }
       }

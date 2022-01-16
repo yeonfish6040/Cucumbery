@@ -28,14 +28,7 @@ public class Pair<FIRST, SECOND>
   @Override
   public boolean equals(Object object)
   {
-    if (object instanceof Pair<?, ?> pair)
-    {
-      return this.first.equals(pair.first) &&
-              this.second.equals(pair.second);
-    }
-    else
-    {
-      return false;
-    }
+    return object instanceof Pair<?, ?> pair && this.first.equals(pair.first) &&
+            this.second.equals(pair.second);
   }
 }

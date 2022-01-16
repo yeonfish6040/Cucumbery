@@ -676,12 +676,15 @@ public class ComponentUtil
     return component;
   }
 
+  final static private String q = "이\\(가\\)|\\(이\\)가|가\\(이\\)|\\(가\\)이|을\\(를\\)|\\(을\\)를|를\\(을\\)|\\(를\\)을|와\\(과\\)|\\(와\\)과|과\\(와\\)|\\(과\\)와|은\\(는\\)|\\(은\\)는|는\\(은\\)|\\(는\\)은|\\(으\\)로|으\\(로\\)|\\(이\\)라|이\\(라\\)";
+
   @NotNull
   private static String yeet2(@NotNull String key, @NotNull String serial)
   {
     Matcher matcher = yeet.matcher(key);
-    String[] split = serial.split("이\\(가\\)|\\(이\\)가|가\\(이\\)|\\(가\\)이|을\\(를\\)|\\(을\\)를|를\\(을\\)|\\(를\\)을|와\\(과\\)|\\(와\\)과|과\\(와\\)|\\(과\\)와|은\\(는\\)|\\(은\\)는|는\\(은\\)|\\(는\\)은|\\(으\\)로|으\\(로\\)|\\(이\\)라|이\\(라\\)");
+    String[] split = serial.split(q);
     int loop = 0;
+    int count = 1;
     while (matcher.find())
     {
       try
@@ -691,19 +694,47 @@ public class ComponentUtil
         if (Cucumbery.config.getBoolean("use-gusenited-consonant-grammar"))
         {
           consonantType = ConsonantType.values()[(int) (Math.random() * ConsonantType.values().length)];
+          String replacer = MessageUtil.getFinalConsonant(Math.random() < 0.5 ? split[loop] : "" + Math.random(), consonantType);
+          key = replace(key, q, replacer, count);
+          count++;
         }
-        String replacer = MessageUtil.getFinalConsonant(split[loop], consonantType);
-        if (!a3.equals(replacer))
+        else
         {
-          key = key.replaceFirst(a3.replace("(", "\\(").replace(")", "\\)"), replacer);
+          String replacer = MessageUtil.getFinalConsonant(split[loop], consonantType);
+          if (!a3.equals(replacer))
+          {
+            key = replace(key, q, replacer, count);
+          }
+          else
+          {
+            count++;
+          }
         }
         loop++;
       }
-      catch (Exception ignored)
+      catch (Exception e)
       {
+        e.printStackTrace();
       }
     }
     return key;
+  }
+
+  private static String replace(@NotNull String key, @NotNull String from, @NotNull String to, int index)
+  {
+    StringBuffer sb = new StringBuffer();
+    Pattern p = Pattern.compile(from);
+    Matcher m = p.matcher(key);
+    int count = 0;
+    while (m.find())
+    {
+      if (count++ == index - 1)
+      {
+        m.appendReplacement(sb, to);
+      }
+    }
+    m.appendTail(sb);
+    return sb.toString();
   }
 
   @NotNull

@@ -55,19 +55,36 @@ public class EntityDamage implements Listener
     double damage = event.getDamage();
     double damageMultiplier = 1d, finalDamageMultiplier = 1d;
     Entity entity = event.getEntity();
-    if (CustomEffectManager.hasEffect(entity, CustomEffectType.INVINCIBLE) || CustomEffectManager.hasEffect(entity, CustomEffectType.RESURRECTION_INVINCIBLE))
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.INVINCIBLE))
     {
       event.setCancelled(true);
       entity.setFireTicks(-20);
       return;
     }
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.RESURRECTION_INVINCIBLE) ||
+            CustomEffectManager.hasEffect(entity, CustomEffectType.INVINCIBLE_RESPAWN) ||
+            CustomEffectManager.hasEffect(entity, CustomEffectType.INVINCIBLE_PLUGIN_RELOAD))
+    {
+      event.setCancelled(true);
+      return;
+    }
     if (CustomEffectManager.hasEffect(entity, CustomEffectType.PARROTS_CHEER))
     {
-      damageMultiplier -= 0.45d;
+      finalDamageMultiplier *= 0.55d;
     }
     if (CustomEffectManager.hasEffect(entity, CustomEffectType.DARKNESS_TERROR))
     {
-      damageMultiplier += 0.3d;
+      finalDamageMultiplier *= 1.3d;
+    }
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.NEWBIE_SHIELD))
+    {
+      int amplifier = CustomEffectManager.getEffect(entity, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
+      switch (amplifier)
+      {
+        case 1 -> finalDamageMultiplier *= 0.9;
+        case 2 -> finalDamageMultiplier *= 0.8;
+        default -> finalDamageMultiplier *= 0.6;
+      }
     }
     DamageCause damageCause = event.getCause();
     switch (damageCause)
@@ -151,6 +168,16 @@ public class EntityDamage implements Listener
                 return;
               }
             }
+            if (CustomEffectManager.hasEffect(entity, CustomEffectType.NEWBIE_SHIELD))
+            {
+              int amplifier = CustomEffectManager.getEffect(entity, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
+              switch (amplifier)
+              {
+                case 1 -> damageMultiplier += 0.05;
+                case 2 -> damageMultiplier += 0.15;
+                default -> damageMultiplier += 0.25;
+              }
+            }
           }
         }
       }
@@ -200,6 +227,16 @@ public class EntityDamage implements Listener
                   MessageUtil.sendActionBar(entity, "공격을 회피했습니다!");
                   MessageUtil.sendActionBar(sourceEntity, "상대방이 공격을 회피했습니다!");
                   return;
+                }
+              }
+              if (CustomEffectManager.hasEffect(entity, CustomEffectType.NEWBIE_SHIELD))
+              {
+                int amplifier = CustomEffectManager.getEffect(entity, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
+                switch (amplifier)
+                {
+                  case 1 -> damageMultiplier += 0.05;
+                  case 2 -> damageMultiplier += 0.15;
+                  default -> damageMultiplier += 0.25;
                 }
               }
             }

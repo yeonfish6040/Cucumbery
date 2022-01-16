@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ItemLorePotionDescription
 {
-  public static final Component ABSORPTION = ComponentUtil.translate("effect.minecraft.night_vision");
+  public static final Component ABSORPTION = ComponentUtil.translate("effect.minecraft.absorption");
 
   public static final Component BAD_OMEN = ComponentUtil.translate("effect.minecraft.bad_omen");
 

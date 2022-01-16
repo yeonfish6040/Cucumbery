@@ -20,6 +20,7 @@ import com.jho5245.cucumbery.commands.teleport.CommandSwapTeleport;
 import com.jho5245.cucumbery.commands.teleport.CommandTeleport;
 import com.jho5245.cucumbery.commands.teleport.CommandWarp;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.listeners.UnknownCommand;
 import com.jho5245.cucumbery.listeners.addon.noteblockapi.SongEnd;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopDelete;
@@ -87,7 +88,9 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 14;
+  public static final int CONFIG_VERSION = 15;
+  public static final int DEATH_MESSAGES_CONFIG_VERSION = 1;
+  public static final int LANG_CONFIG_VERSION = 1;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   public static boolean using_CommandAPI;
@@ -105,7 +108,6 @@ public class Cucumbery extends JavaPlugin
   public static long runTime;
   private static Cucumbery cucumbery;
   public PluginDescriptionFile pluginDescriptionFile;
-  public int currentConfigVersion;
   private PluginManager pluginManager;
 
   public static Cucumbery getPlugin()
@@ -163,18 +165,12 @@ public class Cucumbery extends JavaPlugin
   // 플러그인 활성화 시 초기화 과정
   private void init()
   {
-    Cucumbery.cucumbery = this;
+    cucumbery = this;
     file = this.getFile();
     dataFolder = this.getDataFolder();
-    Cucumbery.config = (YamlConfiguration) this.getConfig();
+    config = (YamlConfiguration) this.getConfig();
     this.pluginDescriptionFile = this.getDescription();
     this.pluginManager = Bukkit.getServer().getPluginManager();
-    this.currentConfigVersion = Cucumbery.config.getInt("config-version");
-    if (currentConfigVersion != CONFIG_VERSION)
-    {
-      MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "&econfig 파일의 버전이 최신 버전과 일치하지 않습니다! 현재 버전 : " + currentConfigVersion + ", 최신 버전 : " + CONFIG_VERSION);
-      MessageUtil.consoleSendMessage(Prefix.INFO, "config 파일을 삭제하고 플러그인을 리로드하여 config 파일을 재생성하시거나 플러그인 파일에 있는 config에서 직접 값을 붙여넣어 주세요.");
-    }
     try
     {
       this.registerItems();
@@ -182,6 +178,30 @@ public class Cucumbery extends JavaPlugin
     catch (Throwable e)
     {
       e.printStackTrace();
+    }
+    if (config.getBoolean("console-messages.outdated-config"))
+    {
+      int currentConfigVersion = config.getInt("config-version");
+      if (currentConfigVersion != CONFIG_VERSION)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "%s 파일의 버전이 최신 버전과 일치하지 않습니다! 현재 버전 : %s, 최신 버전 : %s",
+                "&econfig.yml", currentConfigVersion, CONFIG_VERSION);
+        MessageUtil.consoleSendMessage(Prefix.INFO, "%1$s 파일을 삭제하고 플러그인을 리로드하여 %1$s 파일을 재생성하시거나 플러그인 파일에 있는 %1$s에서 직접 값을 붙여넣어 주세요.", "&econfig.yml");
+      }
+      int currentDeathMessagesVersion = Variable.deathMessages.getInt("config-version");
+      if (currentDeathMessagesVersion != DEATH_MESSAGES_CONFIG_VERSION)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "%s 파일의 버전이 최신 버전과 일치하지 않습니다! 현재 버전 : %s, 최신 버전 : %s",
+                "&eDeathMessages.yml", currentDeathMessagesVersion, DEATH_MESSAGES_CONFIG_VERSION);
+        MessageUtil.consoleSendMessage(Prefix.INFO, "%1$s 파일을 삭제하고 플러그인을 리로드하여 %1$s 파일을 재생성하시거나 플러그인 파일에 있는 %1$s에서 직접 값을 붙여넣어 주세요.", "&eDeathMessages.yml");
+      }
+      int currentLangVersion = Variable.lang.getInt("config-version");
+      if (currentLangVersion != LANG_CONFIG_VERSION)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "%s 파일의 버전이 최신 버전과 일치하지 않습니다! 현재 버전 : %s, 최신 버전 : %s",
+                "&elang.yml", currentLangVersion, LANG_CONFIG_VERSION);
+        MessageUtil.consoleSendMessage(Prefix.INFO, "%1$s 파일을 삭제하고 플러그인을 리로드하여 %1$s 파일을 재생성하시거나 플러그인 파일에 있는 %1$s에서 직접 값을 붙여넣어 주세요.", "&elang.yml");
+      }
     }
     Scheduler.Schedule(this);
     Updater.onEnable();
@@ -198,6 +218,10 @@ public class Cucumbery extends JavaPlugin
   // 플러그인 비활성화 시 처리 과정
   private void disableOperation()
   {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      CustomEffectManager.addEffect(player, CustomEffectType.INVINCIBLE_PLUGIN_RELOAD);
+    }
     Initializer.saveUserData();
     Initializer.saveBlockPlaceData();
     Initializer.saveItemUsageData();
@@ -579,6 +603,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerPreLogin());
     Initializer.registerEvent(new PlayerQuit());
     Initializer.registerEvent(new PlayerRecipeBookClick());
+    Initializer.registerEvent(new PlayerRespawn());
     Initializer.registerEvent(new PlayerStoneCutterRecipeSelect());
     Initializer.registerEvent(new PlayerStopSpectatingEntity());
     Initializer.registerEvent(new PlayerTakeLecternBook());
@@ -628,7 +653,6 @@ public class Cucumbery extends JavaPlugin
       this.getConfig().options().copyDefaults(true);
       this.saveDefaultConfig();
     }
-    this.currentConfigVersion = this.getConfig().getInt("config-version");
   }
 
   private void registerCustomConfig()

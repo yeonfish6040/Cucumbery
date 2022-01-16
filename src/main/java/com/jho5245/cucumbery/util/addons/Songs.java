@@ -95,7 +95,10 @@ public class Songs
         for (Object o : array)
         {
           String songName = ((JSONObject) o).get("name").toString();
-          list.add(songName);
+          if (songName.endsWith(".nbs"))
+          {
+            list.add(songName.substring(0, songName.length() - 4));
+          }
         }
       }
       connection.disconnect();

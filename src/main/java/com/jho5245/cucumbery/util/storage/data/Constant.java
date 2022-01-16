@@ -35,6 +35,8 @@ public class Constant
 
   public static final String SEPARATOR = "&8&m                                                                ";
 
+  public static final String TAB_COMPLETER_QUOTE_ESCAPE = "tab_completer_quote_escape";
+
   public static Sound WARNING_SOUND, ERROR_SOUND;
 
   public static double WARNING_SOUND_VOLUME, WARNING_SOUND_PITCH, ERROR_SOUND_VOLUME, ERROR_SOUND_PITCH;
@@ -322,6 +324,9 @@ public class Constant
 
   public static final List<Material> WOOL = new ArrayList<>(), PLANKS = new ArrayList<>(), FLOWERS = new ArrayList<>(), SMALL_FLOWERS = new ArrayList<>(), TALL_FLOWERS = new ArrayList<>(),
   WITHER_IMMUNE = new ArrayList<>(), BEACON_BASE_BLOCKS = new ArrayList<>(), DYES = new ArrayList<>(), SHULKER_BOXES = new ArrayList<>();
+
+  public static final Set<Material> OPTIFINE_DYNAMIC_LIGHT_ITEMS = new HashSet<>(Arrays.asList(Material.TORCH, Material.REDSTONE_TORCH, Material.LAVA_BUCKET, Material.NETHER_STAR, Material.BEACON,
+          Material.GLOWSTONE, Material.SEA_LANTERN));
 
   static
   {

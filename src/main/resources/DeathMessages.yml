@@ -1,3 +1,4 @@
+config-version: 1
 # 데스 메시지 기능 편집
 death-messages:
   enable: true # 사용 여부. true 또는 false

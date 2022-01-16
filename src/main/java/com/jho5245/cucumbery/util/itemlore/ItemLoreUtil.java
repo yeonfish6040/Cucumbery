@@ -758,29 +758,32 @@ public class ItemLoreUtil
     ItemMeta itemMeta = itemStack.getItemMeta();
     if (itemMeta instanceof BlockStateMeta blockStateMeta)
     {
-      BlockState blockState = blockStateMeta.getBlockState();
-      if (blockState instanceof InventoryHolder inventoryHolder)
+      if (blockStateMeta.hasBlockState())
       {
-        Inventory inventory = inventoryHolder.getInventory();
-        for (int i = 0; i < inventory.getSize(); i++)
+        BlockState blockState = blockStateMeta.getBlockState();
+        if (blockState instanceof InventoryHolder inventoryHolder)
         {
-          ItemStack innerItemStack = inventory.getItem(i);
-          try
+          Inventory inventory = inventoryHolder.getInventory();
+          for (int i = 0; i < inventory.getSize(); i++)
           {
-            if (ItemStackUtil.itemExists(innerItemStack))
+            ItemStack innerItemStack = inventory.getItem(i);
+            try
             {
-              removeInventoryItemLore(innerItemStack);
-              inventory.setItem(i, ItemLore.removeItemLore(innerItemStack));
+              if (ItemStackUtil.itemExists(innerItemStack))
+              {
+                removeInventoryItemLore(innerItemStack);
+                inventory.setItem(i, ItemLore.removeItemLore(innerItemStack));
+              }
+            }
+            catch (Exception ignored)
+            {
+
             }
           }
-          catch (Exception ignored)
-          {
-
-          }
+          blockStateMeta.setBlockState(blockState);
         }
-        blockStateMeta.setBlockState(blockState);
+        itemStack.setItemMeta(blockStateMeta);
       }
-      itemStack.setItemMeta(blockStateMeta);
     }
   }
 }

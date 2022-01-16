@@ -132,6 +132,22 @@ public class CustomEffect
                       };
               case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 주는 피해량이 %s 증가합니다.", "&e" + ((amplifier + 2) * 5) + "%");
               case DODGE -> ComponentUtil.translate("%s 확률로 공격을 회피합니다.", "&e" + (amplifier + 1) + "%");
+              case NEWBIE_SHIELD -> ComponentUtil.translate("누적 접속 시간이 1시간 미만인 당신!")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("받는 피해량이 %s 감소하고 주는 피해량이 %s 증가합니다.", "&e" + (switch (amplifier + 1)
+                              {
+                                case 1 -> "10%";
+                                case 2 -> "20%";
+                                default -> "40%";
+                              }), "&e" + (switch (amplifier + 1)
+                              {
+                                case 1 -> "5%";
+                                case 2 -> "15%";
+                                default -> "25%";
+                              })
+                      ))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("접속 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다."));
               default -> effectType.getDescription();
             };
     description = ComponentUtil.create(description, effectType.getPropertyDescription());

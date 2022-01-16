@@ -339,7 +339,7 @@ public class Initializer
         String fileName5 = file.getName();
         if (fileName5.endsWith(".nbs"))
         {
-          Variable.songFiles.add(fileName5);
+          Variable.songFiles.add(fileName5.substring(0, fileName5.length() - 4));
         }
       }
     }

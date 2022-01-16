@@ -353,6 +353,7 @@ public class CustomConfig
     SPECTATOR_MODE_ON_JOIN("접속-시-자동-관전-모드-전환", false),
     ANNOUNCE_ADVANCEMENTS("발전-과제-달성-메시지-띄움", true),
     ENTITY_HOVER_EVENT_TMI_MODE("개체-호버-이벤트-TMI-모드", false),
+    NEWBIE_BUFF_ENABLED("뉴비-환영-효과-사용", true),
     ;
 
     private final String key;

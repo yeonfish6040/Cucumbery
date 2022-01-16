@@ -9,8 +9,10 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -80,13 +82,17 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           MessageUtil.commandInfo(sender, label, args[0] + (sender instanceof Player ? " [개체]" : " <개체>") + " [효과 종류] [명령어 출력 숨김 여부]");
           return failure;
         }
-        if (!(sender instanceof Player) && length < 2)
+        Entity target = null;
+        if (length < 2)
         {
-          MessageUtil.shortArg(sender, 2, args);
-          MessageUtil.commandInfo(sender, label, args[0] + " <개체> [효과 종류] [명령어 출력 숨김 여부]");
-          return failure;
+          if (!(sender instanceof Player player))
+          {
+            MessageUtil.shortArg(sender, 2, args);
+            MessageUtil.commandInfo(sender, label, args[0] + " <개체> [효과 종류] [명령어 출력 숨김 여부]");
+            return failure;
+          }
+          target = player;
         }
-        Entity target = (Entity) sender;
         CustomEffectType effectType = null;
         boolean hideOutput = false;
         if (length == 1)
@@ -247,127 +253,6 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     }
   }
 
-  public boolean giveEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @NotNull CustomEffectType customEffectType, int duration, int amplifier, @NotNull DisplayType displayType, boolean hideOutput, boolean force)
-  {
-    CustomEffect customEffect = new CustomEffect(customEffectType, duration, amplifier, displayType);
-    List<Entity> successEntities = new ArrayList<>();
-    for (Entity entity : entities)
-    {
-      if (CustomEffectManager.addEffect(entity, customEffect, force))
-      {
-        successEntities.add(entity);
-      }
-    }
-    boolean successEntitiesIsEmpty = successEntities.isEmpty();
-    if (!hideOutput)
-    {
-      List<Entity> failureEntities = new ArrayList<>(entities);
-      failureEntities.removeAll(successEntities);
-      if (!failureEntities.isEmpty())
-      {
-        MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과를 받을 수 없는 상태이거나 더 강한 효과를 가지고 있습니다.)", failureEntities, customEffect));
-      }
-      if (!successEntitiesIsEmpty)
-      {
-        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다.", successEntities, customEffect));
-        MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신에게 %s 효과를 적용했습니다.", sender, customEffect));
-        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다.]", sender, successEntities, customEffect));
-      }
-    }
-    return !successEntitiesIsEmpty;
-  }
-
-  public boolean clearEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @Nullable CustomEffectType customEffectType, boolean hideOutput)
-  {
-    boolean all = customEffectType == null;
-    List<Entity> successEntities = new ArrayList<>();
-    for (Entity entity : entities)
-    {
-      if (all)
-      {
-        if (CustomEffectManager.clearEffects(entity))
-        {
-          successEntities.add(entity);
-        }
-      }
-      else
-      {
-        if (CustomEffectManager.removeEffect(entity, customEffectType))
-        {
-          successEntities.add(entity);
-        }
-      }
-    }
-    boolean successEntitiesIsEmpty = successEntities.isEmpty();
-    if (!hideOutput)
-    {
-      List<Entity> failureEntities = new ArrayList<>(entities);
-      failureEntities.removeAll(successEntities);
-      if (!failureEntities.isEmpty())
-      {
-        if (all)
-        {
-          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.translate("%s은(는) 효과를 가지고 있지 않습니다.", failureEntities));
-        }
-        else
-        {
-          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.translate("%s은(는) %s 효과를 가지고 있지 않습니다.", failureEntities, customEffectType));
-        }
-      }
-      if (!successEntitiesIsEmpty)
-      {
-        if (all)
-        {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 모든 효과를 제거했습니다.", successEntities));
-          MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신의 모든 효과를 제거했습니다.", sender));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 모든 효과를 제거했습니다.]", sender, successEntities));
-        }
-        else
-        {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 %s 효과를 제거했습니다.", successEntities, customEffectType));
-          MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신의 %s 효과를 제거했습니다.", sender, customEffectType));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 %s 효과를 제거했습니다.]", sender, successEntities, customEffectType));
-        }
-      }
-    }
-    return !successEntitiesIsEmpty;
-  }
-
-  public void queryEffect(@NotNull CommandSender sender, @NotNull Entity entity, boolean gui)
-  {
-    if (sender instanceof Player player && gui)
-    {
-      CustomEffectGUI.openGUI(player, true);
-      return;
-    }
-    boolean hasVanilla = entity instanceof LivingEntity livingEntity && !livingEntity.getActivePotionEffects().isEmpty(), hasCustom = CustomEffectManager.hasEffects(entity);
-
-    if (hasVanilla)
-    {
-      LivingEntity livingEntity = (LivingEntity) entity;
-      Collection<PotionEffect> potionEffects = livingEntity.getActivePotionEffects();
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) %s개의 포션 효과를 가지고 있습니다: %s", entity,
-              potionEffects.size(), CustomEffectManager.getVanillaDisplay(potionEffects, true)));
-    }
-    else
-    {
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 포션 효과를 가지고 있지 않습니다.", entity));
-    }
-    if (hasCustom)
-    {
-      List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) %s개의 커스텀 효과를 가지고 있습니다: %s", entity,
-              customEffects.size(), CustomEffectManager.getDisplay(customEffects, true)));
-    }
-    else
-    {
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 커스텀 효과를 가지고 있지 않습니다.", entity));
-    }
-  }
-
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
@@ -475,12 +360,12 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         {
           int defaultDuration = effectType.getDefaultDuration();
           return Method.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]", "infinite", "default",
-                  "default(기본값, " + (defaultDuration == -1 ? "무제한" : Method.timeFormatMilli(defaultDuration * 50L, true, 2)) + ")");
+                  Constant.TAB_COMPLETER_QUOTE_ESCAPE + "default(기본값, " + (defaultDuration == -1 ? "무제한" : Method.timeFormatMilli(defaultDuration * 50L, true, 2)) + ")");
         }
         if (length == 5)
         {
           int maxAmplifier = effectType.getMaxAmplifier();
-          return Method.tabCompleterIntegerRadius(args, 0, maxAmplifier, "[농도 레벨]", "max", "max(최댓값, " + maxAmplifier + ")");
+          return Method.tabCompleterIntegerRadius(args, 0, maxAmplifier, "[농도 레벨]", "max", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "max(최댓값, " + maxAmplifier + ")");
         }
         if (length == 6)
         {
@@ -495,6 +380,131 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       }
     }
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  public boolean giveEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @NotNull CustomEffectType customEffectType, int duration, int amplifier, @NotNull DisplayType displayType, boolean hideOutput, boolean force)
+  {
+    CustomEffect customEffect = new CustomEffect(customEffectType, duration, amplifier, displayType);
+    List<Entity> successEntities = new ArrayList<>();
+    for (Entity entity : entities)
+    {
+      if (CustomEffectManager.addEffect(entity, customEffect, force))
+      {
+        successEntities.add(entity);
+      }
+    }
+    boolean successEntitiesIsEmpty = successEntities.isEmpty();
+    if (!hideOutput)
+    {
+      List<Entity> failureEntities = new ArrayList<>(entities);
+      failureEntities.removeAll(successEntities);
+      if (!failureEntities.isEmpty())
+      {
+        MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
+                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과를 받을 수 없는 상태이거나 더 강한 효과를 가지고 있습니다.)", failureEntities, customEffect));
+      }
+      if (!successEntitiesIsEmpty)
+      {
+        List<Audience> infoTarget = new ArrayList<>(successEntities);
+        infoTarget.remove(sender);
+        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다.", successEntities, customEffect));
+        MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신에게 %s 효과를 적용했습니다.", sender, customEffect));
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다.]", sender, successEntities, customEffect));
+      }
+    }
+    return !successEntitiesIsEmpty;
+  }
+
+  public boolean clearEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @Nullable CustomEffectType customEffectType, boolean hideOutput)
+  {
+    boolean all = customEffectType == null;
+    List<Entity> successEntities = new ArrayList<>();
+    for (Entity entity : entities)
+    {
+      if (all)
+      {
+        if (CustomEffectManager.clearEffects(entity))
+        {
+          successEntities.add(entity);
+        }
+      }
+      else
+      {
+        if (CustomEffectManager.removeEffect(entity, customEffectType))
+        {
+          successEntities.add(entity);
+        }
+      }
+    }
+    boolean successEntitiesIsEmpty = successEntities.isEmpty();
+    if (!hideOutput)
+    {
+      List<Entity> failureEntities = new ArrayList<>(entities);
+      failureEntities.removeAll(successEntities);
+      if (!failureEntities.isEmpty())
+      {
+        if (all)
+        {
+          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
+                  ComponentUtil.translate("%s은(는) 효과를 가지고 있지 않습니다.", failureEntities));
+        }
+        else
+        {
+          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
+                  ComponentUtil.translate("%s은(는) %s 효과를 가지고 있지 않습니다.", failureEntities, customEffectType));
+        }
+      }
+      if (!successEntitiesIsEmpty)
+      {
+        List<Audience> infoTarget = new ArrayList<>(successEntities);
+        infoTarget.remove(sender);
+        if (all)
+        {
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 모든 효과를 제거했습니다.", successEntities));
+          MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신의 모든 효과를 제거했습니다.", sender));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 모든 효과를 제거했습니다.]", sender, successEntities));
+        }
+        else
+        {
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 %s 효과를 제거했습니다.", successEntities, customEffectType));
+          MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신의 %s 효과를 제거했습니다.", sender, customEffectType));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 %s 효과를 제거했습니다.]", sender, successEntities, customEffectType));
+        }
+      }
+    }
+    return !successEntitiesIsEmpty;
+  }
+
+  public void queryEffect(@NotNull CommandSender sender, @NotNull Entity entity, boolean gui)
+  {
+    if (sender instanceof Player player && gui)
+    {
+      CustomEffectGUI.openGUI(player, true);
+      return;
+    }
+    boolean hasVanilla = entity instanceof LivingEntity livingEntity && !livingEntity.getActivePotionEffects().isEmpty(), hasCustom = CustomEffectManager.hasEffects(entity);
+
+    if (hasVanilla)
+    {
+      LivingEntity livingEntity = (LivingEntity) entity;
+      Collection<PotionEffect> potionEffects = livingEntity.getActivePotionEffects();
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) %s개의 포션 효과를 가지고 있습니다: %s", entity,
+              potionEffects.size(), CustomEffectManager.getVanillaDisplay(potionEffects, true)));
+    }
+    else
+    {
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 포션 효과를 가지고 있지 않습니다.", entity));
+    }
+    if (hasCustom)
+    {
+      List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) %s개의 커스텀 효과를 가지고 있습니다: %s", entity,
+              customEffects.size(), CustomEffectManager.getDisplay(customEffects, true)));
+    }
+    else
+    {
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 커스텀 효과를 가지고 있지 않습니다.", entity));
+    }
   }
 }
 

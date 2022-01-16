@@ -328,7 +328,7 @@ public class JosaFormatter
   // 조사 앞에 붙는 문자중 무시할 문자들. ex) "(%s)으로"
   public boolean isEndSkipText(char ch)
   {
-    String skipChars = "\"')]}>";
+    String skipChars = "\"')]}>:";
     return skipChars.indexOf(ch) >= 0;
   }
 

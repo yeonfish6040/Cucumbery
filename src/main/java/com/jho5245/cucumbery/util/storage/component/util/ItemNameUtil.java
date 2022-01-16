@@ -73,7 +73,16 @@ public class ItemNameUtil
     // 아이템의 이름이 있을 경우 이름을 가져온다
     if (itemMeta != null && itemMeta.hasDisplayName())
     {
-      component = itemMeta.displayName();
+      try
+      {
+        component = itemMeta.displayName();
+      }
+      catch (Throwable t)
+      {
+        itemMeta.displayName(null);
+        itemStack.setItemMeta(itemMeta);
+        component = itemName(itemStack);
+      }
 
       if (component == null) // 이런 경우는 없다.
       {
@@ -126,7 +135,7 @@ public class ItemNameUtil
             String potionId = potionMeta.getBasePotionData().getType().toString().toLowerCase();
             switch (potionMeta.getBasePotionData().getType())
             {
-              case AWKWARD, FIRE_RESISTANCE, INVISIBILITY, LUCK, MUNDANE, NIGHT_VISION, POISON, SLOW_FALLING, SLOWNESS, STRENGTH, THICK, TURTLE_MASTER, WATER, WATER_BREATHING, WEAKNESS -> component = Component.translatable(id + ".effect." + potionId);
+              default -> component = Component.translatable(id + ".effect." + potionId);
               case UNCRAFTABLE -> component = Component.translatable(id + ".effect.empty");
               case JUMP -> component = Component.translatable(id + ".effect.leaping");
               case REGEN -> component = Component.translatable(id + ".effect.regeneration");

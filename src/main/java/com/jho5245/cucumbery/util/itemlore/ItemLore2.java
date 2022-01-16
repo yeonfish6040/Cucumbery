@@ -512,14 +512,14 @@ public class ItemLore2
             for (AttributeModifier modifier : attr)
             {
               double amount = modifier.getAmount();
-              if (amount == 0D)
+              if (amount == 0d)
               {
                 continue;
               }
               AttributeModifier.Operation operation = modifier.getOperation();
               if (operation != AttributeModifier.Operation.ADD_NUMBER)
               {
-                amount *= 100D;
+                amount *= 100d;
               }
               String operationString = ItemLoreUtil.operationValue(operation);
               Component component = ComponentUtil.translate("rgb255,142,82;%s : %s",
@@ -838,7 +838,7 @@ public class ItemLore2
           break;
         case HONEY_BOTTLE:
           foodLore.addAll(List.of(
-                  ComponentUtil.translate("rgb255,97,144;%s 확률로 %s 효과 제거", ComponentUtil.create("100%"), ItemLorePotionDescription.getComponent(PotionEffectType.POISON))));
+                  ComponentUtil.translate("rgb255,97,144;%s 확률로 %s 효과 제거", "100%", ItemLorePotionDescription.getComponent(PotionEffectType.POISON))));
           break;
         case MILK_BUCKET:
           foodLore.addAll(List.of(
@@ -849,7 +849,7 @@ public class ItemLore2
       }
     }
 
-    if (ItemStackUtil.isEdible(type) && type != Material.POTION)
+    if (ItemStackUtil.isEdible(type) && type != Material.POTION && type != Material.SUSPICIOUS_STEW)
     {
       foodLore.addAll(ItemLorePotionDescription.getCustomEffectList(item));
     }
@@ -1138,7 +1138,8 @@ public class ItemLore2
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate(Constant.ITEM_LORE_STATUS_EFFECT));
         SuspiciousStewMeta stewMeta = (SuspiciousStewMeta) itemMeta;
-        if (!stewMeta.hasCustomEffects())
+        List<Component> customPotionEffects = ItemLorePotionDescription.getCustomEffectList(item);
+        if (!stewMeta.hasCustomEffects() && customPotionEffects.isEmpty())
         {
           lore.add(ItemLorePotionDescription.NONE);
         }
@@ -1146,9 +1147,10 @@ public class ItemLore2
         {
           for (PotionEffect effect : stewMeta.getCustomEffects())
           {
-            lore.add(ItemLorePotionDescription.getDescription(ItemLorePotionDescription.getComponent(effect.getType()), effect.getDuration() * 50L, effect.getAmplifier() + 1));
+            lore.add(ItemLorePotionDescription.getDescription(ItemLorePotionDescription.getComponent(effect.getType()), effect.getDuration(), effect.getAmplifier() + 1));
             ItemLoreUtil.setItemRarityValue(lore, 10L * ((effect.getDuration() / 200) + 1) * (effect.getAmplifier() + 1));
           }
+          lore.addAll(customPotionEffects);
         }
       }
       case FILLED_MAP -> {
@@ -1527,21 +1529,18 @@ public class ItemLore2
             lore.add(customNameLore);
             if (ItemStackUtil.itemExists(ingredient))
             {
-              ItemLore.removeItemLore(ingredient);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(ingredient);
               lore.add(ComponentUtil.translate("&7" + smeltType + " 중인 아이템 : %s", itemStackComponent));
             }
             ItemStack fuel = furnaceInventory.getFuel();
             if (ItemStackUtil.itemExists(fuel))
             {
-              ItemLore.removeItemLore(fuel);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(fuel);
               lore.add(ComponentUtil.translate("&7땔감 아이템 : %s", itemStackComponent));
             }
             ItemStack result = furnaceInventory.getResult();
             if (ItemStackUtil.itemExists(result))
             {
-              ItemLore.removeItemLore(result);
               Component itemStackComponent = ItemStackComponent.itemStackComponent(result);
               lore.add(ComponentUtil.translate("&7결과물 아이템 : %s", itemStackComponent));
             }
@@ -1597,11 +1596,11 @@ public class ItemLore2
           lore.add(Component.empty());
           lore.add(customNameLore);
           lore.add(ComponentUtil.translate("#b07c15;벌 %s", beeCount == 0 ? "없음" : "#e6ac6d;" + beeCount + "마리"));
-          NBTCompound flowerPos = blockEntityTag.getCompound("FlowerPos");
+          Location flowerPos = beehive.getFlower();
           if (flowerPos != null)
           {
             lore.add(ComponentUtil.translate("#b07c15;꽃 좌표 : %s",
-                    ComponentUtil.translate("#b07c15;%s, %s, %s", "#e6ac6d;" + flowerPos.getInteger("X"), flowerPos.getInteger("Y"), flowerPos.getInteger("Z"))));
+                    ComponentUtil.translate("#b07c15;%s, %s, %s", "#e6ac6d;" + flowerPos.getBlockX(), "#e6ac6d;" + flowerPos.getBlockY(), "#e6ac6d;" + flowerPos.getBlockZ())));
           }
         }
         if (blockState instanceof Lootable lootable)

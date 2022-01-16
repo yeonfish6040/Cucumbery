@@ -1,3 +1,5 @@
+config-version: 1
+# lang translation keys
 addServer-add: "완료"
 addServer-enterIp: "서버 주소"
 addServer-enterName: "서버 이름"

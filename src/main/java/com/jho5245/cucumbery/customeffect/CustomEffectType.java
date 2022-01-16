@@ -240,6 +240,16 @@ public enum CustomEffectType implements Translatable, EnumHideable
    * 회피
    */
   DODGE(99),
+
+  KNOCKBACK_RESISTANCE(99),
+  KNOCKBACK_RESISTANCE_COMBAT(99),
+  KNOCKBACK_RESISTANCE_NON_COMBAT(99),
+  /**
+   * 뉴비 보호막
+   */
+  NEWBIE_SHIELD(2, true, true, false),
+  INVINCIBLE_PLUGIN_RELOAD(true, false, false),
+  INVINCIBLE_RESPAWN(true, false, false),
   ;
 
   private final int maxAmplifier;
@@ -291,7 +301,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case CONFUSION -> "혼란";
               case RESURRECTION -> "리저렉션";
               case RESURRECTION_INVINCIBLE -> "리저렉션 무적";
-              case RESURRECTION_COOLDOWN -> "리저렉션 쿨타임";
+              case RESURRECTION_COOLDOWN -> "리저렉션 저주";
               case FROST_WALKER -> "차가운 걸음";
               case FEATHER_FALLING -> "가벼운 착지";
               case BLESS_OF_SANS -> "샌즈의 축복";
@@ -339,6 +349,12 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case COOLDOWN_CHAT -> "채팅 쿨타임";
               case COOLDOWN_ITEM_MEGAPHONE -> "아이템 확성기 쿨타임";
               case DODGE -> "회피";
+              case KNOCKBACK_RESISTANCE -> "넉백 저항";
+              case KNOCKBACK_RESISTANCE_COMBAT -> "넉백 저항(전투형)";
+              case KNOCKBACK_RESISTANCE_NON_COMBAT -> "넉백 저항 (비전투형)";
+              case NEWBIE_SHIELD -> "뉴비 보호막";
+              case INVINCIBLE_PLUGIN_RELOAD -> "플러그인 리로드 무적";
+              case INVINCIBLE_RESPAWN -> "리스폰 무적";
             };
   }
 
@@ -466,6 +482,13 @@ public enum CustomEffectType implements Translatable, EnumHideable
               .append(ComponentUtil.translate("%s 확률로 받는 피해량 증가에 영향을 받는 1의 피해를 입습니다.", "&e5%"));
       case DARKNESS_TERROR_RESISTANCE -> ComponentUtil.translate("%s 효과에 대한 내성이 생깁니다.", DARKNESS_TERROR);
       case DODGE -> ComponentUtil.translate("일정 확률로 공격을 회피합니다.");
+      case NEWBIE_SHIELD -> ComponentUtil.translate("누적 접속 시간이 1시간 미만인 당신!")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("받는 피해량이 감소하고 주는 피해량이 증가합니다."))
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("접속 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다."));
+      case INVINCIBLE_PLUGIN_RELOAD -> ComponentUtil.translate("플러그인을 리도드하는 중입니다.");
+      case INVINCIBLE_RESPAWN -> ComponentUtil.translate("리스폰 무적 상태입니다.");
       default -> Component.empty();
     };
   }
@@ -533,11 +556,11 @@ public enum CustomEffectType implements Translatable, EnumHideable
     return switch (this)
             {
               case RESURRECTION, CUCUMBERY_UPDATER, DARKNESS_TERROR -> -1;
-              case SERVER_RADIO_LISTENING -> 2;
+              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD -> 2;
               case RESURRECTION_INVINCIBLE -> 20 * 2;
               case COOLDOWN_CHAT -> 20 * 3;
-              case PARROTS_CHEER -> 20 * 5;
-              case STOP, COOLDOWN_ITEM_MEGAPHONE -> 20 * 10;
+              case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD -> 20 * 5;
+              case STOP, COOLDOWN_ITEM_MEGAPHONE, INVINCIBLE_RESPAWN -> 20 * 10;
               case RESURRECTION_COOLDOWN -> 20 * 60 * 10;
               default -> 20 * 30;
             };
@@ -569,18 +592,23 @@ public enum CustomEffectType implements Translatable, EnumHideable
 
   public boolean isTimeHidden()
   {
-    return isTimeHiddenWhenFull();
+    return isTimeHiddenWhenFull() || switch (this)
+            {
+              case DARKNESS_TERROR, SERVER_RADIO_LISTENING, NEWBIE_SHIELD -> true;
+              default -> false;
+            };
   }
 
   /**
    * 커스텀 효과의 지속 시간이 하나도 경과하지 않앗을 때 사간을 표시할지 말지 확인합니다.
    * @return 시간을 표시하지 않는 버프면 true 이오ㅔ에는 false
    */
+  @SuppressWarnings("all")
   public boolean isTimeHiddenWhenFull()
   {
     return switch (this)
             {
-              case PARROTS_CHEER, DARKNESS_TERROR, SERVER_RADIO_LISTENING -> true;
+              case PARROTS_CHEER -> true;
               default -> false;
     };
   }
@@ -611,7 +639,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return switch (this)
             {
-              case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER -> true;
+              case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER,
+                      INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN -> true;
               default -> false;
             };
   }

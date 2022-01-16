@@ -8,8 +8,8 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -22,7 +22,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
-import java.util.Objects;
 
 public class PlayerQuit implements Listener
 {
@@ -42,16 +41,16 @@ public class PlayerQuit implements Listener
     if (enabeldActionbar || enabledTellraw)
     {
       event.quitMessage(null);
-      MessageUtil.consoleSendMessage("&5[&c퇴장&5] &rUUID : &e" + uuid + "&r, ID : &e" + name + "&r, Nickname : ", displayName);
+      MessageUtil.consoleSendMessage(Prefix.INFO_QUIT, "%s - %s(%s)", Constant.THE_COLOR_HEX + uuid, Constant.THE_COLOR_HEX + name, displayName);
     }
     if (enabeldActionbar && !isSpectator)
     {
-      String quitMessageActionbar = MessageUtil.n2s(Objects.requireNonNull(cfg.getString("actionbar-quit-message")).replace("%player%", ComponentUtil.serialize(displayName)));
+      String quitMessageActionbar = cfg.getString("actionbar-quit-message", "%player%이(가) 퇴장하셨습니다.").replace("%player%", "%s");
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
         if (online != player)
         {
-          MessageUtil.sendActionBar(online, quitMessageActionbar);
+          MessageUtil.sendActionBar(online, quitMessageActionbar, displayName);
         }
       }
     }
@@ -59,7 +58,6 @@ public class PlayerQuit implements Listener
     boolean outsider = false;
     if (CustomEffectManager.hasEffect(player, CustomEffectType.OUTSIDER))
     {
-      @SuppressWarnings("all")
       int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.OUTSIDER).getAmplifier() + 1;
       if (Math.random() * 100 < amplifier * 10)
       {
@@ -67,14 +65,13 @@ public class PlayerQuit implements Listener
       }
     }
 
-    String quitMessage = "%s이(가) 퇴장하셨습니다.";
-    switch (event.getReason())
+    String quitMessage = switch (event.getReason())
     {
-      case DISCONNECTED -> quitMessage = "%s이(가) 퇴장하셨습니다.";
-      case KICKED -> quitMessage = player.isBanned() ? "%s이(가) 서버에서 정지당했습니다." : "%s이(가) 서버에서 강퇴당했습니다.";
-      case TIMED_OUT -> quitMessage = "%s이(가) 시간이 초과되어 서버에서 강퇴당했습니다.";
-      case ERRONEOUS_STATE -> quitMessage = "%s이(가) 오류나서 터졌습니다.";
-    }
+      default -> "%s이(가) 퇴장하셨습니다.";
+      case KICKED -> player.isBanned() ? "%s이(가) 서버에서 정지당했습니다." : "%s이(가) 서버에서 강퇴당했습니다.";
+      case TIMED_OUT -> "%s이(가) 시간이 초과되어 서버에서 강퇴당했습니다.";
+      case ERRONEOUS_STATE -> "%s이(가) 오류나서 터졌습니다.";
+    };
 
     if (enabledTellraw && !isSpectator && !outsider)
     {
@@ -85,7 +82,7 @@ public class PlayerQuit implements Listener
           if (UserData.SHOW_QUIT_MESSAGE_FORCE.getBoolean(player.getUniqueId()) || (UserData.SHOW_QUIT_MESSAGE.getBoolean(player.getUniqueId()) && UserData.OUTPUT_QUIT_MESSAGE.getBoolean(
                   online.getUniqueId()) || UserData.OUTPUT_QUIT_MESSAGE_FORCE.getBoolean(online.getUniqueId())))
           {
-            MessageUtil.sendMessage(online, Prefix.INFO_QUIT, ComponentUtil.translate(quitMessage, player));
+            MessageUtil.sendMessage(online, Prefix.INFO_QUIT, quitMessage, player);
           }
         }
       }

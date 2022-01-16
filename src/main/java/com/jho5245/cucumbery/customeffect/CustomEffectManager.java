@@ -48,6 +48,11 @@ public class CustomEffectManager
     return customEffects;
   }
 
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType)
+  {
+    return addEffect(entity, new CustomEffect(effectType));
+  }
+
   public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect)
   {
     return addEffect(entity, customEffect, false);

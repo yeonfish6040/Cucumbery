@@ -24,9 +24,8 @@ import net.kyori.adventure.bossbar.BossBar.Overlay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
@@ -49,6 +48,7 @@ public class CustomEffectScheduler
     {
       tick();
       display();
+      newbieShield();
       darknessTerror();
       serverRadio();
       axolotlsGrace();
@@ -168,7 +168,7 @@ public class CustomEffectScheduler
         for (CustomEffect customEffect : customEffects)
         {
           int initDuration = customEffect.getInitDuration();
-          progress += (initDuration == -1 || customEffect.isTimeHiddenWhenFull() ? 1f : 1f * customEffect.getDuration() / initDuration) / size;
+          progress += (initDuration == -1 || customEffect.isTimeHidden() ? 1f : 1f * customEffect.getDuration() / initDuration) / size;
         }
         for (CustomEffect customEffect : customEffects)
         {
@@ -249,6 +249,26 @@ public class CustomEffectScheduler
     }
   }
 
+  private static void newbieShield()
+  {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      int playTime = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+      if (playTime < 20 * 60 * 20)
+      {
+        CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.NEWBIE_SHIELD, 2, 2));
+      }
+      else if (playTime < 20 * 60 * 40)
+      {
+        CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.NEWBIE_SHIELD, 2, 1));
+      }
+      else if (playTime < 20 * 60 * 60)
+      {
+        CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.NEWBIE_SHIELD));
+      }
+    }
+  }
+
   private static void darknessTerror()
   {
     for (Player player : Bukkit.getOnlinePlayers())
@@ -269,10 +289,14 @@ public class CustomEffectScheduler
       }
       darknessTerrorTimer.remove(player.getUniqueId());
       darknessTerrorTimer2.remove(player.getUniqueId());
-      if (player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR && !player.hasPotionEffect(PotionEffectType.NIGHT_VISION) &&
-              player.getEyeLocation().getBlock().isPassable() && player.getEyeLocation().getBlock().getLightLevel() == 0)
+      Location location = player.getLocation();
+      Material mainHand = player.getInventory().getItemInMainHand().getType(), offHand = player.getInventory().getItemInOffHand().getType();
+      if (Cucumbery.config.getBoolean("use-darkness-terror-custom-effect") &&
+              location.getWorld().getEnvironment() == Environment.NORMAL && location.getY() < location.getWorld().getSeaLevel() &&
+              player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR && !player.hasPotionEffect(PotionEffectType.NIGHT_VISION) &&
+              player.getEyeLocation().getBlock().isPassable() && player.getEyeLocation().getBlock().getLightLevel() == 0
+              && !(Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(mainHand) || Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(offHand)))
       {
-
         CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.DARKNESS_TERROR));
       }
       else

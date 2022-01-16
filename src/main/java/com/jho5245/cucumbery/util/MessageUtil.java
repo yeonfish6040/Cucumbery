@@ -362,6 +362,47 @@ public class MessageUtil
     sendMessage(audience, Prefix.INFO_WARN, key, args);
   }
 
+  public static void sendError(@NotNull Object audience, @NotNull String key)
+  {
+    sendError(audience, key, true);
+  }
+
+  public static void sendError(@NotNull Object audience, @NotNull String key, @NotNull Object... args)
+  {
+    if (Cucumbery.config.getBoolean("sound-const.error-sound.enable"))
+    {
+      SoundPlay.playErrorSound(audience);
+    }
+    sendMessage(audience, Prefix.INFO_ERROR, key, args);
+  }
+
+  public static void sendWarnOrError(boolean error, @NotNull Object audience, @NotNull String key)
+  {
+    sendWarnOrError(error, audience, key, true);
+  }
+
+  public static void sendWarnOrError(boolean error, @NotNull Object audience, @NotNull String key, @NotNull Object... args)
+  {
+    if (!error)
+    {
+      sendWarn(audience, key, args);
+    }
+    else
+    {
+      sendError(audience, key, args);
+    }
+  }
+
+  public static void info(@NotNull Object audience, @NotNull String key)
+  {
+    info(audience, key, true);
+  }
+
+  public static void info(@NotNull Object audience, @NotNull String key, @NotNull Object... args)
+  {
+    sendMessage(audience, Prefix.INFO, key, args);
+  }
+
   @SuppressWarnings("unchecked")
   public static void sendToast(@NotNull Object audience, @NotNull Component title, @NotNull Material type, @NotNull Frame frame)
   {
@@ -458,6 +499,26 @@ public class MessageUtil
     sendMessage(Bukkit.getServer().getConsoleSender(), objects);
   }
 
+  public static void consoleSendMessage(@NotNull String key)
+  {
+    consoleSendMessage(null, key);
+  }
+
+  public static void consoleSendMessage(@NotNull String key, @NotNull Object... args)
+  {
+    consoleSendMessage(null, key, args);
+  }
+
+  public static void consoleSendMessage(@Nullable Prefix prefix, @NotNull String key)
+  {
+    consoleSendMessage(prefix, key, true);
+  }
+
+  public static void consoleSendMessage(@Nullable Prefix prefix, @NotNull String key, @NotNull Object... args)
+  {
+    sendMessage(Bukkit.getConsoleSender(), prefix, key, args);
+  }
+
   /**
    * 모든 플레이어에게 메시지를 보냅니다.
    *
@@ -468,6 +529,29 @@ public class MessageUtil
     for (Player player : Bukkit.getOnlinePlayers())
     {
       MessageUtil.sendMessage(player, objects);
+    }
+  }
+
+  public static void broadcastPlayer(@NotNull String key)
+  {
+    broadcastPlayer(null, key);
+  }
+
+  public static void broadcastPlayer(@NotNull String key, @NotNull Object... args)
+  {
+    broadcastPlayer(null, key, args);
+  }
+
+  public static void broadcastPlayer(@Nullable Prefix prefix, @NotNull String key)
+  {
+    broadcastPlayer(prefix, key, true);
+  }
+
+  public static void broadcastPlayer(@Nullable Prefix prefix, @NotNull String key, @NotNull Object... args)
+  {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      sendMessage(player, prefix, key, args);
     }
   }
 
@@ -536,7 +620,7 @@ public class MessageUtil
     sendMessage(audience, newObjects);
   }
 
-  public static void sendWarnOrError(boolean error, @NotNull Object audience, @NotNull Object objects)
+  public static void sendWarnOrError(boolean error, @NotNull Object audience, @NotNull Object... objects)
   {
     if (!error)
     {
@@ -1093,7 +1177,11 @@ public class MessageUtil
     try
     {
       double d = Double.parseDouble(a);
-      return !Double.isNaN(d) && !Double.isInfinite(d);
+      if (Double.isNaN(d) || Double.isInfinite(d))
+      {
+        throw new NumberFormatException("Double cannot be NaN or Infinity!");
+      }
+      return true;
     }
     catch (Exception e)
     {

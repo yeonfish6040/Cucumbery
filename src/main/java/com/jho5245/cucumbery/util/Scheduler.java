@@ -42,6 +42,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -53,7 +54,8 @@ public class Scheduler
    * 플레이어가 플레이어를 관전 중일 때 표시할 영양 게이지 텍스트
    */
   private static final String EXHAUSTION_GUAGE = "▁▂▃▄▅▆▇█";
-  private static boolean delay = false, delay2 = false;
+  public static boolean delay = false, delay2 = false;
+  public static BukkitTask delayTask = null;
   public static int fileNameLength = -1;
 
   @SuppressWarnings("all")
@@ -135,22 +137,22 @@ public class Scheduler
     float ratio = Math.min(1f, Math.max(0f, 1f * current / max));
     float speed = song.getSpeed();
 
-      if (!delay)
+    if (!delay)
+    {
+      delay = true;
+      delayTask = Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> delay = false, (long) (160 / speed));
+      BossBar.Color[] colors = BossBar.Color.values();
+      int ordinal = serverRadio.color().ordinal();
+      if (ordinal + 1 >= colors.length)
       {
-        delay = true;
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> delay = false, (long) (200 / speed));
-        BossBar.Color[] colors = BossBar.Color.values();
-        int ordinal = serverRadio.color().ordinal();
-        if (ordinal + 1 >= colors.length)
-        {
-          ordinal = 0;
-        }
-        else
-        {
-          ordinal++;
-        }
-        serverRadio.color(colors[ordinal]);
+        ordinal = 0;
       }
+      else
+      {
+        ordinal++;
+      }
+      serverRadio.color(colors[ordinal]);
+    }
     String songName = song.getPath().getName();
     songName = songName.substring(0, songName.length() - 4);
     final String originalName = songName;
@@ -165,7 +167,7 @@ public class Scheduler
       if (!delay2)
       {
         delay2 = true;
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> delay2 = false, 8L);
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> delay2 = false, 8);
         fileNameLength++;
         if (fileNameLength > extendName.length())
         {
@@ -188,13 +190,7 @@ public class Scheduler
               case PURPLE -> NamedTextColor.DARK_PURPLE;
               case WHITE -> NamedTextColor.WHITE;
             };
-    @SuppressWarnings("all")
-    String repeatMode = switch (radio.getRepeatMode())
-            {
-              case NO -> "Playing";
-              default -> "Repeating";
-            };
-    serverRadio.progress(ratio).name(ComponentUtil.translate("♬ %s",
+    serverRadio.progress(ratio).name(ComponentUtil.translate((radio.isPlaying() ? "♬" : "■") + " %s",
             Component.text(songName, NamedTextColor.WHITE), Constant.JeongsuFloor.format(ratio * 100d) + "%", Constant.Sosu2.format(speed)).color(textColor));
 
     for (Player online : Bukkit.getOnlinePlayers())
@@ -1371,9 +1367,8 @@ public class Scheduler
       {
         if (player.getOpenInventory().getType() == InventoryType.CRAFTING)
         {
-          if (player.getSpectatorTarget() != null && player.getSpectatorTarget().getType() == EntityType.PLAYER)
+          if (player.getSpectatorTarget() instanceof Player target)
           {
-            final Player target = (Player) player.getSpectatorTarget();
             UUID uuid = player.getUniqueId();
             if (!Variable.spectateUpdater.containsKey(uuid))
             {
@@ -1381,7 +1376,7 @@ public class Scheduler
             }
             Location plLoc = player.getLocation(), tarLoc = Variable.spectateUpdater.get(uuid);
             double distance = Method2.distance(plLoc, tarLoc);
-            if (distance == -1D || distance > 128D)
+            if (distance == -1D || distance > 100D)
             {
               player.setSpectatorTarget(null);
               player.teleport(target);
