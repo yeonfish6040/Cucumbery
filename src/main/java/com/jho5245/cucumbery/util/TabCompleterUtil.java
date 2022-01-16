@@ -31,7 +31,7 @@ public class TabCompleterUtil
     String customItemType = NBTAPI.getString(customItemTag, CucumberyTag.ID_KEY);
     if (customItemType == null)
     {
-      return Collections.singletonList("주로 사용하는 손에 들고 있는 아이템에 커스텀 아이템 태그가 없습니다.");
+      return Collections.singletonList("주로 사용하는 손에 들고 있는 아이템에 커스텀 아이템 태그가 없습니다");
     }
     switch (customItemType)
     {
@@ -79,7 +79,7 @@ public class TabCompleterUtil
       case CucumberyTag.CUSTOM_ITEM_FISHING_LOD_ID:
         if (item.getType() != Material.FISHING_ROD)
         {
-          return Collections.singletonList("해당 태그는 낚싯대에만 사용할 수 있습니다.");
+          return Collections.singletonList("해당 태그는 낚싯대에만 사용할 수 있습니다");
         }
         if (length == 3)
         {

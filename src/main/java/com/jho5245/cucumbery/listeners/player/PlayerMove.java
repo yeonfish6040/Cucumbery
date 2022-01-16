@@ -33,7 +33,7 @@ public class PlayerMove implements Listener
       if (!Variable.playerMoveAlertCooldown.contains(uuid))
       {
         Variable.playerMoveAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "움직일 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "움직일 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerMoveAlertCooldown.remove(uuid), 100L);
       }

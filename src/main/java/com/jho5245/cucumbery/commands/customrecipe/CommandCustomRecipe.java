@@ -99,7 +99,7 @@ public class CommandCustomRecipe implements CommandExecutor
         File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[1] + ".yml");
         if (!file.exists())
         {
-          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다.");
+          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다");
           return true;
         }
         YamlConfiguration config = Variable.customRecipes.get(args[1]);
@@ -112,7 +112,7 @@ public class CommandCustomRecipe implements CommandExecutor
         }
         if ((config.getConfigurationSection("recipes") == null) || (!Objects.requireNonNull(config.getConfigurationSection("recipes")).contains(args[2])))
         {
-          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r에서 해당 커스텀 레시피(&e" + args[2] + "&r)를 찾을 수 없습니다.");
+          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r에서 해당 커스텀 레시피(&e" + args[2] + "&r)를 찾을 수 없습니다");
           return true;
         }
         final Player finalPlayer = player;
@@ -140,24 +140,24 @@ public class CommandCustomRecipe implements CommandExecutor
         }
         if (Method2.isInvalidFileName(args[1]))
         {
-          MessageUtil.sendError(player, "유효하지 않은 레시피 목록 이름입니다.");
+          MessageUtil.sendError(player, "유효하지 않은 레시피 목록 이름입니다");
           return true;
         }
         if (args[2].equals("--all"))
         {
-          MessageUtil.sendError(player, "해당하는 이름으로는 레시피를 저장할 수 없습니다.");
+          MessageUtil.sendError(player, "해당하는 이름으로는 레시피를 저장할 수 없습니다");
           return true;
         }
         if (!args[1].equals(MessageUtil.stripColor(args[1])))
         {
-          MessageUtil.sendError(player, "레시피 목록 이름에는 컬러 코드를 사용할 수 없습니다.");
-          MessageUtil.info(player, "레시피 제작 후, &e/" + label + " edit category " + MessageUtil.stripColor(args[1] + " display (레시피__목록__이름) &r명령어로 컬러 코드를 사용할 수 있습니다."));
+          MessageUtil.sendError(player, "레시피 목록 이름에는 컬러 코드를 사용할 수 없습니다");
+          MessageUtil.info(player, "레시피 제작 후, &e/" + label + " edit category " + MessageUtil.stripColor(args[1] + " display (레시피__목록__이름) &r명령어로 컬러 코드를 사용할 수 있습니다"));
           return true;
         }
         if (!args[2].equals(MessageUtil.stripColor(args[2])))
         {
-          MessageUtil.sendError(player, "레시피 이름에는 컬러 코드를 사용할 수 없습니다.");
-          MessageUtil.info(player, "레시피 제작 후, &e/" + label + " edit recipe " + MessageUtil.stripColor(args[1] + " " + MessageUtil.stripColor(args[2]) + "display (레시피__목록__이름) &r명령어로 컬러 코드를 사용할 수 있습니다."));
+          MessageUtil.sendError(player, "레시피 이름에는 컬러 코드를 사용할 수 없습니다");
+          MessageUtil.info(player, "레시피 제작 후, &e/" + label + " edit recipe " + MessageUtil.stripColor(args[1] + " " + MessageUtil.stripColor(args[2]) + "display (레시피__목록__이름) &r명령어로 컬러 코드를 사용할 수 있습니다"));
           return true;
         }
         File recipeFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[1] + ".yml");
@@ -221,7 +221,7 @@ public class CommandCustomRecipe implements CommandExecutor
         file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[1] + ".yml");
         if (!file.exists())
         {
-          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다.");
+          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r" + MessageUtil.getFinalConsonant(args[1], ConsonantType.을를) + " 찾을 수 없습니다");
           return true;
         }
         config = Variable.customRecipes.get(args[1]);
@@ -237,13 +237,13 @@ public class CommandCustomRecipe implements CommandExecutor
           {
             System.err.println("[Cucumbery] could not delete custom recipe file (" + args[1] + ")!");
           }
-          MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[1] + "&r에 있는 모든 레시피를 제거하였습니다.");
+          MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[1] + "&r에 있는 모든 레시피를 제거하였습니다");
           return true;
         }
         ConfigurationSection configurationSection1 = config.getConfigurationSection("recipes");
         if (configurationSection1 == null || !configurationSection1.contains(args[2]))
         {
-          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r에서 해당 커스텀 레시피(&e" + args[2] + "&r)를 찾을 수 없습니다.");
+          MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r에서 해당 커스텀 레시피(&e" + args[2] + "&r)를 찾을 수 없습니다");
           return true;
         }
         CustomConfig customRecipeListConfig = CustomConfig.getCustomConfig("data/CustomRecipe/" + args[1] + ".yml");
@@ -263,7 +263,7 @@ public class CommandCustomRecipe implements CommandExecutor
           Variable.customRecipes.put(args[1], config);
           customRecipeListConfig.saveConfig();
         }
-        MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[1] + "&r에서 &e" + args[2] + "&r 레시피를 제거하였습니다.");
+        MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[1] + "&r에서 &e" + args[2] + "&r 레시피를 제거하였습니다");
         break;
       case "edit":
         if (args.length < 2)
@@ -299,7 +299,7 @@ public class CommandCustomRecipe implements CommandExecutor
             file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[2] + ".yml");
             if (!file.exists())
             {
-              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을를) + " 찾을 수 없습니다.");
+              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을를) + " 찾을 수 없습니다");
               return true;
             }
             customRecipeListConfig = CustomConfig.getCustomConfig("data/CustomRecipe/" + args[2] + ".yml");
@@ -337,7 +337,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     ItemStack configItem = ItemSerializer.deserialize(config.getString("extra.displayitem"));
                     if (ItemStackUtil.itemExists(configItem) && item.equals(configItem))
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 아이템이 주로 사용하는 손에 들고 있는 아이템과 동일합니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 아이템이 주로 사용하는 손에 들고 있는 아이템과 동일합니다");
                       return true;
                     }
                     config.set("extra.displayitem", ItemSerializer.serialize(item));
@@ -345,7 +345,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     customRecipeListConfig.saveConfig();
                     MessageUtil.sendMessage(
                             sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 §e" + args[2] + "&r의 표시 아이템을 주로 사용하는 손에 들고 있는 아이템(&e",
-                            ItemNameUtil.itemName(item), "&r)으로 설정하였습니다.");
+                            ItemNameUtil.itemName(item), "&r)으로 설정하였습니다");
                     break;
                   case "material":
                     if (args.length < 6)
@@ -386,7 +386,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     }
                     if (configMaterial != null && material == configMaterial)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 아이템이 &e" + materialName + "&r입니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 아이템이 &e" + materialName + "&r입니다");
                       return true;
                     }
                     config.set("extra.displayitem", material.toString());
@@ -400,7 +400,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                     materialName +
                                     "&r" +
                                     MessageUtil.getFinalConsonant(materialName, ConsonantType.으로) +
-                                    " 설정하였습니다.");
+                                    " 설정하였습니다");
                     break;
                   case "remove":
                     if (args.length > 5)
@@ -412,13 +412,13 @@ public class CommandCustomRecipe implements CommandExecutor
                     String configValue = config.getString("extra.displayitem");
                     if (configValue == null)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 아이템이 없습니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 아이템이 없습니다");
                       return true;
                     }
                     config.set("extra.displayitem", null);
                     Variable.customRecipes.put(args[2], config);
                     customRecipeListConfig.saveConfig();
-                    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 §e" + args[2] + "&r의 표시 아이템을 제거하였습니다.");
+                    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 §e" + args[2] + "&r의 표시 아이템을 제거하였습니다");
                     break;
                   default:
                     MessageUtil.wrongArg(sender, 5, args);
@@ -440,12 +440,12 @@ public class CommandCustomRecipe implements CommandExecutor
                     String configBasePermission = config.getString("extra.permissions.base-permission");
                     if (inputBasePermission.equals(configBasePermission))
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 접근 권한 요구 퍼미션 노드 기본값이 &e" + inputBasePermission + "&r입니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 접근 권한 요구 퍼미션 노드 기본값이 &e" + inputBasePermission + "&r입니다");
                       return true;
                     }
                     if (inputBasePermission.equals("--remove") && configBasePermission == null)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 접근 권한 퍼미션 노드 기본값이 없는 상태입니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 접근 권한 퍼미션 노드 기본값이 없는 상태입니다");
                       return true;
                     }
                     config.set("extra.permissions.base-permission", inputBasePermission.equals("--remove") ? null : inputBasePermission);
@@ -456,22 +456,22 @@ public class CommandCustomRecipe implements CommandExecutor
                                     "커스텀 레시피 목록 §e" +
                                     args[2] +
                                     "&r의 접근 권한 요구 퍼미션 노드 기본값을 &e" +
-                                    (inputBasePermission.equals("--remove") ? "&r삭제하였습니다." : (inputBasePermission +
+                                    (inputBasePermission.equals("--remove") ? "&r삭제하였습니다" : (inputBasePermission +
                                             "&r" +
                                             MessageUtil.getFinalConsonant(inputBasePermission, ConsonantType.으로) +
-                                            " 지정하였습니다.")));
+                                            " 지정하였습니다")));
                     break;
                   case "bypass":
                     String inputBypassPermission = args[5];
                     String configBypassPermission = config.getString("extra.permissions.bypass-if-hidden-permission");
                     if (inputBypassPermission.equals(configBypassPermission))
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 비공개 우회 퍼미션 노드 값이 &e" + inputBypassPermission + "&r입니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 비공개 우회 퍼미션 노드 값이 &e" + inputBypassPermission + "&r입니다");
                       return true;
                     }
                     if (inputBypassPermission.equals("--remove") && configBypassPermission == null)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 비공개 우회 퍼미션 노드 값이 없는 상태입니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 비공개 우회 퍼미션 노드 값이 없는 상태입니다");
                       return true;
                     }
                     config.set("extra.permissions.bypass-if-hidden-permission", inputBypassPermission.equals("--remove") ? null : inputBypassPermission);
@@ -482,7 +482,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                     "커스텀 레시피 목록 §e" +
                                     args[2] +
                                     "&r의 비공개 우회 퍼미션 노드 값을 &e" +
-                                    (inputBypassPermission.equals("--remove") ? "&r삭제하였습니다." : (inputBypassPermission + "&r" + MessageUtil.getFinalConsonant(inputBypassPermission, ConsonantType.으로) + " 지정하였습니다.")));
+                                    (inputBypassPermission.equals("--remove") ? "&r삭제하였습니다" : (inputBypassPermission + "&r" + MessageUtil.getFinalConsonant(inputBypassPermission, ConsonantType.으로) + " 지정하였습니다")));
                     break;
                   case "hide":
                     boolean hideIfNoPerm = false;
@@ -497,13 +497,13 @@ public class CommandCustomRecipe implements CommandExecutor
                     }
                     if (config.getBoolean("extra.permissions.hide-if-no-base") == hideIfNoPerm)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 권한이 없을 시 레시피 목록 내용 비공개 값이 &e" + hideIfNoPerm + "&r입니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 권한이 없을 시 레시피 목록 내용 비공개 값이 &e" + hideIfNoPerm + "&r입니다");
                       return true;
                     }
                     config.set("extra.permissions.hide-if-no-base", hideIfNoPerm);
                     Variable.customRecipes.put(args[2], config);
                     customRecipeListConfig.saveConfig();
-                    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 §e" + args[2] + "&r의 권한이 없을 시 레시피 목록 내용 비공개 값을 &e" + hideIfNoPerm + "&r로 지정하였습니다.");
+                    MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 §e" + args[2] + "&r의 권한이 없을 시 레시피 목록 내용 비공개 값을 &e" + hideIfNoPerm + "&r로 지정하였습니다");
                     break;
                   default:
                     MessageUtil.wrongArg(sender, 5, args);
@@ -514,7 +514,7 @@ public class CommandCustomRecipe implements CommandExecutor
               case "wealth":
                 if (!Cucumbery.using_Vault_Economy)
                 {
-                  MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다.");
+                  MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다");
                   return true;
                 }
                 if (args.length > 6)
@@ -547,7 +547,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 boolean configWealthMaxExists = config.contains("extra.wealth.max");
                 if (inputWealthMin == -1d && (!configWealthMinExists || configWealthMin == -1d) && inputWealthMax == -1d && (!configWealthMaxExists || configWealthMax == -1d))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 소지 금액 조건이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 소지 금액 조건이 없습니다");
                   return true;
                 }
                 if (configWealthMinExists && inputWealthMin == configWealthMin && configWealthMaxExists && inputWealthMax == configWealthMax)
@@ -559,7 +559,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                   Constant.Sosu15.format(inputWealthMin) +
                                   "원&r, 최대 소지 금액 조건이 &e" +
                                   Constant.Sosu15.format(inputWealthMax) +
-                                  "원&r입니다.");
+                                  "원&r입니다");
                   return true;
                 }
                 config.set("extra.wealth.min", inputWealthMin == -1d ? null : inputWealthMin);
@@ -580,15 +580,15 @@ public class CommandCustomRecipe implements CommandExecutor
                                   (inputWealthMin == -1d ? ("&r의 최소 소지 금액 조건을 제거") : ("&r의 최소 소지 금액 조건을 &e" + Constant.Sosu15.format(inputWealthMin) + "원&r으로 지정")) +
                                   "하였고, 최대 소지 금액 조건을 " +
                                   (inputWealthMax == -1d ? ("제거") : ("&e" + Constant.Sosu15.format(inputWealthMax) + "원&r으로 지정")) +
-                                  "하였습니다.");
+                                  "하였습니다");
                 }
                 else if (inputWealthMin == -1d)
                 {
-                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 소지 금액 조건을 제거하였습니다.");
+                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 소지 금액 조건을 제거하였습니다");
                 }
                 else
                 {
-                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 소지 금액 조건을 &e" + Constant.Sosu15.format(inputWealthMin) + "원&r으로 지정하였습니다.");
+                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 소지 금액 조건을 &e" + Constant.Sosu15.format(inputWealthMin) + "원&r으로 지정하였습니다");
                 }
                 break;
               case "level":
@@ -622,7 +622,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 boolean configLevelMaxExists = config.contains("extra.level.max");
                 if (inputLevelMin == -1 && (!configLevelMinExists || configLevelMin == -1) && inputLevelMax == -1 && (!configLevelMaxExists || configLevelMax == -1))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 레벨 조건이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 레벨 조건이 없습니다");
                   return true;
                 }
                 if (configLevelMinExists && inputLevelMin == configLevelMin && configLevelMaxExists && inputLevelMax == configLevelMax)
@@ -634,7 +634,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                   Constant.Sosu15.format(inputLevelMin) +
                                   "&r, 최대 레벨 조건이 &e" +
                                   Constant.Sosu15.format(inputLevelMax) +
-                                  "&r입니다.");
+                                  "&r입니다");
                   return true;
                 }
                 config.set("extra.level.min", inputLevelMin == -1 ? null : inputLevelMin);
@@ -649,15 +649,15 @@ public class CommandCustomRecipe implements CommandExecutor
                 {
                   MessageUtil.sendMessage(sender,
                           Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + args[2] + (inputLevelMin == -1 ? ("&r의 최소 레벨 조건을 제거") : ("&r의 최소 레벨 조건을 &e" + Constant.Sosu15.format(
-                                  inputLevelMin) + "&r으로 지정")) + "하였고, 최대 레벨 조건을 " + (inputLevelMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputLevelMax) + "&r으로 지정")) + "하였습니다.");
+                                  inputLevelMin) + "&r으로 지정")) + "하였고, 최대 레벨 조건을 " + (inputLevelMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputLevelMax) + "&r으로 지정")) + "하였습니다");
                 }
                 else if (inputLevelMin == -1)
                 {
-                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 레벨 조건을 제거하였습니다.");
+                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 레벨 조건을 제거하였습니다");
                 }
                 else
                 {
-                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 레벨 조건을 &e" + Constant.Sosu15.format(inputLevelMin) + "&r으로 지정하였습니다.");
+                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r의 최대, 최소 레벨 조건을 &e" + Constant.Sosu15.format(inputLevelMin) + "&r으로 지정하였습니다");
                 }
                 break;
               case "require":
@@ -678,7 +678,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 }
                 if (!new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[5] + ".yml").exists())
                 {
-                  MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[5] + "&r" + MessageUtil.getFinalConsonant(args[5], ConsonantType.을를) + " 찾을 수 없습니다.");
+                  MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[5] + "&r" + MessageUtil.getFinalConsonant(args[5], ConsonantType.을를) + " 찾을 수 없습니다");
                   return true;
                 }
                 switch (args[4])
@@ -695,7 +695,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     ConfigurationSection recipe = config.getConfigurationSection("recipes." + args[6]);
                     if (recipe == null || recipe.getKeys(false).size() == 0)
                     {
-                      MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[5] + "&r에서 해당 레시피(&e" + args[6] + "&r)를 찾을 수 없습니다.");
+                      MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[5] + "&r에서 해당 레시피(&e" + args[6] + "&r)를 찾을 수 없습니다");
                       return true;
                     }
                     customRecipeListConfig = CustomConfig.getCustomConfig("data/CustomRecipe/" + args[2] + ".yml");
@@ -731,7 +731,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[5] +
                                       "&r에 있는 레시피 &e" +
                                       args[6] +
-                                      "&r의 최대, 최소 제작 횟수 조건이 없습니다.");
+                                      "&r의 최대, 최소 제작 횟수 조건이 없습니다");
                       return true;
                     }
                     if (configRecipeMinExists && inputRecipeMin == configRecipeMin && configRecipeMaxExists && inputRecipeMax == configRecipeMax)
@@ -747,7 +747,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputRecipeMin) +
                                       "&r, 최대 제작 횟수 조건이 &e" +
                                       Constant.Sosu15.format(inputRecipeMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("extra.recipes." + args[5] + "." + args[6] + ".min", inputRecipeMin == -1 ? null : inputRecipeMin);
@@ -789,7 +789,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputRecipeMin == -1 ? ("&r의 최소 제작 횟수 조건을 제거") : ("&r의 최소 제작 횟수 조건을 &e" + Constant.Sosu15.format(inputRecipeMin) + "&r으로 " + "지정")) +
                                       "하였고, 최대 제작 횟수 조건을 " +
                                       (inputRecipeMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputRecipeMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputRecipeMin == -1)
                     {
@@ -816,7 +816,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[6] +
                                       "&r의 최대, 최소 레시피 제작 조건을 &e" +
                                       Constant.Sosu15.format(inputRecipeMin) +
-                                      "&r으로 지정하였습니다.");
+                                      "&r으로 지정하였습니다");
                     }
                     break;
                   case "category":
@@ -850,7 +850,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     boolean configCategoryMaxExists = config.contains("extra.categories." + args[5] + ".max");
                     if (inputCategoryMin == -1 && (!configCategoryMinExists || configCategoryMin == -1) && inputCategoryMax == -1 && (!configCategoryMaxExists || configCategoryMax == -1))
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 대한 커스텀 레시피 목록 &e" + args[5] + "&r에 포함되어 있는 레시피의 최대, 최소 제작 횟수 조건이 없습니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 대한 커스텀 레시피 목록 &e" + args[5] + "&r에 포함되어 있는 레시피의 최대, 최소 제작 횟수 조건이 없습니다");
                       return true;
                     }
                     if (configCategoryMinExists && inputCategoryMin == configCategoryMin && configCategoryMaxExists && inputCategoryMax == configCategoryMax)
@@ -864,7 +864,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputCategoryMin) +
                                       "&r, 최대 제작 횟수 조건이 &e" +
                                       Constant.Sosu15.format(inputCategoryMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("extra.categories." + args[5] + ".min", inputCategoryMin == -1 ? null : inputCategoryMin);
@@ -897,7 +897,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputCategoryMin == -1 ? ("의 최소 제작 횟수 조건을 제거") : ("의 최소 제작 횟수 조건을 &e" + Constant.Sosu15.format(inputCategoryMin) + "&r으로 지정")) +
                                       "하였고, 최대 제작 횟수 조건을 " +
                                       (inputCategoryMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputCategoryMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputCategoryMin == -1)
                     {
@@ -907,7 +907,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[2] +
                                       "&r에 대한 커스텀 레시피 목록 &e" +
                                       args[5] +
-                                      "&r에 포함되어 있는 레시피의 최대, 최소 제작 조건을 제거하였습니다.");
+                                      "&r에 포함되어 있는 레시피의 최대, 최소 제작 조건을 제거하였습니다");
                     }
                     else
                     {
@@ -918,7 +918,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               args[5] +
                               "&r에 포함되어 있는 레시피의 최대, 최소 제작 조건을 &e" +
                               Constant.Sosu15.format(inputCategoryMin) +
-                              "&r으로 지정하였습니다.");
+                              "&r으로 지정하였습니다");
                     }
                     break;
                   default:
@@ -961,11 +961,11 @@ public class CommandCustomRecipe implements CommandExecutor
                       case USE_ITEM:
                       case BREAK_ITEM:
                       case MINE_BLOCK:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 material 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 material 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                       case KILL_ENTITY:
                       case ENTITY_KILLED_BY:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 entity 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 entity 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                       default:
                         break;
@@ -995,7 +995,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     boolean configGeneralMaxExists = config.contains("extra.statistics.general." + statisticString + ".max");
                     if (inputGeneralMin == -1 && (!configGeneralMinExists || configGeneralMin == -1) && inputGeneralMax == -1 && (!configGeneralMaxExists || configGeneralMax == -1))
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건이 없습니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건이 없습니다");
                       return true;
                     }
                     if (configGeneralMinExists && inputGeneralMin == configGeneralMin && configGeneralMaxExists && inputGeneralMax == configGeneralMax)
@@ -1008,7 +1008,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               Constant.Sosu15.format(inputGeneralMin) +
                               "&r, 최대값 조건이 &e" +
                               Constant.Sosu15.format(inputGeneralMax) +
-                              "&r입니다.");
+                              "&r입니다");
                       return true;
                     }
                     config.set("extra.statistics.general." + statisticString + ".min", inputGeneralMin == -1 ? null : inputGeneralMin);
@@ -1048,12 +1048,12 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputGeneralMin == -1 ? ("의 최소값 조건을 제거") : ("의 최소값 조건을 &e" + Constant.Sosu15.format(inputGeneralMin) + "&r으로 지정")) +
                                       "하였고, 최대값 조건을 " +
                                       (inputGeneralMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputGeneralMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputGeneralMin == -1)
                     {
                       MessageUtil.sendMessage(sender,
-                              Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statistic + "&r의 최대, 최소값 조건을 제거하였습니다.");
+                              Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statistic + "&r의 최대, 최소값 조건을 제거하였습니다");
                     }
                     else
                     {
@@ -1064,7 +1064,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               statisticName +
                               "&r의 최대, 최소값 조건을 &e" +
                               Constant.Sosu15.format(inputGeneralMin) +
-                              "&r으로 지정하였습니다.");
+                              "&r으로 지정하였습니다");
                     }
                     break;
                   case "entity":
@@ -1091,13 +1091,13 @@ public class CommandCustomRecipe implements CommandExecutor
                       case USE_ITEM:
                       case BREAK_ITEM:
                       case MINE_BLOCK:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 material 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 material 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                       case KILL_ENTITY:
                       case ENTITY_KILLED_BY:
                         break;
                       default:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 general 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 general 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                     }
                     EntityType entityType;
@@ -1137,7 +1137,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     boolean configEntityMaxExists = config.contains("extra.statistics.entity." + statisticString + "." + entityTypeString + ".max");
                     if (inputEntityMin == -1 && (!configEntityMinExists || configEntityMin == -1) && inputEntityMax == -1 && (!configEntityMaxExists || configEntityMax == -1))
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건이 없습니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건이 없습니다");
                       return true;
                     }
                     if (configEntityMinExists && inputEntityMin == configEntityMin && configEntityMaxExists && inputEntityMax == configEntityMax)
@@ -1151,7 +1151,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputEntityMin) +
                                       "&r, 최대값 조건이 &e" +
                                       Constant.Sosu15.format(inputEntityMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("extra.statistics.entity." + statisticString + "." + entityTypeString + ".min", inputEntityMin == -1 ? null : inputEntityMin);
@@ -1199,7 +1199,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputEntityMin == -1 ? ("의 최소값 조건을 제거") : ("의 최소값 조건을 &e" + Constant.Sosu15.format(inputEntityMin) + "&r으로 지정")) +
                                       "하였고, 최대값 조건을 " +
                                       (inputEntityMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputEntityMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputEntityMin == -1)
                     {
@@ -1222,7 +1222,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       statisticName +
                                       "&r의 최대, 최소값 조건을 &e" +
                                       Constant.Sosu15.format(inputEntityMin) +
-                                      "&r으로 지정하였습니다.");
+                                      "&r으로 지정하였습니다");
                     }
                     break;
                   case "material":
@@ -1252,10 +1252,10 @@ public class CommandCustomRecipe implements CommandExecutor
                         break;
                       case KILL_ENTITY:
                       case ENTITY_KILLED_BY:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 entity 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 entity 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                       default:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 general 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 general 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                     }
                     Material material;
@@ -1295,7 +1295,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     boolean configMaterialMaxExists = config.contains("extra.statistics.material." + statisticString + "." + materialString + ".max");
                     if (inputMaterialMin == -1 && (!configMaterialMinExists || configMaterialMin == -1) && inputMaterialMax == -1 && (!configMaterialMaxExists || configMaterialMax == -1))
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건이 없습니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건이 없습니다");
                       return true;
                     }
                     if (configMaterialMinExists && inputMaterialMin == configMaterialMin && configMaterialMaxExists && inputMaterialMax == configMaterialMax)
@@ -1309,7 +1309,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputMaterialMin) +
                                       "&r, 최대값 조건이 &e" +
                                       Constant.Sosu15.format(inputMaterialMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("extra.statistics.material." + statisticString + "." + materialString + ".min", inputMaterialMin == -1 ? null : inputMaterialMin);
@@ -1357,12 +1357,12 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputMaterialMin == -1 ? ("의 최소값 조건을 제거") : ("의 최소값 조건을 &e" + Constant.Sosu15.format(inputMaterialMin) + "&r으로 지정")) +
                                       "하였고, 최대값 조건을 " +
                                       (inputMaterialMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputMaterialMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputMaterialMin == -1)
                     {
                       MessageUtil.sendMessage(sender,
-                              Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건을 제거하였습니다.");
+                              Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + args[2] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건을 제거하였습니다");
                     }
                     else
                     {
@@ -1375,7 +1375,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       statisticName +
                                       "&r의 최대, 최소값 조건을 &e" +
                                       Constant.Sosu15.format(inputMaterialMin) +
-                                      "&r으로 지정하였습니다.");
+                                      "&r으로 지정하였습니다");
                     }
                     break;
                   default:
@@ -1395,12 +1395,12 @@ public class CommandCustomRecipe implements CommandExecutor
                 String configDisplay = config.getString("extra.display");
                 if (inputDisplay.equals("--remove") && (configDisplay == null || configDisplay.equals(args[2])))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 이름이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 이름이 없습니다");
                   return true;
                 }
                 else if (inputDisplay.equals(configDisplay))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 이름이 &e" + inputDisplay + "&r입니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 표시 이름이 &e" + inputDisplay + "&r입니다");
                   return true;
                 }
                 config.set("extra.display", inputDisplay.equals("--remove") ? args[2] : inputDisplay);
@@ -1410,11 +1410,11 @@ public class CommandCustomRecipe implements CommandExecutor
                         sender, Prefix.INFO_CUSTOM_RECIPE +
                                 "커스텀 레시피 목록 &e" +
                                 args[2] +
-                                (inputDisplay.equals("--remove") ? ("&r의 표시 이름을 제거하였습니다.") : ("&r의 표시 이름을 &e" +
+                                (inputDisplay.equals("--remove") ? ("&r의 표시 이름을 제거하였습니다") : ("&r의 표시 이름을 &e" +
                                         inputDisplay +
                                         "&r" +
                                         MessageUtil.getFinalConsonant(inputDisplay, ConsonantType.으로) +
-                                        " 지정하였습니다.")));
+                                        " 지정하였습니다")));
                 break;
               case "biome":
                 if (args.length > 5)
@@ -1445,12 +1445,12 @@ public class CommandCustomRecipe implements CommandExecutor
                 configDisplay = config.getString("extra.biome");
                 if (inputDisplay.equals("--remove") && configDisplay == null)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 생물 군계 조건이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 생물 군계 조건이 없습니다");
                   return true;
                 }
                 else if (inputDisplay.equals(configDisplay))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 생물 군계 조건이 &e" + biomeName + "&r입니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 생물 군계 조건이 &e" + biomeName + "&r입니다");
                   return true;
                 }
                 config.set("extra.biome", inputDisplay.equals("--remove") ? null : inputDisplay.toUpperCase());
@@ -1460,11 +1460,11 @@ public class CommandCustomRecipe implements CommandExecutor
                         sender, Prefix.INFO_CUSTOM_RECIPE +
                                 "커스텀 레시피 목록 &e" +
                                 args[2] +
-                                (inputDisplay.equals("--remove") ? ("&r의 생물 군계 조건을 제거하였습니다.") : ("&r의 생물 군계 조건을 &e" +
+                                (inputDisplay.equals("--remove") ? ("&r의 생물 군계 조건을 제거하였습니다") : ("&r의 생물 군계 조건을 &e" +
                                         biomeName +
                                         "&r" +
                                         MessageUtil.getFinalConsonant(biomeName, ConsonantType.으로) +
-                                        " 지정하였습니다.")));
+                                        " 지정하였습니다")));
                 break;
               case "belowblock":
                 if (args.length > 5)
@@ -1504,12 +1504,12 @@ public class CommandCustomRecipe implements CommandExecutor
                 configDisplay = config.getString("extra.belowblock");
                 if (inputDisplay.equals("--remove") && configDisplay == null)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 밟고 있는 블록 조건이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 밟고 있는 블록 조건이 없습니다");
                   return true;
                 }
                 else if (inputDisplay.equals(configDisplay))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 밟고 있는 블록 조건이 &e" + blockTypeName + "&r입니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r의 밟고 있는 블록 조건이 &e" + blockTypeName + "&r입니다");
                   return true;
                 }
                 config.set("extra.belowblock", inputDisplay.equals("--remove") ? null : inputDisplay.toUpperCase());
@@ -1519,11 +1519,11 @@ public class CommandCustomRecipe implements CommandExecutor
                         sender, Prefix.INFO_CUSTOM_RECIPE +
                                 "커스텀 레시피 목록 &e" +
                                 args[2] +
-                                (inputDisplay.equals("--remove") ? ("&r의 밟고 있는 블록 조건을 제거하였습니다.") : ("&r의 밟고 있는 블록 조건을 &e" +
+                                (inputDisplay.equals("--remove") ? ("&r의 밟고 있는 블록 조건을 제거하였습니다") : ("&r의 밟고 있는 블록 조건을 &e" +
                                         blockTypeName +
                                         "&r" +
                                         MessageUtil.getFinalConsonant(blockTypeName, ConsonantType.으로) +
-                                        " 지정하였습니다.")));
+                                        " 지정하였습니다")));
                 break;
               default:
                 MessageUtil.wrongArg(sender, 4, args);
@@ -1556,7 +1556,7 @@ public class CommandCustomRecipe implements CommandExecutor
             file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[2] + ".yml");
             if (!file.exists())
             {
-              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을를) + " 찾을 수 없습니다.");
+              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r" + MessageUtil.getFinalConsonant(args[2], ConsonantType.을를) + " 찾을 수 없습니다");
               return true;
             }
             customRecipeListConfig = CustomConfig.getCustomConfig("data/CustomRecipe/" + args[2] + ".yml");
@@ -1564,7 +1564,7 @@ public class CommandCustomRecipe implements CommandExecutor
             ConfigurationSection recipe = config.getConfigurationSection("recipes." + args[3]);
             if (recipe == null || recipe.getKeys(false).size() == 0)
             {
-              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r에서 해당 레시피(&e" + args[2] + "&r)를 찾을 수 없습니다.");
+              MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[1] + "&r에서 해당 레시피(&e" + args[2] + "&r)를 찾을 수 없습니다");
               return true;
             }
             switch (args[4])
@@ -1597,7 +1597,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     case "list":
                       if (commands.size() == 0)
                       {
-                        MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 " + commandTypeStr + " 시 실행되는 명령어가 없습니다.");
+                        MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 " + commandTypeStr + " 시 실행되는 명령어가 없습니다");
                         return true;
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE +
@@ -1609,7 +1609,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               commandTypeStr +
                               " 시 실행되는 명령어의 개수는 &e" +
                               commands.size() +
-                              "개&r입니다.");
+                              "개&r입니다");
                       for (int i = 0; i < commands.size(); i++)
                       {
                         MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "&e" + (i + 1) + "번째&r 명령어 : &e/" + commands.get(i));
@@ -1637,7 +1637,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               command +
                               "&r" +
                               MessageUtil.getFinalConsonant(command, ConsonantType.이라) +
-                              "는 명령어를 추가하였습니다.");
+                              "는 명령어를 추가하였습니다");
                       config.set("recipes." + args[3] + ".extra.commands." + args[5], commands);
                       Variable.customRecipes.put(args[2], config);
                       customRecipeListConfig.saveConfig();
@@ -1645,7 +1645,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     case "remove":
                       if (commands.size() == 0)
                       {
-                        MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 " + commandTypeStr + " 시 실행되는 명령어가 없습니다.");
+                        MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 " + commandTypeStr + " 시 실행되는 명령어가 없습니다");
                         return true;
                       }
                       if (args.length == 7)
@@ -1659,7 +1659,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                 commandTypeStr +
                                 " 시 실행되는 명령어의 &e" +
                                 commands.size() +
-                                "번째&r 줄의 명령어를 제거하였습니다.");
+                                "번째&r 줄의 명령어를 제거하였습니다");
                         commands.remove(commands.size() - 1);
                       }
                       else
@@ -1676,7 +1676,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                             args[3] +
                                             "&r의 " +
                                             commandTypeStr +
-                                            " 시 실행되는 모든 명령어를 제거하였습니다.");
+                                            " 시 실행되는 모든 명령어를 제거하였습니다");
                             commands = null;
                           }
                           else
@@ -1699,7 +1699,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                     commandTypeStr +
                                     " 시 실행되는 명령어의 &e" +
                                     line +
-                                    "번째&r 줄의 명령어를 제거하였습니다.");
+                                    "번째&r 줄의 명령어를 제거하였습니다");
                             commands.remove(line - 1);
                           }
                         }
@@ -1728,7 +1728,7 @@ public class CommandCustomRecipe implements CommandExecutor
                       }
                       if (commands.size() == 0)
                       {
-                        MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 " + commandTypeStr + " 시 실행되는 명령어가 없습니다.");
+                        MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 " + commandTypeStr + " 시 실행되는 명령어가 없습니다");
                         return true;
                       }
                       if (!MessageUtil.isInteger(sender, args[7], true))
@@ -1755,7 +1755,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               command +
                               "&r" +
                               MessageUtil.getFinalConsonant(command, ConsonantType.이라) +
-                              "는 명령어를 설정하였습니다.");
+                              "는 명령어를 설정하였습니다");
                       config.set("recipes." + args[3] + ".extra.commands." + args[5], commands);
                       Variable.customRecipes.put(args[2], config);
                       customRecipeListConfig.saveConfig();
@@ -1769,7 +1769,7 @@ public class CommandCustomRecipe implements CommandExecutor
                       }
                       if (commands.size() == 0)
                       {
-                        MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 " + commandTypeStr + " 시 실행되는 명령어가 없습니다.");
+                        MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 " + commandTypeStr + " 시 실행되는 명령어가 없습니다");
                         return true;
                       }
                       if (!MessageUtil.isInteger(sender, args[7], true))
@@ -1806,7 +1806,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               command +
                               "&r" +
                               MessageUtil.getFinalConsonant(command, ConsonantType.이라) +
-                              "는 명령어를 들여썼습니다.");
+                              "는 명령어를 들여썼습니다");
                       config.set("recipes." + args[3] + ".extra.commands." + args[5], commands);
                       Variable.customRecipes.put(args[2], config);
                       customRecipeListConfig.saveConfig();
@@ -1843,12 +1843,12 @@ public class CommandCustomRecipe implements CommandExecutor
                     if (inputBasePermission.equals(configBasePermission))
                     {
                       MessageUtil.sendError(sender,
-                              "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 요구 퍼미션 노드 값이 &e" + inputBasePermission + "&r입니다.");
+                              "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 요구 퍼미션 노드 값이 &e" + inputBasePermission + "&r입니다");
                       return true;
                     }
                     if (inputBasePermission.equals("--remove") && configBasePermission == null)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 요구 퍼미션 노드 값이 없는 상태입니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 요구 퍼미션 노드 값이 없는 상태입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.permissions.base-permission", inputBasePermission.equals("--remove") ? null : inputBasePermission);
@@ -1869,10 +1869,10 @@ public class CommandCustomRecipe implements CommandExecutor
                                     "&r에 있는 레시피 &e" +
                                     args[3] +
                                     "&r의 제작 요구 퍼미션 노드 값을 &e" +
-                                    (inputBasePermission.equals("--remove") ? "&r삭제하였습니다." : (inputBasePermission +
+                                    (inputBasePermission.equals("--remove") ? "&r삭제하였습니다" : (inputBasePermission +
                                             "&r" +
                                             MessageUtil.getFinalConsonant(inputBasePermission, ConsonantType.으로) +
-                                            " 지정하였습니다.")));
+                                            " 지정하였습니다")));
                     break;
                   case "bypass":
                     String inputBypassPermission = args[6];
@@ -1880,12 +1880,12 @@ public class CommandCustomRecipe implements CommandExecutor
                     if (inputBypassPermission.equals(configBypassPermission))
                     {
                       MessageUtil.sendError(sender,
-                              "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 비공개 우회 퍼미션 노드 값이 &e" + inputBypassPermission + "&r입니다.");
+                              "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 비공개 우회 퍼미션 노드 값이 &e" + inputBypassPermission + "&r입니다");
                       return true;
                     }
                     if (inputBypassPermission.equals("--remove") && configBypassPermission == null)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 비공개 우회 퍼미션 노드 값이 없는 상태입니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 비공개 우회 퍼미션 노드 값이 없는 상태입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.permissions.bypass-if-hidden-permission", inputBypassPermission.equals("--remove") ? null : inputBypassPermission);
@@ -1904,7 +1904,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                     "&r에 있는 레시피 &e" +
                                     args[3] +
                                     "&r의 비공개 우회 퍼미션 노드 값을 &e" +
-                                    (inputBypassPermission.equals("--remove") ? "&r삭제하였습니다." : (inputBypassPermission + "&r" + MessageUtil.getFinalConsonant(inputBypassPermission, ConsonantType.으로) + " 지정하였습니다.")));
+                                    (inputBypassPermission.equals("--remove") ? "&r삭제하였습니다" : (inputBypassPermission + "&r" + MessageUtil.getFinalConsonant(inputBypassPermission, ConsonantType.으로) + " 지정하였습니다")));
                     break;
                   case "hide":
                     boolean hideIfNoPerm = false;
@@ -1920,7 +1920,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     if (config.getBoolean("recipes." + args[3] + ".extra.permissions.hide-if-no-base") == hideIfNoPerm)
                     {
                       MessageUtil.sendError(sender,
-                              "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 권한이 없을 시 레시피 내용 비공개 값이 &e" + hideIfNoPerm + "&r입니다.");
+                              "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 권한이 없을 시 레시피 내용 비공개 값이 &e" + hideIfNoPerm + "&r입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.permissions.hide-if-no-base", hideIfNoPerm);
@@ -1967,7 +1967,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 double configChance = config.getDouble("recipes." + args[3] + ".extra.chance");
                 if (inputChance == 0d && configChance == 0d)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 성공 확률 기능이 비활성화 상태입니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 성공 확률 기능이 비활성화 상태입니다");
                   return true;
                 }
                 else if (inputChance == configChance)
@@ -1978,7 +1978,7 @@ public class CommandCustomRecipe implements CommandExecutor
                           args[3] +
                           "&r의 제작 성공 확률이 &e" +
                           Constant.Sosu15.format(inputChance) +
-                          "%&r입니다.");
+                          "%&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.chance", inputChance == 0d ? null : inputChance);
@@ -1990,7 +1990,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputChance == 0d ? ("&r의 제작 성공 확률 기능을 비활성화 하였습니다.") : ("&r의 제작 성공 확률을 &e" + Constant.Sosu15.format(inputChance) + "%&r로 지정하였습니다.")));
+                                (inputChance == 0d ? ("&r의 제작 성공 확률 기능을 비활성화 하였습니다") : ("&r의 제작 성공 확률을 &e" + Constant.Sosu15.format(inputChance) + "%&r로 지정하였습니다")));
                 break;
               case "craftingtime":
                 if (args.length < 7)
@@ -2021,7 +2021,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     long configCraftingInterval = config.getLong("recipes." + args[3] + ".extra.crafting-time-interval");
                     if (inputCraftingInterval == 0 && configCraftingInterval == 0)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 주기가 없습니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 주기가 없습니다");
                       return true;
                     }
                     else if (inputCraftingInterval == configCraftingInterval)
@@ -2033,7 +2033,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[3] +
                                       "&r의 제작 주기가 &e" +
                                       Method.timeFormatMilli(configCraftingInterval, false) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.crafting-time-interval", inputCraftingInterval == 0 ? null : inputCraftingInterval);
@@ -2045,16 +2045,16 @@ public class CommandCustomRecipe implements CommandExecutor
                                     args[2] +
                                     "&r에 있는 레시피 &e" +
                                     args[3] +
-                                    (inputCraftingInterval == 0d ? ("&r의 제작 주기를 제거하였습니다.") : ("&r의 제작 주기를 &e" +
+                                    (inputCraftingInterval == 0d ? ("&r의 제작 주기를 제거하였습니다") : ("&r의 제작 주기를 &e" +
                                             Method.timeFormatMilli(inputCraftingInterval, false) +
                                             "&r" +
                                             MessageUtil.getFinalConsonant(Method.timeFormatMilli(inputCraftingInterval, false), ConsonantType.으로) +
-                                            " 지정하였습니다.")));
+                                            " 지정하였습니다")));
                     break;
                   case "skip":
                     if (!Cucumbery.using_Vault_Economy)
                     {
-                      MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다.");
+                      MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다");
                       return true;
                     }
                     if (args.length < 8)
@@ -2084,7 +2084,7 @@ public class CommandCustomRecipe implements CommandExecutor
                         double configSkipCost = config.getDouble("recipes." + args[3] + ".extra.crafting-time-skip.cost");
                         if (inputSkipCost == 0d && configSkipCost == 0d)
                         {
-                          MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 시간 스킵 비용이 없습니다.");
+                          MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 시간 스킵 비용이 없습니다");
                           return true;
                         }
                         else if (inputSkipCost == configSkipCost)
@@ -2113,7 +2113,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                         args[2] +
                                         "&r에 있는 레시피 &e" +
                                         args[3] +
-                                        (inputSkipCost == 0d ? ("&r의 제작 시간 스킵 비용을 제거하였습니다.") : ("&r의 제작 시간 스킵 비용을 &e" + Constant.Sosu15.format(inputSkipCost) + "원&r으로 지정하였습니다.")));
+                                        (inputSkipCost == 0d ? ("&r의 제작 시간 스킵 비용을 제거하였습니다") : ("&r의 제작 시간 스킵 비용을 &e" + Constant.Sosu15.format(inputSkipCost) + "원&r으로 지정하였습니다")));
                         break;
                       case "permission":
                         if (args.length > 8)
@@ -2132,12 +2132,12 @@ public class CommandCustomRecipe implements CommandExecutor
                                   args[3] +
                                   "&r의 제작 시간 스킵 요구 퍼미션 노드 값이 &e" +
                                   inputSkipPermission +
-                                  "&r입니다.");
+                                  "&r입니다");
                           return true;
                         }
                         if (inputSkipPermission.equals("--remove") && configSkipPermission == null)
                         {
-                          MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 시간 스킵 요구 퍼미션 노드 값이 없는 상태입니다.");
+                          MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 시간 스킵 요구 퍼미션 노드 값이 없는 상태입니다");
                           return true;
                         }
                         config.set("recipes." + args[3] + ".extra.crafting-time-skip.permission", inputSkipPermission.equals("--remove") ? null : inputSkipPermission);
@@ -2156,7 +2156,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                         "&r에 있는 레시피 &e" +
                                         args[3] +
                                         "&r의 제작 시간 스킵 요구 퍼미션 노드 값을 &e" +
-                                        (inputSkipPermission.equals("--remove") ? "&r삭제하였습니다." : (inputSkipPermission + "&r" + MessageUtil.getFinalConsonant(inputSkipPermission, ConsonantType.으로) + " 지정하였습니다.")));
+                                        (inputSkipPermission.equals("--remove") ? "&r삭제하였습니다" : (inputSkipPermission + "&r" + MessageUtil.getFinalConsonant(inputSkipPermission, ConsonantType.으로) + " 지정하였습니다")));
                         break;
                       case "relative":
                         if (args.length > 8)
@@ -2180,7 +2180,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                   args[3] +
                                   "&r의 스킵 비용 시간 비례 적용 여부 값이 &e" +
                                   skipCostRelative +
-                                  "&r입니다.");
+                                  "&r입니다");
                           return true;
                         }
                         config.set("recipes." + args[3] + ".extra.crafting-time-skip.time-relative", skipCostRelative ? true : null);
@@ -2198,7 +2198,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                         args[3] +
                                         "&r의 스킵 비용 시간 비례 적용 여부 값을 &e" +
                                         skipCostRelative +
-                                        "&r로 지정하였습니다.");
+                                        "&r로 지정하였습니다");
                         break;
                       default:
                         MessageUtil.wrongArg(sender, 6, args);
@@ -2226,7 +2226,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     long configCraftingTime = config.getLong("recipes." + args[3] + ".extra.crafting-time");
                     if (inputCraftingTime == 0 && configCraftingTime == 0)
                     {
-                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작에 필요한 시간이 없습니다.");
+                      MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작에 필요한 시간이 없습니다");
                       return true;
                     }
                     else if (inputCraftingTime == configCraftingTime)
@@ -2238,7 +2238,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[3] +
                                       "&r의 제작에 필요한 시간이 &e" +
                                       Method.timeFormatMilli(configCraftingTime, false) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.crafting-time", inputCraftingTime == 0 ? null : inputCraftingTime);
@@ -2250,11 +2250,11 @@ public class CommandCustomRecipe implements CommandExecutor
                                     args[2] +
                                     "&r에 있는 레시피 &e" +
                                     args[3] +
-                                    (inputCraftingTime == 0d ? ("&r의 제작에 필요한 시간을 제거하였습니다.") : ("&r의 제작에 필요한 시간을 &e" +
+                                    (inputCraftingTime == 0d ? ("&r의 제작에 필요한 시간을 제거하였습니다") : ("&r의 제작에 필요한 시간을 &e" +
                                             Method.timeFormatMilli(inputCraftingTime, false) +
                                             "&r" +
                                             MessageUtil.getFinalConsonant(Method.timeFormatMilli(inputCraftingTime, false), ConsonantType.으로) +
-                                            " 지정하였습니다.")));
+                                            " 지정하였습니다")));
                     break;
                   default:
                     MessageUtil.wrongArg(sender, 6, args);
@@ -2265,7 +2265,7 @@ public class CommandCustomRecipe implements CommandExecutor
               case "cost":
                 if (!Cucumbery.using_Vault_Economy)
                 {
-                  MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다.");
+                  MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다");
                   return true;
                 }
                 if (args.length > 6)
@@ -2286,13 +2286,13 @@ public class CommandCustomRecipe implements CommandExecutor
                 double configCost = config.getDouble("recipes." + args[3] + ".extra.cost");
                 if (inputCost == 0d && configCost == 0d)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 비용이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 비용이 없습니다");
                   return true;
                 }
                 else if (inputCost == configCost)
                 {
                   MessageUtil.sendError(sender,
-                          "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 비용이 &e" + Constant.Sosu15.format(inputCost) + "원&r입니다.");
+                          "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 비용이 &e" + Constant.Sosu15.format(inputCost) + "원&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.cost", inputCost == 0d ? null : inputCost);
@@ -2304,7 +2304,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputCost == 0d ? ("&r의 제작 비용을 제거하였습니다.") : ("&r의 제작 비용을 &e" + Constant.Sosu15.format(inputCost) + "원&r으로 지정하였습니다.")));
+                                (inputCost == 0d ? ("&r의 제작 비용을 제거하였습니다") : ("&r의 제작 비용을 &e" + Constant.Sosu15.format(inputCost) + "원&r으로 지정하였습니다")));
                 break;
               case "hpcost":
                 if (args.length > 6)
@@ -2325,7 +2325,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 double configHPCost = config.getDouble("recipes." + args[3] + ".extra.hpcost");
                 if (inputHPCost == 0d && configHPCost == 0d)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 HP 비용이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 HP 비용이 없습니다");
                   return true;
                 }
                 else if (inputHPCost == configHPCost)
@@ -2336,7 +2336,7 @@ public class CommandCustomRecipe implements CommandExecutor
                           args[3] +
                           "&r의 제작 HP 비용이 &e" +
                           Constant.Sosu15.format(inputHPCost) +
-                          "&r입니다.");
+                          "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.hpcost", inputHPCost == 0d ? null : inputHPCost);
@@ -2348,7 +2348,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputHPCost == 0d ? ("&r의 제작 HP 비용을 제거하였습니다.") : ("&r의 제작 HP 비용을 &e" + Constant.Sosu15.format(inputHPCost) + "&r으로 지정하였습니다.")));
+                                (inputHPCost == 0d ? ("&r의 제작 HP 비용을 제거하였습니다") : ("&r의 제작 HP 비용을 &e" + Constant.Sosu15.format(inputHPCost) + "&r으로 지정하였습니다")));
                 break;
               case "saturationcost":
                 if (args.length > 6)
@@ -2369,7 +2369,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 double configSaturationCost = config.getDouble("recipes." + args[3] + ".extra.saturationcost");
                 if (inputSaturationCost == 0d && configSaturationCost == 0d)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 포화도 비용이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 제작 포화도 비용이 없습니다");
                   return true;
                 }
                 else if (inputSaturationCost == configSaturationCost)
@@ -2381,7 +2381,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                   args[3] +
                                   "&r의 제작 포화도 비용이 &e" +
                                   Constant.Sosu15.format(inputSaturationCost) +
-                                  "&r입니다.");
+                                  "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.saturationcost", inputSaturationCost == 0d ? null : inputSaturationCost);
@@ -2393,7 +2393,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputSaturationCost == 0d ? ("&r의 제작 포화도 비용을 제거하였습니다.") : ("&r의 제작 포화도 비용을 &e" + Constant.Sosu15.format(inputSaturationCost) + "&r으로 지정하였습니다.")));
+                                (inputSaturationCost == 0d ? ("&r의 제작 포화도 비용을 제거하였습니다") : ("&r의 제작 포화도 비용을 &e" + Constant.Sosu15.format(inputSaturationCost) + "&r으로 지정하였습니다")));
                 break;
               case "levelcost":
                 if (args.length > 6)
@@ -2414,7 +2414,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 int configLevelCost = config.getInt("recipes." + args[3] + ".extra.levelcost");
                 if (inputLevelCost == 0 && configLevelCost == 0)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 레벨 비용이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 레벨 비용이 없습니다");
                   return true;
                 }
                 else if (inputLevelCost == configLevelCost)
@@ -2425,7 +2425,7 @@ public class CommandCustomRecipe implements CommandExecutor
                           args[3] +
                           "&r의 레벨 비용이 &e" +
                           Constant.Sosu15.format(inputLevelCost) +
-                          "&r입니다.");
+                          "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.levelcost", inputLevelCost == 0 ? null : inputLevelCost);
@@ -2437,7 +2437,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputLevelCost == 0 ? ("&r의 레벨 비용을 제거하였습니다.") : ("&r의 레벨 비용을 &e" + Constant.Sosu15.format(inputLevelCost) + "&r으로 지정하였습니다.")));
+                                (inputLevelCost == 0 ? ("&r의 레벨 비용을 제거하였습니다") : ("&r의 레벨 비용을 &e" + Constant.Sosu15.format(inputLevelCost) + "&r으로 지정하였습니다")));
                 break;
               case "foodlevelcost":
                 if (args.length > 6)
@@ -2458,7 +2458,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 int configFoodCost = config.getInt("recipes." + args[3] + ".extra.foodlevelcost");
                 if (inputFoodLevelCost == 0 && configFoodCost == 0)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 음식 포인트 비용이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 음식 포인트 비용이 없습니다");
                   return true;
                 }
                 else if (inputFoodLevelCost == configFoodCost)
@@ -2469,7 +2469,7 @@ public class CommandCustomRecipe implements CommandExecutor
                           args[3] +
                           "&r의 옴식 포인트 비용이 &e" +
                           Constant.Sosu15.format(inputFoodLevelCost) +
-                          "&r입니다.");
+                          "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.foodlevelcost", inputFoodLevelCost == 0 ? null : inputFoodLevelCost);
@@ -2481,12 +2481,12 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputFoodLevelCost == 0 ? ("&r의 레벨 비용을 제거하였습니다.") : ("&r의 레벨 비용을 &e" + Constant.Sosu15.format(inputFoodLevelCost) + "&r으로 지정하였습니다.")));
+                                (inputFoodLevelCost == 0 ? ("&r의 레벨 비용을 제거하였습니다") : ("&r의 레벨 비용을 &e" + Constant.Sosu15.format(inputFoodLevelCost) + "&r으로 지정하였습니다")));
                 break;
               case "wealth":
                 if (!Cucumbery.using_Vault_Economy)
                 {
-                  MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다.");
+                  MessageUtil.sendError(sender, "&eVault &r플러그인을 사용하고 있지 않습니다");
                   return true;
                 }
                 if (args.length > 7)
@@ -2519,7 +2519,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 boolean configWealthMaxExists = config.contains("recipes." + args[3] + ".extra.wealth.max");
                 if (inputWealthMin == -1d && (!configWealthMinExists || configWealthMin == -1d) && inputWealthMax == -1d && (!configWealthMaxExists || configWealthMax == -1d))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 최대, 최소 소지 금액 조건이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 최대, 최소 소지 금액 조건이 없습니다");
                   return true;
                 }
                 if (configWealthMinExists && inputWealthMin == configWealthMin && configWealthMaxExists && inputWealthMax == configWealthMax)
@@ -2532,7 +2532,7 @@ public class CommandCustomRecipe implements CommandExecutor
                           Constant.Sosu15.format(inputWealthMin) +
                           "원&r, 최대 소지 금액 조건이 &e" +
                           Constant.Sosu15.format(inputWealthMax) +
-                          "원&r입니다.");
+                          "원&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.wealth.min", inputWealthMin == -1d ? null : inputWealthMin);
@@ -2556,11 +2556,11 @@ public class CommandCustomRecipe implements CommandExecutor
                                   (inputWealthMin == -1d ? ("&r의 최소 소지 금액 조건을 제거") : ("&r의 최소 소지 금액 조건을 &e" + Constant.Sosu15.format(inputWealthMin) + "원&r으로 지정")) +
                                   "하였고, 최대 소지 금액 조건을 " +
                                   (inputWealthMax == -1d ? ("제거") : ("&e" + Constant.Sosu15.format(inputWealthMax) + "원&r으로 지정")) +
-                                  "하였습니다.");
+                                  "하였습니다");
                 }
                 else if (inputWealthMin == -1d)
                 {
-                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 최대, 최소 소지 금액 조건을 제거하였습니다.");
+                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 최대, 최소 소지 금액 조건을 제거하였습니다");
                 }
                 else
                 {
@@ -2572,7 +2572,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                   args[3] +
                                   "&r의 최대, 최소 소지 금액 조건을 &e" +
                                   Constant.Sosu15.format(inputWealthMin) +
-                                  "원&r으로 지정하였습니다.");
+                                  "원&r으로 지정하였습니다");
                 }
                 break;
               case "level":
@@ -2606,7 +2606,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 boolean configLevelMaxExists = config.contains("recipes." + args[3] + ".extra.level.max");
                 if (inputLevelMin == -1 && (!configLevelMinExists || configLevelMin == -1) && inputLevelMax == -1 && (!configLevelMaxExists || configLevelMax == -1))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 최대, 최소 레벨 조건이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 최대, 최소 레벨 조건이 없습니다");
                   return true;
                 }
                 if (configLevelMinExists && inputLevelMin == configLevelMin && configLevelMaxExists && inputLevelMax == configLevelMax)
@@ -2619,7 +2619,7 @@ public class CommandCustomRecipe implements CommandExecutor
                           Constant.Sosu15.format(inputLevelMin) +
                           "&r, 최대 레벨 조건이 &e" +
                           Constant.Sosu15.format(inputLevelMax) +
-                          "&r입니다.");
+                          "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.level.min", inputLevelMin == -1 ? null : inputLevelMin);
@@ -2644,11 +2644,11 @@ public class CommandCustomRecipe implements CommandExecutor
                                   (inputLevelMin == -1 ? ("&r의 최소 레벨 조건을 제거") : ("&r의 최소 레벨 조건을 &e" + Constant.Sosu15.format(inputLevelMin) + "&r으로 지정")) +
                                   "하였고, 최대 레벨 조건을 " +
                                   (inputLevelMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputLevelMax) + "&r으로 지정")) +
-                                  "하였습니다.");
+                                  "하였습니다");
                 }
                 else if (inputLevelMin == -1)
                 {
-                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 최대, 최소 레벨 조건을 제거하였습니다.");
+                  MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 최대, 최소 레벨 조건을 제거하였습니다");
                 }
                 else
                 {
@@ -2660,7 +2660,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                   args[3] +
                                   "&r의 최대, 최소 레벨 조건을 &e" +
                                   Constant.Sosu15.format(inputLevelMin) +
-                                  "&r으로 지정하였습니다.");
+                                  "&r으로 지정하였습니다");
                 }
                 break;
               case "display":
@@ -2674,12 +2674,12 @@ public class CommandCustomRecipe implements CommandExecutor
                 String configDisplay = config.getString("recipes." + args[3] + ".extra.display");
                 if (inputDisplay.equals("--remove") && (configDisplay == null || configDisplay.equals(args[3])))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 레시피 표시 이름이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 레시피 표시 이름이 없습니다");
                   return true;
                 }
                 else if (inputDisplay.equals(configDisplay))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 레시피 표시 이름이 &e" + inputDisplay + "&r입니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 레시피 표시 이름이 &e" + inputDisplay + "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.display", inputDisplay.equals("--remove") ? args[3] : inputDisplay);
@@ -2691,11 +2691,11 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputDisplay.equals("--remove") ? ("&r의 레시피 표시 이름을 제거하였습니다.") : ("&r의 레시피 표시 이름을 &e" +
+                                (inputDisplay.equals("--remove") ? ("&r의 레시피 표시 이름을 제거하였습니다") : ("&r의 레시피 표시 이름을 &e" +
                                         inputDisplay +
                                         "&r" +
                                         MessageUtil.getFinalConsonant(inputDisplay, ConsonantType.으로) +
-                                        " 지정하였습니다.")));
+                                        " 지정하였습니다")));
                 break;
               case "biome":
                 if (args.length > 6)
@@ -2726,12 +2726,12 @@ public class CommandCustomRecipe implements CommandExecutor
                 configDisplay = config.getString("recipes." + args[3] + ".extra.biome");
                 if (inputDisplay.equals("--remove") && configDisplay == null)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 생물 군계 조건이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 생물 군계 조건이 없습니다");
                   return true;
                 }
                 else if (inputDisplay.equals(configDisplay))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 생물 군계 조건이 &e" + biomeName + "&r입니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 생물 군계 조건이 &e" + biomeName + "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.biome", inputDisplay.equals("--remove") ? null : inputDisplay.toUpperCase());
@@ -2743,11 +2743,11 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputDisplay.equals("--remove") ? ("&r의 생물 군계 조건을 제거하였습니다.") : ("&r의 생물 군계 조건을 &e" +
+                                (inputDisplay.equals("--remove") ? ("&r의 생물 군계 조건을 제거하였습니다") : ("&r의 생물 군계 조건을 &e" +
                                         biomeName +
                                         "&r" +
                                         MessageUtil.getFinalConsonant(biomeName, ConsonantType.으로) +
-                                        " 지정하였습니다.")));
+                                        " 지정하였습니다")));
                 break;
               case "belowblock":
                 if (args.length > 6)
@@ -2787,12 +2787,12 @@ public class CommandCustomRecipe implements CommandExecutor
                 configDisplay = config.getString("recipes." + args[3] + ".extra.belowblock");
                 if (inputDisplay.equals("--remove") && configDisplay == null)
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 밟고 있는 블록 조건이 없습니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 밟고 있는 블록 조건이 없습니다");
                   return true;
                 }
                 else if (inputDisplay.equals(configDisplay))
                 {
-                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 밟고 있는 블록 조건이 &e" + belowBlockTypeName + "&r입니다.");
+                  MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 밟고 있는 블록 조건이 &e" + belowBlockTypeName + "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".extra.belowblock", inputDisplay.equals("--remove") ? null : inputDisplay.toUpperCase());
@@ -2804,8 +2804,8 @@ public class CommandCustomRecipe implements CommandExecutor
                                 args[2] +
                                 "&r에 있는 레시피 &e" +
                                 args[3] +
-                                (inputDisplay.equals("--remove") ? ("&r의 밟고 있는 블록 조건을 제거하였습니다.") : ("&r의 밟고 있는 블록 조건을 &e" + belowBlockTypeName + "&r" + MessageUtil.getFinalConsonant(
-                                        belowBlockTypeName, ConsonantType.으로) + " 지정하였습니다.")));
+                                (inputDisplay.equals("--remove") ? ("&r의 밟고 있는 블록 조건을 제거하였습니다") : ("&r의 밟고 있는 블록 조건을 &e" + belowBlockTypeName + "&r" + MessageUtil.getFinalConsonant(
+                                        belowBlockTypeName, ConsonantType.으로) + " 지정하였습니다")));
                 break;
               case "reusable":
                 if (args.length < 7)
@@ -2855,7 +2855,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                   ItemNameUtil.itemName(ItemSerializer.deserialize(config.getString("recipes." + args[3] + ".ingredients." + inputIngredientNumber + ".item"))) +
                                   "&r)의 제작 시 사라지지 않는 아이템 태그 값이 &e" +
                                   inputResuable +
-                                  "&r입니다.");
+                                  "&r입니다");
                   return true;
                 }
                 config.set("recipes." + args[3] + ".ingredients." + inputIngredientNumber + ".reusable", (inputResuable ? true : null));
@@ -2872,7 +2872,7 @@ public class CommandCustomRecipe implements CommandExecutor
                         ItemNameUtil.itemName(ItemSerializer.deserialize(config.getString("recipes." + args[3] + ".ingredients." + inputIngredientNumber + ".item"))) +
                         "&r)의 제작 시 사라지지 않는 아이템 태그 값을 &e" +
                         inputResuable +
-                        "&r로 지정하였습니다.");
+                        "&r로 지정하였습니다");
                 break;
               case "require":
                 if (args.length < 8)
@@ -2892,7 +2892,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 }
                 if (!new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + args[6] + ".yml").exists())
                 {
-                  MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[6] + "&r" + MessageUtil.getFinalConsonant(args[6], ConsonantType.을를) + " 찾을 수 없습니다.");
+                  MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[6] + "&r" + MessageUtil.getFinalConsonant(args[6], ConsonantType.을를) + " 찾을 수 없습니다");
                   return true;
                 }
                 switch (args[5])
@@ -2909,7 +2909,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     recipe = config.getConfigurationSection("recipes." + args[7]);
                     if (recipe == null || recipe.getKeys(false).size() == 0)
                     {
-                      MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[6] + "&r에서 해당 레시피(&e" + args[7] + "&r)를 찾을 수 없습니다.");
+                      MessageUtil.sendError(sender, "커스텀 레시피 목록 &e" + args[6] + "&r에서 해당 레시피(&e" + args[7] + "&r)를 찾을 수 없습니다");
                       return true;
                     }
                     customRecipeListConfig = CustomConfig.getCustomConfig("data/CustomRecipe/" + args[2] + ".yml");
@@ -2947,7 +2947,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[6] +
                                       "&r에 있는 레시피 &e" +
                                       args[7] +
-                                      "&r의 최대, 최소 제작 횟수 조건이 없습니다.");
+                                      "&r의 최대, 최소 제작 횟수 조건이 없습니다");
                       return true;
                     }
                     if (configRecipeMinExists && inputRecipeMin == configRecipeMin && configRecipeMaxExists && inputRecipeMax == configRecipeMax)
@@ -2965,7 +2965,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputRecipeMin) +
                                       "&r, 최대 제작 횟수 조건이 &e" +
                                       Constant.Sosu15.format(inputRecipeMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.recipes." + args[6] + "." + args[7] + ".min", inputRecipeMin == -1 ? null : inputRecipeMin);
@@ -3009,7 +3009,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputRecipeMin == -1 ? ("&r의 최소 제작 횟수 조건을 제거") : ("&r의 최소 제작 횟수 조건을 &e" + Constant.Sosu15.format(inputRecipeMin) + "&r으로 지정")) +
                                       "하였고, 최대 제작 횟수 조건을 " +
                                       (inputRecipeMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputRecipeMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputRecipeMin == -1)
                     {
@@ -3025,7 +3025,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[7] +
                                       "&r의 최대, 최소 &e" +
                                       args[7] +
-                                      "&r 레시피 제작 조건을 제거하였습니다.");
+                                      "&r 레시피 제작 조건을 제거하였습니다");
                     }
                     else
                     {
@@ -3041,7 +3041,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[7] +
                                       "&r의 최대, 최소 레시피 제작 조건을 &e" +
                                       Constant.Sosu15.format(inputRecipeMin) +
-                                      "&r으로 지정하였습니다.");
+                                      "&r으로 지정하였습니다");
                     }
                     break;
                   case "category":
@@ -3082,7 +3082,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[3] +
                                       "&r에 대한 커스텀 레시피 목록 &e" +
                                       args[6] +
-                                      "&r에 포함되어 있는 레시피의 최대, 최소 제작 횟수 조건이 없습니다.");
+                                      "&r에 포함되어 있는 레시피의 최대, 최소 제작 횟수 조건이 없습니다");
                       return true;
                     }
                     if (configCategoryMinExists && inputCategoryMin == configCategoryMin && configCategoryMaxExists && inputCategoryMax == configCategoryMax)
@@ -3098,7 +3098,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputCategoryMin) +
                                       "&r, 최대 제작 횟수 조건이 &e" +
                                       Constant.Sosu15.format(inputCategoryMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.categories." + args[6] + ".min", inputCategoryMin == -1 ? null : inputCategoryMin);
@@ -3126,7 +3126,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputCategoryMin == -1 ? ("의 최소 제작 횟수 조건을 제거") : ("의 최소 제작 횟수 조건을 &e" + Constant.Sosu15.format(inputCategoryMin) + "&r으로 지정")) +
                                       "하였고, 최대 제작 횟수 조건을 " +
                                       (inputCategoryMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputCategoryMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputCategoryMin == -1)
                     {
@@ -3138,7 +3138,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[3] +
                                       "&r에 대한 커스텀 레시피 목록 &e" +
                                       args[6] +
-                                      "&r에 포함되어 있는 레시피의 최대, 최소 제작 조건을 제거하였습니다.");
+                                      "&r에 포함되어 있는 레시피의 최대, 최소 제작 조건을 제거하였습니다");
                     }
                     else
                     {
@@ -3152,7 +3152,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[6] +
                                       "&r에 포함되어 있는 레시피의 최대, 최소 제작 조건을 &e" +
                                       Constant.Sosu15.format(inputCategoryMin) +
-                                      "&r으로 지정하였습니다.");
+                                      "&r으로 지정하였습니다");
                     }
                     break;
                   default:
@@ -3195,11 +3195,11 @@ public class CommandCustomRecipe implements CommandExecutor
                       case USE_ITEM:
                       case BREAK_ITEM:
                       case MINE_BLOCK:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 material 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 material 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                       case KILL_ENTITY:
                       case ENTITY_KILLED_BY:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 entity 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 entity 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                       default:
                         break;
@@ -3230,7 +3230,7 @@ public class CommandCustomRecipe implements CommandExecutor
                     if (inputGeneralMin == -1 && (!configGeneralMinExists || configGeneralMin == -1) && inputGeneralMax == -1 && (!configGeneralMaxExists || configGeneralMax == -1))
                     {
                       MessageUtil.sendError(sender,
-                              "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건이 없습니다.");
+                              "변동 사항이 없습니다. 이미 커스텀 레시피 목록 &e" + args[2] + "&r에 있는 레시피 &e" + args[3] + "&r의 통계값 &e" + statisticName + "&r의 최대, 최소값 조건이 없습니다");
                       return true;
                     }
                     if (configGeneralMinExists && inputGeneralMin == configGeneralMin && configGeneralMaxExists && inputGeneralMax == configGeneralMax)
@@ -3246,7 +3246,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputGeneralMin) +
                                       "&r, 최대값 조건이 &e" +
                                       Constant.Sosu15.format(inputGeneralMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.statistics.general." + statisticString + ".min", inputGeneralMin == -1 ? null : inputGeneralMin);
@@ -3289,7 +3289,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputGeneralMin == -1 ? ("의 최소값 조건을 제거") : ("의 최소값 조건을 &e" + Constant.Sosu15.format(inputGeneralMin) + "&r으로 지정")) +
                                       "하였고, 최대값 조건을 " +
                                       (inputGeneralMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputGeneralMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputGeneralMin == -1)
                     {
@@ -3301,7 +3301,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[3] +
                                       "&r의 통계값 &e" +
                                       statistic.toString() +
-                                      "&r의 최대, 최소값 조건을 제거하였습니다.");
+                                      "&r의 최대, 최소값 조건을 제거하였습니다");
                     }
                     else
                     {
@@ -3315,7 +3315,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       statisticName +
                                       "&r의 최대, 최소값 조건을 &e" +
                                       Constant.Sosu15.format(inputGeneralMin) +
-                                      "&r으로 지정하였습니다.");
+                                      "&r으로 지정하였습니다");
                     }
                     break;
                   case "entity":
@@ -3342,13 +3342,13 @@ public class CommandCustomRecipe implements CommandExecutor
                       case USE_ITEM:
                       case BREAK_ITEM:
                       case MINE_BLOCK:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 material 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 material 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                       case KILL_ENTITY:
                       case ENTITY_KILLED_BY:
                         break;
                       default:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 general 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 general 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                     }
                     EntityType entityType;
@@ -3395,7 +3395,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[3] +
                                       "&r의 통계값 &e" +
                                       statisticName +
-                                      "&r의 최대, 최소값 조건이 없습니다.");
+                                      "&r의 최대, 최소값 조건이 없습니다");
                       return true;
                     }
                     if (configEntityMinExists && inputEntityMin == configEntityMin && configEntityMaxExists && inputEntityMax == configEntityMax)
@@ -3411,7 +3411,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputEntityMin) +
                                       "&r, 최대값 조건이 &e" +
                                       Constant.Sosu15.format(inputEntityMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.statistics.entity." + statisticString + "." + entityTypeString + ".min", inputEntityMin == -1 ? null : inputEntityMin);
@@ -3461,7 +3461,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       (inputEntityMin == -1 ? ("의 최소값 조건을 제거") : ("의 최소값 조건을 &e" + Constant.Sosu15.format(inputEntityMin) + "&r으로 지정")) +
                                       "하였고, 최대값 조건을 " +
                                       (inputEntityMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputEntityMax) + "&r으로 지정")) +
-                                      "하였습니다.");
+                                      "하였습니다");
                     }
                     else if (inputEntityMin == -1)
                     {
@@ -3473,7 +3473,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[3] +
                                       "&r의 통계값 &e" +
                                       statisticName +
-                                      "&r의 최대, 최소값 조건을 제거하였습니다.");
+                                      "&r의 최대, 최소값 조건을 제거하였습니다");
                     }
                     else
                     {
@@ -3487,7 +3487,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               statisticName +
                               "&r의 최대, 최소값 조건을 &e" +
                               Constant.Sosu15.format(inputEntityMin) +
-                              "&r으로 지정하였습니다.");
+                              "&r으로 지정하였습니다");
                     }
                     break;
                   case "material":
@@ -3517,10 +3517,10 @@ public class CommandCustomRecipe implements CommandExecutor
                         break;
                       case KILL_ENTITY:
                       case ENTITY_KILLED_BY:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 entity 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 entity 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                       default:
-                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 general 종류의 통계에서만 사용할 수 있습니다.");
+                        MessageUtil.sendError(sender, "잘못된 통계입니다. 해당 통계는 general 종류의 통계에서만 사용할 수 있습니다");
                         return true;
                     }
                     Material material;
@@ -3567,7 +3567,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[3] +
                                       "&r의 통계값 &e" +
                                       statisticName +
-                                      "&r의 최대, 최소값 조건이 없습니다.");
+                                      "&r의 최대, 최소값 조건이 없습니다");
                       return true;
                     }
                     if (configMaterialMinExists && inputMaterialMin == configMaterialMin && configMaterialMaxExists && inputMaterialMax == configMaterialMax)
@@ -3583,7 +3583,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       Constant.Sosu15.format(inputMaterialMin) +
                                       "&r, 최대값 조건이 &e" +
                                       Constant.Sosu15.format(inputMaterialMax) +
-                                      "&r입니다.");
+                                      "&r입니다");
                       return true;
                     }
                     config.set("recipes." + args[3] + ".extra.statistics.material." + statisticString + "." + materialString + ".min", inputMaterialMin == -1 ? null : inputMaterialMin);
@@ -3632,7 +3632,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               (inputMaterialMin == -1 ? ("의 최소값 조건을 제거") : ("의 최소값 조건을 &e" + Constant.Sosu15.format(inputMaterialMin) + "&r으로 지정")) +
                               "하였고, 최대값 조건을 " +
                               (inputMaterialMax == -1 ? ("제거") : ("&e" + Constant.Sosu15.format(inputMaterialMax) + "&r으로 지정")) +
-                              "하였습니다.");
+                              "하였습니다");
                     }
                     else if (inputMaterialMin == -1)
                     {
@@ -3643,7 +3643,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               args[3] +
                               "&r의 통계값 &e" +
                               statisticName +
-                              "&r의 최대, 최소값 조건을 제거하였습니다.");
+                              "&r의 최대, 최소값 조건을 제거하였습니다");
                     }
                     else
                     {
@@ -3657,7 +3657,7 @@ public class CommandCustomRecipe implements CommandExecutor
                               statisticName +
                               "&r의 최대, 최소값 조건을 &e" +
                               Constant.Sosu15.format(inputMaterialMin) +
-                              "&r으로 지정하였습니다.");
+                              "&r으로 지정하였습니다");
                     }
                     break;
                   default:

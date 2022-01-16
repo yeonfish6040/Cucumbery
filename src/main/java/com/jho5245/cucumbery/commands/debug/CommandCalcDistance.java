@@ -68,7 +68,7 @@ public class CommandCalcDistance implements CommandExecutor, TabCompleter
 			}
       if (player == target)
       {
-        MessageUtil.sendError(sender, "같은 플레이어의 거리는 측정할 수 없습니다.");
+        MessageUtil.sendError(sender, "같은 플레이어의 거리는 측정할 수 없습니다");
         return true;
       }
       if (args.length == 3 && !args[2].equals("true") && !args[2].equals("false"))
@@ -77,7 +77,7 @@ public class CommandCalcDistance implements CommandExecutor, TabCompleter
         return true;
       }
       double distance = Method2.distance(player.getLocation(), target.getLocation(), Boolean.parseBoolean(args[2]));
-      MessageUtil.info(sender, "&e" + player.getName() + "&r와(과) &e" + target.getName() + "&r와(과)의 거리는 &e" + Constant.Sosu4.format(distance) + "m&r입니다.");
+      MessageUtil.info(sender, "&e" + player.getName() + "&r와(과) &e" + target.getName() + "&r와(과)의 거리는 &e" + Constant.Sosu4.format(distance) + "m&r입니다");
     }
     else
     {

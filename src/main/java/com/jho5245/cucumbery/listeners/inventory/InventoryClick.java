@@ -1762,7 +1762,7 @@ public class InventoryClick implements Listener
         recipeDisplay = recipe;
       }
       recipeDisplay = recipeDisplay;
-      MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + category + "&r(&e" + categoryDisplay + "&r)에서 &e" + recipe + "&r(&e" + recipeDisplay + "&r) 레시피를 제거하였습니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + category + "&r(&e" + categoryDisplay + "&r)에서 &e" + recipe + "&r(&e" + recipeDisplay + "&r) 레시피를 제거하였습니다");
       for (File logFile : CustomRecipeUtil.getPlayersCraftLog())
       {
         CustomRecipeUtil.removePlayerCraftLog(logFile.getName().substring(0, logFile.getName().length() - 4), category, removeCategory ? null : recipe);
@@ -2309,7 +2309,7 @@ public class InventoryClick implements Listener
             {
               String lastLore = itemLore.get(itemLore.size() - 1);
               String lastSecondLore = itemLore.get(itemLore.size() - 2);
-              if (!lastLore.equals("§b[아이템을 제작하는 중입니다.]") && !lastLore.equals("§c[추가 제작 조건 불충족]") && !lastLore.equals("§c[재료 부족]") && !lastSecondLore.equals("§c[인벤토리 공간 부족]"))
+              if (!lastLore.equals("§b[아이템을 제작하는 중입니다]") && !lastLore.equals("§c[추가 제작 조건 불충족]") && !lastLore.equals("§c[재료 부족]") && !lastSecondLore.equals("§c[인벤토리 공간 부족]"))
               {
                 if (lastLore.equals("§e시프트 클릭§7으로 빠르게 아이템 제작 시간 스킵 가능"))
                 {
@@ -2336,7 +2336,7 @@ public class InventoryClick implements Listener
                 if (configurationSection == null || !configurationSection.contains(recipe))
                 {
                   player.closeInventory();
-                  MessageUtil.sendWarn(player, "관리자에 의하여 레시피가 변형/삭제되었습니다.");
+                  MessageUtil.sendWarn(player, "관리자에 의하여 레시피가 변형/삭제되었습니다");
                   return;
                 }
                 String nbtItemStack = config.getString("recipes." + recipe + ".result");
@@ -2407,7 +2407,7 @@ public class InventoryClick implements Listener
           if (!file.exists())
           {
             player.closeInventory();
-            MessageUtil.sendWarn(player, "관리자에 의하여 레시피가 변형/삭제되었습니다.");
+            MessageUtil.sendWarn(player, "관리자에 의하여 레시피가 변형/삭제되었습니다");
             return;
           }
           YamlConfiguration config = Variable.customRecipes.get(category);
@@ -2435,7 +2435,7 @@ public class InventoryClick implements Listener
           if (configurationSection == null || !configurationSection.contains(recipe))
           {
             player.closeInventory();
-            MessageUtil.sendWarn(player, "관리자에 의하여 레시피가 변형/삭제되었습니다.");
+            MessageUtil.sendWarn(player, "관리자에 의하여 레시피가 변형/삭제되었습니다");
             return;
           }
           String nbtItemStack = config.getString("recipes." + recipe + ".result");

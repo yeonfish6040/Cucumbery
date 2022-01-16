@@ -61,7 +61,7 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
     int length = ItemSerializer.serialize(item).length();
     if (length >= 25650)
     {
-      MessageUtil.sendError(sender, "해당 아이템에는 속성이 너무 많아서 채팅창에 올릴 수 없습니다.");
+      MessageUtil.sendError(sender, "해당 아이템에는 속성이 너무 많아서 채팅창에 올릴 수 없습니다");
       return true;
     }
     if (!ItemStackUtil.itemExists(item) &&
@@ -82,7 +82,7 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
     {
       if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ITEM_MEGAPHONE))
       {
-        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다."));
+        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다"));
         return true;
       }
       if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player) && Cucumbery.config.getBoolean("no-spam.item-megaphone.enable"))
@@ -119,7 +119,7 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
           }
         }
       }
-      MessageUtil.broadcastPlayer(Prefix.INFO_ITEMSTORAGE, ComponentUtil.translate("%s이(가) %s을(를) 채팅창에 올렸습니다.", player, ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR)));
+      MessageUtil.broadcastPlayer(Prefix.INFO_ITEMSTORAGE, ComponentUtil.translate("%s이(가) %s을(를) 채팅창에 올렸습니다", player, ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR)));
       return true;
     }
     if (!msg.contains("[i]") && !msg.contains("[i1]") && !msg.contains("[i2]") && !msg.contains("[i3]") && !msg.contains("[i4]") && !msg.contains("[i5]") && !msg.contains("[i6]") && !msg.contains(
@@ -133,7 +133,7 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
     {
       if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ITEM_MEGAPHONE))
       {
-        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다."));
+        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다"));
         return true;
       }
       if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player) && Cucumbery.config.getBoolean("no-spam.item-megaphone.enable"))
@@ -191,13 +191,13 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
       {
         if (msg.contains("[i" + i + "]") && !ItemStackUtil.itemExists(inv.getItem(i - 1)))
         {
-          MessageUtil.sendError(player, ComponentUtil.translate("%s에 아이템을 들고 있지 않습니다.", ComponentUtil.translate("&e%s번째 단축바 슬롯", i)));
+          MessageUtil.sendError(player, ComponentUtil.translate("%s에 아이템을 들고 있지 않습니다", ComponentUtil.translate("&e%s번째 단축바 슬롯", i)));
           return true;
         }
       }
       if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ITEM_MEGAPHONE))
       {
-        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다."));
+        MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다"));
         return true;
       }
       if (!Permission.CMD_BROADCASTITEM_BYPASS.has(player) && Cucumbery.config.getBoolean("no-spam.item-megaphone.enable"))
@@ -359,12 +359,12 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
       }
       else if (arg.contains("[i" + (i + 1) + "]"))
       {
-        return Collections.singletonList((i + 1) + "번째 단축바 슬롯에 아이템을 들고 있지 않습니다.");
+        return Collections.singletonList((i + 1) + "번째 단축바 슬롯에 아이템을 들고 있지 않습니다");
       }
     }
     if (empty)
     {
-      return Collections.singletonList("주로 사용하는 손 또는 단축바 슬롯에 아이템을 들고 있지 않습니다.");
+      return Collections.singletonList("주로 사용하는 손 또는 단축바 슬롯에 아이템을 들고 있지 않습니다");
     }
     ItemStack maindHand = inventory.getItemInMainHand();
     if (ItemStackUtil.itemExists(maindHand))

@@ -41,7 +41,7 @@ public class PrepareSmithing implements Listener
         }
         ItemStack result = Cucumbery.config.getBoolean("blind-result-when-crafting-with-uncraftable-item") ? null :
                 CreateItemStack.create(Material.BARRIER, 1,
-                        ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME), ComponentUtil.translate("&7아이템을 조합할 권한이 없습니다."), true);
+                        ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME), ComponentUtil.translate("&7아이템을 조합할 권한이 없습니다"), true);
         if (!Permission.EVENT_ITEM_CRAFT.has(player))
         {
           event.setResult(result);
@@ -65,7 +65,7 @@ public class PrepareSmithing implements Listener
               secondItemNoAnvil = NBTAPI.isRestricted(player, secondItem, RestrictionType.NO_SMITHING_TABLE);
       if (firstItemNoAnvil || secondItemNoAnvil)
       {
-        lores.add(ComponentUtil.translate("&c대장장이 작업대에서 사용할 수 없는 아이템이 존재합니다."));
+        lores.add(ComponentUtil.translate("&c대장장이 작업대에서 사용할 수 없는 아이템이 존재합니다"));
       }
       if (firstItemNoAnvil)
       {

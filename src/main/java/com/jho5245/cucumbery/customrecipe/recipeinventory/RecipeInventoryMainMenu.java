@@ -44,7 +44,7 @@ public class RecipeInventoryMainMenu
     int categoryAmount = Variable.customRecipes.size();
     if (categoryAmount == 0)
     {
-      MessageUtil.sendError(player, "제작된 커스텀 레시피가 하나도 없습니다.");
+      MessageUtil.sendError(player, "제작된 커스텀 레시피가 하나도 없습니다");
       String openInventoryTitle = player.getOpenInventory().getTitle();
       if (openInventoryTitle.startsWith(Constant.CANCEL_STRING))
       {
@@ -256,7 +256,7 @@ public class RecipeInventoryMainMenu
       boolean hideIfNoBase = config.getBoolean("extra.permissions.hide-if-no-base");
       if (permission != null && !player.hasPermission(permission) && hideIfNoBase && (bypassIfHidden == null || !player.hasPermission(bypassIfHidden)))
       {
-        categoryItemLore = new ArrayList<>(Collections.singletonList(ComponentUtil.create("§c해당 레시피 목록의 정보를 볼 권한이 없습니다.")));
+        categoryItemLore = new ArrayList<>(Collections.singletonList(ComponentUtil.create("§c해당 레시피 목록의 정보를 볼 권한이 없습니다")));
         categoryItemMeta.displayName(ComponentUtil.create("§c[비공개 레시피 목록]"));
         categoryItem.setType(Material.BARRIER);
       }
@@ -267,6 +267,6 @@ public class RecipeInventoryMainMenu
     }
     menu.setItem(
             40, CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?",
-                    Arrays.asList("&73×3 제작대처럼 복잡하게 재료의", "&7위치를 외울 필요 없이 재료만 들고 있으면", "&7클릭 한 번으로 아이템을 제작할 수 있는 곳입니다.", "&b제작하고 싶은 아이템의 종류를 목록 위에서 골라보세요!"), false));
+                    Arrays.asList("&73×3 제작대처럼 복잡하게 재료의", "&7위치를 외울 필요 없이 재료만 들고 있으면", "&7클릭 한 번으로 아이템을 제작할 수 있는 곳입니다", "&b제작하고 싶은 아이템의 종류를 목록 위에서 골라보세요!"), false));
   }
 }

@@ -40,7 +40,7 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       Player player = (Player) sender;
       if (player.getScoreboardTags().contains("observer"))
       {
-        MessageUtil.sendError(sender, ComponentUtil.translate("옵저버는 윷을 던질 수 없습니다."));
+        MessageUtil.sendError(sender, ComponentUtil.translate("옵저버는 윷을 던질 수 없습니다"));
         return true;
       }
       if (throwing)

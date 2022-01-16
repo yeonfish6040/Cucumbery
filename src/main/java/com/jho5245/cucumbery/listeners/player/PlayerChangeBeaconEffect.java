@@ -47,7 +47,7 @@ public class PlayerChangeBeaconEffect implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerChangeBeaconEffectAlertCooldown.contains(uuid))
         {
           Variable.playerChangeBeaconEffectAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(player, "&c사용 불가!", "&r신호기에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c사용 불가!", "&r신호기에 사용할 수 없는 아이템입니다", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerChangeBeaconEffectAlertCooldown.remove(uuid), 100L);
         }
@@ -81,7 +81,7 @@ public class PlayerChangeBeaconEffect implements Listener
           if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerChangeBeaconEffectAlertCooldown.contains(uuid))
           {
             Variable.playerChangeBeaconEffectAlertCooldown.add(uuid);
-            MessageUtil.sendTitle(player, "&c사용 불가!", "&r효과를 적용하거나 바꿀 수 없는 신호기입니다.", 5, 80, 15);
+            MessageUtil.sendTitle(player, "&c사용 불가!", "&r효과를 적용하거나 바꿀 수 없는 신호기입니다", 5, 80, 15);
             SoundPlay.playSound(player, Constant.ERROR_SOUND);
             Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerChangeBeaconEffectAlertCooldown.remove(uuid), 100L);
           }

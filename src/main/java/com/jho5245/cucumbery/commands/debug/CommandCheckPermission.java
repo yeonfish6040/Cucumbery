@@ -57,11 +57,11 @@ public class CommandCheckPermission implements CommandExecutor, TabCompleter
       }
       if (!hasPermission.isEmpty())
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s은(는) %s 퍼미션 노드를 가지고 있습니다.", hasPermission, Constant.THE_COLOR_HEX + args[1]));
+        MessageUtil.info(sender, ComponentUtil.translate("%s은(는) %s 퍼미션 노드를 가지고 있습니다", hasPermission, Constant.THE_COLOR_HEX + args[1]));
       }
       if (!noPermission.isEmpty())
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s은(는) %s 퍼미션 노드를 가지고 있지 않습니다.", noPermission, Constant.THE_COLOR_HEX + args[1]));
+        MessageUtil.info(sender, ComponentUtil.translate("%s은(는) %s 퍼미션 노드를 가지고 있지 않습니다", noPermission, Constant.THE_COLOR_HEX + args[1]));
       }
     }
     else

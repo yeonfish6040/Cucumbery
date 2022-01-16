@@ -51,7 +51,7 @@ public class CommandWhat implements CommandExecutor, TabCompleter
             }
             else if (entity != null)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s은(는) 효과를 받을 수 있는 대상이 아닙니다.", entity));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s은(는) 효과를 받을 수 있는 대상이 아닙니다", entity));
               return !(sender instanceof BlockCommandSender);
             }
             else if (MessageUtil.isInteger(sender, args[1], true))
@@ -68,7 +68,7 @@ public class CommandWhat implements CommandExecutor, TabCompleter
             }
             else if (entity != null)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s은(는) 효과를 받을 수 있는 대상이 아닙니다.", entity));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s은(는) 효과를 받을 수 있는 대상이 아닙니다", entity));
               return !(sender instanceof BlockCommandSender);
             }
           }

@@ -44,13 +44,13 @@ public class PlayerPickupExperience implements Listener
       }
       if (UserData.SHOW_ACTIONBAR_ON_ITEM_PICKUP.getBoolean(player))
       {
-        MessageUtil.sendActionBar(player, ComponentUtil.translate("&c%s을(를) 잃었습니다.", ComponentUtil.translate("&e경험치 %s", experience)));
+        MessageUtil.sendActionBar(player, ComponentUtil.translate("&c%s을(를) 잃었습니다", ComponentUtil.translate("&e경험치 %s", experience)));
       }
       return;
     }
     if (UserData.SHOW_ACTIONBAR_ON_ITEM_PICKUP.getBoolean(player))
     {
-      MessageUtil.sendActionBar(player, ComponentUtil.translate("&b%s을(를) 주웠습니다.", ComponentUtil.translate("&e경험치 %s", experience)));
+      MessageUtil.sendActionBar(player, ComponentUtil.translate("&b%s을(를) 주웠습니다", ComponentUtil.translate("&e경험치 %s", experience)));
     }
   }
 }

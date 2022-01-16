@@ -68,15 +68,15 @@ public class CommandReplaceEntity extends CommandBase
       if (failureEntities.size() > 0)
       {
         MessageUtil.sendWarnOrError(successEntities.isEmpty(), sender,
-                ComponentUtil.translate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다.", failureEntities));
+                ComponentUtil.translate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다", failureEntities));
       }
       if (successEntities.size() > 0)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다.", successEntities, resultEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다", successEntities, resultEntities));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다.");
+        CommandAPI.fail("개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();
@@ -113,16 +113,16 @@ public class CommandReplaceEntity extends CommandBase
         if (failureEntities.size() > 0)
         {
           MessageUtil.sendWarnOrError(successEntities.isEmpty(), sender,
-                  ComponentUtil.translate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다.", failureEntities));
+                  ComponentUtil.translate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다", failureEntities));
         }
       }
       if (!hideOutput && successEntities.size() > 0)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다.", successEntities, resultEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다", successEntities, resultEntities));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다.");
+        CommandAPI.fail("개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();
@@ -171,16 +171,16 @@ public class CommandReplaceEntity extends CommandBase
         if (failureEntities.size() > 0)
         {
           MessageUtil.sendWarnOrError(successEntities.isEmpty(), sender,
-                  ComponentUtil.translate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다.", failureEntities));
+                  ComponentUtil.translate("%s은(는) 플레이어여서 개체 유형을 변경할 수 없습니다", failureEntities));
         }
       }
       if (!hideOutput && successEntities.size() > 0)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다.", successEntities, resultEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다", successEntities, resultEntities));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다.");
+        CommandAPI.fail("개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();

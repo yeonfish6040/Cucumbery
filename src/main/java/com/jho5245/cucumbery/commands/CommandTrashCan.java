@@ -39,7 +39,7 @@ public class CommandTrashCan implements CommandExecutor, TabCompleter
       Inventory inventory = Bukkit.createInventory(null, 54, Constant.TRASH_CAN + MessageUtil.n2s("&8쓰레기통"));
       player.openInventory(inventory);
       SoundPlay.playSound(player, Sound.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS);
-      //MessageUtil.sendMessage(player, Prefix.INFO_TRASHCAN, "쓰레기통을 엽니다.");
+      //MessageUtil.sendMessage(player, Prefix.INFO_TRASHCAN, "쓰레기통을 엽니다");
     }
     else
     {
@@ -70,9 +70,9 @@ public class CommandTrashCan implements CommandExecutor, TabCompleter
         SoundPlay.playSound(target, Sound.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS);
         if (!target.equals(sender))
         {
-          MessageUtil.sendMessage(target, Prefix.INFO_TRASHCAN, sender, "이 당신에게 쓰레기통을 열어주었습니다.");
+          MessageUtil.sendMessage(target, Prefix.INFO_TRASHCAN, sender, "이 당신에게 쓰레기통을 열어주었습니다");
         }
-        MessageUtil.sendMessage(sender, Prefix.INFO_TRASHCAN, target, "에게 쓰레기통을 열어줍니다.");
+        MessageUtil.sendMessage(sender, Prefix.INFO_TRASHCAN, target, "에게 쓰레기통을 열어줍니다");
       }
     }
     return true;

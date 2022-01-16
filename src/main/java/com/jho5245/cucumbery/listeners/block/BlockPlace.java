@@ -72,8 +72,8 @@ public class BlockPlace implements Listener
     {
       event.setCancelled(true);
       Method.playSound(player, Constant.ERROR_SOUND);
-      MessageUtil.sendError(player, "강화중에는 블록을 설치하실 수 없습니다.");
-      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, "/강화 quit");
+      MessageUtil.sendError(player, "강화중에는 블록을 설치하실 수 없습니다");
+      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, "/강화 quit");
       player.sendMessage(a);
       return;
     }
@@ -83,7 +83,7 @@ public class BlockPlace implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockPlaceAlertCooldown.contains(uuid))
       {
         Variable.blockPlaceAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c설치 불가!", "&r블록을 설치할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c설치 불가!", "&r블록을 설치할 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockPlaceAlertCooldown.remove(uuid), 100L);
       }
@@ -95,7 +95,7 @@ public class BlockPlace implements Listener
       if (!Variable.blockPlaceAlertCooldown.contains(uuid))
       {
         Variable.blockPlaceAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "블록을 설치할 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "블록을 설치할 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockPlaceAlertCooldown.remove(uuid), 100L);
       }
@@ -107,7 +107,7 @@ public class BlockPlace implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockPlaceAlertCooldown2.contains(uuid))
       {
         Variable.blockPlaceAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, "&c설치 불가!", "&r설치할 수 없는 블록입니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c설치 불가!", "&r설치할 수 없는 블록입니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockPlaceAlertCooldown2.remove(uuid), 100L);
       }

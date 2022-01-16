@@ -49,7 +49,7 @@ public class PlayerTeleport implements Listener
 					if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.antispecateAlertCooldown.contains(uuid))
 					{
 						Variable.antispecateAlertCooldown.add(uuid);
-						MessageUtil.sendTitle(player, "&c관전 불가!", "&r관전할 수 없는 플레이어입니다.", 5, 80, 15);
+						MessageUtil.sendTitle(player, "&c관전 불가!", "&r관전할 수 없는 플레이어입니다", 5, 80, 15);
 						SoundPlay.playSound(player, Constant.ERROR_SOUND);
 						Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.antispecateAlertCooldown.remove(uuid), 100L);
 					}

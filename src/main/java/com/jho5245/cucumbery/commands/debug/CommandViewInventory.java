@@ -54,12 +54,12 @@ public class CommandViewInventory implements CommandExecutor, TabCompleter
         if (!merchantRecipes.isEmpty())
         {
           player.openMerchant(merchant, true);
-          MessageUtil.info(player, ComponentUtil.translate("%s의 거래 목록을 참조합니다.", merchant));
-          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 거래 목록을 참조합니다.]", player, merchant));
+          MessageUtil.info(player, ComponentUtil.translate("%s의 거래 목록을 참조합니다", merchant));
+          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 거래 목록을 참조합니다]", player, merchant));
         }
         else
         {
-          MessageUtil.sendWarn(ComponentUtil.translate("%s은(는) 거래 목록을 가지고 있지 않습니다.", merchant));
+          MessageUtil.sendWarn(ComponentUtil.translate("%s은(는) 거래 목록을 가지고 있지 않습니다", merchant));
         }
       }
       else if (entity instanceof InventoryHolder inventoryHolder)
@@ -71,12 +71,12 @@ public class CommandViewInventory implements CommandExecutor, TabCompleter
           Inventory clone = Bukkit.createInventory(null, 54, ComponentUtil.translate("&8%s의 인벤토리 (복사본)", SenderComponentUtil.senderComponent(inventoryHolder, NamedTextColor.DARK_GRAY)));
           clone.setContents(contents);
           player.openInventory(clone);
-          MessageUtil.info(player, ComponentUtil.translate("%s의 인벤토리 내용을 참조합니다.", inventoryHolder));
-          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 인벤토리 내용을 참조합니다.]", player, inventoryHolder));
+          MessageUtil.info(player, ComponentUtil.translate("%s의 인벤토리 내용을 참조합니다", inventoryHolder));
+          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 인벤토리 내용을 참조합니다]", player, inventoryHolder));
         }
         else
         {
-          MessageUtil.sendWarn(player, ComponentUtil.translate("%s은(는) 인벤토리에 아이템을 가지고 있지 않습니다.", inventoryHolder));
+          MessageUtil.sendWarn(player, ComponentUtil.translate("%s은(는) 인벤토리에 아이템을 가지고 있지 않습니다", inventoryHolder));
         }
       }
       else if (entity instanceof LivingEntity livingEntity)
@@ -109,17 +109,17 @@ public class CommandViewInventory implements CommandExecutor, TabCompleter
           inventory.setItem(15, leggings);
           inventory.setItem(16, boots);
           player.openInventory(inventory);
-          MessageUtil.info(player, ComponentUtil.translate("%s의 장착 중인 아이템을 참조합니다.", livingEntity));
-          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 장착 중인 아이템을 참조합니다.]", player, livingEntity));
+          MessageUtil.info(player, ComponentUtil.translate("%s의 장착 중인 아이템을 참조합니다", livingEntity));
+          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 장착 중인 아이템을 참조합니다]", player, livingEntity));
         }
         else
         {
-          MessageUtil.sendWarn(ComponentUtil.translate("%s은(는) 장착 중인 아이템이 없습니다.", livingEntity));
+          MessageUtil.sendWarn(ComponentUtil.translate("%s은(는) 장착 중인 아이템이 없습니다", livingEntity));
         }
       }
       else
       {
-        MessageUtil.sendError(player, ComponentUtil.translate("%s은(는) 인벤토리를 참조할 수 있는 개체가 아닙니다.", entity));
+        MessageUtil.sendError(player, ComponentUtil.translate("%s은(는) 인벤토리를 참조할 수 있는 개체가 아닙니다", entity));
       }
     }
     else

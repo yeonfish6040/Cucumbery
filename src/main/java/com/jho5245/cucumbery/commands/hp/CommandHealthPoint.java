@@ -48,7 +48,7 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
       String targetName = (entity).getName();
       if (!(entity instanceof Damageable) && !(entity instanceof Attributable))
       {
-        MessageUtil.sendError(sender, "&e" + targetName + "&r" + MessageUtil.getFinalConsonant(targetName, ConsonantType.은는) + "&r HP 태그를 가지고 있지 않습니다.");
+        MessageUtil.sendError(sender, "&e" + targetName + "&r" + MessageUtil.getFinalConsonant(targetName, ConsonantType.은는) + "&r HP 태그를 가지고 있지 않습니다");
         return true;
       }
       Damageable target = (Damageable) SelectorUtil.getEntity(sender, args[1]);
@@ -147,7 +147,7 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
         {
           if (!hideOutput)
           {
-            MessageUtil.sendError(sender, "더 이상 ", target, playerSuffix + "에게 HP를 지급할 수 없습니다.");
+            MessageUtil.sendError(sender, "더 이상 ", target, playerSuffix + "에게 HP를 지급할 수 없습니다");
           }
           return true;
         }
@@ -201,7 +201,7 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
         {
           if (!hideOutput)
           {
-            MessageUtil.sendError(sender, "더 이상 &e" + targetName + "&r" + playerSuffix + "의 HP를 차감할 수 없습니다.");
+            MessageUtil.sendError(sender, "더 이상 &e" + targetName + "&r" + playerSuffix + "의 HP를 차감할 수 없습니다");
           }
           return true;
         }

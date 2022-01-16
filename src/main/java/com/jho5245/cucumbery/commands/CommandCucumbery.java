@@ -112,18 +112,18 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
           Constant.WARNING_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.warning-sound.volume");
           Constant.ERROR_SOUND_PITCH = Cucumbery.config.getDouble("sound-const.error-sound.pitch");
           Constant.ERROR_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.error-sound.volume");
-          MessageUtil.info(sender, "모든 콘픽 파일을 리로드하였습니다.");
+          MessageUtil.info(sender, "모든 콘픽 파일을 리로드하였습니다");
           break;
         case "reloaddata":
           MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloaddata 명령어 사용", sender));
           Bukkit.reloadData();
-          MessageUtil.info(sender, "서버 데이터 파일을 리로드하였습니다.");
+          MessageUtil.info(sender, "서버 데이터 파일을 리로드하였습니다");
           break;
         case "reloadplugin":
           MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin 명령어 사용", sender));
           PluginLoader.unload();
           PluginLoader.load(Cucumbery.file);
-          MessageUtil.info(sender, "플러그인을 리로드하였습니다.");
+          MessageUtil.info(sender, "플러그인을 리로드하였습니다");
           break;
         case "reloadplugin2":
           MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin2 명령어 사용", sender));
@@ -143,13 +143,13 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
           }
           else
           {
-            MessageUtil.sendError(sender, ComponentUtil.translate("이미 최신 버전입니다."));
+            MessageUtil.sendError(sender, ComponentUtil.translate("이미 최신 버전입니다"));
           }
           break;
         case "update-quickshop-item":
           if (!Cucumbery.using_QuickShop)
           {
-            MessageUtil.sendError(sender, "&eQuickShop&r 플러그인을 사용하고 있지 않습니다.");
+            MessageUtil.sendError(sender, "&eQuickShop&r 플러그인을 사용하고 있지 않습니다");
             return true;
           }
           int size = QuickShopSupport.updateQuickShopItems();
@@ -166,7 +166,7 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
             File[] files = userDataFolder.listFiles();
             if (files == null)
             {
-              MessageUtil.sendError(sender, "제거할 유저 데이터가 존재하지 않습니다.");
+              MessageUtil.sendError(sender, "제거할 유저 데이터가 존재하지 않습니다");
               return true;
             }
             int removeSize = 0;
@@ -199,16 +199,16 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
               Initializer.saveUserData();
               Initializer.loadNicknamesConfig();
               Initializer.loadPlayersConfig();
-              MessageUtil.info(sender, "&e" + removeSize + "개&r의 유저 데이터를 제거하고 유저 데이터를 리로드 하였습니다.");
+              MessageUtil.info(sender, "&e" + removeSize + "개&r의 유저 데이터를 제거하고 유저 데이터를 리로드 하였습니다");
             }
             else
             {
-              MessageUtil.info(sender, "제거할 유저 데이터가 존재하지 않습니다.");
+              MessageUtil.info(sender, "제거할 유저 데이터가 존재하지 않습니다");
             }
           }
           else
           {
-            MessageUtil.info(sender, "제거할 유저 데이터가 존재하지 않습니다.");
+            MessageUtil.info(sender, "제거할 유저 데이터가 존재하지 않습니다");
           }
           break;
       }

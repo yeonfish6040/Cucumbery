@@ -735,7 +735,7 @@ public class EntityComponentUtil
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.translate("#52ee52;관리자입니다."));
+                .append(ComponentUtil.translate("#52ee52;관리자입니다"));
       }
       hover = hover
               .append(Component.text("\n"))

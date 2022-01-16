@@ -269,22 +269,22 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
     {
       if (weatherDuration < thunderDuration && world.isThundering())
       {
-        weather = "현재 날씨는 &e맑음&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(thunderDuration) + "&r 이후 번개를 동반한 비가 올 예정입니다.";
+        weather = "현재 날씨는 &e맑음&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(thunderDuration) + "&r 이후 번개를 동반한 비가 올 예정입니다";
       }
       else
       {
-        weather = "현재 날씨는 &e맑음&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(weatherDuration) + "&r 이후 비가 올 예정입니다.";
+        weather = "현재 날씨는 &e맑음&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(weatherDuration) + "&r 이후 비가 올 예정입니다";
       }
     }
     else if (world.hasStorm() && !world.isThundering())
     {
       if (weatherDuration < thunderDuration)
       {
-        weather = "현재 날씨는 &e비가 오는 중&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(weatherDuration) + "&r 이후 비가 그칠 예정입니다.";
+        weather = "현재 날씨는 &e비가 오는 중&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(weatherDuration) + "&r 이후 비가 그칠 예정입니다";
       }
       else
       {
-        weather = "현재 날씨는 &e비가 오는 중&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(thunderDuration) + "&r 이후 번개를 동반한 비가 올 예정입니다.";
+        weather = "현재 날씨는 &e비가 오는 중&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(thunderDuration) + "&r 이후 번개를 동반한 비가 올 예정입니다";
         additionalInfo = true;
       }
     }
@@ -292,18 +292,18 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
     {
       if (weatherDuration < thunderDuration)
       {
-        weather = "현재 날씨는 &e번개를 동반한 비가 오는 중&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(weatherDuration) + "&r 이후 비가 그칠 예정입니다.";
+        weather = "현재 날씨는 &e번개를 동반한 비가 오는 중&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(weatherDuration) + "&r 이후 비가 그칠 예정입니다";
       }
       else
       {
-        weather = "현재 날씨는 &e번개를 동한반 비가 오는 중&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(thunderDuration) + "&r 이후 번개구름이 사라질 예정입니다.";
+        weather = "현재 날씨는 &e번개를 동한반 비가 오는 중&r이며, &e" + MessageUtil.periodRealTimeAndGameTime(thunderDuration) + "&r 이후 번개구름이 사라질 예정입니다";
         additionalInfo = true;
       }
     }
     returnValue.add(weather);
     if (additionalInfo)
     {
-      returnValue.add("아울러, &e" + MessageUtil.periodRealTimeAndGameTime(weatherDuration) + "&r 이후 비가 그칠 예정입니다.");
+      returnValue.add("아울러, &e" + MessageUtil.periodRealTimeAndGameTime(weatherDuration) + "&r 이후 비가 그칠 예정입니다");
     }
     return returnValue;
   }

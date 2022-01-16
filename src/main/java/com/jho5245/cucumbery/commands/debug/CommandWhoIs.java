@@ -94,7 +94,7 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
         if (player == null && !Method.equals(args[1], "name", "stats", "stats_general", "stats_entity", "stats_material", "offline"))
         {
           MessageUtil.wrongArg(sender, 2, args);
-          MessageUtil.info(sender, "해당 정보 유형은 온라인 상태의 플레이어에게만 사용할 수 있습니다.");
+          MessageUtil.info(sender, "해당 정보 유형은 온라인 상태의 플레이어에게만 사용할 수 있습니다");
           return true;
         }
         String playerName = Method.getName(offlinePlayer);
@@ -674,7 +674,7 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
 
               MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
               MessageUtil.sendMessage(
-                      sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s의 %s은(는) %s입니다.", offlinePlayer, key.color(Constant.THE_COLOR),
+                      sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s의 %s은(는) %s입니다", offlinePlayer, key.color(Constant.THE_COLOR),
                               ComponentUtil.translate("%s" + suffix, valueString)));
             }
             case BREAK_ITEM, CRAFT_ITEM, DROP, MINE_BLOCK, PICKUP, USE_ITEM -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_material <통계> <아이템 이름>&r 명령어를 사용해주세요.");
@@ -726,7 +726,7 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
               int value = offlinePlayer.getStatistic(stats, type);
               MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
               MessageUtil.sendMessage(
-                      sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s의 %s %s은(는) %s입니다.", offlinePlayer, type, key,
+                      sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s의 %s %s은(는) %s입니다", offlinePlayer, type, key,
                               ComponentUtil.translate("%s회", Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
             }
             case ENTITY_KILLED_BY, KILL_ENTITY -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_entity <통계> <몹 이름>&r 명령어를 사용해주세요.");
@@ -896,7 +896,7 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
         }
         else
         {
-          MessageUtil.sendError(sender, "명령어에 잘못된 인수가 있거나 불완전한 명령어입니다.");
+          MessageUtil.sendError(sender, "명령어에 잘못된 인수가 있거나 불완전한 명령어입니다");
           MessageUtil.commandInfo(sender, label, usage);
           return true;
         }
@@ -947,7 +947,7 @@ public class CommandWhoIs implements CommandExecutor, TabCompleter
       {
         if (Method.equals(args[1], "pos", "state", "effect"))
         {
-          return Collections.singletonList("해당 정보 유형은 온라인 상태의 플레이어에게만 사용할 수 있습니다.");
+          return Collections.singletonList("해당 정보 유형은 온라인 상태의 플레이어에게만 사용할 수 있습니다");
         }
         return Method.tabCompleterList(args, "[정보 유형]", "name", "stats", "stats_general", "stats_entity", "stats_material", "offline");
       }

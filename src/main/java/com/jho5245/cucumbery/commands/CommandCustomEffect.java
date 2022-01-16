@@ -100,13 +100,13 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           if (CustomEffectManager.hasEffects(target))
           {
             CustomEffectManager.clearEffects(target);
-            MessageUtil.info(sender, "모든 효과를 제거했습니다.");
-            MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 모든 효과를 제거했습니다.]", sender));
+            MessageUtil.info(sender, "모든 효과를 제거했습니다");
+            MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 모든 효과를 제거했습니다]", sender));
             return true;
           }
           else
           {
-            MessageUtil.sendError(sender, "가지고 있는 효과가 없습니다.");
+            MessageUtil.sendError(sender, "가지고 있는 효과가 없습니다");
             return failure;
           }
         }
@@ -290,7 +290,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           }
           catch (Exception e)
           {
-            return Collections.singletonList("'" + args[2] + "'" + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다.");
+            return Collections.singletonList("'" + args[2] + "'" + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다");
           }
         }
         if (length == 3)
@@ -307,7 +307,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           }
           if (list.isEmpty())
           {
-            return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.translate("%s에게 효과가 없습니다.", entities))));
+            return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.translate("%s에게 효과가 없습니다", entities))));
           }
           return Method.tabCompleterList(args, list, "[효과]");
         }
@@ -334,7 +334,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
             CustomEffectType customEffectType = CustomEffectType.valueOf(effect);
             if (force)
             {
-              return Collections.singletonList(customEffectType.translationKey() + " 효과를 강제로 적용합니다.");
+              return Collections.singletonList(customEffectType.translationKey() + " 효과를 강제로 적용합니다");
             }
             else
             {
@@ -354,7 +354,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         }
         catch (Exception e)
         {
-          return Collections.singletonList("'" + args[2] + "'" + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다.");
+          return Collections.singletonList("'" + args[2] + "'" + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다");
         }
         if (length == 4)
         {
@@ -407,9 +407,9 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       {
         List<Audience> infoTarget = new ArrayList<>(successEntities);
         infoTarget.remove(sender);
-        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다.", successEntities, customEffect));
-        MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신에게 %s 효과를 적용했습니다.", sender, customEffect));
-        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다.]", sender, successEntities, customEffect));
+        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다", successEntities, customEffect));
+        MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신에게 %s 효과를 적용했습니다", sender, customEffect));
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다]", sender, successEntities, customEffect));
       }
     }
     return !successEntitiesIsEmpty;
@@ -446,12 +446,12 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         if (all)
         {
           MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.translate("%s은(는) 효과를 가지고 있지 않습니다.", failureEntities));
+                  ComponentUtil.translate("%s은(는) 효과를 가지고 있지 않습니다", failureEntities));
         }
         else
         {
           MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.translate("%s은(는) %s 효과를 가지고 있지 않습니다.", failureEntities, customEffectType));
+                  ComponentUtil.translate("%s은(는) %s 효과를 가지고 있지 않습니다", failureEntities, customEffectType));
         }
       }
       if (!successEntitiesIsEmpty)
@@ -460,15 +460,15 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         infoTarget.remove(sender);
         if (all)
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 모든 효과를 제거했습니다.", successEntities));
-          MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신의 모든 효과를 제거했습니다.", sender));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 모든 효과를 제거했습니다.]", sender, successEntities));
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 모든 효과를 제거했습니다", successEntities));
+          MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신의 모든 효과를 제거했습니다", sender));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 모든 효과를 제거했습니다]", sender, successEntities));
         }
         else
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 %s 효과를 제거했습니다.", successEntities, customEffectType));
-          MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신의 %s 효과를 제거했습니다.", sender, customEffectType));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 %s 효과를 제거했습니다.]", sender, successEntities, customEffectType));
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 %s 효과를 제거했습니다", successEntities, customEffectType));
+          MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신의 %s 효과를 제거했습니다", sender, customEffectType));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 %s 효과를 제거했습니다]", sender, successEntities, customEffectType));
         }
       }
     }
@@ -493,7 +493,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     }
     else
     {
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 포션 효과를 가지고 있지 않습니다.", entity));
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 포션 효과를 가지고 있지 않습니다", entity));
     }
     if (hasCustom)
     {
@@ -503,7 +503,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     }
     else
     {
-      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 커스텀 효과를 가지고 있지 않습니다.", entity));
+      MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_EFFECT, ComponentUtil.translate("%s은(는) 커스텀 효과를 가지고 있지 않습니다", entity));
     }
   }
 }

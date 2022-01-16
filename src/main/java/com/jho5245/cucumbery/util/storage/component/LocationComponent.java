@@ -23,7 +23,7 @@ public class LocationComponent
     Component pitchComponent = Component.text(Constant.Sosu2.format(pitch)).color(Constant.THE_COLOR);
     return ComponentUtil.translate("&7%s, %s, %s, %s", world, xComponent, yComponent, zComponent)
             .hoverEvent(ComponentUtil.translate(
-                    "클릭하여 %s, %s, %s, %s, %s, %s 좌표로 텔레포트합니다.",
+                    "클릭하여 %s, %s, %s, %s, %s, %s 좌표로 텔레포트합니다",
                     Constant.THE_COLOR_HEX + worldName, xComponent, yComponent, zComponent, yawComponent, pitchComponent
             ))
             .clickEvent(ClickEvent.suggestCommand("/atp @s " + worldName + " " + x + " " + y + " " + z + " " + yaw + " " + pitch));

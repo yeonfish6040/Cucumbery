@@ -56,7 +56,7 @@ public class PlayerItemConsume implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemConsumeAlertCooldown.contains(uuid))
       {
         Variable.itemConsumeAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c섭취 불가!", "&r아이템을 사용할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c섭취 불가!", "&r아이템을 사용할 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown.remove(uuid), 100L);
       }
@@ -68,7 +68,7 @@ public class PlayerItemConsume implements Listener
       if (!Variable.itemConsumeAlertCooldown.contains(uuid))
       {
         Variable.itemConsumeAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 사용할 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 사용할 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown.remove(uuid), 100L);
       }
@@ -80,7 +80,7 @@ public class PlayerItemConsume implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemConsumeAlertCooldown2.contains(uuid))
       {
         Variable.itemConsumeAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, ComponentUtil.translate("&c섭취 불가!"), ComponentUtil.translate("&r사용할 수 없는 아이템입니다."), 5, 80, 15);
+        MessageUtil.sendTitle(player, ComponentUtil.translate("&c섭취 불가!"), ComponentUtil.translate("&r사용할 수 없는 아이템입니다"), 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown2.remove(uuid), 100L);
       }
@@ -98,7 +98,7 @@ public class PlayerItemConsume implements Listener
       {
         Variable.itemConsumeAlertCooldown2.add(uuid);
         MessageUtil.sendTitle(player, ComponentUtil.translate("&c섭취 불가!"),
-                ComponentUtil.translate("&r인벤토리가 가득 찬 상태에서는 %s을(를) 섭취할 수 없습니다.", item), 5, 120, 15);
+                ComponentUtil.translate("&r인벤토리가 가득 찬 상태에서는 %s을(를) 섭취할 수 없습니다", item), 5, 120, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemConsumeAlertCooldown2.remove(uuid), 100L);
       }

@@ -49,7 +49,7 @@ public class CommandCustomMerchant implements CommandExecutor, TabCompleter
       HashMap<String, MerchantData> merchants = MerchantData.merchantDataHashMap;
       if (merchants.isEmpty())
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.translate("유효한 상점이 없습니다."));
+        MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.translate("유효한 상점이 없습니다"));
         return true;
       }
       MessageUtil.sendMessage(sender, Prefix.INFO_CUSTOM_MERCHANT, ComponentUtil.translate("상점 개수 : %s개", merchants.size()));

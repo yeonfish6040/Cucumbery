@@ -71,7 +71,7 @@ public class PlayerInteractEntity implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAtEntityAlertCooldown.contains(uuid))
       {
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
-        MessageUtil.sendTitle(event.getPlayer(), "&c행동 불가!", "&r개체에게 상호작용할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(event.getPlayer(), "&c행동 불가!", "&r개체에게 상호작용할 권한이 없습니다", 5, 80, 15);
         Variable.playerInteractAtEntityAlertCooldown.add(uuid);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityAlertCooldown.remove(uuid), 100L);
       }
@@ -83,7 +83,7 @@ public class PlayerInteractEntity implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAtEntityRestrictedItemAlertCooldown.contains(uuid))
       {
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
-        MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r사용할 수 없는 아이템입니다.", 5, 80, 15);
+        MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r사용할 수 없는 아이템입니다", 5, 80, 15);
         Variable.playerInteractAtEntityRestrictedItemAlertCooldown.add(uuid);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityRestrictedItemAlertCooldown.remove(uuid), 100L);
       }
@@ -101,15 +101,15 @@ public class PlayerInteractEntity implements Listener
             SoundPlay.playSound(player, Constant.ERROR_SOUND);
             if (NBTAPI.isRestricted(player, item, RestrictionType.NO_STORE))
             {
-              MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r보관 불가인 아이템을 액자에 걸 수 없습니다.", 5, 80, 15);
+              MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r보관 불가인 아이템을 액자에 걸 수 없습니다", 5, 80, 15);
             }
             else if (NBTAPI.isRestricted(player, item, RestrictionType.NO_TRADE))
             {
-              MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r캐릭터 귀속인 아이템을 액자에 걸 수 없습니다.", 5, 80, 15);
+              MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r캐릭터 귀속인 아이템을 액자에 걸 수 없습니다", 5, 80, 15);
             }
             else if (NBTAPI.isRestricted(player, item, RestrictionType.NO_ITEM_FRAME))
             {
-              MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r액자에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+              MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r액자에 사용할 수 없는 아이템입니다", 5, 80, 15);
             }
             Variable.playerInteractAtEntityRestrictedItemAlertCooldown.add(uuid);
             Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityRestrictedItemAlertCooldown.remove(uuid), 100L);
@@ -125,7 +125,7 @@ public class PlayerInteractEntity implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAtEntityRestrictedItemAlertCooldown.contains(uuid))
         {
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
-          MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r화로가 실린 광산 수레에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(event.getPlayer(), "&c사용 불가!", "&r화로가 실린 광산 수레에 사용할 수 없는 아이템입니다", 5, 80, 15);
           Variable.playerInteractAtEntityRestrictedItemAlertCooldown.add(uuid);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityRestrictedItemAlertCooldown.remove(uuid), 100L);
         }
@@ -147,7 +147,7 @@ public class PlayerInteractEntity implements Listener
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           if (item != null)
           {
-            MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.translate("%s은(는) %s에게 사용할 수 없습니다.", item, entity), 5, 80, 15);
+            MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.translate("%s은(는) %s에게 사용할 수 없습니다", item, entity), 5, 80, 15);
           }
           Variable.playerInteractAtEntityRestrictedItemAlertCooldown.add(uuid);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityRestrictedItemAlertCooldown.remove(uuid), 100L);

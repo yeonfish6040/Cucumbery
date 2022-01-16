@@ -37,7 +37,7 @@ public class CommandWorkbench implements CommandExecutor, TabCompleter
         }
         Player player = (Player) sender;
         player.openWorkbench(player.getLocation(), true);
-        MessageUtil.sendMessage(player, Prefix.INFO_WORKBENCH, "제작대를 엽니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_WORKBENCH, "제작대를 엽니다");
         return true;
       }
       Player target = SelectorUtil.getPlayer(sender, args[0]);
@@ -50,9 +50,9 @@ public class CommandWorkbench implements CommandExecutor, TabCompleter
       {
         if (!target.equals(sender))
         {
-          MessageUtil.sendMessage(sender, Prefix.INFO_WORKBENCH, target, "에게 제작대를 열어줍니다.");
+          MessageUtil.sendMessage(sender, Prefix.INFO_WORKBENCH, target, "에게 제작대를 열어줍니다");
         }
-        MessageUtil.sendMessage(target, Prefix.INFO_WORKBENCH, sender, "이 당신에게 제작대를 열어주었습니다.");
+        MessageUtil.sendMessage(target, Prefix.INFO_WORKBENCH, sender, "이 당신에게 제작대를 열어주었습니다");
       }
     }
     else

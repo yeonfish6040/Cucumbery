@@ -79,13 +79,13 @@ public class CommandRide extends CommandBase
       if (entity == vehicle)
       {
         Method.playErrorSound(entity);
-        MessageUtil.sendError(entity, "자기 자신은 탑승할 수 없습니다.");
+        MessageUtil.sendError(entity, "자기 자신은 탑승할 수 없습니다");
         return;
       }
 
       if (entity.getVehicle() == vehicle)
       {
-        MessageUtil.sendError(entity, ComponentUtil.translate("변동 사항이 없습니다. 이미 %s을(를) 탑승하고 있는 상태입니다.", vehicle));
+        MessageUtil.sendError(entity, ComponentUtil.translate("변동 사항이 없습니다. 이미 %s을(를) 탑승하고 있는 상태입니다", vehicle));
         return;
       }
 
@@ -94,11 +94,11 @@ public class CommandRide extends CommandBase
       if (!success)
       {
         Method.playErrorSound(entity);
-        MessageUtil.sendError(sender, ComponentUtil.translate("%s을(를) 탑승할 수 없습니다. 이미 해당 개체가 자신을 탑승하고 있는 상태이거나 너무 멀리 있습니다.", vehicle));
+        MessageUtil.sendError(sender, ComponentUtil.translate("%s을(를) 탑승할 수 없습니다. 이미 해당 개체가 자신을 탑승하고 있는 상태이거나 너무 멀리 있습니다", vehicle));
         return;
       }
-      MessageUtil.info(vehicle, ComponentUtil.translate("%s이(가) 당신을 탑승합니다.", entity));
-      MessageUtil.info(sender, ComponentUtil.translate("%s을(를) 탑승합니다.", vehicle));
+      MessageUtil.info(vehicle, ComponentUtil.translate("%s이(가) 당신을 탑승합니다", entity));
+      MessageUtil.info(sender, ComponentUtil.translate("%s을(를) 탑승합니다", vehicle));
       MessageUtil.sendAdminMessage(sender, Collections.singletonList(vehicle), ComponentUtil.translate("[%s: %s을(를) 탑승합니다]", sender, vehicle));
     });
     commandAPICommand.register();
@@ -113,7 +113,7 @@ public class CommandRide extends CommandBase
     {
       if (!(sender.getCallee() instanceof Entity))
       {
-        CommandAPI.fail("개체만 사용할 수 있습니다.");
+        CommandAPI.fail("개체만 사용할 수 있습니다");
       }
       @SuppressWarnings("all")
       Entity entity = (Entity) sender.getCallee();
@@ -122,13 +122,13 @@ public class CommandRide extends CommandBase
       {
         if (entity instanceof Player)
         {
-          MessageUtil.sendError(entity, "개체를 탑승하고 있지 않습니다.");
+          MessageUtil.sendError(entity, "개체를 탑승하고 있지 않습니다");
         }
         return;
       }
       entity.teleport(entity);
-      MessageUtil.info(vehicle, ComponentUtil.translate("%s이(가) 당신의 탑승을 중지하였습니다.", entity));
-      MessageUtil.info(entity, ComponentUtil.translate("더 이상 %s을(를) 탑승하지 않습니다.", vehicle));
+      MessageUtil.info(vehicle, ComponentUtil.translate("%s이(가) 당신의 탑승을 중지하였습니다", entity));
+      MessageUtil.info(entity, ComponentUtil.translate("더 이상 %s을(를) 탑승하지 않습니다", vehicle));
       MessageUtil.sendAdminMessage(sender, Collections.singletonList(vehicle), ComponentUtil.translate("[%s: 더 이상 %s을(를) 탑승하지 않습니다]", sender, vehicle));
     });
     commandAPICommand.register();
@@ -156,7 +156,7 @@ public class CommandRide extends CommandBase
             continue;
           }
           successEntities.add(entity);
-          MessageUtil.info(entity, ComponentUtil.translate("%s에 의해 %s을(를) 탑승합니다.", sender, vehicle));
+          MessageUtil.info(entity, ComponentUtil.translate("%s에 의해 %s을(를) 탑승합니다", sender, vehicle));
         }
       }
       List<Entity> failureEntities = new ArrayList<>(entities);
@@ -164,19 +164,19 @@ public class CommandRide extends CommandBase
       if (!failureEntities.isEmpty())
       {
         MessageUtil.sendWarnOrError(successEntities.isEmpty(),
-                sender, ComponentUtil.translate("%s은(는) 해당 개체 위에 탑승 중인 개체이거나 이미 해당 개체가 %s을(를) 탑승하고 있는 상태입니다.", failureEntities, vehicle));
+                sender, ComponentUtil.translate("%s은(는) 해당 개체 위에 탑승 중인 개체이거나 이미 해당 개체가 %s을(를) 탑승하고 있는 상태입니다", failureEntities, vehicle));
       }
       if (!successEntities.isEmpty())
       {
         List<Permissible> permissibles = new ArrayList<>(successEntities);
         permissibles.add(vehicle);
-        MessageUtil.info(vehicle, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승합니다.", sender, successEntities));
-        MessageUtil.info(sender, ComponentUtil.translate("%s이(가) %s을(를) 탑승합니다.", successEntities, vehicle));
-        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게 탑승시켰습니다.]", sender, successEntities, vehicle));
+        MessageUtil.info(vehicle, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승합니다", sender, successEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s이(가) %s을(를) 탑승합니다", successEntities, vehicle));
+        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게 탑승시켰습니다]", sender, successEntities, vehicle));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체 위에 탑승 중인 개체이거나 이미 해당 개체가 탑승하고 있는 상태입니다.");
+        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체 위에 탑승 중인 개체이거나 이미 해당 개체가 탑승하고 있는 상태입니다");
       }
     });
     commandAPICommand.register();
@@ -207,7 +207,7 @@ public class CommandRide extends CommandBase
           successEntities.add(entity);
           if (!hideOutput)
           {
-            MessageUtil.info(entity, ComponentUtil.translate("%s에 의해 %s을(를) 탑승합니다.", sender, vehicle));
+            MessageUtil.info(entity, ComponentUtil.translate("%s에 의해 %s을(를) 탑승합니다", sender, vehicle));
           }
         }
       }
@@ -218,7 +218,7 @@ public class CommandRide extends CommandBase
         if (!failureEntities.isEmpty())
         {
           MessageUtil.sendWarnOrError(successEntities.isEmpty(),
-                  sender, ComponentUtil.translate("%s은(는) 해당 개체 위에 탑승 중인 개체이거나 이미 해당 개체가 %s을(를) 탑승하고 있는 상태입니다.", failureEntities, vehicle));
+                  sender, ComponentUtil.translate("%s은(는) 해당 개체 위에 탑승 중인 개체이거나 이미 해당 개체가 %s을(를) 탑승하고 있는 상태입니다", failureEntities, vehicle));
         }
 
       }
@@ -226,13 +226,13 @@ public class CommandRide extends CommandBase
       {
         List<Permissible> permissibles = new ArrayList<>(successEntities);
         permissibles.add(vehicle);
-        MessageUtil.info(vehicle, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승합니다.", sender, successEntities));
-        MessageUtil.info(sender, ComponentUtil.translate("%s이(가) %s을(를) 탑승합니다.", successEntities, vehicle));
-        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게 탑승시켰습니다.]", sender, successEntities, vehicle));
+        MessageUtil.info(vehicle, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승합니다", sender, successEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s이(가) %s을(를) 탑승합니다", successEntities, vehicle));
+        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게 탑승시켰습니다]", sender, successEntities, vehicle));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체 위에 탑승 중인 개체이거나 이미 해당 개체가 탑승하고 있는 상태입니다.");
+        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체 위에 탑승 중인 개체이거나 이미 해당 개체가 탑승하고 있는 상태입니다");
       }
     });
     commandAPICommand.register();
@@ -260,7 +260,7 @@ public class CommandRide extends CommandBase
           if (entity.teleport(entity) || entity.getVehicle() == null)
           {
             successEntities.add(entity);
-            MessageUtil.info(entity, ComponentUtil.translate("%s에 의해 %s을(를) 탑승하지 않습니다.", sender, vehicle));
+            MessageUtil.info(entity, ComponentUtil.translate("%s에 의해 %s을(를) 탑승하지 않습니다", sender, vehicle));
           }
         }
       }
@@ -269,19 +269,19 @@ public class CommandRide extends CommandBase
       if (!failureEntities.isEmpty())
       {
         MessageUtil.sendWarnOrError(successEntities.isEmpty(),
-                sender, ComponentUtil.translate("%s은(는) 다른 개체를 탑승하고 있는 상태가 아닙니다.", failureEntities));
+                sender, ComponentUtil.translate("%s은(는) 다른 개체를 탑승하고 있는 상태가 아닙니다", failureEntities));
       }
       if (!successEntities.isEmpty())
       {
         List<Permissible> permissibles = new ArrayList<>(successEntities);
         permissibles.addAll(vehicles);
-        MessageUtil.info(vehicles, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승하지 않습니다.", sender, successEntities));
-        MessageUtil.info(sender, ComponentUtil.translate("%s을(를) %s에게서 탑승을 중지시켰습니다.", successEntities, vehicles));
-        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게서 탑승을 중지시켰습니다.]", sender, successEntities, vehicles));
+        MessageUtil.info(vehicles, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승하지 않습니다", sender, successEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s을(를) %s에게서 탑승을 중지시켰습니다", successEntities, vehicles));
+        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게서 탑승을 중지시켰습니다]", sender, successEntities, vehicles));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 이미 해당 개체가 다른 개체를 탑승하고 있지 않습니다.");
+        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 이미 해당 개체가 다른 개체를 탑승하고 있지 않습니다");
       }
     });
     commandAPICommand.register();
@@ -312,7 +312,7 @@ public class CommandRide extends CommandBase
             successEntities.add(entity);
             if (!hideOutput)
             {
-              MessageUtil.info(entity, ComponentUtil.translate("%s에 의해 %s을(를) 탑승하지 않습니다.", sender, vehicle));
+              MessageUtil.info(entity, ComponentUtil.translate("%s에 의해 %s을(를) 탑승하지 않습니다", sender, vehicle));
             }
           }
         }
@@ -324,20 +324,20 @@ public class CommandRide extends CommandBase
         if (!failureEntities.isEmpty())
         {
           MessageUtil.sendWarnOrError(successEntities.isEmpty(),
-                  sender, ComponentUtil.translate("%s은(는) 다른 개체를 탑승하고 있는 상태가 아닙니다.", failureEntities));
+                  sender, ComponentUtil.translate("%s은(는) 다른 개체를 탑승하고 있는 상태가 아닙니다", failureEntities));
         }
       }
       if (!hideOutput && !successEntities.isEmpty())
       {
         List<Permissible> permissibles = new ArrayList<>(successEntities);
         permissibles.addAll(vehicles);
-        MessageUtil.info(vehicles, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승하지 않습니다.", sender, successEntities));
-        MessageUtil.info(sender, ComponentUtil.translate("%s을(를) %s에게서 탑승을 중지시켰습니다.", successEntities, vehicles));
-        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게서 탑승을 중지시켰습니다.]", sender, successEntities, vehicles));
+        MessageUtil.info(vehicles, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승하지 않습니다", sender, successEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s을(를) %s에게서 탑승을 중지시켰습니다", successEntities, vehicles));
+        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게서 탑승을 중지시켰습니다]", sender, successEntities, vehicles));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 이미 해당 개체가 다른 개체를 탑승하고 있지 않습니다.");
+        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 이미 해당 개체가 다른 개체를 탑승하고 있지 않습니다");
       }
     });
     commandAPICommand.register();

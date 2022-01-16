@@ -60,7 +60,7 @@ public class EntityPickupItem implements Listener
         if (!Variable.itemPickupAlertCooldown.contains(uuid))
         {
           Variable.itemPickupAlertCooldown.add(uuid);
-          MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 주울 수 없는 상태입니다.");
+          MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 주울 수 없는 상태입니다");
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown.remove(uuid), 100L);
         }
@@ -97,7 +97,7 @@ public class EntityPickupItem implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemPickupScrollReinforcingAlertCooldown.contains(uuid))
         {
           Variable.itemPickupScrollReinforcingAlertCooldown.add(uuid);
-          MessageUtil.sendError(player, "강화중에는 아이템을 주울 수 없습니다.");
+          MessageUtil.sendError(player, "강화중에는 아이템을 주울 수 없습니다");
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupScrollReinforcingAlertCooldown.remove(uuid), 100L);
         }
@@ -109,7 +109,7 @@ public class EntityPickupItem implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemPickupAlertCooldown.contains(uuid))
         {
           Variable.itemPickupAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(player, "&c줍기 불가!", "&r아이템을 주울 권한이 없습니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c줍기 불가!", "&r아이템을 주울 권한이 없습니다", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown.remove(uuid), 100L);
         }
@@ -121,7 +121,7 @@ public class EntityPickupItem implements Listener
         if (!Variable.itemPickupAlertCooldown.contains(uuid))
         {
           Variable.itemPickupAlertCooldown.add(uuid);
-          MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 주울 수 없는 상태입니다.");
+          MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 주울 수 없는 상태입니다");
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown.remove(uuid), 100L);
         }
@@ -201,11 +201,11 @@ public class EntityPickupItem implements Listener
       Component itemStackComponent = ItemNameUtil.itemName(itemStack, TextColor.fromHexString("#00ff3c"));
       if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
       {
-        player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) 주웠습니다.", itemStackComponent));
+        player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) 주웠습니다", itemStackComponent));
       }
       else
       {
-        player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) %s개 주웠습니다.", itemStackComponent, "#00ff3c;" + amount));
+        player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) %s개 주웠습니다", itemStackComponent, "#00ff3c;" + amount));
       }
     }
   }

@@ -126,13 +126,13 @@ public class CommandModifyExplosive implements CommandExecutor, TabCompleter
       if (!failureEntities.isEmpty())
       {
         MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                ComponentUtil.translate("%s은(는) 폭발물이 아니여서 데이터를 수정할 수 없습니다.", failureEntities));
+                ComponentUtil.translate("%s은(는) 폭발물이 아니여서 데이터를 수정할 수 없습니다", failureEntities));
       }
       if (!successEntitiesIsEmpty)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s의 %s을(를) %s(으)로 설정하였습니다.", successEntities, ComponentUtil.translate(type.key), value));
+        MessageUtil.info(sender, ComponentUtil.translate("%s의 %s을(를) %s(으)로 설정하였습니다", successEntities, ComponentUtil.translate(type.key), value));
         MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                ComponentUtil.translate("[%s: %s의 %s을(를) %s(으)로 설정하였습니다.]", sender, successEntities, ComponentUtil.translate(type.key), value));
+                ComponentUtil.translate("[%s: %s의 %s을(를) %s(으)로 설정하였습니다]", sender, successEntities, ComponentUtil.translate(type.key), value));
       }
     }
     return !successEntities.isEmpty();
@@ -165,7 +165,7 @@ public class CommandModifyExplosive implements CommandExecutor, TabCompleter
           return Method.tabCompleterBoolean(args, "<불 번짐 여부>");
         }
         default -> {
-          return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], ConsonantType.은는) + " 잘못되거나 알 수 없는 인수입니다.");
+          return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], ConsonantType.은는) + " 잘못되거나 알 수 없는 인수입니다");
         }
       }
     }

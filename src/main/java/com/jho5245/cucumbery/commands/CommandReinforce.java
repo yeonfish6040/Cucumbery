@@ -646,17 +646,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
     double success = chance[0], failKeep = chance[1], failDown = chance[2], destroy = chance[3];
     if (amount >= 10 && amount < 15)
     {
-      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
       player.sendMessage(msg);
     }
     else if (amount >= 15 && amount < 20)
     {
-      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
       player.sendMessage(msg);
     }
     else if (amount >= 20 && amount < 25)
     {
-      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
       player.sendMessage(msg);
     }
     else if (amount == 25)
@@ -679,17 +679,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
     double success = chance[0], failKeep = chance[1], failDown = chance[2], destroy = chance[3];
     if (amount >= 20 && amount < 30)
     {
-      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
       player.sendMessage(msg);
     }
     else if (amount >= 30 && amount < 40)
     {
-      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
       player.sendMessage(msg);
     }
     else if (amount >= 40 && amount < 50)
     {
-      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
       player.sendMessage(msg);
     }
     else if (amount == 50)
@@ -1651,27 +1651,27 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
   {
     if (failDown > 0 && destroy == 0 && failKeep > 0)
     {
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패시 &6강화 단계&c가 &4하락&c할 수 있습니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패시 &6강화 단계&c가 &4하락&c할 수 있습니다");
     }
     else if (failDown > 0 && destroy == 0 && failKeep == 0)
     {
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 &6강화 단계&c가 &4하락&c됩니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 &6강화 단계&c가 &4하락&c됩니다");
     }
     else if (failDown > 0 && destroy > 0 && failKeep > 0)
     {
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c될 수 있습니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c될 수 있습니다");
     }
     else if (failDown > 0 && destroy > 0 && failKeep == 0)
     {
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c됩니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c됩니다");
     }
     else if (failDown == 0 && destroy > 0)
     {
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c될 수 있습니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c될 수 있습니다");
     }
     else if (success + destroy == 100)
     {
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c됩니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c됩니다");
     }
     MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 성공 확률 : &e" + df2.format(success) + "%");
     if (failKeep > 0)
@@ -1717,12 +1717,12 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
       {
         if (players.contains(player.getUniqueId()))
         {
-          MessageUtil.sendError(player, "강화중에는 강화를 중지할 수 없습니다.");
+          MessageUtil.sendError(player, "강화중에는 강화를 중지할 수 없습니다");
           return true;
         }
         if (!Variable.scrollReinforcing.contains(player.getUniqueId()))
         {
-          MessageUtil.sendError(player, "강화중인 상태가 아닙니다.");
+          MessageUtil.sendError(player, "강화중인 상태가 아닙니다");
           return true;
         }
         if (chanceTime.contains(player))
@@ -1739,7 +1739,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
         }
         Variable.scrollReinforcing.remove(player.getUniqueId());
         antiDest.put(player, false);
-        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화를 중지하였습니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화를 중지하였습니다");
         return true;
       }
       if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
@@ -1902,7 +1902,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
       }
       if (!isCucumberForceItem && !isEBEBEBItem && !isStarforceItem && !isSuperiorItem)
       {
-        MessageUtil.sendError(player, "강화를 할 수 없는 아이템입니다.");
+        MessageUtil.sendError(player, "강화를 할 수 없는 아이템입니다");
         return true;
       }
       int reinforceCost = (int) Math.round(getCost(current, reinforceRank, type));
@@ -1913,7 +1913,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "스타포스 : &b" + current + "&e / &b" + max);
           if (current >= max)
           {
-            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "최대 강화수치입니다.");
+            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "최대 강화수치입니다");
             return true;
           }
           else
@@ -1922,17 +1922,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             {
               if (current >= 10 && current < 15)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 15 && current < 20)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 20 && current < 25)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&e연속 2회 하락 CHANCE TIME!");
@@ -1950,7 +1950,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "현재 강화 포인트 : &e" + reinforcePoint + "&f, 요구 강화 포인트 : &e" + reinforceCost);
             if (reinforceCost > reinforcePoint)
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c강화 포인트가 부족합니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c강화 포인트가 부족합니다");
             }
           }
         }
@@ -1959,7 +1959,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "슈페리얼 : &b" + current + "&e / &b" + max);
           if (current >= max)
           {
-            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "최대 강화수치입니다.");
+            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "최대 강화수치입니다");
             return true;
           }
           else
@@ -1981,7 +1981,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "현재 강화 포인트 : &e" + reinforcePoint + "&f, 요구 강화 포인트 : &e" + reinforceCost);
             if (reinforceCost > reinforcePoint)
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c강화 포인트가 부족합니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c강화 포인트가 부족합니다");
             }
           }
         }
@@ -1990,7 +1990,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "오이포스 : &b" + current + "&e / &b" + max);
           if (current >= max)
           {
-            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "최대 강화수치입니다.");
+            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "최대 강화수치입니다");
             return true;
           }
           else
@@ -1999,19 +1999,19 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             {
               if (current >= 20 && current < 30)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
 
                 player.sendMessage(msg);
               }
               else if (current >= 30 && current < 40)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
 
                 player.sendMessage(msg);
               }
               else if (current >= 40 && current < 50)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
 
                 player.sendMessage(msg);
               }
@@ -2031,7 +2031,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
 
             if (reinforceCost > reinforcePoint)
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c강화 포인트가 부족합니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c강화 포인트가 부족합니다");
             }
           }
         }
@@ -2040,7 +2040,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "에베벱 : &b" + current + "&e / &b" + max);
           if (current >= max)
           {
-            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "최대 강화수치입니다.");
+            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "최대 강화수치입니다");
             return true;
           }
           else
@@ -2062,13 +2062,13 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "현재 강화 포인트 : &e" + reinforcePoint + "&f, 요구 강화 포인트 : &e" + reinforceCost);
             if (reinforceCost > reinforcePoint)
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c강화 포인트가 부족합니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c강화 포인트가 부족합니다");
             }
           }
         }
         else
         {
-          MessageUtil.sendError(player, "강화를 할 수 없는 아이템입니다.");
+          MessageUtil.sendError(player, "강화를 할 수 없는 아이템입니다");
           return true;
         }
       }
@@ -2078,7 +2078,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
         {
           if (current >= max)
           {
-            MessageUtil.sendError(player, "이미 한계까지 강화되어 더 이상 강화할 수 없습니다.");
+            MessageUtil.sendError(player, "이미 한계까지 강화되어 더 이상 강화할 수 없습니다");
             return true;
           }
           if (reinforceCost > reinforcePoint)
@@ -2094,9 +2094,9 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           {
             if (확률주작)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c됩니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c됩니다");
               MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 성공 확률 : &e" + 40 + "%");
               MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 실패(하락) 확률 : &e" + 59.4 + "%");
               MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "파괴 확률 : &e" + 0.6 + "%");
@@ -2107,18 +2107,18 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               {
                 if (current >= 10 && current < 15)
                 {
-                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
                   player.sendMessage(msg);
                 }
                 else if (current >= 15 && current < 20)
                 {
-                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
 
                   player.sendMessage(msg);
                 }
                 else if (current >= 20 && current < 25)
                 {
-                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                   player.sendMessage(msg);
                 }
                 MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&e연속 2회 하락 CHANCE TIME!");
@@ -2148,17 +2148,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                 destroy = 0D;
                 if (current >= 10 && current < 15)
                 {
-                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
                   player.sendMessage(msg);
                 }
                 else if (current >= 15 && current < 20)
                 {
-                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
                   player.sendMessage(msg);
                 }
                 else if (current >= 20 && current < 25)
                 {
-                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                  Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                   player.sendMessage(msg);
                 }
                 else if (current == 25)
@@ -2197,17 +2197,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             {
               if (current >= 20 && current < 30)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 30 && current < 40)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 40 && current < 50)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&e연속 2회 하락 CHANCE TIME!");
@@ -2237,17 +2237,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               destroy = 0D;
               if (current >= 20 && current < 30)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 30 && current < 40)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 40 && current < 50)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current == 50)
@@ -2285,23 +2285,23 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, option);
           }
           Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-          Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+          Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
           Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
-          Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
+          Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
           if ((type == ReinforceType.STARFORCE && current >= ANTI_DESTRUCTION_STARFORCE_FROM && current <= ANTI_DESTRUCTION_STARFORCE_TO) || (type == ReinforceType.CUCUMBERFORCE && current >= ANTI_DESTRUCTION_CUCUMBERFORCE_FROM && current <= ANTI_DESTRUCTION_CUCUMBERFORCE_TO))
           {
             if (antiDest == null || !antiDest.containsKey(player) || !antiDest.get(player))
             {
               Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하려면 ");
-              Component f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
+              Component f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
               Component g = ComponentUtil.create("&f를 클릭하세요.");
               if (type == ReinforceType.STARFORCE)
               {
-                f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
+                f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
               }
               else if (type == ReinforceType.CUCUMBERFORCE)
               {
-                f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다.", ClickEvent.Action.RUN_COMMAND,
+                f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                         Constant.REINFORCE_USE_ANTI_DESTRUCTION);
               }
               MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
@@ -2309,7 +2309,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             else
             {
               Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하지 않으려면 ");
-              Component f = ComponentUtil.create("&b\"여기\"", "&f클릭하면 파괴 방지를 사용하지 않습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION);
+              Component f = ComponentUtil.create("&b\"여기\"", "&f클릭하면 파괴 방지를 사용하지 않습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION);
               Component g = ComponentUtil.create("&f를 클릭하세요.");
               MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
             }
@@ -2322,7 +2322,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
         }
         else
         {
-          MessageUtil.sendError(player, "강화를 할 수 없는 아이템입니다.");
+          MessageUtil.sendError(player, "강화를 할 수 없는 아이템입니다");
           return true;
         }
       }
@@ -2360,9 +2360,9 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
         {
           if (확률주작)
           {
-            Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+            Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
             player.sendMessage(msg);
-            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c됩니다.");
+            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c됩니다");
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 성공 확률 : &e" + 30 + "%");
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 실패(하락) 확률 : &e" + 69.3 + "%");
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "파괴 확률 : &e" + 0.7 + "%");
@@ -2373,17 +2373,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             {
               if (current >= 10 && current < 15)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 15 && current < 20)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 20 && current < 25)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&e연속 2회 하락 CHANCE TIME!");
@@ -2413,17 +2413,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               destroy = 0D;
               if (current >= 10 && current < 15)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 15 && current < 20)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 20 && current < 25)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current == 25)
@@ -2462,17 +2462,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           {
             if (current >= 20 && current < 30)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
             else if (current >= 30 && current < 40)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
             else if (current >= 40 && current < 50)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&e연속 2회 하락 CHANCE TIME!");
@@ -2502,17 +2502,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             destroy = 0D;
             if (current >= 20 && current < 30)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
             else if (current >= 30 && current < 40)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
             else if (current >= 40 && current < 50)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
             else if (current == 50)
@@ -2550,11 +2550,11 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, option);
         }
         Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-        Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+        Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
         Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
-        Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
+        Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
         Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하지 않으려면 ");
-        Component f = ComponentUtil.create("&b\"여기\"", "&f클릭하면 파괴 방지를 사용하지 않습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION);
+        Component f = ComponentUtil.create("&b\"여기\"", "&f클릭하면 파괴 방지를 사용하지 않습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION);
         Component g = ComponentUtil.create("&f를 클릭하세요.");
         MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
       }
@@ -2591,9 +2591,9 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
         {
           if (확률주작)
           {
-            Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+            Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
             player.sendMessage(msg);
-            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c됩니다.");
+            MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&c실패 시 아이템이 &4파괴&c되거나 &6단계&c가 &4하락&c됩니다");
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 성공 확률 : &e" + 40 + "%");
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 실패(하락) 확률 : &e" + 59.4 + "%");
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "파괴 확률 : &e" + 0.6 + "%");
@@ -2604,17 +2604,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             {
               if (current >= 10 && current < 15)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 15 && current < 20)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               else if (current >= 20 && current < 25)
               {
-                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                 player.sendMessage(msg);
               }
               MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&e연속 2회 하락 CHANCE TIME!");
@@ -2654,19 +2654,19 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           {
             if (current >= 20 && current < 30)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
 
             else if (current >= 30 && current < 40)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
 
             else if (current >= 40 && current < 50)
             {
-              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+              Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
               player.sendMessage(msg);
             }
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&e연속 2회 하락 CHANCE TIME!");
@@ -2705,20 +2705,20 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, option);
         }
         Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-        Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+        Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
         Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
-        Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
+        Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
         Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하려면 ");
-        Component f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
+        Component f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
         Component g = ComponentUtil.create("&f를 클릭하세요.");
         if (type == ReinforceType.STARFORCE)
         {
-          f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다.", ClickEvent.Action.RUN_COMMAND,
+          f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                   Constant.REINFORCE_USE_ANTI_DESTRUCTION);
         }
         else if (type == ReinforceType.CUCUMBERFORCE)
         {
-          f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다.", ClickEvent.Action.RUN_COMMAND,
+          f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                   Constant.REINFORCE_USE_ANTI_DESTRUCTION);
         }
         MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
@@ -2727,12 +2727,12 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
       {
         if (!Variable.scrollReinforcing.contains(player.getUniqueId()))
         {
-          MessageUtil.sendError(player, "강화를 하고 있지 않습니다.");
+          MessageUtil.sendError(player, "강화를 하고 있지 않습니다");
           return true;
         }
         if (players.contains(player.getUniqueId()))
         {
-          MessageUtil.sendError(player, "이미 강화를 시도하고 있습니다.");
+          MessageUtil.sendError(player, "이미 강화를 시도하고 있습니다");
           return true;
         }
         if (chanceTime.contains(player))
@@ -3451,20 +3451,20 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               item.setItemMeta(meta);
               player.getInventory().setItemInMainHand(item);
               Method.reinforceSound(player, Method.ReinforceSound.SUCCESS, use, com.jho5245.cucumbery.util.Method.ReinforceType.COMMAND);
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화에 &e성공&f하였습니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화에 &e성공&f하였습니다");
               successTitle(player);
             }
             else if (bDestroy) // 파괴
             {
               destroyTitle(player);
               player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화에 &8실패&f하여 아이템이 &8파괴&f되었습니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화에 &8실패&f하여 아이템이 &8파괴&f되었습니다");
               Method.reinforceSound(player, Method.ReinforceSound.DESTROY, use, com.jho5245.cucumbery.util.Method.ReinforceType.COMMAND);
               destroyGG = true;
             }
             else if (bFail) // 실패 - 유지
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화에 &4실패&f하였습니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화에 &4실패&f하였습니다");
               Method.reinforceSound(player, Method.ReinforceSound.FAIL, use, com.jho5245.cucumbery.util.Method.ReinforceType.COMMAND);
               failTitle(player, false);
             }
@@ -3856,7 +3856,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               }
               item.setItemMeta(meta);
               player.getInventory().setItemInMainHand(item);
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화에 &4실패&f하여 강화 단계가 &4하락&f하였습니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화에 &4실패&f하여 강화 단계가 &4하락&f하였습니다");
               Method.reinforceSound(player, Method.ReinforceSound.FAIL, use, com.jho5245.cucumbery.util.Method.ReinforceType.COMMAND);
             }
             if (destroyGG)
@@ -3865,7 +3865,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             }
             if (current >= max)
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "장비가 한계까지 강화되어 더 이상 강화할 수 없습니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "장비가 한계까지 강화되어 더 이상 강화할 수 없습니다");
               antiDest.put(player, false);
               return;
             }
@@ -3882,7 +3882,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               }
               if (reinforceCost2 > reinforcePoint)
               {
-                MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 포인트가 부족하여 더 이상 강화할 수 없습니다.");
+                MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화 포인트가 부족하여 더 이상 강화할 수 없습니다");
                 antiDest.put(player, false);
                 return;
               }
@@ -3901,17 +3901,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                   {
                     if (current >= 20 && current < 30)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current >= 30 && current < 40)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current >= 40 && current < 50)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
 
                       player.sendMessage(msg);
                     }
@@ -3942,17 +3942,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                     destroy1 = 0D;
                     if (current >= 20 && current < 30)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★20성+★", "&f20성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current >= 30 && current < 40)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★30성+★★", "&f30성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 30성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current >= 40 && current < 50)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★40성+★☆★", "&f40성을 달성했습니다!\n&f오이포스 강화에 실패하여 강화 단계가\n&f하락하더라도 40성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current == 50)
@@ -3971,17 +3971,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                   {
                     if (current >= 10 && current < 15)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current >= 15 && current < 20)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current >= 20 && current < 25)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "&e연속 2회 하락 CHANCE TIME!");
@@ -4011,17 +4011,17 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                     destroy1 = 0D;
                     if (current >= 10 && current < 15)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&e★10성+★", "&f10성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 10성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current >= 15 && current < 20)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&b★★15성+★★", "&f15성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 15성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current >= 20 && current < 25)
                     {
-                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다.");
+                      Component msg = ComponentUtil.create(Prefix.INFO_REINFORCE + "&d★☆★20성+★☆★", "&f20성을 달성했습니다!\n&f스타포스 강화에 실패하여 강화 단계가\n&f하락하더라도 20성 밑으로는 하락하지 않습니다");
                       player.sendMessage(msg);
                     }
                     else if (current == 25)
@@ -4077,20 +4077,20 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                 if (antiDest == null || !antiDest.containsKey(player) || !antiDest.get(player))
                 {
                   Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-                  Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+                  Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
                   Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
-                  Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
+                  Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
                   Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하려면 ");
-                  Component f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
+                  Component f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
                   Component g = ComponentUtil.create("&f를 클릭하세요.");
                   if (type == ReinforceType.STARFORCE)
                   {
-                    f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다.", ClickEvent.Action.RUN_COMMAND,
+                    f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                             Constant.REINFORCE_USE_ANTI_DESTRUCTION);
                   }
                   else if (type == ReinforceType.CUCUMBERFORCE)
                   {
-                    f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다.", ClickEvent.Action.RUN_COMMAND,
+                    f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                             Constant.REINFORCE_USE_ANTI_DESTRUCTION);
                   }
                   MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
@@ -4098,11 +4098,11 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                 else
                 {
                   Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-                  Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+                  Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
                   Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
-                  Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
+                  Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
                   Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하지 않으려면 ");
-                  Component f = ComponentUtil.create("&b\"여기\"", "&f클릭하면 파괴 방지를 사용하지 않습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION);
+                  Component f = ComponentUtil.create("&b\"여기\"", "&f클릭하면 파괴 방지를 사용하지 않습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION);
                   Component g = ComponentUtil.create("&f를 클릭하세요.");
                   MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
                 }
@@ -4110,9 +4110,9 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               else
               {
                 Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-                Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+                Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
                 Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
-                Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
+                Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
                 Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요.");
                 MessageUtil.sendMessage(player, a, b, c, d, e);
               }

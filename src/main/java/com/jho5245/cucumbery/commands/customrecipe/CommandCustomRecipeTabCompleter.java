@@ -46,13 +46,13 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
           case "remove":
             if (Variable.customRecipes.isEmpty())
             {
-              return Collections.singletonList((args[0].equals("open") ? "열" : "제거할") + " 수 있는 유효한 레시피 목록이 존재하지 않습니다.");
+              return Collections.singletonList((args[0].equals("open") ? "열" : "제거할") + " 수 있는 유효한 레시피 목록이 존재하지 않습니다");
             }
             return Method.tabCompleterList(args, Variable.customRecipes.keySet(), "<레시피 목록>");
           case "create":
             if (Method2.isInvalidFileName(args[1]))
             {
-              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 유효하지 않은 레시피 목록 이름입니다.");
+              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 유효하지 않은 레시피 목록 이름입니다");
             }
             if (Variable.customRecipes.isEmpty())
             {
@@ -72,12 +72,12 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
             YamlConfiguration config = Variable.customRecipes.get(args[1]);
             if (config == null)
             {
-              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+              return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
             }
             ConfigurationSection recipes = config.getConfigurationSection("recipes");
             if (recipes == null)
             {
-              return Collections.singletonList((args[0].equals("open") ? "열" : "제거할") + " 수 있는 유효한 레시피가 존재하지 않습니다.");
+              return Collections.singletonList((args[0].equals("open") ? "열" : "제거할") + " 수 있는 유효한 레시피가 존재하지 않습니다");
             }
             return Method.tabCompleterList(args, recipes.getKeys(false), "<레시피>");
           }
@@ -101,7 +101,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
               case "category", "recipe" -> {
                 if (Variable.customRecipes.isEmpty())
                 {
-                  return Collections.singletonList("유효한 레시피 목록이 없습니다.");
+                  return Collections.singletonList("유효한 레시피 목록이 없습니다");
                 }
                 return Method.tabCompleterList(args, Variable.customRecipes.keySet(), "<레시피 목록>");
               }
@@ -124,12 +124,12 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 YamlConfiguration config = Variable.customRecipes.get(args[2]);
                 if (config == null)
                 {
-                  return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                  return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                 }
                 ConfigurationSection recipes = config.getConfigurationSection("recipes");
                 if (recipes == null)
                 {
-                  return Collections.singletonList(args[2] + " 레시피 목록에는 유효한 레시피가 없습니다.");
+                  return Collections.singletonList(args[2] + " 레시피 목록에는 유효한 레시피가 없습니다");
                 }
                 return Method.tabCompleterList(args, recipes.getKeys(false), "<레시피>");
             }
@@ -200,7 +200,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 case "wealth":
                   if (!Cucumbery.using_Vault_Economy)
                   {
-                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                   }
                   return Method.tabCompleterDoubleRadius(args, 0, Double.MAX_VALUE, "<현재 소지 금액의 최소 조건>", "-1");
               }
@@ -215,7 +215,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 list.remove("wealth");
                 if (Method.equals(lastArg, "cost", "wealth"))
                 {
-                  return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+                  return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                 }
               }
               return list;
@@ -328,7 +328,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 {
                   if (!Cucumbery.using_Vault_Economy)
                   {
-                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                   }
                   double min = 0;
                   String minStr = args[4];
@@ -350,12 +350,12 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[2]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다");
                   }
                   ConfigurationSection ingredients = config.getConfigurationSection("recipes." + args[3] + ".ingredients");
                   if (ingredients == null)
                   {
-                    return Collections.singletonList(args[2] + " 레시피는 손상된 레시피입니다.");
+                    return Collections.singletonList(args[2] + " 레시피는 손상된 레시피입니다");
                   }
                   Set<String> keys = ingredients.getKeys(false);
                   List<String> list = new ArrayList<>();
@@ -397,7 +397,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 case "cost":
                   if (!Cucumbery.using_Vault_Economy)
                   {
-                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                   }
                   return Method.tabCompleterDoubleRadius(args, 0, 100, "<제작 비용>");
                 case "foodlevelcost":
@@ -425,7 +425,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 case "wealth":
                   if (!Cucumbery.using_Vault_Economy)
                   {
-                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                   }
                   return Method.tabCompleterDoubleRadius(args, 0, Double.MAX_VALUE, "<현재 소지 금액의 최소 조건>", "-1");
               }
@@ -469,7 +469,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                     case "skip":
                       if (!Cucumbery.using_Vault_Economy)
                       {
-                        return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+                        return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                       }
                       return Method.tabCompleterList(args, "<인수>", "cost", "permission", "relative");
                     case "time":
@@ -548,7 +548,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 {
                   if (!Cucumbery.using_Vault_Economy)
                   {
-                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                   }
                   double min = 0;
                   String minStr = args[5];
@@ -569,12 +569,12 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                     YamlConfiguration config = Variable.customRecipes.get(args[5]);
                     if (config == null)
                     {
-                      return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                      return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                     }
                     ConfigurationSection recipes = config.getConfigurationSection("recipes");
                     if (recipes == null)
                     {
-                      return Collections.singletonList(args[5] + " 레시피 목록에는 유효한 레시피가 없습니다.");
+                      return Collections.singletonList(args[5] + " 레시피 목록에는 유효한 레시피가 없습니다");
                     }
                     return Method.tabCompleterList(args, recipes.getKeys(false), "<레시피>");
                   }
@@ -583,7 +583,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                     YamlConfiguration config = Variable.customRecipes.get(args[5]);
                     if (config == null)
                     {
-                      return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                      return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                     }
                     String requireCategoryDisplay = config.getString("extra.display");
                     if (requireCategoryDisplay == null)
@@ -754,7 +754,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 YamlConfiguration config = Variable.customRecipes.get(args[5]);
                 if (config == null)
                 {
-                  return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                  return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                 }
                 String requireCategoryDisplay = config.getString("extra.display");
                 if (requireCategoryDisplay == null)
@@ -774,16 +774,16 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 YamlConfiguration config = Variable.customRecipes.get(args[5]);
                 if (config == null)
                 {
-                  return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                  return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                 }
                 ConfigurationSection recipes = config.getConfigurationSection("recipes");
                 if (recipes == null)
                 {
-                  return Collections.singletonList(args[5] + " 레시피 목록에는 유효한 레시피가 없습니다.");
+                  return Collections.singletonList(args[5] + " 레시피 목록에는 유효한 레시피가 없습니다");
                 }
                 if (config.getConfigurationSection("recipes." + args[6]) == null)
                 {
-                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다");
                 }
                 String requireCategoryDisplay = config.getString("extra.display");
                 if (requireCategoryDisplay == null)
@@ -811,12 +811,12 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                   FileConfiguration config = Variable.customRecipes.get(args[6]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                   }
                   ConfigurationSection recipes = config.getConfigurationSection("recipes");
                   if (recipes == null)
                   {
-                    return Collections.singletonList(args[6] + " 레시피 목록에는 유효한 레시피가 없습니다.");
+                    return Collections.singletonList(args[6] + " 레시피 목록에는 유효한 레시피가 없습니다");
                   }
                   return Method.tabCompleterList(args, recipes.getKeys(false), "<레시피>");
                 }
@@ -825,7 +825,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                   YamlConfiguration config = Variable.customRecipes.get(args[6]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                   }
                   String requireCategoryDisplay = config.getString("extra.display");
                   if (requireCategoryDisplay == null)
@@ -900,7 +900,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 {
                   if (!Cucumbery.using_Vault_Economy)
                   {
-                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+                    return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                   }
                   switch (args[6])
                   {
@@ -920,7 +920,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                   FileConfiguration config = Variable.customRecipes.get(args[2]);
                   if (config == null)
                   {
-                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                    return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                   }
                   List<String> commands = config == null ? null : config.getStringList("recipes." + args[3] + ".extra.commands." + args[5]);
                   switch (args[5])
@@ -940,7 +940,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                     case "remove":
                       if (commands.isEmpty())
                       {
-                        return Collections.singletonList(args[2] + " 레시피 목록의 " + args[3] + " 레시피에는 " + commandTypeStr + " 시 실행되는 명령어가 없습니다.");
+                        return Collections.singletonList(args[2] + " 레시피 목록의 " + args[3] + " 레시피에는 " + commandTypeStr + " 시 실행되는 명령어가 없습니다");
                       }
                       return Method.tabCompleterIntegerRadius(args, 1, commands.size(), "[줄]", "--all");
                     case "set":
@@ -948,7 +948,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                       {
                         if (commands.isEmpty())
                         {
-                          return Collections.singletonList(args[2] + " 레시피 목록의 " + args[3] + " 레시피에는 " + commandTypeStr + " 시 실행되는 명령어가 없습니다.");
+                          return Collections.singletonList(args[2] + " 레시피 목록의 " + args[3] + " 레시피에는 " + commandTypeStr + " 시 실행되는 명령어가 없습니다");
                         }
                       }
                       return Method.tabCompleterIntegerRadius(args, 1, commands.size(), "<줄>");
@@ -957,7 +957,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                       {
                         if (commands.isEmpty())
                         {
-                          return Collections.singletonList(args[2] + " 레시피 목록의 " + args[3] + " 레시피에는 " + commandTypeStr + " 시 실행되는 명령어가 없습니다.");
+                          return Collections.singletonList(args[2] + " 레시피 목록의 " + args[3] + " 레시피에는 " + commandTypeStr + " 시 실행되는 명령어가 없습니다");
                         }
                         return Method.tabCompleterIntegerRadius(args, 1, commands.size(), "[줄]", "--all");
                       }
@@ -1058,16 +1058,16 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 YamlConfiguration config = Variable.customRecipes.get(args[5]);
                 if (config == null)
                 {
-                  return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                  return Collections.singletonList(args[5] + MessageUtil.getFinalConsonant(args[5], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                 }
                 ConfigurationSection recipes = config.getConfigurationSection("recipes");
                 if (recipes == null)
                 {
-                  return Collections.singletonList(args[5] + " 레시피 목록에는 유효한 레시피가 없습니다.");
+                  return Collections.singletonList(args[5] + " 레시피 목록에는 유효한 레시피가 없습니다");
                 }
                 if (config.getConfigurationSection("recipes." + args[6]) == null)
                 {
-                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다");
                 }
                 String requireCategoryDisplay = config.getString("extra.display");
                 if (requireCategoryDisplay == null)
@@ -1182,7 +1182,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 YamlConfiguration config = Variable.customRecipes.get(args[6]);
                 if (config == null)
                 {
-                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                 }
                 String requireCategoryDisplay = config.getString("extra.display");
                 if (requireCategoryDisplay == null)
@@ -1202,16 +1202,16 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 YamlConfiguration config = Variable.customRecipes.get(args[6]);
                 if (config == null)
                 {
-                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                 }
                 ConfigurationSection recipes = config.getConfigurationSection("recipes");
                 if (recipes == null)
                 {
-                  return Collections.singletonList(args[6] + " 레시피 목록에는 유효한 레시피가 없습니다.");
+                  return Collections.singletonList(args[6] + " 레시피 목록에는 유효한 레시피가 없습니다");
                 }
                 if (config.getConfigurationSection("recipes." + args[7]) == null)
                 {
-                  return Collections.singletonList(args[7] + MessageUtil.getFinalConsonant(args[7], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                  return Collections.singletonList(args[7] + MessageUtil.getFinalConsonant(args[7], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다");
                 }
                 String requireCategoryDisplay = config.getString("extra.display");
                 if (requireCategoryDisplay == null)
@@ -1321,16 +1321,16 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                 YamlConfiguration config = Variable.customRecipes.get(args[6]);
                 if (config == null)
                 {
-                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다.");
+                  return Collections.singletonList(args[6] + MessageUtil.getFinalConsonant(args[6], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피 목록입니다");
                 }
                 ConfigurationSection recipes = config.getConfigurationSection("recipes");
                 if (recipes == null)
                 {
-                  return Collections.singletonList(args[6] + " 레시피 목록에는 유효한 레시피가 없습니다.");
+                  return Collections.singletonList(args[6] + " 레시피 목록에는 유효한 레시피가 없습니다");
                 }
                 if (config.getConfigurationSection("recipes." + args[7]) == null)
                 {
-                  return Collections.singletonList(args[7] + MessageUtil.getFinalConsonant(args[7], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다.");
+                  return Collections.singletonList(args[7] + MessageUtil.getFinalConsonant(args[7], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 레시피입니다");
                 }
                 String requireCategoryDisplay = config.getString("extra.display");
                 if (requireCategoryDisplay == null)

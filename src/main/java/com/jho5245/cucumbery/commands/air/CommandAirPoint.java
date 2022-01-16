@@ -74,7 +74,7 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
         case "give" -> {
           if (air >= maxAir)
           {
-            MessageUtil.sendError(sender, "더 이상 ", target, "에게 산소를 지급할 수 없습니다.");
+            MessageUtil.sendError(sender, "더 이상 ", target, "에게 산소를 지급할 수 없습니다");
             return true;
           }
           if (!MessageUtil.checkNumberSize(sender, value, 1, Integer.MAX_VALUE, false, false))
@@ -108,7 +108,7 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
         case "take" -> {
           if (air <= 0)
           {
-            MessageUtil.sendError(sender, "더 이상 ", target, "의 산소를 차감할 수 없습니다.");
+            MessageUtil.sendError(sender, "더 이상 ", target, "의 산소를 차감할 수 없습니다");
             return true;
           }
           if (!MessageUtil.checkNumberSize(sender, value, 1, Integer.MAX_VALUE, false, false))

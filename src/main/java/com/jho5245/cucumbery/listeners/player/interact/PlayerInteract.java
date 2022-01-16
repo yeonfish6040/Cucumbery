@@ -100,7 +100,7 @@ public class PlayerInteract implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
       {
         Variable.playerInteractAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c행동 불가!", "&r행동할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c행동 불가!", "&r행동할 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                 Variable.playerInteractAlertCooldown.remove(uuid), 100L);
@@ -113,7 +113,7 @@ public class PlayerInteract implements Listener
       if (!Variable.playerInteractAlertCooldown.contains(uuid))
       {
         Variable.playerInteractAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 사용할 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 사용할 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
       }
@@ -128,7 +128,7 @@ public class PlayerInteract implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
         {
           Variable.playerInteractAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(player, "&c사용 불가!", "주로 사용하는 손에 들고 사용할 수 없는 아이템입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c사용 불가!", "주로 사용하는 손에 들고 사용할 수 없는 아이템입니다", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
         }
@@ -140,7 +140,7 @@ public class PlayerInteract implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
         {
           Variable.playerInteractAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(player, "&c사용 불가!", "다른 손에 들고 사용할 수 없는 아이템입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c사용 불가!", "다른 손에 들고 사용할 수 없는 아이템입니다", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
         }
@@ -156,7 +156,7 @@ public class PlayerInteract implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
       {
         Variable.playerInteractAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c행동 불가!", "&r블록과 상호작용할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c행동 불가!", "&r블록과 상호작용할 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
       }
@@ -181,7 +181,7 @@ public class PlayerInteract implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
         {
           Variable.playerInteractAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(player, "&c사용 불가!", "&r사용할 수 없는 아이템입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c사용 불가!", "&r사용할 수 없는 아이템입니다", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
         }
@@ -262,7 +262,7 @@ public class PlayerInteract implements Listener
             if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
             {
               Variable.playerInteractAlertCooldown.add(uuid);
-              MessageUtil.sendTitle(player, "&c장착 불가!", "&r장착할 수 없는 아이템입니다.", 5, 80, 15);
+              MessageUtil.sendTitle(player, "&c장착 불가!", "&r장착할 수 없는 아이템입니다", 5, 80, 15);
               SoundPlay.playSound(player, Constant.ERROR_SOUND);
               Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
             }
@@ -292,15 +292,15 @@ public class PlayerInteract implements Listener
                 Variable.playerInteractAlertCooldown.add(uuid);
                 if (noStore)
                 {
-                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r보관 불가인 책을 독서대에 올릴 수 없습니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r보관 불가인 책을 독서대에 올릴 수 없습니다", 5, 80, 15);
                 }
                 else if (noTrade)
                 {
-                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r캐릭터 귀속인 책을 독서대에 올릴 수 없습니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r캐릭터 귀속인 책을 독서대에 올릴 수 없습니다", 5, 80, 15);
                 }
                 else
                 {
-                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r독서대에 올릴 수 없는 아이템입니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r독서대에 올릴 수 없는 아이템입니다", 5, 80, 15);
                 }
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
@@ -316,7 +316,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(player, "&c사용 불가!", "&r퇴비통에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", "&r퇴비통에 사용할 수 없는 아이템입니다", 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -331,7 +331,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(player, "&c사용 불가!", "&r모닥불에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", "&r모닥불에 사용할 수 없는 아이템입니다", 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -391,7 +391,7 @@ public class PlayerInteract implements Listener
                       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
                       {
                         Variable.playerInteractAlertCooldown.add(uuid);
-                        MessageUtil.sendTitle(player, "&c탈색 불가!", "&r가마솥에서 탈색할 수 없는 아이템입니다.", 5, 80, 15);
+                        MessageUtil.sendTitle(player, "&c탈색 불가!", "&r가마솥에서 탈색할 수 없는 아이템입니다", 5, 80, 15);
                         SoundPlay.playSound(player, Constant.ERROR_SOUND);
                         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
                       }
@@ -415,7 +415,7 @@ public class PlayerInteract implements Listener
                 if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockPlaceAlertCooldown2.contains(uuid))
                 {
                   Variable.blockPlaceAlertCooldown2.add(uuid);
-                  MessageUtil.sendTitle(player, "&c설치 불가!", "&r설치할 수 없는 블록입니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c설치 불가!", "&r설치할 수 없는 블록입니다", 5, 80, 15);
                   SoundPlay.playSound(player, Constant.ERROR_SOUND);
                   Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockPlaceAlertCooldown2.remove(uuid), 100L);
                 }
@@ -430,7 +430,7 @@ public class PlayerInteract implements Listener
                 if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockPlaceAlertCooldown2.contains(uuid))
                 {
                   Variable.blockPlaceAlertCooldown2.add(uuid);
-                  MessageUtil.sendTitle(player, "&c설치 불가!", "&r설치할 수 없는 블록입니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c설치 불가!", "&r설치할 수 없는 블록입니다", 5, 80, 15);
                   SoundPlay.playSound(player, Constant.ERROR_SOUND);
                   Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockPlaceAlertCooldown2.remove(uuid), 100L);
                 }
@@ -799,7 +799,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.translate("캐릭터 귀속 아이템은 %s에 사용할 수 없습니다.", clickedBlockType), 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", ComponentUtil.translate("캐릭터 귀속 아이템은 %s에 사용할 수 없습니다", clickedBlockType), 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -814,7 +814,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(player, "&c사용 불가!", noTrade ? "캐릭터 귀속 아이템은 주크박스에 사용할 수 없습니다." : "주크박스에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", noTrade ? "캐릭터 귀속 아이템은 주크박스에 사용할 수 없습니다" : "주크박스에 사용할 수 없는 아이템입니다", 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -828,7 +828,7 @@ public class PlayerInteract implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
               {
                 Variable.playerInteractAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(player, "&c사용 불가!", "&r화분에 사용할 수 없는 아이템입니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c사용 불가!", "&r화분에 사용할 수 없는 아이템입니다", 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
               }
@@ -844,7 +844,7 @@ public class PlayerInteract implements Listener
                 if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
                 {
                   Variable.playerInteractAlertCooldown.add(uuid);
-                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r리스폰 정박기에 사용할 수 없는  아이템입니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r리스폰 정박기에 사용할 수 없는  아이템입니다", 5, 80, 15);
                   SoundPlay.playSound(player, Constant.ERROR_SOUND);
                   Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
                 }
@@ -861,7 +861,7 @@ public class PlayerInteract implements Listener
                 if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
                 {
                   Variable.playerInteractAlertCooldown.add(uuid);
-                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r자석석에 사용할 수 없는  아이템입니다.", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r자석석에 사용할 수 없는  아이템입니다", 5, 80, 15);
                   SoundPlay.playSound(player, Constant.ERROR_SOUND);
                   Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
                 }
@@ -906,7 +906,7 @@ public class PlayerInteract implements Listener
                     !Variable.soilTrampleAlertCooldown.contains(uuid))
             {
               Variable.soilTrampleAlertCooldown.add(uuid);
-              MessageUtil.sendTitle(player, "&c경작지 훼손 불가!", "&r경작지를 훼손할 수 없습니다.", 5, 80, 15);
+              MessageUtil.sendTitle(player, "&c경작지 훼손 불가!", "&r경작지를 훼손할 수 없습니다", 5, 80, 15);
               SoundPlay.playSound(player, Constant.ERROR_SOUND);
               Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.soilTrampleAlertCooldown.remove(uuid), 100L);
             }
@@ -1217,7 +1217,7 @@ public class PlayerInteract implements Listener
       }
       if (!isRailgun[0] || !isRailgun[1] || !isRailgun[2])
       {
-        MessageUtil.sendWarn(player, "해당 레일건의 필수 태그가 지정되지 않아 사용할 수 없습니다.");
+        MessageUtil.sendWarn(player, "해당 레일건의 필수 태그가 지정되지 않아 사용할 수 없습니다");
         return;
       }
       if (!RAILGUN_WHITE_LIST.contains(uuid))
@@ -1656,7 +1656,7 @@ public class PlayerInteract implements Listener
           if (!Method.configContainsLocation(player.getLocation(), Cucumbery.getPlugin().getConfig().getStringList("no-send-title-on-item-break-worlds")))
           {
             MessageUtil.sendTitle(player, ComponentUtil.translate("&c장비 파괴됨!"),
-                    ComponentUtil.translate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다.", item), 5, 100, 15);
+                    ComponentUtil.translate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다", item), 5, 100, 15);
           }
         }
         Method.itemBreakParticle(player, item);

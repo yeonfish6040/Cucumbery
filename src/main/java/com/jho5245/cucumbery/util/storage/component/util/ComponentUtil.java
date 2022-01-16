@@ -330,7 +330,7 @@ public class ComponentUtil
           if (customEffect.isTimeHidden())
           {
             hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.translate("&e지속 시간이 표기되지 않는 효과입니다."));
+            hover = hover.append(ComponentUtil.translate("&e지속 시간이 표기되지 않는 효과입니다"));
           }
         }
         if (isAmplifiable)
@@ -1012,7 +1012,7 @@ public class ComponentUtil
           component = component.content(urlString);
           String url = urlString.startsWith("http") ? urlString : "http://" + urlString;
           component = component.clickEvent(ClickEvent.openUrl(url));
-          component = component.hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 연결합니다.", Component.text(url).color(NamedTextColor.YELLOW))));
+          component = component.hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 연결합니다", Component.text(url).color(NamedTextColor.YELLOW))));
           components.add(component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.TRUE));
           i += pos - i - 1;
           component = old;

@@ -57,7 +57,7 @@ public class PlayerItemHeld implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerItemHeldAlertCooldown.contains(uuid))
       {
         Variable.playerItemHeldAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c행동 불가!", "&r단축바 슬롯을 변경할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c행동 불가!", "&r단축바 슬롯을 변경할 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerItemHeldAlertCooldown.remove(uuid), 100L);
       }
@@ -69,7 +69,7 @@ public class PlayerItemHeld implements Listener
       if (!Variable.playerItemHeldAlertCooldown.contains(uuid))
       {
         Variable.playerItemHeldAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "단축바 슬롯을 변경할 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "단축바 슬롯을 변경할 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerItemHeldAlertCooldown.remove(uuid), 100L);
       }
@@ -79,8 +79,8 @@ public class PlayerItemHeld implements Listener
     {
       event.setCancelled(true);
       Method.playSound(player, Constant.ERROR_SOUND);
-      MessageUtil.sendError(player, "강화중에는 주로 사용하는 손에 들고 있는 아이템을 바꿀 수 없습니다.");
-      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, "/강화 quit");
+      MessageUtil.sendError(player, "강화중에는 주로 사용하는 손에 들고 있는 아이템을 바꿀 수 없습니다");
+      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, "/강화 quit");
       player.sendMessage(a);
       return;
     }

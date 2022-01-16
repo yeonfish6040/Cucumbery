@@ -235,8 +235,8 @@ public class StatGUI
 
 		ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
 
-		this.stack("§a§l[설명]", Material.OAK_SIGN, 0, 1, Arrays.asList("§e대미지 계산은 위에서 아래 순으로,", "§e%만큼 곱적용 후 %가 아닌 값이 합산 됩니다.", "§e크리티컬 최소, 최대는 % 사이의 값을 곱적용 후,",
-				"§e추가 크리티컬 최소 대미지, 추가 크리티컬", "§e최대 대미지가 합산되어 그 사이의 값이 적용됩니다.", "§c크리티컬 최소 대미지는 크리티컬 최대 대미지보다", "§c높을 수 없습니다. (합산 이후 값 포함)", "§e크리티컬 확률은 최대 100% 적용"), true, 39, gui);
+		this.stack("§a§l[설명]", Material.OAK_SIGN, 0, 1, Arrays.asList("§e대미지 계산은 위에서 아래 순으로,", "§e%만큼 곱적용 후 %가 아닌 값이 합산 됩니다", "§e크리티컬 최소, 최대는 % 사이의 값을 곱적용 후,",
+				"§e추가 크리티컬 최소 대미지, 추가 크리티컬", "§e최대 대미지가 합산되어 그 사이의 값이 적용됩니다", "§c크리티컬 최소 대미지는 크리티컬 최대 대미지보다", "§c높을 수 없습니다. (합산 이후 값 포함)", "§e크리티컬 확률은 최대 100% 적용"), true, 39, gui);
 
 		SkullMeta meta = (SkullMeta) skull.getItemMeta();
 		meta.setOwningPlayer(player);
@@ -288,13 +288,13 @@ public class StatGUI
 		if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR) == 0D)
 		{
 			this.stack("§c[STR]", Material.RED_STAINED_GLASS_PANE, 14, 1,
-					Arrays.asList("&r근거리 공격력에 크게 관여합니다.", "&r원거리 공격력에 조금 관여합니다.", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR)), true, 11, gui);
+					Arrays.asList("&r근거리 공격력에 크게 관여합니다", "&r원거리 공격력에 조금 관여합니다", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR)), true, 11, gui);
 		}
 
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR) < 0D)
 		{
 			this.stack("§c[STR]", Material.RED_STAINED_GLASS_PANE, 14, 1,
-					Arrays.asList("&r근거리 공격력에 크게 관여합니다.", "&r원거리 공격력에 조금 관여합니다.", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR) + "&r (§e" + stat[1]
+					Arrays.asList("&r근거리 공격력에 크게 관여합니다", "&r원거리 공격력에 조금 관여합니다", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR) + "&r (§e" + stat[1]
 							+ "&r - §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR)) + "&r)"),
 					true, 11, gui);
 		}
@@ -302,7 +302,7 @@ public class StatGUI
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR) > 0D)
 		{
 			this.stack("§c[STR]", Material.RED_STAINED_GLASS_PANE, 14, 1,
-					Arrays.asList("&r근거리 공격력에 크게 관여합니다.", "&r원거리 공격력에 조금 관여합니다.", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR) + "&r (§e" + stat[1]
+					Arrays.asList("&r근거리 공격력에 크게 관여합니다", "&r원거리 공격력에 조금 관여합니다", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR) + "&r (§e" + stat[1]
 							+ "&r + §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR)) + "&r)"),
 					true, 11, gui);
 		}
@@ -310,16 +310,16 @@ public class StatGUI
 		if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR) == 0D)
 		{
 			this.stack("§c[STR+]", Material.RED_STAINED_GLASS, 14, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 STR을 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 STR을 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 STR을 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 STR를 증가 시킵니다.", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR)),
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 STR을 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 STR을 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 STR을 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 STR를 증가 시킵니다", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR)),
 					true, 20, gui);
 		}
 
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR) < 0D)
 		{
 			this.stack("§c[STR+]", Material.RED_STAINED_GLASS, 14, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 STR을 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 STR을 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 STR을 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 STR를 증가 시킵니다.", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR) + "&r (§e" + stat[1]
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 STR을 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 STR을 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 STR을 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 STR를 증가 시킵니다", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR) + "&r (§e" + stat[1]
 									+ "&r - §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR)) + "&r)"),
 					true, 20, gui);
 		}
@@ -327,8 +327,8 @@ public class StatGUI
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR) > 0D)
 		{
 			this.stack("§c[STR+]", Material.RED_STAINED_GLASS, 14, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 STR을 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 STR을 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 STR을 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 STR를 증가 시킵니다.", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR) + "&r (§e" + stat[1]
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 STR을 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 STR을 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 STR을 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 STR를 증가 시킵니다", "&r현재 STR : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.STR) + "&r (§e" + stat[1]
 									+ "&r + §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.STR)) + "&r)"),
 					true, 20, gui);
 		}
@@ -336,13 +336,13 @@ public class StatGUI
 		if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX) == 0D)
 		{
 			this.stack("§b[DEX]", Material.LIGHT_BLUE_STAINED_GLASS_PANE, 3, 1,
-					Arrays.asList("&r원거리 공격력에 크게 관여합니다.", "&r근거리 공격력에 조금 관여합니다.", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX)), true, 12, gui);
+					Arrays.asList("&r원거리 공격력에 크게 관여합니다", "&r근거리 공격력에 조금 관여합니다", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX)), true, 12, gui);
 		}
 
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX) < 0D)
 		{
 			this.stack("§b[DEX]", Material.LIGHT_BLUE_STAINED_GLASS_PANE, 3, 1,
-					Arrays.asList("&r원거리 공격력에 크게 관여합니다.", "&r근거리 공격력에 조금 관여합니다.", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX) + "&r (§e" + stat[2]
+					Arrays.asList("&r원거리 공격력에 크게 관여합니다", "&r근거리 공격력에 조금 관여합니다", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX) + "&r (§e" + stat[2]
 							+ "&r - §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX)) + "&r)"),
 					true, 12, gui);
 		}
@@ -350,7 +350,7 @@ public class StatGUI
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX) > 0D)
 		{
 			this.stack("§b[DEX]", Material.LIGHT_BLUE_STAINED_GLASS_PANE, 3, 1,
-					Arrays.asList("&r원거리 공격력에 크게 관여합니다.", "&r근거리 공격력에 조금 관여합니다.", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX) + "&r (§e" + stat[2]
+					Arrays.asList("&r원거리 공격력에 크게 관여합니다", "&r근거리 공격력에 조금 관여합니다", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX) + "&r (§e" + stat[2]
 							+ "&r + §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX)) + "&r)"),
 					true, 12, gui);
 		}
@@ -358,16 +358,16 @@ public class StatGUI
 		if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX) == 0D)
 		{
 			this.stack("§b[DEX+]", Material.LIGHT_BLUE_STAINED_GLASS, 3, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 DEX를 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 DEX를 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 DEX를 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 DEX를 증가 시킵니다.", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX)),
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 DEX를 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 DEX를 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 DEX를 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 DEX를 증가 시킵니다", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX)),
 					true, 21, gui);
 		}
 
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX) < 0D)
 		{
 			this.stack("§b[DEX+]", Material.LIGHT_BLUE_STAINED_GLASS, 3, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 DEX를 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 DEX를 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 DEX를 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 DEX를 증가 시킵니다.", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX) + "&r (§e" + stat[2]
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 DEX를 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 DEX를 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 DEX를 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 DEX를 증가 시킵니다", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX) + "&r (§e" + stat[2]
 									+ "&r - §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX)) + "&r)"),
 					true, 21, gui);
 		}
@@ -375,8 +375,8 @@ public class StatGUI
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX) > 0D)
 		{
 			this.stack("§b[DEX+]", Material.LIGHT_BLUE_STAINED_GLASS, 3, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 DEX를 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 DEX를 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 DEX를 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 DEX를 증가 시킵니다.", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX) + "&r (§e" + stat[2]
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 DEX를 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 DEX를 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 DEX를 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 DEX를 증가 시킵니다", "&r현재 DEX : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.DEX) + "&r (§e" + stat[2]
 									+ "&r + §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.DEX)) + "&r)"),
 					true, 21, gui);
 		}
@@ -384,13 +384,13 @@ public class StatGUI
 		if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT) == 0D)
 		{
 			this.stack("§d[INT]", Material.MAGENTA_STAINED_GLASS_PANE, 2, 1,
-					Arrays.asList("&r마법 공격력에 크게 관여합니다.", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT)), true, 13, gui);
+					Arrays.asList("&r마법 공격력에 크게 관여합니다", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT)), true, 13, gui);
 		}
 
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT) < 0D)
 		{
 			this.stack("§d[INT]", Material.MAGENTA_STAINED_GLASS_PANE, 2, 1,
-					Arrays.asList("&r마법 공격력에 크게 관여합니다.", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT) + "&r (§e" + stat[3] + "&r - §e"
+					Arrays.asList("&r마법 공격력에 크게 관여합니다", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT) + "&r (§e" + stat[3] + "&r - §e"
 							+ (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT)) + "&r)"),
 					true, 13, gui);
 		}
@@ -398,7 +398,7 @@ public class StatGUI
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT) > 0D)
 		{
 			this.stack("§d[INT]", Material.MAGENTA_STAINED_GLASS_PANE, 2, 1,
-					Arrays.asList("&r마법 공격력에 크게 관여합니다.", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT) + "&r (§e" + stat[3] + "&r + §e"
+					Arrays.asList("&r마법 공격력에 크게 관여합니다", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT) + "&r (§e" + stat[3] + "&r + §e"
 							+ (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT)) + "&r)"),
 					true, 13, gui);
 		}
@@ -406,16 +406,16 @@ public class StatGUI
 		if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT) == 0D)
 		{
 			this.stack("§d[INT+]", Material.MAGENTA_STAINED_GLASS, 2, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 INT를 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 INT를 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 INT를 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 INT를 증가 시킵니다.", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT)),
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 INT를 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 INT를 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 INT를 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 INT를 증가 시킵니다", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT)),
 					true, 22, gui);
 		}
 
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT) < 0D)
 		{
 			this.stack("§d[INT+]", Material.MAGENTA_STAINED_GLASS, 2, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 INT를 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 INT를 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 INT를 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 INT를 증가 시킵니다.", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT) + "&r (§e" + stat[3]
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 INT를 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 INT를 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 INT를 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 INT를 증가 시킵니다", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT) + "&r (§e" + stat[3]
 									+ "&r - §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT)) + "&r)"),
 					true, 22, gui);
 		}
@@ -423,8 +423,8 @@ public class StatGUI
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT) > 0D)
 		{
 			this.stack("§d[INT+]", Material.MAGENTA_STAINED_GLASS, 2, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 INT를 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 INT를 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 INT를 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 INT를 증가 시킵니다.", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT) + "&r (§e" + stat[3]
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 INT를 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 INT를 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 INT를 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 INT를 증가 시킵니다", "&r현재 INT : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.INT) + "&r (§e" + stat[3]
 									+ "&r + §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.INT)) + "&r)"),
 					true, 22, gui);
 		}
@@ -432,13 +432,13 @@ public class StatGUI
 		if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK) == 0D)
 		{
 			this.stack("§a[LUK]", Material.LIME_STAINED_GLASS_PANE, 5, 1,
-					Arrays.asList("&r좋은 일이 일어날 확률을 올려줍니다.", "&r마법 공격력에 조금 관여합니다.", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK)), true, 14, gui);
+					Arrays.asList("&r좋은 일이 일어날 확률을 올려줍니다", "&r마법 공격력에 조금 관여합니다", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK)), true, 14, gui);
 		}
 
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK) < 0D)
 		{
 			this.stack("§a[LUK]", Material.LIME_STAINED_GLASS_PANE, 5, 1,
-					Arrays.asList("&r좋은 일이 일어날 확률을 올려줍니다.", "&r마법 공격력에 조금 관여합니다.", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK) + "&r (§e" + stat[4]
+					Arrays.asList("&r좋은 일이 일어날 확률을 올려줍니다", "&r마법 공격력에 조금 관여합니다", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK) + "&r (§e" + stat[4]
 							+ "&r - §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK)) + "&r)"),
 					true, 14, gui);
 		}
@@ -446,7 +446,7 @@ public class StatGUI
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK) > 0D)
 		{
 			this.stack("§a[LUK]", Material.LIME_STAINED_GLASS_PANE, 5, 1,
-					Arrays.asList("&r좋은 일이 일어날 확률을 올려줍니다.", "&r마법 공격력에 조금 관여합니다.", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK) + "&r (§e" + stat[4]
+					Arrays.asList("&r좋은 일이 일어날 확률을 올려줍니다", "&r마법 공격력에 조금 관여합니다", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK) + "&r (§e" + stat[4]
 							+ "&r + §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK)) + "&r)"),
 					true, 14, gui);
 		}
@@ -454,16 +454,16 @@ public class StatGUI
 		if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK) == 0D)
 		{
 			this.stack("§a[LUK+]", Material.LIME_STAINED_GLASS, 5, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 LUK을 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 LUK을 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 LUK을 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 LUK을 증가 시킵니다.", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK)),
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 LUK을 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 LUK을 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 LUK을 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 LUK을 증가 시킵니다", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK)),
 					true, 23, gui);
 		}
 
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK) < 0D)
 		{
 			this.stack("§a[LUK+]", Material.LIME_STAINED_GLASS, 5, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 LUK을 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 LUK을 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 LUK을 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 LUK을 증가 시킵니다.", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK) + "&r (§e" + stat[4]
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 LUK을 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 LUK을 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 LUK을 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 LUK을 증가 시킵니다", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK) + "&r (§e" + stat[4]
 									+ "&r - §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK)) + "&r)"),
 					true, 23, gui);
 		}
@@ -471,8 +471,8 @@ public class StatGUI
 		else if (GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK) > 0D)
 		{
 			this.stack("§a[LUK+]", Material.LIME_STAINED_GLASS, 5, 1,
-					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 LUK을 §e1 &r만큼 증가 시킵니다.", "§e우클릭&r으로 LUK을 §e10 &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 LUK을 §e100 &r만큼 증가 시킵니다.",
-							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 LUK을 증가 시킵니다.", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK) + "&r (§e" + stat[4]
+					Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 LUK을 §e1 &r만큼 증가 시킵니다", "§e우클릭&r으로 LUK을 §e10 &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 LUK을 §e100 &r만큼 증가 시킵니다",
+							"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 LUK을 증가 시킵니다", "&r현재 LUK : §e" + GetStat.getStatClass().getLongStat(player, GetStat.Stat.LUK) + "&r (§e" + stat[4]
 									+ "&r + §e" + (long) Math.abs(GetStat.getStatClass().getDoubleStat(player, GetStat.Stat.LUK)) + "&r)"),
 					true, 23, gui);
 		}
@@ -482,8 +482,8 @@ public class StatGUI
 				15, gui);
 
 		this.stack("§6[숙련도+]", Material.ORANGE_STAINED_GLASS, 1, 1,
-				Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 숙련도를 §e0.01% &r만큼 증가 시킵니다.", "§e우클릭&r으로 숙련도를 §e0.1% &r만큼 증가 시킵니다.", "§e시프트 + 좌클릭&r으로 숙련도를 §e1% &r만큼 증가 시킵니다.",
-						"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 숙련도를 증가 시킵니다. (스탯 포인트 × 0.01%)", "§c[주의 사항] 숙련도는 최대 §499%§c 까지만 올릴 수 있습니다.",
+				Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 숙련도를 §e0.01% &r만큼 증가 시킵니다", "§e우클릭&r으로 숙련도를 §e0.1% &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 숙련도를 §e1% &r만큼 증가 시킵니다",
+						"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 숙련도를 증가 시킵니다. (스탯 포인트 × 0.01%)", "§c[주의 사항] 숙련도는 최대 §499%§c 까지만 올릴 수 있습니다",
 						"&r현재 숙련도 : §e" + d1.format(GetStat.getStatClass().getLongStat(player, GetStat.Stat.PROFICIENCY) / 100D) + "§e%"),
 				true, 24, gui);
 

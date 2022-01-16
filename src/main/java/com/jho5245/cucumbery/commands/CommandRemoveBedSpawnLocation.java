@@ -64,7 +64,7 @@ public class CommandRemoveBedSpawnLocation implements CommandExecutor, TabComple
           player.setBedSpawnLocation(null);
           if (!sender.equals(player) && !hideOutput)
           {
-            MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신의 스폰 포인트를 제거하였습니다.", sender));
+            MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신의 스폰 포인트를 제거하였습니다", sender));
           }
           successPlayers.add(player);
         }
@@ -73,12 +73,12 @@ public class CommandRemoveBedSpawnLocation implements CommandExecutor, TabComple
       {
         if (!failurePlayers.isEmpty())
         {
-          MessageUtil.sendWarnOrError(!successPlayers.isEmpty(), sender, ComponentUtil.translate("%s은(는) 스폰 포인트가 없습니다.", failurePlayers));
+          MessageUtil.sendWarnOrError(!successPlayers.isEmpty(), sender, ComponentUtil.translate("%s은(는) 스폰 포인트가 없습니다", failurePlayers));
         }
         if (!successPlayers.isEmpty())
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 스폰 포인트를 제거하였습니다.", successPlayers));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successPlayers), ComponentUtil.translate("[%s: %s의 스폰 포인트를 제거하였습니다.]", sender, successPlayers));
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 스폰 포인트를 제거하였습니다", successPlayers));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successPlayers), ComponentUtil.translate("[%s: %s의 스폰 포인트를 제거하였습니다]", sender, successPlayers));
           return true;
         }
       }

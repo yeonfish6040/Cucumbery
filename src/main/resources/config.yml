@@ -10,8 +10,8 @@
 # 예시 : 다음 두 텍스트 중 2번째의 문장은 번역이 되지 않고 언어에 상관없이 그대로 표시됩니다.
 # 1번째 텍스트처럼 해야 리소스팩으로 번역이 가능합니다.
 #
-# 1. a-sample-text: "&a이것은 다이아몬드입니다." <- 언어를 영어로 하고 리소스팩에 적용 시, "&aThis is a Diamond."
-# 2. a-sample-text: "&a이것은 &b다이아몬드&a입니다." <- 언어에 상관없이 항상 "&a이것은 &b다이아몬드&a입니다."
+# 1. a-sample-text: "&a이것은 다이아몬드입니다" <- 언어를 영어로 하고 리소스팩에 적용 시, "&aThis is a Diamond."
+# 2. a-sample-text: "&a이것은 &b다이아몬드&a입니다" <- 언어에 상관없이 항상 "&a이것은 &b다이아몬드&a입니다"
 #
 # ---------------------------컬러 코드 사용 방법---------------------------
 #
@@ -176,7 +176,7 @@ use-anvil-use-time-lore-feature: true
 send-actionbar-when-merchant-update-their-recipe: true
 
 # 액션바 내용 - String
-actionbar-when-merchant-update-their-recipe: "주민이 거래 재고를 준비하고 있으니 다시 말을 걸어주세요."
+actionbar-when-merchant-update-their-recipe: "주민이 거래 재고를 준비하고 있으니 다시 말을 걸어주세요"
 
 # 도움이 되는 설명 중 가장 밑에 있는 회색 설명(예시 : 도끼, 작물의 많은 TMI) 기능을 사용할 것인가?
 use-additional-tmi-feature: true
@@ -270,7 +270,7 @@ no-tellraw-feature-on-join-worlds:
 use-actionbar-feature-on-join: false
 
 #액션바 입장 메시지 %player%은 플레이어의 닉네임 - String
-actionbar-join-message: "&e%player%&a이(가) &3입장&a하셨습니다."
+actionbar-join-message: "&e%player%&a이(가) &3입장&a하셨습니다"
 
 #서버에 입장할때 actionbar 입장메시지 기능을 사용하지 않을 위치 - List<String>
 no-actionbar-feature-on-join-worlds:
@@ -291,7 +291,7 @@ no-tellraw-feature-on-quit-worlds:
 use-actionbar-feature-on-quit: false
 
 #액션바 퇴장 메시지 %player%은 플레이어의 닉네임 - String
-actionbar-quit-message: "&e%player%&c이(가) &4퇴장&c하셨습니다."
+actionbar-quit-message: "&e%player%&c이(가) &4퇴장&c하셨습니다"
 
 #서버에서 퇴장할때 actionbar 입장메시지 기능을 사용하지 않을 위치 - List<String>
 no-actionbar-feature-on-quit-worlds:
@@ -307,7 +307,7 @@ play-join-sound-to-join-player: false
 
 #서버에 입장할때 소리, 볼륨, 음높이
 play-join-sounds:
-  type: "BLOCK_NOTE_BLOCK_PLING"
+  type: BLOCK_NOTE_BLOCK_PLING
   volume: 1
   pitch: 1
 
@@ -322,7 +322,7 @@ play-quit-sound: true
 
 #서버에서 퇴장할때 소리, 볼륨, 음높이
 play-quit-sounds:
-  type: "BLOCK_NOTE_BLOCK_BASS"
+  type: BLOCK_NOTE_BLOCK_BASS
   volume: 1
   pitch: 1
 
@@ -355,8 +355,8 @@ no-title-on-join-worlds:
 
 #서버에 접속할때 뜰 타이틀 - String, 타이틀 페이드 인, 스테이, 페이드 아웃 - int
 title-on-join:
-  title: "&a환영합니다."
-  subtitle: "&e%player%&r님, 즐거운 시간 보내세요."
+  title: "&a환영합니다"
+  subtitle: "&e%player%&r님, 즐거운 시간 보내세요"
   fade-in: 5
   stay: 80
   fade-out: 5
@@ -673,8 +673,8 @@ world-change:
   world_1: # 이동한 월드의 이름
     message:
       messages: # 띄울 메시지들 (메시지를 띄우지 않으려면 message: [] 처럼 적거나 아예 제거하면 됨)
-        - "당신은 현재 %player_location_world_display%로 이동했다."
-        - "translate:당신은 현재 %s(으)로 이동했다.;%player_location_world_display%"
+        - "당신은 현재 %player_location_world_display%로 이동했다"
+        - "translate:당신은 현재 %s(으)로 이동했다;%player_location_world_display%"
       conditions: # 추가 조건들이다. 안적어도 되며 만약 조건을 만족하지 않으면 메시지가 뜨지 않는다.
         # 월드 이동 전 월드의 이름
         before-world: world_from_previous
@@ -686,7 +686,7 @@ world-change:
       titles:
         delay: 10 # 타이틀이 뜨기 전까지의 딜레이(틱 단위)
         title: "안녕"
-        subtitle: "지옥이 아니라 world_1에 온걸 환영한다."
+        subtitle: "지옥이 아니라 world_1에 온걸 환영한다"
         fade-in: 5
         stay: 80
         fade-out: 15

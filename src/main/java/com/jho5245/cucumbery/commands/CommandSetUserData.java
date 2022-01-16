@@ -75,7 +75,7 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
           return true;
         }
         case ID, UUID -> {
-          MessageUtil.sendError(sender, "&e" + keyString + "&r 키의 값은 변경할 수 없습니다.");
+          MessageUtil.sendError(sender, "&e" + keyString + "&r 키의 값은 변경할 수 없습니다");
           return true;
         }
         case ITEM_DROP_MODE, ITEM_PICKUP_MODE -> {
@@ -117,10 +117,10 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
       }
       if (!hideMessage)
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_SETDATA, player, "의 &e" + keyString + "&r 값을 &e" + value + "&r으로 설정하였습니다.");
+        MessageUtil.sendMessage(sender, Prefix.INFO_SETDATA, player, "의 &e" + keyString + "&r 값을 &e" + value + "&r으로 설정하였습니다");
         if (isOnline && !player.equals(sender))
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, sender, "이 당신의 &e" + keyString + "&r 값을 &e" + value + "&r으로 설정하였습니다.");
+          MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, sender, "이 당신의 &e" + keyString + "&r 값을 &e" + value + "&r으로 설정하였습니다");
         }
       }
       if (isOnline)
@@ -212,7 +212,7 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
     {
       if (Method.equals(args[1], "id", "uuid"))
       {
-        return Collections.singletonList(args[1] + "(" + UserData.valueOf(args[1].toUpperCase()).getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다.");
+        return Collections.singletonList(args[1] + "(" + UserData.valueOf(args[1].toUpperCase()).getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다");
       }
       List<String> list = Method.enumToList(UserData.values());
       list.remove("id");
@@ -228,7 +228,7 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
       }
       catch (Exception e)
       {
-        return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + "잘못된 데이터 키입니다.");
+        return Collections.singletonList(args[1] + MessageUtil.getFinalConsonant(args[1], MessageUtil.ConsonantType.은는) + "잘못된 데이터 키입니다");
       }
       return switch (key)
               {
@@ -236,7 +236,7 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
                 default -> Method.tabCompleterBoolean(args, "<값>");
                 case DISPLAY_NAME, PLAYER_LIST_NAME -> Collections.singletonList("닉네임은 닉네임 명령어(/nick, /nickothers)를 사용하여 변경해주세요.");
                 case HEALTH_BAR -> Collections.singletonList("HP바는 hp바 명령어(/shp)를 사용하여 변경해주세요.");
-                case ID, UUID -> Collections.singletonList(args[1] + "(" + key.getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다.");
+                case ID, UUID -> Collections.singletonList(args[1] + "(" + key.getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다");
                 case ITEM_USE_DELAY, ITEM_DROP_DELAY -> Method.tabCompleterIntegerRadius(args, 0, 200, "<틱>");
               };
     }

@@ -69,11 +69,11 @@ public class Data
         newList.add(entity);
       }
     }
-    MessageUtil.sendAdminMessage(sender, newList, ComponentUtil.translate("[%s: %s에게 %s을(를) %s개 지급하였습니다.]", sender, targets, item, amountComponent));
+    MessageUtil.sendAdminMessage(sender, newList, ComponentUtil.translate("[%s: %s에게 %s을(를) %s개 지급하였습니다]", sender, targets, item, amountComponent));
 
     if (!failure.isEmpty())
     {
-      MessageUtil.sendWarn(sender, "%s이(가) 인벤토리가 가득 차서 %s %s개를 제대로 지급하지 못했습니다.", failure, item, amountComponent);
+      MessageUtil.sendWarn(sender, "%s이(가) 인벤토리가 가득 차서 %s %s개를 제대로 지급하지 못했습니다", failure, item, amountComponent);
       Component hover = Component.empty();
       for (int i = 0; i < failure.size(); i++)
       {
@@ -89,7 +89,7 @@ public class Data
         {
           continue;
         }
-        MessageUtil.sendWarn(target, "인벤토리가 가득 차서 %s이(가) 보낸 %s %s개 중 %s개를 지급받지 못했습니다.", sender, item, amountComponent, Component.text(lostAmount).color(Constant.THE_COLOR));
+        MessageUtil.sendWarn(target, "인벤토리가 가득 차서 %s이(가) 보낸 %s %s개 중 %s개를 지급받지 못했습니다", sender, item, amountComponent, Component.text(lostAmount).color(Constant.THE_COLOR));
       }
       if (sender instanceof Player player)
       {
@@ -102,14 +102,14 @@ public class Data
         MessageUtil.info(player, message.hoverEvent(hover));
       }
     }
-    MessageUtil.sendMessage(sender, Prefix.INFO_HANDGIVE, "%s에게 %s을(를) %s개 지급하였습니다.", targets, item, amountComponent);
+    MessageUtil.sendMessage(sender, Prefix.INFO_HANDGIVE, "%s에게 %s을(를) %s개 지급하였습니다", targets, item, amountComponent);
     for (UUID target : targets)
     {
       if (sender instanceof Player player && target.equals(player.getUniqueId()))
       {
         continue;
       }
-      MessageUtil.sendMessage(target, Prefix.INFO_HANDGIVE, "%s(으)로부터 %s을(를) %s개 지급받았습니다.", sender, item, amountComponent);
+      MessageUtil.sendMessage(target, Prefix.INFO_HANDGIVE, "%s(으)로부터 %s을(를) %s개 지급받았습니다", sender, item, amountComponent);
     }
   }
 }

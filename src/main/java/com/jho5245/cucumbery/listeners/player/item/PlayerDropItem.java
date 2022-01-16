@@ -61,8 +61,8 @@ public class PlayerDropItem implements Listener
     {
       event.setCancelled(true);
       Method.playSound(player, Constant.ERROR_SOUND);
-      MessageUtil.sendError(player, "강화중에는 아이템을 버릴 수 없습니다.");
-      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다.",
+      MessageUtil.sendError(player, "강화중에는 아이템을 버릴 수 없습니다");
+      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다",
               ClickEvent.Action.RUN_COMMAND, "/강화 quit");
       player.sendMessage(a);
       return;
@@ -73,7 +73,7 @@ public class PlayerDropItem implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemDropAlertCooldown.contains(uuid))
       {
         Variable.itemDropAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c버리기 불가!", "&r아이템을 버릴 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c버리기 불가!", "&r아이템을 버릴 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemDropAlertCooldown.remove(uuid), 100L);
       }
@@ -85,7 +85,7 @@ public class PlayerDropItem implements Listener
       if (!Variable.itemDropAlertCooldown.contains(uuid))
       {
         Variable.itemDropAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 버릴 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 버릴 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemDropAlertCooldown.remove(uuid), 100L);
       }
@@ -97,8 +97,8 @@ public class PlayerDropItem implements Listener
       if (!Variable.itemDropDisabledAlertCooldown.contains(uuid))
       {
         Variable.itemDropDisabledAlertCooldown.add(uuid);
-        MessageUtil.sendWarn(player, "현재 아이템 버리기 모드가 비활성화 되어 있습니다.");
-        MessageUtil.info(player, "메뉴에서 아이템 버리기 모드를 변경하실 수 있습니다.");
+        MessageUtil.sendWarn(player, "현재 아이템 버리기 모드가 비활성화 되어 있습니다");
+        MessageUtil.info(player, "메뉴에서 아이템 버리기 모드를 변경하실 수 있습니다");
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemDropDisabledAlertCooldown.remove(uuid), 40L);
       }
       return;
@@ -117,7 +117,7 @@ public class PlayerDropItem implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemDropAlertCooldown2.contains(uuid))
       {
         Variable.itemDropAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, "&c버리기 불가!", "&r버릴 수 없는 아이템입니다.", 5, 60, 15);
+        MessageUtil.sendTitle(player, "&c버리기 불가!", "&r버릴 수 없는 아이템입니다", 5, 60, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemDropAlertCooldown2.remove(uuid), 100L);
       }
@@ -129,8 +129,8 @@ public class PlayerDropItem implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemDropAlertCooldown2.contains(uuid))
       {
         Variable.itemDropAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, "&c버리기 불가!", "&r캐릭터 귀속 아이템은 버릴 수 없습니다.", 5, 60, 15);
-        MessageUtil.info(player, ComponentUtil.create("이 메시지를 클릭하여 쓰레기통을 엽니다.").clickEvent(ClickEvent.runCommand("/trashcan")));
+        MessageUtil.sendTitle(player, "&c버리기 불가!", "&r캐릭터 귀속 아이템은 버릴 수 없습니다", 5, 60, 15);
+        MessageUtil.info(player, ComponentUtil.create("이 메시지를 클릭하여 쓰레기통을 엽니다").clickEvent(ClickEvent.runCommand("/trashcan")));
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemDropAlertCooldown2.remove(uuid), 100L);
       }
@@ -189,11 +189,11 @@ public class PlayerDropItem implements Listener
       Component itemStackComponent = ItemNameUtil.itemName(item, TextColor.fromHexString("#ff9900"));
       if (amount == 1 && item.getType().getMaxStackSize() == 1)
       {
-        player.sendActionBar(ComponentUtil.translate("#ffd900;%s을(를) 버렸습니다.", itemStackComponent));
+        player.sendActionBar(ComponentUtil.translate("#ffd900;%s을(를) 버렸습니다", itemStackComponent));
       }
       else
       {
-        player.sendActionBar(ComponentUtil.translate("#ffd900;%s을(를) %s개 버렸습니다.", itemStackComponent, "#ff9900;" + amount));
+        player.sendActionBar(ComponentUtil.translate("#ffd900;%s을(를) %s개 버렸습니다", itemStackComponent, "#ff9900;" + amount));
       }
     }
     if (UserData.LISTEN_ITEM_DROP.getBoolean(player.getUniqueId()))

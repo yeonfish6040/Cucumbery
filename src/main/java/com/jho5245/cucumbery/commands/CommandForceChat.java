@@ -83,9 +83,9 @@ public class CommandForceChat implements CommandExecutor, TabCompleter
     {
       if (!target.equals(sender))
       {
-        MessageUtil.info(target, sender, "이 당신에게 &e" + msg + "&r 메시지를 강제로 채팅시켰습니다.");
+        MessageUtil.info(target, sender, "이 당신에게 &e" + msg + "&r 메시지를 강제로 채팅시켰습니다");
       }
-      MessageUtil.info(sender, target, "에게 &e" + msg + "&r 메시지를 강제로 채팅시켰습니다.");
+      MessageUtil.info(sender, target, "에게 &e" + msg + "&r 메시지를 강제로 채팅시켰습니다");
     }
     return true;
   }

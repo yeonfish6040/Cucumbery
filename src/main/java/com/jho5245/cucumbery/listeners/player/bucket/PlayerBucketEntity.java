@@ -38,7 +38,7 @@ public class PlayerBucketEntity implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerBucketUseAlertCooldown.contains(uuid))
       {
         Variable.playerBucketUseAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c사용 불가!", "&r사용할 수 없는 양동이입니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c사용 불가!", "&r사용할 수 없는 양동이입니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerBucketUseAlertCooldown.remove(uuid), 100L);
       }

@@ -122,11 +122,11 @@ public class CommandHealthPoint
 
       if (successCount > 0)
       {
-        MessageUtil.info(commandSender, "&e" + successCount + "개&r의 개체의 HP를 조정하였습니다.");
+        MessageUtil.info(commandSender, "&e" + successCount + "개&r의 개체의 HP를 조정하였습니다");
       }
       else
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체의 HP에 변화가 없습니다.");
+        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체의 HP에 변화가 없습니다");
       }
     });
     commandAPICommand.register();
@@ -156,7 +156,7 @@ public class CommandHealthPoint
 
       if (!force && !MessageUtil.checkNumberSize(sender, value, 1, Double.MAX_VALUE, false))
       {
-        CommandAPI.fail("숫자는 1 이상이여야 하는데, " + value + "이/가 있습니다.");
+        CommandAPI.fail("숫자는 1 이상이여야 하는데, " + value + "이/가 있습니다");
         return;
       }
 
@@ -263,11 +263,11 @@ public class CommandHealthPoint
 
       if (successCount > 0)
       {
-        MessageUtil.info(commandSender, "&e" + successCount + "개&r의 개체의 HP를 조정하였습니다.");
+        MessageUtil.info(commandSender, "&e" + successCount + "개&r의 개체의 HP를 조정하였습니다");
       }
       else
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없습니다.");
+        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();
@@ -298,7 +298,7 @@ public class CommandHealthPoint
 
       if (!force && !MessageUtil.checkNumberSize(sender, value, 1, Double.MAX_VALUE, false))
       {
-        CommandAPI.fail("숫자는 1 이상이여야 하는데, " + value + "이/가 있습니다.");
+        CommandAPI.fail("숫자는 1 이상이여야 하는데, " + value + "이/가 있습니다");
         return;
       }
 
@@ -407,12 +407,12 @@ public class CommandHealthPoint
       {
         if (!hideOutput)
         {
-          MessageUtil.info(commandSender, "&e" + successCount + "개&r의 개체의 HP를 조정하였습니다.");
+          MessageUtil.info(commandSender, "&e" + successCount + "개&r의 개체의 HP를 조정하였습니다");
         }
       }
       else
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없습니다.");
+        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();

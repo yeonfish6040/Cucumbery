@@ -51,7 +51,7 @@ class CommandCall implements CommandExecutor, TabCompleter
       }
       if (target == player)
       {
-        MessageUtil.sendError(sender, "자기 자신을 호출할 수 없습니다.");
+        MessageUtil.sendError(sender, "자기 자신을 호출할 수 없습니다");
         return true;
       }
       FileConfiguration cfg = Cucumbery.config;
@@ -65,8 +65,8 @@ class CommandCall implements CommandExecutor, TabCompleter
         sound = Sound.ENTITY_CHICKEN_HURT;
       }
       SoundPlay.playSound(target, sound, (float) cfg.getDouble("sound-const.call-sound.volume"), (float) cfg.getDouble("sound-const.call-sound.pitch"));
-      MessageUtil.info(player, target, "을(를) 호출합니다.");
-      MessageUtil.info(target, player, "이(가) 당신을 호출합니다.");
+      MessageUtil.info(player, target, "을(를) 호출합니다");
+      MessageUtil.info(target, player, "이(가) 당신을 호출합니다");
     }
     else
     {

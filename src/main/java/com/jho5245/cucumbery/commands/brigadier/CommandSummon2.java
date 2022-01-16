@@ -83,12 +83,12 @@ public class CommandSummon2 extends CommandBase
       }
       if (!success)
       {
-        CommandAPI.fail("개체를 소환할 수 없습니다.");
+        CommandAPI.fail("개체를 소환할 수 없습니다");
       }
       else
       {
-        MessageUtil.info(commandSender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.info(commandSender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();
@@ -110,12 +110,12 @@ public class CommandSummon2 extends CommandBase
       }
       if (!success)
       {
-        CommandAPI.fail("개체를 소환할 수 없습니다.");
+        CommandAPI.fail("개체를 소환할 수 없습니다");
       }
       else
       {
-        MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();
@@ -150,12 +150,12 @@ public class CommandSummon2 extends CommandBase
       }
       if (!success)
       {
-        CommandAPI.fail("개체를 소환할 수 없습니다.");
+        CommandAPI.fail("개체를 소환할 수 없습니다");
       }
       else if (!hideOutput)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();
@@ -178,12 +178,12 @@ public class CommandSummon2 extends CommandBase
       }
       if (!success)
       {
-        CommandAPI.fail("개체를 소환할 수 없습니다.");
+        CommandAPI.fail("개체를 소환할 수 없습니다");
       }
       else if (!hideOutput)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();
@@ -223,12 +223,12 @@ public class CommandSummon2 extends CommandBase
       }
       if (!success)
       {
-        CommandAPI.fail("개체를 소환할 수 없습니다.");
+        CommandAPI.fail("개체를 소환할 수 없습니다");
       }
       else if (!hideOutput)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다.]", sender, entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다]", sender, entity, Constant.THE_COLOR_HEX + amount));
       }
     });
     commandAPICommand.register();

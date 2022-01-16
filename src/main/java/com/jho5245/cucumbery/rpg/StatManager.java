@@ -59,7 +59,7 @@ public class StatManager implements Listener
 
 		catch (IOException exception)
 		{
-			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생하였습니다.");
+			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생하였습니다");
 			exception.printStackTrace();
 		}
 	}
@@ -120,7 +120,7 @@ public class StatManager implements Listener
 
 		catch (IOException exception)
 		{
-			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생하였습니다.");
+			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생하였습니다");
 			exception.printStackTrace();
 		}
 
@@ -199,7 +199,7 @@ public class StatManager implements Listener
 
 		catch (IOException exception)
 		{
-			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생하였습니다.");
+			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생하였습니다");
 			exception.printStackTrace();
 		}
 	}
@@ -212,7 +212,7 @@ public class StatManager implements Listener
 			{
 				if (num == 5 && stat[5] + 1 > 9900)
 				{
-					MessageUtil.sendError(player, "§e숙련도&r는 99%까지만 채울 수 있습니다.");
+					MessageUtil.sendError(player, "§e숙련도&r는 99%까지만 채울 수 있습니다");
 					return;
 				}
 
@@ -224,7 +224,7 @@ public class StatManager implements Listener
 			}
 			else
 			{
-				MessageUtil.sendError(player, "스탯 포인트가 부족합니다.");
+				MessageUtil.sendError(player, "스탯 포인트가 부족합니다");
 				return;
 			}
 		}
@@ -235,7 +235,7 @@ public class StatManager implements Listener
 			{
 				if (num == 5 && stat[5] + 1 > 9900)
 				{
-					MessageUtil.sendError(player, "§e숙련도&r는 99%까지만 채울 수 있습니다.");
+					MessageUtil.sendError(player, "§e숙련도&r는 99%까지만 채울 수 있습니다");
 					return;
 				}
 				Method.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 1F);
@@ -245,7 +245,7 @@ public class StatManager implements Listener
 			}
 			else
 			{
-				MessageUtil.sendError(player, "스탯 포인트가 부족합니다.");
+				MessageUtil.sendError(player, "스탯 포인트가 부족합니다");
 				return;
 			}
 		}
@@ -255,7 +255,7 @@ public class StatManager implements Listener
 			{
 				if (num == 5 && stat[5] + 100 > 9900)
 				{
-					MessageUtil.sendError(player, "§e숙련도&r는 99%까지만 채울 수 있습니다.");
+					MessageUtil.sendError(player, "§e숙련도&r는 99%까지만 채울 수 있습니다");
 					return;
 				}
 				Method.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 1F);
@@ -265,7 +265,7 @@ public class StatManager implements Listener
 			}
 			else
 			{
-				MessageUtil.sendError(player, "스탯 포인트가 부족합니다.");
+				MessageUtil.sendError(player, "스탯 포인트가 부족합니다");
 				return;
 			}
 		}
@@ -276,7 +276,7 @@ public class StatManager implements Listener
 			{
 				if (num == 5 && stat[5] >= 9900)
 				{
-					MessageUtil.sendError(player, "§e숙련도&r는 99%까지만 채울 수 있습니다.");
+					MessageUtil.sendError(player, "§e숙련도&r는 99%까지만 채울 수 있습니다");
 					return;
 				}
 
@@ -306,7 +306,7 @@ public class StatManager implements Listener
 
 			else
 			{
-				MessageUtil.sendError(player, "스탯 포인트가 부족합니다.");
+				MessageUtil.sendError(player, "스탯 포인트가 부족합니다");
 				return;
 			}
 		}
@@ -337,7 +337,7 @@ public class StatManager implements Listener
 
 		if (levelUp >= 1)
 		{
-			MessageUtil.sendActionBar(player, "레벨업을 §e" + levelUp + "&r 번 하여 스탯포인트를 §e" + levelUp * 5 + "&r 만큼 획득하였습니다.");
+			MessageUtil.sendActionBar(player, "레벨업을 §e" + levelUp + "&r 번 하여 스탯포인트를 §e" + levelUp * 5 + "&r 만큼 획득하였습니다");
 		}
 
 		setStat(player, stat);
@@ -389,7 +389,7 @@ public class StatManager implements Listener
 
 		stat[0] += 5 * differance;
 
-		MessageUtil.sendActionBar(player, "레벨업을 §e" + differance + "&r 번 하여 스탯포인트를 §e" + differance * 5 + "&r 만큼 획득하였습니다.");
+		MessageUtil.sendActionBar(player, "레벨업을 §e" + differance + "&r 번 하여 스탯포인트를 §e" + differance * 5 + "&r 만큼 획득하였습니다");
 
 		setStat(player, stat);
 	}*/

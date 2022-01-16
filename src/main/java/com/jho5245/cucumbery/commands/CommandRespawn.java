@@ -53,7 +53,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
           player.spigot().respawn();
           if (!sender.equals(player) && !hideOutput)
           {
-            MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신을 강제로 리스폰시켰습니다.", sender));
+            MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신을 강제로 리스폰시켰습니다", sender));
           }
           successPlayers.add(player);
         }
@@ -66,12 +66,12 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
       {
         if (!failurePlayers.isEmpty())
         {
-          MessageUtil.sendWarnOrError(successPlayers.isEmpty(), sender, ComponentUtil.translate("%s은(는) 죽어 있는 상태가 아닙니다.", failurePlayers));
+          MessageUtil.sendWarnOrError(successPlayers.isEmpty(), sender, ComponentUtil.translate("%s은(는) 죽어 있는 상태가 아닙니다", failurePlayers));
         }
         if (!successPlayers.isEmpty())
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s을(를) 강제로 리스폰시켰습니다.", successPlayers));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successPlayers), ComponentUtil.translate("[%s: %s을(를) 강제로 리스폰시켰습니다.]", sender, successPlayers));
+          MessageUtil.info(sender, ComponentUtil.translate("%s을(를) 강제로 리스폰시켰습니다", successPlayers));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successPlayers), ComponentUtil.translate("[%s: %s을(를) 강제로 리스폰시켰습니다]", sender, successPlayers));
           return true;
         }
       }

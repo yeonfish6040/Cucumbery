@@ -52,7 +52,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
           File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CommandPacks/" + fileName + ".yml");
           if (!file.exists())
           {
-            MessageUtil.sendError(sender, "&e" + fileName + "&r" + MessageUtil.getFinalConsonant(fileName, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 명령어 팩 파일 이름입니다.");
+            MessageUtil.sendError(sender, "&e" + fileName + "&r" + MessageUtil.getFinalConsonant(fileName, MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 명령어 팩 파일 이름입니다");
             return true;
           }
           if (!file.delete())
@@ -60,7 +60,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
             System.err.println("[Cucumbery] could not delete " + fileName + ".yml file!");
           }
           Variable.commandPacks.remove(fileName);
-          MessageUtil.info(sender, "&e" + fileName + ".yml&r 명령어 팩 파일을 제거하였습니다.");
+          MessageUtil.info(sender, "&e" + fileName + ".yml&r 명령어 팩 파일을 제거하였습니다");
         }
         case "execute" -> {
           if (args.length < 4)
@@ -121,7 +121,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
                 MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않거나 명령어가 없습니다. (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
                 return true;
               }
-              MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩에는 명령어가 &e" + commands.size() + "개&r 있습니다.");
+              MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩에는 명령어가 &e" + commands.size() + "개&r 있습니다");
               for (int i = 0; i < commands.size(); i++)
               {
                 MessageUtil.info(sender, "&e" + (i + 1) + "번째 &r명령어 : &e" + commands.get(i));
@@ -150,7 +150,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
               configuration.set(packName, commands);
               commandPackFile.saveConfig();
               Variable.commandPacks.put(fileName, configuration);
-              MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + commands.size() + "번째&r 줄에 &e" + command + "&r 명령어를 추가하였습니다.");
+              MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + commands.size() + "번째&r 줄에 &e" + command + "&r 명령어를 추가하였습니다");
             }
             case "remove" -> {
               if (commands == null || commands.isEmpty())
@@ -208,11 +208,11 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
                 configuration.set(packName, commands);
                 commandPackFile.saveConfig();
                 Variable.commandPacks.put(fileName, configuration);
-                MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + (line + 1) + "번째&r 명령어를 제거하였습니다.");
+                MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + (line + 1) + "번째&r 명령어를 제거하였습니다");
               }
               else
               {
-                MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 모든 명령어를 제거하였습니다.");
+                MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 모든 명령어를 제거하였습니다");
                 configuration.set(packName, null);
                 if (configuration.getKeys(false).isEmpty())
                 {
@@ -265,7 +265,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
               configuration.set(packName, commands);
               commandPackFile.saveConfig();
               Variable.commandPacks.put(fileName, configuration);
-              MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + line + "번째&r 줄의 명령어를 &e" + command + "&r으로 설정하였습니다.");
+              MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + line + "번째&r 줄의 명령어를 &e" + command + "&r으로 설정하였습니다");
             }
             case "insert" -> {
               if (args.length < 6)
@@ -303,7 +303,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
               configuration.set(packName, commands);
               commandPackFile.saveConfig();
               Variable.commandPacks.put(fileName, configuration);
-              MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + line + "번째&r 줄에 &e" + command + "&r 명령어를 들여썼습니다.");
+              MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩의 &e" + line + "번째&r 줄에 &e" + command + "&r 명령어를 들여썼습니다");
             }
             default -> {
               MessageUtil.wrongArg(sender, 4, args);
@@ -348,7 +348,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
         case "remove":
           if (Variable.commandPacks.isEmpty())
           {
-            return Collections.singletonList("유효한 명령어 팩 파일이 존재하지 않습니다.");
+            return Collections.singletonList("유효한 명령어 팩 파일이 존재하지 않습니다");
           }
           return Method.tabCompleterList(args, Variable.commandPacks.keySet(), "<명령어 팩 파일 이름>");
       }
@@ -363,7 +363,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
           {
             if (Variable.commandPacks.isEmpty())
             {
-              return Collections.singletonList("유효한 명령어 팩 파일이 존재하지 않습니다.");
+              return Collections.singletonList("유효한 명령어 팩 파일이 존재하지 않습니다");
             }
             return Method.tabCompleterList(args, Variable.commandPacks.keySet(), "<명령어 팩 파일 이름>");
           }
@@ -371,12 +371,12 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
           {
             if (Variable.commandPacks.isEmpty())
             {
-              return Collections.singletonList("유효한 명령어 팩 파일이 존재하지 않습니다.");
+              return Collections.singletonList("유효한 명령어 팩 파일이 존재하지 않습니다");
             }
             YamlConfiguration config = Variable.commandPacks.get(args[2]);
             if (config == null)
             {
-              return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 명령어 팩 파일입니다.");
+              return Collections.singletonList(args[2] + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 명령어 팩 파일입니다");
             }
             return Method.tabCompleterList(args, config.getKeys(false), "<명령어 팩>");
           }
@@ -410,12 +410,12 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
               {
                 if (config == null)
                 {
-                  return Collections.singletonList("명령어를 들여쓸 수 없습니다.");
+                  return Collections.singletonList("명령어를 들여쓸 수 없습니다");
                 }
                 List<String> commands = config.getStringList(args[2]);
                 if (commands.isEmpty())
                 {
-                  return Collections.singletonList("명령어를 들여쓸 수 없습니다.");
+                  return Collections.singletonList("명령어를 들여쓸 수 없습니다");
                 }
                 return Method.tabCompleterIntegerRadius(args, 1, commands.size(), "<줄>");
               }
@@ -423,12 +423,12 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
               {
                 if (config == null)
                 {
-                  return Collections.singletonList("제거할 명령어가 없습니다.");
+                  return Collections.singletonList("제거할 명령어가 없습니다");
                 }
                 List<String> commands = config.getStringList(args[2]);
                 if (commands.isEmpty())
                 {
-                  return Collections.singletonList("제거할 명령어가 없습니다.");
+                  return Collections.singletonList("제거할 명령어가 없습니다");
                 }
                 return Method.tabCompleterIntegerRadius(args, 1, commands.size(), "[줄]", "--all");
               }

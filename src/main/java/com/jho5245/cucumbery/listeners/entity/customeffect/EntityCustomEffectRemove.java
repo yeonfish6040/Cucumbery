@@ -27,7 +27,7 @@ public class EntityCustomEffectRemove implements Listener
     }
     if (customEffectType == CustomEffectType.MUTE)
     {
-      MessageUtil.sendMessage(entity, Prefix.INFO, "채팅 금지가 해제되었습니다.");
+      MessageUtil.sendMessage(entity, Prefix.INFO, "채팅 금지가 해제되었습니다");
     }
   }
 }

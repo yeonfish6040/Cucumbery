@@ -89,7 +89,7 @@ import java.util.concurrent.Executors;
 public class Cucumbery extends JavaPlugin
 {
   public static final int CONFIG_VERSION = 15;
-  public static final int DEATH_MESSAGES_CONFIG_VERSION = 1;
+  public static final int DEATH_MESSAGES_CONFIG_VERSION = 2;
   public static final int LANG_CONFIG_VERSION = 1;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
@@ -128,12 +128,12 @@ public class Cucumbery extends JavaPlugin
     }
     catch (Exception e)
     {
-      MessageUtil.consoleSendMessage("&c플러그인을 활성화하는 도중 오류가 발생하였습니다.");
+      MessageUtil.consoleSendMessage("&c플러그인을 활성화하는 도중 오류가 발생하였습니다");
       e.printStackTrace();
     }
     if (Cucumbery.config.getBoolean("console-messages.plugin"))
     {
-      MessageUtil.consoleSendMessage("&2[#52ee52;활성화&2] &e" + pluginDescriptionFile.getName() + "&r version : &e" + pluginDescriptionFile.getVersion() + "&r 플러그인이 활성화 되었습니다.");
+      MessageUtil.consoleSendMessage("&2[#52ee52;활성화&2] &e" + pluginDescriptionFile.getName() + "&r version : &e" + pluginDescriptionFile.getVersion() + "&r 플러그인이 활성화 되었습니다");
     }
     MessageUtil.broadcastDebug("Cucumbery 플러그인 활성화");
     for (Player online : Bukkit.getOnlinePlayers())
@@ -153,12 +153,12 @@ public class Cucumbery extends JavaPlugin
     }
     catch (Exception e)
     {
-      MessageUtil.consoleSendMessage("&c플러그인을 비활성화하는 도중 오류가 발생하였습니다.");
+      MessageUtil.consoleSendMessage("&c플러그인을 비활성화하는 도중 오류가 발생하였습니다");
       e.printStackTrace();
     }
     if (Cucumbery.config.getBoolean("console-messages.plugin"))
     {
-      MessageUtil.consoleSendMessage("&5[&d비활성화&5] &e" + pluginDescriptionFile.getName() + "&r version : &e" + pluginDescriptionFile.getVersion() + "&r 플러그인이 비활성화 되었습니다.");
+      MessageUtil.consoleSendMessage("&5[&d비활성화&5] &e" + pluginDescriptionFile.getName() + "&r version : &e" + pluginDescriptionFile.getVersion() + "&r 플러그인이 비활성화 되었습니다");
     }
   }
 
@@ -234,7 +234,7 @@ public class Cucumbery extends JavaPlugin
       if (title.contains(Constant.GUI_SUFFIX) || CreateGUI.isGUITitle(inventoryView.title()))
       {
         player.closeInventory();
-        MessageUtil.sendWarn(player, "플러그인이 비활성화되어 GUI 창이 닫힙니다.");
+        MessageUtil.sendWarn(player, "플러그인이 비활성화되어 GUI 창이 닫힙니다");
       }
     }
     for (UUID uuid : Variable.customEffectBossBarMap.keySet())

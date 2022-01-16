@@ -81,13 +81,13 @@ public class CommandGetUserData implements CommandExecutor, TabCompleter
                   ,ComponentUtil.create(value)
                           .hoverEvent(HoverEvent.showText(Component.translatable("chat.copy.click")))
                           .clickEvent(ClickEvent.copyToClipboard(value.toString())),
-                  "입니다.");
+                  "입니다");
         }
       }
 			else
 			{
 				MessageUtil.sendMessage(sender, Prefix.INFO_SETDATA, player, "의 " + keyString
-                + (value == null ? "&r 값이 없습니다." : "&r 값은 &e" + value + "&r입니다."));
+                + (value == null ? "&r 값이 없습니다" : "&r 값은 &e" + value + "&r입니다"));
 			}
     }
     else

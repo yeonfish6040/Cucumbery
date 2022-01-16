@@ -80,7 +80,7 @@ public class RecipeInventoryCategory
       {
         RecipeInventoryMainMenu.openRecipeInventory(player, page, true);
       }
-      MessageUtil.sendWarn(player, "해당 레시피 목록에 접근할 권한이 없어 레시피 목록 선택 화면으로 돌아갑니다.");
+      MessageUtil.sendWarn(player, "해당 레시피 목록에 접근할 권한이 없어 레시피 목록 선택 화면으로 돌아갑니다");
       return;
     }
 
@@ -330,7 +330,7 @@ public class RecipeInventoryCategory
             {
               resultLore.remove(resultLore.size() - 1);
               resultLore.remove(resultLore.size() - 1);
-              resultLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.create("§b[아이템을 제작하는 중입니다.]")));
+              resultLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.create("§b[아이템을 제작하는 중입니다]")));
               if (Cucumbery.using_Vault_Economy)
               {
                 double skipCost = config.getDouble("recipes." + recipe + ".extra.crafting-time-skip.cost");
@@ -388,7 +388,7 @@ public class RecipeInventoryCategory
         String bypassIfHidden = config.getString("recipes." + recipe + ".extra.permissions.bypass-if-hidden-permission");
         if (permission != null && !player.hasPermission(permission) && hideIfNoBase && (bypassIfHidden == null || !player.hasPermission(bypassIfHidden)))
         {
-          resultLore = new ArrayList<>(Collections.singletonList(ComponentUtil.create("§c해당 레시피의 정보를 볼 권한이 없습니다.")));
+          resultLore = new ArrayList<>(Collections.singletonList(ComponentUtil.create("§c해당 레시피의 정보를 볼 권한이 없습니다")));
           resultMeta.displayName(ComponentUtil.create("§c[비공개 레시피]"));
           result.setType(Material.BARRIER);
         }
@@ -403,6 +403,6 @@ public class RecipeInventoryCategory
   }
 
   private final static ItemStack INFO_ITEM = CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?", Arrays
-          .asList("&7제작을 원하는 아이템에 마우스를 올리면", "&7해당 아이템을 제작하는데 필요한 아이템들을 나열해줍니다.", "&e클릭&7을 하면 해당 재료에 대한 자세한 정보를 알려줍니다.", "&7제작 조건을 전부 충족시켰다면 &e시프트 클릭", "&7으로도 빠르게 아이템을 제작할 수 있습니다.",
+          .asList("&7제작을 원하는 아이템에 마우스를 올리면", "&7해당 아이템을 제작하는데 필요한 아이템들을 나열해줍니다", "&e클릭&7을 하면 해당 재료에 대한 자세한 정보를 알려줍니다", "&7제작 조건을 전부 충족시켰다면 &e시프트 클릭", "&7으로도 빠르게 아이템을 제작할 수 있습니다",
                   "&b제작하고 싶은 아이템을 선택해서 제작해보세요!"), false);
 }

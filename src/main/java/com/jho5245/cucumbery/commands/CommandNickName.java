@@ -63,7 +63,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         String inputName = MessageUtil.listToString(" ", 1, args.length, args);
         if (inputName.length() > 4096)
         {
-          MessageUtil.sendError(player, "너무 긴 닉네임입니다. 최대 &e4096자&r까지 입력할 수 있으나, &e" + inputName.length() + "자&r가 입력되었습니다.");
+          MessageUtil.sendError(player, "너무 긴 닉네임입니다. 최대 &e4096자&r까지 입력할 수 있으나, &e" + inputName.length() + "자&r가 입력되었습니다");
           return true;
         }
         Component nickName;
@@ -157,11 +157,11 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         }
         if (off)
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 초기화 하였습니다.", type + " 닉네임");
+          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 초기화 하였습니다", type + " 닉네임");
         }
         else
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 %s(으)로 변경하였습니다.", type + " 닉네임", finalNickname);
+          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 %s(으)로 변경하였습니다", type + " 닉네임", finalNickname);
         }
         Variable.nickNames.remove(originDisplay);
         Variable.nickNames.remove(originList);
@@ -215,7 +215,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
       String nicknameSerial = off ? null : ComponentUtil.serialize(finalNickname);
       if (nickName.length() > 4096)
       {
-        MessageUtil.sendError(sender, "너무 긴 닉네임입니다. 최대 &e4096자&r까지 입력할 수 있으나, &e" + nickName.length() + "자&r가 입력되었습니다.");
+        MessageUtil.sendError(sender, "너무 긴 닉네임입니다. 최대 &e4096자&r까지 입력할 수 있으나, &e" + nickName.length() + "자&r가 입력되었습니다");
         return true;
       }
       String originDisplay = UserData.DISPLAY_NAME.getString(uuid), originList = UserData.PLAYER_LIST_NAME.getString(uuid);
@@ -302,20 +302,20 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         {
           if (off)
           {
-            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 초기화 하였습니다.", sender, type + " 닉네임");
+            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 초기화 하였습니다", sender, type + " 닉네임");
           }
           else
           {
-            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 %s(으)로 변경하였습니다.", sender, type + " 닉네임", finalNickname);
+            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 %s(으)로 변경하였습니다", sender, type + " 닉네임", finalNickname);
           }
         }
         if (off)
         {
-          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 초기화 하였습니다.", offlinePlayer, type + " 닉네임");
+          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 초기화 하였습니다", offlinePlayer, type + " 닉네임");
         }
         else
         {
-          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 %s(으)로 변경하였습니다.", offlinePlayer, type + " 닉네임", finalNickname);
+          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 %s(으)로 변경하였습니다", offlinePlayer, type + " 닉네임", finalNickname);
         }
       }
       File nickNamesFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/Nicknames.yml");
@@ -341,7 +341,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
   {
     if (!Cucumbery.config.getBoolean("use-nickname-feature"))
     {
-      return Collections.singletonList("닉네임 기능이 비활성화 되어 있습니다.");
+      return Collections.singletonList("닉네임 기능이 비활성화 되어 있습니다");
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
     {

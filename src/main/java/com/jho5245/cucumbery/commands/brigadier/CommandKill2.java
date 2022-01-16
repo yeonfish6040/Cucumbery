@@ -52,7 +52,7 @@ public class CommandKill2 extends CommandBase
       }
       else
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다.");
+        CommandAPI.fail("개체를 찾을 수 없습니다");
       }
     }
     else
@@ -61,11 +61,11 @@ public class CommandKill2 extends CommandBase
       {
         if (commandSender instanceof BlockCommandSender)
         {
-          CommandAPI.fail("개체를 찾을 수 없습니다.");
+          CommandAPI.fail("개체를 찾을 수 없습니다");
         }
         else
         {
-          MessageUtil.sendError(commandSender, "개체를 찾을 수 없습니다.");
+          MessageUtil.sendError(commandSender, "개체를 찾을 수 없습니다");
         }
         return;
       }
@@ -97,12 +97,12 @@ public class CommandKill2 extends CommandBase
         if (!failureEntities.isEmpty())
         {
           MessageUtil.sendWarnOrError(successEntitiesIsEmpty,
-                  sender, ComponentUtil.translate("%s은(는) 이미 죽어 있는 상태여서 죽일 수 없습니다.", failureEntities));
+                  sender, ComponentUtil.translate("%s은(는) 이미 죽어 있는 상태여서 죽일 수 없습니다", failureEntities));
         }
         if (!successEntitiesIsEmpty)
         {
           MessageUtil.info(sender, ComponentUtil.translate("commands.kill.success.single", successEntities));
-          MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신을 죽였습니다.", sender));
+          MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신을 죽였습니다", sender));
           MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s]", sender,
                   ComponentUtil.translate("commands.kill.success.single", successEntities)
           ));
@@ -110,7 +110,7 @@ public class CommandKill2 extends CommandBase
       }
       else if (successEntities.isEmpty() && commandSender instanceof BlockCommandSender)
       {
-        MessageUtil.sendMessage(commandSender, "유효한 개체를 찾을 수 없습니다.");
+        MessageUtil.sendMessage(commandSender, "유효한 개체를 찾을 수 없습니다");
       }
     }
   }

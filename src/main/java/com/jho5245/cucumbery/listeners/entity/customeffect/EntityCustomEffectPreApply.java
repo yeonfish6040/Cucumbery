@@ -27,7 +27,7 @@ public class EntityCustomEffectPreApply implements Listener
     if (customEffectType == CustomEffectType.RESURRECTION && CustomEffectManager.hasEffect(entity, CustomEffectType.RESURRECTION_COOLDOWN))
     {
       event.setCancelled(true);
-      MessageUtil.sendWarn(entity, ComponentUtil.translate("%s 효과가 적용중이여서 %s 효과를 적용받지 못했습니다.",
+      MessageUtil.sendWarn(entity, ComponentUtil.translate("%s 효과가 적용중이여서 %s 효과를 적용받지 못했습니다",
               CustomEffectManager.getDisplay(Collections.singletonList(
                       CustomEffectManager.getEffect(entity, CustomEffectType.RESURRECTION_COOLDOWN)), true),
                       customEffect));

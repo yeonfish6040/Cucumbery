@@ -43,7 +43,7 @@ public class PlayerChat implements Listener
     if (CustomEffectManager.hasEffect(player, CustomEffectType.MUTE))
     {
       event.setCancelled(true);
-      MessageUtil.sendMessage(player, Prefix.INFO, "채팅을 할 수 없는 상태입니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO, "채팅을 할 수 없는 상태입니다");
       return;
     }
     UUID uuid = player.getUniqueId();
@@ -97,7 +97,7 @@ public class PlayerChat implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerChatAlertCooldown.contains(uuid))
       {
         Variable.playerChatAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c채팅 불가!", "&r채팅을 칠 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c채팅 불가!", "&r채팅을 칠 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerChatAlertCooldown.remove(uuid), 100L);
       }
@@ -109,7 +109,7 @@ public class PlayerChat implements Listener
       if (!Variable.playerChatAlertCooldown.contains(uuid))
       {
         Variable.playerChatAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "채팅을 칠 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "채팅을 칠 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerChatAlertCooldown.remove(uuid), 100L);
       }
@@ -128,7 +128,7 @@ public class PlayerChat implements Listener
       if (Variable.playerChatNoSpamAlertCooldown.contains(uuid))
       {
         event.setCancelled(true);
-        MessageUtil.sendTitle(player, "&c채팅 불가!", "&r채팅은 &e" + Constant.Sosu2.format(chatCooldown / 20d) + "초&r 마다 가능합니다.", 5, 60, 15);
+        MessageUtil.sendTitle(player, "&c채팅 불가!", "&r채팅은 &e" + Constant.Sosu2.format(chatCooldown / 20d) + "초&r 마다 가능합니다", 5, 60, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         return;
       }
@@ -140,7 +140,7 @@ public class PlayerChat implements Listener
         if (message.equals(Variable.playerChatSameMessageSpamAlertCooldown.get(uuid)))
         {
           event.setCancelled(true);
-          MessageUtil.sendTitle(player, "&c채팅 불가!", "&r같은 메시지를 &e" + Constant.Sosu2.format(chatCooldown / 20d) + "초&r 이내에 채팅할 수 없습니다.", 5, 60, 15);
+          MessageUtil.sendTitle(player, "&c채팅 불가!", "&r같은 메시지를 &e" + Constant.Sosu2.format(chatCooldown / 20d) + "초&r 이내에 채팅할 수 없습니다", 5, 60, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           return;
         }
@@ -203,7 +203,7 @@ public class PlayerChat implements Listener
       if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
       {
         event.setCancelled(true);
-        MessageUtil.sendError(player, ComponentUtil.translate("주로 사용하는 손에 아이템을 들고 있어야 아이템 확성기를 사용할 수 있습니다."));
+        MessageUtil.sendError(player, ComponentUtil.translate("주로 사용하는 손에 아이템을 들고 있어야 아이템 확성기를 사용할 수 있습니다"));
         return;
       }
       else
@@ -211,7 +211,7 @@ public class PlayerChat implements Listener
         if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ITEM_MEGAPHONE))
         {
           event.setCancelled(true);
-          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다."));
+          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 아이템 확성기를 사용할 수 없습니다"));
           return;
         }
         if (!Permission.EVENT_CHAT_SPAM.has(player) && Cucumbery.config.getBoolean("no-spam.item-megaphone.enable"))

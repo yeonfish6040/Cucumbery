@@ -56,13 +56,13 @@ public class CommandUpdateCommands implements CommandExecutor, TabCompleter
 				player.updateCommands();
 				if (!sender.equals(player) && !hideOutput)
 				{
-					MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신의 명령어 목록을 업데이트 하였습니다.", sender));
+					MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신의 명령어 목록을 업데이트 하였습니다", sender));
 				}
 			}
 			if (!hideOutput)
 			{
-				MessageUtil.info(sender, ComponentUtil.translate("%s의 명령어 목록을 업데이트 하였습니다.", players));
-				MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), ComponentUtil.translate("[%s: %s의 명령어 목록을 업데이트 하였습니다.]", sender, players));
+				MessageUtil.info(sender, ComponentUtil.translate("%s의 명령어 목록을 업데이트 하였습니다", players));
+				MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), ComponentUtil.translate("[%s: %s의 명령어 목록을 업데이트 하였습니다]", sender, players));
 			}
 		}
 		else

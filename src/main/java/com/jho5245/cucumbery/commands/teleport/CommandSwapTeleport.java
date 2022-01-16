@@ -71,7 +71,7 @@ public class CommandSwapTeleport implements CommandExecutor, TabCompleter
       }
       if (player == target)
       {
-        MessageUtil.sendError(sender, "같은 개체의 위치는 서로 맞바꿀 수 없습니다.");
+        MessageUtil.sendError(sender, "같은 개체의 위치는 서로 맞바꿀 수 없습니다");
         return true;
       }
       if (args.length >= 3 && !MessageUtil.isBoolean(sender, args, 3, true))
@@ -112,14 +112,14 @@ public class CommandSwapTeleport implements CommandExecutor, TabCompleter
       }
       if (!hideOutput)
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s와(과) %s의 위치를 서로 맞바꾸었습니다.", player, target));
+        MessageUtil.sendMessage(sender, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s와(과) %s의 위치를 서로 맞바꾸었습니다", player, target));
         if (!player.equals(sender))
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다.", sender, target));
+          MessageUtil.sendMessage(player, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다", sender, target));
         }
         if (!target.equals(sender))
         {
-          MessageUtil.sendMessage(target, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다.", sender, player));
+          MessageUtil.sendMessage(target, Prefix.INFO_TELEPORT, ComponentUtil.translate("%s이(가) 당신과 %s의 위치를 서로 맞바꾸었습니다", sender, player));
         }
       }
     }

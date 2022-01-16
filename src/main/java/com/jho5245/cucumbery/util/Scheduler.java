@@ -615,7 +615,7 @@ public class Scheduler
           int currentStack = Variable.playerNotifyChatIfInventoryIsFullStack.get(uuid);
           if (currentStack == 1)
           {
-            MessageUtil.info(player, "&r이 메시지와 경고는 &e/메뉴 &r혹은 &e/apsb&r 명령어로 개인 설정(철사 덫 갈고리)에서 비활성화할 수 있습니다.");
+            MessageUtil.info(player, "&r이 메시지와 경고는 &e/메뉴 &r혹은 &e/apsb&r 명령어로 개인 설정(철사 덫 갈고리)에서 비활성화할 수 있습니다");
           }
           currentStack++;
           if (currentStack > 4)
@@ -1082,7 +1082,7 @@ public class Scheduler
             {
               if (nearByEntity instanceof Player player)
               {
-                MessageUtil.info(player, ComponentUtil.translate("근처에 떨어져 있는 아이템 [%s](%s)의 유효 기간이 지나서 아이템이 제거되었습니다.", item, location));
+                MessageUtil.info(player, ComponentUtil.translate("근처에 떨어져 있는 아이템 [%s](%s)의 유효 기간이 지나서 아이템이 제거되었습니다", item, location));
               }
             }
             item.setAmount(0);
@@ -1103,7 +1103,7 @@ public class Scheduler
             {
               if (nearByEntity instanceof Player player)
               {
-                MessageUtil.info(player, ComponentUtil.translate("근처에 있는 아이템 액자(%s)에 설치되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
+                MessageUtil.info(player, ComponentUtil.translate("근처에 있는 아이템 액자(%s)에 설치되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
               }
             }
             itemFrame.setItem(null);
@@ -1127,7 +1127,7 @@ public class Scheduler
                 if (nearByEntity.getType() == EntityType.PLAYER)
                 {
                   Player player = (Player) nearByEntity;
-                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 머리에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
+                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 머리에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
                 }
               }
               entityEquipment.setHelmet(null);
@@ -1142,7 +1142,7 @@ public class Scheduler
               {
                 if (nearByEntity instanceof Player player)
                 {
-                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 몸에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
+                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 몸에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
                 }
               }
               entityEquipment.setChestplate(null);
@@ -1157,7 +1157,7 @@ public class Scheduler
               {
                 if (nearByEntity instanceof Player player)
                 {
-                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 다리에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
+                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 다리에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
                 }
               }
               entityEquipment.setLeggings(null);
@@ -1172,7 +1172,7 @@ public class Scheduler
               {
                 if (nearByEntity instanceof Player player)
                 {
-                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 발에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
+                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 발에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
                 }
               }
               entityEquipment.setBoots(null);
@@ -1186,7 +1186,7 @@ public class Scheduler
               {
                 if (nearByEntity instanceof Player player)
                 {
-                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 주로 사용하는 손에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
+                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 주로 사용하는 손에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
                 }
               }
               entityEquipment.setItemInMainHand(null);
@@ -1200,7 +1200,7 @@ public class Scheduler
               {
                 if (nearByEntity instanceof Player player)
                 {
-                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 다른 손에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", location, item));
+                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 갑옷 거치대(%s)의 다른 손에 장착되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
                 }
               }
               entityEquipment.setItemInOffHand(null);
@@ -1229,7 +1229,7 @@ public class Scheduler
               String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
               if (expireDate != null && Method.isTimeUp(item, expireDate))
               {
-                MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", item));
+                MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", item));
                 item.setAmount(0);
                 player.updateInventory();
                 if (player.getOpenInventory().getType() == InventoryType.CRAFTING || player.getOpenInventory().getType() == InventoryType.WORKBENCH)
@@ -1260,7 +1260,7 @@ public class Scheduler
             String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
             if (expireDate != null && Method.isTimeUp(item, expireDate))
             {
-              MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", item));
+              MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", item));
               item.setAmount(0);
             }
           }
@@ -1269,7 +1269,7 @@ public class Scheduler
         String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(cursor), CucumberyTag.EXPIRE_DATE_KEY);
         if (expireDate != null && Method.isTimeUp(cursor, expireDate))
         {
-          MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", cursor));
+          MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", cursor));
           cursor.setAmount(0);
           player.updateInventory();
         }
@@ -1339,7 +1339,7 @@ public class Scheduler
             if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.antispecateAlertCooldown.contains(uuid))
             {
               Variable.antispecateAlertCooldown.add(uuid);
-              MessageUtil.sendTitle(player, "&c관전 불가!", "&r관전할 수 없는 플레이어입니다.", 5, 80, 15);
+              MessageUtil.sendTitle(player, "&c관전 불가!", "&r관전할 수 없는 플레이어입니다", 5, 80, 15);
               SoundPlay.playSound(player, Constant.ERROR_SOUND);
               Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.antispecateAlertCooldown.remove(uuid), 100L);
             }

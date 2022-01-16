@@ -43,7 +43,7 @@ public class CommandGetPositions implements CommandExecutor, TabCompleter
         worldSpecified = true;
         if (world.getPlayers().isEmpty())
         {
-          MessageUtil.info(sender, "해당 월드에는 플레이어가 존재하지 않습니다.");
+          MessageUtil.info(sender, "해당 월드에는 플레이어가 존재하지 않습니다");
           return true;
         }
       }

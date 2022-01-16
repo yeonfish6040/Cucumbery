@@ -68,8 +68,8 @@ public class BlockBreak implements Listener
     {
       event.setCancelled(true);
       Method.playSound(player, Constant.ERROR_SOUND);
-      MessageUtil.sendError(player, "강화중에는 블록을 파괴하실 수 없습니다.");
-      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다.", ClickEvent.Action.RUN_COMMAND, "/강화 quit");
+      MessageUtil.sendError(player, "강화중에는 블록을 파괴하실 수 없습니다");
+      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, "/강화 quit");
       player.sendMessage(a);
       return;
     }
@@ -79,7 +79,7 @@ public class BlockBreak implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockBreakAlertCooldown.contains(uuid))
       {
         Variable.blockBreakAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c파괴 불가!", "&r블록을 파괴할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c파괴 불가!", "&r블록을 파괴할 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockBreakAlertCooldown.remove(uuid), 100L);
       }
@@ -100,7 +100,7 @@ public class BlockBreak implements Listener
       if (!Variable.blockBreakAlertCooldown.contains(uuid))
       {
         Variable.blockBreakAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "블록을 파괴할 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "블록을 파괴할 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockBreakAlertCooldown.remove(uuid), 100L);
       }
@@ -120,7 +120,7 @@ public class BlockBreak implements Listener
               if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockBreakCropHarvestAlertCooldown.contains(uuid))
               {
                 Variable.blockBreakCropHarvestAlertCooldown.add(uuid);
-                MessageUtil.sendTitle(player, "&c수확 불가!", "&r맨손 혹은 괭이로만 수확할 수 있습니다.", 5, 80, 15);
+                MessageUtil.sendTitle(player, "&c수확 불가!", "&r맨손 혹은 괭이로만 수확할 수 있습니다", 5, 80, 15);
                 SoundPlay.playSound(player, Constant.ERROR_SOUND);
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockBreakCropHarvestAlertCooldown.remove(uuid), 100L);
               }
@@ -137,7 +137,7 @@ public class BlockBreak implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockBreakAlertCooldown2.contains(uuid))
       {
         Variable.blockBreakAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, "&c파괴 불가!", "&r사용할 수 없는 아이템입니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c파괴 불가!", "&r사용할 수 없는 아이템입니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockBreakAlertCooldown2.remove(uuid), 100L);
       }
@@ -151,7 +151,7 @@ public class BlockBreak implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockBreakAlertCooldown2.contains(uuid))
       {
         Variable.blockBreakAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, "&c파괴 불가!", "&r파괴할 수 없는 블록입니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c파괴 불가!", "&r파괴할 수 없는 블록입니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockBreakAlertCooldown2.remove(uuid), 100L);
       }
@@ -166,7 +166,7 @@ public class BlockBreak implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.blockBreakAlertCooldown2.contains(uuid))
         {
           Variable.blockBreakAlertCooldown2.add(uuid);
-          MessageUtil.sendWarn(player, "웅크린 상태에서 명령 블록 파괴 방지 기능으로 명령 블록을 파괴하지 않습니다.");
+          MessageUtil.sendWarn(player, "웅크린 상태에서 명령 블록 파괴 방지 기능으로 명령 블록을 파괴하지 않습니다");
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.blockBreakAlertCooldown2.remove(uuid), 100L);
         }
         return;

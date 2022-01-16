@@ -275,7 +275,7 @@ public class JosaFormatter
         }
       }
 
-      // 없으면 괄호 표현식을 사용한다. ex) "???을(를) 찾을 수 없습니다."
+      // 없으면 괄호 표현식을 사용한다. ex) "???을(를) 찾을 수 없습니다"
 
       String replaceStr = matchedJosaPair.first + "(" + matchedJosaPair.second + ")";
       return str.substring(0, josaIndex) + replaceStr + str.substring(josaIndex + searchStr.length());

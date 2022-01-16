@@ -93,7 +93,7 @@ public class CustomEffectGUI
     if (isEmpty)
     {
       menu.setItem(22, CreateItemStack.create(Material.RED_STAINED_GLASS_PANE, 1, ComponentUtil.translate("&c효과 없음!"),
-              Arrays.asList(ComponentUtil.translate("&7적용 중인 효과가 하나도 없습니다."), ComponentUtil.translate("&7포션을 마셔서 효과를 적용시켜 보세요!")), false));
+              Arrays.asList(ComponentUtil.translate("&7적용 중인 효과가 하나도 없습니다"), ComponentUtil.translate("&7포션을 마셔서 효과를 적용시켜 보세요!")), false));
     }
     else
     {

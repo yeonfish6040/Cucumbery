@@ -85,7 +85,7 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
                       .hoverEvent(HoverEvent.showText(
                               ComponentUtil.translate("클릭하여 쓰레기통을 엽니다. %s", "&7 - /trashcan")
                                       .append(Component.text("\n"))
-                                      .append(ComponentUtil.translate("쓰레기통에서는 바닥에 버릴 수 없는 아이템도 버릴 수 있습니다."))
+                                      .append(ComponentUtil.translate("쓰레기통에서는 바닥에 버릴 수 없는 아이템도 버릴 수 있습니다"))
                               ))
                       .clickEvent(ClickEvent.runCommand("/trashcan"))
       );

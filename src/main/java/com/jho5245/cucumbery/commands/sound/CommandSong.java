@@ -51,7 +51,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
     }
     if (!Cucumbery.using_NoteBlockAPI)
     {
-      MessageUtil.sendError(sender, "&eNoteBlockAPI&r 플러그인을 사용하고 있지 않습니다.");
+      MessageUtil.sendError(sender, "&eNoteBlockAPI&r 플러그인을 사용하고 있지 않습니다");
       return !(sender instanceof BlockCommandSender);
     }
     int length = args.length;
@@ -131,7 +131,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
               if (!console)
               {
                 MessageUtil.sendError(sender, ComponentUtil.translate("노래가 이미 재생중이여서 재생할 수 없습니다. (%s)", song));
-                MessageUtil.info(sender, ComponentUtil.translate("'/csong stop' 명령어로 노래를 멈추거나 '노래이름--stop'을 입력하면 이미 재생중인 노래를 멈추고 재생할 수 있습니다."));
+                MessageUtil.info(sender, ComponentUtil.translate("'/csong stop' 명령어로 노래를 멈추거나 '노래이름--stop'을 입력하면 이미 재생중인 노래를 멈추고 재생할 수 있습니다"));
                 if (sender instanceof Player player)
                 {
                   if (fileName.contains(" "))
@@ -143,7 +143,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
                     fileName += "--stop";
                   }
                   String command = "/csong play " + fileName;
-                  Component component = Component.translatable("혹은 이 메시지를 클릭하여 노래를 재생할 수 있습니다.", Constant.THE_COLOR);
+                  Component component = Component.translatable("혹은 이 메시지를 클릭하여 노래를 재생할 수 있습니다", Constant.THE_COLOR);
                   component = component.hoverEvent(HoverEvent.showText(Component.text(command))).clickEvent(ClickEvent.suggestCommand(command));
                   MessageUtil.info(player, component);
                 }
@@ -181,7 +181,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
               song = NBSDecoder.parse(songFile);
               if (song == null)
               {
-                MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다.");
+                MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다");
                 return true;
               }
               if (radioSongPlayer != null)
@@ -199,7 +199,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
               }
               if (!silent)
               {
-                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s을(를) 재생합니다.", song);
+                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s을(를) 재생합니다", song);
               }
               Scheduler.fileNameLength = -1;
               if (Scheduler.delayTask != null)
@@ -214,7 +214,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
                   radioSongPlayer.addPlayer(player);
                   if (!silent && !sender.equals(player))
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, "%s이(가) %s을(를) 재생합니다.", sender, song);
+                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, "%s이(가) %s을(를) 재생합니다", sender, song);
                   }
                 }
               }
@@ -236,7 +236,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
             if (radioSongPlayer == null || song == null)
             {
-              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다.");
+              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다");
               return !(sender instanceof BlockCommandSender);
             }
             boolean hideOutput = false;
@@ -252,14 +252,14 @@ public class CommandSong implements CommandExecutor, TabCompleter
             radioSongPlayer.destroy();
             if (!hideOutput)
             {
-              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 재생을 멈췄습니다.", song));
+              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 재생을 멈췄습니다", song));
               for (Player player : Bukkit.getServer().getOnlinePlayers())
               {
                 if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
                 {
                   if (!sender.equals(player))
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) %s의 재생을 멈췄습니다.", sender, song));
+                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) %s의 재생을 멈췄습니다", sender, song));
                   }
                 }
               }
@@ -277,7 +277,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
             if (radioSongPlayer == null || song == null)
             {
-              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다.");
+              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다");
               return !(sender instanceof BlockCommandSender);
             }
             boolean playing = radioSongPlayer.isPlaying();
@@ -311,14 +311,14 @@ public class CommandSong implements CommandExecutor, TabCompleter
             if (!hideOutput)
             {
               String display = !playing ? "중지" : "재개";
-              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 재생을 " + display + "하였습니다.", song));
+              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 재생을 " + display + "하였습니다", song));
               for (Player player : Bukkit.getServer().getOnlinePlayers())
               {
                 if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
                 {
                   if (!sender.equals(player))
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) %s의 재생을 " + display + "하였습니다.", sender, song));
+                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) %s의 재생을 " + display + "하였습니다", sender, song));
                   }
                 }
               }
@@ -340,7 +340,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
             if (radioSongPlayer == null || song == null)
             {
-              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다.");
+              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다");
               return !(sender instanceof BlockCommandSender);
             }
             if (!MessageUtil.isDouble(sender, args[1], true))
@@ -366,7 +366,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
             if (radioSongPlayer == null || song == null)
             {
-              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다.");
+              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다");
               return !(sender instanceof BlockCommandSender);
             }
             List<Player> players = new ArrayList<>();
@@ -379,7 +379,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
             if (players.isEmpty())
             {
-              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "아무도 노래를 듣고 있지 않습니다.");
+              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "아무도 노래를 듣고 있지 않습니다");
               return true;
             }
             MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "--------------------------------------------");
@@ -399,7 +399,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
             if (radioSongPlayer == null || song == null)
             {
-              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다.");
+              MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다");
               return !(sender instanceof BlockCommandSender);
             }
 
@@ -489,7 +489,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
               playerSong = NBSDecoder.parse(songFile);
               if (playerSong == null)
               {
-                MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다.");
+                MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다");
                 return true;
               }
               playerRadio = new RadioSongPlayer(playerSong);
@@ -502,14 +502,14 @@ public class CommandSong implements CommandExecutor, TabCompleter
               playerRadio.setAutoDestroy(true);
               if (!hideOutput)
               {
-                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s에게 %s을(를) 재생합니다.", player, playerSong));
+                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s에게 %s을(를) 재생합니다", player, playerSong));
               }
               if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
               {
                 playerRadio.addPlayer(player);
                 if (!hideOutput && !player.equals(sender))
                 {
-                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) 당신에게 %s을(를) 재생합니다.", sender, playerSong));
+                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) 당신에게 %s을(를) 재생합니다", sender, playerSong));
                 }
               }
               playerRadio.setPlaying(true);
@@ -543,7 +543,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
               RadioSongPlayer playerRadio = CommandSong.playerRadio.get(uuid);
               if (playerRadio == null)
               {
-                MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다.");
+                MessageUtil.sendError(sender, "노래를 재생하고 있지 않습니다");
                 return true;
               }
               Song playerSong = playerRadio.getSong();
@@ -551,13 +551,13 @@ public class CommandSong implements CommandExecutor, TabCompleter
               playerRadio.destroy();
               if (!hideOutput)
               {
-                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 %s의 재생을 멈췄습니다.", player, playerSong));
+                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 %s의 재생을 멈췄습니다", player, playerSong));
               }
               if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
               {
                 if (!hideOutput && !player.equals(sender))
                 {
-                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) 당신의 %s의 재생을 멈췄습니다.", sender, playerSong));
+                  MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) 당신의 %s의 재생을 멈췄습니다", sender, playerSong));
                 }
               }
               CommandSong.playerRadio.remove(uuid);
@@ -565,7 +565,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
             catch (Exception e)
             {
-              MessageUtil.sendError(sender, "노래의 재생을 멈추는 도중에 알 수 없는 오류가 발생하였습니다.");
+              MessageUtil.sendError(sender, "노래의 재생을 멈추는 도중에 알 수 없는 오류가 발생하였습니다");
               e.printStackTrace();
             }
           }
@@ -573,7 +573,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             RadioSongPlayer playerRadio = CommandSong.playerRadio.get(uuid);
             if (playerRadio == null)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s은(는) 노래를 재생하고 있지 않습니다.", player));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s은(는) 노래를 재생하고 있지 않습니다", player));
               return true;
             }
             Song playerSong = playerRadio.getSong();
@@ -603,7 +603,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
     {
       if (!Cucumbery.using_NoteBlockAPI)
       {
-        return Collections.singletonList("NoteBlockAPI 플러그인을 사용하고 있지 않습니다.");
+        return Collections.singletonList("NoteBlockAPI 플러그인을 사용하고 있지 않습니다");
       }
       if (length == 1)
       {
@@ -641,7 +641,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
     {
       if (!Cucumbery.using_NoteBlockAPI)
       {
-        return Collections.singletonList("NoteBlockAPI 플러그인을 사용하고 있지 않습니다.");
+        return Collections.singletonList("NoteBlockAPI 플러그인을 사용하고 있지 않습니다");
       }
       if (length == 1)
       {

@@ -29,7 +29,7 @@ public class CommandEconomy implements CommandExecutor, TabCompleter
     }
     if (!Cucumbery.using_Vault_Economy)
     {
-      MessageUtil.sendError(sender, "&eVault&r 플러그인을 사용하고 있지 않습니다.");
+      MessageUtil.sendError(sender, "&eVault&r 플러그인을 사용하고 있지 않습니다");
       return true;
     }
     if (args.length < 3)
@@ -83,10 +83,10 @@ public class CommandEconomy implements CommandExecutor, TabCompleter
             String balanceDisplay = Constant.Sosu2.format(Cucumbery.eco.getBalance(offlinePlayer));
             if (player != null && !player.equals(sender))
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신에게 &e" + inputDisplay + "원&r을 지급하였습니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신에게 &e" + inputDisplay + "원&r을 지급하였습니다");
               MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, "현재 소지 금액 : &e" + balanceDisplay + "원");
             }
-            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "에게 &e" + inputDisplay + "원&r을 지급하였습니다.");
+            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "에게 &e" + inputDisplay + "원&r을 지급하였습니다");
             MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "의 소지 금액 : &e" + balanceDisplay + "원");
           }
         }
@@ -97,10 +97,10 @@ public class CommandEconomy implements CommandExecutor, TabCompleter
             String balanceDisplay = Constant.Sosu2.format(Cucumbery.eco.getBalance(offlinePlayer));
             if (player != null && !player.equals(sender))
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신에게서 &e" + inputDisplay + "원&r을 차감하였습니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신에게서 &e" + inputDisplay + "원&r을 차감하였습니다");
               MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, "현재 소지 금액 : &e" + balanceDisplay + "원");
             }
-            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "에게서 &e" + inputDisplay + "원&r을 차감하였습니다.");
+            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "에게서 &e" + inputDisplay + "원&r을 차감하였습니다");
             MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "의 소지 금액 : &e" + balanceDisplay + "원");
           }
         }
@@ -111,9 +111,9 @@ public class CommandEconomy implements CommandExecutor, TabCompleter
           {
             if (player != null && !player.equals(sender))
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신의 소지 금액을 &e" + inputDisplay + "원&r으로 설정하였습니다.");
+              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신의 소지 금액을 &e" + inputDisplay + "원&r으로 설정하였습니다");
             }
-            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "의 소지 금액을 &e" + inputDisplay + "원&r으로 설정하였습니다.");
+            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "의 소지 금액을 &e" + inputDisplay + "원&r으로 설정하였습니다");
           }
         }
         default -> {
@@ -136,7 +136,7 @@ public class CommandEconomy implements CommandExecutor, TabCompleter
   {
     if (!Cucumbery.using_Vault_Economy)
     {
-      return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다.");
+      return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
     {

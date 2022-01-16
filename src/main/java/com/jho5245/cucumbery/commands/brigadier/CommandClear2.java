@@ -57,12 +57,12 @@ public class CommandClear2 extends CommandBase
     }
     if (total == 0)
     {
-      MessageUtil.sendError(sender, ComponentUtil.translate("%s에게 제거할 수 있는 아이템이 없습니다.", players));
+      MessageUtil.sendError(sender, ComponentUtil.translate("%s에게 제거할 수 있는 아이템이 없습니다", players));
     }
     else
     {
-      MessageUtil.info(sender, ComponentUtil.translate("%s에게서 아이템 %s개를 제거하였습니다.", players, total));
-      MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), ComponentUtil.translate("[%s: %s에게서 아이템 %s개를 제거하였습니다.]",  sender, players, total));
+      MessageUtil.info(sender, ComponentUtil.translate("%s에게서 아이템 %s개를 제거하였습니다", players, total));
+      MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), ComponentUtil.translate("[%s: %s에게서 아이템 %s개를 제거하였습니다]",  sender, players, total));
     }
   }
 

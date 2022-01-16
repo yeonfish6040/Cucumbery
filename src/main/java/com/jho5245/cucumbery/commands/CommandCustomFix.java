@@ -46,18 +46,18 @@ public class CommandCustomFix implements CommandExecutor, TabCompleter
     }
     if (!Constant.DURABLE_ITEMS.contains(item.getType()))
     {
-      MessageUtil.sendError(player, "수리할 수 없는 아이템입니다.");
+      MessageUtil.sendError(player, "수리할 수 없는 아이템입니다");
       return true;
     }
     Damageable duraMeta = (Damageable) item.getItemMeta();
     if (duraMeta.getDamage() <= 0)
     {
-      MessageUtil.sendError(player, "내구도가 가득 찬 아이템은 수리할 수 없습니다.");
+      MessageUtil.sendError(player, "내구도가 가득 찬 아이템은 수리할 수 없습니다");
       return true;
     }
     double cost = Cucumbery.config.getDouble("fix-command-cost");
     boolean useCost = Cucumbery.using_Vault_Economy && cost > 0;
-    String fixMessage = "주로 사용하는 손에 들고 있는 아이템을 수리하였습니다.";
+    String fixMessage = "주로 사용하는 손에 들고 있는 아이템을 수리하였습니다";
     if (player.getGameMode() != GameMode.CREATIVE && useCost)
     {
       double playerMoney = Cucumbery.eco.getBalance(player);

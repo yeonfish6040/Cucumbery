@@ -142,7 +142,7 @@ public class ItemLore2
         long expireMills = Method.getTimeDifference(Calendar.getInstance(), expireDate);
         if (!relative && expireMills <= 20000)
         {
-          lore.add(ComponentUtil.create("&e유효 기간 : 유효 기간이 만료되었습니다."));
+          lore.add(ComponentUtil.create("&e유효 기간 : 유효 기간이 만료되었습니다"));
         }
         else
         {

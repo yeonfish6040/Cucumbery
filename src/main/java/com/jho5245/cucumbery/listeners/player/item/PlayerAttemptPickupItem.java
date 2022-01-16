@@ -80,11 +80,11 @@ public class PlayerAttemptPickupItem implements Listener
         Component itemStackComponent = ItemNameUtil.itemName(itemStack, TextColor.fromHexString("#00ff3c"));
         if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
         {
-          player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) 주웠습니다.", itemStackComponent));
+          player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) 주웠습니다", itemStackComponent));
         }
         else
         {
-          player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) %s개 주웠습니다.", itemStackComponent, "#00ff3c;" + amount));
+          player.sendActionBar(ComponentUtil.translate("#00ccff;%s을(를) %s개 주웠습니다", itemStackComponent, "#00ff3c;" + amount));
         }
       }
     }

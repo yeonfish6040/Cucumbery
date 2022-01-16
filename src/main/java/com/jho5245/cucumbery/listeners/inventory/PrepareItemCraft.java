@@ -49,7 +49,7 @@ public class PrepareItemCraft implements Listener
         int amplifier = customEffect.getAmplifier();
         ItemStack result = Cucumbery.config.getBoolean("blind-result-when-crafting-with-uncraftable-item") ? null : CreateItemStack.create(Material.BARRIER, 1,
                 ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME),
-                ComponentUtil.translate("&c아이템을 제작할 수 없습니다."),
+                ComponentUtil.translate("&c아이템을 제작할 수 없습니다"),
                 true);
         if (inventoryType == InventoryType.CRAFTING && (amplifier == 0 || amplifier == 2))
         {
@@ -70,7 +70,7 @@ public class PrepareItemCraft implements Listener
           return;
         }
         ItemStack result = Cucumbery.config.getBoolean("blind-result-when-crafting-with-uncraftable-item") ? null
-                : CreateItemStack.create(Material.BARRIER, 1, ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME), ComponentUtil.translate("&7아이템을 조합할 권한이 없습니다."), true);
+                : CreateItemStack.create(Material.BARRIER, 1, ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME), ComponentUtil.translate("&7아이템을 조합할 권한이 없습니다"), true);
         if (!Permission.EVENT_ITEM_CRAFT.has(player))
         {
           event.getView().setItem(0, result);
@@ -92,7 +92,7 @@ public class PrepareItemCraft implements Listener
         }
         ItemStack result = CreateItemStack.create(Material.BARRIER, 1,
                 ComponentUtil.translate(Constant.NO_CRAFT_ITEM_DISPLAYNAME),
-                ComponentUtil.translate("&c조합 재료 아이템들 중에서 조합이 불가능한 아이템이 존재합니다."),
+                ComponentUtil.translate("&c조합 재료 아이템들 중에서 조합이 불가능한 아이템이 존재합니다"),
                 true);
         ItemMeta itemMeta = result.getItemMeta();
         List<Component> lores = itemMeta.lore();

@@ -113,7 +113,7 @@ public class CommandCheckAmount implements CommandExecutor, TabCompleter
               "" :
               ("(내구도 : &e" + durability + "&r)")) + ((isSpace) ?
               MessageUtil.getFinalConsonant(name, MessageUtil.ConsonantType.이가) :
-              MessageUtil.getFinalConsonant(name, MessageUtil.ConsonantType.을를)) + " &e" + number + "개 &r" + ((isSpace) ? "들어갈 수 있는 공간이 있습니다." : "가지고 있습니다.");
+              MessageUtil.getFinalConsonant(name, MessageUtil.ConsonantType.을를)) + " &e" + number + "개 &r" + ((isSpace) ? "들어갈 수 있는 공간이 있습니다" : "가지고 있습니다");
       if (!(sender instanceof Player))
       {
         MessageUtil.info(sender, msg);

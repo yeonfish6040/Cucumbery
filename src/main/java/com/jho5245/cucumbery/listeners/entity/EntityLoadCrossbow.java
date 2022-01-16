@@ -38,7 +38,7 @@ public class EntityLoadCrossbow implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerLoadCrossbowAlertCooldown.contains(uuid))
         {
           Variable.playerLoadCrossbowAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(player, "&c장전 불가!", "&r장전할 수 없는 쇠뇌입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c장전 불가!", "&r장전할 수 없는 쇠뇌입니다", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerLoadCrossbowAlertCooldown.remove(uuid), 100L);
         }

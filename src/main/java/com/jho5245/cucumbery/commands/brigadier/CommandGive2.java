@@ -43,11 +43,11 @@ public class CommandGive2 extends CommandBase
     {
       if (commandSender instanceof BlockCommandSender)
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다.");
+        CommandAPI.fail("개체를 찾을 수 없습니다");
       }
       else
       {
-        MessageUtil.sendError(commandSender, "개체를 찾을 수 없습니다.");
+        MessageUtil.sendError(commandSender, "개체를 찾을 수 없습니다");
       }
       return;
     }

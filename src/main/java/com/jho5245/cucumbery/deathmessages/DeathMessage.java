@@ -204,12 +204,12 @@ public enum DeathMessage
   DRAGON_BREATH_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 스스로를 드래곤의 숨결에 구웠습니다."
+   - "%1$s이(가) 스스로를 드래곤의 숨결에 구웠습니다"
    */
   DRAGON_BREATH_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %3$s을(를) 사용한 스스로를 드래곤의 숨결에 구웠습니다."
+   - "%1$s이(가) %3$s을(를) 사용한 스스로를 드래곤의 숨결에 구웠습니다"
    */
   DRAGON_BREATH_COMBAT_SUICIDE_ITEM,
 
@@ -229,12 +229,12 @@ public enum DeathMessage
   DROWN_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 물속으로 투신자살했습니다."
+   - "%1$s이(가) 물속으로 투신자살했습니다"
    */
   DROWN_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %3$s을(를) 사용하여 익사했습니다."
+   - "%1$s이(가) %3$s을(를) 사용하여 익사했습니다"
    */
   DROWN_COMBAT_SUICIDE_ITEM,
 
@@ -254,12 +254,12 @@ public enum DeathMessage
   DROWN_TOGETHER_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 물속으로 투신자살했습니다."
+   - "%1$s이(가) 물속으로 투신자살했습니다"
    */
   DROWN_TOGETHER_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %3$s을(를) 사용하여 익사했습니다."
+   - "%1$s이(가) %3$s을(를) 사용하여 익사했습니다"
    */
   DROWN_TOGETHER_COMBAT_SUICIDE_ITEM,
 
@@ -279,7 +279,7 @@ public enum DeathMessage
   DROWN_WATER_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 물 밖에서 자살했습니다."
+   - "%1$s이(가) 물 밖에서 자살했습니다"
    */
   DROWN_WATER_COMBAT_SUICIDE,
 
@@ -304,7 +304,7 @@ public enum DeathMessage
   DROWN_WATER_TOGHETER_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 물 밖에서 자살했습니다."
+   - "%1$s이(가) 물 밖에서 자살했습니다"
    */
   DROWN_WATER_TOGETHER_COMBAT_SUICIDE,
 
@@ -329,12 +329,12 @@ public enum DeathMessage
   DRY_OUT_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 스스로를 말려비틀어 죽었습니다."
+   - "%1$s이(가) 스스로를 말려비틀어 죽었습니다"
    */
   DRY_OUT_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %3$s을(를) 사용하여 스스로를 말려비틀어 죽었습니다."
+   - "%1$s이(가) %3$s을(를) 사용하여 스스로를 말려비틀어 죽었습니다"
    */
   DRY_OUT_COMBAT_SUICIDE_ITEM,
 
@@ -354,12 +354,12 @@ public enum DeathMessage
   ELYTRA_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) %3$s에 처박아 죽었습니다."
+   - "%1$s이(가) %3$s에 처박아 죽었습니다"
    */
   ELYTRA_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %3$s을(를) 사용하여 %4$s에 처박아 죽었습니다."
+   - "%1$s이(가) %3$s을(를) 사용하여 %4$s에 처박아 죽었습니다"
    */
   ELYTRA_COMBAT_SUICIDE_ITEM,
 
@@ -379,12 +379,12 @@ public enum DeathMessage
   ENDER_PEARL_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) %3$s을(를) 사용하여 자살하였습니다."
+   - "%1$s이(가) %3$s을(를) 사용하여 자살하였습니다"
    */
   ENDER_PEARL_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %4$s와(과) %3$s을(를) 사용하여 자살하였습니다."
+   - "%1$s이(가) %4$s와(과) %3$s을(를) 사용하여 자살하였습니다"
    */
   ENDER_PEARL_COMBAT_SUICIDE_ITEM,
 
@@ -404,12 +404,12 @@ public enum DeathMessage
   EXPLOSION_COMBAT_ITEM,
 
   /**
-   - "%1%s이(가) 자폭하였습니다."
+   - "%1%s이(가) 자폭하였습니다"
    */
   EXPLOSION_COMBAT_SUICIDE,
 
   /**
-   - "%1%s이(가) %3$s을(를) 사용하여 자폭하였습니다."
+   - "%1%s이(가) %3$s을(를) 사용하여 자폭하였습니다"
    */
   EXPLOSION_COMBAT_SUICIDE_ITEM,
 
@@ -434,12 +434,12 @@ public enum DeathMessage
   FALL_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 높지는 않지만 스스로 몸을 던져 죽었습니다."
+   - "%1$s이(가) 높지는 않지만 스스로 몸을 던져 죽었습니다"
    */
   FALL_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 스스로 몸을 던져 죽었습니다."
+   - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 스스로 몸을 던져 죽었습니다"
    */
   FALL_COMBAT_SUICIDE_ITEM,
 
@@ -459,12 +459,12 @@ public enum DeathMessage
   FALL_HIGH_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 스스로 몸을 던져 죽었습니다."
+   - "%1$s이(가) 스스로 몸을 던져 죽었습니다"
    */
   FALL_HIGH_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %3$2을(를) 사용하여 스스로 몸을 던져 죽었습니다."
+   - "%1$s이(가) %3$2을(를) 사용하여 스스로 몸을 던져 죽었습니다"
    */
   FALL_HIGH_COMBAT_SUICIDE_ITEM,
 
@@ -484,12 +484,12 @@ public enum DeathMessage
   FALL_BLOCK_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 높지는 않지만 %3$s에서 스스로 몸을 던져 죽었습니다."
+   - "%1$s이(가) 높지는 않지만 %3$s에서 스스로 몸을 던져 죽었습니다"
    */
   FALL_BLOCK_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다."
+   - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다"
    */
   FALL_BLOCK_COMBAT_SUICIDE_ITEM,
 
@@ -509,12 +509,12 @@ public enum DeathMessage
   FALL_BLOCK_HIGH_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) %3$s에서 스스로 몸을 던져 죽었습니다."
+   - "%1$s이(가) %3$s에서 스스로 몸을 던져 죽었습니다"
    */
   FALL_BLOCK_HIGH_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다."
+   - "%1$s이(가) %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다"
    */
   FALL_BLOCK_HIGH_COMBAT_SUICIDE_ITEM,
 
@@ -609,12 +609,12 @@ public enum DeathMessage
   FIREWORKS_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) 자신이 쏜 폭죽 때문에 굉음과 함께 폭사했습니다."
+   - "%1$s이(가) 자신이 쏜 폭죽 때문에 굉음과 함께 폭사했습니다"
    */
   FIREWORKS_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) 자신이 쏜 %3$s 때문에 굉음과 함께 폭사했습니다."
+   - "%1$s이(가) 자신이 쏜 %3$s 때문에 굉음과 함께 폭사했습니다"
    */
   FIREWORKS_COMBAT_SUICIDE_ITEM,
 
@@ -709,7 +709,7 @@ public enum DeathMessage
   GENERIC_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 죽었습니다."
+   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 죽었습니다"
    */
   GENERIC_COMBAT_ITEM,
 
@@ -719,7 +719,7 @@ public enum DeathMessage
   GENERIC_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 죽었습니다."
+   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 죽었습니다"
    */
   GENERIC_COMBAT_SUICIDE_ITEM,
 

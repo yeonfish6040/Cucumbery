@@ -52,7 +52,7 @@ public class InventoryOpen implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.inventoryOpenAlertCooldown.contains(uuid))
         {
           Variable.inventoryOpenAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(player, "&c열기 불가!", "&r인벤토리 GUI를 열 권한이 없습니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c열기 불가!", "&r인벤토리 GUI를 열 권한이 없습니다", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.inventoryOpenAlertCooldown.remove(uuid), 100L);
         }
@@ -64,7 +64,7 @@ public class InventoryOpen implements Listener
         if (!Variable.inventoryOpenAlertCooldown.contains(uuid))
         {
           Variable.inventoryOpenAlertCooldown.add(uuid);
-          MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "인벤토리 GUI를 열 수 없는 상태입니다.");
+          MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "인벤토리 GUI를 열 수 없는 상태입니다");
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.inventoryOpenAlertCooldown.remove(uuid), 100L);
         }
@@ -256,7 +256,7 @@ public class InventoryOpen implements Listener
             Method.updateInventory(player, item);
             if (Method.isTimeUp(item, expireDate))
             {
-              MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", item));
+              MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", item));
               item.setAmount(0);
               player.updateInventory();
               if (player.getOpenInventory().getType() == InventoryType.CRAFTING || player.getOpenInventory().getType() == InventoryType.WORKBENCH)

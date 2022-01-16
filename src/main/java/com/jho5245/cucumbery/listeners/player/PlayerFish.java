@@ -45,7 +45,7 @@ public class PlayerFish implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerFishAlertCooldown.contains(uuid))
         {
           Variable.playerFishAlertCooldown.add(uuid);
-          MessageUtil.sendTitle(player, "&c낚시 불가!", "&r사용할 수 없는 낚싯대입니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c낚시 불가!", "&r사용할 수 없는 낚싯대입니다", 5, 80, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerFishAlertCooldown.remove(uuid), 100L);
         }

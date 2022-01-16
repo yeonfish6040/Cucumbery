@@ -182,7 +182,7 @@ public class EntityDamageByEntity implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerHurtEntityAlertCooldown.contains(uuid))
         {
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
-          MessageUtil.sendTitle(player, "&c행동 불가!", "&r개체에게 피해를 입힐 권한이 없습니다.", 5, 80, 15);
+          MessageUtil.sendTitle(player, "&c행동 불가!", "&r개체에게 피해를 입힐 권한이 없습니다", 5, 80, 15);
           Variable.playerHurtEntityAlertCooldown.add(uuid);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerHurtEntityAlertCooldown.remove(uuid), 100L);
         }
@@ -197,7 +197,7 @@ public class EntityDamageByEntity implements Listener
           if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerHurtEntityAlertCooldown.contains(uuid))
           {
             SoundPlay.playSound(player, Constant.ERROR_SOUND);
-            MessageUtil.sendTitle(player, "&c공격 불가!", "&r사용할 수 없는 아이템입니다.", 5, 80, 15);
+            MessageUtil.sendTitle(player, "&c공격 불가!", "&r사용할 수 없는 아이템입니다", 5, 80, 15);
             Variable.playerHurtEntityAlertCooldown.add(uuid);
             Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerHurtEntityAlertCooldown.remove(uuid), 100L);
           }
@@ -216,7 +216,7 @@ public class EntityDamageByEntity implements Listener
           if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerHurtEntityAlertCooldown.contains(uuid))
           {
             SoundPlay.playSound(player, Constant.ERROR_SOUND);
-            MessageUtil.sendTitle(player, "&c행동 불가!", "&r개체에게 피해를 입힐 권한이 없습니다.", 5, 80, 15);
+            MessageUtil.sendTitle(player, "&c행동 불가!", "&r개체에게 피해를 입힐 권한이 없습니다", 5, 80, 15);
             Variable.playerHurtEntityAlertCooldown.add(uuid);
             Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerHurtEntityAlertCooldown.remove(uuid), 100L);
           }
@@ -1798,7 +1798,7 @@ public class EntityDamageByEntity implements Listener
             {
               defRatio = 0D;
               event.setDamage(0D);
-              MessageUtil.sendActionBar(player, "&c&l몬스터의 방어율이 높아 대미지를 줄 수 없습니다.");
+              MessageUtil.sendActionBar(player, "&c&l몬스터의 방어율이 높아 대미지를 줄 수 없습니다");
               Method.playSound(player, Constant.WARNING_SOUND);
             }
 

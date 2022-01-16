@@ -880,7 +880,7 @@ public class MessageUtil
 
   public static void wrongBool(@NotNull Object audience, int input, @NotNull String[] args)
   {
-    sendError(audience, "잘못된 불입니다. '&etrue&r' 또는 '&efalse&r'가 필요하지만 &e" + input + "번&r째 인수에 '&e" + args[input - 1] + "&r'" + getFinalConsonant(args[input - 1], ConsonantType.이가) + " 입력되었습니다.");
+    sendError(audience, "잘못된 불입니다. '&etrue&r' 또는 '&efalse&r'가 필요하지만 &e" + input + "번&r째 인수에 '&e" + args[input - 1] + "&r'" + getFinalConsonant(args[input - 1], ConsonantType.이가) + " 입력되었습니다");
   }
 
   public static void sendTitle(@NotNull Object player, @Nullable Object title, @Nullable Object subTitle, int fadeIn, int stay, int fadeOut)
@@ -926,7 +926,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "정수는 &e" + Constant.Sosu15.format(min) + "&r 초과여야 하는데, " + valueString + " 있습니다.");
+        sendError(sender, "정수는 &e" + Constant.Sosu15.format(min) + "&r 초과여야 하는데, " + valueString + " 있습니다");
       }
       return false;
     }
@@ -934,7 +934,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "정수는 &e" + Constant.Sosu15.format(min) + "&r 이상이어야 하는데, " + valueString + " 있습니다.");
+        sendError(sender, "정수는 &e" + Constant.Sosu15.format(min) + "&r 이상이어야 하는데, " + valueString + " 있습니다");
       }
       return false;
     }
@@ -942,7 +942,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "정수는 &e" + Constant.Sosu15.format(max) + "&r 미만이어야 하는데, " + valueString + " 있습니다.");
+        sendError(sender, "정수는 &e" + Constant.Sosu15.format(max) + "&r 미만이어야 하는데, " + valueString + " 있습니다");
       }
       return false;
     }
@@ -950,7 +950,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "정수는 &e" + Constant.Sosu15.format(max) + "&r 이하여야 하는데, " + valueString + " 있습니다.");
+        sendError(sender, "정수는 &e" + Constant.Sosu15.format(max) + "&r 이하여야 하는데, " + valueString + " 있습니다");
       }
       return false;
     }
@@ -982,7 +982,7 @@ public class MessageUtil
       {
         if (sender != null)
         {
-          sendError(sender, "숫자는 &e" + Constant.Sosu15.format(min) + "&r 초과여야 하는데, " + valueString + " 있습니다.");
+          sendError(sender, "숫자는 &e" + Constant.Sosu15.format(min) + "&r 초과여야 하는데, " + valueString + " 있습니다");
         }
       }
       return false;
@@ -993,7 +993,7 @@ public class MessageUtil
       {
         if (sender != null)
         {
-          sendError(sender, "숫자는 &e" + Constant.Sosu15.format(min) + "&r 이상이어야 하는데, " + valueString + " 있습니다.");
+          sendError(sender, "숫자는 &e" + Constant.Sosu15.format(min) + "&r 이상이어야 하는데, " + valueString + " 있습니다");
         }
       }
       return false;
@@ -1004,7 +1004,7 @@ public class MessageUtil
       {
         if (sender != null)
         {
-          sendError(sender, "숫자는 &e" + Constant.Sosu15.format(max) + "&r 미만이어야 하는데, " + valueString + " 있습니다.");
+          sendError(sender, "숫자는 &e" + Constant.Sosu15.format(max) + "&r 미만이어야 하는데, " + valueString + " 있습니다");
         }
       }
       return false;
@@ -1015,7 +1015,7 @@ public class MessageUtil
       {
         if (sender != null)
         {
-          sendError(sender, "숫자는 &e" + Constant.Sosu15.format(max) + "&r 이하여야 하는데, " + valueString + " 있습니다.");
+          sendError(sender, "숫자는 &e" + Constant.Sosu15.format(max) + "&r 이하여야 하는데, " + valueString + " 있습니다");
         }
       }
       return false;

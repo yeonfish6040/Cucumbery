@@ -60,7 +60,7 @@ public class CommandMenu implements CommandExecutor, TabCompleter
       if (!(args.length == 2 && args[1].equalsIgnoreCase("true")))
       {
         Method.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1.5F);
-        MessageUtil.sendMessage(sender, Prefix.INFO_MENU, "%s에게 메뉴를 열어줍니다.", target);
+        MessageUtil.sendMessage(sender, Prefix.INFO_MENU, "%s에게 메뉴를 열어줍니다", target);
       }
       Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> GUI.openGUI(target, GUIType.MAIN_MENU), 0L);
     }

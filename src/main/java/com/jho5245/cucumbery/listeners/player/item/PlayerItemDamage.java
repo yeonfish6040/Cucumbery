@@ -111,7 +111,7 @@ public class PlayerItemDamage implements Listener
             if (!Cucumbery.getPlugin().getConfig().getStringList("no-send-title-on-item-break-worlds").contains(player.getLocation().getWorld().getName()))
             {
               MessageUtil.sendTitle(player, ComponentUtil.translate("&c장비 파괴됨!"),
-                      ComponentUtil.translate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다.", item), 5, 100, 15);
+                      ComponentUtil.translate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다", item), 5, 100, 15);
             }
           }
 

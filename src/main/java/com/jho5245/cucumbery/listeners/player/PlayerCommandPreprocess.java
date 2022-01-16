@@ -43,7 +43,7 @@ public class PlayerCommandPreprocess implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerCommandPreprocessAlertCooldown.contains(uuid))
       {
         Variable.playerCommandPreprocessAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c명령어 사용 불가!", "&r명령어를 사용할 권한이 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c명령어 사용 불가!", "&r명령어를 사용할 권한이 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerCommandPreprocessAlertCooldown.remove(uuid), 100L);
       }
@@ -55,7 +55,7 @@ public class PlayerCommandPreprocess implements Listener
       if (!Variable.playerCommandPreprocessAlertCooldown.contains(uuid))
       {
         Variable.playerCommandPreprocessAlertCooldown.add(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "명령어를 실행할 수 없는 상태입니다.");
+        MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "명령어를 실행할 수 없는 상태입니다");
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerCommandPreprocessAlertCooldown.remove(uuid), 100L);
       }
@@ -110,8 +110,8 @@ public class PlayerCommandPreprocess implements Listener
             && !message.equalsIgnoreCase("/강화 파괴방지미사용"))
     {
       event.setCancelled(true);
-      MessageUtil.sendError(player, "강화중에는 명령어를 사용할 수 없습니다.");
-      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다.",
+      MessageUtil.sendError(player, "강화중에는 명령어를 사용할 수 없습니다");
+      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다",
               ClickEvent.Action.RUN_COMMAND, "/강화 quit");
       player.sendMessage(a);
       return;

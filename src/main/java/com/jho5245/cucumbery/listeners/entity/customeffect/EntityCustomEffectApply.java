@@ -42,7 +42,7 @@ public class EntityCustomEffectApply implements Listener
 
     if (customEffectType == CustomEffectType.MUTE)
     {
-      MessageUtil.sendMessage(entity, Prefix.INFO, duration != -1 ? "%s 동안 채팅 금지 당하셨습니다." : "채팅 금지 당하셨습니다.", Method.timeFormatMilli(duration * 50L, false, 0));
+      MessageUtil.sendMessage(entity, Prefix.INFO, duration != -1 ? "%s 동안 채팅 금지 당하셨습니다" : "채팅 금지 당하셨습니다", Method.timeFormatMilli(duration * 50L, false, 0));
     }
 
     if (customEffectType == CustomEffectType.CUCUMBERY_UPDATER)

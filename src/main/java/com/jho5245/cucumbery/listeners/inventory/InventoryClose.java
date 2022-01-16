@@ -161,7 +161,7 @@ public class InventoryClose implements Listener
         // 확인 버튼을 누르지 않을 경우에 리턴
         if (ItemStackUtil.itemExists(inventory.getItem(22)))
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "을 취소하였습니다.");
+          MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "을 취소하였습니다");
           if (!title.contains("§레§시§피§ §편§집§3편집"))
           {
             for (int i = 27; i <= 53; i++)
@@ -183,7 +183,7 @@ public class InventoryClose implements Listener
         ItemStack result = inventory.getItem(4);
         if (!ItemStackUtil.itemExists(result))
         {
-          MessageUtil.sendError(player, "레시피의 결과물이 되는 아이템을 중앙 상단에 놔두고 다시 시도해주세요. 결과물 아이템이 없어 레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "에 실패하였습니다.");
+          MessageUtil.sendError(player, "레시피의 결과물이 되는 아이템을 중앙 상단에 놔두고 다시 시도해주세요. 결과물 아이템이 없어 레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "에 실패하였습니다");
           if (!title.contains("§레§시§피§ §편§집§3편집"))
           {
             for (int i = 27; i <= 53; i++)
@@ -209,7 +209,7 @@ public class InventoryClose implements Listener
         }
         if (ingredientInventory.firstEmpty() == 0)
         {
-          MessageUtil.sendError(player, "레시피의 재료로 되는 아이템을 하단 9×3 슬롯에 놔두고 다시 시도해주세요. 재료 아이템이 없어 레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "에 실패하였습니다.");
+          MessageUtil.sendError(player, "레시피의 재료로 되는 아이템을 하단 9×3 슬롯에 놔두고 다시 시도해주세요. 재료 아이템이 없어 레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "에 실패하였습니다");
           if (!title.contains("§레§시§피§ §편§집§3편집"))
           {
             player.getInventory().addItem(result);
@@ -296,7 +296,7 @@ public class InventoryClose implements Listener
         customRecipeListConfig.saveConfig();
         Variable.customRecipes.put(category, config);
         MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + category + "&r에 &e" + recipe + "&r" + MessageUtil
-                .getFinalConsonant(recipe, MessageUtil.ConsonantType.이라) + "는 이름의 레시피를 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "하였습니다.");
+                .getFinalConsonant(recipe, MessageUtil.ConsonantType.이라) + "는 이름의 레시피를 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "하였습니다");
         // player.sendMessage(category.replace("§", "&") + ", " + recipe.replace("§", "&"));
         player.updateInventory();
       }
@@ -311,7 +311,7 @@ public class InventoryClose implements Listener
             Method.updateInventory(player, item);
             if (Method.isTimeUp(item, expireDate))
             {
-              MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다.", item));
+              MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", item));
               Objects.requireNonNull(item).setAmount(0);
               player.updateInventory();
               if (player.getOpenInventory().getType() == InventoryType.CRAFTING || player.getOpenInventory().getType() == InventoryType.WORKBENCH)

@@ -18,7 +18,7 @@ public class ShopPreCreate implements Listener
 		ItemStack item = player.getInventory().getItemInMainHand();
 		if (NBTAPI.isRestricted(player, item, Constant.RestrictionType.NO_TRADE))
 		{
-			MessageUtil.sendError(player, "캐릭터 귀속 아이템으로는 상점을 개설할 수 없습니다.");
+			MessageUtil.sendError(player, "캐릭터 귀속 아이템으로는 상점을 개설할 수 없습니다");
 			event.setCancelled(true);
 		}
 	}

@@ -36,7 +36,7 @@ public class PlayerTakeLecternBook implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerTakeLecternBookAlertCooldown.contains(uuid))
       {
         Variable.playerTakeLecternBookAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c회수 불가!", "&r가져갈 수 없는 책입니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c회수 불가!", "&r가져갈 수 없는 책입니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerTakeLecternBookAlertCooldown.remove(uuid), 100L);
       }
@@ -47,7 +47,7 @@ public class PlayerTakeLecternBook implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerTakeLecternBookAlertCooldown.contains(uuid))
       {
         Variable.playerTakeLecternBookAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c회수 불가!", "&r인벤토리가 가득 찬 상태에서는 책을 가져갈 수 없습니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c회수 불가!", "&r인벤토리가 가득 찬 상태에서는 책을 가져갈 수 없습니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerTakeLecternBookAlertCooldown.remove(uuid), 100L);
       }

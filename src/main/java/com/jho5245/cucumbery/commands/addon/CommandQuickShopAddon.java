@@ -40,7 +40,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
     }
     if (!Cucumbery.using_QuickShop)
     {
-      MessageUtil.sendError(sender, "&eQuickShop &r플러그인을 사용하고 있지 않습니다.");
+      MessageUtil.sendError(sender, "&eQuickShop &r플러그인을 사용하고 있지 않습니다");
       return true;
     }
     if (args.length < 5)
@@ -103,7 +103,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
       Shop shop = QuickShop.getInstance().getShopManager().getShop(location);
       if (shop == null)
       {
-        MessageUtil.sendError(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점을 찾을 수 없습니다.");
+        MessageUtil.sendError(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점을 찾을 수 없습니다");
         return true;
       }
       switch (type)
@@ -123,7 +123,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
             if (!hideOutput)
             {
               MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) +
-                      "&r)의 거래 가격이 &e" + Constant.Sosu15.format(price) + "원&r입니다.");
+                      "&r)의 거래 가격이 &e" + Constant.Sosu15.format(price) + "원&r입니다");
             }
             return true;
           }
@@ -131,7 +131,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           if (!hideOutput)
           {
             MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 가격을 &e"
-                    + Constant.Sosu15.format(price) + "원&r으로 설정하였습니다.");
+                    + Constant.Sosu15.format(price) + "원&r으로 설정하였습니다");
           }
         }
         case "amount" -> {
@@ -143,7 +143,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           ItemStack item = shop.getItem();
           if (item.getMaxStackSize() == 1)
           {
-            MessageUtil.sendError(sender, "&e" + ItemNameUtil.itemName(shop.getItem()) + "&r의 최대 거래 개수가 &e1개&r여서 변경할 수 없습니다.");
+            MessageUtil.sendError(sender, "&e" + ItemNameUtil.itemName(shop.getItem()) + "&r의 최대 거래 개수가 &e1개&r여서 변경할 수 없습니다");
             return true;
           }
           if (!MessageUtil.checkNumberSize(sender, amount, 1, item.getMaxStackSize()))
@@ -155,7 +155,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
             if (!hideOutput)
             {
               MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 개수가 &e" + amount +
-                      "개&r입니다.");
+                      "개&r입니다");
             }
             return true;
           }
@@ -164,7 +164,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           shop.setItem(item);
           if (!hideOutput)
           {
-            MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 개수를 &e" + Constant.Sosu15.format(amount) + "개&r로 설정하였습니다.");
+            MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 개수를 &e" + Constant.Sosu15.format(amount) + "개&r로 설정하였습니다");
           }
         }
         case "type" -> {
@@ -188,14 +188,14 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           {
             if (!hideOutput)
             {
-              MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)이 " + typeString + "입니다.");
+              MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)이 " + typeString + "입니다");
             }
             return true;
           }
           shop.setShopType(shopType);
           if (!hideOutput)
           {
-            MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)을 " + typeString + "으로 설정하였습니다.");
+            MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)을 " + typeString + "으로 설정하였습니다");
           }
         }
         case "get" -> {
@@ -249,7 +249,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
   {
     if (!Cucumbery.using_QuickShop)
     {
-      return Collections.singletonList("QuickShop 플러그인을 사용하고 있지 않습니다.");
+      return Collections.singletonList("QuickShop 플러그인을 사용하고 있지 않습니다");
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
     {
@@ -258,7 +258,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
     int length = args.length;
     if (Variable.shops.isEmpty() && args.length >= 2 && args.length <= 6)
     {
-      return Collections.singletonList("유효한 QuickShop 상점이 존재하지 않습니다.");
+      return Collections.singletonList("유효한 QuickShop 상점이 존재하지 않습니다");
     }
     List<String> list = new ArrayList<>();
     List<String> xList = new ArrayList<>();
@@ -383,7 +383,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
       }
       catch (Exception e)
       {
-        return Collections.singletonList(args[0] + " " + args[1] + " " + args[2] + " " + args[3] + "에 있는 상점을 찾을 수 없습니다.");
+        return Collections.singletonList(args[0] + " " + args[1] + " " + args[2] + " " + args[3] + "에 있는 상점을 찾을 수 없습니다");
       }
       ItemStack shopItem = shop.getItem();
       if (args.length == 5)
@@ -402,7 +402,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
         case "amount":
           if (shopItem.getMaxStackSize() == 1)
           {
-            return Collections.singletonList(display + "의 최대 거래 개수가 1개여서 변경할 수 없습니다.");
+            return Collections.singletonList(display + "의 최대 거래 개수가 1개여서 변경할 수 없습니다");
           }
           return Method.tabCompleterIntegerRadius(args, 1, shopItem.getMaxStackSize(), "<" + display + "의 거래 개수>", shopItem.getAmount() + "");
         case "type":

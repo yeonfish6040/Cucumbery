@@ -42,11 +42,11 @@ public class CommandDamage extends CommandBase
     {
       if (commandSender instanceof BlockCommandSender)
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다.");
+        CommandAPI.fail("개체를 찾을 수 없습니다");
       }
       else
       {
-        MessageUtil.sendError(commandSender, "개체를 찾을 수 없습니다.");
+        MessageUtil.sendError(commandSender, "개체를 찾을 수 없습니다");
       }
       return;
     }
@@ -102,15 +102,15 @@ public class CommandDamage extends CommandBase
         String damageString = Constant.THE_COLOR_HEX + Constant.Sosu15.format(damage);
         if (damager == null)
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s만큼의 피해를 주었습니다.", successEntities, damageString));
+          MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s만큼의 피해를 주었습니다", successEntities, damageString));
           MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                  ComponentUtil.translate("[%s: %s에게 %s만큼의 피해를 주었습니다.]", sender, successEntities, damageString));
+                  ComponentUtil.translate("[%s: %s에게 %s만큼의 피해를 주었습니다]", sender, successEntities, damageString));
         }
         else
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.", successEntities, damager, damageString));
+          MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다", successEntities, damager, damageString));
           MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                  ComponentUtil.translate("[%s: %s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다.]", sender, successEntities, damager, damageString));
+                  ComponentUtil.translate("[%s: %s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다]", sender, successEntities, damager, damageString));
         }
       }
     }

@@ -30,7 +30,7 @@ public class PlayerLecternPageChange implements Listener
       if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerLecternChangePageAlertCooldown.contains(uuid))
       {
         Variable.playerLecternChangePageAlertCooldown.add(uuid);
-        MessageUtil.sendTitle(player, "&c열람 불가!", "&r쪽수를 바꿀 수 없는 책입니다.", 5, 80, 15);
+        MessageUtil.sendTitle(player, "&c열람 불가!", "&r쪽수를 바꿀 수 없는 책입니다", 5, 80, 15);
         SoundPlay.playSound(player, Constant.ERROR_SOUND);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerLecternChangePageAlertCooldown.remove(uuid), 100L);
       }

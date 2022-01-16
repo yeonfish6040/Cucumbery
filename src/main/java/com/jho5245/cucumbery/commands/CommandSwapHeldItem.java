@@ -38,12 +38,12 @@ public class CommandSwapHeldItem implements CommandExecutor, TabCompleter
       ItemStack mainHand = player.getInventory().getItemInMainHand(), offHand = player.getInventory().getItemInOffHand();
       if (!ItemStackUtil.itemExists(mainHand) && !ItemStackUtil.itemExists(offHand))
       {
-        MessageUtil.sendError(player, "맞바꿀 아이템이 존재하지 않습니다.");
+        MessageUtil.sendError(player, "맞바꿀 아이템이 존재하지 않습니다");
         return true;
       }
       player.getInventory().setItemInMainHand(offHand);
       player.getInventory().setItemInOffHand(mainHand);
-      MessageUtil.info(player, "주로 사용하는 손과 다른 손에 있는 아이템을 서로 맞바꾸었습니다.");
+      MessageUtil.info(player, "주로 사용하는 손과 다른 손에 있는 아이템을 서로 맞바꾸었습니다");
     }
     else if (args.length <= 2)
     {
@@ -58,7 +58,7 @@ public class CommandSwapHeldItem implements CommandExecutor, TabCompleter
       {
         if (!hideMessage)
         {
-          MessageUtil.sendError(sender, "맞바꿀 아이템이 존재하지 않습니다.");
+          MessageUtil.sendError(sender, "맞바꿀 아이템이 존재하지 않습니다");
         }
         return true;
       }
@@ -68,9 +68,9 @@ public class CommandSwapHeldItem implements CommandExecutor, TabCompleter
       {
         if (!target.equals(sender))
         {
-          MessageUtil.info(target, sender, "이 당신의 주로 사용하는 손과 다른 손에 있는 아이템을 서로 맞바꾸었습니다.");
+          MessageUtil.info(target, sender, "이 당신의 주로 사용하는 손과 다른 손에 있는 아이템을 서로 맞바꾸었습니다");
         }
-        MessageUtil.info(sender, target, "의 주로 사용하는 손과 다른 손에 있는 아이템을 서로 맞바꾸었습니다.");
+        MessageUtil.info(sender, target, "의 주로 사용하는 손과 다른 손에 있는 아이템을 서로 맞바꾸었습니다");
       }
     }
     else

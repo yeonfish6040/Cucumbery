@@ -48,7 +48,7 @@ public class CommandMaxHealthPoint implements CommandExecutor, TabCompleter
       String targetName = (entity).getName();
       if (!(entity instanceof Damageable target) || !(entity instanceof Attributable attributable))
       {
-        MessageUtil.sendError(sender, "&e" + targetName + "&r" + MessageUtil.getFinalConsonant(targetName, ConsonantType.은는) + "&r HP 태그를 가지고 있지 않습니다.");
+        MessageUtil.sendError(sender, "&e" + targetName + "&r" + MessageUtil.getFinalConsonant(targetName, ConsonantType.은는) + "&r HP 태그를 가지고 있지 않습니다");
         return true;
       }
       if (!MessageUtil.isDouble(sender, args[2], true))
@@ -137,7 +137,7 @@ public class CommandMaxHealthPoint implements CommandExecutor, TabCompleter
         {
           if (!hideOutput)
           {
-            MessageUtil.sendError(sender, "더 이상 &e" + targetName, "의 순수 최대 HP를 차감할 수 없습니다.");
+            MessageUtil.sendError(sender, "더 이상 &e" + targetName, "의 순수 최대 HP를 차감할 수 없습니다");
           }
           return true;
         }

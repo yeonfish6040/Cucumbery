@@ -196,13 +196,13 @@ public class CommandEffect2 extends CommandBase
       }
       if (!successEntitiesIsEmpty)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다.", successEntities, potionEffect));
+        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다", successEntities, potionEffect));
         if (!(successEntities.size() == 1 && successEntities.get(0).equals(sender.getCallee())))
         {
-          MessageUtil.info(successEntities, ComponentUtil.translate("%1$s이(가) 당신에게 %2$s 효과를 적용했습니다.", sender, potionEffect));
+          MessageUtil.info(successEntities, ComponentUtil.translate("%1$s이(가) 당신에게 %2$s 효과를 적용했습니다", sender, potionEffect));
         }
         MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다.]", sender, successEntities, potionEffect));
+                ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다]", sender, successEntities, potionEffect));
       }
     }
     else if (successEntities.isEmpty() && sender.getCallee() instanceof BlockCommandSender)

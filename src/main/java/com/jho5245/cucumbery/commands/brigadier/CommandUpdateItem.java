@@ -50,12 +50,12 @@ public class CommandUpdateItem extends CommandBase
       }
       if (successEntities.size() > 0)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s의 아이템 태그를 업데이트 하였습니다.", successEntities));
-        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s의 아이템 태그를 업데이트 하였습니다.]", sender, successEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s의 아이템 태그를 업데이트 하였습니다", successEntities));
+        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s의 아이템 태그를 업데이트 하였습니다]", sender, successEntities));
       }
       else
       {
-        CommandAPI.fail("아이템을 찾을 수 없습니다.");
+        CommandAPI.fail("아이템을 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();
@@ -80,13 +80,13 @@ public class CommandUpdateItem extends CommandBase
       {
         if (!hideOutout)
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 아이템 태그를 업데이트 하였습니다.", successEntities));
-          MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s의 아이템 태그를 업데이트 하였습니다.]", sender, successEntities));
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 아이템 태그를 업데이트 하였습니다", successEntities));
+          MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s의 아이템 태그를 업데이트 하였습니다]", sender, successEntities));
         }
       }
       else
       {
-        CommandAPI.fail("아이템을 찾을 수 없습니다.");
+        CommandAPI.fail("아이템을 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();

@@ -45,7 +45,7 @@ public class PlayerQuit implements Listener
     }
     if (enabeldActionbar && !isSpectator)
     {
-      String quitMessageActionbar = cfg.getString("actionbar-quit-message", "%player%이(가) 퇴장하셨습니다.").replace("%player%", "%s");
+      String quitMessageActionbar = cfg.getString("actionbar-quit-message", "%player%이(가) 퇴장하셨습니다").replace("%player%", "%s");
       for (Player online : Bukkit.getServer().getOnlinePlayers())
       {
         if (online != player)
@@ -67,10 +67,10 @@ public class PlayerQuit implements Listener
 
     String quitMessage = switch (event.getReason())
     {
-      default -> "%s이(가) 퇴장하셨습니다.";
-      case KICKED -> player.isBanned() ? "%s이(가) 서버에서 정지당했습니다." : "%s이(가) 서버에서 강퇴당했습니다.";
-      case TIMED_OUT -> "%s이(가) 시간이 초과되어 서버에서 강퇴당했습니다.";
-      case ERRONEOUS_STATE -> "%s이(가) 오류나서 터졌습니다.";
+      default -> "%s이(가) 퇴장하셨습니다";
+      case KICKED -> player.isBanned() ? "%s이(가) 서버에서 정지당했습니다" : "%s이(가) 서버에서 강퇴당했습니다";
+      case TIMED_OUT -> "%s이(가) 시간이 초과되어 서버에서 강퇴당했습니다";
+      case ERRONEOUS_STATE -> "%s이(가) 오류나서 터졌습니다";
     };
 
     if (enabledTellraw && !isSpectator && !outsider)

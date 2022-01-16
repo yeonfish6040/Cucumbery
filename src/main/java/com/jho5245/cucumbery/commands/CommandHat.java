@@ -50,7 +50,7 @@ public class CommandHat implements CommandExecutor, TabCompleter
         inv.addItem(helmet);
       }
       inv.setHelmet(mainHand);
-      MessageUtil.sendMessage(player, Prefix.INFO_HAT, "주로 사용하는 손에 들고 있는 아이템을 머리에 장착하였습니다.");
+      MessageUtil.sendMessage(player, Prefix.INFO_HAT, "주로 사용하는 손에 들고 있는 아이템을 머리에 장착하였습니다");
     }
     else
     {

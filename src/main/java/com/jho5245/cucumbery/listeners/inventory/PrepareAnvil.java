@@ -67,7 +67,7 @@ public class PrepareAnvil implements Listener
       boolean firstItemNoAnvil = NBTAPI.isRestricted(player, firstItem, RestrictionType.NO_ANVIL), secondItemNoAnvil = NBTAPI.isRestricted(player, secondItem, RestrictionType.NO_ANVIL);
       if (firstItemNoAnvil || secondItemNoAnvil)
       {
-        lores.add(MessageUtil.n2s("&c모루에서 사용할 수 없는 아이템이 존재합니다."));
+        lores.add(MessageUtil.n2s("&c모루에서 사용할 수 없는 아이템이 존재합니다"));
       }
       if (firstItemNoAnvil)
       {
@@ -85,7 +85,7 @@ public class PrepareAnvil implements Listener
       if ((firstItemNoUseEnchantedBookEnchant || secondItemNoUseEnchantedBookEnchant) && ItemStackUtil.itemExists(firstItem) && firstItem.getType() != Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(secondItem) && secondItem.getType() == Material.ENCHANTED_BOOK)
       {
         restricted = true;
-        lores.add(MessageUtil.n2s("&c모루에서 마법이 부여된 책으로 마법을 부여할 수 없는 아이템이 존재합니다."));
+        lores.add(MessageUtil.n2s("&c모루에서 마법이 부여된 책으로 마법을 부여할 수 없는 아이템이 존재합니다"));
         if (firstItemNoUseEnchantedBookEnchant)
         {
           lores.add(MessageUtil.n2s("&e왼쪽에 있는 아이템(" + firstItemName + "&e)"));
@@ -102,7 +102,7 @@ public class PrepareAnvil implements Listener
               .getType() == secondItem.getType())
       {
         restricted = true;
-        lores.add(MessageUtil.n2s("&c모루에서 같은 종류의 아이템끼리 합성할 수 없는 아이템이 존재합니다."));
+        lores.add(MessageUtil.n2s("&c모루에서 같은 종류의 아이템끼리 합성할 수 없는 아이템이 존재합니다"));
         if (firstItemNoComposition)
         {
           lores.add(MessageUtil.n2s("&e왼쪽에 있는 아이템(" + firstItemName + "&e)"));
@@ -119,7 +119,7 @@ public class PrepareAnvil implements Listener
                 (Objects.requireNonNull(firstItem).getType() != Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(secondItem) && firstItem.getType() == secondItem.getType()))
         {
           restricted = true;
-          lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 왼쪽에 있는 아이템 같은 종류의 아이템끼리 합성할 수 없는 아이템이 존재합니다."));
+          lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 왼쪽에 있는 아이템 같은 종류의 아이템끼리 합성할 수 없는 아이템이 존재합니다"));
           lores.add(MessageUtil.n2s("&e왼쪽에 있는 아이템(" + firstItemName + "&e)"));
         }
       }
@@ -131,7 +131,7 @@ public class PrepareAnvil implements Listener
                         (Objects.requireNonNull(secondItem).getType() != Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(firstItem) && firstItem.getType() == secondItem.getType()))
         {
           restricted = true;
-          lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 오른쪽에 있는 아이템 같은 종류의 아이템끼리 합성할 수 없는 아이템이 존재합니다."));
+          lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 오른쪽에 있는 아이템 같은 종류의 아이템끼리 합성할 수 없는 아이템이 존재합니다"));
           lores.add(MessageUtil.n2s("&e오른쪽에 있는 아이템(" + secondItemName + "&e)"));
         }
       }
@@ -141,7 +141,7 @@ public class PrepareAnvil implements Listener
               .getType() == Material.ENCHANTED_BOOK && NBTAPI.isRestricted(player, secondItem, RestrictionType.NO_ANVIL_ENCHANTED_BOOK_COMPOSITION);
       if (firstItemNoUseEnchantedBookComposition || secondItemNoUseEnchantedBookComposition)
       {
-        lores.add(MessageUtil.n2s("&c모루에서 마법이 부여된 책끼리 합성할 수 없는 아이템이 존재합니다."));
+        lores.add(MessageUtil.n2s("&c모루에서 마법이 부여된 책끼리 합성할 수 없는 아이템이 존재합니다"));
       }
       if (firstItemNoUseEnchantedBookComposition)
       {
@@ -159,7 +159,7 @@ public class PrepareAnvil implements Listener
         if (Objects.requireNonNull(firstItem).getType() == Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(secondItem) && firstItem.getType() == secondItem.getType())
         {
           restricted = true;
-          lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 왼쪽에 있는 마법이 부여된 책끼리 합성할 수 없는 아이템이 존재합니다."));
+          lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 왼쪽에 있는 마법이 부여된 책끼리 합성할 수 없는 아이템이 존재합니다"));
           lores.add(MessageUtil.n2s("&e왼쪽에 있는 아이템(" + firstItemName + "&e)"));
         }
       }
@@ -169,7 +169,7 @@ public class PrepareAnvil implements Listener
         if (Objects.requireNonNull(secondItem).getType() == Material.ENCHANTED_BOOK && ItemStackUtil.itemExists(firstItem) && firstItem.getType() == secondItem.getType())
         {
           restricted = true;
-          lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 오른쪽에 있는 마법이 부여된 책끼리 합성할 수 없는 아이템이 존재합니다."));
+          lores.add(MessageUtil.n2s("&c(더 깔끔한 설명 필요) 모루에서 오른쪽에 있는 마법이 부여된 책끼리 합성할 수 없는 아이템이 존재합니다"));
           lores.add(MessageUtil.n2s("&e오른쪽에 있는 아이템(" + secondItemName + "&e)"));
         }
       }
@@ -187,7 +187,7 @@ public class PrepareAnvil implements Listener
         if (!firstItemName.equals(resultItemName))
         {
           restricted = true;
-          lores.add(MessageUtil.n2s("&c모루에서 이름을 바꿀 수 없는 아이템이 존재합니다."));
+          lores.add(MessageUtil.n2s("&c모루에서 이름을 바꿀 수 없는 아이템이 존재합니다"));
           lores.add(MessageUtil.n2s("&e왼쪽에 있는 아이템(" + firstItemName + "&e)"));
         }
       }
@@ -200,7 +200,7 @@ public class PrepareAnvil implements Listener
         if (!firstItemMeta.getEnchants().equals(resultItemMeta.getEnchants()))
         {
           restricted = true;
-          lores.add(MessageUtil.n2s("&c모루에서 마법을 부여할 수 없는 아이템이 존재합니다."));
+          lores.add(MessageUtil.n2s("&c모루에서 마법을 부여할 수 없는 아이템이 존재합니다"));
           lores.add(MessageUtil.n2s("&e왼쪽에 있는 아이템(" + firstItemName + "&e)"));
         }
       }
@@ -223,7 +223,7 @@ public class PrepareAnvil implements Listener
         if ((firstItemNoRepair && firstItemDamage != resultItemDamage) || (secondItemNoRepair && secondItemDamage != resultItemDamage))
         {
           restricted = true;
-          lores.add(MessageUtil.n2s("&c모루에서 수리할 수 없는 아이템이 존재합니다."));
+          lores.add(MessageUtil.n2s("&c모루에서 수리할 수 없는 아이템이 존재합니다"));
           if (firstItemNoRepair)
           {
             lores.add(MessageUtil.n2s("&e왼쪽에 있는 아이템(" + firstItemName + "&e)"));

@@ -36,10 +36,10 @@ public class DeathManager
   public static final Component BAD_RESPAWM_POINT = ComponentUtil.translate("chat.square_brackets", ComponentUtil.translate("death.attack.badRespawnPoint.link"))
           .hoverEvent(HoverEvent.showText(Component.text("MC-28723"))).clickEvent(ClickEvent.openUrl("https://bugs.mojang.com/browse/MCPE-28723"));
   public static final Component downloadURL = ComponentUtil.translate("&9&l여기")
-          .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 이동합니다.", "&ehttps://cucumbery.com/api/builds/dev/latest/download")))
+          .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 이동합니다", "&ehttps://cucumbery.com/api/builds/dev/latest/download")))
           .clickEvent(ClickEvent.openUrl("https://cucumbery.com/api/builds/dev/latest/download"));
   public static final Component reportBugURL = ComponentUtil.translate("&9&l여기")
-          .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 이동합니다.", "&ehttps://github.com/jho5245/Cucumbery/issues/new")))
+          .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 이동합니다", "&ehttps://github.com/jho5245/Cucumbery/issues/new")))
           .clickEvent(ClickEvent.openUrl("https://github.com/jho5245/Cucumbery/issues/new"));
   public static final int MAXIMUM_COMPONENT_SERIAL_LENGTH = 100000;
   private static final int COOLDOWN_IN_TICKS = 5;

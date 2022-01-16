@@ -166,7 +166,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
         {
           if (!hideOutput)
           {
-            MessageUtil.sendError(sender, "더 이상 &e" + targetName + "&r의 HP바를 차감할 수 없습니다.");
+            MessageUtil.sendError(sender, "더 이상 &e" + targetName + "&r의 HP바를 차감할 수 없습니다");
           }
           return true;
         }

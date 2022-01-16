@@ -49,7 +49,7 @@ public class DamageDebugCommand implements CommandExecutor
 			{
 				debug.remove(player);
 				
-				MessageUtil.sendMessage(player, Prefix.INFO_DAMAGE, "대미지 디버깅을 끕니다.");
+				MessageUtil.sendMessage(player, Prefix.INFO_DAMAGE, "대미지 디버깅을 끕니다");
 				return true;
 			}
 			
@@ -57,7 +57,7 @@ public class DamageDebugCommand implements CommandExecutor
 			{
 				debug.put(player, true);
 				
-				MessageUtil.sendMessage(player, Prefix.INFO_DAMAGE, "대미지 디버깅을 켭니다.");
+				MessageUtil.sendMessage(player, Prefix.INFO_DAMAGE, "대미지 디버깅을 켭니다");
 				return true;
 			}
 		}

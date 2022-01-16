@@ -77,7 +77,7 @@ public class CommandKill3 implements CommandExecutor, TabCompleter
     boolean hideOutput = args.length == 2 && args[1].equals("true");
     if (!hideOutput)
     {
-      MessageUtil.sendMessage(sender, Prefix.INFO, ComponentUtil.translate("%s을(를) 죽였습니다.", successEntities));
+      MessageUtil.sendMessage(sender, Prefix.INFO, ComponentUtil.translate("%s을(를) 죽였습니다", successEntities));
     }
     return true;
   }

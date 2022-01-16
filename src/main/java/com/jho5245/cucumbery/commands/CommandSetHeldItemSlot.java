@@ -57,7 +57,7 @@ public class CommandSetHeldItemSlot implements CommandExecutor, TabCompleter
 				return true;
 			}
 			player.getInventory().setHeldItemSlot(slot-1);
-			MessageUtil.info(player, "단축바 슬롯을 &e"+slot+"번&r으로 변경하였습니다.");
+			MessageUtil.info(player, "단축바 슬롯을 &e"+slot+"번&r으로 변경하였습니다");
 		}
 		else if (args.length <= 3)
 		{
@@ -85,9 +85,9 @@ public class CommandSetHeldItemSlot implements CommandExecutor, TabCompleter
 			{
 				if (!target.equals(sender))
 				{
-					MessageUtil.info(target, sender, "이 당신의 단축바 슬롯을 &e"+slot+"번&r으로 변경하였습니다.");
+					MessageUtil.info(target, sender, "이 당신의 단축바 슬롯을 &e"+slot+"번&r으로 변경하였습니다");
 				}
-				MessageUtil.info(sender, target, "의 단축바 슬롯을 &e"+slot+"번&r으로 변경하였습니다.");
+				MessageUtil.info(sender, target, "의 단축바 슬롯을 &e"+slot+"번&r으로 변경하였습니다");
 			}
 		}
 		else
