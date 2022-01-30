@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -88,7 +89,8 @@ public class CustomEffectGUI
     }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
     customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE || effect.isHidden());
-    Collection<PotionEffect> potionEffects = player.getActivePotionEffects();
+    List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
+    potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
     boolean isEmpty = customEffects.isEmpty() && potionEffects.isEmpty();
     if (isEmpty)
     {
@@ -104,7 +106,7 @@ public class CustomEffectGUI
         {
           continue;
         }
-        CustomEffectType effectType = customEffect.getEffectType();
+        CustomEffectType effectType = customEffect.getType();
         String key = effectType.translationKey();
         ItemStack itemStack = new ItemStack(Material.POTION);
         PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
@@ -148,7 +150,7 @@ public class CustomEffectGUI
         menu.addItem(itemStack);
       }
     }
-    int size = player.getActivePotionEffects().size() + CustomEffectManager.getEffects(player).size();
+    int size = potionEffects.size() + CustomEffectManager.getEffects(player).size();
     ItemStack info = new ItemStack(Material.PLAYER_HEAD);
     SkullMeta skullMeta = (SkullMeta) info.getItemMeta();
     skullMeta.setOwningPlayer(player);
@@ -156,6 +158,12 @@ public class CustomEffectGUI
     skullMeta.lore(List.of(ComponentUtil.translate("&7효과 개수 : %s개", size)));
     info.setItemMeta(skullMeta);
     menu.setItem(4, info);
+    UUID uuid = player.getUniqueId();
+    InventoryView inventory = CreateGUI.getLastInventory(uuid);
+    if (inventory != null)
+    {
+      menu.setItem(45, CreateItemStack.getPreviousButton(inventory.title()));
+    }
   }
 
   @SuppressWarnings("all")
@@ -163,7 +171,7 @@ public class CustomEffectGUI
   private static List<Component> customEffectLore(@NotNull CustomEffect customEffect)
   {
     List<Component> lore = new ArrayList<>();
-    CustomEffectType effectType = customEffect.getEffectType();
+    CustomEffectType effectType = customEffect.getType();
     int duration = customEffect.getDuration();
     int amplifier = customEffect.getAmplifier();
     Component description = customEffect.getDescription();
@@ -219,18 +227,10 @@ public class CustomEffectGUI
     if (isAmplifiable)
     {
       lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
-      if (effectType == CustomEffectType.CURSE_OF_BEANS)
-      {
-        lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
-      }
     }
     if (effectType.isRightClickRemovable())
     {
       lore.add(Component.empty());
-      if (effectType == CustomEffectType.CURSE_OF_BEANS)
-      {
-        lore.add(Component.empty());
-      }
       lore.add(ComponentUtil.translate("&e우클릭하여 효과 제거"));
     }
     return lore;

@@ -6,7 +6,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.util.*;
@@ -220,4 +222,8 @@ public class Variable
   public static HashMap<UUID, List<BossBarMessage>> sendBossBarMap = new HashMap<>();
 
   public static Set<UUID> darknessTerrorFlag = new HashSet<>();
+
+  public static HashMap<UUID, Collection<PotionEffect>> buffFreezerEffects = new HashMap<>();
+
+  public static HashMap<UUID, List<InventoryView>> lastInventory = new HashMap<>();
 }

@@ -160,6 +160,7 @@ public class PlayerJoin implements Listener
       }
     }
     CustomEffectManager.removeEffect(player, CustomEffectType.INVINCIBLE_PLUGIN_RELOAD);
+    CustomEffectManager.refreshAttributeEffects(player);
     if (enabledTellraw && !isSpectator && !outsider)
     {
       for (Player online : Bukkit.getServer().getOnlinePlayers())

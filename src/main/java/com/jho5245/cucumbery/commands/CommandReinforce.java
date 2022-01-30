@@ -2285,7 +2285,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
             MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, option);
           }
           Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-          Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+          Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
           Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
           Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
           if ((type == ReinforceType.STARFORCE && current >= ANTI_DESTRUCTION_STARFORCE_FROM && current <= ANTI_DESTRUCTION_STARFORCE_TO) || (type == ReinforceType.CUCUMBERFORCE && current >= ANTI_DESTRUCTION_CUCUMBERFORCE_FROM && current <= ANTI_DESTRUCTION_CUCUMBERFORCE_TO))
@@ -2297,11 +2297,11 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               Component g = ComponentUtil.create("&f를 클릭하세요.");
               if (type == ReinforceType.STARFORCE)
               {
-                f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
+                f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_USE_ANTI_DESTRUCTION);
               }
               else if (type == ReinforceType.CUCUMBERFORCE)
               {
-                f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
+                f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                         Constant.REINFORCE_USE_ANTI_DESTRUCTION);
               }
               MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
@@ -2550,7 +2550,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, option);
         }
         Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-        Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+        Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
         Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
         Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
         Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하지 않으려면 ");
@@ -2705,7 +2705,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, option);
         }
         Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-        Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+        Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
         Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
         Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
         Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하려면 ");
@@ -2713,12 +2713,12 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
         Component g = ComponentUtil.create("&f를 클릭하세요.");
         if (type == ReinforceType.STARFORCE)
         {
-          f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
+          f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                   Constant.REINFORCE_USE_ANTI_DESTRUCTION);
         }
         else if (type == ReinforceType.CUCUMBERFORCE)
         {
-          f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
+          f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                   Constant.REINFORCE_USE_ANTI_DESTRUCTION);
         }
         MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
@@ -4077,7 +4077,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                 if (antiDest == null || !antiDest.containsKey(player) || !antiDest.get(player))
                 {
                   Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-                  Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+                  Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
                   Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
                   Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
                   Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하려면 ");
@@ -4085,12 +4085,12 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                   Component g = ComponentUtil.create("&f를 클릭하세요.");
                   if (type == ReinforceType.STARFORCE)
                   {
-                    f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
+                    f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다\n&f파괴 방지 기능은 12성에서 16성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                             Constant.REINFORCE_USE_ANTI_DESTRUCTION);
                   }
                   else if (type == ReinforceType.CUCUMBERFORCE)
                   {
-                    f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다.\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
+                    f = ComponentUtil.create("&e\"여기\"", "&f클릭하면 파괴 방지를 사용합니다\n&f파괴 방지 기능은 24성에서 33성 사이의 아이템으로\n&f강화를 시도할때만 사용할 수 있습니다", ClickEvent.Action.RUN_COMMAND,
                             Constant.REINFORCE_USE_ANTI_DESTRUCTION);
                   }
                   MessageUtil.sendMessage(player, a, b, c, d, e, f, g);
@@ -4098,7 +4098,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
                 else
                 {
                   Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-                  Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+                  Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
                   Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
                   Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
                   Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요. 파괴 방지를 사용하지 않으려면 ");
@@ -4110,7 +4110,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter
               else
               {
                 Component a = ComponentUtil.create("&9[&3강&e화&9] &f강화를 시작하려면 ");
-                Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다.\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
+                Component b = ComponentUtil.create("&a\"강화 시작\"", "&f클릭하면 강화를 시작합니다\n&c이 작업은 되돌릴 수 없습니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_START);
                 Component c = ComponentUtil.create("&f을, 강화를 중지하려면 ");
                 Component d = ComponentUtil.create("&c\"강화 중지\"", "&f클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, Constant.REINFORCE_QUIT);
                 Component e = ComponentUtil.create("&f를 채팅창을 열고 클릭해주세요.");

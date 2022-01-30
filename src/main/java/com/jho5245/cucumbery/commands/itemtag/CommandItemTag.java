@@ -7,12 +7,12 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.MessageUtil.N2SType;
 import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.ItemCategory.Rarity;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
@@ -20,7 +20,10 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import de.tr7zw.changeme.nbtapi.*;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.BlockCommandSender;
@@ -30,6 +33,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -90,11 +94,11 @@ public class CommandItemTag implements CommandExecutor
           }
           if (itemTag != null)
           {
-            MessageUtil.info(sender, "&e" + ItemNameUtil.itemName(item) + "&r의 CucumberyItemTags는 다음과 같습니다: &e" + itemTag.toString().replace("\"", "&e\""));
+            MessageUtil.info(sender, "%s의 CucumberyItemTags는 다음과 같습니다: %s", item, itemTag);
           }
           else
           {
-            MessageUtil.sendError(sender, "&e" + ItemNameUtil.itemName(item) + "&r에는 CucumberyItemTags가 없습니다");
+            MessageUtil.sendError(sender, "%s에는 CucumberyItemTags가 없습니다", item);
           }
         }
         case "nbt" -> {
@@ -3678,7 +3682,7 @@ public class CommandItemTag implements CommandExecutor
               potionListTag.remove(line - 1);
               playerInventory.setItemInMainHand(nbtItem.getItem());
               Method.updateInventory(player);
-              MessageUtil.info(sender, ComponentUtil.translate("%s에 있는 %s번째 효과(%s)를 제거하였습니다. (남은 효과 개수 : %s개)", item, line, customEffect != null ? customEffect : ComponentUtil.translate("&c잘못된 효과입니다!"), potionListTag.size()));
+              MessageUtil.info(sender, ComponentUtil.translate("%s에 있는 %s번째 효과(%s)를 제거하였습니다 (남은 효과 개수 : %s개)", item, line, customEffect != null ? customEffect : ComponentUtil.translate("&c잘못된 효과입니다!"), potionListTag.size()));
             }
             case "set" -> {
 
@@ -3781,7 +3785,627 @@ public class CommandItemTag implements CommandExecutor
               potionListTag.addCompound(nbtCompound);
               playerInventory.setItemInMainHand(nbtItem.getItem());
               Method.updateInventory(player);
-              MessageUtil.info(sender, ComponentUtil.translate("%s에 %s 효과를 추가하였습니다. (총 %s개 효과 보유)", nbtItem.getItem(), new CustomEffect(customEffectType, duration, amplifier, displayType), potionListTag.size()));
+              MessageUtil.info(sender, ComponentUtil.translate("%s에 %s 효과를 추가하였습니다 (총 %s개 효과 보유)", nbtItem.getItem(), new CustomEffect(customEffectType, duration, amplifier, displayType), potionListTag.size()));
+            }
+          }
+        }
+        case "customdisplayname" -> {
+          if (args.length < 2)
+          {
+            MessageUtil.shortArg(sender, 2, args);
+            MessageUtil.commandInfo(sender, label, "customdisplayname <prefix|suffix|name|remove>");
+            return true;
+          }
+          NBTCompound displayCompound = NBTAPI.getCompound(itemTag, CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+          switch (args[1])
+          {
+            case "prefix" -> {
+              NBTCompoundList prefixes = NBTAPI.getCompoundList(displayCompound, CucumberyTag.ITEMSTACK_DISPLAY_PREFIX);
+              if (args.length < 3)
+              {
+                MessageUtil.shortArg(sender, 3, args);
+                MessageUtil.commandInfo(sender, label, "customdisplayname prefix <add|remove|set|insert|list>");
+                return true;
+              }
+              switch (args[2])
+              {
+                case "list" -> {
+                  if (args.length > 3)
+                  {
+                    MessageUtil.longArg(sender, 3, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname prefix list");
+                    return true;
+                  }
+                  if (prefixes == null || prefixes.isEmpty())
+                  {
+                    MessageUtil.sendError(sender, "%s에는 접두어가 없습니다", item);
+                    return true;
+                  }
+                  MessageUtil.info(sender, "%s에는 접두어가 %s개 있습니다", item, prefixes.size());
+                  for (int i = 0; i < prefixes.size(); i++)
+                  {
+                    NBTCompound nbtCompound = prefixes.get(i);
+                    String text = nbtCompound.getString("text");
+                    if (text != null)
+                    {
+                      Component message = Component.text(text);
+                      message = message.hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %1$s번째 접두어를 수정합니다\n우클릭하여 채팅창에 %1$s번째 접두어를 삽입합니다", i + 1)));
+                      message = message.clickEvent(ClickEvent.suggestCommand("/itag customdisplayname prefix set " + (i + 1) + " "));
+                      message = message.insertion(text);
+                      NBTCompound nbt = nbtCompound.getCompound("nbt");
+                      MessageUtil.info(sender, "%s번째 접두어 : %s" + (nbt != null ? ", nbt : %s" : ""), i + 1, message, nbt != null ? nbt.toString() : "");
+                    }
+                    else
+                    {
+                      MessageUtil.info(sender, "잘못된 %s번째 접두어입니다", i + 1);
+                    }
+                  }
+                }
+                case "add" -> {
+                  if (args.length < 4)
+                  {
+                    MessageUtil.shortArg(sender, 4, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname prefix add <접두어> [nbt]");
+                    return true;
+                  }
+                  if (args.length > 5)
+                  {
+                    MessageUtil.longArg(sender, 5, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname prefix add <접두어> [nbt]");
+                    return true;
+                  }
+                  String prefix = args[3];
+                  String nbt = null;
+                  if (args.length == 5)
+                  {
+                    try
+                    {
+                      nbt = args[4];
+                      new NBTContainer(nbt);
+                    }
+                    catch (Exception exception)
+                    {
+                      MessageUtil.sendError(sender, "잘못된 NBT입니다: %s", nbt);
+                      return true;
+                    }
+                  }
+                  if (itemTag == null)
+                  {
+                    itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+                  }
+                  if (displayCompound == null)
+                  {
+                    displayCompound = itemTag.addCompound(CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+                  }
+                  if (prefixes == null)
+                  {
+                    prefixes = displayCompound.getCompoundList(CucumberyTag.ITEMSTACK_DISPLAY_PREFIX);
+                  }
+                  NBTCompound compound = prefixes.addCompound();
+                  compound.setString("text", prefix);
+                  if (nbt != null)
+                  {
+                    NBTCompound nbtCompound = compound.addCompound("nbt");
+                    nbtCompound.mergeCompound(new NBTContainer(nbt));
+                  }
+                  String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+                  ItemStack itemStack = nbtItem.getItem();
+                  ItemMeta itemMeta = itemStack.getItemMeta();
+                  Component displayName = itemMeta.displayName();
+                  if ((originalName == null || originalName.equals("")) &&
+                          displayName != null && !(displayName instanceof TranslatableComponent t && t.args().size() == 4 && t.args().get(3) instanceof TextComponent c && c.content().equals("Custom Display")))
+                  {
+                    originalName = ComponentUtil.serializeAsJson(displayName);
+                    displayCompound.setString(CucumberyTag.ORIGINAL_NAME, originalName);
+                    itemStack = nbtItem.getItem();
+                    itemMeta = itemStack.getItemMeta();
+                  }
+                  itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                  itemStack.setItemMeta(itemMeta);
+                  ItemLore.setItemLore(itemStack);
+                  playerInventory.setItemInMainHand(itemStack);
+                  Component prefixComponent = ComponentUtil.create(prefix);
+                  if (prefixComponent.color() == null)
+                  {
+                    prefixComponent = prefixComponent.color(Constant.THE_COLOR);
+                  }
+                  MessageUtil.info(sender, "아이템에 %s번째 접두어 %s을(를) 추가했습니다. 전 : %s, 후 : %s" + (nbt != null ? ", nbt : %s" : ""), prefixes.size(), prefixComponent, item, itemStack, nbt + "");
+                }
+                case "remove" -> {
+                  if (args.length > 4)
+                  {
+                    MessageUtil.longArg(sender, 4, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname prefix remove [줄|--all]");
+                    return true;
+                  }
+                  if (prefixes == null || prefixes.isEmpty())
+                  {
+                    MessageUtil.sendError(sender, "%s에는 접두어가 없습니다", item);
+                    return true;
+                  }
+                  int line = prefixes.size() - 1;
+                  if (args.length == 4)
+                  {
+                    if (args[3].equals("--all"))
+                    {
+                      line = -1;
+                    }
+                    else
+                    {
+                      if (!MessageUtil.isInteger(sender, args[3], true))
+                      {
+                        return true;
+                      }
+                      line = Integer.parseInt(args[3]);
+                      if (!MessageUtil.checkNumberSize(sender, line, 1, prefixes.size(), true))
+                      {
+                        return true;
+                      }
+                      line--;
+                    }
+                  }
+                  String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+                  if (line == -1 || prefixes.size() == 1)
+                  {
+                    NBTAPI.removeKey(displayCompound, CucumberyTag.ITEMSTACK_DISPLAY_PREFIX);
+                    ItemStack itemStack = nbtItem.getItem();
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                    itemStack.setItemMeta(itemMeta);
+                    ItemLore.setItemLore(itemStack);
+                    playerInventory.setItemInMainHand(itemStack);
+                    MessageUtil.info(sender, "아이템의 모든 접두어를 제거했습니다. 전 : %s, 후 : %s", item, itemStack);
+                    return true;
+                  }
+                  String text = prefixes.get(line).getString("text");
+                  if (text == null)
+                  {
+                    text = "translate:&c잘못된 접두어";
+                  }
+                  Component prefixComponent = ComponentUtil.create(text);
+                  if (prefixComponent.color() == null)
+                  {
+                    prefixComponent = prefixComponent.color(Constant.THE_COLOR);
+                  }
+                  prefixes.remove(line);
+                  ItemStack itemStack = nbtItem.getItem();
+                  ItemMeta itemMeta = itemStack.getItemMeta();
+                  itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                  itemStack.setItemMeta(itemMeta);
+                  ItemLore.setItemLore(itemStack);
+                  playerInventory.setItemInMainHand(itemStack);
+                  MessageUtil.info(sender, "아이템의 %s번째 접두어 %s을(를) 제거했습니다. 전 : %s, 후 : %s", line + 1, prefixComponent, item, itemStack);
+                }
+                case "set" -> {
+                  if (args.length < 5)
+                  {
+                    MessageUtil.shortArg(sender, 5, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname prefix set <줄> <접두어> [nbt]");
+                    return true;
+                  }
+                  if (args.length > 6)
+                  {
+                    MessageUtil.longArg(sender, 6, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname prefix set <줄> <접두어> [nbt]");
+                    return true;
+                  }
+                  if (prefixes == null || prefixes.isEmpty())
+                  {
+                    MessageUtil.sendError(sender, "%s에는 접두어가 없습니다", item);
+                    return true;
+                  }
+                  if (!MessageUtil.isInteger(sender, args[3], true))
+                  {
+                    return true;
+                  }
+                  int line = Integer.parseInt(args[3]);
+                  if (!MessageUtil.checkNumberSize(sender, line, 1, prefixes.size()))
+                  {
+                    return true;
+                  }
+                  line--;
+                  String prefix = args[4];
+                  String nbt = null;
+                  if (args.length == 6)
+                  {
+                    try
+                    {
+                      nbt = args[5];
+                      new NBTContainer(nbt);
+                    }
+                    catch (Exception exception)
+                    {
+                      MessageUtil.sendError(sender, "잘못된 NBT입니다: %s", nbt);
+                      return true;
+                    }
+                  }
+                  NBTCompound compound = prefixes.get(line);
+                  compound.setString("text", prefix);
+                  if (nbt != null)
+                  {
+                    NBTCompound nbtCompound = compound.addCompound("nbt");
+                    nbtCompound.mergeCompound(new NBTContainer(nbt));
+                  }
+                  String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+                  ItemStack itemStack = nbtItem.getItem();
+                  ItemMeta itemMeta = itemStack.getItemMeta();
+                  itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                  itemStack.setItemMeta(itemMeta);
+                  ItemLore.setItemLore(itemStack);
+                  playerInventory.setItemInMainHand(itemStack);
+                  Component prefixComponent = ComponentUtil.create(prefix);
+                  if (prefixComponent.color() == null)
+                  {
+                    prefixComponent = prefixComponent.color(Constant.THE_COLOR);
+                  }
+                  MessageUtil.info(sender, "아이템의 %s번째 접두어를 %s(으)로 변경했습니다. 전 : %s, 후 : %s" + (nbt != null ? ", nbt : %s" : ""), line + 1, prefixComponent, item, itemStack, nbt + "");
+                }
+                default -> {
+                  MessageUtil.wrongArg(sender, 3, args);
+                  MessageUtil.commandInfo(sender, label, "customdisplayname prefix <add|remove|set|list>");
+                  return true;
+                }
+              }
+            }
+            case "suffix" -> {
+              NBTCompoundList suffixes = NBTAPI.getCompoundList(displayCompound, CucumberyTag.ITEMSTACK_DISPLAY_SUFFIX);
+              if (args.length < 3)
+              {
+                MessageUtil.shortArg(sender, 3, args);
+                MessageUtil.commandInfo(sender, label, "customdisplayname suffix <add|remove|set|insert|list>");
+                return true;
+              }
+              switch (args[2])
+              {
+                case "list" -> {
+                  if (args.length > 3)
+                  {
+                    MessageUtil.longArg(sender, 3, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname suffix list");
+                    return true;
+                  }
+                  if (suffixes == null || suffixes.isEmpty())
+                  {
+                    MessageUtil.sendError(sender, "%s에는 접미어가 없습니다", item);
+                    return true;
+                  }
+                  MessageUtil.info(sender, "%s에는 접미어가 %s개 있습니다", item, suffixes.size());
+                  for (int i = 0; i < suffixes.size(); i++)
+                  {
+                    NBTCompound nbtCompound = suffixes.get(i);
+                    String text = nbtCompound.getString("text");
+                    if (text != null)
+                    {
+                      Component message = Component.text(text);
+                      message = message.hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %1$s번째 접미어를 수정합니다\n우클릭하여 채팅창에 %1$s번째 접미어를 삽입합니다", i + 1)));
+                      message = message.clickEvent(ClickEvent.suggestCommand("/itag customdisplayname suffix set " + (i + 1) + " "));
+                      message = message.insertion(text);
+                      NBTCompound nbt = nbtCompound.getCompound("nbt");
+                      MessageUtil.info(sender, "%s번째 접미어 : %s" + (nbt != null ? ", nbt : %s" : ""), i + 1, message, nbt != null ? nbt.toString() : "");
+                    }
+                    else
+                    {
+                      MessageUtil.info(sender, "잘못된 %s번째 접미어입니다", i + 1);
+                    }
+                  }
+                }
+                case "add" -> {
+                  if (args.length < 4)
+                  {
+                    MessageUtil.shortArg(sender, 4, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname suffix add <접미어> [nbt]");
+                    return true;
+                  }
+                  if (args.length > 5)
+                  {
+                    MessageUtil.longArg(sender, 5, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname suffix add <접미어> [nbt]");
+                    return true;
+                  }
+                  String suffix = args[3];
+                  String nbt = null;
+                  if (args.length == 5)
+                  {
+                    try
+                    {
+                      nbt = args[4];
+                      new NBTContainer(nbt);
+                    }
+                    catch (Exception exception)
+                    {
+                      MessageUtil.sendError(sender, "잘못된 NBT입니다: %s", nbt);
+                      return true;
+                    }
+                  }
+                  if (itemTag == null)
+                  {
+                    itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+                  }
+                  if (displayCompound == null)
+                  {
+                    displayCompound = itemTag.addCompound(CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+                  }
+                  if (suffixes == null)
+                  {
+                    suffixes = displayCompound.getCompoundList(CucumberyTag.ITEMSTACK_DISPLAY_SUFFIX);
+                  }
+                  NBTCompound compound = suffixes.addCompound();
+                  compound.setString("text", suffix);
+                  if (nbt != null)
+                  {
+                    NBTCompound nbtCompound = compound.addCompound("nbt");
+                    nbtCompound.mergeCompound(new NBTContainer(nbt));
+                  }
+                  String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+                  ItemStack itemStack = nbtItem.getItem();
+                  ItemMeta itemMeta = itemStack.getItemMeta();
+                  Component displayName = itemMeta.displayName();
+                  if ((originalName == null || originalName.equals("")) &&
+                          displayName != null && !(displayName instanceof TranslatableComponent t && t.args().size() == 4 && t.args().get(3) instanceof TextComponent c && c.content().equals("Custom Display")))
+                  {
+                    originalName = ComponentUtil.serializeAsJson(displayName);
+                    displayCompound.setString(CucumberyTag.ORIGINAL_NAME, originalName);
+                    itemStack = nbtItem.getItem();
+                    itemMeta = itemStack.getItemMeta();
+                  }
+                  itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                  itemStack.setItemMeta(itemMeta);
+                  ItemLore.setItemLore(itemStack);
+                  playerInventory.setItemInMainHand(itemStack);
+                  Component suffixComponent = ComponentUtil.create(suffix);
+                  if (suffixComponent.color() == null)
+                  {
+                    suffixComponent = suffixComponent.color(Constant.THE_COLOR);
+                  }
+                  MessageUtil.info(sender, "아이템에 %s번째 접미어 %s을(를) 추가했습니다. 전 : %s, 후 : %s" + (nbt != null ? ", nbt : %s" : ""), suffixes.size(), suffixComponent, item, itemStack, nbt + "");
+                }
+                case "remove" -> {
+                  if (args.length > 4)
+                  {
+                    MessageUtil.longArg(sender, 4, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname suffix remove [줄|--all]");
+                    return true;
+                  }
+                  if (suffixes == null || suffixes.isEmpty())
+                  {
+                    MessageUtil.sendError(sender, "%s에는 접미어가 없습니다", item);
+                    return true;
+                  }
+                  int line = suffixes.size() - 1;
+                  if (args.length == 4)
+                  {
+                    if (args[3].equals("--all"))
+                    {
+                      line = -1;
+                    }
+                    else
+                    {
+                      if (!MessageUtil.isInteger(sender, args[3], true))
+                      {
+                        return true;
+                      }
+                      line = Integer.parseInt(args[3]);
+                      if (!MessageUtil.checkNumberSize(sender, line, 1, suffixes.size(), true))
+                      {
+                        return true;
+                      }
+                      line--;
+                    }
+                  }
+                  String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+                  if (line == -1 || suffixes.size() == 1)
+                  {
+                    NBTAPI.removeKey(displayCompound, CucumberyTag.ITEMSTACK_DISPLAY_SUFFIX);
+                    ItemStack itemStack = nbtItem.getItem();
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                    itemStack.setItemMeta(itemMeta);
+                    ItemLore.setItemLore(itemStack);
+                    playerInventory.setItemInMainHand(itemStack);
+                    MessageUtil.info(sender, "아이템의 모든 접미어를 제거했습니다. 전 : %s, 후 : %s", item, itemStack);
+                    return true;
+                  }
+                  String text = suffixes.get(line).getString("text");
+                  if (text == null)
+                  {
+                    text = "translate:&c잘못된 접미어";
+                  }
+                  Component suffixComponent = ComponentUtil.create(text);
+                  if (suffixComponent.color() == null)
+                  {
+                    suffixComponent = suffixComponent.color(Constant.THE_COLOR);
+                  }
+                  suffixes.remove(line);
+                  ItemStack itemStack = nbtItem.getItem();
+                  ItemMeta itemMeta = itemStack.getItemMeta();
+                  itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                  itemStack.setItemMeta(itemMeta);
+                  ItemLore.setItemLore(itemStack);
+                  playerInventory.setItemInMainHand(itemStack);
+                  MessageUtil.info(sender, "아이템의 %s번째 접미어 %s을(를) 제거했습니다. 전 : %s, 후 : %s", line + 1, suffixComponent, item, itemStack);
+                }
+                case "set" -> {
+                  if (args.length < 5)
+                  {
+                    MessageUtil.shortArg(sender, 5, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname suffix set <줄> <접미어> [nbt]");
+                    return true;
+                  }
+                  if (args.length > 6)
+                  {
+                    MessageUtil.longArg(sender, 6, args);
+                    MessageUtil.commandInfo(sender, label, "customdisplayname suffix set <줄> <접미어> [nbt]");
+                    return true;
+                  }
+                  if (suffixes == null || suffixes.isEmpty())
+                  {
+                    MessageUtil.sendError(sender, "%s에는 접미어가 없습니다", item);
+                    return true;
+                  }
+                  if (!MessageUtil.isInteger(sender, args[3], true))
+                  {
+                    return true;
+                  }
+                  int line = Integer.parseInt(args[3]);
+                  if (!MessageUtil.checkNumberSize(sender, line, 1, suffixes.size()))
+                  {
+                    return true;
+                  }
+                  line--;
+                  String suffix = args[4];
+                  String nbt = null;
+                  if (args.length == 6)
+                  {
+                    try
+                    {
+                      nbt = args[5];
+                      new NBTContainer(nbt);
+                    }
+                    catch (Exception exception)
+                    {
+                      MessageUtil.sendError(sender, "잘못된 NBT입니다: %s", nbt);
+                      return true;
+                    }
+                  }
+                  NBTCompound compound = suffixes.get(line);
+                  compound.setString("text", suffix);
+                  if (nbt != null)
+                  {
+                    NBTCompound nbtCompound = compound.addCompound("nbt");
+                    nbtCompound.mergeCompound(new NBTContainer(nbt));
+                  }
+                  String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+                  ItemStack itemStack = nbtItem.getItem();
+                  ItemMeta itemMeta = itemStack.getItemMeta();
+                  itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                  itemStack.setItemMeta(itemMeta);
+                  ItemLore.setItemLore(itemStack);
+                  playerInventory.setItemInMainHand(itemStack);
+                  Component suffixComponent = ComponentUtil.create(suffix);
+                  if (suffixComponent.color() == null)
+                  {
+                    suffixComponent = suffixComponent.color(Constant.THE_COLOR);
+                  }
+                  MessageUtil.info(sender, "아이템의 %s번째 접미어를 %s으(로) 변경했습니다. 전 : %s, 후 : %s" + (nbt != null ? ", nbt : %s" : ""), line + 1, suffixComponent, item, itemStack, nbt + "");
+                }
+                default -> {
+                  MessageUtil.wrongArg(sender, 3, args);
+                  MessageUtil.commandInfo(sender, label, "customdisplayname suffix <add|remove|set|list>");
+                  return true;
+                }
+              }
+            }
+            case "name" -> {
+              if (args.length < 3)
+              {
+                MessageUtil.shortArg(sender, 3, args);
+                MessageUtil.commandInfo(sender, label, "customdisplayname name <name|--remove>");
+                return true;
+              }
+              if (args.length > 3)
+              {
+                MessageUtil.longArg(sender, 3, args);
+                MessageUtil.commandInfo(sender, label, "customdisplayname name <name|--remove>");
+                return true;
+              }
+              boolean remove = args[2].equals("--remove");
+              String name = NBTAPI.getString(displayCompound, CucumberyTag.ITEMSTACK_DISPLAY_NAME);
+              if (remove)
+              {
+                if (name == null)
+                {
+                  MessageUtil.sendError(sender, "%s에는 이름이 없습니다", item);
+                  return true;
+                }
+                displayCompound.removeKey(CucumberyTag.ITEMSTACK_DISPLAY_NAME);
+                if (displayCompound.getKeys().isEmpty())
+                {
+                  itemTag.removeKey(CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+                }
+                if (itemTag.getKeys().isEmpty())
+                {
+                  nbtItem.removeKey(CucumberyTag.KEY_MAIN);
+                }
+                String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+                ItemStack itemStack = nbtItem.getItem();
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                Component displayName = itemMeta.displayName();
+                if ((originalName == null || originalName.equals("")) &&
+                        displayName != null && !(displayName instanceof TranslatableComponent t && t.args().size() == 4 && t.args().get(3) instanceof TextComponent c && c.content().equals("Custom Display")))
+                {
+                  originalName = ComponentUtil.serializeAsJson(displayName);
+                  displayCompound.setString(CucumberyTag.ORIGINAL_NAME, originalName);
+                  itemStack = nbtItem.getItem();
+                  itemMeta = itemStack.getItemMeta();
+                }
+                itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+                itemStack.setItemMeta(itemMeta);
+                ItemLore.setItemLore(itemStack);
+                playerInventory.setItemInMainHand(itemStack);
+                Component nameComponent = ComponentUtil.create(name);
+                if (nameComponent.color() == null)
+                {
+                  nameComponent = nameComponent.color(Constant.THE_COLOR);
+                }
+                MessageUtil.info(sender, "이름 %s을(를) 제거하였습니다. 전 : %s, 후 : %s", nameComponent, item, itemStack);
+                return true;
+              }
+              if (itemTag == null)
+              {
+                itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+              }
+              if (displayCompound == null)
+              {
+                displayCompound = itemTag.addCompound(CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+              }
+              displayCompound.setString(CucumberyTag.ITEMSTACK_DISPLAY_NAME, args[2]);
+              String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+              ItemStack itemStack = nbtItem.getItem();
+              ItemMeta itemMeta = itemStack.getItemMeta();
+              Component displayName = itemMeta.displayName();
+              if ((originalName == null || originalName.equals("")) &&
+                      displayName != null && !(displayName instanceof TranslatableComponent t && t.args().size() == 4 && t.args().get(3) instanceof TextComponent c && c.content().equals("Custom Display")))
+              {
+                originalName = ComponentUtil.serializeAsJson(displayName);
+                displayCompound.setString(CucumberyTag.ORIGINAL_NAME, originalName);
+                itemStack = nbtItem.getItem();
+                itemMeta = itemStack.getItemMeta();
+              }
+              itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+              itemStack.setItemMeta(itemMeta);
+              ItemLore.setItemLore(itemStack);
+              playerInventory.setItemInMainHand(itemStack);
+              Component nameComponent = ComponentUtil.create(args[2]);
+              if (nameComponent.color() == null)
+              {
+                nameComponent = nameComponent.color(Constant.THE_COLOR);
+              }
+              MessageUtil.info(sender, "이름을 %s으(로) 설정했습니다. 전 : %s, 후 : %s", nameComponent, item, itemStack);
+            }
+            case "remove" -> {
+              if (displayCompound == null)
+              {
+                MessageUtil.sendError(sender, "%s에는 사용자 지정 이름 태그가 없습니다", item);
+                return true;
+              }
+              String originalName = displayCompound.getString(CucumberyTag.ORIGINAL_NAME);
+              itemTag.removeKey(CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+              if (itemTag.getKeys().isEmpty())
+              {
+                nbtItem.removeKey(CucumberyTag.KEY_MAIN);
+              }
+              ItemStack itemStack = nbtItem.getItem();
+              ItemMeta itemMeta = itemStack.getItemMeta();
+              itemMeta.displayName(originalName == null || originalName.equals("") ? null : ComponentUtil.create(originalName));
+              itemStack.setItemMeta(itemMeta);
+              ItemLore.setItemLore(itemStack);
+              playerInventory.setItemInMainHand(itemStack);
+              MessageUtil.info(sender, "사용자 지정 이름 태그를 제거했습니다. 전 : %s, 후 : %s", item, itemStack);
+            }
+            default -> {
+              MessageUtil.wrongArg(sender, 2, args);
+              MessageUtil.commandInfo(sender, label, "customdisplayname <prefix|suffix|name|remove>");
+              return true;
             }
           }
         }

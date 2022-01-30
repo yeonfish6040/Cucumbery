@@ -1,8 +1,14 @@
 package com.jho5245.cucumbery.customeffect;
 
+import com.jho5245.cucumbery.customeffect.children.group.OfflinePlayerCustomEffect;
+import com.jho5245.cucumbery.customeffect.children.group.PlayerCustomEffect;
+import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import net.kyori.adventure.text.Component;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CustomEffect
@@ -40,7 +46,7 @@ public class CustomEffect
   }
 
   @NotNull
-  public CustomEffectType getEffectType()
+  public CustomEffectType getType()
   {
     return effectType;
   }
@@ -132,7 +138,7 @@ public class CustomEffect
                       };
               case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 주는 피해량이 %s 증가합니다", "&e" + ((amplifier + 2) * 5) + "%");
               case DODGE -> ComponentUtil.translate("%s 확률로 공격을 회피합니다", "&e" + (amplifier + 1) + "%");
-              case NEWBIE_SHIELD -> ComponentUtil.translate("누적 접속 시간이 1시간 미만인 당신!")
+              case NEWBIE_SHIELD -> ComponentUtil.translate("플레이 시간이 1시간 미만인 당신!")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("받는 피해량이 %s 감소하고 주는 피해량이 %s 증가합니다", "&e" + (switch (amplifier + 1)
                               {
@@ -147,9 +153,33 @@ public class CustomEffect
                               })
                       ))
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("접속 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
+                      .append(ComponentUtil.translate("플레이 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
+              case WA_SANS -> ComponentUtil.translate("스켈레톤 유형의 개체에게 받는")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("피해량이 %s 감소하고 주는 피해량이 %s 증가합니다","&e" + ((amplifier + 1) * 3) + "%", "&e" + ((amplifier + 1) * 10) + "%"));
+              case HEALTH_INCREASE -> ComponentUtil.translate("최대 HP가 %s 증가합니다", "&e" + ((amplifier + 1) * 10) + "%p");
               default -> effectType.getDescription();
             };
+    if (this instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)
+    {
+      OfflinePlayer player = offlinePlayerCustomEffect.getOfflinePlayer();
+      if (effectType == CustomEffectType.NEWBIE_SHIELD)
+      {
+        description = description.append(Component.text("\n"));
+        description = description.append(Component.text("\n"));
+        description = description.append(ComponentUtil.translate("&7플레이 시간 : %s", Method.timeFormatMilli(player.getStatistic(Statistic.PLAY_ONE_MINUTE) * 50L, false)));
+      }
+    }
+    if (this instanceof PlayerCustomEffect playerCustomEffect)
+    {
+      Player player = playerCustomEffect.getPlayer();
+      if (effectType == CustomEffectType.CONTINUAL_SPECTATING)
+      {
+        description = description.append(Component.text("\n"));
+        description = description.append(Component.text("\n"));
+        description = description.append(ComponentUtil.translate("&7관전 중인 플레이어 : %s", player));
+      }
+    }
     description = ComponentUtil.create(description, effectType.getPropertyDescription());
     return description;
   }
@@ -172,7 +202,7 @@ public class CustomEffect
   @NotNull
   public CustomEffect copy()
   {
-    return new CustomEffect(this.getEffectType(), this.getDuration(), this.getAmplifier(), this.getDisplayType());
+    return new CustomEffect(this.getType(), this.getDuration(), this.getAmplifier(), this.getDisplayType());
   }
 
   public boolean isHidden()

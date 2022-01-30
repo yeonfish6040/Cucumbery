@@ -3,10 +3,13 @@ package com.jho5245.cucumbery.customeffect;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.EnumHideable;
+import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -225,6 +228,10 @@ public enum CustomEffectType implements Translatable, EnumHideable
    */
   DARKNESS_TERROR(false, true, true),
   /**
+   * 어둠의 공포
+   */
+  DARKNESS_TERROR_ACTIVATED(false, true, true),
+  /**
    * 어둠의 공포 내성
    */
   DARKNESS_TERROR_RESISTANCE,
@@ -250,6 +257,16 @@ public enum CustomEffectType implements Translatable, EnumHideable
   NEWBIE_SHIELD(2, true, true, false),
   INVINCIBLE_PLUGIN_RELOAD(true, false, false),
   INVINCIBLE_RESPAWN(true, false, false),
+  /**
+   * 영웅의 메아리
+   */
+  HEROS_ECHO(false, false, false),
+  HEROS_ECHO_OTHERS(false, false, false),
+  FANCY_SPOTLIGHT(false, false, false),
+  FANCY_SPOTLIGHT_ACTIVATED(false, false, false),
+  WA_SANS(9),
+  HEALTH_INCREASE(99),
+  CONTINUAL_SPECTATING(true, true, false),
   ;
 
   private final int maxAmplifier;
@@ -344,7 +361,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case THICK -> "진함";
               case UNCRAFTABLE -> "제작 불가능함";
               case SERVER_RADIO_LISTENING -> "서버 라디오 분위기";
-              case DARKNESS_TERROR -> "어둠의 공포";
+              case DARKNESS_TERROR -> "어두운거 싫어요";
+              case DARKNESS_TERROR_ACTIVATED -> "어둠의 공포";
               case DARKNESS_TERROR_RESISTANCE -> "어둠의 공포 내성";
               case COOLDOWN_CHAT -> "채팅 쿨타임";
               case COOLDOWN_ITEM_MEGAPHONE -> "아이템 확성기 쿨타임";
@@ -355,6 +373,12 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case NEWBIE_SHIELD -> "뉴비 보호막";
               case INVINCIBLE_PLUGIN_RELOAD -> "플러그인 리로드 무적";
               case INVINCIBLE_RESPAWN -> "리스폰 무적";
+              case HEROS_ECHO, HEROS_ECHO_OTHERS -> "영웅의 메아리";
+              case FANCY_SPOTLIGHT -> "화려한 조명";
+              case FANCY_SPOTLIGHT_ACTIVATED -> "화려한 조명 효과";
+              case WA_SANS -> "와 샌즈";
+              case HEALTH_INCREASE -> "HP 증가";
+              case CONTINUAL_SPECTATING -> "관전 지속";
             };
   }
 
@@ -387,7 +411,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
       case MUTE -> ComponentUtil.translate("채팅을 할 수 없는 상태입니다");
       case CURSE_OF_MUSHROOM -> ComponentUtil.translate("농도 레벨 * 0.1% 확률로 5초마다 인벤토리에 버섯이 들어옵니다");
       case INVINCIBLE -> ComponentUtil.translate("어떠한 형태의 피해도 받지 않습니다");
-      case BUFF_FREEZE -> ComponentUtil.translate("사망시 일부 버프를 제외한 버프가 사라지지 않습니다");
+      case BUFF_FREEZE -> ComponentUtil.translate("사망시 버프를 소모하여 일부 버프를 제외한 버프가 사라지지 않습니다");
       case CONFUSION -> ComponentUtil.translate("방향키가 반대로 작동합니다");
       case RESURRECTION -> ComponentUtil.translate("죽음에 이르는 피해를 입었을 때, 죽지 않고")
               .append(Component.text("\n"))
@@ -425,9 +449,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
               .append(Component.text("\n"))
               .append(ComponentUtil.translate("입장 메시지, 퇴장 메시지가 뜨지 않습니다"));
       case CURSE_OF_BEANS ->
-              ComponentUtil.translate("뭔가.. 자꾸.. 2번씩 일어난다.")
+              ComponentUtil.translate("뭔가.. 자꾸.. 2번씩 일어난다")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("뭔가.. 자꾸.. 2번씩 일어난다."));
+                      .append(ComponentUtil.translate("뭔가.. 자꾸.. 2번씩 일어난다"));
       case SILK_TOUCH ->
               ComponentUtil.translate("블록을 캐면 섬세한 손길 마법과")
               .append(Component.text("\n"))
@@ -477,18 +501,36 @@ public enum CustomEffectType implements Translatable, EnumHideable
       case COOLDOWN_CHAT -> ComponentUtil.translate("채팅 쿨타임동안은 채팅하실 수 없습니다");
       case COOLDOWN_ITEM_MEGAPHONE -> ComponentUtil.translate("아이템 확성기 쿨타임동안은 아이템 확성기를 사용하실 수 없습니다");
       case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 주는 피해량이 증가합니다");
-      case DARKNESS_TERROR -> ComponentUtil.translate("너무 어둡습니다! 받는 피해량이 30% 증가하고 블록을 캘 때마다")
+      case DARKNESS_TERROR -> ComponentUtil.translate("어두운거.. 무섭다..")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("%s 효과나 손에 빛을 내는 아이템 없이 어두운 곳에 가면 %s 효과가 걸립니다",
+                      Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.NIGHT_VISION), NamedTextColor.GREEN), DARKNESS_TERROR_ACTIVATED));
+      case DARKNESS_TERROR_ACTIVATED -> ComponentUtil.translate("너무 어둡습니다! 받는 피해량이 30% 증가하고 블록을 캘 때마다")
               .append(Component.text("\n"))
               .append(ComponentUtil.translate("%s 확률로 받는 피해량 증가에 영향을 받는 1의 피해를 입습니다", "&e5%"));
-      case DARKNESS_TERROR_RESISTANCE -> ComponentUtil.translate("%s 효과에 대한 내성이 생깁니다", DARKNESS_TERROR);
+      case DARKNESS_TERROR_RESISTANCE -> ComponentUtil.translate("%s 효과에 대한 내성이 생깁니다", DARKNESS_TERROR_ACTIVATED);
       case DODGE -> ComponentUtil.translate("일정 확률로 공격을 회피합니다");
-      case NEWBIE_SHIELD -> ComponentUtil.translate("누적 접속 시간이 1시간 미만인 당신!")
+      case NEWBIE_SHIELD -> ComponentUtil.translate("플레이 시간이 1시간 미만인 당신!")
               .append(Component.text("\n"))
               .append(ComponentUtil.translate("받는 피해량이 감소하고 주는 피해량이 증가합니다"))
               .append(Component.text("\n"))
-              .append(ComponentUtil.translate("접속 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
+              .append(ComponentUtil.translate("플레이 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
       case INVINCIBLE_PLUGIN_RELOAD -> ComponentUtil.translate("플러그인을 리도드하는 중입니다");
       case INVINCIBLE_RESPAWN -> ComponentUtil.translate("리스폰 무적 상태입니다");
+      case HEROS_ECHO, HEROS_ECHO_OTHERS -> ComponentUtil.translate("최종 대미지가 5% 증가합니다");
+      case FANCY_SPOTLIGHT -> ComponentUtil.translate("화려한 조명이 나를 비추네~")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("주변에 충분히 밝은 블록이 있으면 %s와(과) %s이(가) 적용됩니다",
+                      Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN),  Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN)));
+      case FANCY_SPOTLIGHT_ACTIVATED -> ComponentUtil.translate("주변에 충분히 밝은 블록이 있어 %s와(과) %s이(가) 적용됩니다",
+              Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN),  Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN));
+      case WA_SANS -> ComponentUtil.translate("스켈레톤 유형의 개체에게 주는")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("피해량이 증가하고 받는 피해량이 감소합니다"));
+      case HEALTH_INCREASE -> ComponentUtil.translate("최대 HP가 증가합니다");
+      case CONTINUAL_SPECTATING -> ComponentUtil.translate("플레이어를 지속적으로 관전합니다")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("해당 플레이어가 재접속하거나 리스폰해도 자동으로 관전합니다"));
       default -> Component.empty();
     };
   }
@@ -498,9 +540,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     Component description = Component.empty();
     boolean isNegative = this.isNegative();
-    boolean keepOnDeath = this.isKeepOnDeath(), keepOnQuit = this.isKeepOnQuit(), keepOnMilk = this.isKeepOnMilk();
+    boolean keepOnDeath = this.isKeepOnDeath(), keepOnQuit = this.isKeepOnQuit(), keepOnMilk = this.isKeepOnMilk(), buffFreezable = this.isBuffFreezable();
 
-    if (!this.getDescription().equals(Component.empty()) && (keepOnDeath || !keepOnQuit || keepOnMilk))
+    if (!this.getDescription().equals(Component.empty()) && (keepOnDeath || !keepOnQuit || keepOnMilk || !buffFreezable))
     {
       description = description.append(Component.text("\n"));
     }
@@ -515,10 +557,6 @@ public enum CustomEffectType implements Translatable, EnumHideable
     if (!keepOnQuit)
     {
       description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c접속을 종료하면 효과가 사라집니다"));
-      if (this == CustomEffectType.CURSE_OF_BEANS)
-      {
-        description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c접속을 종료하면 효과가 사라집니다"));
-      }
     }
     if (keepOnMilk)
     {
@@ -527,6 +565,10 @@ public enum CustomEffectType implements Translatable, EnumHideable
       {
         description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "우유를 마셔도 효과가 사라지지 않습니다"));
       }
+    }
+    if (!buffFreezable)
+    {
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c%s의 영향을 받지 않습니다", CustomEffectType.BUFF_FREEZE));
     }
     return description;
   }
@@ -555,13 +597,14 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return switch (this)
             {
-              case RESURRECTION, CUCUMBERY_UPDATER, DARKNESS_TERROR -> -1;
-              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD -> 2;
+              case RESURRECTION, CUCUMBERY_UPDATER, DARKNESS_TERROR_ACTIVATED -> -1;
+              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED -> 2;
               case RESURRECTION_INVINCIBLE -> 20 * 2;
               case COOLDOWN_CHAT -> 20 * 3;
               case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD -> 20 * 5;
               case STOP, COOLDOWN_ITEM_MEGAPHONE, INVINCIBLE_RESPAWN -> 20 * 10;
               case RESURRECTION_COOLDOWN -> 20 * 60 * 10;
+              case HEROS_ECHO, HEROS_ECHO_OTHERS -> 20 * 60 * 60 * 2;
               default -> 20 * 30;
             };
   }
@@ -576,6 +619,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case BANE_OF_ARTHROPODS -> Arrays.asList(CustomEffectType.SHARPNESS, CustomEffectType.SMITE);
               case INSIDER -> Collections.singletonList(CustomEffectType.OUTSIDER);
               case OUTSIDER -> Collections.singletonList(CustomEffectType.INSIDER);
+              case HEROS_ECHO -> Collections.singletonList(CustomEffectType.HEROS_ECHO_OTHERS);
+              case HEROS_ECHO_OTHERS -> Collections.singletonList(CustomEffectType.HEROS_ECHO);
               default -> Collections.emptyList();
             };
   }
@@ -594,7 +639,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return isTimeHiddenWhenFull() || switch (this)
             {
-              case DARKNESS_TERROR, SERVER_RADIO_LISTENING, NEWBIE_SHIELD -> true;
+              case DARKNESS_TERROR_ACTIVATED, SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED -> true;
               default -> false;
             };
   }
@@ -613,13 +658,34 @@ public enum CustomEffectType implements Translatable, EnumHideable
     };
   }
 
-  @SuppressWarnings("all")
   public boolean isRightClickRemovable()
   {
     return !isNegative() && switch (this)
             {
-              case SERVER_RADIO_LISTENING -> false;
+              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED -> false;
               default -> true;
+            };
+  }
+
+  public boolean isBuffFreezable()
+  {
+    return switch (this)
+            {
+              case INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN -> false;
+              default -> true;
+            };
+  }
+
+  /**
+   * @return 효과가 같은 여러 농도의 효과를 가지고 있을 때 해당 효과를 전부 표시할 효과면 true 이오ㅔ이는 false
+   */
+  @SuppressWarnings("all")
+  public boolean isStackdisplayed()
+  {
+    return getMaxAmplifier() > 0 && switch (this)
+            {
+              case HEALTH_INCREASE -> true;
+              default -> false;
             };
   }
 
@@ -639,8 +705,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return switch (this)
             {
-              case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER,
-                      INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN -> true;
+              case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR_ACTIVATED, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER,
+                      INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, HEROS_ECHO_OTHERS, FANCY_SPOTLIGHT_ACTIVATED, NEWBIE_SHIELD -> true;
               default -> false;
             };
   }

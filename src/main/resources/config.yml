@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 15
+config-version: 16
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -722,11 +722,6 @@ show-vanilla-potion-effects-on-bossbar: true
 # 추가로, 해당 효과가 있는 상태에서 특정 음식을 먹으면 양조 조합법과 같은 결과의 포션 효과를 적용받을 수 있음
 # (예: 어색한 포션을 마시고 황금 당근을 먹으면 야간 투시가 걸림)
 use-no-effect-potions-weirdly: true
-
-# 어두운 곳에서 야간 투시가 없는 경우 어둠의 공포 효과가 적용되게 할 것인가?
-# 단, 관전 혹은 크리에이티브는 걸리지 않으며 옵티파인 동적 조명 기능을 사용하는 경우를 위해
-# 손에 빛을 내는 물질을 들고 있는 경우에는 걸리지 않으며, 네더나 디 엔드, 사용자 지정 환경의 월드에서는 적용되지 않는다.
-use-darkness-terror-custom-effect: true
 
 # 커스텀 인챈트 기능 사용(/itag customenchant 명령어가 아닌 마크 고유의 인챈트)
 use-custom-enchant-features: true

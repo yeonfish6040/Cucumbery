@@ -1,7 +1,9 @@
 package com.jho5245.cucumbery.util.storage;
 
 import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -73,7 +75,7 @@ public class CreateItemStack
   @Deprecated
   public static ItemStack newItem(Material type, int amount, String name, boolean hideItemFlag)
   {
-    return CreateItemStack.newItem(type, amount, name, new ArrayList<String>(), hideItemFlag);
+    return CreateItemStack.newItem(type, amount, name, new ArrayList<>(), hideItemFlag);
   }
 
   @Deprecated
@@ -159,5 +161,30 @@ public class CreateItemStack
     }
     itemStack.setItemMeta(itemMeta);
     return itemStack;
+  }
+
+  @NotNull
+  public static ItemStack getPreviousButton(@NotNull Component previousTitle)
+  {
+    ItemStack itemStack = new ItemStack(Material.ARROW);
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    itemMeta.displayName(ComponentUtil.translate("&b이전 메뉴로"));
+    itemMeta.lore(Collections.singletonList(ComponentUtil.translate("&8(%s)", previousTitle)));
+    itemStack.setItemMeta(itemMeta);
+    NBTItem nbtItem = new NBTItem(itemStack, true);
+    nbtItem.setBoolean(CucumberyTag.GUI_BUTTON_PREVIOUS, true);
+    itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
+    return itemStack;
+  }
+
+  public static boolean isPreviousButton(@NotNull ItemStack itemStack)
+  {
+    if (itemStack.getType() != Material.ARROW)
+    {
+      return false;
+    }
+    NBTItem nbtItem = new NBTItem(itemStack);
+    Boolean b = nbtItem.getBoolean(CucumberyTag.GUI_BUTTON_PREVIOUS);
+    return b != null && b;
   }
 }

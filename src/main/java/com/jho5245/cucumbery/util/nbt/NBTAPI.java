@@ -219,7 +219,7 @@ public class NBTAPI
    */
   public static boolean commpoundListContainsValue(@Nullable NBTCompoundList array, @NotNull String key, @NotNull String value)
   {
-    if (array == null || array.size() == 0 || key.length() == 0 || value.length() == 0)
+    if (array == null || array.isEmpty() || key.isEmpty() || value.isEmpty())
     {
       return false;
     }
@@ -247,7 +247,7 @@ public class NBTAPI
   {
     NBTCompound parent = compound;
     parent.removeKey(key);
-    while (parent.getParent() != null && parent.getKeys().size() == 0)
+    while (parent.getParent() != null && parent.getKeys().isEmpty())
     {
       key = parent.getName();
       parent = parent.getParent();

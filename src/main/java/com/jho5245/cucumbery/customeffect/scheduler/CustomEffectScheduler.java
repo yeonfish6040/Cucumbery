@@ -7,6 +7,7 @@ import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.customeffect.CustomEffectGUI;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.customeffect.scheduler.metasasis.MetasasisScheduler;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreRemoveEvent;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
@@ -48,6 +49,7 @@ public class CustomEffectScheduler
     {
       tick();
       display();
+      fancySpotlight();
       newbieShield();
       darknessTerror();
       serverRadio();
@@ -74,6 +76,19 @@ public class CustomEffectScheduler
         for (CustomEffect customEffect : customEffects)
         {
           customEffect.tick();
+          if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
+          {
+            Player player = playerCustomEffect.getPlayer();
+            UUID uuid1 = player.getUniqueId();
+            if (!player.isOnline() || !player.isValid())
+            {
+              Player newPlayer = Bukkit.getPlayer(uuid1);
+              if (newPlayer != null)
+              {
+                playerCustomEffect.setPlayer(newPlayer);
+              }
+            }
+          }
           if (customEffect.getDuration() == 0)
           {
             EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, customEffect);
@@ -104,10 +119,10 @@ public class CustomEffectScheduler
         @NotNull List<CustomEffect> finalCustomEffects = new ArrayList<>(customEffects);
         customEffects.removeIf(e ->
         {
-          CustomEffectType customEffectType = e.getEffectType();
+          CustomEffectType customEffectType = e.getType();
           for (CustomEffect effect : finalCustomEffects)
           {
-            if (effect.getEffectType() == customEffectType && effect.getAmplifier() > e.getAmplifier())
+            if (effect.getType() == customEffectType && !customEffectType.isStackdisplayed() && effect.getAmplifier() > e.getAmplifier())
             {
               return true;
             }
@@ -121,17 +136,19 @@ public class CustomEffectScheduler
       @NotNull List<CustomEffect> finalCustomEffects = new ArrayList<>(customEffects);
       customEffects.removeIf(e ->
       {
-        CustomEffectType customEffectType = e.getEffectType();
+        CustomEffectType customEffectType = e.getType();
         for (CustomEffect effect : finalCustomEffects)
         {
-          if (effect.getEffectType() == customEffectType && effect.getAmplifier() > e.getAmplifier())
+          if (effect.getType() == customEffectType && !customEffectType.isStackdisplayed() && effect.getAmplifier() > e.getAmplifier())
           {
             return true;
           }
         }
         return false;
       });
-      boolean showPotionEffect = Cucumbery.config.getBoolean("show-vanilla-potion-effects-on-bossbar") && !player.getActivePotionEffects().isEmpty();
+      List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
+      potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
+      boolean showPotionEffect = Cucumbery.config.getBoolean("show-vanilla-potion-effects-on-bossbar") && !potionEffects.isEmpty();
       if (!showPotionEffect && customEffects.isEmpty())
       {
         if (Variable.customEffectBossBarMap.containsKey(uuid))
@@ -142,7 +159,7 @@ public class CustomEffectScheduler
       }
       else
       {
-        int size = customEffects.size() + player.getActivePotionEffects().size();
+        int size = customEffects.size() + potionEffects.size();
         if (!Variable.customEffectBossBarMap.containsKey(uuid))
         {
           BossBar bossBar = BossBar.bossBar(Component.empty(), 1f, BossBar.Color.GREEN, Overlay.PROGRESS);
@@ -160,7 +177,7 @@ public class CustomEffectScheduler
           {
             display = display.append(Component.text(", "));
           }
-          display = display.append(CustomEffectManager.getVanillaDisplay(player.getActivePotionEffects(), size <= 10));
+          display = display.append(CustomEffectManager.getVanillaDisplay(potionEffects, size <= 10));
         }
         bossBar.name(ComponentUtil.stripEvent(display));
         float progress = 0f;
@@ -172,7 +189,7 @@ public class CustomEffectScheduler
         }
         for (CustomEffect customEffect : customEffects)
         {
-          if (customEffect.getEffectType().isNegative())
+          if (customEffect.getType().isNegative())
           {
             allIsPositive = false;
           }
@@ -181,7 +198,7 @@ public class CustomEffectScheduler
             allIsNegative = false;
           }
         }
-        for (PotionEffect potionEffect : player.getActivePotionEffects())
+        for (PotionEffect potionEffect : potionEffects)
         {
           if (CustomEffectManager.isVanillaNegative(potionEffect.getType()))
           {
@@ -211,7 +228,7 @@ public class CustomEffectScheduler
             bossBar.color(Color.YELLOW);
           }
         }
-        progress += 1f * player.getActivePotionEffects().size() / size;
+        progress += 1f * potionEffects.size() / size;
         progress = Math.min(Math.max(progress, 0f), 1f);
         player.showBossBar(bossBar.progress(progress));
       }
@@ -249,6 +266,24 @@ public class CustomEffectScheduler
     }
   }
 
+  private static void fancySpotlight()
+  {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT))
+      {
+        Location location = player.getEyeLocation();
+        byte blockLight = location.getBlock().getLightFromBlocks();
+        if (blockLight > 10)
+        {
+          CustomEffectManager.addEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED);
+          player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2,0, false, false, false));
+          player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 2,0, false, false, false));
+        }
+      }
+    }
+  }
+
   private static void newbieShield()
   {
     for (Player player : Bukkit.getOnlinePlayers())
@@ -275,7 +310,7 @@ public class CustomEffectScheduler
     {
       if (CustomEffectManager.hasEffect(player, CustomEffectType.DARKNESS_TERROR_RESISTANCE))
       {
-        CustomEffectManager.removeEffect(player, CustomEffectType.DARKNESS_TERROR);
+        CustomEffectManager.removeEffect(player, CustomEffectType.DARKNESS_TERROR_ACTIVATED);
         continue;
       }
       if (!darknessTerrorTimer.contains(player.getUniqueId()))
@@ -289,19 +324,19 @@ public class CustomEffectScheduler
       }
       darknessTerrorTimer.remove(player.getUniqueId());
       darknessTerrorTimer2.remove(player.getUniqueId());
-      Location location = player.getLocation();
+      Location location = player.getEyeLocation();
       Material mainHand = player.getInventory().getItemInMainHand().getType(), offHand = player.getInventory().getItemInOffHand().getType();
-      if (Cucumbery.config.getBoolean("use-darkness-terror-custom-effect") &&
-              location.getWorld().getEnvironment() == Environment.NORMAL && location.getY() < location.getWorld().getSeaLevel() &&
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.DARKNESS_TERROR) &&
+              location.getWorld().getEnvironment() == Environment.NORMAL &&
               player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR && !player.hasPotionEffect(PotionEffectType.NIGHT_VISION) &&
-              player.getEyeLocation().getBlock().isPassable() && player.getEyeLocation().getBlock().getLightLevel() == 0
+              !location.getBlock().isSolid() && location.getBlock().getLightLevel() == 0
               && !(Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(mainHand) || Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(offHand)))
       {
-        CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.DARKNESS_TERROR));
+        CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectType.DARKNESS_TERROR_ACTIVATED));
       }
       else
       {
-        CustomEffectManager.removeEffect(player, CustomEffectType.DARKNESS_TERROR);
+        CustomEffectManager.removeEffect(player, CustomEffectType.DARKNESS_TERROR_ACTIVATED);
       }
     }
   }

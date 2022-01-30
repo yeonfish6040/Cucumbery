@@ -711,7 +711,7 @@ public class MessageUtil
     }
     String tmp = MessageUtil.n2sHex(ChatColor.translateAlternateColorCodes('&', input));
     tmp = ColorUtil.chatEffect(tmp);
-    tmp = tmp.replace("&p", "§p").replace("&q", "§q");
+    tmp = tmp.replace("&p", "§p").replace("&q", "§q").replace("&i", "§i");
     return type == N2SType.SPECIAL ? tmp.replace("&&", "§") : tmp;
   }
 

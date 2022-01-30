@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.customeffect;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.customeffect.children.group.*;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectApplyEvent;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreApplyEvent;
 import com.jho5245.cucumbery.util.MessageUtil;
@@ -9,10 +10,12 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
@@ -58,11 +61,12 @@ public class CustomEffectManager
     return addEffect(entity, customEffect, false);
   }
 
+  @SuppressWarnings("all")
   public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect effect, boolean force)
   {
-    if (!force && hasEffect(entity, effect.getEffectType()))
+    if (!force && hasEffect(entity, effect.getType()))
     {
-      CustomEffect customEffect = getEffect(entity, effect.getEffectType());
+      CustomEffect customEffect = getEffect(entity, effect.getType());
       int originDura = customEffect.getDuration(), newDura = effect.getDuration();
       int originAmpl = customEffect.getAmplifier(), newAmpl = effect.getAmplifier();
       if (!(originAmpl != newAmpl || newDura == -1 || (originDura != -1 && originDura < newDura)))
@@ -83,8 +87,60 @@ public class CustomEffectManager
     {
       int originAmpl = customEffect.getAmplifier(), newAmpl = finalEffect.getAmplifier();
       int originDura = customEffect.getDuration(), newDura = finalEffect.getDuration();
-      return customEffect.getEffectType() == finalEffect.getEffectType() && originAmpl == newAmpl && (force || newDura == -1 || (originDura != -1 && originDura < newDura));
+
+      if (customEffect.getType() == finalEffect.getType() && (originAmpl == newAmpl) && (force || newDura == -1 || (originDura != -1 && originDura < newDura)))
+      {
+        if (entity instanceof Attributable attributable && customEffect instanceof AttributeCustomEffect attributeCustomEffect)
+        {
+          UUID uuid = attributeCustomEffect.getUniqueId();
+          Attribute attribute = attributeCustomEffect.getAttribute();
+          AttributeInstance attributeInstance = attributable.getAttribute(attribute);
+          if (attributeInstance != null)
+          {
+            AttributeModifier attributeModifier = null;
+            for (AttributeModifier modifier : attributeInstance.getModifiers())
+            {
+              if (modifier.getUniqueId().equals(uuid))
+              {
+                attributeModifier = modifier;
+                break;
+              }
+            }
+            if (attributeModifier != null)
+            {
+              attributeInstance.removeModifier(attributeModifier);
+            }
+          }
+        }
+        return true;
+      }
+      return false;
     });
+    CustomEffectType effectType = effect.getType();
+    int initDura = effect.getInitDuration(), initAmple = effect.getInitAmplifier();
+    DisplayType displayType = effect.getDisplayType();
+    switch (effectType)
+    {
+      case HEALTH_INCREASE -> {
+        effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MAX_HEALTH, Operation.ADD_SCALAR,0.1);
+      }
+      case NEWBIE_SHIELD -> {
+        if (entity instanceof OfflinePlayer offlinePlayer)
+        {
+          effect = new OfflinePlayerCustomEffectImple(effectType, initDura, initAmple, displayType, offlinePlayer);
+        }
+      }
+      case CONTINUAL_SPECTATING -> {
+        if (entity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR)
+        {
+          Entity spectatorTarget = player.getSpectatorTarget();
+          if (spectatorTarget != null && spectatorTarget instanceof Player p)
+          {
+            effect = new PlayerCustomEffectImple(effectType, initDura, initAmple, displayType, p);
+          }
+        }
+      }
+    }
     customEffects.add(effect);
     effectMap.put(entity.getUniqueId(), customEffects);
     EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect);
@@ -113,7 +169,36 @@ public class CustomEffectManager
       return false;
     }
     List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
-    customEffects.removeIf(effect -> effect.getEffectType() == effectType);
+    customEffects.removeIf(effect ->
+    {
+      if (effect.getType() == effectType)
+      {
+        if (entity instanceof Attributable attributable && effect instanceof AttributeCustomEffect attributeCustomEffect)
+        {
+          UUID uuid = attributeCustomEffect.getUniqueId();
+          Attribute attribute = attributeCustomEffect.getAttribute();
+          AttributeInstance attributeInstance = attributable.getAttribute(attribute);
+          if (attributeInstance != null)
+          {
+            AttributeModifier attributeModifier = null;
+            for (AttributeModifier modifier : attributeInstance.getModifiers())
+            {
+              if (modifier.getUniqueId().equals(uuid))
+              {
+                attributeModifier = modifier;
+                break;
+              }
+            }
+            if (attributeModifier != null)
+            {
+              attributeInstance.removeModifier(attributeModifier);
+            }
+          }
+        }
+        return true;
+      }
+      return false;
+    });
     effectMap.put(entity.getUniqueId(), customEffects);
     return true;
   }
@@ -125,7 +210,36 @@ public class CustomEffectManager
       return;
     }
     List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
-    customEffects.removeIf(effect -> effect.getEffectType() == effectType && effect.getAmplifier() == amplifier);
+    customEffects.removeIf(effect ->
+  {
+    if (effect.getType() == effectType && effect.getAmplifier() == amplifier)
+    {
+      if (entity instanceof Attributable attributable && effect instanceof AttributeCustomEffect attributeCustomEffect)
+      {
+        UUID uuid = attributeCustomEffect.getUniqueId();
+        Attribute attribute = attributeCustomEffect.getAttribute();
+        AttributeInstance attributeInstance = attributable.getAttribute(attribute);
+        if (attributeInstance != null)
+        {
+          AttributeModifier attributeModifier = null;
+          for (AttributeModifier modifier : attributeInstance.getModifiers())
+          {
+            if (modifier.getUniqueId().equals(uuid))
+            {
+              attributeModifier = modifier;
+              break;
+            }
+          }
+          if (attributeModifier != null)
+          {
+            attributeInstance.removeModifier(attributeModifier);
+          }
+        }
+      }
+      return true;
+    }
+    return false;
+  });
     effectMap.put(entity.getUniqueId(), customEffects);
   }
 
@@ -134,6 +248,32 @@ public class CustomEffectManager
     if (!hasEffects(entity))
     {
       return false;
+    }
+    List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
+    for (CustomEffect effect : customEffects)
+    {
+      if (entity instanceof Attributable attributable && effect instanceof AttributeCustomEffect attributeCustomEffect)
+      {
+        UUID uuid = attributeCustomEffect.getUniqueId();
+        Attribute attribute = attributeCustomEffect.getAttribute();
+        AttributeInstance attributeInstance = attributable.getAttribute(attribute);
+        if (attributeInstance != null)
+        {
+          AttributeModifier attributeModifier = null;
+          for (AttributeModifier modifier : attributeInstance.getModifiers())
+          {
+            if (modifier.getUniqueId().equals(uuid))
+            {
+              attributeModifier = modifier;
+              break;
+            }
+          }
+          if (attributeModifier != null)
+          {
+            attributeInstance.removeModifier(attributeModifier);
+          }
+        }
+      }
     }
     effectMap.put(entity.getUniqueId(), Collections.emptyList());
     return true;
@@ -148,7 +288,7 @@ public class CustomEffectManager
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
     for (CustomEffect customEffect : customEffects)
     {
-      if (customEffect.getEffectType() == effectType)
+      if (customEffect.getType() == effectType)
       {
         return true;
       }
@@ -193,7 +333,7 @@ public class CustomEffectManager
     CustomEffect returnEffect = null;
     for (CustomEffect customEffect : customEffects)
     {
-      if (customEffect.getEffectType() == effectType)
+      if (customEffect.getType() == effectType)
       {
         if (returnEffect == null || returnEffect.getAmplifier() < customEffect.getAmplifier())
         {
@@ -206,6 +346,42 @@ public class CustomEffectManager
       return returnEffect;
     }
     throw new IllegalStateException();
+  }
+
+  public static void refreshAttributeEffects(@NotNull Entity entity)
+  {
+    if (entity instanceof Attributable attributable)
+    {
+      for (Attribute attribute : Attribute.values())
+      {
+        AttributeInstance instance = attributable.getAttribute(attribute);
+        if (instance != null)
+        {
+          Collection<AttributeModifier> modifiers = new ArrayList<>(instance.getModifiers());
+          for (AttributeModifier modifier : modifiers)
+          {
+            if (modifier.getName().startsWith("cucumbery"))
+            {
+              instance.removeModifier(modifier);
+            }
+          }
+        }
+      }
+      List<CustomEffect> customEffects = getEffects(entity);
+      for (CustomEffect customEffect : customEffects)
+      {
+        if (customEffect instanceof AttributeCustomEffect attributeCustomEffect)
+        {
+          UUID uuid = attributeCustomEffect.getUniqueId();
+          Attribute attribute = attributeCustomEffect.getAttribute();
+          AttributeInstance attributeInstance = attributable.getAttribute(attribute);
+          if (attributeInstance != null)
+          {
+            attributeInstance.addModifier(new AttributeModifier(uuid, "cucumbery-" + customEffect.getType().translationKey(), (customEffect.getAmplifier() + 1) * attributeCustomEffect.getMultiplier(), attributeCustomEffect.getOperation()));
+          }
+        }
+      }
+    }
   }
 
   public static void save()
@@ -257,7 +433,7 @@ public class CustomEffectManager
       for (int i = 0; i < customEffects.size(); i++)
       {
         CustomEffect customEffect = customEffects.get(i);
-        CustomEffectType effectType = customEffect.getEffectType();
+        CustomEffectType effectType = customEffect.getType();
         int duration = customEffect.getDuration();
         int amplifier = customEffect.getAmplifier();
         int initDuration = customEffect.getInitDuration();
@@ -268,6 +444,24 @@ public class CustomEffectManager
         config.set("effects." + i + ".duration", duration);
         config.set("effects." + i + ".amplifier", amplifier);
         config.set("effects." + i + ".display-type", customEffect.getDisplayType().toString());
+        if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
+        {
+          config.set("effects." + i + ".player", playerCustomEffect.getPlayer().getUniqueId().toString());
+        }
+        else if (customEffect instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)
+        {
+          config.set("effects." + i + ".offline-player", offlinePlayerCustomEffect.getOfflinePlayer().getUniqueId().toString());
+        }
+        else if (customEffect instanceof UUIDCustomEffect uuidCustomEffect)
+        {
+          config.set("effects." + i + ".uuid", uuidCustomEffect.getUniqueId().toString());
+          if (uuidCustomEffect instanceof AttributeCustomEffect attributeCustomEffect)
+          {
+            config.set("effects." + i + ".attribute", attributeCustomEffect.getAttribute().toString());
+            config.set("effects." + i + ".operation", attributeCustomEffect.getOperation().toString());
+            config.set("effects." + i + ".multiplier", attributeCustomEffect.getMultiplier());
+          }
+        }
       }
       customConfig.saveConfig();
     }
@@ -304,13 +498,51 @@ public class CustomEffectManager
           int initDuration = root.getInt(typeString + ".init-duration");
           int initAmplifier = root.getInt(typeString + ".init-amplifier");
           CustomEffect customEffect = new CustomEffect(customEffectType, initDuration, initAmplifier, displayType);
+          String playerUuidString = root.getString(typeString + ".player");
+          if (playerUuidString != null && Method.isUUID(playerUuidString))
+          {
+            Player player = Bukkit.getPlayer(UUID.fromString(playerUuidString));
+            if (player != null)
+            {
+              customEffect = new PlayerCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, player);
+            }
+          }
+          String offlinePlayerUuidString = root.getString(typeString + ".offline-player");
+          if (offlinePlayerUuidString != null && Method.isUUID(offlinePlayerUuidString))
+          {
+            customEffect = new OfflinePlayerCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, Bukkit.getOfflinePlayer(UUID.fromString(offlinePlayerUuidString)));
+          }
+          String uuidString = root.getString(typeString + ".uuid");
+          if (uuidString != null && Method.isUUID(uuidString))
+          {
+            UUID uuidData = UUID.fromString(uuidString);
+            String attribute = root.getString(typeString + ".attribute");
+            String operation = root.getString(typeString + ".operation");
+            if (attribute == null || operation == null)
+            {
+              customEffect = new UUIDCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, uuidData);
+            }
+            else
+            {
+              try
+              {
+                Attribute attr = Attribute.valueOf(attribute);
+                Operation oper = Operation.valueOf(operation);
+                customEffect = new AttributeCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, uuidData, attr, oper, root.getDouble(typeString + ".multiplier"));
+              }
+              catch (Exception e)
+              {
+                e.printStackTrace();
+              }
+            }
+          }
           customEffect.setDuration(duration);
           customEffect.setAmplifier(amplifier);
           customEffects.add(customEffect);
         }
-        catch (Exception ignored)
+        catch (Exception e)
         {
-
+          e.printStackTrace();
         }
       }
       effectMap.put(uuid, customEffects);
@@ -331,7 +563,7 @@ public class CustomEffectManager
       boolean ampleZero = amplifier == 0;
       int remain = 255 - (duration % 20 * 10 + 56);
       String timePrefixColor = initDuration > 200 && (initDuration > 20 * 60 || duration * 1d / initDuration <= 0.2) && less10Sec ?
-              (customEffect.getEffectType().isNegative() ?
+              (customEffect.getType().isNegative() ?
                       ("rgb" + remain + ",255," + remain + ";") :
                       ("rgb255," + remain + "," + remain + ";")
               )

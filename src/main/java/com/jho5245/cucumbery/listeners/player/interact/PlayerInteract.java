@@ -1403,7 +1403,7 @@ public class PlayerInteract implements Listener
           {
             if (!ignoreInvincible && !alreadyWarned)
             {
-              MessageUtil.sendWarn(player, ComponentUtil.translate("%s에게는 피해를 입힐 수 없다.", entity));
+              MessageUtil.sendWarn(player, ComponentUtil.translate("%s에게는 피해를 입힐 수 없다", entity));
             }
             alreadyWarned = true;
           }

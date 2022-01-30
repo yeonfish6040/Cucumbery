@@ -1739,7 +1739,7 @@ public class InventoryClick implements Listener
       YamlConfiguration config = customRecipeListConfig.getConfig();
       config.set("recipes." + recipe, null);
       ConfigurationSection configurationSection = config.getConfigurationSection("recipes");
-      boolean removeCategory = configurationSection == null || configurationSection.getKeys(false).size() == 0;
+      boolean removeCategory = configurationSection == null || configurationSection.getKeys(false).isEmpty();
       if (removeCategory)
       {
         customRecipeListConfig.delete();
@@ -1819,18 +1819,20 @@ public class InventoryClick implements Listener
     }
     Material type = Objects.requireNonNull(item).getType();
     String invName = event.getView().getTitle();
+    String itemName = ComponentUtil.serialize(ItemNameUtil.itemName(item));
+    if (itemName.equals(""))
+    {
+      return;
+    }
+
     int random = Method.random(1, 10000);
     boolean ohYes = random >= 9700;
     if (ohYes && Cucumbery.config.getBoolean("gui-easter-egg-sound"))
     {
       Method.playSound(player, Sound.ENTITY_VILLAGER_AMBIENT);
     }
-    Method.playSound(player, Sound.BLOCK_NOTE_BLOCK_HAT, 1F, 1.4F);
-    String itemName = ComponentUtil.serialize(ItemNameUtil.itemName(item));
-    if (itemName.equalsIgnoreCase("§와"))
-    {
-      return;
-    }
+    Method.playSound(player, Sound.UI_BUTTON_CLICK, 1F, 1F);
+    InventoryView lastInventory = CreateGUI.getLastInventory(uuid);
 
     int s = event.getSlot();
 
@@ -1878,10 +1880,19 @@ public class InventoryClick implements Listener
           }
         }
       }
+      if (lastInventory != null && s == 45)
+      {
+        player.openInventory(lastInventory);
+      }
     }
 
     if (invName.equalsIgnoreCase(Constant.CANCEL_STRING + Constant.MAIN_MENU))
     {
+      if (lastInventory != null && s == 0)
+      {
+        player.openInventory(lastInventory);
+      }
+
       if (s == 3)
       {
         GUI.openGUI(player, GUIType.SERVER_SETTINGS);
@@ -2064,6 +2075,11 @@ public class InventoryClick implements Listener
           }
           break;
         case 45:
+          if (lastInventory != null)
+          {
+            player.openInventory(lastInventory);
+          }
+          break;
         case 53:
           GUI.openGUI(player, GUIType.MAIN_MENU);
           break;
@@ -2124,7 +2140,10 @@ public class InventoryClick implements Listener
           player.sendMessage("아ㅏ ㅏㅏㅏ하기시리ㅓ 귀차나");
           break;
         case 45:
-          GUI.openGUI(player, GUIType.SERVER_SETTINGS);
+          if (lastInventory != null)
+          {
+            player.openInventory(lastInventory);
+          }
           break;
         case 53:
           GUI.openGUI(player, GUIType.MAIN_MENU);
@@ -2155,7 +2174,10 @@ public class InventoryClick implements Listener
           saveConfig = true;
           break;
         case 18:
-          GUI.openGUI(player, GUIType.SERVER_SETTINGS);
+          if (lastInventory != null)
+          {
+            player.openInventory(lastInventory);
+          }
           break;
         case 26:
           GUI.openGUI(player, GUIType.MAIN_MENU);
@@ -2186,7 +2208,10 @@ public class InventoryClick implements Listener
           saveConfig = true;
           break;
         case 18:
-          GUI.openGUI(player, GUIType.SERVER_SETTINGS);
+          if (lastInventory != null)
+          {
+            player.openInventory(lastInventory);
+          }
           break;
         case 26:
           GUI.openGUI(player, GUIType.MAIN_MENU);
@@ -2238,7 +2263,11 @@ public class InventoryClick implements Listener
       boolean isMenuItem = (s >= 10 && s <= 16) || (s >= 19 && s <= 25) || (s >= 28 && s <= 34);
       if (invName.contains(Constant.CUSTOM_RECIPE_RECIPE_LIST_MENU))
       {
-        if (s == 36)
+        if (s == 36 && lastInventory != null)
+        {
+          player.openInventory(lastInventory);
+        }
+        if (s == 44)
         {
           GUI.openGUI(player, GUIType.MAIN_MENU);
         }
@@ -2259,7 +2288,7 @@ public class InventoryClick implements Listener
             // 카테고리 이름 앞에 &e{카테고리 이름} 컬러코드 제거
             // category = category.substring(2, category.length());
             List<String> itemLore = item.getItemMeta().getLore();
-            if (itemLore == null || itemLore.size() == 0)
+            if (itemLore == null || itemLore.isEmpty())
             {
               return;
             }

@@ -1,30 +1,22 @@
 package com.jho5245.cucumbery.gui;
 
-import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.CreateGUI;
 import com.jho5245.cucumbery.util.storage.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class GUI
 {
-  public enum GUIType
-  {
-    MAIN_MENU,
-    RPG,
-    SERVER_SETTINGS,
-    SERVER_SETTINGS_ADMIN,
-    ITEM_DROP_MODE_MENU,
-    ITEM_PICKUP_MODE_MENU,
-  }
-
   public static void openGUI(Player player, GUIType gui)
   {
     switch (gui)
@@ -54,9 +46,15 @@ public class GUI
   {
     Inventory inv = Bukkit.createInventory(null, 9, Constant.CANCEL_STRING + Constant.MAIN_MENU);
     inv.setItem(3, CreateItemStack.newItem(Material.TRIPWIRE_HOOK, 1, "&b개인 설정", "&7서버에서 제공하는 몇몇 기능들을 설정합니다", true));
-    inv.setItem(5, CreateItemStack.newItem(Material.CRAFTING_TABLE, 1, "&e아이템 제작", Arrays.asList("&7아이템 제작 메뉴를 엽니다", "&eEpicCraftingsPlus&7 플러그인이 일을 안해서 내가 직접 만들었다."), true));
+    inv.setItem(5, CreateItemStack.newItem(Material.CRAFTING_TABLE, 1, "&e아이템 제작", Arrays.asList("&7아이템 제작 메뉴를 엽니다", "&eEpicCraftingsPlus&7 플러그인이 일을 안해서 내가 직접 만들었다"), true));
 
     player.openInventory(inv);
+
+    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    if (lastInventory != null)
+    {
+      inv.setItem(0, CreateItemStack.getPreviousButton(lastInventory.title()));
+    }
   }
 
   private static void serverMenu(Player player)
@@ -166,10 +164,14 @@ public class GUI
     inv.setItem(41, CreateItemStack
             .newItem(Material.SPONGE, 1, "&6아이템 줍기 모드 설정", Arrays.asList("&7아이템 줍기 모드를 설정합니다", "&7아이템 줍기 모드는 3가지가 있으며", "&e기본&7, &e웅크리기&7, &e비활성화&7가 있습니다", "", "&6현재 설정 : &e" + itemPickupMode),
                     true));
-    inv.setItem(45, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
     inv.setItem(53, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
+    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    if (lastInventory != null)
+    {
+      inv.setItem(45, CreateItemStack.getPreviousButton(lastInventory.title()));
+    }
   }
 
   private static boolean getBool(Player player, UserData key)
@@ -231,9 +233,14 @@ public class GUI
     inv.setItem(14, CreateItemStack.toggleItem(getBool(player, UserData.OUTPUT_JOIN_MESSAGE_FORCE), "&b입장 메시지 무조건 출력",
             Arrays.asList("&e내부 아이디 : LISTEN_JOIN_FORCE", "", "&7다른 플레이어가 서버에 입장할 때", "&7config와 플레이어들의 설정에 관계 없이", "&7반드시 입장 효과음을 듣습니다", "", "&6현재 설정 : &a켜짐", "", "&c클릭하면 해당 기능을 끕니다"), "&b입장 소리 무조건 들음",
             Arrays.asList("&e내부 아이디 : LISTEN_JOIN_FORCE", "", "&7다른 플레이어가 서버에 입장할 때", "&7config와 플레이어들의 설정에 관계 없이", "&7반드시 입장 효과음을 듣습니다", "", "&6현재 설정 : &c꺼짐", "", "&a클릭하면 해당 기능을 켭니다")));
-    inv.setItem(45, CreateItemStack.newItem(Material.ARROW, 1, "&b서버 설정 메뉴로", true));
+
     inv.setItem(53, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
     player.openInventory(inv);
+    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    if (lastInventory != null)
+    {
+      inv.setItem(45, CreateItemStack.getPreviousButton(lastInventory.title()));
+    }
   }
 
   private static void itemDropModeMenu(Player player)
@@ -252,10 +259,15 @@ public class GUI
             Arrays.asList("&7아이템을 웅크린 상태에서만 버릴 수 있으며,", "&7인벤토리를 연 상태에서는 아이템을 버릴 수 없습니다", "", "&6현재 설정 : &e" + itemDropMode, "", "&e클릭하면 아이템 버리기 모드를 &6웅크리기&e로 설정합니다"), true));
     inv.setItem(15,
             CreateItemStack.newItem(Material.BARRIER, 1, "&6비활성화", Arrays.asList("&7아이템을 어떤 상황에서도 버릴 수 없습니다", "", "&6현재 설정 : &e" + itemDropMode, "", "&e클릭하면 아이템 버리기 모드를 &6비활성화&e로 설정합니다"), true));
-    inv.setItem(18, CreateItemStack.newItem(Material.ARROW, 1, "&b이전으로", true));
+
     inv.setItem(26, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
+    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    if (lastInventory != null)
+    {
+      inv.setItem(18, CreateItemStack.getPreviousButton(lastInventory.title()));
+    }
   }
 
   private static void itemPickupModeMenu(Player player)
@@ -275,9 +287,24 @@ public class GUI
                     true));
     inv.setItem(15,
             CreateItemStack.newItem(Material.BARRIER, 1, "&6비활성화", Arrays.asList("&7아이템을 어떤 상황에서도 주울 수 없습니다", "", "&6현재 설정 : &e" + itemPickupMode, "", "&e클릭하면 아이템 줍기 모드를 &6비활성화&e로 설정합니다"), true));
-    inv.setItem(18, CreateItemStack.newItem(Material.ARROW, 1, "&b이전으로", true));
+
     inv.setItem(26, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
+    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    if (lastInventory != null)
+    {
+      inv.setItem(18, CreateItemStack.getPreviousButton(lastInventory.title()));
+    }
+  }
+
+  public enum GUIType
+  {
+    MAIN_MENU,
+    RPG,
+    SERVER_SETTINGS,
+    SERVER_SETTINGS_ADMIN,
+    ITEM_DROP_MODE_MENU,
+    ITEM_PICKUP_MODE_MENU,
   }
 }

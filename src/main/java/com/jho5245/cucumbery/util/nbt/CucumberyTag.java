@@ -111,4 +111,15 @@ public class CucumberyTag
   public static final String CUSTOM_EFFECTS_DURATION = "Duration";
   public static final String CUSTOM_EFFECTS_AMPLIFIER = "Amplifier";
   public static final String CUSTOM_EFFECTS_DISPLAY_TYPE = "display-type";
+
+  public static final String ITEMSTACK_DISPLAY_KEY = "CustomDisplay";
+
+  public static final String ITEMSTACK_DISPLAY_PREFIX = "Prefix";
+
+  public static final String ITEMSTACK_DISPLAY_SUFFIX = "Suffix";
+
+  public static final String ITEMSTACK_DISPLAY_NAME = "Name";
+
+  public static final String ORIGINAL_NAME = "OriginalName";
+  public static final String GUI_BUTTON_PREVIOUS = "GuiButtonPrevious";
 }

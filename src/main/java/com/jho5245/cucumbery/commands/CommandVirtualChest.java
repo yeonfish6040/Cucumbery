@@ -4,7 +4,6 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.*;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -20,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class CommandVirtualChest implements CommandExecutor, TabCompleter
         YamlConfiguration config = customConfig.getConfig();
         Inventory chest = Bukkit.createInventory(null, 54, Constant.VIRTUAL_CHEST_MENU_PREFIX + "§6가상창고 - §e" + chestName);
         ConfigurationSection items = config.getConfigurationSection("items");
-        if (items != null && items.getKeys(false).size() > 0)
+        if (items != null && !items.getKeys(false).isEmpty())
         {
           for (int i = 1; i <= 54; i++)
           {
@@ -131,7 +131,7 @@ public class CommandVirtualChest implements CommandExecutor, TabCompleter
         YamlConfiguration config = customConfig.getConfig();
         Inventory chest = Bukkit.createInventory(null, 54, Constant.VIRTUAL_CHEST_MENU_PREFIX + "§6가상창고 - §e" + chestName);
         ConfigurationSection items = config.getConfigurationSection("items");
-        if (items != null && items.getKeys(false).size() > 0)
+        if (items != null && !items.getKeys(false).isEmpty())
         {
           for (int i = 1; i <= 54; i++)
           {
@@ -155,8 +155,7 @@ public class CommandVirtualChest implements CommandExecutor, TabCompleter
           config.set("items." + i, ItemSerializer.serialize(contents[i - 1]));
         }
         customConfig.saveConfig();
-        String display = ItemNameUtil.itemName(handItem).toString();
-        MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "&e" + chestName + "&r 가상창고에 &e" + display + "&r" + MessageUtil.getFinalConsonant(display, MessageUtil.ConsonantType.을를) + " 추가하였습니다");
+        MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "%s 가상창고에 %s을(를) 추가하였습니다", "&e" + chestName, handItem);
       }
       case "virtualchestadmin" -> {
         args = MessageUtil.wrapWithQuote(args);
@@ -189,7 +188,7 @@ public class CommandVirtualChest implements CommandExecutor, TabCompleter
           MessageUtil.sendError(player, "해당하는 이름으로는 가상창고를 사용할 수 없습니다");
           return true;
         }
-        YamlConfiguration config;
+        @Nullable YamlConfiguration config;
         File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/VirtualChest/" + uuid.toString() + "/" + chestName + ".yml");
         if (!file.exists())
         {
@@ -205,9 +204,9 @@ public class CommandVirtualChest implements CommandExecutor, TabCompleter
           return true;
         }
         Inventory chest = Bukkit.createInventory(null, 54,
-                Constant.VIRTUAL_CHEST_ADMIN_MENU_PREFIX + "§6가상창고 - §e" + chestName + Method.format("owneruuid:" + target.getUniqueId().toString(), "§"));
+                Constant.VIRTUAL_CHEST_ADMIN_MENU_PREFIX + "§6가상창고 - §e" + chestName + Method.format("owneruuid:" + target.getUniqueId(), "§"));
         ConfigurationSection items = config.getConfigurationSection("items");
-        if (items != null && items.getKeys(false).size() > 0)
+        if (items != null && !items.getKeys(false).isEmpty())
         {
           for (int i = 1; i <= 54; i++)
           {

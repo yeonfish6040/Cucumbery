@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.customrecipe.recipeinventory;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.customrecipe.CustomRecipeUtil;
+import com.jho5245.cucumbery.util.CreateGUI;
 import com.jho5245.cucumbery.util.ItemSerializer;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
@@ -21,6 +22,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -101,7 +103,7 @@ public class RecipeInventoryMainMenu
 
       // buttons
 
-      menu.setItem(36, CreateItemStack.newItem(Material.BIRCH_BOAT, 1, "§b메인 메뉴로", false));
+      menu.setItem(44, CreateItemStack.newItem(Material.BIRCH_BOAT, 1, "§b메인 메뉴로", false));
 
       if (maxPage == 1)
       {
@@ -116,6 +118,15 @@ public class RecipeInventoryMainMenu
       }
       menu.setItem(40, CreateItemStack.newItem(Material.CLOCK, 1, "&e로딩중...", false));
       player.openInventory(menu);
+      InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+      if (lastInventory != null)
+      {
+        menu.setItem(36, CreateItemStack.getPreviousButton(lastInventory.title()));
+      }
+      else
+      {
+        menu.setItem(36, deco1);
+      }
     }
     else
     {

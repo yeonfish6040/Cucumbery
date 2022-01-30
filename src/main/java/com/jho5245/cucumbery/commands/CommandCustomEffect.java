@@ -61,12 +61,16 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           MessageUtil.commandInfo(sender, label, "query <개체>");
           return failure;
         }
-        Entity target = (Entity) sender;
+        Entity target;
         boolean gui = true;
         if (length == 2)
         {
           target = SelectorUtil.getEntity(sender, args[1]);
           gui = false;
+        }
+        else
+        {
+          target = (Entity) sender;
         }
         if (target == null)
         {
@@ -301,7 +305,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
             List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
             for (CustomEffect customEffect : customEffects)
             {
-              String effect = customEffect.getEffectType().toString().toLowerCase();
+              String effect = customEffect.getType().toString().toLowerCase();
               list.add(effect);
             }
           }
@@ -401,7 +405,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       if (!failureEntities.isEmpty())
       {
         MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과를 받을 수 없는 상태이거나 더 강한 효과를 가지고 있습니다.)", failureEntities, customEffect));
+                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다 (대상이 효과에 내성이 있거나 효과를 받을 수 없는 상태입니다)", failureEntities, customEffect));
       }
       if (!successEntitiesIsEmpty)
       {

@@ -9,6 +9,7 @@ import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,7 +41,6 @@ public class PlayerDeath implements Listener
       event.setCancelled(true);
       return;
     }
-
     boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY);
     boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player);
     if (keepInv)
@@ -73,8 +73,15 @@ public class PlayerDeath implements Listener
       drops.removeAll(removals);
     }
 
+    boolean hasBuffFreeze = CustomEffectManager.hasEffect(player, CustomEffectType.BUFF_FREEZE);
+    if (hasBuffFreeze)
+    {
+      Variable.buffFreezerEffects.put(player.getUniqueId(), new ArrayList<>(player.getActivePotionEffects()));
+      CustomEffectManager.removeEffect(player, CustomEffectType.BUFF_FREEZE);
+    }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
-    customEffects.removeIf(customEffect -> !customEffect.isKeepOnDeath());
+    customEffects.removeIf(customEffect -> !customEffect.isKeepOnDeath() &&
+            (!hasBuffFreeze || (!customEffect.getType().isBuffFreezable() && !customEffect.getType().isNegative())));
 
     if (UserData.IMMEDIATE_RESPAWN.getBoolean(player))
     {

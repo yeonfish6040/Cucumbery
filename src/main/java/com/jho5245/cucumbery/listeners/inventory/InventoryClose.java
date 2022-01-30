@@ -38,6 +38,7 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class InventoryClose implements Listener
 {
@@ -124,12 +125,12 @@ public class InventoryClose implements Listener
       else if (title.contains(Constant.VIRTUAL_CHEST_ADMIN_MENU_PREFIX))
       {
         String chestName = title.split("§6가상창고 - §e")[1].split(Method.format("owneruuid:", "§"))[0];
-        String uuid = title.split(Method.format("owneruuid:", "§"))[1].replace("§", "");
-        CustomConfig virtualChestConfig = CustomConfig.getCustomConfig("data/VirtualChest/" + uuid + "/" + chestName + ".yml");
+        String chestUuid = title.split(Method.format("owneruuid:", "§"))[1].replace("§", "");
+        CustomConfig virtualChestConfig = CustomConfig.getCustomConfig("data/VirtualChest/" + chestUuid + "/" + chestName + ".yml");
         if (Method.inventoryEmpty(inventory))
         {
           virtualChestConfig.delete();
-          File folder = new File(Cucumbery.getPlugin().getDataFolder() + "/data/VirtualChest/" + uuid);
+          File folder = new File(Cucumbery.getPlugin().getDataFolder() + "/data/VirtualChest/" + chestUuid);
           if (folder.exists() && folder.listFiles() != null && Objects.requireNonNull(folder.listFiles()).length == 0)
           {
             boolean success = folder.delete();

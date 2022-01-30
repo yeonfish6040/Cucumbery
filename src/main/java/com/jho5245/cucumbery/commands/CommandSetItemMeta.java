@@ -71,6 +71,7 @@ public class CommandSetItemMeta implements CommandExecutor, TabCompleter
           itemMeta.displayName(null);
           item.setItemMeta(itemMeta);
           inventory.setItemInMainHand(item);
+          Method.updateInventory(player);
           if (!silent)
           {
             MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 이름을 제거하였습니다").hoverEvent(item.asHoverEvent()));

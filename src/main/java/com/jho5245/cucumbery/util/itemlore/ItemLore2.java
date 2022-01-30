@@ -26,6 +26,8 @@ import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
@@ -1572,7 +1574,7 @@ public class ItemLore2
                 lore.add(customNameLore);
                 for (int i = 0; i < itemStackList.size(); i++)
                 {
-                  if (i == 9)
+                  if (i == 27)
                   {
                     lore.add(ComponentUtil.translate("&7&ocontainer.shulkerBox.more", Component.text(itemStackList.size() - i)));
                     break;
@@ -1596,11 +1598,12 @@ public class ItemLore2
           lore.add(Component.empty());
           lore.add(customNameLore);
           lore.add(ComponentUtil.translate("#b07c15;벌 %s", beeCount == 0 ? "없음" : "#e6ac6d;" + beeCount + "마리"));
-          Location flowerPos = beehive.getFlower();
+          //Location flowerPos = beehive.getFlower(); must be placed
+          NBTCompound flowerPos = blockEntityTag.getCompound("FlowerPos");
           if (flowerPos != null)
           {
             lore.add(ComponentUtil.translate("#b07c15;꽃 좌표 : %s",
-                    ComponentUtil.translate("#b07c15;%s, %s, %s", "#e6ac6d;" + flowerPos.getBlockX(), "#e6ac6d;" + flowerPos.getBlockY(), "#e6ac6d;" + flowerPos.getBlockZ())));
+                    ComponentUtil.translate("#b07c15;%s, %s, %s", "#e6ac6d;" + flowerPos.getInteger("X"), "#e6ac6d;" + flowerPos.getInteger("Y"), "#e6ac6d;" + flowerPos.getInteger("Z"))));
           }
         }
         if (blockState instanceof Lootable lootable)
@@ -1910,6 +1913,57 @@ public class ItemLore2
     if (!itemMeta.isUnbreakable() && itemMeta.hasItemFlag(ItemFlag.HIDE_UNBREAKABLE))
     {
       itemMeta.removeItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+    }
+    // 아이템 이름 속성
+    Component displayName = itemMeta.displayName();
+    NBTCompound displayCompound = NBTAPI.getCompound(itemTag, CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+    if (!(displayName instanceof TranslatableComponent t && t.args().size() == 4 && t.args().get(3) instanceof TextComponent c && c.content().equals("Custom Display")) && displayCompound != null)
+    {
+      NBTCompoundList prefix = displayCompound.getCompoundList(CucumberyTag.ITEMSTACK_DISPLAY_PREFIX);
+      NBTCompoundList suffix = displayCompound.getCompoundList(CucumberyTag.ITEMSTACK_DISPLAY_SUFFIX);
+      String name = displayCompound.getString(CucumberyTag.ITEMSTACK_DISPLAY_NAME);
+      NBTItem n = new NBTItem(item, true);
+      NBTCompound m = n.getCompound(CucumberyTag.KEY_MAIN);
+      NBTCompound d = m.getCompound(CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+      d.setString(CucumberyTag.ORIGINAL_NAME, displayName == null ? "" : ComponentUtil.serializeAsJson(displayName));
+      itemMeta = n.getItem().getItemMeta();
+      TranslatableComponent translatableComponent = Component.translatable("%s%s%s");
+      List<Component> arguments = new ArrayList<>();
+      Component prefixComponent = Component.empty();
+      for (NBTCompound nbtCompound : prefix)
+      {
+        String text = nbtCompound.getString("text");
+        if (text != null)
+        {
+          prefixComponent = ComponentUtil.create(false, prefixComponent, text);
+        }
+      }
+      arguments.add(prefix.isEmpty() ? Component.empty() : prefixComponent);
+      if (displayName == null)
+      {
+        if (name != null && !name.equals(""))
+        {
+          displayName = ComponentUtil.create(name);
+        }
+        else
+        {
+          displayName = ItemNameUtil.itemName(item);
+        }
+      }
+      arguments.add(displayName);
+      Component suffixComponent = Component.empty();
+      for (NBTCompound nbtCompound : suffix)
+      {
+        String text = nbtCompound.getString("text");
+        if (text != null)
+        {
+          suffixComponent = ComponentUtil.create(false, suffixComponent, text);
+        }
+      }
+      arguments.add(suffix.isEmpty() ? Component.empty() : suffixComponent);
+      arguments.add(Component.text("Custom Display"));
+      translatableComponent = translatableComponent.args(arguments);
+      itemMeta.displayName(translatableComponent);
     }
     // 추가 설명으로 인한 아이템의 등급 수치 변경
     long rarity2 = ItemLoreUtil.getItemRarityValue(lore);

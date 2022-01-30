@@ -42,11 +42,8 @@ public class InventoryOpen implements Listener
     {
       Player player = (Player) event.getPlayer();
       UUID uuid = player.getUniqueId();
-      if (player.getGameMode() == GameMode.SPECTATOR)
-      {
-        return;
-      }
-      if (!Cucumbery.config.getBoolean("grant-default-permission-to-players") && !Permission.EVENT_OPENCONTAINER.has(player))
+      boolean isSpectator = player.getGameMode() == GameMode.SPECTATOR;
+      if (!isSpectator && !Cucumbery.config.getBoolean("grant-default-permission-to-players") && !Permission.EVENT_OPENCONTAINER.has(player))
       {
         event.setCancelled(true);
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.inventoryOpenAlertCooldown.contains(uuid))
@@ -58,7 +55,7 @@ public class InventoryOpen implements Listener
         }
         return;
       }
-      if (!Permission.EVENT2_ANTI_ALLPLAYER.has(player) && AllPlayer.OPEN_CONTAINER.isEnabled())
+      if (!isSpectator && !Permission.EVENT2_ANTI_ALLPLAYER.has(player) && AllPlayer.OPEN_CONTAINER.isEnabled())
       {
         event.setCancelled(true);
         if (!Variable.inventoryOpenAlertCooldown.contains(uuid))
@@ -73,36 +70,57 @@ public class InventoryOpen implements Listener
       String title = event.getView().getTitle();
       Inventory inventory = event.getInventory();
       Location location = inventory.getLocation();
+
       if (inventory.getType() == InventoryType.BREWING)
       {
         Method.updateInventory(player);
       }
 
+      // gui cache
+      InventoryView inventoryView = event.getView();
+      InventoryType viewType = inventoryView.getTopInventory().getType();
+      if (viewType != InventoryType.CRAFTING && location == null)
+      {
+        List<InventoryView> views = Variable.lastInventory.containsKey(uuid) ? Variable.lastInventory.get(uuid) : new ArrayList<>();
+        if (views.isEmpty() || !views.get(views.size() - 1).title().equals(inventoryView.title()))
+        {
+          views.add(inventoryView);
+        }
+        if (views.size() > 2)
+        {
+          views.remove(0);
+        }
+        Variable.lastInventory.put(uuid, views);
+      }
+      if (isSpectator)
+      {
+        return;
+      }
       // Openinv로 인벤토리가 열린 경우가 아닐 때
       if (location != null)
       {
-          if (Method.usingLoreFeature(player))
+        if (Method.usingLoreFeature(player))
+        {
+          for (int i = 0; i < inventory.getSize(); i++)
           {
-            for (int i = 0; i < inventory.getSize(); i++)
+            ItemStack itemStack = inventory.getItem(i);
+            if (itemStack != null)
             {
-              ItemStack itemStack = inventory.getItem(i);
-              if (itemStack != null)
-              {
-                ItemLore.setItemLore(itemStack);
-              }
+              ItemLore.setItemLore(itemStack);
             }
           }
-          else
+        }
+        else
+        {
+          for (int i = 0; i < inventory.getSize(); i++)
           {
-            for (int i = 0; i < inventory.getSize(); i++)
+            ItemStack itemStack = inventory.getItem(i);
+            if (itemStack != null)
             {
-              ItemStack itemStack = inventory.getItem(i);
-              if (itemStack != null)
-              {
-                ItemLore.removeItemLore(itemStack);
-              }
+              ItemLore.removeItemLore(itemStack);
             }
           }
+        }
       }
       if (inventory.getType() == InventoryType.MERCHANT)
       {

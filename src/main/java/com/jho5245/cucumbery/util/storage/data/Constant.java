@@ -108,11 +108,11 @@ public class Constant
 
   public static final String ITEM_LORE_STORED_ENCHANT = "rgb224,133,255;[부여 가능한 마법]";
 
-  public static final String ITEM_LORE_RETURN_BOWL_AFTER_EATEN = "&7섭취 후 그릇은 반환된다.";
+  public static final String ITEM_LORE_RETURN_BOWL_AFTER_EATEN = "&7섭취 후 그릇은 반환된다";
 
-  public static final String ITEM_LORE_GRAVITION = "&7중력의 영향을 받는다.";
+  public static final String ITEM_LORE_GRAVITION = "&7중력의 영향을 받는다";
 
-  public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS = "%s이 부여된 아이템이나 %s로만 직접 얻을 수 있다.";
+  public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS = "%s이 부여된 아이템이나 %s로만 직접 얻을 수 있다";
 
   public static final Component ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS_COMPONENT =
           Component.translatable(ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS)
@@ -122,7 +122,7 @@ public class Constant
                           Component.translatable("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)),
                           Component.translatable("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
 
-  public static final String ITEM_LORE_ONLY_WITH_SWEARS = "%s로만 직접 얻을 수 있다.";
+  public static final String ITEM_LORE_ONLY_WITH_SWEARS = "%s로만 직접 얻을 수 있다";
 
   public static final Component ITEM_LORE_ONLY_WITH_SHEARS_COMPONENT =
           Component.translatable(ITEM_LORE_ONLY_WITH_SWEARS)
@@ -131,7 +131,7 @@ public class Constant
                   .args(
                           Component.translatable("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
 
-  public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH = "%s이 부여된 아이템으로만 직접 얻을 수 있다.";
+  public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH = "%s이 부여된 아이템으로만 직접 얻을 수 있다";
 
   public static final Component ITEM_LORE_ONLY_WITH_SILKTOUCH_COMPONENT =
           Component.translatable(ITEM_LORE_ONLY_WITH_SILKTOUCH)

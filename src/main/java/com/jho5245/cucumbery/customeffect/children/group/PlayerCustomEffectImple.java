@@ -5,7 +5,7 @@ import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class PlayerCustomEffectImple extends CustomEffect implements PlayerCustomEffect
+public class PlayerCustomEffectImple extends CustomEffect implements PlayerCustomEffect
 {
   private Player player;
 

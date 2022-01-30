@@ -22,6 +22,7 @@ import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTList;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import io.papermc.paper.advancement.AdvancementDisplay.Frame;
 import net.kyori.adventure.audience.Audience;
@@ -31,6 +32,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.translation.Translatable;
 import net.md_5.bungee.api.ChatColor;
@@ -104,6 +106,14 @@ public class ComponentUtil
         }
       }
       else if (object instanceof List<?> list)
+      {
+        for (Object c : list)
+        {
+          Component concat = ComponentUtil.create(player, c);
+          component = component.append(concat);
+        }
+      }
+      else if (object instanceof NBTList<?> list)
       {
         for (Object c : list)
         {
@@ -301,7 +311,7 @@ public class ComponentUtil
       }
       else if (object instanceof CustomEffect customEffect)
       {
-        CustomEffectType effectType = customEffect.getEffectType();
+        CustomEffectType effectType = customEffect.getType();
         String key = effectType.translationKey();
         int duration = customEffect.getInitDuration();
         int amplifier = customEffect.getInitAmplifier();
@@ -312,7 +322,7 @@ public class ComponentUtil
         if (!description.equals(Component.empty()))
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(customEffect.getDescription());
+          hover = hover.append(description);
           if (isFinite || isAmplifiable)
           {
             hover = hover.append(Component.text("\n"));
@@ -762,9 +772,9 @@ public class ComponentUtil
       Component senderComponent = SenderComponentUtil.senderComponent(player, obj, Constant.THE_COLOR);
       if (!senderComponent.equals(Component.empty()))
       {
-        if (senderComponent.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
+        if (senderComponent.decoration(TextDecoration.ITALIC) == State.FALSE)
         {
-          senderComponent = senderComponent.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
+          senderComponent = senderComponent.decoration(TextDecoration.ITALIC, State.NOT_SET);
         }
         componentArgs.add(senderComponent);
         continue;
@@ -774,9 +784,9 @@ public class ComponentUtil
         for (Object o : list)
         {
           Component arg = ComponentUtil.create(player, n2s, o);
-          if (arg.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
+          if (arg.decoration(TextDecoration.ITALIC) == State.FALSE)
           {
-            arg = arg.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
+            arg = arg.decoration(TextDecoration.ITALIC, State.NOT_SET);
           }
           componentArgs.add(arg);
         }
@@ -793,9 +803,9 @@ public class ComponentUtil
       if (!(obj instanceof Boolean))
       {
         Component arg = ComponentUtil.create(player, n2s, obj);
-        if (arg.decoration(TextDecoration.ITALIC) == TextDecoration.State.FALSE)
+        if (arg.decoration(TextDecoration.ITALIC) == State.FALSE)
         {
-          arg = arg.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
+          arg = arg.decoration(TextDecoration.ITALIC, State.NOT_SET);
         }
         componentArgs.add(arg);
       }
@@ -912,27 +922,27 @@ public class ComponentUtil
           {
             component = Component.empty();
             component = component.color(null);
-            component = component.decoration(TextDecoration.BOLD, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.OBFUSCATED, TextDecoration.State.NOT_SET);
+            component = component.decoration(TextDecoration.BOLD, State.NOT_SET);
+            component = component.decoration(TextDecoration.ITALIC, State.NOT_SET);
+            component = component.decoration(TextDecoration.UNDERLINED, State.NOT_SET);
+            component = component.decoration(TextDecoration.STRIKETHROUGH, State.NOT_SET);
+            component = component.decoration(TextDecoration.OBFUSCATED, State.NOT_SET);
           }
           else
           {
             component = Component.empty();
             java.awt.Color color = format.getColor();
             component = component.color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()));
-            component = component.decoration(TextDecoration.BOLD, TextDecoration.State.NOT_SET);
+            component = component.decoration(TextDecoration.BOLD, State.NOT_SET);
             component = component.decoration(TextDecoration.ITALIC, false);
-            component = component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.OBFUSCATED, TextDecoration.State.NOT_SET);
+            component = component.decoration(TextDecoration.UNDERLINED, State.NOT_SET);
+            component = component.decoration(TextDecoration.STRIKETHROUGH, State.NOT_SET);
+            component = component.decoration(TextDecoration.OBFUSCATED, State.NOT_SET);
           }
         }
         else
         {
-          if (c == 'p' || c == 'q')
+          if (c == 'p' || c == 'q' || c == 'i')
           {
             if (!builder.isEmpty())
             {
@@ -946,11 +956,14 @@ public class ComponentUtil
             {
               case 'p' -> component = component.color(component.color() != null ? NamedTextColor.WHITE : null);
               case 'q' -> {
-                component = component.decoration(TextDecoration.BOLD, component.decoration(TextDecoration.BOLD) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
-                component = component.decoration(TextDecoration.ITALIC, component.decoration(TextDecoration.ITALIC) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
-                component = component.decoration(TextDecoration.UNDERLINED, component.decoration(TextDecoration.UNDERLINED) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
-                component = component.decoration(TextDecoration.STRIKETHROUGH, component.decoration(TextDecoration.STRIKETHROUGH) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
-                component = component.decoration(TextDecoration.OBFUSCATED, component.decoration(TextDecoration.OBFUSCATED) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.BOLD, component.decoration(TextDecoration.BOLD) == State.TRUE ? State.FALSE : State.NOT_SET);
+                component = component.decoration(TextDecoration.ITALIC, component.decoration(TextDecoration.ITALIC) == State.TRUE ? State.FALSE : State.NOT_SET);
+                component = component.decoration(TextDecoration.UNDERLINED, component.decoration(TextDecoration.UNDERLINED) == State.TRUE ? State.FALSE : State.NOT_SET);
+                component = component.decoration(TextDecoration.STRIKETHROUGH, component.decoration(TextDecoration.STRIKETHROUGH) == State.TRUE ? State.FALSE : State.NOT_SET);
+                component = component.decoration(TextDecoration.OBFUSCATED, component.decoration(TextDecoration.OBFUSCATED) == State.TRUE ? State.FALSE : State.NOT_SET);
+              }
+              case 'i' -> {
+                component = component.decoration(TextDecoration.ITALIC, State.FALSE);
               }
             }
           }
@@ -1013,7 +1026,7 @@ public class ComponentUtil
           String url = urlString.startsWith("http") ? urlString : "http://" + urlString;
           component = component.clickEvent(ClickEvent.openUrl(url));
           component = component.hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s 주소로 연결합니다", Component.text(url).color(NamedTextColor.YELLOW))));
-          components.add(component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.TRUE));
+          components.add(component.decoration(TextDecoration.UNDERLINED, State.TRUE));
           i += pos - i - 1;
           component = old;
         }
@@ -1127,27 +1140,27 @@ public class ComponentUtil
           {
             component = Component.translatable("");
             component = component.color(null);
-            component = component.decoration(TextDecoration.BOLD, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.OBFUSCATED, TextDecoration.State.NOT_SET);
+            component = component.decoration(TextDecoration.BOLD, State.NOT_SET);
+            component = component.decoration(TextDecoration.ITALIC, State.NOT_SET);
+            component = component.decoration(TextDecoration.UNDERLINED, State.NOT_SET);
+            component = component.decoration(TextDecoration.STRIKETHROUGH, State.NOT_SET);
+            component = component.decoration(TextDecoration.OBFUSCATED, State.NOT_SET);
           }
           else
           {
             component = Component.translatable("");
             java.awt.Color color = format.getColor();
             component = component.color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()));
-            component = component.decoration(TextDecoration.BOLD, TextDecoration.State.NOT_SET);
+            component = component.decoration(TextDecoration.BOLD, State.NOT_SET);
             component = component.decoration(TextDecoration.ITALIC, false);
-            component = component.decoration(TextDecoration.UNDERLINED, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.NOT_SET);
-            component = component.decoration(TextDecoration.OBFUSCATED, TextDecoration.State.NOT_SET);
+            component = component.decoration(TextDecoration.UNDERLINED, State.NOT_SET);
+            component = component.decoration(TextDecoration.STRIKETHROUGH, State.NOT_SET);
+            component = component.decoration(TextDecoration.OBFUSCATED, State.NOT_SET);
           }
         }
         else
         {
-          if (c == 'p' || c == 'q')
+          if (c == 'p' || c == 'q' || c == 'i')
           {
             if (!builder.isEmpty())
             {
@@ -1169,11 +1182,14 @@ public class ComponentUtil
             {
               case 'p' -> component = component.color(component.color() != null ? NamedTextColor.WHITE : null);
               case 'q' -> {
-                component = component.decoration(TextDecoration.BOLD, component.decoration(TextDecoration.BOLD) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
-                component = component.decoration(TextDecoration.ITALIC, component.decoration(TextDecoration.ITALIC) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
-                component = component.decoration(TextDecoration.UNDERLINED, component.decoration(TextDecoration.UNDERLINED) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
-                component = component.decoration(TextDecoration.STRIKETHROUGH, component.decoration(TextDecoration.STRIKETHROUGH) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
-                component = component.decoration(TextDecoration.OBFUSCATED, component.decoration(TextDecoration.OBFUSCATED) == TextDecoration.State.TRUE ? TextDecoration.State.FALSE : TextDecoration.State.NOT_SET);
+                component = component.decoration(TextDecoration.BOLD, component.decoration(TextDecoration.BOLD) == State.TRUE ? State.FALSE : State.NOT_SET);
+                component = component.decoration(TextDecoration.ITALIC, component.decoration(TextDecoration.ITALIC) == State.TRUE ? State.FALSE : State.NOT_SET);
+                component = component.decoration(TextDecoration.UNDERLINED, component.decoration(TextDecoration.UNDERLINED) == State.TRUE ? State.FALSE : State.NOT_SET);
+                component = component.decoration(TextDecoration.STRIKETHROUGH, component.decoration(TextDecoration.STRIKETHROUGH) == State.TRUE ? State.FALSE : State.NOT_SET);
+                component = component.decoration(TextDecoration.OBFUSCATED, component.decoration(TextDecoration.OBFUSCATED) == State.TRUE ? State.FALSE : State.NOT_SET);
+              }
+              case 'i' -> {
+                component = component.decoration(TextDecoration.ITALIC, State.FALSE);
               }
             }
           }
@@ -1209,11 +1225,11 @@ public class ComponentUtil
   {
     StringBuilder builder = new StringBuilder();
     TextColor textColor = component.color();
-    boolean italic = component.decoration(TextDecoration.ITALIC) == TextDecoration.State.TRUE;
-    boolean bold = component.decoration(TextDecoration.BOLD) == TextDecoration.State.TRUE;
-    boolean underlined = component.decoration(TextDecoration.UNDERLINED) == TextDecoration.State.TRUE;
-    boolean strikethrough = component.decoration(TextDecoration.STRIKETHROUGH) == TextDecoration.State.TRUE;
-    boolean obfuscated = component.decoration(TextDecoration.OBFUSCATED) == TextDecoration.State.TRUE;
+    boolean italic = component.decoration(TextDecoration.ITALIC) == State.TRUE;
+    boolean bold = component.decoration(TextDecoration.BOLD) == State.TRUE;
+    boolean underlined = component.decoration(TextDecoration.UNDERLINED) == State.TRUE;
+    boolean strikethrough = component.decoration(TextDecoration.STRIKETHROUGH) == State.TRUE;
+    boolean obfuscated = component.decoration(TextDecoration.OBFUSCATED) == State.TRUE;
     String color = null;
     if (textColor != null)
     {
@@ -1401,11 +1417,11 @@ public class ComponentUtil
     return component.color() == null
             && component.hoverEvent() == null
             && component.clickEvent() == null
-            && component.decoration(TextDecoration.ITALIC) == TextDecoration.State.NOT_SET
-            && component.decoration(TextDecoration.BOLD) == TextDecoration.State.NOT_SET
-            && component.decoration(TextDecoration.STRIKETHROUGH) == TextDecoration.State.NOT_SET
-            && component.decoration(TextDecoration.OBFUSCATED) == TextDecoration.State.NOT_SET
-            && component.decoration(TextDecoration.UNDERLINED) == TextDecoration.State.NOT_SET;
+            && component.decoration(TextDecoration.ITALIC) == State.NOT_SET
+            && component.decoration(TextDecoration.BOLD) == State.NOT_SET
+            && component.decoration(TextDecoration.STRIKETHROUGH) == State.NOT_SET
+            && component.decoration(TextDecoration.OBFUSCATED) == State.NOT_SET
+            && component.decoration(TextDecoration.UNDERLINED) == State.NOT_SET;
   }
 
   /**

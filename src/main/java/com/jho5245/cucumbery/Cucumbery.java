@@ -88,7 +88,7 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 15;
+  public static final int CONFIG_VERSION = 16;
   public static final int DEATH_MESSAGES_CONFIG_VERSION = 2;
   public static final int LANG_CONFIG_VERSION = 1;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
@@ -600,6 +600,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerMove());
     Initializer.registerEvent(new PlayerPickupArrow());
     Initializer.registerEvent(new PlayerPickupExperience());
+    Initializer.registerEvent(new PlayerPostRespawn());
     Initializer.registerEvent(new PlayerPreLogin());
     Initializer.registerEvent(new PlayerQuit());
     Initializer.registerEvent(new PlayerRecipeBookClick());

@@ -4,7 +4,11 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
 import com.jho5245.cucumbery.commands.CommandReinforce;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
+import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.customeffect.children.group.PlayerCustomEffect;
+import com.jho5245.cucumbery.customeffect.children.group.PlayerCustomEffectImple;
 import com.jho5245.cucumbery.customeffect.scheduler.CustomEffectScheduler;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.customrecipe.recipeinventory.RecipeInventoryMainMenu;
@@ -1328,9 +1332,36 @@ public class Scheduler
       }
       if (player.getGameMode() == GameMode.SPECTATOR)
       {
-        if (player.getSpectatorTarget() != null && player.getSpectatorTarget().getType() == EntityType.PLAYER)
+        Entity spectatorTarget = player.getSpectatorTarget();
+        if (CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING))
         {
-          Player target = (Player) player.getSpectatorTarget();
+          CustomEffect effect = CustomEffectManager.getEffect(player, CustomEffectType.CONTINUAL_SPECTATING);
+          if (effect instanceof PlayerCustomEffect playerCustomEffect)
+          {
+            Player target = playerCustomEffect.getPlayer();
+            if (!target.equals(spectatorTarget) && spectatorTarget instanceof Player newTarget)
+            {
+              playerCustomEffect.setPlayer(newTarget);
+              target = newTarget;
+            }
+            if (spectatorTarget == null && !target.isDead() && target.isOnline() && target.isValid())
+            {
+              player.setSpectatorTarget(null);
+              player.teleport(target);
+              player.setSpectatorTarget(target);
+            }
+          }
+          else if (spectatorTarget instanceof Player target)
+          {
+            int dura = effect.getDuration(), ample = effect.getAmplifier();
+            effect = new PlayerCustomEffectImple(effect.getType(), effect.getInitDuration(), effect.getInitAmplifier(), effect.getDisplayType(), target);
+            effect.setDuration(dura);
+            effect.setAmplifier(ample);
+            CustomEffectManager.addEffect(player, effect, true);
+          }
+        }
+        if (spectatorTarget instanceof Player target)
+        {
           if (!Cucumbery.config.getBoolean("grant-default-permission-to-players") && Method
                   .hasPermission(target, Permission.EVENT2_ANTI_SPECTATE, false) && !Method.hasPermission(player, Permission.EVENT2_ANTI_SPECTATE_BYPASS, false))
           {

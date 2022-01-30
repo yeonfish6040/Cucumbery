@@ -53,7 +53,7 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
     {
       panel = panel.append(
               ComponentUtil.translate("&e[귓속말 보내기]")
-                      .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s에게 귓속말을 보냅니다. %s", target, "&7 - /w " + name + " <메시지>")))
+                      .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s에게 귓속말을 보냅니다 %s", target, "&7 - /w " + name + " <메시지>")))
                       .clickEvent(ClickEvent.suggestCommand("/w " + name + " "))
       );
       panel = panel.append(Component.text(" "));
@@ -61,7 +61,7 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
       {
         panel = panel.append(
                 ComponentUtil.translate("&b[텔레포트 요청 보내기]")
-                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s에게 텔레포트 요청을 보냅니다. %s", target, "&7/tpa " + name)))
+                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s에게 텔레포트 요청을 보냅니다 %s", target, "&7/tpa " + name)))
                         .clickEvent(ClickEvent.suggestCommand("/tpa " + name))
         );
       }
@@ -70,20 +70,20 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
     {
       panel = panel.append(
               ComponentUtil.translate("&e[아이템 자랑하기]")
-                      .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 주로 사옹하는 손에 들고 있는 아이템을 다른 사람에게 자랑합니다. %s", "&7 - /bitem [메시지]")))
+                      .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 주로 사옹하는 손에 들고 있는 아이템을 다른 사람에게 자랑합니다 %s", "&7 - /bitem [메시지]")))
                       .clickEvent(ClickEvent.suggestCommand("/bitem "))
       );
       panel = panel.append(Component.text(" "));
       panel = panel.append(
               ComponentUtil.translate("&a[메뉴 열기]")
-                      .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 메뉴를 엽니다. %s", "&7 - /menu")))
+                      .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 메뉴를 엽니다 %s", "&7 - /menu")))
                       .clickEvent(ClickEvent.runCommand("/menu"))
       );
       panel = panel.append(Component.text(" "));
       panel = panel.append(
               ComponentUtil.translate("&a[쓰레기통 열기]")
                       .hoverEvent(HoverEvent.showText(
-                              ComponentUtil.translate("클릭하여 쓰레기통을 엽니다. %s", "&7 - /trashcan")
+                              ComponentUtil.translate("클릭하여 쓰레기통을 엽니다 %s", "&7 - /trashcan")
                                       .append(Component.text("\n"))
                                       .append(ComponentUtil.translate("쓰레기통에서는 바닥에 버릴 수 없는 아이템도 버릴 수 있습니다"))
                               ))
@@ -98,25 +98,25 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
       {
         adminPanel = adminPanel.append(
                 ComponentUtil.translate("&d[정보 보기]")
-                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s의 정보를 봅니다. %s", target, "&7 - /whois " + name)))
+                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s의 정보를 봅니다 %s", target, "&7 - /whois " + name)))
                         .clickEvent(ClickEvent.runCommand("/whois " + name))
         );
         adminPanel = adminPanel.append(Component.text(" "));
         adminPanel = adminPanel.append(
                 ComponentUtil.translate("&b[텔레포트]")
-                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s에게 즉시 텔레포트합니다. %s", target, "&7 - /tp " + name)))
+                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s에게 즉시 텔레포트합니다 %s", target, "&7 - /tp " + name)))
                         .clickEvent(ClickEvent.runCommand("/tp " + name))
         );
         adminPanel = adminPanel.append(Component.text(" "));
         adminPanel = adminPanel.append(
                 ComponentUtil.translate("&a[관전]")
-                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s을(를) 즉시 관전합니다. %s", target, "&7 - /cspectate " + name)))
+                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s을(를) 즉시 관전합니다 %s", target, "&7 - /cspectate " + name)))
                         .clickEvent(ClickEvent.runCommand("/cspectate @s " + name + " true true true"))
         );
         adminPanel = adminPanel.append(Component.text(" "));
         adminPanel = adminPanel.append(
                 ComponentUtil.translate("&a[관전 중지]")
-                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 관전을 중지합니다. %s", "&7 - /spectate")))
+                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 관전을 중지합니다 %s", "&7 - /spectate")))
                         .clickEvent(ClickEvent.runCommand("/spectate"))
         );
         if (Cucumbery.getPlugin().getPluginManager().getPlugin("OpenInv") != null)
@@ -124,20 +124,20 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
           adminPanel = adminPanel.append(Component.text(" "));
           adminPanel = adminPanel.append(
                   ComponentUtil.translate("&6[인벤토리 열기]")
-                          .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s의 인벤토리를 엽니다. %s", target, "&7 - /openinv " + name)))
+                          .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s의 인벤토리를 엽니다 %s", target, "&7 - /openinv " + name)))
                           .clickEvent(ClickEvent.runCommand("/openinv " + name))
           );
         }
         adminPanel = adminPanel.append(Component.text(" "));
         adminPanel = adminPanel.append(
                 ComponentUtil.translate("&4[접속 제한]")
-                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s을(를) 접속 제한합니다. %s", target, "&7 - /ban " + name + " [사유]")))
+                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s을(를) 접속 제한합니다 %s", target, "&7 - /ban " + name + " [사유]")))
                         .clickEvent(ClickEvent.suggestCommand("/ban " + name + " "))
         );
         adminPanel = adminPanel.append(Component.text(" "));
         adminPanel = adminPanel.append(
                 ComponentUtil.translate("&4[강퇴]")
-                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s을(를) 강퇴합니다. %s", target, "&7 - /kick " + name + " [사유]")))
+                        .hoverEvent(HoverEvent.showText(ComponentUtil.translate("클릭하여 %s을(를) 강퇴합니다 %s", target, "&7 - /kick " + name + " [사유]")))
                         .clickEvent(ClickEvent.suggestCommand("/kick " + name + " "))
         );
       }

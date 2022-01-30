@@ -55,10 +55,10 @@ public class CommandItemTagTabCompleter implements TabCompleter
     {
       case 1:
       {
-        List<String> list = Method.tabCompleterList(args, "<태그>", "restriction", "customlore", "extratag", "customdurability" + (!Constant.DURABLE_ITEMS.contains(material) ? "(내구도가 있는 아이템 전용)" : ""),
-                "customitemtype", "hideflag", "customrarity", "usage", "expiredate", "tnt" + (material != Material.TNT ? "(TNT 전용)" : ""), "abovecustomlore",
-                "customenchant", "customitem", "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt", "customtag", "potion" +
-                        (isPotionType ? "" : "(음식 또는 포션 유형의 아이템 전용)"));
+        List<String> list = Method.tabCompleterList(args, "<태그>", "restriction", "customlore", "extratag", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "customdurability" + (!Constant.DURABLE_ITEMS.contains(material) ? "(내구도가 있는 아이템 전용)" : ""),
+                "customitemtype", "hideflag", "customrarity", "usage", "expiredate", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "tnt" + (material != Material.TNT ? "(TNT 전용)" : ""), "abovecustomlore",
+                "customenchant", "customitem", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt", "customtag", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "potion" +
+                        (isPotionType ? "" : "(음식 또는 포션 유형의 아이템 전용)"), "customdisplayname");
         if (args[0].equals("tnt") && material != Material.TNT)
         {
           return Collections.singletonList("해당 태그는 TNT에만 사용할 수 있습니다");
@@ -123,6 +123,8 @@ public class CommandItemTagTabCompleter implements TabCompleter
               return Collections.singletonList("해당 태그는 음식 또는 포션 유형의 아이템에만 사용할 수 있습니다");
             }
             return Method.tabCompleterList(args, "<인수>", "list", "add", "remove", "set");
+          case "customdisplayname":
+            return Method.tabCompleterList(args, "<인수>", "prefix", "suffix", "name", "remove");
         }
         break;
       case 3:
@@ -360,6 +362,17 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
               }
             }
+            break;
+          case "customdisplayname":
+            switch (args[1])
+            {
+              case "prefix":
+              case "suffix":
+                return Method.tabCompleterList(args, "<인수>", "add", "remove", "list", "set");
+              case "name":
+                return Method.tabCompleterList(args, "<이름|--remove>", true, "--remove");
+            }
+            break;
         }
         break;
       case 4:
@@ -502,6 +515,45 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 return Method.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]", "infinite", "default");
               }
             }
+            break;
+          case "customdisplayname":
+            switch (args[1])
+            {
+              case "prefix", "suffix" -> {
+                NBTCompound displayCompound = NBTAPI.getCompound(NBTAPI.getMainCompound(item), CucumberyTag.ITEMSTACK_DISPLAY_KEY);
+                boolean isPrefix = args[1].equals("prefix");
+                switch (args[2])
+                {
+                  case "add" -> {
+                    return Method.tabCompleterList(args, isPrefix ? "<접두어>" : "<접미어>", true);
+                  }
+                  case "remove" -> {
+                    if (isPrefix)
+                    {
+                      NBTCompoundList prefixList = NBTAPI.getCompoundList(displayCompound, CucumberyTag.ITEMSTACK_DISPLAY_PREFIX);
+                      if (prefixList == null || prefixList.isEmpty())
+                      {
+                        return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.translate("%s에는 접두어가 없습니다", item))));
+                      }
+                      return Method.tabCompleterIntegerRadius(args, 1, prefixList.size(), "[줄(1~" + prefixList.size() + ")|--all]", "--all");
+                    }
+                    else
+                    {
+                      NBTCompoundList suffixList = NBTAPI.getCompoundList(displayCompound, CucumberyTag.ITEMSTACK_DISPLAY_SUFFIX);
+                      if (suffixList == null || suffixList.isEmpty())
+                      {
+                        return Collections.singletonList(MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.translate("%s에는 접미어가 없습니다", item))));
+                      }
+                      return Method.tabCompleterIntegerRadius(args, 1, suffixList.size(), "[줄(1~" + suffixList.size() + ")|--all]", "--all");
+                    }
+                  }
+                  case "set" -> {
+                    return Method.tabCompleterIntegerRadius(args, 1, Integer.MAX_VALUE, "<줄>");
+                  }
+                }
+              }
+            }
+            break;
         }
         break;
       case 5:
@@ -861,6 +913,35 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 return Method.tabCompleterIntegerRadius(args, 0, customEffectType.getMaxAmplifier(), "[농도 레벨]", "max");
               }
             }
+            break;
+
+          case "customdisplayname":
+            switch (args[1])
+            {
+              case "prefix", "suffix" -> {
+                boolean isPrefix = args[1].equals("prefix");
+                switch (args[2])
+                {
+                  case "add" -> {
+                    String nbt = args[4];
+                    if (!nbt.equals(""))
+                    try
+                    {
+                      new NBTContainer(nbt);
+                    }
+                    catch (Exception exception)
+                    {
+                      return Collections.singletonList("잘못된 NBT입니다:" + nbt);
+                    }
+                    return Method.tabCompleterList(args, "[nbt]", true);
+                  }
+                  case "set" -> {
+                    return Method.tabCompleterList(args, isPrefix ? "<접두어>" : "<접미어>", true);
+                  }
+                }
+              }
+            }
+            break;
         }
         break;
       case 6:
@@ -903,6 +984,29 @@ public class CommandItemTagTabCompleter implements TabCompleter
             }
           }
         }
+        if (args[0].equals("customdisplayname"))
+        {
+          switch (args[1])
+          {
+            case "prefix", "suffix" -> {
+              if ("set".equals(args[2]))
+              {
+                String nbt = args[5];
+                if (!nbt.equals(""))
+                  try
+                  {
+                    new NBTContainer(nbt);
+                  }
+                  catch (Exception exception)
+                  {
+                    return Collections.singletonList("잘못된 NBT입니다:" + nbt);
+                  }
+                return Method.tabCompleterList(args, "[nbt]", true);
+              }
+            }
+          }
+        }
+        break;
       }
       case 7:
       {
