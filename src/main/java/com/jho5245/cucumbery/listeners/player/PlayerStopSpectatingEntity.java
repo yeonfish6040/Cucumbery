@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class PlayerStopSpectatingEntity implements Listener
     Entity spectatorTarget = event.getSpectatorTarget();
     Location plLoc = player.getLocation(), tarLoc = spectatorTarget.getLocation();
     Collection<Entity> entities = plLoc.getWorld().getNearbyEntities(plLoc, 1D, 1D, 1D);
-    if (CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING) && !spectatorTarget.isDead() && spectatorTarget.isValid() &&
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING) && player.getGameMode() == GameMode.SPECTATOR && !spectatorTarget.isDead() && spectatorTarget.isValid() &&
     plLoc.equals(tarLoc) && entities.contains(spectatorTarget))
     {
       event.setCancelled(true);

@@ -267,6 +267,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   WA_SANS(9),
   HEALTH_INCREASE(99),
   CONTINUAL_SPECTATING(true, true, false),
+  TRUE_INVISIBILITY,
   ;
 
   private final int maxAmplifier;
@@ -379,6 +380,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case WA_SANS -> "와 샌즈";
               case HEALTH_INCREASE -> "HP 증가";
               case CONTINUAL_SPECTATING -> "관전 지속";
+              case TRUE_INVISIBILITY -> "찐 투명화";
             };
   }
 
@@ -531,6 +533,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
       case CONTINUAL_SPECTATING -> ComponentUtil.translate("플레이어를 지속적으로 관전합니다")
               .append(Component.text("\n"))
               .append(ComponentUtil.translate("해당 플레이어가 재접속하거나 리스폰해도 자동으로 관전합니다"));
+      case TRUE_INVISIBILITY -> ComponentUtil.translate("말 그대로 완전히 다른 플레이어로부터 보이지 않습니다");
       default -> Component.empty();
     };
   }
@@ -588,7 +591,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
     return switch (this)
             {
               // 우유 마시면 사라짐
-              case CONFUSION, NOTHING, THICK, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING, CHEESE_EXPERIMENT -> false;
+              case CONFUSION, NOTHING, THICK, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING, CHEESE_EXPERIMENT, TRUE_INVISIBILITY -> false;
               default -> true;
             };
   }
@@ -597,7 +600,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return switch (this)
             {
-              case RESURRECTION, CUCUMBERY_UPDATER, DARKNESS_TERROR_ACTIVATED -> -1;
+              case RESURRECTION, CUCUMBERY_UPDATER, DARKNESS_TERROR_ACTIVATED, CONTINUAL_SPECTATING -> -1;
               case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED -> 2;
               case RESURRECTION_INVINCIBLE -> 20 * 2;
               case COOLDOWN_CHAT -> 20 * 3;
@@ -645,8 +648,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
   }
 
   /**
-   * 커스텀 효과의 지속 시간이 하나도 경과하지 않앗을 때 사간을 표시할지 말지 확인합니다.
-   * @return 시간을 표시하지 않는 버프면 true 이오ㅔ에는 false
+   * 커스텀 효과의 지속 시간이 하나도 경과하지 않았을 때 사간을 표시할지 말지 확인합니다.
+   * @return 시간을 표시하지 않는 버프면 true 이외에는 false
    */
   @SuppressWarnings("all")
   public boolean isTimeHiddenWhenFull()
@@ -677,10 +680,10 @@ public enum CustomEffectType implements Translatable, EnumHideable
   }
 
   /**
-   * @return 효과가 같은 여러 농도의 효과를 가지고 있을 때 해당 효과를 전부 표시할 효과면 true 이오ㅔ이는 false
+   * @return 효과가 같은 여러 농도의 효과를 가지고 있을 때 해당 효과를 전부 표시할 효과면 true 이외에는 false
    */
   @SuppressWarnings("all")
-  public boolean isStackdisplayed()
+  public boolean isStackDisplayed()
   {
     return getMaxAmplifier() > 0 && switch (this)
             {

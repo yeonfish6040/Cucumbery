@@ -97,7 +97,7 @@ public class InventoryOpen implements Listener
         return;
       }
       // Openinv로 인벤토리가 열린 경우가 아닐 때
-      if (location != null)
+      if (location != null || inventory.getType() != InventoryType.CHEST)
       {
         if (Method.usingLoreFeature(player))
         {

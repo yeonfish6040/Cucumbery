@@ -1831,7 +1831,7 @@ public class InventoryClick implements Listener
     {
       Method.playSound(player, Sound.ENTITY_VILLAGER_AMBIENT);
     }
-    Method.playSound(player, Sound.UI_BUTTON_CLICK, 1F, 1F);
+    Method.playSound(player, Sound.UI_BUTTON_CLICK);
     InventoryView lastInventory = CreateGUI.getLastInventory(uuid);
 
     int s = event.getSlot();
@@ -1870,6 +1870,10 @@ public class InventoryClick implements Listener
                 else
                 {
                   CustomEffectManager.removeEffect(player, effectType, amplifier);
+                }
+                if (effectType == CustomEffectType.CONTINUAL_SPECTATING && player.getGameMode() == GameMode.SPECTATOR  && player.getSpectatorTarget() instanceof Player)
+                {
+                  player.setSpectatorTarget(null);
                 }
               }
             }

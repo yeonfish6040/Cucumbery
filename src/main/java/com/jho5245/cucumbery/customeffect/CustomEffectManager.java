@@ -9,6 +9,7 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
@@ -122,7 +123,7 @@ public class CustomEffectManager
     switch (effectType)
     {
       case HEALTH_INCREASE -> {
-        effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MAX_HEALTH, Operation.ADD_SCALAR,0.1);
+        effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MAX_HEALTH, Operation.ADD_SCALAR, 0.1);
       }
       case NEWBIE_SHIELD -> {
         if (entity instanceof OfflinePlayer offlinePlayer)
@@ -211,35 +212,35 @@ public class CustomEffectManager
     }
     List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
     customEffects.removeIf(effect ->
-  {
-    if (effect.getType() == effectType && effect.getAmplifier() == amplifier)
     {
-      if (entity instanceof Attributable attributable && effect instanceof AttributeCustomEffect attributeCustomEffect)
+      if (effect.getType() == effectType && effect.getAmplifier() == amplifier)
       {
-        UUID uuid = attributeCustomEffect.getUniqueId();
-        Attribute attribute = attributeCustomEffect.getAttribute();
-        AttributeInstance attributeInstance = attributable.getAttribute(attribute);
-        if (attributeInstance != null)
+        if (entity instanceof Attributable attributable && effect instanceof AttributeCustomEffect attributeCustomEffect)
         {
-          AttributeModifier attributeModifier = null;
-          for (AttributeModifier modifier : attributeInstance.getModifiers())
+          UUID uuid = attributeCustomEffect.getUniqueId();
+          Attribute attribute = attributeCustomEffect.getAttribute();
+          AttributeInstance attributeInstance = attributable.getAttribute(attribute);
+          if (attributeInstance != null)
           {
-            if (modifier.getUniqueId().equals(uuid))
+            AttributeModifier attributeModifier = null;
+            for (AttributeModifier modifier : attributeInstance.getModifiers())
             {
-              attributeModifier = modifier;
-              break;
+              if (modifier.getUniqueId().equals(uuid))
+              {
+                attributeModifier = modifier;
+                break;
+              }
+            }
+            if (attributeModifier != null)
+            {
+              attributeInstance.removeModifier(attributeModifier);
             }
           }
-          if (attributeModifier != null)
-          {
-            attributeInstance.removeModifier(attributeModifier);
-          }
         }
+        return true;
       }
-      return true;
-    }
-    return false;
-  });
+      return false;
+    });
     effectMap.put(entity.getUniqueId(), customEffects);
   }
 
@@ -483,7 +484,16 @@ public class CustomEffectManager
       {
         try
         {
-          CustomEffectType customEffectType = CustomEffectType.valueOf(root.getString(typeString + ".type"));
+          CustomEffectType customEffectType;
+          try
+          {
+            customEffectType = CustomEffectType.valueOf(root.getString(typeString + ".type"));
+          }
+          catch (Exception e)
+          {
+            MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "유효하지 않은 효과입니다: %s", root.getString(typeString + ".type") + "");
+            continue;
+          }
           DisplayType displayType;
           try
           {
@@ -497,7 +507,7 @@ public class CustomEffectManager
           int amplifier = root.getInt(typeString + ".amplifier");
           int initDuration = root.getInt(typeString + ".init-duration");
           int initAmplifier = root.getInt(typeString + ".init-amplifier");
-          CustomEffect customEffect = new CustomEffect(customEffectType, initDuration, initAmplifier, displayType);
+          CustomEffect customEffect = null;
           String playerUuidString = root.getString(typeString + ".player");
           if (playerUuidString != null && Method.isUUID(playerUuidString))
           {
@@ -518,6 +528,7 @@ public class CustomEffectManager
             UUID uuidData = UUID.fromString(uuidString);
             String attribute = root.getString(typeString + ".attribute");
             String operation = root.getString(typeString + ".operation");
+            double multiplier = root.getDouble(typeString + ".multiplier");
             if (attribute == null || operation == null)
             {
               customEffect = new UUIDCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, uuidData);
@@ -528,13 +539,17 @@ public class CustomEffectManager
               {
                 Attribute attr = Attribute.valueOf(attribute);
                 Operation oper = Operation.valueOf(operation);
-                customEffect = new AttributeCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, uuidData, attr, oper, root.getDouble(typeString + ".multiplier"));
+                customEffect = new AttributeCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, uuidData, attr, oper, multiplier);
               }
               catch (Exception e)
               {
                 e.printStackTrace();
               }
             }
+          }
+          if (customEffect == null)
+          {
+            customEffect = new CustomEffect(customEffectType, initDuration, initAmplifier, displayType);
           }
           customEffect.setDuration(duration);
           customEffect.setAmplifier(amplifier);

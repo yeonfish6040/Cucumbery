@@ -1,14 +1,13 @@
 package com.jho5245.cucumbery.listeners.player;
 
+import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
-
-import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.Method;
 
 public class PlayerGameModeChange implements Listener
 {

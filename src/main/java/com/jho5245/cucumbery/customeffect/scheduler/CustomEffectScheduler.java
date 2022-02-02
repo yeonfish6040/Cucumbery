@@ -49,6 +49,7 @@ public class CustomEffectScheduler
     {
       tick();
       display();
+      trueInvisibility();
       fancySpotlight();
       newbieShield();
       darknessTerror();
@@ -122,7 +123,7 @@ public class CustomEffectScheduler
           CustomEffectType customEffectType = e.getType();
           for (CustomEffect effect : finalCustomEffects)
           {
-            if (effect.getType() == customEffectType && !customEffectType.isStackdisplayed() && effect.getAmplifier() > e.getAmplifier())
+            if (effect.getType() == customEffectType && !customEffectType.isStackDisplayed() && effect.getAmplifier() > e.getAmplifier())
             {
               return true;
             }
@@ -139,7 +140,7 @@ public class CustomEffectScheduler
         CustomEffectType customEffectType = e.getType();
         for (CustomEffect effect : finalCustomEffects)
         {
-          if (effect.getType() == customEffectType && !customEffectType.isStackdisplayed() && effect.getAmplifier() > e.getAmplifier())
+          if (effect.getType() == customEffectType && !customEffectType.isStackDisplayed() && effect.getAmplifier() > e.getAmplifier())
           {
             return true;
           }
@@ -262,6 +263,38 @@ public class CustomEffectScheduler
       if (CreateGUI.isGUITitle(title) && title instanceof TranslatableComponent translatableComponent && translatableComponent.args().get(1) instanceof TextComponent textComponent && textComponent.content().equals(Constant.POTION_EFFECTS))
       {
         CustomEffectGUI.openGUI(player, false);
+      }
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private static void trueInvisibility()
+  {
+    for (World world : Bukkit.getWorlds())
+    {
+      for (Entity entity : world.getEntities())
+      {
+        Set<String> scoreboardTags = entity.getScoreboardTags();
+        if (scoreboardTags.contains("true_invisibility") || CustomEffectManager.hasEffect(entity, CustomEffectType.TRUE_INVISIBILITY))
+        {
+          for (Player player : Bukkit.getOnlinePlayers())
+          {
+            if (entity != player && player.canSee(entity))
+            {
+              player.hideEntity(Cucumbery.getPlugin(), entity);
+            }
+          }
+        }
+        else
+        {
+          for (Player player : Bukkit.getOnlinePlayers())
+          {
+            if (entity != player && !player.canSee(entity))
+            {
+              player.showEntity(Cucumbery.getPlugin(), entity);
+            }
+          }
+        }
       }
     }
   }

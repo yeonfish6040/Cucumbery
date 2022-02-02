@@ -386,7 +386,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
   }
 
-  public boolean giveEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @NotNull CustomEffectType customEffectType, int duration, int amplifier, @NotNull DisplayType displayType, boolean hideOutput, boolean force)
+  private boolean giveEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @NotNull CustomEffectType customEffectType, int duration, int amplifier, @NotNull DisplayType displayType, boolean hideOutput, boolean force)
   {
     CustomEffect customEffect = new CustomEffect(customEffectType, duration, amplifier, displayType);
     List<Entity> successEntities = new ArrayList<>();
@@ -405,7 +405,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       if (!failureEntities.isEmpty())
       {
         MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다 (대상이 효과에 내성이 있거나 효과를 받을 수 없는 상태입니다)", failureEntities, customEffect));
+                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다 (대상이 효과에 내성이 있거나 더 긴 지속 시간을 가지고 있거나 효과를 받을 수 없는 상태입니다)", failureEntities, customEffect));
       }
       if (!successEntitiesIsEmpty)
       {
@@ -419,7 +419,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     return !successEntitiesIsEmpty;
   }
 
-  public boolean clearEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @Nullable CustomEffectType customEffectType, boolean hideOutput)
+  private boolean clearEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @Nullable CustomEffectType customEffectType, boolean hideOutput)
   {
     boolean all = customEffectType == null;
     List<Entity> successEntities = new ArrayList<>();
@@ -479,7 +479,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     return !successEntitiesIsEmpty;
   }
 
-  public void queryEffect(@NotNull CommandSender sender, @NotNull Entity entity, boolean gui)
+  private void queryEffect(@NotNull CommandSender sender, @NotNull Entity entity, boolean gui)
   {
     if (sender instanceof Player player && gui)
     {

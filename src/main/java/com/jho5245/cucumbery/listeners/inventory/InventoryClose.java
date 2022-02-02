@@ -6,10 +6,10 @@ import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.CustomConfig;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -24,11 +24,11 @@ import org.bukkit.SoundCategory;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent.Reason;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -45,10 +45,15 @@ public class InventoryClose implements Listener
   @EventHandler
   public void onInventoryClose(InventoryCloseEvent event)
   {
-    if (event.getPlayer().getType() == EntityType.PLAYER)
+    if (event.getPlayer() instanceof Player player)
     {
-      Player player = (Player) event.getPlayer();
+      UUID uuid = player.getUniqueId();
       Inventory inventory = event.getInventory();
+      Reason reason = event.getReason();
+      if (reason != Reason.OPEN_NEW)
+      {
+        Variable.lastInventory.remove(uuid);
+      }
       InventoryType inventoryType = inventory.getType();
       String title = event.getView().getTitle();
       if (inventoryType == InventoryType.SHULKER_BOX && event.getView().title() instanceof TranslatableComponent translatableComponent)

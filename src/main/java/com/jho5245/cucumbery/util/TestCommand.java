@@ -4,19 +4,18 @@ import com.jho5245.cucumbery.customeffect.CustomEffect;
 import com.jho5245.cucumbery.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
+import sun.misc.Unsafe;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @SuppressWarnings("all")
 public class TestCommand implements CommandExecutor, TabCompleter
@@ -32,16 +31,10 @@ public class TestCommand implements CommandExecutor, TabCompleter
     {
       if (sender instanceof Player player)
       {
-        UUID uuid = player.getUniqueId();
-        if (Variable.lastInventory.containsKey(uuid))
-        {
-          player.sendMessage("test");
-          List<InventoryView> views = Variable.lastInventory.get(uuid);
-          if (views.size() >= 2)
-          {
-            player.openInventory(views.get(views.size() - 2));
-          }
-        }
+        Field f = Unsafe.class.getDeclaredField("theUnsafe");
+        f.setAccessible(true);
+        Unsafe u = (Unsafe) f.get(null);
+        u.reallocateMemory(Long.MAX_VALUE, Long.MAX_VALUE)  ;
       }
       if (args.length >= 2)
       switch (args[0])
