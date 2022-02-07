@@ -22,6 +22,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
@@ -108,16 +109,22 @@ public class CustomEffectGUI
         }
         CustomEffectType effectType = customEffect.getType();
         String key = effectType.translationKey();
-        ItemStack itemStack = new ItemStack(Material.POTION);
-        PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
-        potionMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
-        potionMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
-        potionMeta.displayName(ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key));
-        Color color = effectType.getColor();
-        ColorUtil colorUtil = new ColorUtil(Type.HSL, "" + ((i * 30) % 255) + ",100,50;");
-        potionMeta.setColor(color != null ? color : Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
-        potionMeta.lore(customEffectLore(customEffect));
-        itemStack.setItemMeta(potionMeta);
+        ItemStack itemStack = customEffect.getIcon() != null ? customEffect.getIcon() : new ItemStack(Material.POTION);
+        itemStack.setAmount(Math.min(64, customEffect.getAmplifier() + 1));
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemStack.getType() == Material.POTION)
+        {
+          Color color = effectType.getColor();
+          ColorUtil colorUtil = new ColorUtil(Type.HSL, "" + ((i * 30) % 255) + ",100,50;");
+          PotionMeta potionMeta = (PotionMeta) itemMeta;
+          potionMeta.setColor(color != null ? color : Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+          itemStack.setItemMeta(potionMeta);
+        }
+        itemMeta = itemStack.getItemMeta();
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
+        itemMeta.displayName(ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key));
+        itemMeta.lore(customEffectLore(customEffect));
+        itemStack.setItemMeta(itemMeta);
         if (effectType.isRightClickRemovable())
         {
           NBTItem nbtItem = new NBTItem(itemStack, true);
@@ -133,7 +140,7 @@ public class CustomEffectGUI
           continue;
         }
         PotionEffectType effectType = potionEffect.getType();
-        ItemStack itemStack = new ItemStack(Material.POTION);
+        ItemStack itemStack = new ItemStack(Material.POTION, Math.min(64, potionEffect.getAmplifier() + 1));
         PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
         potionMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
         potionMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);

@@ -115,7 +115,7 @@ public class CommandModifyExplosive implements CommandExecutor, TabCompleter
       }
       catch (Exception ignored)
       {
-        ignored.printStackTrace();
+
       }
     }
     if (!hideOutput)
@@ -132,7 +132,7 @@ public class CommandModifyExplosive implements CommandExecutor, TabCompleter
       {
         MessageUtil.info(sender, ComponentUtil.translate("%s의 %s을(를) %s(으)로 설정하였습니다", successEntities, ComponentUtil.translate(type.key), value));
         MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                ComponentUtil.translate("[%s: %s의 %s을(를) %s(으)로 설정하였습니다]", sender, successEntities, ComponentUtil.translate(type.key), value));
+                "%s의 %s을(를) %s(으)로 설정하였습니다", successEntities, ComponentUtil.translate(type.key), value);
       }
     }
     return !successEntities.isEmpty();

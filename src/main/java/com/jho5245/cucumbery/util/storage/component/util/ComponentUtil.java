@@ -132,12 +132,12 @@ public class ComponentUtil
       else if (object instanceof Material material)
       {
         ItemStack itemStack = ItemStackUtil.loredItemStack(material, player);
-        Component concat = ItemNameUtil.itemName(itemStack, Constant.THE_COLOR);
-        concat = concat.hoverEvent(itemStack.asHoverEvent());
+        Component concat = create(player, itemStack);
         component = component.append(concat);
       }
       else if (object instanceof ItemStack itemStack)
       {
+        final ItemStack giveItem = ItemLore.removeItemLore(itemStack.clone());
         itemStack = itemStack.clone();
         Material type = itemStack.getType();
         if (type.isItem() && type != Material.AIR)
@@ -165,6 +165,7 @@ public class ComponentUtil
         {
           concat = concat.hoverEvent(itemStack.asHoverEvent());
         }
+        concat = concat.clickEvent(ClickEvent.copyToClipboard("/give @s minecraft:" + type.toString().toLowerCase() + new NBTItem(giveItem)));
         component = component.append(concat);
       }
       else if (object instanceof Prefix prefix)
@@ -442,7 +443,7 @@ public class ComponentUtil
         }
         else if (string.startsWith("player:"))
         {
-          Player player2 = SelectorUtil.getPlayer(player, string.substring(""), false);
+          Player player2 = SelectorUtil.getPlayer(player, string.substring("player:".length()), false);
           if (player2 != null)
           {
             Component concat = create(player2);

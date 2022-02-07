@@ -46,9 +46,7 @@ public class CommandKill2 extends CommandBase
           entity.remove();
         }
         MessageUtil.info(sender, ComponentUtil.translate("commands.kill.success.single", sender));
-        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s]", sender,
-                ComponentUtil.translate("commands.kill.success.single", sender)
-        ));
+        MessageUtil.sendAdminMessage(sender, null, "commands.kill.success.single", sender);
       }
       else
       {
@@ -103,9 +101,7 @@ public class CommandKill2 extends CommandBase
         {
           MessageUtil.info(sender, ComponentUtil.translate("commands.kill.success.single", successEntities));
           MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신을 죽였습니다", sender));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s]", sender,
-                  ComponentUtil.translate("commands.kill.success.single", successEntities)
-          ));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),"commands.kill.success.single", successEntities);
         }
       }
       else if (successEntities.isEmpty() && commandSender instanceof BlockCommandSender)

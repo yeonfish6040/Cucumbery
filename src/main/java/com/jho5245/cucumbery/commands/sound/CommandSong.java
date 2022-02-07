@@ -94,6 +94,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
             {
               fileName = fileName.replace("--stop", "");
             }
+            stop = stop || (sender instanceof Player player && UserData.FORCE_PLAY_SERVER_RADIO.getBoolean(player));
             boolean disable10Octave = fileName.contains("--no10");
             if (disable10Octave)
             {

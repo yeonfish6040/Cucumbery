@@ -4,11 +4,15 @@ import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.EnumHideable;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -802,6 +806,29 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case AWKWARD, MUNDANE, THICK, NOTHING -> Color.fromRGB(10, 50, 255);
               default -> null;
             };
+  }
+
+  @Nullable
+  public ItemStack getIcon()
+  {
+    ItemStack itemStack = null;
+    ItemMeta itemMeta = null;
+    switch (this)
+    {
+      case SERVER_RADIO_LISTENING -> itemStack = new ItemStack(Material.JUKEBOX);
+      case ELYTRA_BOOSTER -> itemStack = new ItemStack(Material.FIREWORK_ROCKET);
+      case INVINCIBLE, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, RESURRECTION_INVINCIBLE, RESURRECTION -> itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
+      case RESURRECTION_COOLDOWN -> {
+        itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
+        itemMeta = itemStack.getItemMeta();
+        itemMeta.addEnchant(CustomEnchant.GLOW, 1, true);
+      }
+    }
+    if (itemMeta != null)
+    {
+      itemStack.setItemMeta(itemMeta);
+    }
+    return itemStack;
   }
 
   @Override

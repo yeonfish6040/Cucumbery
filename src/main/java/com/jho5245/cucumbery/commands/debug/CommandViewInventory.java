@@ -55,7 +55,7 @@ public class CommandViewInventory implements CommandExecutor, TabCompleter
         {
           player.openMerchant(merchant, true);
           MessageUtil.info(player, ComponentUtil.translate("%s의 거래 목록을 참조합니다", merchant));
-          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 거래 목록을 참조합니다]", player, merchant));
+          MessageUtil.sendAdminMessage(player, null,"%s의 거래 목록을 참조합니다", player, merchant);
         }
         else
         {
@@ -72,7 +72,7 @@ public class CommandViewInventory implements CommandExecutor, TabCompleter
           clone.setContents(contents);
           player.openInventory(clone);
           MessageUtil.info(player, ComponentUtil.translate("%s의 인벤토리 내용을 참조합니다", inventoryHolder));
-          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 인벤토리 내용을 참조합니다]", player, inventoryHolder));
+          MessageUtil.sendAdminMessage(player, null, "%s의 인벤토리 내용을 참조합니다", player, inventoryHolder);
         }
         else
         {
@@ -110,7 +110,7 @@ public class CommandViewInventory implements CommandExecutor, TabCompleter
           inventory.setItem(16, boots);
           player.openInventory(inventory);
           MessageUtil.info(player, ComponentUtil.translate("%s의 장착 중인 아이템을 참조합니다", livingEntity));
-          MessageUtil.sendAdminMessage(player, null, ComponentUtil.translate("[%s: %s의 장착 중인 아이템을 참조합니다]", player, livingEntity));
+          MessageUtil.sendAdminMessage(player, null, "%s의 장착 중인 아이템을 참조합니다]", player, livingEntity);
         }
         else
         {

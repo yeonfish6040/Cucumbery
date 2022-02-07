@@ -48,10 +48,10 @@ public class CommandUpdateItem extends CommandBase
           Method.updateItem(itemEntity);
         }
       }
-      if (successEntities.size() > 0)
+      if (!successEntities.isEmpty())
       {
         MessageUtil.info(sender, ComponentUtil.translate("%s의 아이템 태그를 업데이트 하였습니다", successEntities));
-        MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s의 아이템 태그를 업데이트 하였습니다]", sender, successEntities));
+        MessageUtil.sendAdminMessage(sender, null, "%s의 아이템 태그를 업데이트 하였습니다", successEntities);
       }
       else
       {
@@ -76,12 +76,12 @@ public class CommandUpdateItem extends CommandBase
           Method.updateItem(itemEntity);
         }
       }
-      if (successEntities.size() > 0)
+      if (!successEntities.isEmpty())
       {
         if (!hideOutout)
         {
           MessageUtil.info(sender, ComponentUtil.translate("%s의 아이템 태그를 업데이트 하였습니다", successEntities));
-          MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s의 아이템 태그를 업데이트 하였습니다]", sender, successEntities));
+          MessageUtil.sendAdminMessage(sender, null, "%s의 아이템 태그를 업데이트 하였습니다]", successEntities);
         }
       }
       else

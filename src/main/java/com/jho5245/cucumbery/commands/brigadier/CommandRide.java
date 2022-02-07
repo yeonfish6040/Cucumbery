@@ -99,7 +99,7 @@ public class CommandRide extends CommandBase
       }
       MessageUtil.info(vehicle, ComponentUtil.translate("%s이(가) 당신을 탑승합니다", entity));
       MessageUtil.info(sender, ComponentUtil.translate("%s을(를) 탑승합니다", vehicle));
-      MessageUtil.sendAdminMessage(sender, Collections.singletonList(vehicle), ComponentUtil.translate("[%s: %s을(를) 탑승합니다]", sender, vehicle));
+      MessageUtil.sendAdminMessage(sender, Collections.singletonList(vehicle), "%s을(를) 탑승합니다", vehicle);
     });
     commandAPICommand.register();
 
@@ -129,7 +129,7 @@ public class CommandRide extends CommandBase
       entity.teleport(entity);
       MessageUtil.info(vehicle, ComponentUtil.translate("%s이(가) 당신의 탑승을 중지하였습니다", entity));
       MessageUtil.info(entity, ComponentUtil.translate("더 이상 %s을(를) 탑승하지 않습니다", vehicle));
-      MessageUtil.sendAdminMessage(sender, Collections.singletonList(vehicle), ComponentUtil.translate("[%s: 더 이상 %s을(를) 탑승하지 않습니다]", sender, vehicle));
+      MessageUtil.sendAdminMessage(sender, Collections.singletonList(vehicle), "더 이상 %s을(를) 탑승하지 않습니다", vehicle);
     });
     commandAPICommand.register();
 
@@ -172,7 +172,7 @@ public class CommandRide extends CommandBase
         permissibles.add(vehicle);
         MessageUtil.info(vehicle, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승합니다", sender, successEntities));
         MessageUtil.info(sender, ComponentUtil.translate("%s이(가) %s을(를) 탑승합니다", successEntities, vehicle));
-        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게 탑승시켰습니다]", sender, successEntities, vehicle));
+        MessageUtil.sendAdminMessage(sender, permissibles, "%s을(를) %s에게 탑승시켰습니다", successEntities, vehicle);
       }
       else if (!(sender.getCallee() instanceof Player))
       {
@@ -228,7 +228,7 @@ public class CommandRide extends CommandBase
         permissibles.add(vehicle);
         MessageUtil.info(vehicle, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승합니다", sender, successEntities));
         MessageUtil.info(sender, ComponentUtil.translate("%s이(가) %s을(를) 탑승합니다", successEntities, vehicle));
-        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게 탑승시켰습니다]", sender, successEntities, vehicle));
+        MessageUtil.sendAdminMessage(sender, permissibles, "%s을(를) %s에게 탑승시켰습니다", successEntities, vehicle);
       }
       else if (!(sender.getCallee() instanceof Player))
       {
@@ -277,7 +277,7 @@ public class CommandRide extends CommandBase
         permissibles.addAll(vehicles);
         MessageUtil.info(vehicles, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승하지 않습니다", sender, successEntities));
         MessageUtil.info(sender, ComponentUtil.translate("%s을(를) %s에게서 탑승을 중지시켰습니다", successEntities, vehicles));
-        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게서 탑승을 중지시켰습니다]", sender, successEntities, vehicles));
+        MessageUtil.sendAdminMessage(sender, permissibles, "%s을(를) %s에게서 탑승을 중지시켰습니다", successEntities, vehicles);
       }
       else if (!(sender.getCallee() instanceof Player))
       {
@@ -333,7 +333,7 @@ public class CommandRide extends CommandBase
         permissibles.addAll(vehicles);
         MessageUtil.info(vehicles, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 탑승하지 않습니다", sender, successEntities));
         MessageUtil.info(sender, ComponentUtil.translate("%s을(를) %s에게서 탑승을 중지시켰습니다", successEntities, vehicles));
-        MessageUtil.sendAdminMessage(sender.getCallee(), permissibles, ComponentUtil.translate("[%s: %s을(를) %s에게서 탑승을 중지시켰습니다]", sender, successEntities, vehicles));
+        MessageUtil.sendAdminMessage(sender, permissibles, "%s을(를) %s에게서 탑승을 중지시켰습니다", successEntities, vehicles);
       }
       else if (!(sender.getCallee() instanceof Player))
       {

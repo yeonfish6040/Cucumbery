@@ -29,7 +29,6 @@ public class EntityPotionEffect implements Listener
     PotionEffectType potionEffectType = event.getModifiedType();
     boolean override = event.isOverride();
 
-//
 //    MessageUtil.broadcastDebug("entity-", entity, ", action:" + action + ", cause:" + cause, ", type:", potionEffectType,
 //            ComponentUtil.translate(", old:%s, new:%s, override:%s", oldEffect != null ? oldEffect : "null", newEffect != null ? newEffect : "null", override + ""));
 

@@ -150,7 +150,9 @@ public class EntitySpawn implements Listener
                 .getLeggings(), boots = equipment.getBoots();
         ItemLore.setItemLore(mainHand);
         ItemLore.setItemLore(offHand);
-        if (helmet != null)
+        // when kiled Pillager's helmet Banner has TMI, it is not considered as Bad Omen effect-given entity.
+        boolean isPillager = livingEntity instanceof Pillager && helmet != null && helmet.getType() == Material.WHITE_BANNER;
+        if (!isPillager && helmet != null)
         {
           ItemLore.setItemLore(helmet);
         }
@@ -168,7 +170,10 @@ public class EntitySpawn implements Listener
         }
         equipment.setItemInMainHand(mainHand);
         equipment.setItemInOffHand(offHand);
-        equipment.setHelmet(helmet);
+        if (!isPillager)
+        {
+          equipment.setHelmet(helmet);
+        }
         equipment.setChestplate(chestplate);
         equipment.setLeggings(leggings);
         equipment.setBoots(boots);

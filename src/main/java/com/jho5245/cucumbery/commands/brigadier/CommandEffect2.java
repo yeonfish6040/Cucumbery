@@ -202,7 +202,7 @@ public class CommandEffect2 extends CommandBase
           MessageUtil.info(successEntities, ComponentUtil.translate("%1$s이(가) 당신에게 %2$s 효과를 적용했습니다", sender, potionEffect));
         }
         MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다]", sender, successEntities, potionEffect));
+                "%s에게 %s 효과를 적용했습니다", successEntities, potionEffect);
       }
     }
     else if (successEntities.isEmpty() && sender.getCallee() instanceof BlockCommandSender)

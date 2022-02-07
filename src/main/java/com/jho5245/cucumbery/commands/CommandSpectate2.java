@@ -153,7 +153,7 @@ public class CommandSpectate2 implements CommandExecutor, TabCompleter
         {
           MessageUtil.info(sender, ComponentUtil.translate("%s을(를) 관전합니다", target));
           MessageUtil.info(target, ComponentUtil.translate("%s이(가) 당신을 관전합니다", sender));
-          MessageUtil.sendAdminMessage(sender, Collections.singletonList(target), ComponentUtil.translate("[%s: %s을(를) 관전합니다]", sender, target));
+          MessageUtil.sendAdminMessage(sender, Collections.singletonList(target), "%s을(를) 관전합니다", target);
         }
         else
         {
@@ -162,7 +162,7 @@ public class CommandSpectate2 implements CommandExecutor, TabCompleter
           MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s을(를) 관전시킵니다", successPlayers, target));
           MessageUtil.info(successPlayers, ComponentUtil.translate("%s이(가) 당신에게 %s을(를) 관전시켰습니다", sender, target));
           MessageUtil.info(target, ComponentUtil.translate("%s에 의해 %s이(가) 당신을 관전합니다", sender, successPlayers));
-          MessageUtil.sendAdminMessage(sender, exceptions, ComponentUtil.translate("[%s: %s에게 %s을(를) 관전시켰습니다]", sender, successPlayers, target));
+          MessageUtil.sendAdminMessage(sender, exceptions, "%s에게 %s을(를) 관전시켰습니다", successPlayers, target);
         }
       }
     }

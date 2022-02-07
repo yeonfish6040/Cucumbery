@@ -71,7 +71,7 @@ public class CommandRespawn implements CommandExecutor, TabCompleter
         if (!successPlayers.isEmpty())
         {
           MessageUtil.info(sender, ComponentUtil.translate("%s을(를) 강제로 리스폰시켰습니다", successPlayers));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successPlayers), ComponentUtil.translate("[%s: %s을(를) 강제로 리스폰시켰습니다]", sender, successPlayers));
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successPlayers), "%s을(를) 강제로 리스폰시켰습니다", successPlayers);
           return true;
         }
       }

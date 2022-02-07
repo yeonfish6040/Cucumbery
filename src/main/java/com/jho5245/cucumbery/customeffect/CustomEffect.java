@@ -6,10 +6,13 @@ import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CustomEffect
 {
@@ -156,7 +159,7 @@ public class CustomEffect
                       .append(ComponentUtil.translate("플레이 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
               case WA_SANS -> ComponentUtil.translate("스켈레톤 유형의 개체에게 받는")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("피해량이 %s 감소하고 주는 피해량이 %s 증가합니다","&e" + ((amplifier + 1) * 3) + "%", "&e" + ((amplifier + 1) * 10) + "%"));
+                      .append(ComponentUtil.translate("피해량이 %s 감소하고 주는 피해량이 %s 증가합니다", "&e" + ((amplifier + 1) * 3) + "%", "&e" + ((amplifier + 1) * 10) + "%"));
               case HEALTH_INCREASE -> ComponentUtil.translate("최대 HP가 %s 증가합니다", "&e" + ((amplifier + 1) * 10) + "%p");
               default -> effectType.getDescription();
             };
@@ -219,6 +222,23 @@ public class CustomEffect
   public boolean isTimeHiddenWhenFull()
   {
     return this.effectType.isTimeHiddenWhenFull() && this.duration + 1 >= this.initDuration;
+  }
+
+  @Nullable
+  public Color getColor()
+  {
+    return this.effectType.getColor();
+  }
+
+  @Nullable
+  public ItemStack getIcon()
+  {
+    return this.effectType.getIcon();
+  }
+
+  public boolean isHiddenEnum()
+  {
+    return this.effectType.isHiddenEnum();
   }
 
   public enum DisplayType

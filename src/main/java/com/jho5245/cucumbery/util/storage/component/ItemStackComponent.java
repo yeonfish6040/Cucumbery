@@ -1,10 +1,12 @@
 package com.jho5245.cucumbery.util.storage.component;
 
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +44,7 @@ public class ItemStackComponent
     {
       defaultColor = NamedTextColor.GRAY;
     }
+    final ItemStack giveItem = ItemLore.removeItemLore(itemStack.clone());
     itemStack = itemStack.clone();
     NBTItem nbtItem = new NBTItem(itemStack);
     nbtItem.removeKey("BlockEntityTag");
@@ -67,6 +70,7 @@ public class ItemStackComponent
       return itemName;
     }
 
-    return ComponentUtil.translate("&o&q%s %s", itemName, ComponentUtil.translate("%s개", Component.text(amount)).color(defaultColor)).color(itemName.color()).hoverEvent(itemStack.asHoverEvent());
+    return ComponentUtil.translate("&o&q%s %s", itemName, ComponentUtil.translate("%s개", Component.text(amount)).color(defaultColor)).color(itemName.color()).hoverEvent(itemStack.asHoverEvent())
+            .clickEvent(ClickEvent.copyToClipboard("/give @s minecraft:" + itemStack.getType().toString().toLowerCase() + new NBTItem(giveItem)));
   }
 }

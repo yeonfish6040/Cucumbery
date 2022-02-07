@@ -104,13 +104,13 @@ public class CommandDamage extends CommandBase
         {
           MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s만큼의 피해를 주었습니다", successEntities, damageString));
           MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                  ComponentUtil.translate("[%s: %s에게 %s만큼의 피해를 주었습니다]", sender, successEntities, damageString));
+                  "%s에게 %s만큼의 피해를 주었습니다", successEntities, damageString);
         }
         else
         {
           MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다", successEntities, damager, damageString));
           MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                  ComponentUtil.translate("[%s: %s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다]", sender, successEntities, damager, damageString));
+                  "%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다", successEntities, damager, damageString);
         }
       }
     }

@@ -62,7 +62,7 @@ public class CommandUpdateInventory implements CommandExecutor, TabCompleter
       if (!hideOutput)
       {
         MessageUtil.info(sender, ComponentUtil.translate("%s의 인벤토리를 업데이트 하였습니다", players));
-        MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), ComponentUtil.translate("[%s: %s의 인벤토리를 업데이트 하였습니다]", sender, players));
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), "%s의 인벤토리를 업데이트 하였습니다", players);
       }
     }
     else

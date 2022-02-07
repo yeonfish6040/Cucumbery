@@ -61,8 +61,8 @@ public class CommandClear2 extends CommandBase
     }
     else
     {
-      MessageUtil.info(sender, ComponentUtil.translate("%s에게서 아이템 %s개를 제거하였습니다", players, total));
-      MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), ComponentUtil.translate("[%s: %s에게서 아이템 %s개를 제거하였습니다]",  sender, players, total));
+      MessageUtil.info(sender, ComponentUtil.translate("commands.clear.success.single", players, total));
+      MessageUtil.sendAdminMessage(sender, new ArrayList<>(players), "commands.clear.success.single", players, total);
     }
   }
 

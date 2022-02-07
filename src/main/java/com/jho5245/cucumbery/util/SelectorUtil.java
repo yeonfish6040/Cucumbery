@@ -518,7 +518,6 @@ public class SelectorUtil
       {
         return "argument.entity.options.limit.toosmall";
       }
-
       if (msg.startsWith("Invalid name or UUID"))
       {
         return "argument.entity.invalid";
@@ -527,7 +526,6 @@ public class SelectorUtil
       {
         return "argument.uuid.invalid";
       }
-
       if (msg.startsWith("Expected value or range of values"))
       {
         return "argument.range.empty";
