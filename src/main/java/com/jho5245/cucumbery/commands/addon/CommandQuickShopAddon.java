@@ -220,7 +220,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
             item.setAmount(amount);
           }
           ((Player) sender).getInventory().addItem(item);
-          MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점의 아이템을 &e" + amount + "개&r 지급받았습니다. (&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)");
+          MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점의 아이템을 &e" + amount + "개&r 지급받았습니다 (&e" + ItemNameUtil.itemName(shop.getItem()) + "&r)");
         }
         case "info" -> {
           if (args.length == 5)

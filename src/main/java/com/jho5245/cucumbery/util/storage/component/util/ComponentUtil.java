@@ -442,13 +442,12 @@ public class ComponentUtil
         }
         else if (string.startsWith("player:"))
         {
-          Component concat = Component.empty();
-          Player player2 = SelectorUtil.getPlayer(player, string.substring(7), false);
+          Player player2 = SelectorUtil.getPlayer(player, string.substring(""), false);
           if (player2 != null)
           {
-            concat = create(player2);
+            Component concat = create(player2);
+            component = component.append(concat);
           }
-          component = component.append(concat);
         }
         else if (string.startsWith("players:"))
         {
@@ -531,7 +530,7 @@ public class ComponentUtil
           }
           else
           {
-            component = component.append(translate("&c알 수 없는 월드입니다. (%s)", string.substring(6)));
+            component = component.append(translate("&c알 수 없는 월드입니다 (%s)", string.substring(6)));
           }
         }
         else
@@ -542,7 +541,7 @@ public class ComponentUtil
             Component concat = GsonComponentSerializer.gson().deserialize(string);
             component = component.append(ComponentUtil.create(player, concat));
           }
-          catch (Error | Exception e)
+          catch (Throwable e)
           {
             Component concat = ComponentUtil.create2(string, n2s);
             component = component.append(ComponentUtil.create(player, concat));

@@ -488,7 +488,7 @@ public class CommandItemTag implements CommandExecutor
               String input = MessageUtil.listToString(" ", 2, args.length, args);
               try
               {
-                NBTContainer nbtContainer = new NBTContainer(input);
+                NBTContainer nbtContainer = new NBTContainer("{" + input + "}");
                 nbtItem.mergeCompound(nbtContainer);
                 playerInventory.setItemInMainHand(nbtItem.getItem());
                 Method.updateInventory(player);

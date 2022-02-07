@@ -103,7 +103,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                     SenderComponentUtil.senderComponent(sender),
                     "이 당신의 HP바를 &e" +
                     Constant.Sosu15.format(value) +
-                    "&r으로 설정하였습니다. (&eHP&r : &e" +
+                    "&r으로 설정하였습니다 (&eHP&r : &e" +
                     hpStr +
                     "&r / &e" +
                     mhpStr +
@@ -116,7 +116,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                   targetName +
                   "&r의 HP바를 &e" +
                   Constant.Sosu15.format(value) +
-                  "&r으로 설정하였습니다. (&eHP&r : &e" +
+                  "&r으로 설정하였습니다 (&eHP&r : &e" +
                   hpStr +
                   "&r / &e" +
                   mhpStr +
@@ -139,7 +139,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                     SenderComponentUtil.senderComponent(sender),
                     "이 당신의 HP바를 &e" +
                     Constant.Sosu15.format(value) +
-                    "&r만큼 증가시켰습니다. (&eHP&r : &e" +
+                    "&r만큼 증가시켰습니다 (&eHP&r : &e" +
                     hpStr +
                     "&r / &e" +
                     mhpStr +
@@ -152,7 +152,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                   targetName +
                   "&r의 HP바를 &e" +
                   Constant.Sosu15.format(value) +
-                  "&r만큼 증가시켰습니다. (&eHP&r : &e" +
+                  "&r만큼 증가시켰습니다 (&eHP&r : &e" +
                   hpStr +
                   "&r / &e" +
                   mhpStr +
@@ -174,7 +174,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
         {
           if (!hideOutput)
           {
-            MessageUtil.sendWarn(sender, "차감시킨 HP바의 양이 &e" + targetName + "&r의 HP바의 양보다 적습니다. (&e손해 본 값&r : &e" + Constant.Sosu2.format(1D + value - shp) + "&r)");
+            MessageUtil.sendWarn(sender, "차감시킨 HP바의 양이 &e" + targetName + "&r의 HP바의 양보다 적습니다 (&e손해 본 값&r : &e" + Constant.Sosu2.format(1D + value - shp) + "&r)");
           }
           target.setHealthScale(1D);
           UserData.HEALTH_BAR.set(uuid, 1d);
@@ -186,7 +186,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                       SenderComponentUtil.senderComponent(sender),
                       "이 당신의 HP바를 &e" +
                       Constant.Sosu15.format(shp - 1D) +
-                      "&r만큼 차감시켰습니다. (&eHP&r : &e" +
+                      "&r만큼 차감시켰습니다 (&eHP&r : &e" +
                       hpStr +
                       "&r / &e" +
                       mhpStr +
@@ -199,7 +199,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                     targetName +
                     "&r의 HP바를 &e" +
                     Constant.Sosu15.format(shp - 1D) +
-                    "&r만큼 차감시켰습니다. (&eHP&r : &e" +
+                    "&r만큼 차감시켰습니다 (&eHP&r : &e" +
                     hpStr +
                     "&r / &e" +
                     mhpStr +
@@ -219,7 +219,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                       SenderComponentUtil.senderComponent(sender),
                       "이 당신의 HP바를 &e" +
                       Constant.Sosu15.format(value) +
-                      "&r만큼 차감시켰습니다. (&eHP&r : &e" +
+                      "&r만큼 차감시켰습니다 (&eHP&r : &e" +
                       hpStr +
                       "&r / &e" +
                       mhpStr +
@@ -232,7 +232,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                     targetName +
                     "&r의 HP바를 &e" +
                     Constant.Sosu15.format(value) +
-                    "&r만큼 차감시켰습니다. (&eHP&r : &e" +
+                    "&r만큼 차감시켰습니다 (&eHP&r : &e" +
                     hpStr +
                     "&r / &e" +
                     mhpStr +

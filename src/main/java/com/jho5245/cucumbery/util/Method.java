@@ -2619,7 +2619,7 @@ public class Method extends SoundPlay
       for (String str : list)
       {
         final boolean contains = str.toLowerCase().replace(" ", "").replace("_", "").contains(replace);
-        if ((length <= 2 && str.toLowerCase().startsWith(replace)) || (length >= 3 && contains))
+        if ((length <= 2 && str.replace(Constant.TAB_COMPLETER_QUOTE_ESCAPE, "").toLowerCase().startsWith(replace)) || (length >= 3 && contains))
         {
           returnValue.add(str);
         }
@@ -3282,7 +3282,7 @@ public class Method extends SoundPlay
         if (currentTime < nextAvailable)
         {
           playWarnSound(player);
-          MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN, ComponentUtil.translate("아직 %s을(를) 우클릭 사용할 수 없습니다. (남은 시간 : %s)", item, "&e" + remainTime)));
+          MessageUtil.sendMessage(player, ComponentUtil.create(Prefix.INFO_WARN, ComponentUtil.translate("아직 %s을(를) 우클릭 사용할 수 없습니다 (남은 시간 : %s)", item, "&e" + remainTime)));
           return true;
         }
         if (configPlayerCooldown == null)

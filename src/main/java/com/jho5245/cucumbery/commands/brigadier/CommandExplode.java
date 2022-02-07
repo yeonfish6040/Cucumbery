@@ -136,7 +136,7 @@ public class CommandExplode extends CommandBase
     if (!hideOutput)
     {
       Component explosionComponent = explosionComponent(power, setFire, breakBlocks, source);
-      MessageUtil.info(sender, ComponentUtil.translate("%s에 %s을(를) 일으켰습니다", location, explosionComponent));
+      MessageUtil.info(sender,"%s에 %s을(를) 일으켰습니다", location, explosionComponent);
       MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: %s에 %s을(를) 일으켰습니다]", sender, location, explosionComponent));
     }
     if (!world.createExplosion(location, power, setFire, breakBlocks, source))

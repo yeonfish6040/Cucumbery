@@ -104,13 +104,13 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
           if (CustomEffectManager.hasEffects(target))
           {
             CustomEffectManager.clearEffects(target);
-            MessageUtil.info(sender, "모든 효과를 제거했습니다");
-            MessageUtil.sendAdminMessage(sender, null, ComponentUtil.translate("[%s: 모든 효과를 제거했습니다]", sender));
+            MessageUtil.info(sender, "commands.effect.clear.everything.success.single", sender);
+            MessageUtil.sendAdminMessage(sender, null, "commands.effect.clear.everything.success.single", sender);
             return true;
           }
           else
           {
-            MessageUtil.sendError(sender, "가지고 있는 효과가 없습니다");
+            MessageUtil.sendError(sender, "commands.effect.clear.everything.failed");
             return failure;
           }
         }
@@ -411,9 +411,9 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       {
         List<Audience> infoTarget = new ArrayList<>(successEntities);
         infoTarget.remove(sender);
-        MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다", successEntities, customEffect));
-        MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신에게 %s 효과를 적용했습니다", sender, customEffect));
-        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s에게 %s 효과를 적용했습니다]", sender, successEntities, customEffect));
+        MessageUtil.info(sender, "commands.effect.give.success.single", customEffect, successEntities);
+        MessageUtil.info(infoTarget, "%s이(가) 당신에게 %s 효과를 적용했습니다", sender, customEffect);
+        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), "commands.effect.give.success.single", customEffect, successEntities);
       }
     }
     return !successEntitiesIsEmpty;
@@ -449,13 +449,11 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       {
         if (all)
         {
-          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.translate("%s은(는) 효과를 가지고 있지 않습니다", failureEntities));
+          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,"%s에게 제거할 호과가 없습니다", failureEntities);
         }
         else
         {
-          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                  ComponentUtil.translate("%s은(는) %s 효과를 가지고 있지 않습니다", failureEntities, customEffectType));
+          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,"%s에게 %s 효과가 없습니다", failureEntities, customEffectType);
         }
       }
       if (!successEntitiesIsEmpty)
@@ -464,15 +462,15 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         infoTarget.remove(sender);
         if (all)
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 모든 효과를 제거했습니다", successEntities));
-          MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신의 모든 효과를 제거했습니다", sender));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 모든 효과를 제거했습니다]", sender, successEntities));
+          MessageUtil.info(sender, "commands.effect.clear.everything.success.single", successEntities);
+          MessageUtil.info(infoTarget, "%s이(가) 당신의 모든 효과를 제거했습니다", sender);
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), "commands.effect.clear.everything.success.single", sender, successEntities);
         }
         else
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 %s 효과를 제거했습니다", successEntities, customEffectType));
-          MessageUtil.info(infoTarget, ComponentUtil.translate("%s이(가) 당신의 %s 효과를 제거했습니다", sender, customEffectType));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), ComponentUtil.translate("[%s: %s의 %s 효과를 제거했습니다]", sender, successEntities, customEffectType));
+          MessageUtil.info(sender, "commands.effect.clear.specific.success.single", customEffectType, successEntities);
+          MessageUtil.info(infoTarget, "%s이(가) 당신의 %s 효과를 제거했습니다", sender, customEffectType);
+          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), "commands.effect.clear.specific.success.single", sender, customEffectType, successEntities);
         }
       }
     }

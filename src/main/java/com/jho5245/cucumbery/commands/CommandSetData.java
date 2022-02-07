@@ -136,7 +136,7 @@ public class CommandSetData implements CommandExecutor, TabCompleter
             if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
             {
               player.getInventory().setItemInMainHand(item);
-              MessageUtil.sendWarn(player, "존재할 수 없는 물질이여서 변경이 취소되었습니다. (&e" + ItemNameUtil.itemName(type) + "&r)");
+              MessageUtil.sendWarn(player, "존재할 수 없는 물질이여서 변경이 취소되었습니다 (&e" + ItemNameUtil.itemName(type) + "&r)");
               return true;
             }
             if (ItemStackUtil.itemExists(item))

@@ -178,8 +178,12 @@ public class PlayerItemConsume implements Listener
       }
     }
 
-    this.customEffect(event);
     this.consumeItemUsage(event, player, item, player.isSneaking());
+    if (event.isCancelled())
+    {
+      return;
+    }
+    this.customEffect(event);
   }
 
   private void customEffect(PlayerItemConsumeEvent event)
@@ -299,7 +303,7 @@ public class PlayerItemConsume implements Listener
         String remainTime = "&e" + Method.timeFormatMilli(nextAvailable - currentTime);
         if (currentTime < nextAvailable)
         {
-          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) " + (isSneaking ? "웅크리고 " : "") + "섭취할 수 없습니다. (남은 시간 : %s)", item, remainTime));
+          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) " + (isSneaking ? "웅크리고 " : "") + "섭취할 수 없습니다 (남은 시간 : %s)", item, remainTime));
           event.setCancelled(true);
           return;
         }

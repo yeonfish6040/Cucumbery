@@ -235,7 +235,7 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
   }
 
   /**
-   * 마인크래프트의 하루의 시각을 가져옵니다. (0 = 오전 6시, 6000 = 오후 12시, 12000 = 오후 6시, 18000 = 오전 12시)
+   * 마인크래프트의 하루의 시각을 가져옵니다 (0 = 오전 6시, 6000 = 오후 12시, 12000 = 오후 6시, 18000 = 오전 12시)
    *
    * @param t 현재 시각
    * @return 시각 표시

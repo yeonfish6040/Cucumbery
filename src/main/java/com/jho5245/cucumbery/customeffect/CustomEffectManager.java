@@ -19,6 +19,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -194,6 +195,15 @@ public class CustomEffectManager
             {
               attributeInstance.removeModifier(attributeModifier);
             }
+            // update max health
+            if (attribute == Attribute.GENERIC_MAX_HEALTH && entity instanceof Damageable damageable)
+            {
+              double maxHealth = attributeInstance.getValue();
+              if (damageable.getHealth() > maxHealth)
+              {
+                damageable.setHealth(maxHealth);
+              }
+            }
           }
         }
         return true;
@@ -235,6 +245,15 @@ public class CustomEffectManager
             {
               attributeInstance.removeModifier(attributeModifier);
             }
+            // update max health
+            if (attribute == Attribute.GENERIC_MAX_HEALTH && entity instanceof Damageable damageable)
+            {
+              double maxHealth = attributeInstance.getValue();
+              if (damageable.getHealth() > maxHealth)
+              {
+                damageable.setHealth(maxHealth);
+              }
+            }
           }
         }
         return true;
@@ -272,6 +291,15 @@ public class CustomEffectManager
           if (attributeModifier != null)
           {
             attributeInstance.removeModifier(attributeModifier);
+          }
+          // update max health
+          if (attribute == Attribute.GENERIC_MAX_HEALTH && entity instanceof Damageable damageable)
+          {
+            double maxHealth = attributeInstance.getValue();
+            if (damageable.getHealth() > maxHealth)
+            {
+              damageable.setHealth(maxHealth);
+            }
           }
         }
       }
@@ -355,15 +383,24 @@ public class CustomEffectManager
     {
       for (Attribute attribute : Attribute.values())
       {
-        AttributeInstance instance = attributable.getAttribute(attribute);
-        if (instance != null)
+        AttributeInstance attributeInstance = attributable.getAttribute(attribute);
+        if (attributeInstance != null)
         {
-          Collection<AttributeModifier> modifiers = new ArrayList<>(instance.getModifiers());
+          Collection<AttributeModifier> modifiers = new ArrayList<>(attributeInstance.getModifiers());
           for (AttributeModifier modifier : modifiers)
           {
             if (modifier.getName().startsWith("cucumbery"))
             {
-              instance.removeModifier(modifier);
+              attributeInstance.removeModifier(modifier);
+            }
+          }
+          // update max health
+          if (attribute == Attribute.GENERIC_MAX_HEALTH && entity instanceof Damageable damageable)
+          {
+            double maxHealth = attributeInstance.getValue();
+            if (damageable.getHealth() > maxHealth)
+            {
+              damageable.setHealth(maxHealth);
             }
           }
         }

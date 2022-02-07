@@ -13,6 +13,7 @@ import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -56,6 +57,15 @@ public class EntityCustomEffectRemove implements Listener
         if (attributeModifier != null)
         {
           attributeInstance.removeModifier(attributeModifier);
+        }
+        // update max health
+        if (attribute == Attribute.GENERIC_MAX_HEALTH && entity instanceof Damageable damageable)
+        {
+          double maxHealth = attributeInstance.getValue();
+          if (damageable.getHealth() > maxHealth)
+          {
+            damageable.setHealth(maxHealth);
+          }
         }
       }
     }

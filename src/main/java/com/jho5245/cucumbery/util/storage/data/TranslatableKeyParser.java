@@ -74,9 +74,7 @@ public class TranslatableKeyParser
     if (potionEffectType.equals(PotionEffectType.DAMAGE_RESISTANCE))
       return "effect.minecraft.resistance";
     if (potionEffectType.equals(PotionEffectType.FAST_DIGGING))
-    {
       return "effect.minecraft.haste";
-    }
     if (potionEffectType.equals(PotionEffectType.HARM))
       return "effect.minecraft.instant_damage";
     if (potionEffectType.equals(PotionEffectType.HEAL))

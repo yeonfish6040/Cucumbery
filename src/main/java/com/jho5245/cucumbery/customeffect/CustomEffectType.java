@@ -98,7 +98,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   /**
    * 정지
    */
-  STOP(100,false, true, true),
+  STOP(100, false, true, true),
   /**
    * 인벤토리 보호
    */
@@ -110,11 +110,11 @@ public enum CustomEffectType implements Translatable, EnumHideable
   /**
    * 인싸
    */
-  INSIDER(9,true, true, true),
+  INSIDER(9, true, true, true),
   /**
    * 아싸
    */
-  OUTSIDER(9,true, true, true),
+  OUTSIDER(9, true, true, true),
   /**
    * 콩의 저주 콩의 저주
    */
@@ -190,7 +190,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   /**
    * 똥손
    */
-  IDIOT_SHOOTER(19,true, true, true),
+  IDIOT_SHOOTER(19, true, true, true),
   /**
    * 디버그 염탐
    */
@@ -198,7 +198,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   /**
    * 즉시 큐컴버리 업데이트
    */
-  CUCUMBERY_UPDATER(1, true, true, false),
+  CUCUMBERY_UPDATER(1),
   /**
    * 아무것도 아님
    */
@@ -268,6 +268,38 @@ public enum CustomEffectType implements Translatable, EnumHideable
   HEALTH_INCREASE(99),
   CONTINUAL_SPECTATING(true, true, false),
   TRUE_INVISIBILITY,
+  MINECRAFT_SPEED(255),
+  MINECRAFT_SLOWNESS(255, true),
+  MINECRAFT_HASTE(255),
+  MINECRAFT_MINING_FATIGUE(255, true),
+  MINECRAFT_STRENGTH(255),
+  MINECRAFT_WEAKNESS(255, true),
+  MINECRAFT_INSTANT_DAMAGE(255, true),
+  MINECRAFT_INSTANT_HEAL(255),
+  MINECRAFT_JUMP_BOOST(255),
+  MINECRAFT_NAUSEA(255, true),
+  MINECRAFT_REGENERATION(255),
+  MINECRAFT_RESISTANCE(255),
+  MINECRAFT_FIRE_RESISTANCE(255),
+  MINECRAFT_WATER_BREATHING(255),
+  MINECRAFT_INVISIBILITY(255),
+  MINECRAFT_BLINDNESS(255, true),
+  MINECRAFT_NIGHT_VISION(255),
+  MINECRAFT_HUNGER(255, true),
+  MINECRAFT_POISON(255, true),
+  MINECRAFT_WITHER(255, true),
+  MINECRAFT_HEALTH_BOOST(255),
+  MINECRAFT_ABSORPTION(255),
+  MINECRAFT_SATURATION(255),
+  MINECRAFT_GLOWING(255, true),
+  MINECRAFT_LEVITATION(255, true),
+  MINECRAFT_SLOW_FALLING(255),
+  MINECRAFT_LUCK(255),
+  MINECRAFT_UNLUCK(255, true),
+  MINECRAFT_CONDUIT_POWER(255),
+  MINECRAFT_DOLPHINS_GRACE(255),
+  MINECRAFT_BAD_OMEN(255, true),
+  MINECRAFT_HERO_OF_THE_VILLAGE(255),
   ;
 
   private final int maxAmplifier;
@@ -381,6 +413,38 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case HEALTH_INCREASE -> "HP 증가";
               case CONTINUAL_SPECTATING -> "관전 지속";
               case TRUE_INVISIBILITY -> "찐 투명화";
+              case MINECRAFT_SPEED -> TranslatableKeyParser.getKey(PotionEffectType.SPEED);
+              case MINECRAFT_SLOWNESS -> TranslatableKeyParser.getKey(PotionEffectType.SLOW);
+              case MINECRAFT_HASTE -> TranslatableKeyParser.getKey(PotionEffectType.FAST_DIGGING);
+              case MINECRAFT_MINING_FATIGUE -> TranslatableKeyParser.getKey(PotionEffectType.SLOW_DIGGING);
+              case MINECRAFT_STRENGTH -> TranslatableKeyParser.getKey(PotionEffectType.INCREASE_DAMAGE);
+              case MINECRAFT_WEAKNESS -> TranslatableKeyParser.getKey(PotionEffectType.WEAKNESS);
+              case MINECRAFT_INSTANT_DAMAGE -> TranslatableKeyParser.getKey(PotionEffectType.HARM);
+              case MINECRAFT_INSTANT_HEAL -> TranslatableKeyParser.getKey(PotionEffectType.HEAL);
+              case MINECRAFT_JUMP_BOOST -> TranslatableKeyParser.getKey(PotionEffectType.JUMP);
+              case MINECRAFT_NAUSEA -> TranslatableKeyParser.getKey(PotionEffectType.CONFUSION);
+              case MINECRAFT_REGENERATION -> TranslatableKeyParser.getKey(PotionEffectType.REGENERATION);
+              case MINECRAFT_RESISTANCE -> TranslatableKeyParser.getKey(PotionEffectType.DAMAGE_RESISTANCE);
+              case MINECRAFT_FIRE_RESISTANCE -> TranslatableKeyParser.getKey(PotionEffectType.FIRE_RESISTANCE);
+              case MINECRAFT_WATER_BREATHING -> TranslatableKeyParser.getKey(PotionEffectType.WATER_BREATHING);
+              case MINECRAFT_BLINDNESS -> TranslatableKeyParser.getKey(PotionEffectType.BLINDNESS);
+              case MINECRAFT_INVISIBILITY -> TranslatableKeyParser.getKey(PotionEffectType.INVISIBILITY);
+              case MINECRAFT_NIGHT_VISION -> TranslatableKeyParser.getKey(PotionEffectType.NIGHT_VISION);
+              case MINECRAFT_HUNGER -> TranslatableKeyParser.getKey(PotionEffectType.HUNGER);
+              case MINECRAFT_POISON -> TranslatableKeyParser.getKey(PotionEffectType.POISON);
+              case MINECRAFT_WITHER -> TranslatableKeyParser.getKey(PotionEffectType.WITHER);
+              case MINECRAFT_HEALTH_BOOST -> TranslatableKeyParser.getKey(PotionEffectType.HEALTH_BOOST);
+              case MINECRAFT_ABSORPTION -> TranslatableKeyParser.getKey(PotionEffectType.ABSORPTION);
+              case MINECRAFT_SATURATION -> TranslatableKeyParser.getKey(PotionEffectType.SATURATION);
+              case MINECRAFT_LEVITATION -> TranslatableKeyParser.getKey(PotionEffectType.LEVITATION);
+              case MINECRAFT_SLOW_FALLING -> TranslatableKeyParser.getKey(PotionEffectType.SLOW_FALLING);
+              case MINECRAFT_GLOWING -> TranslatableKeyParser.getKey(PotionEffectType.GLOWING);
+              case MINECRAFT_LUCK -> TranslatableKeyParser.getKey(PotionEffectType.LUCK);
+              case MINECRAFT_UNLUCK -> TranslatableKeyParser.getKey(PotionEffectType.UNLUCK);
+              case MINECRAFT_CONDUIT_POWER -> TranslatableKeyParser.getKey(PotionEffectType.CONDUIT_POWER);
+              case MINECRAFT_DOLPHINS_GRACE -> TranslatableKeyParser.getKey(PotionEffectType.DOLPHINS_GRACE);
+              case MINECRAFT_BAD_OMEN -> TranslatableKeyParser.getKey(PotionEffectType.BAD_OMEN);
+              case MINECRAFT_HERO_OF_THE_VILLAGE -> TranslatableKeyParser.getKey(PotionEffectType.HERO_OF_THE_VILLAGE);
             };
   }
 
@@ -409,133 +473,156 @@ public enum CustomEffectType implements Translatable, EnumHideable
   public Component getDescription()
   {
     return switch (this)
-    {
-      case MUTE -> ComponentUtil.translate("채팅을 할 수 없는 상태입니다");
-      case CURSE_OF_MUSHROOM -> ComponentUtil.translate("농도 레벨 * 0.1% 확률로 5초마다 인벤토리에 버섯이 들어옵니다");
-      case INVINCIBLE -> ComponentUtil.translate("어떠한 형태의 피해도 받지 않습니다");
-      case BUFF_FREEZE -> ComponentUtil.translate("사망시 버프를 소모하여 일부 버프를 제외한 버프가 사라지지 않습니다");
-      case CONFUSION -> ComponentUtil.translate("방향키가 반대로 작동합니다");
-      case RESURRECTION -> ComponentUtil.translate("죽음에 이르는 피해를 입었을 때, 죽지 않고")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("버프를 소모하여 2초간 무적이 됩니다"));
-      case RESURRECTION_INVINCIBLE -> ComponentUtil.translate("2초간 무적이 됩니다");
-      case RESURRECTION_COOLDOWN -> ComponentUtil.translate("%s 버프를 받을 수 없는 상태입니다", CustomEffectType.RESURRECTION);
-      case FROST_WALKER -> ComponentUtil.translate("마그마 블록 위를 걸어도 피해를 입지 않습니다");
-      case FEATHER_FALLING -> ComponentUtil.translate("낙하 피해를 받기 위한 최소 높이가 증가하고,")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("낙하 피해량이 감소합니다"));
-      case BLESS_OF_SANS, SHARPNESS -> ComponentUtil.translate("근거리 공격 피해량이 증가합니다");
-      case METASASIS -> ComponentUtil.translate("뭐");
-      case PARROTS_CHEER -> ComponentUtil.translate("HP가 5 이하일 때 15 블록 이내에 자신이 길들인 앵무새가")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("있으면 받는 피해가 45% 감소하고 주는 피해량이 10% 증가합니다"));
-      case SMITE -> ComponentUtil.translate("언데드 개체에게 주는 근거리 공격 피해량이 증가합니다");
-      case BANE_OF_ARTHROPODS ->
-              ComponentUtil.translate("절지동물류 개체에게 주는 근거리 공격 피해량이 증가하고,")
+            {
+              case MUTE -> ComponentUtil.translate("채팅을 할 수 없는 상태입니다");
+              case CURSE_OF_MUSHROOM -> ComponentUtil.translate("농도 레벨 * 0.1% 확률로 5초마다 인벤토리에 버섯이 들어옵니다");
+              case INVINCIBLE -> ComponentUtil.translate("어떠한 형태의 피해도 받지 않습니다");
+              case BUFF_FREEZE -> ComponentUtil.translate("사망시 버프를 소모하여 일부 버프를 제외한 버프가 사라지지 않습니다");
+              case CONFUSION -> ComponentUtil.translate("방향키가 반대로 작동합니다");
+              case RESURRECTION -> ComponentUtil.translate("죽음에 이르는 피해를 입었을 때, 죽지 않고")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("버프를 소모하여 2초간 무적이 됩니다"));
+              case RESURRECTION_INVINCIBLE -> ComponentUtil.translate("2초간 무적이 됩니다");
+              case RESURRECTION_COOLDOWN -> ComponentUtil.translate("%s 버프를 받을 수 없는 상태입니다", CustomEffectType.RESURRECTION);
+              case FROST_WALKER -> ComponentUtil.translate("마그마 블록 위를 걸어도 피해를 입지 않습니다");
+              case FEATHER_FALLING -> ComponentUtil.translate("낙하 피해를 받기 위한 최소 높이가 증가하고,")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("낙하 피해량이 감소합니다"));
+              case BLESS_OF_SANS, SHARPNESS -> ComponentUtil.translate("근거리 공격 피해량이 증가합니다");
+              case METASASIS -> ComponentUtil.translate("뭐");
+              case PARROTS_CHEER -> ComponentUtil.translate("HP가 5 이하일 때 15 블록 이내에 자신이 길들인 앵무새가")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("있으면 받는 피해가 45% 감소하고 주는 피해량이 10% 증가합니다"));
+              case SMITE -> ComponentUtil.translate("언데드 개체에게 주는 근거리 공격 피해량이 증가합니다");
+              case BANE_OF_ARTHROPODS -> ComponentUtil.translate("절지동물류 개체에게 주는 근거리 공격 피해량이 증가하고,")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("%s 효과를 지급합니다", ComponentUtil.translate("effect.minecraft.slowness")));
-      case STOP ->
-              ComponentUtil.translate("모든 행동을 할 수 없는 상태입니다")
+              case STOP -> ComponentUtil.translate("모든 행동을 할 수 없는 상태입니다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("좌우이동, 웅크리기를 할 때마다 지속 시간이 6초씩 감소합니다"));
-      case KEEP_INVENTORY -> ComponentUtil.translate("죽어도 아이템을 떨어뜨리지 않습니다");
-      case DO_NOT_PICKUP_BUT_THROW_IT -> ComponentUtil.translate("아이템을 줍는 대신 던집니다")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("농도 레벨이 높을 수록 더 멀리 던집니다"));
-      case INSIDER ->
-              ComponentUtil.translate("채팅이 여러번 입력되고, 죽을 때 모든 플레이어에게")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("타이틀로 자신의 데스 메시지를 띄워줍니다"));
-      case OUTSIDER ->
-              ComponentUtil.translate("일정 확률로 채팅 메시지가 보내지지 않고")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("입장 메시지, 퇴장 메시지가 뜨지 않습니다"));
-      case CURSE_OF_BEANS ->
-              ComponentUtil.translate("뭔가.. 자꾸.. 2번씩 일어난다")
+              case KEEP_INVENTORY -> ComponentUtil.translate("죽어도 아이템을 떨어뜨리지 않습니다");
+              case DO_NOT_PICKUP_BUT_THROW_IT -> ComponentUtil.translate("아이템을 줍는 대신 던집니다")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("농도 레벨이 높을 수록 더 멀리 던집니다"));
+              case INSIDER -> ComponentUtil.translate("채팅이 여러번 입력되고, 죽을 때 모든 플레이어에게")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("타이틀로 자신의 데스 메시지를 띄워줍니다"));
+              case OUTSIDER -> ComponentUtil.translate("일정 확률로 채팅 메시지가 보내지지 않고")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("입장 메시지, 퇴장 메시지가 뜨지 않습니다"));
+              case CURSE_OF_BEANS -> ComponentUtil.translate("뭔가.. 자꾸.. 2번씩 일어난다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("뭔가.. 자꾸.. 2번씩 일어난다"));
-      case SILK_TOUCH ->
-              ComponentUtil.translate("블록을 캐면 섬세한 손길 마법과")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("동일하게 아이템을 얻을 수 있습니다"));
-      case TELEKINESIS ->
-              ComponentUtil.translate("블록을 캐거나 적을 잡았을 때 드롭하는")
+              case SILK_TOUCH -> ComponentUtil.translate("블록을 캐면 섬세한 손길 마법과")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("동일하게 아이템을 얻을 수 있습니다"));
+              case TELEKINESIS -> ComponentUtil.translate("블록을 캐거나 적을 잡았을 때 드롭하는")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("아이템과 경험치가 즉시 인벤토리에 들어옵니다"));
-      case SMELTING_TOUCH ->
-              ComponentUtil.translate("블록을 캐거나 적을 잡았을 때 드롭하는")
+              case SMELTING_TOUCH -> ComponentUtil.translate("블록을 캐거나 적을 잡았을 때 드롭하는")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("아이템을 제련된 형태로 바꿔줍니다"));
-      case CURSE_OF_INVENTORY -> ComponentUtil.translate("죽으면 가지고 있는 모든 아이템을 떨어뜨립니다");
-      case CURSE_OF_CREATIVITY -> ComponentUtil.translate("블록을 설치하거나 파괴할 수 없습니다");
-      case CURSE_OF_CREATIVITY_BREAK -> ComponentUtil.translate("블록을 파괴할 수 없습니다");
-      case CURSE_OF_CREATIVITY_PLACE -> ComponentUtil.translate("블록을 설치할 수 없습니다");
-      case CURSE_OF_CONSUMPTION -> ComponentUtil.translate("음식이나 포션을 사용할 수 없습니다");
-      case CURSE_OF_PICKUP -> ComponentUtil.translate("아이템을 주울 수 없습니다");
-      case CURSE_OF_DROP -> ComponentUtil.translate("아이템을 버릴 수 없습니다");
-      case CURSE_OF_JUMPING -> ComponentUtil.translate("점프를 할 수 없습니다");
-      case KINETIC_RESISTANCE ->
-              ComponentUtil.translate("겉날개 활강 중 블록에 부딪혀서 받는 피해량이 감소됩니다")
+              case CURSE_OF_INVENTORY -> ComponentUtil.translate("죽으면 가지고 있는 모든 아이템을 떨어뜨립니다");
+              case CURSE_OF_CREATIVITY -> ComponentUtil.translate("블록을 설치하거나 파괴할 수 없습니다");
+              case CURSE_OF_CREATIVITY_BREAK -> ComponentUtil.translate("블록을 파괴할 수 없습니다");
+              case CURSE_OF_CREATIVITY_PLACE -> ComponentUtil.translate("블록을 설치할 수 없습니다");
+              case CURSE_OF_CONSUMPTION -> ComponentUtil.translate("음식이나 포션을 사용할 수 없습니다");
+              case CURSE_OF_PICKUP -> ComponentUtil.translate("아이템을 주울 수 없습니다");
+              case CURSE_OF_DROP -> ComponentUtil.translate("아이템을 버릴 수 없습니다");
+              case CURSE_OF_JUMPING -> ComponentUtil.translate("점프를 할 수 없습니다");
+              case KINETIC_RESISTANCE -> ComponentUtil.translate("겉날개 활강 중 블록에 부딪혀서 받는 피해량이 감소됩니다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("낙하 피해량은 감소되지 않습니다"));
-      case ELYTRA_BOOSTER -> ComponentUtil.translate("겉날개 활강 중 폭죽으로 가속할 때")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("일정 확률로 폭죽을 소비하지 않습니다"));
-      case LEVITATION_RESISTANCE -> ComponentUtil.translate("셜커에게 공격받아도 일정 확률로")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("공중 부양 상태 효과가 적용되지 않습니다"));
-      case CHEESE_EXPERIMENT -> ComponentUtil.translate("우유를 마시면 효과가 사라지고 멀미가 30초간 지속됩니다")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("또한, 80% 확률로 허기가 30초 지속됩니다"));
-      case IDIOT_SHOOTER -> ComponentUtil.translate("발사체가 이상한 방향으로 날아갑니다");
-      case DEBUG_WATCHER -> ComponentUtil.translate("플러그인 디버그 메시지를 볼 수 있게 됩니다");
-      case CUCUMBERY_UPDATER -> ComponentUtil.translate("큐컴버리 플러그인을 업데이트합니다");
-      case NOTHING -> ComponentUtil.translate("놀랍게도 아무런 효과도 지니고 있지 않습니다");
-      case WHAT_TO_DO -> ComponentUtil.translate("너구리가 일을 했으면 좋겠군요");
-      case EXPERIENCE_INTOLERANCE -> ComponentUtil.translate("경험치를 획득하는 양만큼 오히려 경험치를 잃습니다");
-      case TROLL_INVENTORY_PROPERTY, TROLL_INVENTORY_PROPERTY_MIN -> ComponentUtil.translate("인벤토리의 숫자가 자꾸 멋대로 바뀝니다")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("잘만 이용하면 오히려 더 좋을 수도..?"));
-      case MUNDANE -> ComponentUtil.translate("평범하다...");
-      case AWKWARD -> ComponentUtil.translate("어... 그게.. 어색? 해 진다? 라고 생각? 합니다");
-      case THICK -> ComponentUtil.translate("채팅이 진해집니다");
-      case UNCRAFTABLE -> ComponentUtil.translate("아이템을 제작할 수 없습니다");
-      case COOLDOWN_CHAT -> ComponentUtil.translate("채팅 쿨타임동안은 채팅하실 수 없습니다");
-      case COOLDOWN_ITEM_MEGAPHONE -> ComponentUtil.translate("아이템 확성기 쿨타임동안은 아이템 확성기를 사용하실 수 없습니다");
-      case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 주는 피해량이 증가합니다");
-      case DARKNESS_TERROR -> ComponentUtil.translate("어두운거.. 무섭다..")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("%s 효과나 손에 빛을 내는 아이템 없이 어두운 곳에 가면 %s 효과가 걸립니다",
-                      Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.NIGHT_VISION), NamedTextColor.GREEN), DARKNESS_TERROR_ACTIVATED));
-      case DARKNESS_TERROR_ACTIVATED -> ComponentUtil.translate("너무 어둡습니다! 받는 피해량이 30% 증가하고 블록을 캘 때마다")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("%s 확률로 받는 피해량 증가에 영향을 받는 1의 피해를 입습니다", "&e5%"));
-      case DARKNESS_TERROR_RESISTANCE -> ComponentUtil.translate("%s 효과에 대한 내성이 생깁니다", DARKNESS_TERROR_ACTIVATED);
-      case DODGE -> ComponentUtil.translate("일정 확률로 공격을 회피합니다");
-      case NEWBIE_SHIELD -> ComponentUtil.translate("플레이 시간이 1시간 미만인 당신!")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("받는 피해량이 감소하고 주는 피해량이 증가합니다"))
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("플레이 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
-      case INVINCIBLE_PLUGIN_RELOAD -> ComponentUtil.translate("플러그인을 리도드하는 중입니다");
-      case INVINCIBLE_RESPAWN -> ComponentUtil.translate("리스폰 무적 상태입니다");
-      case HEROS_ECHO, HEROS_ECHO_OTHERS -> ComponentUtil.translate("최종 대미지가 5% 증가합니다");
-      case FANCY_SPOTLIGHT -> ComponentUtil.translate("화려한 조명이 나를 비추네~")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("주변에 충분히 밝은 블록이 있으면 %s와(과) %s이(가) 적용됩니다",
-                      Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN),  Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN)));
-      case FANCY_SPOTLIGHT_ACTIVATED -> ComponentUtil.translate("주변에 충분히 밝은 블록이 있어 %s와(과) %s이(가) 적용됩니다",
-              Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN),  Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN));
-      case WA_SANS -> ComponentUtil.translate("스켈레톤 유형의 개체에게 주는")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("피해량이 증가하고 받는 피해량이 감소합니다"));
-      case HEALTH_INCREASE -> ComponentUtil.translate("최대 HP가 증가합니다");
-      case CONTINUAL_SPECTATING -> ComponentUtil.translate("플레이어를 지속적으로 관전합니다")
-              .append(Component.text("\n"))
-              .append(ComponentUtil.translate("해당 플레이어가 재접속하거나 리스폰해도 자동으로 관전합니다"));
-      case TRUE_INVISIBILITY -> ComponentUtil.translate("말 그대로 완전히 다른 플레이어로부터 보이지 않습니다");
-      default -> Component.empty();
-    };
+              case ELYTRA_BOOSTER -> ComponentUtil.translate("겉날개 활강 중 폭죽으로 가속할 때")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("일정 확률로 폭죽을 소비하지 않습니다"));
+              case LEVITATION_RESISTANCE -> ComponentUtil.translate("셜커에게 공격받아도 일정 확률로")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("공중 부양 상태 효과가 적용되지 않습니다"));
+              case CHEESE_EXPERIMENT -> ComponentUtil.translate("우유를 마시면 효과가 사라지고 멀미가 30초간 지속됩니다")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("또한, 80% 확률로 허기가 30초 지속됩니다"));
+              case IDIOT_SHOOTER -> ComponentUtil.translate("발사체가 이상한 방향으로 날아갑니다");
+              case DEBUG_WATCHER -> ComponentUtil.translate("플러그인 디버그 메시지를 볼 수 있게 됩니다");
+              case CUCUMBERY_UPDATER -> ComponentUtil.translate("큐컴버리 플러그인을 업데이트합니다");
+              case NOTHING -> ComponentUtil.translate("놀랍게도 아무런 효과도 지니고 있지 않습니다");
+              case WHAT_TO_DO -> ComponentUtil.translate("너구리가 일을 했으면 좋겠군요");
+              case EXPERIENCE_INTOLERANCE -> ComponentUtil.translate("경험치를 획득하는 양만큼 오히려 경험치를 잃습니다");
+              case TROLL_INVENTORY_PROPERTY, TROLL_INVENTORY_PROPERTY_MIN -> ComponentUtil.translate("인벤토리의 숫자가 자꾸 멋대로 바뀝니다")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("잘만 이용하면 오히려 더 좋을 수도..?"));
+              case MUNDANE -> ComponentUtil.translate("평범하다...");
+              case AWKWARD -> ComponentUtil.translate("어... 그게.. 어색? 해 진다? 라고 생각? 합니다");
+              case THICK -> ComponentUtil.translate("채팅이 진해집니다");
+              case UNCRAFTABLE -> ComponentUtil.translate("아이템을 제작할 수 없습니다");
+              case COOLDOWN_CHAT -> ComponentUtil.translate("채팅 쿨타임동안은 채팅하실 수 없습니다");
+              case COOLDOWN_ITEM_MEGAPHONE -> ComponentUtil.translate("아이템 확성기 쿨타임동안은 아이템 확성기를 사용하실 수 없습니다");
+              case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 주는 피해량이 증가합니다");
+              case DARKNESS_TERROR -> ComponentUtil.translate("어두운거.. 무섭다..")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("%s 효과나 손에 빛을 내는 아이템 없이 어두운 곳에 가면 %s 효과가 걸립니다",
+                              Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.NIGHT_VISION), NamedTextColor.GREEN), DARKNESS_TERROR_ACTIVATED));
+              case DARKNESS_TERROR_ACTIVATED -> ComponentUtil.translate("너무 어둡습니다! 받는 피해량이 30% 증가하고 블록을 캘 때마다")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("%s 확률로 받는 피해량 증가에 영향을 받는 1의 피해를 입습니다", "&e5%"));
+              case DARKNESS_TERROR_RESISTANCE -> ComponentUtil.translate("%s 효과에 대한 내성이 생깁니다", DARKNESS_TERROR_ACTIVATED);
+              case DODGE -> ComponentUtil.translate("일정 확률로 공격을 회피합니다");
+              case NEWBIE_SHIELD -> ComponentUtil.translate("플레이 시간이 1시간 미만인 당신!")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("받는 피해량이 감소하고 주는 피해량이 증가합니다"))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("플레이 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
+              case INVINCIBLE_PLUGIN_RELOAD -> ComponentUtil.translate("플러그인을 리도드하는 중입니다");
+              case INVINCIBLE_RESPAWN -> ComponentUtil.translate("리스폰 무적 상태입니다");
+              case HEROS_ECHO, HEROS_ECHO_OTHERS -> ComponentUtil.translate("최종 대미지가 5% 증가합니다");
+              case FANCY_SPOTLIGHT -> ComponentUtil.translate("화려한 조명이 나를 비추네~")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("주변에 충분히 밝은 블록이 있으면 %s와(과) %s이(가) 적용됩니다",
+                              Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN)));
+              case FANCY_SPOTLIGHT_ACTIVATED -> ComponentUtil.translate("주변에 충분히 밝은 블록이 있어 %s와(과) %s이(가) 적용됩니다",
+                      Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN));
+              case WA_SANS -> ComponentUtil.translate("스켈레톤 유형의 개체에게 주는")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("피해량이 증가하고 받는 피해량이 감소합니다"));
+              case HEALTH_INCREASE -> ComponentUtil.translate("최대 HP가 증가합니다");
+              case CONTINUAL_SPECTATING -> ComponentUtil.translate("플레이어를 지속적으로 관전합니다")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("해당 플레이어가 재접속하거나 리스폰해도 자동으로 관전합니다"));
+              case TRUE_INVISIBILITY -> ComponentUtil.translate("말 그대로 완전히 다른 플레이어로부터 보이지 않습니다");
+              case MINECRAFT_SPEED -> VanillaEffectDescription.getDescription(PotionEffectType.SPEED);
+              case MINECRAFT_SLOWNESS -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW);
+              case MINECRAFT_HASTE -> VanillaEffectDescription.getDescription(PotionEffectType.FAST_DIGGING);
+              case MINECRAFT_MINING_FATIGUE -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW_DIGGING);
+              case MINECRAFT_STRENGTH -> VanillaEffectDescription.getDescription(PotionEffectType.INCREASE_DAMAGE);
+              case MINECRAFT_WEAKNESS -> VanillaEffectDescription.getDescription(PotionEffectType.WEAKNESS);
+              case MINECRAFT_INSTANT_DAMAGE -> VanillaEffectDescription.getDescription(PotionEffectType.HARM);
+              case MINECRAFT_INSTANT_HEAL -> VanillaEffectDescription.getDescription(PotionEffectType.HEAL);
+              case MINECRAFT_JUMP_BOOST -> VanillaEffectDescription.getDescription(PotionEffectType.JUMP);
+              case MINECRAFT_NAUSEA -> VanillaEffectDescription.getDescription(PotionEffectType.CONFUSION);
+              case MINECRAFT_REGENERATION -> VanillaEffectDescription.getDescription(PotionEffectType.REGENERATION);
+              case MINECRAFT_RESISTANCE -> VanillaEffectDescription.getDescription(PotionEffectType.DAMAGE_RESISTANCE);
+              case MINECRAFT_FIRE_RESISTANCE -> VanillaEffectDescription.getDescription(PotionEffectType.FIRE_RESISTANCE);
+              case MINECRAFT_WATER_BREATHING -> VanillaEffectDescription.getDescription(PotionEffectType.WATER_BREATHING);
+              case MINECRAFT_BLINDNESS -> VanillaEffectDescription.getDescription(PotionEffectType.BLINDNESS);
+              case MINECRAFT_INVISIBILITY -> VanillaEffectDescription.getDescription(PotionEffectType.INVISIBILITY);
+              case MINECRAFT_NIGHT_VISION -> VanillaEffectDescription.getDescription(PotionEffectType.NIGHT_VISION);
+              case MINECRAFT_HUNGER -> VanillaEffectDescription.getDescription(PotionEffectType.HUNGER);
+              case MINECRAFT_POISON -> VanillaEffectDescription.getDescription(PotionEffectType.POISON);
+              case MINECRAFT_WITHER -> VanillaEffectDescription.getDescription(PotionEffectType.WITHER);
+              case MINECRAFT_HEALTH_BOOST -> VanillaEffectDescription.getDescription(PotionEffectType.HEALTH_BOOST);
+              case MINECRAFT_ABSORPTION -> VanillaEffectDescription.getDescription(PotionEffectType.ABSORPTION);
+              case MINECRAFT_SATURATION -> VanillaEffectDescription.getDescription(PotionEffectType.SATURATION);
+              case MINECRAFT_LEVITATION -> VanillaEffectDescription.getDescription(PotionEffectType.LEVITATION);
+              case MINECRAFT_SLOW_FALLING -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW_FALLING);
+              case MINECRAFT_GLOWING -> VanillaEffectDescription.getDescription(PotionEffectType.GLOWING);
+              case MINECRAFT_LUCK -> VanillaEffectDescription.getDescription(PotionEffectType.LUCK);
+              case MINECRAFT_UNLUCK -> VanillaEffectDescription.getDescription(PotionEffectType.UNLUCK);
+              case MINECRAFT_CONDUIT_POWER -> VanillaEffectDescription.getDescription(PotionEffectType.CONDUIT_POWER);
+              case MINECRAFT_DOLPHINS_GRACE -> VanillaEffectDescription.getDescription(PotionEffectType.DOLPHINS_GRACE);
+              case MINECRAFT_BAD_OMEN -> VanillaEffectDescription.getDescription(PotionEffectType.BAD_OMEN);
+              case MINECRAFT_HERO_OF_THE_VILLAGE -> VanillaEffectDescription.getDescription(PotionEffectType.HERO_OF_THE_VILLAGE);
+              default -> Component.empty();
+            };
   }
 
   @NotNull
@@ -588,11 +675,24 @@ public enum CustomEffectType implements Translatable, EnumHideable
 
   public boolean isKeepOnMilk()
   {
-    return switch (this)
+    return !isInstant() && switch (this)
             {
               // 우유 마시면 사라짐
               case CONFUSION, NOTHING, THICK, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING, CHEESE_EXPERIMENT, TRUE_INVISIBILITY -> false;
               default -> true;
+            };
+  }
+
+  public boolean isInstant()
+  {
+    return switch (this)
+            {
+              case CUCUMBERY_UPDATER, MINECRAFT_SPEED, MINECRAFT_SLOWNESS, MINECRAFT_HASTE, MINECRAFT_MINING_FATIGUE, MINECRAFT_STRENGTH, MINECRAFT_WEAKNESS, MINECRAFT_INSTANT_DAMAGE, MINECRAFT_INSTANT_HEAL,
+                      MINECRAFT_JUMP_BOOST, MINECRAFT_NAUSEA, MINECRAFT_REGENERATION, MINECRAFT_RESISTANCE, MINECRAFT_FIRE_RESISTANCE, MINECRAFT_WATER_BREATHING,
+                      MINECRAFT_BLINDNESS, MINECRAFT_INVISIBILITY, MINECRAFT_NIGHT_VISION, MINECRAFT_HUNGER, MINECRAFT_POISON, MINECRAFT_WITHER, MINECRAFT_HEALTH_BOOST,
+                      MINECRAFT_ABSORPTION, MINECRAFT_SATURATION, MINECRAFT_LEVITATION, MINECRAFT_SLOW_FALLING, MINECRAFT_GLOWING, MINECRAFT_LUCK, MINECRAFT_UNLUCK,
+                      MINECRAFT_CONDUIT_POWER, MINECRAFT_DOLPHINS_GRACE, MINECRAFT_BAD_OMEN, MINECRAFT_HERO_OF_THE_VILLAGE -> true;
+              default -> false;
             };
   }
 
@@ -649,6 +749,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
 
   /**
    * 커스텀 효과의 지속 시간이 하나도 경과하지 않았을 때 사간을 표시할지 말지 확인합니다.
+   *
    * @return 시간을 표시하지 않는 버프면 true 이외에는 false
    */
   @SuppressWarnings("all")
@@ -658,7 +759,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
             {
               case PARROTS_CHEER -> true;
               default -> false;
-    };
+            };
   }
 
   public boolean isRightClickRemovable()

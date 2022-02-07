@@ -28,7 +28,7 @@ public class PlayerStopSpectatingEntity implements Listener
     Location plLoc = player.getLocation(), tarLoc = spectatorTarget.getLocation();
     Collection<Entity> entities = plLoc.getWorld().getNearbyEntities(plLoc, 1D, 1D, 1D);
     if (CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING) && player.getGameMode() == GameMode.SPECTATOR && !spectatorTarget.isDead() && spectatorTarget.isValid() &&
-    plLoc.equals(tarLoc) && entities.contains(spectatorTarget))
+    player.canSee(spectatorTarget) && plLoc.equals(tarLoc) && entities.contains(spectatorTarget))
     {
       event.setCancelled(true);
       return;

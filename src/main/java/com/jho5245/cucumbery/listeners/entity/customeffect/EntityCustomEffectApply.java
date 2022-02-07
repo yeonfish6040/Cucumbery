@@ -17,10 +17,13 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,11 +60,55 @@ public class EntityCustomEffectApply implements Listener
       MessageUtil.sendMessage(entity, Prefix.INFO, duration != -1 ? "%s 동안 채팅 금지 당하셨습니다" : "채팅 금지 당하셨습니다", Method.timeFormatMilli(duration * 50L, false, 0));
     }
 
+    if (customEffectType.isInstant())
+    {
+      CustomEffectManager.removeEffect(entity, customEffectType);
+    }
+
     if (customEffectType == CustomEffectType.CUCUMBERY_UPDATER)
     {
-      CustomEffectManager.removeEffect(entity, CustomEffectType.CUCUMBERY_UPDATER);
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
               Updater.defaultUpdater.updateLatest(amplifier == 1), 2L);
+    }
+
+    if (entity instanceof LivingEntity livingEntity)
+    {
+      int minecraftDuration = duration == -1 ? Integer.MAX_VALUE : duration;
+      switch (customEffectType)
+      {
+        case MINECRAFT_SPEED -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, minecraftDuration, amplifier));
+        case MINECRAFT_SLOWNESS -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, minecraftDuration, amplifier));
+        case MINECRAFT_HASTE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, minecraftDuration, amplifier));
+        case MINECRAFT_MINING_FATIGUE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, minecraftDuration, amplifier));
+        case MINECRAFT_STRENGTH -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, minecraftDuration, amplifier));
+        case MINECRAFT_WEAKNESS -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, minecraftDuration, amplifier));
+        case MINECRAFT_INSTANT_DAMAGE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HARM, minecraftDuration, amplifier));
+        case MINECRAFT_INSTANT_HEAL -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, minecraftDuration, amplifier));
+        case MINECRAFT_JUMP_BOOST -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, minecraftDuration, amplifier));
+        case MINECRAFT_NAUSEA -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, minecraftDuration, amplifier));
+        case MINECRAFT_REGENERATION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, minecraftDuration, amplifier));
+        case MINECRAFT_RESISTANCE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, minecraftDuration, amplifier));
+        case MINECRAFT_FIRE_RESISTANCE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, minecraftDuration, amplifier));
+        case MINECRAFT_WATER_BREATHING -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, minecraftDuration, amplifier));
+        case MINECRAFT_BLINDNESS -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, minecraftDuration, amplifier));
+        case MINECRAFT_INVISIBILITY -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, minecraftDuration, amplifier));
+        case MINECRAFT_NIGHT_VISION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, minecraftDuration, amplifier));
+        case MINECRAFT_HUNGER -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, minecraftDuration, amplifier));
+        case MINECRAFT_POISON -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.POISON, minecraftDuration, amplifier));
+        case MINECRAFT_WITHER -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, minecraftDuration, amplifier));
+        case MINECRAFT_HEALTH_BOOST -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, minecraftDuration, amplifier));
+        case MINECRAFT_ABSORPTION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, minecraftDuration, amplifier));
+        case MINECRAFT_SATURATION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, minecraftDuration, amplifier));
+        case MINECRAFT_LEVITATION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, minecraftDuration, amplifier));
+        case MINECRAFT_SLOW_FALLING -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, minecraftDuration, amplifier));
+        case MINECRAFT_GLOWING -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, minecraftDuration, amplifier));
+        case MINECRAFT_LUCK -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, minecraftDuration, amplifier));
+        case MINECRAFT_UNLUCK -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK, minecraftDuration, amplifier));
+        case MINECRAFT_CONDUIT_POWER -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.CONDUIT_POWER, minecraftDuration, amplifier));
+        case MINECRAFT_DOLPHINS_GRACE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, minecraftDuration, amplifier));
+        case MINECRAFT_BAD_OMEN -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, minecraftDuration, amplifier));
+        case MINECRAFT_HERO_OF_THE_VILLAGE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, minecraftDuration, amplifier));
+      }
     }
 
     if (customEffectType == CustomEffectType.HEROS_ECHO)

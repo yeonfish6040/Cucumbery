@@ -45,7 +45,7 @@ public class Data
     this.success = success;
     this.failure = failure;
     this.amount = amount;
-    this.amountComponent = Component.text(amount).color(Constant.THE_COLOR);
+    this.amountComponent = Component.text(amount, Constant.THE_COLOR);
     this.item = ItemNameUtil.itemName(given, Constant.THE_COLOR).hoverEvent(given.asHoverEvent());
   }
 
@@ -69,7 +69,7 @@ public class Data
         newList.add(entity);
       }
     }
-    MessageUtil.sendAdminMessage(sender, newList, ComponentUtil.translate("[%s: %s에게 %s을(를) %s개 지급하였습니다]", sender, targets, item, amountComponent));
+    MessageUtil.sendAdminMessage(sender, newList, "commands.give.success.single", amountComponent, item, targets);
 
     if (!failure.isEmpty())
     {
@@ -80,7 +80,7 @@ public class Data
         UUID target = failure.get(i);
         int lostAmount = lostAmounts.get(target);
         hover = hover.append(ComponentUtil.translate("%s : %s개 (%s - %s)",
-                target, Component.text(amount - lostAmount).color(Constant.THE_COLOR), amountComponent, Component.text(lostAmount).color(Constant.THE_COLOR)));
+                target, Component.text(amount - lostAmount).color(Constant.THE_COLOR), amountComponent, Component.text(lostAmount, Constant.THE_COLOR)));
         if (i + 1 != failure.size())
         {
           hover = hover.append(Component.text("\n"));
@@ -89,7 +89,7 @@ public class Data
         {
           continue;
         }
-        MessageUtil.sendWarn(target, "인벤토리가 가득 차서 %s이(가) 보낸 %s %s개 중 %s개를 지급받지 못했습니다", sender, item, amountComponent, Component.text(lostAmount).color(Constant.THE_COLOR));
+        MessageUtil.sendWarn(target, "인벤토리가 가득 차서 %s이(가) 보낸 %s %s개 중 %s개를 지급받지 못했습니다", sender, item, amountComponent, Component.text(lostAmount, Constant.THE_COLOR));
       }
       if (sender instanceof Player player)
       {
@@ -102,7 +102,7 @@ public class Data
         MessageUtil.info(player, message.hoverEvent(hover));
       }
     }
-    MessageUtil.sendMessage(sender, Prefix.INFO_HANDGIVE, "%s에게 %s을(를) %s개 지급하였습니다", targets, item, amountComponent);
+    MessageUtil.sendMessage(sender, Prefix.INFO_HANDGIVE, "commands.give.success.single", amountComponent, item, targets);
     for (UUID target : targets)
     {
       if (sender instanceof Player player && target.equals(player.getUniqueId()))

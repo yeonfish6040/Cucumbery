@@ -107,7 +107,7 @@ public class PlayerSwapHandItems implements Listener
         if (currentTime < nextAvailable)
         {
           String remainTime = "&e" + Method.timeFormatMilli(nextAvailable - currentTime);
-          MessageUtil.sendWarn(player, ComponentUtil.create("아직 %s을(를)" + (isSneaking ? " 웅크리고" : "") + " 스와핑 사용할 수 없습니다. (남은 시간 : %s)", item, remainTime));
+          MessageUtil.sendWarn(player, ComponentUtil.create("아직 %s을(를)" + (isSneaking ? " 웅크리고" : "") + " 스와핑 사용할 수 없습니다 (남은 시간 : %s)", item, remainTime));
           event.setCancelled(true);
           return;
         }

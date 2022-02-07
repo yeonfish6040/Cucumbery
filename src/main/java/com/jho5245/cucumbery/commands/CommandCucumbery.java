@@ -153,7 +153,7 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
             return true;
           }
           int size = QuickShopSupport.updateQuickShopItems();
-          MessageUtil.info(sender, "&eQuickShop&r의 모든 상점 아이템을 업데이트 하였습니다. (총 " + size + "개)");
+          MessageUtil.info(sender, "&eQuickShop&r의 모든 상점 아이템을 업데이트 하였습니다 (총 " + size + "개)");
           break;
         case "update-customrecipe-item":
           size = CustomRecipeSupport.updateCustomRecipe();

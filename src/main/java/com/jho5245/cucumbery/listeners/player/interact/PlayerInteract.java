@@ -967,7 +967,7 @@ public class PlayerInteract implements Listener
         String remainTime = "&e" + Method.timeFormatMilli(nextAvailable - currentTime);
         if (currentTime < nextAvailable)
         {
-          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) " + usageTypeString + " 사용할 수 없습니다. (남은 시간 : %s)", item, remainTime));
+          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) " + usageTypeString + " 사용할 수 없습니다 (남은 시간 : %s)", item, remainTime));
           event.setCancelled(true);
           return false;
         }

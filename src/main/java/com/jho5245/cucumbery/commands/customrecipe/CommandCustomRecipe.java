@@ -1493,7 +1493,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 }
                 if (blockType != null && !blockType.isBlock())
                 {
-                  MessageUtil.sendError(sender, "블록만 입력할 수 있습니다. (&e" + inputDisplay + "&r)");
+                  MessageUtil.sendError(sender, "블록만 입력할 수 있습니다 (&e" + inputDisplay + "&r)");
                   return true;
                 }
                 String blockTypeName = null;
@@ -2776,7 +2776,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 }
                 if (belowBlockType != null && !belowBlockType.isBlock())
                 {
-                  MessageUtil.sendError(sender, "블록만 입력할 수 있습니다. (&e" + inputDisplay + "&r)");
+                  MessageUtil.sendError(sender, "블록만 입력할 수 있습니다 (&e" + inputDisplay + "&r)");
                   return true;
                 }
                 String belowBlockTypeName = null;
@@ -2823,7 +2823,7 @@ public class CommandCustomRecipe implements CommandExecutor
                 ConfigurationSection ingredients = config.getConfigurationSection("recipes." + args[3] + ".ingredients");
                 if (ingredients == null || ingredients.getKeys(false).size() == 0)
                 {
-                  MessageUtil.sendError(sender, "잘못된 아이템 레시피입니다. (재료 손상)");
+                  MessageUtil.sendError(sender, "잘못된 아이템 레시피입니다 (재료 손상)");
                   return true;
                 }
                 if (!MessageUtil.isInteger(sender, args[5], true))

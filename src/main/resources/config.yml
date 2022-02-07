@@ -434,7 +434,7 @@ no-show-actionbar-on-attack-worlds:
   - world_2,-10~10,-100~100,-1000~1000
   - world_3,10~10,-10~-10,10~10
 
-# PVP 할때 액션바가 뜨는 설정에 상관 없이 위 사냥(또는 PVP) 액션바 설정에 우선한다. (= 위 설정이 꺼져있으면 PVP도 꺼진다.)
+# PVP 할때 액션바가 뜨는 설정에 상관 없이 위 사냥(또는 PVP) 액션바 설정에 우선한다 (= 위 설정이 꺼져있으면 PVP도 꺼진다.)
 # PVP를 할때 액션바가 뜨게 할 것인가? - boolean
 show-actionbar-on-pvp: true
 
@@ -459,7 +459,7 @@ enable-tnt-protection: false
 # TNT 폭발 보호가 켜진 상태에서 TNT가 터질 때 파괴되는 블록이 TNT일 경우 해당 TNT는 폭발 보호에 관계 없이 불이 붙게 할 것인가?
 bypass-tnt-protection-if-block-is-tnt: false
 
-# 해당 월드와 좌표는 TNT 폭발이 보호된다. (월드 이름,x~x,y~y,z~z 꼴)
+# 해당 월드와 좌표는 TNT 폭발이 보호된다 (월드 이름,x~x,y~y,z~z 꼴)
 tnt-protection-coords:
   - "world_1,-300~300,0~256,-300~300"
   - "world_2,-3~3,10~15,-30~30"
@@ -467,7 +467,7 @@ tnt-protection-coords:
 # 침대, 리스폰 정박기 폭발 보호 기능을 사용할 것인가?
 enable-respawn-block-protection: false
 
-# 해당 월드와 좌표는 침대, 리스폰 정박기 폭발이 보호된다. (월드 이름,x~x,y~y,z~z 꼴)
+# 해당 월드와 좌표는 침대, 리스폰 정박기 폭발이 보호된다 (월드 이름,x~x,y~y,z~z 꼴)
 respawn-block-protection-coords:
   - "world_1,-300~300,0~256,-300~300"
   - "world_2,-3~3,10~15,-30~30"
@@ -475,7 +475,7 @@ respawn-block-protection-coords:
 # 크리퍼 폭발 보호 기능을 사용할 것인가?
 enable-creeper-protection: false
 
-# 해당 월드와 좌표는 크리퍼 폭발이 보호된다. (월드 이름,x~x,y~y,z~z 꼴)
+# 해당 월드와 좌표는 크리퍼 폭발이 보호된다 (월드 이름,x~x,y~y,z~z 꼴)
 creeper-protection-coords:
   - "world_1,-300~300,0~256,-300~300"
   - "world_2,-3~3,10~15,-30~30"
@@ -483,7 +483,7 @@ creeper-protection-coords:
 # 엔드 수정 폭발 보호 기능을 사용할 것인가?
 enable-end-crystal-protection: false
 
-# 해당 월드와 좌표는 엔드 수정 폭발이 보호된다. (월드 이름,x~x,y~y,z~z 꼴)
+# 해당 월드와 좌표는 엔드 수정 폭발이 보호된다 (월드 이름,x~x,y~y,z~z 꼴)
 end-crystal-protection-coords:
   - "world_1,-300~300,0~256,-300~300"
   - "world_2,-3~3,10~15,-30~30"
@@ -491,7 +491,7 @@ end-crystal-protection-coords:
 # 화염구 폭발 보호 기능을 사용할 것인가?
 enable-fireball-protection: false
 
-# 해당 월드와 좌표는 화염구 폭발이 보호된다. (월드 이름,x~x,y~y,z~z 꼴)
+# 해당 월드와 좌표는 화염구 폭발이 보호된다 (월드 이름,x~x,y~y,z~z 꼴)
 fireball-protection-coords:
   - "world_1,-300~300,0~256,-300~300"
   - "world_2,-3~3,10~15,-30~30"
@@ -499,7 +499,7 @@ fireball-protection-coords:
 # 위더 해골 폭발 보호 기능을 사용할 것인가?
 enable-wither-skull-protection: false
 
-# 해당 월드와 좌표는 위더 해골 폭발이 보호된다. (월드 이름,x~x,y~y,z~z 꼴)
+# 해당 월드와 좌표는 위더 해골 폭발이 보호된다 (월드 이름,x~x,y~y,z~z 꼴)
 wither-skull-protection-coords:
   - "world_1,-300~300,0~256,-300~300"
   - "world_2,-3~3,10~15,-30~30"

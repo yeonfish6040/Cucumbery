@@ -134,7 +134,7 @@ public class EntityPickupItem implements Listener
         if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemPickupAlertCooldown2.contains(uuid))
         {
           Variable.itemPickupAlertCooldown2.add(uuid);
-          MessageUtil.sendTitle(player, ComponentUtil.translate("&c줍기 불가!"), ComponentUtil.translate("주울 수 없는 아이템입니다. (%s)", itemStack), 5, 40, 15);
+          MessageUtil.sendTitle(player, ComponentUtil.translate("&c줍기 불가!"), ComponentUtil.translate("주울 수 없는 아이템입니다 (%s)", itemStack), 5, 40, 15);
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown2.remove(uuid), 100L);
         }

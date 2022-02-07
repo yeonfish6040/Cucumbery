@@ -1344,7 +1344,7 @@ public class Scheduler
               playerCustomEffect.setPlayer(newTarget);
               target = newTarget;
             }
-            if (spectatorTarget == null && !target.isDead() && target.isOnline() && target.isValid())
+            if (spectatorTarget == null && !target.isDead() && target.isOnline() && target.isValid() && player.canSee(target))
             {
               player.setSpectatorTarget(null);
               player.teleport(target);

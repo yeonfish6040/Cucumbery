@@ -19,7 +19,6 @@ import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -122,29 +121,44 @@ public class CommandSong implements CommandExecutor, TabCompleter
               category = SoundCategory.RECORDS;
             }
             boolean random = fileName.startsWith("--random");
-            if (random && !Songs.list.isEmpty())
+            List<String> list = new ArrayList<>(Songs.list);
+            list.removeIf(name -> name.toLowerCase().contains("vibrato"));
+            if (random && !list.isEmpty())
             {
-              fileName = Songs.list.get((int) (Songs.list.size() * Math.random()));
+              fileName = list.get((int) (list.size() * Math.random()));
             }
             if (!stop && radioSongPlayer != null && song != null)
             {
               if (!console)
               {
-                MessageUtil.sendError(sender, ComponentUtil.translate("노래가 이미 재생중이여서 재생할 수 없습니다. (%s)", song));
-                MessageUtil.info(sender, ComponentUtil.translate("'/csong stop' 명령어로 노래를 멈추거나 '노래이름--stop'을 입력하면 이미 재생중인 노래를 멈추고 재생할 수 있습니다"));
+                MessageUtil.sendError(sender, "노래가 이미 재생중이여서 재생할 수 없습니다 (%s)", song);
+                MessageUtil.info(sender,"'/csong stop' 명령어로 노래를 멈추거나 '노래이름--stop'을 입력하면 이미 재생중인 노래를 멈추고 재생할 수 있습니다");
                 if (sender instanceof Player player)
                 {
+                  fileName += "--stop";
+                  if (enableRepeat)
+                  {
+                    fileName += "--repeat";
+                  }
+                  if (disable10Octave)
+                  {
+                    fileName += "--no10";
+                  }
+                  if (silent)
+                  {
+                    fileName += "--silent";
+                  }
+                  if (force)
+                  {
+                    fileName += "--force";
+                  }
                   if (fileName.contains(" "))
                   {
-                    fileName = "'" + fileName.replace("'", "''") + "--stop'";
-                  }
-                  else
-                  {
-                    fileName += "--stop";
+                    fileName = "'" + fileName.replace("'", "''")  + "'";
                   }
                   String command = "/csong play " + fileName;
                   Component component = Component.translatable("혹은 이 메시지를 클릭하여 노래를 재생할 수 있습니다", Constant.THE_COLOR);
-                  component = component.hoverEvent(HoverEvent.showText(Component.text(command))).clickEvent(ClickEvent.suggestCommand(command));
+                  component = component.hoverEvent(Component.text(command)).clickEvent(ClickEvent.suggestCommand(command));
                   MessageUtil.info(player, component);
                 }
               }
@@ -252,14 +266,14 @@ public class CommandSong implements CommandExecutor, TabCompleter
             radioSongPlayer.destroy();
             if (!hideOutput)
             {
-              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 재생을 멈췄습니다", song));
+              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s의 재생을 멈췄습니다", song);
               for (Player player : Bukkit.getServer().getOnlinePlayers())
               {
                 if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
                 {
                   if (!sender.equals(player))
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) %s의 재생을 멈췄습니다", sender, song));
+                    MessageUtil.sendMessage(player, Prefix.INFO_SONG,"%s이(가) %s의 재생을 멈췄습니다", sender, song);
                   }
                 }
               }
@@ -311,14 +325,14 @@ public class CommandSong implements CommandExecutor, TabCompleter
             if (!hideOutput)
             {
               String display = !playing ? "중지" : "재개";
-              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, ComponentUtil.translate("%s의 재생을 " + display + "하였습니다", song));
+              MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s의 재생을 " + display + "하였습니다", song);
               for (Player player : Bukkit.getServer().getOnlinePlayers())
               {
                 if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
                 {
                   if (!sender.equals(player))
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, ComponentUtil.translate("%s이(가) %s의 재생을 " + display + "하였습니다", sender, song));
+                    MessageUtil.sendMessage(player, Prefix.INFO_SONG,"%s이(가) %s의 재생을 " + display + "하였습니다", sender, song);
                   }
                 }
               }
@@ -353,7 +367,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
               return !(sender instanceof BlockCommandSender);
             }
             radioSongPlayer.setTick((short) (song.getLength() * ratio / 100));
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "재생 중인 노래(%s)의 재생 비율을 %s(으)로 설정하였습니다. (%s)", song, Constant.Sosu2.format(ratio) + "%",
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "재생 중인 노래(%s)의 재생 비율을 %s(으)로 설정하였습니다 (%s)", song, Constant.Sosu2.format(ratio) + "%",
                     Method.timeFormatMilli((long) (radioSongPlayer.getTick() / song.getSpeed() * 20L * 50L), true, 1));
             return true;
           }
@@ -383,7 +397,7 @@ public class CommandSong implements CommandExecutor, TabCompleter
               return true;
             }
             MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "--------------------------------------------");
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "듣고 있는 사람 : &e" + players.size() + "명");
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "듣고 있는 사람 : %s명", "&e" + players.size());
             for (Player player : players)
             {
               MessageUtil.sendMessage(sender, Prefix.INFO_SONG, player);

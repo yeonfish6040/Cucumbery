@@ -118,7 +118,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
               }
               if (commands == null || commands.isEmpty())
               {
-                MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않거나 명령어가 없습니다. (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
+                MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않거나 명령어가 없습니다 (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
                 return true;
               }
               MessageUtil.info(sender, "&e" + fileName + ".yml&r 파일의 &e" + packName + "&r 명령어 팩에는 명령어가 &e" + commands.size() + "개&r 있습니다");
@@ -137,7 +137,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
               File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CommandPacks/" + fileName + ".yml");
               if (!file.exists())
               {
-                MessageUtil.info(sender, "새로운 명령어 팩 파일을 생성합니다. (&e" + fileName + ".yml&r)");
+                MessageUtil.info(sender, "새로운 명령어 팩 파일을 생성합니다 (&e" + fileName + ".yml&r)");
               }
               CustomConfig commandPackFile = CustomConfig.getCustomConfig(file);
               configuration = commandPackFile.getConfig();
@@ -155,7 +155,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
             case "remove" -> {
               if (commands == null || commands.isEmpty())
               {
-                MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않거나 명령어가 없습니다. (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
+                MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않거나 명령어가 없습니다 (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
                 return true;
               }
 
@@ -218,7 +218,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
                 {
                   commandPackFile.delete();
                   Variable.commandPacks.remove(fileName);
-                  MessageUtil.info(sender, "남은 명령어 팩이 없어 파일을 삭제합니다. (&e" + fileName + ".yml&r)");
+                  MessageUtil.info(sender, "남은 명령어 팩이 없어 파일을 삭제합니다 (&e" + fileName + ".yml&r)");
                 }
                 else
                 {
@@ -247,7 +247,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
               File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CommandPacks/" + fileName + ".yml");
               if (!file.exists())
               {
-                MessageUtil.info(sender, "새로운 명령어 팩 파일을 생성합니다. (&e" + fileName + ".yml&r)");
+                MessageUtil.info(sender, "새로운 명령어 팩 파일을 생성합니다 (&e" + fileName + ".yml&r)");
               }
               CustomConfig commandPackFile = CustomConfig.getCustomConfig(file);
               configuration = commandPackFile.getConfig();
@@ -277,7 +277,7 @@ public class CommandCommandPack implements CommandExecutor, TabCompleter
 
               if (commands == null || commands.isEmpty())
               {
-                MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않거나 명령어가 없습니다. (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
+                MessageUtil.sendError(sender, "해당 명령어 팩은 존재하지 않거나 명령어가 없습니다 (파일 이름 : &e" + fileName + ".yml&r, 팩 이름 : &e" + packName + "&r)");
                 return true;
               }
 

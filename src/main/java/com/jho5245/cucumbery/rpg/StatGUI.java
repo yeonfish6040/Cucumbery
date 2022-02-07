@@ -236,7 +236,7 @@ public class StatGUI
 		ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
 
 		this.stack("§a§l[설명]", Material.OAK_SIGN, 0, 1, Arrays.asList("§e대미지 계산은 위에서 아래 순으로,", "§e%만큼 곱적용 후 %가 아닌 값이 합산 됩니다", "§e크리티컬 최소, 최대는 % 사이의 값을 곱적용 후,",
-				"§e추가 크리티컬 최소 대미지, 추가 크리티컬", "§e최대 대미지가 합산되어 그 사이의 값이 적용됩니다", "§c크리티컬 최소 대미지는 크리티컬 최대 대미지보다", "§c높을 수 없습니다. (합산 이후 값 포함)", "§e크리티컬 확률은 최대 100% 적용"), true, 39, gui);
+				"§e추가 크리티컬 최소 대미지, 추가 크리티컬", "§e최대 대미지가 합산되어 그 사이의 값이 적용됩니다", "§c크리티컬 최소 대미지는 크리티컬 최대 대미지보다", "§c높을 수 없습니다 (합산 이후 값 포함)", "§e크리티컬 확률은 최대 100% 적용"), true, 39, gui);
 
 		SkullMeta meta = (SkullMeta) skull.getItemMeta();
 		meta.setOwningPlayer(player);
@@ -483,7 +483,7 @@ public class StatGUI
 
 		this.stack("§6[숙련도+]", Material.ORANGE_STAINED_GLASS, 1, 1,
 				Arrays.asList("§7현재 남은 스탯 포인트 : §6" + stat[0], "§e좌클릭&r으로 숙련도를 §e0.01% &r만큼 증가 시킵니다", "§e우클릭&r으로 숙련도를 §e0.1% &r만큼 증가 시킵니다", "§e시프트 + 좌클릭&r으로 숙련도를 §e1% &r만큼 증가 시킵니다",
-						"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 숙련도를 증가 시킵니다. (스탯 포인트 × 0.01%)", "§c[주의 사항] 숙련도는 최대 §499%§c 까지만 올릴 수 있습니다",
+						"§e시프트 + 우클릭&r으로 현재 가진 스탯 포인트를 전부 다 사용하여 숙련도를 증가 시킵니다 (스탯 포인트 × 0.01%)", "§c[주의 사항] 숙련도는 최대 §499%§c 까지만 올릴 수 있습니다",
 						"&r현재 숙련도 : §e" + d1.format(GetStat.getStatClass().getLongStat(player, GetStat.Stat.PROFICIENCY) / 100D) + "§e%"),
 				true, 24, gui);
 

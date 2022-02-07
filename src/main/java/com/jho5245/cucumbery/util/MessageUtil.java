@@ -423,9 +423,9 @@ public class MessageUtil
    *
    * @param commandSender 해당 메시지를 실행한 주체
    * @param exception     추가로 메시지를 보여주지 않을 개체
-   * @param objects       출력할 메시지
+   * @param component       출력할 메시지
    */
-  public static void sendAdminMessage(@NotNull Object commandSender, @Nullable List<Permissible> exception, @NotNull Object... objects)
+  public static void sendAdminMessage(@NotNull Object commandSender, @Nullable List<Permissible> exception, @NotNull Component component)
   {
     Collection<Permissible> collection = new ArrayList<>(Bukkit.getOnlinePlayers());
     if (exception != null)
@@ -453,7 +453,7 @@ public class MessageUtil
     if (Boolean.TRUE.equals(location.getWorld().getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK)) &&
             (!(commandSender instanceof BlockCommandSender blockCommandSender) || Boolean.TRUE.equals(blockCommandSender.getBlock().getLocation().getWorld().getGameRuleValue(GameRule.COMMAND_BLOCK_OUTPUT))))
     {
-      Component message = setAdminMessage(ComponentUtil.create(objects));
+      Component message = setAdminMessage(ComponentUtil.translate("chat.type.admin", commandSender, component));
       sendMessage(collection, message);
       if (!(commandSender instanceof ConsoleCommandSender))
       {
@@ -463,6 +463,16 @@ public class MessageUtil
         consoleSendMessage(message);
       }
     }
+  }
+
+  public static void sendAdminMessage(@NotNull Object commandSender, @Nullable List<Permissible> exception, @NotNull String key)
+  {
+    sendAdminMessage(commandSender, exception, ComponentUtil.translate(key));
+  }
+
+  public static void sendAdminMessage(@NotNull Object commandSender, @Nullable List<Permissible> exception, @NotNull String key, @NotNull Object... args)
+  {
+    sendAdminMessage(commandSender, exception, ComponentUtil.translate(key, args));
   }
 
   @NotNull

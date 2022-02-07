@@ -165,7 +165,15 @@ public class ItemLore
       }
       itemMeta.lore(defaultLore);
     }
-    Component displayName = itemMeta.displayName();
+    @Nullable Component displayName;
+    try
+    {
+      displayName = itemMeta.displayName();
+    }
+    catch (Exception e)
+    {
+      displayName = null;
+    }
     if (displayName != null)
     {
       itemMeta.displayName(ComponentUtil.stripEvent(ComponentUtil.create(displayName)));
@@ -213,7 +221,6 @@ public class ItemLore
     itemStack.setItemMeta(itemMeta);
     NBTItem nbtItem = new NBTItem(itemStack);
     nbtItem.removeKey(CucumberyTag.KEY_TMI);
-    nbtItem.removeKey("Rarity");
     itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
     return itemStack;
   }

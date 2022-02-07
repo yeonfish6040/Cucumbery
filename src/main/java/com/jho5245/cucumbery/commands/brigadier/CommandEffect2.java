@@ -192,7 +192,7 @@ public class CommandEffect2 extends CommandBase
         }
         failureEntitiesComponent = failureEntitiesComponent.hoverEvent(hover);
         MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,
-                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다. (대상이 효과에 면역이 있거나 더 강한 효과를 가지고 있습니다.)", failureEntitiesComponent, potionEffect));
+                ComponentUtil.translate("%s에게 %s 효과를 적용할 수 없습니다 (대상이 효과에 면역이 있거나 더 강한 효과를 가지고 있습니다.)", failureEntitiesComponent, potionEffect));
       }
       if (!successEntitiesIsEmpty)
       {
@@ -207,7 +207,7 @@ public class CommandEffect2 extends CommandBase
     }
     else if (successEntities.isEmpty() && sender.getCallee() instanceof BlockCommandSender)
     {
-      CommandAPI.fail("이 효과를 적용할 수 없습니다. (대상이 효과에 면역이 있거나 더 강한 효과를 가지고 있습니다.)");
+      CommandAPI.fail("이 효과를 적용할 수 없습니다 (대상이 효과에 면역이 있거나 더 강한 효과를 가지고 있습니다.)");
     }
   }
 

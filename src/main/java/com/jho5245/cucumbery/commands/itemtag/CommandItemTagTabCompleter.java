@@ -616,7 +616,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 case "byte-array":
                   if (input.startsWith(","))
                   {
-                    return Collections.singletonList("정수가 필요합니다. (" + input + ")");
+                    return Collections.singletonList("정수가 필요합니다 (" + input + ")");
                   }
                   String[] split = input.split(",");
                   if (!input.equals(""))
@@ -625,7 +625,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                     {
                       if (!MessageUtil.isInteger(sender, s, false))
                       {
-                        return Collections.singletonList("정수가 필요합니다. (" + s + ")");
+                        return Collections.singletonList("정수가 필요합니다 (" + s + ")");
                       }
                       int j = Integer.parseInt(s);
                       if (j > Byte.MAX_VALUE)
@@ -667,7 +667,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 case "int-array":
                   if (input.startsWith(","))
                   {
-                    return Collections.singletonList("정수가 필요합니다. (" + input + ")");
+                    return Collections.singletonList("정수가 필요합니다 (" + input + ")");
                   }
                   split = input.split(",");
                   if (!input.equals(""))
@@ -676,7 +676,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                     {
                       if (!MessageUtil.isInteger(sender, s2, false))
                       {
-                        return Collections.singletonList("정수가 필요합니다. (" + s2 + ")");
+                        return Collections.singletonList("정수가 필요합니다 (" + s2 + ")");
                       }
                     }
                   }
@@ -697,7 +697,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 case "int-list":
                   if (input.startsWith(","))
                   {
-                    return Collections.singletonList("정수가 필요합니다. (" + input + ")");
+                    return Collections.singletonList("정수가 필요합니다 (" + input + ")");
                   }
                   split = input.split(",");
                   if (!input.equals(""))
@@ -706,7 +706,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                     {
                       if (!MessageUtil.isInteger(sender, s2, false))
                       {
-                        return Collections.singletonList("정수가 필요합니다. (" + s2 + ")");
+                        return Collections.singletonList("정수가 필요합니다 (" + s2 + ")");
                       }
                     }
                   }
@@ -726,7 +726,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 case "long":
                   if (input.startsWith(","))
                   {
-                    return Collections.singletonList("정수가 필요합니다. (" + input + ")");
+                    return Collections.singletonList("정수가 필요합니다 (" + input + ")");
                   }
                   split = input.split(",");
                   if (!input.equals(""))
@@ -735,7 +735,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                     {
                       if (!MessageUtil.isLong(sender, s2, false))
                       {
-                        return Collections.singletonList("정수가 필요합니다. (" + s2 + ")");
+                        return Collections.singletonList("정수가 필요합니다 (" + s2 + ")");
                       }
                     }
                   }
@@ -745,7 +745,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 case "long-list":
                   if (input.startsWith(","))
                   {
-                    return Collections.singletonList("정수가 필요합니다. (" + input + ")");
+                    return Collections.singletonList("정수가 필요합니다 (" + input + ")");
                   }
                   split = input.split(",");
                   if (!input.equals(""))
@@ -754,7 +754,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                     {
                       if (!MessageUtil.isLong(sender, s2, false))
                       {
-                        return Collections.singletonList("정수가 필요합니다. (" + s2 + ")");
+                        return Collections.singletonList("정수가 필요합니다 (" + s2 + ")");
                       }
                     }
                   }
@@ -778,7 +778,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 case "float-list":
                   if (input.startsWith(","))
                   {
-                    return Collections.singletonList("숫자가 필요합니다. (" + input + ")");
+                    return Collections.singletonList("숫자가 필요합니다 (" + input + ")");
                   }
                   split = input.split(",");
                   if (!input.equals(""))
@@ -787,7 +787,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                     {
                       if (!MessageUtil.isDouble(sender, s2, false))
                       {
-                        return Collections.singletonList("숫자가 필요합니다. (" + s2 + ")");
+                        return Collections.singletonList("숫자가 필요합니다 (" + s2 + ")");
                       }
                       double j = Double.parseDouble(s2);
                       if (j > Float.MAX_VALUE)
@@ -824,7 +824,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 case "double-list":
                   if (input.startsWith(","))
                   {
-                    return Collections.singletonList("숫자가 필요합니다. (" + input + ")");
+                    return Collections.singletonList("숫자가 필요합니다 (" + input + ")");
                   }
                   split = input.split(",");
                   if (!input.equals(""))
@@ -833,7 +833,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                     {
                       if (!MessageUtil.isDouble(sender, s2, false))
                       {
-                        return Collections.singletonList("숫자가 필요합니다. (" + s2 + ")");
+                        return Collections.singletonList("숫자가 필요합니다 (" + s2 + ")");
                       }
                     }
                   }
@@ -1258,14 +1258,14 @@ public class CommandItemTagTabCompleter implements TabCompleter
         break;
       }
       case "nbt":
-        if (args.length >= 3 && args[1].equals("merge"))
+        if (args[1].equals("merge"))
         {
           String input = MessageUtil.listToString(" ", 2, args.length, args);
           if (!input.equals(""))
           {
             try
             {
-              new NBTContainer(input);
+              new NBTContainer("{" + input + "}");
             }
             catch (Exception e)
             {
@@ -1274,7 +1274,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
           }
           if (args.length == 3)
           {
-            return Method.tabCompleterList(args, "<nbt>", true, "<nbt>", "예시 : {foo:bar,nbt:{extra:\"nbts\"}}");
+            return Method.tabCompleterList(args, "<nbt>", true, "<nbt>", "예시 : foo:bar,nbt:{extra:\"nbts\"}");
           }
           return Method.tabCompleterList(args, "[nbt]", true);
         }

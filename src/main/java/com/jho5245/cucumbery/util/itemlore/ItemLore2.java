@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.util.itemlore;
 import com.destroystokyo.paper.Namespaced;
 import com.google.common.collect.Multimap;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.MessageUtil;
 import com.jho5245.cucumbery.util.Method;
 import com.jho5245.cucumbery.util.Method2;
 import com.jho5245.cucumbery.util.PlaceHolderUtil;
@@ -10,6 +11,7 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.ColorCode;
 import com.jho5245.cucumbery.util.storage.ItemCategory;
+import com.jho5245.cucumbery.util.storage.ItemCategory.Rarity;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.RecipeChecker;
 import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
@@ -30,6 +32,8 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -1915,7 +1919,16 @@ public class ItemLore2
       itemMeta.removeItemFlags(ItemFlag.HIDE_UNBREAKABLE);
     }
     // 아이템 이름 속성
-    Component displayName = itemMeta.displayName();
+
+    @Nullable Component displayName;
+    try
+    {
+      displayName = itemMeta.displayName();
+    }
+    catch (Exception e)
+    {
+      displayName = null;
+    }
     NBTCompound displayCompound = NBTAPI.getCompound(itemTag, CucumberyTag.ITEMSTACK_DISPLAY_KEY);
     if (!(displayName instanceof TranslatableComponent t && t.args().size() == 4 && t.args().get(3) instanceof TextComponent c && c.content().equals("Custom Display")) && displayCompound != null)
     {
@@ -1948,6 +1961,7 @@ public class ItemLore2
         else
         {
           displayName = ItemNameUtil.itemName(item);
+          MessageUtil.broadcastDebug("disply:", displayName);
         }
       }
       arguments.add(displayName);
@@ -1967,10 +1981,38 @@ public class ItemLore2
     }
     // 추가 설명으로 인한 아이템의 등급 수치 변경
     long rarity2 = ItemLoreUtil.getItemRarityValue(lore);
-    String rarityDisplay = ItemCategory.Rarity.getRarityFromValue(rarity2).getDisplay();
-    Component itemRarityComponent = ComponentUtil.translate("&7아이템 등급 : %s", ComponentUtil.translate(rarityDisplay));
+    Rarity rarity = Rarity.getRarityFromValue(rarity2);
+    String rarityDisplay = rarity.getDisplay();
+    Component rarityComponent = ComponentUtil.translate(rarityDisplay);
+    Component itemRarityComponent = ComponentUtil.translate("&7아이템 등급 : %s", rarityComponent);
     lore.set(2, itemRarityComponent);
     itemMeta.lore(lore);
+    if (NBTAPI.isRestricted(item, RestrictionType.NO_ANVIL) && itemTag.hasKey("FollowRarityColor"))
+    {
+      Boolean b = itemTag.getBoolean("FollowRarityColor");
+      if (b != null && b)
+      {
+        item.setItemMeta(itemMeta);
+        Component itemName;
+        try
+        {
+          itemName = itemMeta.displayName();
+          if (itemName == null || itemName.color(null).decoration(TextDecoration.ITALIC, State.NOT_SET).equals(ItemNameUtil.itemName(item).color(null).decoration(TextDecoration.ITALIC, State.NOT_SET)))
+          {
+            throw new Exception();
+          }
+        }
+        catch (Exception e)
+        {
+          itemName = ItemNameUtil.itemName(item);
+          if (itemName.decoration(TextDecoration.ITALIC) == State.NOT_SET)
+          {
+            itemName = itemName.decoration(TextDecoration.ITALIC, State.FALSE);
+          }
+        }
+        itemMeta.displayName(itemName.color(rarityComponent.color()));
+      }
+    }
     item.setItemMeta(itemMeta);
     return item;
   }
