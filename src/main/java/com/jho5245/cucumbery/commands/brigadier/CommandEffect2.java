@@ -13,6 +13,7 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEvent.Action;
@@ -157,7 +158,7 @@ public class CommandEffect2 extends CommandBase
             }
             LivingEntity livingEntity = entity instanceof LivingEntity ? (LivingEntity) entity : null;
             PotionEffect applied = livingEntity != null ? livingEntity.getPotionEffect(potionEffectType) : null;
-            String duraString = Method.timeFormatMilli(applied != null? applied.getDuration() : 0);
+            String duraString = Method.timeFormatMilli(applied != null ? applied.getDuration() : 0);
             if (duraString.length() > 7)
             {
               duraString = duraString.substring(0, duraString.length() - 5) + "...";
@@ -197,12 +198,10 @@ public class CommandEffect2 extends CommandBase
       if (!successEntitiesIsEmpty)
       {
         MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다", successEntities, potionEffect));
-        if (!(successEntities.size() == 1 && successEntities.get(0).equals(sender.getCallee())))
-        {
-          MessageUtil.info(successEntities, ComponentUtil.translate("%1$s이(가) 당신에게 %2$s 효과를 적용했습니다", sender, potionEffect));
-        }
-        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                "%s에게 %s 효과를 적용했습니다", successEntities, potionEffect);
+        MessageUtil.sendAdminMessage(sender, null, "%s에게 %s 효과를 적용했습니다", successEntities, potionEffect);
+        List<Audience> infoTarget = new ArrayList<>(successEntities);
+        infoTarget.remove(sender.getCallee());
+        MessageUtil.info(infoTarget, ComponentUtil.translate("%1$s이(가) 당신에게 %2$s 효과를 적용했습니다", sender, potionEffect));
       }
     }
     else if (successEntities.isEmpty() && sender.getCallee() instanceof BlockCommandSender)

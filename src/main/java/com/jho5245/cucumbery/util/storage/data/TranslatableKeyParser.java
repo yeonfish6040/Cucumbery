@@ -78,7 +78,7 @@ public class TranslatableKeyParser
     if (potionEffectType.equals(PotionEffectType.HARM))
       return "effect.minecraft.instant_damage";
     if (potionEffectType.equals(PotionEffectType.HEAL))
-      return "effect.minecraft.instant_heal";
+      return "effect.minecraft.instant_health";
     if (potionEffectType.equals(PotionEffectType.INCREASE_DAMAGE))
       return "effect.minecraft.strength";
     if (potionEffectType.equals(PotionEffectType.JUMP))

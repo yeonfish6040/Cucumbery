@@ -24,129 +24,53 @@ import java.util.List;
 public enum CustomEffectType implements Translatable, EnumHideable
 {
   /**
-   * 채팅 금지
+   * 어색함
    */
-  MUTE(0, true, true, true),
-  /**
-   * 버섯의 저주
-   */
-  CURSE_OF_MUSHROOM(999, true, true, true),
-  /**
-   * 무적
-   */
-  INVINCIBLE,
-  /**
-   * 버프 보호
-   */
-  BUFF_FREEZE,
-  /**
-   * 혼란
-   */
-  CONFUSION(false, true, true),
-  /**
-   * 리저렉션
-   */
-  RESURRECTION,
-  /**
-   * 리저렉션 무적
-   */
-  RESURRECTION_INVINCIBLE,
-  /**
-   * 리저렉션 쿨타임
-   */
-  RESURRECTION_COOLDOWN(true, true, true),
-  /**
-   * 차가운 걸음
-   */
-  FROST_WALKER,
-  /**
-   * 가벼운 착지
-   */
-  FEATHER_FALLING(9),
-  /**
-   * 샌즈의 축복
-   */
-  BLESS_OF_SANS(9),
-  /**
-   * 전이
-   */
-  METASASIS(99, false, true, true),
-  /**
-   * 폐렴
-   */
-  PNEUMONIA(false, true, true),
-  /**
-   * 불내증
-   */
-  EXPERIENCE_INTOLERANCE(false, true, true),
-  /**
-   * 뭐하지
-   */
-  WHAT_TO_DO(false, true, true),
-  /**
-   * 앵무새의 가호
-   */
-  PARROTS_CHEER,
-  /**
-   * 날카로움
-   */
-  SHARPNESS(255),
-  /**
-   * 강타
-   */
-  SMITE(255),
+  AWKWARD,
   /**
    * 살충
    */
   BANE_OF_ARTHROPODS(255),
   /**
-   * 정지
+   * 샌즈의 축복
    */
-  STOP(100, false, true, true),
+  BLESS_OF_SANS(9),
   /**
-   * 인벤토리 보호
+   * 버프 보호
    */
-  KEEP_INVENTORY,
+  BUFF_FREEZE,
   /**
-   * 줍지 마, 던져!
+   * 치즈 실험
    */
-  DO_NOT_PICKUP_BUT_THROW_IT(9, false, true, true),
+  CHEESE_EXPERIMENT(false, true, true),
   /**
-   * 인싸
+   * 혼란
    */
-  INSIDER(9, true, true, true),
+  CONFUSION(false, true, true),
   /**
-   * 아싸
+   * 관전 지속
    */
-  OUTSIDER(9, true, true, true),
+  CONTINUAL_SPECTATING(true, true, false),
+  /**
+   * 채팅 쿨타임
+   */
+  COOLDOWN_CHAT(true, true, true),
+  /**
+   * 아아템 확성기 쿨타임
+   */
+  COOLDOWN_ITEM_MEGAPHONE(true, true, true),
+  /**
+   * 즉시 큐컴버리 업데이트
+   */
+  CUCUMBERY_UPDATER(1),
   /**
    * 콩의 저주 콩의 저주
    */
   CURSE_OF_BEANS(true, true, true),
   /**
-   * 섬세한 손길
+   * 섭식 장애
    */
-  SILK_TOUCH,
-  /**
-   * 제련의 손길
-   */
-  SMELTING_TOUCH,
-  /**
-   * 염력
-   */
-  TELEKINESIS,
-  /**
-   * 인벤세이브 저주
-   */
-  CURSE_OF_INVENTORY(false, true, true),
-  /**
-   * 인벤토리 트롤
-   */
-  TROLL_INVENTORY_PROPERTY(Integer.MAX_VALUE - 1, true, true, true),
-  /**
-   * 인벤토리 트롤
-   */
-  TROLL_INVENTORY_PROPERTY_MIN(Integer.MAX_VALUE - 1, true, true, true),
+  CURSE_OF_CONSUMPTION(true, true, true),
   /**
    * 건축 불가능
    */
@@ -160,73 +84,25 @@ public enum CustomEffectType implements Translatable, EnumHideable
    */
   CURSE_OF_CREATIVITY_PLACE(true, true, true),
   /**
-   * 섭식 장애
-   */
-  CURSE_OF_CONSUMPTION(true, true, true),
-  /**
-   * 줍기 불가능
-   */
-  CURSE_OF_PICKUP(true, true, true),
-  /**
    * 버리기 불가능
    */
   CURSE_OF_DROP(true, true, true),
+  /**
+   * 인벤세이브 저주
+   */
+  CURSE_OF_INVENTORY(false, true, true),
   /**
    * 점프 불가능
    */
   CURSE_OF_JUMPING(true, true, true),
   /**
-   * 운동 에너지 저항
+   * 버섯의 저주
    */
-  KINETIC_RESISTANCE(9),
+  CURSE_OF_MUSHROOM(999, true, true, true),
   /**
-   * 겉날개 부스터
+   * 줍기 불가능
    */
-  ELYTRA_BOOSTER(9),
-  /**
-   * 공중 부양 저항
-   */
-  LEVITATION_RESISTANCE(9),
-  /**
-   * 치즈 실험
-   */
-  CHEESE_EXPERIMENT(false, true, true),
-  /**
-   * 똥손
-   */
-  IDIOT_SHOOTER(19, true, true, true),
-  /**
-   * 디버그 염탐
-   */
-  DEBUG_WATCHER(true, true, false),
-  /**
-   * 즉시 큐컴버리 업데이트
-   */
-  CUCUMBERY_UPDATER(1),
-  /**
-   * 아무것도 아님
-   */
-  NOTHING,
-  /**
-   * 어색함
-   */
-  AWKWARD,
-  /**
-   * 평범함
-   */
-  MUNDANE,
-  /**
-   * 진함
-   */
-  THICK,
-  /**
-   * 제작 불가능함
-   */
-  UNCRAFTABLE(2, false, true, true),
-  /**
-   * 서버 라디오 분위기
-   */
-  SERVER_RADIO_LISTENING(2, true, false, false),
+  CURSE_OF_PICKUP(true, true, true),
   /**
    * 어둠의 공포
    */
@@ -240,70 +116,229 @@ public enum CustomEffectType implements Translatable, EnumHideable
    */
   DARKNESS_TERROR_RESISTANCE,
   /**
-   * 채팅 쿨타임
+   * 디버그 염탐
    */
-  COOLDOWN_CHAT(true, true, true),
-  /**
-   * 아아템 확성기 쿨타임
-   */
-  COOLDOWN_ITEM_MEGAPHONE(true, true, true),
+  DEBUG_WATCHER(true, true, false),
   /**
    * 회피
    */
   DODGE(99),
-
-  KNOCKBACK_RESISTANCE(99),
-  KNOCKBACK_RESISTANCE_COMBAT(99),
-  KNOCKBACK_RESISTANCE_NON_COMBAT(99),
   /**
-   * 뉴비 보호막
+   * 줍지 마, 던져!
    */
-  NEWBIE_SHIELD(2, true, true, false),
-  INVINCIBLE_PLUGIN_RELOAD(true, false, false),
-  INVINCIBLE_RESPAWN(true, false, false),
+  DO_NOT_PICKUP_BUT_THROW_IT(9, false, true, true),
+  /**
+   * 겉날개 부스터
+   */
+  ELYTRA_BOOSTER(9),
+  /**
+   * 불내증
+   */
+  EXPERIENCE_INTOLERANCE(false, true, true),
+  /**
+   * 화려한 조명
+   */
+  FANCY_SPOTLIGHT(false, false, false),
+  /**
+   * 화려한 조명 효과
+   */
+  FANCY_SPOTLIGHT_ACTIVATED(false, false, false),
+  /**
+   * 가벼운 착지
+   */
+  FEATHER_FALLING(9),
+  /**
+   * 차가운 걸음
+   */
+  FROST_WALKER,
+  /**
+   * HP 증가
+   */
+  HEALTH_INCREASE(99),
   /**
    * 영웅의 메아리
    */
   HEROS_ECHO(false, false, false),
+  /**
+   * 영웅의 메아리
+   */
   HEROS_ECHO_OTHERS(false, false, false),
-  FANCY_SPOTLIGHT(false, false, false),
-  FANCY_SPOTLIGHT_ACTIVATED(false, false, false),
-  WA_SANS(9),
-  HEALTH_INCREASE(99),
-  CONTINUAL_SPECTATING(true, true, false),
-  TRUE_INVISIBILITY,
-  MINECRAFT_SPEED(255),
-  MINECRAFT_SLOWNESS(255, true),
-  MINECRAFT_HASTE(255),
-  MINECRAFT_MINING_FATIGUE(255, true),
-  MINECRAFT_STRENGTH(255),
-  MINECRAFT_WEAKNESS(255, true),
-  MINECRAFT_INSTANT_DAMAGE(255, true),
-  MINECRAFT_INSTANT_HEAL(255),
-  MINECRAFT_JUMP_BOOST(255),
-  MINECRAFT_NAUSEA(255, true),
-  MINECRAFT_REGENERATION(255),
-  MINECRAFT_RESISTANCE(255),
-  MINECRAFT_FIRE_RESISTANCE(255),
-  MINECRAFT_WATER_BREATHING(255),
-  MINECRAFT_INVISIBILITY(255),
-  MINECRAFT_BLINDNESS(255, true),
-  MINECRAFT_NIGHT_VISION(255),
-  MINECRAFT_HUNGER(255, true),
-  MINECRAFT_POISON(255, true),
-  MINECRAFT_WITHER(255, true),
-  MINECRAFT_HEALTH_BOOST(255),
+  /**
+   * 똥손
+   */
+  IDIOT_SHOOTER(19, true, true, true),
+  /**
+   * 인싸
+   */
+  INSIDER(9, true, true, true),
+  /**
+   * 무적
+   */
+  INVINCIBLE,
+  /**
+   * 플러그인 리로드 무적
+   */
+  INVINCIBLE_PLUGIN_RELOAD(true, false, false),
+  /**
+   * 리스폰 무적
+   */
+  INVINCIBLE_RESPAWN(true, false, false),
+  /**
+   * 인벤토리 보호
+   */
+  KEEP_INVENTORY,
+  /**
+   * 운동 에너지 저항
+   */
+  KINETIC_RESISTANCE(9),
+  /**
+   * 넉백 저항
+   */
+  KNOCKBACK_RESISTANCE(99),
+  /**
+   * 넉백 저항 (PvP)
+   */
+  KNOCKBACK_RESISTANCE_COMBAT(99),
+  /**
+   * 넉백 저항 (PvE)
+   */
+  KNOCKBACK_RESISTANCE_NON_COMBAT(99),
+  /**
+   * 공중 부양 저항
+   */
+  LEVITATION_RESISTANCE(9),
+  /**
+   * 전이
+   */
+  METASASIS(99, false, true, true),
   MINECRAFT_ABSORPTION(255),
-  MINECRAFT_SATURATION(255),
-  MINECRAFT_GLOWING(255, true),
-  MINECRAFT_LEVITATION(255, true),
-  MINECRAFT_SLOW_FALLING(255),
-  MINECRAFT_LUCK(255),
-  MINECRAFT_UNLUCK(255, true),
+  MINECRAFT_BAD_OMEN(255, true),
+  MINECRAFT_BLINDNESS(255, true),
   MINECRAFT_CONDUIT_POWER(255),
   MINECRAFT_DOLPHINS_GRACE(255),
-  MINECRAFT_BAD_OMEN(255, true),
+  MINECRAFT_FIRE_RESISTANCE(255),
+  MINECRAFT_GLOWING(255, true),
+  MINECRAFT_HASTE(255),
+  MINECRAFT_HEALTH_BOOST(255),
   MINECRAFT_HERO_OF_THE_VILLAGE(255),
+  MINECRAFT_HUNGER(255, true),
+  MINECRAFT_INSTANT_DAMAGE(255, true),
+  MINECRAFT_INSTANT_HEAL(255),
+  MINECRAFT_INVISIBILITY(255),
+  MINECRAFT_JUMP_BOOST(255),
+  MINECRAFT_LEVITATION(255, true),
+  MINECRAFT_LUCK(255),
+  MINECRAFT_MINING_FATIGUE(255, true),
+  MINECRAFT_NAUSEA(255, true),
+  MINECRAFT_NIGHT_VISION(255),
+  MINECRAFT_POISON(255, true),
+  MINECRAFT_REGENERATION(255),
+  MINECRAFT_RESISTANCE(255),
+  MINECRAFT_SATURATION(255),
+  MINECRAFT_SLOWNESS(255, true),
+  MINECRAFT_SLOW_FALLING(255),
+  MINECRAFT_SPEED(255),
+  MINECRAFT_STRENGTH(255),
+  MINECRAFT_UNLUCK(255, true),
+  MINECRAFT_WATER_BREATHING(255),
+  MINECRAFT_WEAKNESS(255, true),
+  MINECRAFT_WITHER(255, true),
+  /**
+   * 평범함
+   */
+  MUNDANE,
+  /**
+   * 채팅 금지
+   */
+  MUTE(0, true, true, true),
+  /**
+   * 뉴비 보호막
+   */
+  NEWBIE_SHIELD(2, true, true, false),
+  /**
+   * 아무것도 아님
+   */
+  NOTHING,
+  /**
+   * 아싸
+   */
+  OUTSIDER(9, true, true, true),
+  /**
+   * 앵무새의 가호
+   */
+  PARROTS_CHEER,
+  /**
+   * 폐렴
+   */
+  PNEUMONIA(false, true, true),
+  /**
+   * 리저렉션
+   */
+  RESURRECTION,
+  /**
+   * 리저렉션 쿨타임
+   */
+  RESURRECTION_COOLDOWN(true, true, true),
+  /**
+   * 리저렉션 무적
+   */
+  RESURRECTION_INVINCIBLE,
+  /**
+   * 서버 라디오 분위기
+   */
+  SERVER_RADIO_LISTENING(2, true, false, false),
+  /**
+   * 날카로움
+   */
+  SHARPNESS(255),
+  /**
+   * 섬세한 손길
+   */
+  SILK_TOUCH,
+  /**
+   * 제련의 손길
+   */
+  SMELTING_TOUCH,
+  /**
+   * 강타
+   */
+  SMITE(255),
+  /**
+   * 정지
+   */
+  STOP(100, false, true, true),
+  /**
+   * 염력
+   */
+  TELEKINESIS,
+  /**
+   * 진함
+   */
+  THICK,
+  /**
+   * 인벤토리 트롤
+   */
+  TROLL_INVENTORY_PROPERTY(Integer.MAX_VALUE - 1, true, true, true),
+  /**
+   * 인벤토리 트롤
+   */
+  TROLL_INVENTORY_PROPERTY_MIN(Integer.MAX_VALUE - 1, true, true, true),
+  /**
+   * 찐 투명화
+   */
+  TRUE_INVISIBILITY,
+  /**
+   * 제작 불가능함
+   */
+  UNCRAFTABLE(2, false, true, true),
+  /**
+   * 와 샌즈
+   */
+  WA_SANS(9),
+  /**
+   * 뭐하지
+   */
+  WHAT_TO_DO(false, true, true),
   ;
 
   private final int maxAmplifier;
@@ -450,27 +485,6 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case MINECRAFT_BAD_OMEN -> TranslatableKeyParser.getKey(PotionEffectType.BAD_OMEN);
               case MINECRAFT_HERO_OF_THE_VILLAGE -> TranslatableKeyParser.getKey(PotionEffectType.HERO_OF_THE_VILLAGE);
             };
-  }
-
-  public int getMaxAmplifier()
-  {
-    return maxAmplifier;
-  }
-
-  @NotNull
-  public DisplayType getDefaultDisplayType()
-  {
-    return switch (this)
-            {
-              case PARROTS_CHEER -> DisplayType.PLAYER_LIST;
-              case TROLL_INVENTORY_PROPERTY_MIN -> DisplayType.NONE;
-              default -> DisplayType.BOSS_BAR;
-            };
-  }
-
-  public boolean isNegative()
-  {
-    return isNegative;
   }
 
   @NotNull
@@ -629,44 +643,6 @@ public enum CustomEffectType implements Translatable, EnumHideable
             };
   }
 
-  @NotNull
-  public Component getPropertyDescription()
-  {
-    Component description = Component.empty();
-    boolean isNegative = this.isNegative();
-    boolean keepOnDeath = this.isKeepOnDeath(), keepOnQuit = this.isKeepOnQuit(), keepOnMilk = this.isKeepOnMilk(), buffFreezable = this.isBuffFreezable();
-
-    if (!this.getDescription().equals(Component.empty()) && (keepOnDeath || !keepOnQuit || keepOnMilk || !buffFreezable))
-    {
-      description = description.append(Component.text("\n"));
-    }
-    if (keepOnDeath)
-    {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "사망해도 효과가 사라지지 않습니다"));
-      if (this == CustomEffectType.CURSE_OF_BEANS)
-      {
-        description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "사망해도 효과가 사라지지 않습니다"));
-      }
-    }
-    if (!keepOnQuit)
-    {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c접속을 종료하면 효과가 사라집니다"));
-    }
-    if (keepOnMilk)
-    {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "우유를 마셔도 효과가 사라지지 않습니다"));
-      if (this == CustomEffectType.CURSE_OF_BEANS)
-      {
-        description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "우유를 마셔도 효과가 사라지지 않습니다"));
-      }
-    }
-    if (!buffFreezable)
-    {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c%s의 영향을 받지 않습니다", CustomEffectType.BUFF_FREEZE));
-    }
-    return description;
-  }
-
   public boolean isKeepOnDeath()
   {
     return isKeepOnDeath;
@@ -811,23 +787,24 @@ public enum CustomEffectType implements Translatable, EnumHideable
   @Nullable
   public ItemStack getIcon()
   {
-    ItemStack itemStack = null;
-    ItemMeta itemMeta = null;
+    ItemStack itemStack = new ItemStack(Material.STONE);
+    ItemMeta itemMeta = itemStack.getItemMeta();
     switch (this)
     {
-      case SERVER_RADIO_LISTENING -> itemStack = new ItemStack(Material.JUKEBOX);
+      case SERVER_RADIO_LISTENING -> itemStack = new ItemStack(Material.MUSIC_DISC_CAT);
       case ELYTRA_BOOSTER -> itemStack = new ItemStack(Material.FIREWORK_ROCKET);
       case INVINCIBLE, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, RESURRECTION_INVINCIBLE, RESURRECTION -> itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
       case RESURRECTION_COOLDOWN -> {
         itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
-        itemMeta = itemStack.getItemMeta();
         itemMeta.addEnchant(CustomEnchant.GLOW, 1, true);
       }
+      case FEATHER_FALLING -> itemStack = new ItemStack(Material.FEATHER);
     }
-    if (itemMeta != null)
+    if (itemStack.getType() == Material.STONE)
     {
-      itemStack.setItemMeta(itemMeta);
+      return null;
     }
+    itemStack.setItemMeta(itemMeta);
     return itemStack;
   }
 
@@ -840,6 +817,65 @@ public enum CustomEffectType implements Translatable, EnumHideable
                       INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, HEROS_ECHO_OTHERS, FANCY_SPOTLIGHT_ACTIVATED, NEWBIE_SHIELD -> true;
               default -> false;
             };
+  }
+
+  @NotNull
+  public DisplayType getDefaultDisplayType()
+  {
+    return switch (this)
+            {
+              case PARROTS_CHEER -> DisplayType.PLAYER_LIST;
+              case TROLL_INVENTORY_PROPERTY_MIN -> DisplayType.NONE;
+              default -> DisplayType.BOSS_BAR;
+            };
+  }
+
+  public int getMaxAmplifier()
+  {
+    return maxAmplifier;
+  }
+
+  public boolean isNegative()
+  {
+    return isNegative;
+  }
+
+  @NotNull
+  public Component getPropertyDescription()
+  {
+    Component description = Component.empty();
+    boolean isNegative = this.isNegative();
+    boolean keepOnDeath = this.isKeepOnDeath(), keepOnQuit = this.isKeepOnQuit(), keepOnMilk = this.isKeepOnMilk(), buffFreezable = this.isBuffFreezable();
+
+    if (!this.getDescription().equals(Component.empty()) && (keepOnDeath || !keepOnQuit || keepOnMilk || !buffFreezable))
+    {
+      description = description.append(Component.text("\n"));
+    }
+    if (keepOnDeath)
+    {
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "사망해도 효과가 사라지지 않습니다"));
+      if (this == CustomEffectType.CURSE_OF_BEANS)
+      {
+        description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "사망해도 효과가 사라지지 않습니다"));
+      }
+    }
+    if (!keepOnQuit)
+    {
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c접속을 종료하면 효과가 사라집니다"));
+    }
+    if (keepOnMilk)
+    {
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "우유를 마셔도 효과가 사라지지 않습니다"));
+      if (this == CustomEffectType.CURSE_OF_BEANS)
+      {
+        description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "c" : "a") + "우유를 마셔도 효과가 사라지지 않습니다"));
+      }
+    }
+    if (!buffFreezable)
+    {
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c%s의 영향을 받지 않습니다", CustomEffectType.BUFF_FREEZE));
+    }
+    return description;
   }
 }
 

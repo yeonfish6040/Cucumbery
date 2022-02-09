@@ -65,7 +65,7 @@ public class ComponentUtil
   private static final Pattern p = Pattern.compile("%s"), p2 = Pattern.compile("%[0-9]+\\$s");
   private static final Pattern yeet = Pattern.compile("(%s|%[0-9]+\\$s)([^가-힣ㄱ-ㅎA-Za-z0-9]+|)" +
           "(이\\(가\\)|\\(이\\)가|가\\(이\\)|\\(가\\)이|을\\(를\\)|\\(을\\)를|를\\(을\\)|\\(를\\)을|와\\(과\\)|\\(와\\)과|과\\(와\\)|\\(과\\)와|은\\(는\\)|\\(은\\)는|는\\(은\\)|\\(는\\)은|\\(으\\)로|으\\(로\\)|\\(이\\)라|이\\(라\\))");
-
+  final static private String q = "이\\(가\\)|\\(이\\)가|가\\(이\\)|\\(가\\)이|을\\(를\\)|\\(을\\)를|를\\(을\\)|\\(를\\)을|와\\(과\\)|\\(와\\)과|과\\(와\\)|\\(과\\)와|은\\(는\\)|\\(은\\)는|는\\(은\\)|\\(는\\)은|\\(으\\)로|으\\(로\\)|\\(이\\)라|이\\(라\\)";
 
   public static Component create(@NotNull Object... objects)
   {
@@ -165,7 +165,14 @@ public class ComponentUtil
         {
           concat = concat.hoverEvent(itemStack.asHoverEvent());
         }
-        concat = concat.clickEvent(ClickEvent.copyToClipboard("/give @s minecraft:" + type.toString().toLowerCase() + new NBTItem(giveItem)));
+        String nbt = new NBTItem(giveItem).toString();
+        if (nbt.equals("{}"))
+        {
+          nbt = "";
+        }
+        String giveCommand = Cucumbery.using_CommandAPI ? "/cgive" : "/give";
+        ClickEvent clickEvent = ClickEvent.copyToClipboard(giveCommand + " @p minecraft:" + itemStack.getType().toString().toLowerCase() + nbt);
+        concat = concat.clickEvent(clickEvent);
         component = component.append(concat);
       }
       else if (object instanceof Prefix prefix)
@@ -374,7 +381,42 @@ public class ComponentUtil
       {
         String display = song.getPath().getName();
         display = display.substring(0, display.length() - 4);
-        Component concat = Component.text(display).color(Constant.THE_COLOR).hoverEvent(Component.translatable(display));
+        Component hover = Component.translatable(display);
+        String title = song.getTitle(), description = song.getDescription();
+        String author = song.getAuthor(), originalAuthor = song.getOriginalAuthor();
+        if (!title.equals(""))
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("제목 : %s", Constant.THE_COLOR_HEX + title));
+        }
+        if (!description.equals(""))
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text(description));
+          hover = hover.append(Component.text("\n"));
+        }
+        if (!author.equals(""))
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("제작자 : %s", Constant.THE_COLOR_HEX + author));
+        }
+        if (!originalAuthor.equals(""))
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("원 제작자 : %s", Constant.THE_COLOR_HEX + originalAuthor));
+        }
+        if (!author.equals("") || !originalAuthor.equals("") || !title.equals("") || !description.equals(""))
+        {
+          hover = hover.append(Component.text("\n"));
+        }
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("속도 : %sTPS", Constant.THE_COLOR_HEX + song.getSpeed()));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("길이 : %s",Constant.THE_COLOR_HEX + Method.timeFormatMilli((long) ((song.getLength() / song.getSpeed()) * 1000L), true, 1)));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("딜레이 : %s", Constant.THE_COLOR_HEX + song.getDelay()));
+        Component concat = Component.text(display).color(Constant.THE_COLOR).hoverEvent(hover);
         component = component.append(concat);
       }
       else if (object instanceof Advancement advancement)
@@ -685,8 +727,6 @@ public class ComponentUtil
     }
     return component;
   }
-
-  final static private String q = "이\\(가\\)|\\(이\\)가|가\\(이\\)|\\(가\\)이|을\\(를\\)|\\(을\\)를|를\\(을\\)|\\(를\\)을|와\\(과\\)|\\(와\\)과|과\\(와\\)|\\(과\\)와|은\\(는\\)|\\(은\\)는|는\\(은\\)|\\(는\\)은|\\(으\\)로|으\\(로\\)|\\(이\\)라|이\\(라\\)";
 
   @NotNull
   private static String yeet2(@NotNull String key, @NotNull String serial)

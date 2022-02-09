@@ -419,19 +419,19 @@ public class CommandSong implements CommandExecutor, TabCompleter
             }
 
             MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "--------------------------------------------");
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "파일 이름 : %s", song.getPath().getName());
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "제작자 : %s", song.getAuthor());
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "원 제작자 : %s", song.getOriginalAuthor());
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "노래 제목 : %s", song.getTitle());
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "파일 이름 : %s", Constant.THE_COLOR_HEX + song.getPath().getName());
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "제작자 : %s", Constant.THE_COLOR_HEX + song.getAuthor());
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "원 제작자 : %s", Constant.THE_COLOR_HEX + song.getOriginalAuthor());
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "노래 제목 : %s", Constant.THE_COLOR_HEX + song.getTitle());
             MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "노래 설명 : %s", song.getDescription());
 
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "속도 : %sTPS", Constant.Sosu2.format(song.getSpeed()));
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "길이 : %stick, %s", song.getLength(), Method.timeFormatMilli((long) ((song.getLength() / song.getSpeed()) * 1000L), true, 1));
-            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "달레이 : %s", song.getDelay());
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "속도 : %sTPS", Constant.THE_COLOR_HEX + Constant.Sosu2.format(song.getSpeed()));
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "길이 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli((long) ((song.getLength() / song.getSpeed()) * 1000L), true, 1));
+            MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "딜레이 : %s", Constant.THE_COLOR_HEX + song.getDelay());
             return true;
           }
           default -> {
-            MessageUtil.wrongArg(sender, 2, args);
+            MessageUtil.wrongArg(sender, 1, args);
             MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
             return !(sender instanceof BlockCommandSender);
           }

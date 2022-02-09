@@ -574,6 +574,13 @@ public class ItemLoreUtil
           lore.add(ComponentUtil.translate("&7로 내구도가 깎이는 대신 이동 속도 %s 증가",
                   "&a" + Constant.Sosu2.format((enchantLevel * 0.125 - 0.1) * 100d) + "%"));
         }
+        if (enchant.equals(com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant.TELEKINESIS))
+        {
+          lore.addAll(Arrays.asList(
+                  ComponentUtil.translate("&7블록을 캐거나 적을 잡았을 때 "),
+                  ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
+          );
+        }
       }
     }
     else if (object instanceof String id)
@@ -600,12 +607,12 @@ public class ItemLoreUtil
       maxIs1 = maxIs1 && enchantLevel == 1;
 
       Component prefix = ComponentUtil.translate((isCurse ? "&c" : "rgb154,84,255;") + customEnchant.getDisplay());
-      
+
       if (!maxIs1)
       {
         component = ComponentUtil.translate("%s %s", prefix, enchantLevel);
       }
-      
+
       lore.add(prefix);
       if (useTMI)
       {
@@ -751,6 +758,7 @@ public class ItemLoreUtil
 
   /**
    * 인벤토리에 들어 있는 아이템 설명을 제거하여 nbt 데이터 크기를 줄입니다.(최적화)
+   *
    * @param itemStack 최적화할 아이템 메타
    */
   public static void removeInventoryItemLore(@NotNull ItemStack itemStack)

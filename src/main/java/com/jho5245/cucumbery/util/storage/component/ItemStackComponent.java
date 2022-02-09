@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util.storage.component;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
@@ -65,12 +66,18 @@ public class ItemStackComponent
     {
       itemName = itemName.hoverEvent(itemStack.asHoverEvent());
     }
+    String nbt = new NBTItem(giveItem).toString();
+    if (nbt.equals("{}"))
+    {
+      nbt = "";
+    }
+    String giveCommand = Cucumbery.using_CommandAPI ? "/cgive" : "/give";
+    ClickEvent clickEvent = ClickEvent.copyToClipboard(giveCommand + " @p minecraft:" + itemStack.getType().toString().toLowerCase() + nbt);
     if (amount == 1 && itemStack.getType().getMaxStackSize() == 1)
     {
-      return itemName;
+      return itemName.clickEvent(clickEvent);
     }
-
     return ComponentUtil.translate("&o&q%s %s", itemName, ComponentUtil.translate("%s개", Component.text(amount)).color(defaultColor)).color(itemName.color()).hoverEvent(itemStack.asHoverEvent())
-            .clickEvent(ClickEvent.copyToClipboard("/give @s minecraft:" + itemStack.getType().toString().toLowerCase() + new NBTItem(giveItem)));
+            .clickEvent(clickEvent);
   }
 }

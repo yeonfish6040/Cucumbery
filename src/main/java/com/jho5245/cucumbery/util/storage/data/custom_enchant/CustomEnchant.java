@@ -20,12 +20,14 @@ import java.util.*;
 public abstract class CustomEnchant extends EnchantmentWrapper
 {
   public static Enchantment GLOW;
+  public static Enchantment TELEKINESIS;
   private static final Map<NamespacedKey, Enchantment> byKey = new HashMap<>();
   private static final Map<String, Enchantment> byName = new HashMap<>();
 
   private static void registerEnchants()
   {
     GLOW = registerEnchant(new EnchantGlow("glow"));
+    TELEKINESIS = registerEnchant(new EnchantTelekinesis("telekinesis"));
   }
 
   private static CustomEnchant registerEnchant(@NotNull CustomEnchant enchant)
@@ -150,6 +152,7 @@ public abstract class CustomEnchant extends EnchantmentWrapper
     registerEnchants();
   }
 
+  @SuppressWarnings("unchecked")
   public static void onDisable()
   {
     try
@@ -160,9 +163,7 @@ public abstract class CustomEnchant extends EnchantmentWrapper
       byKeyField.setAccessible(true);
       byNameField.setAccessible(true);
 
-      @SuppressWarnings("unchecked")
       HashMap<NamespacedKey, Enchantment> byKey = (HashMap<NamespacedKey, Enchantment>) byKeyField.get(null);
-      @SuppressWarnings("unchecked")
       HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) byNameField.get(null);
 
       byKey.keySet().removeIf(CustomEnchant.byKey::containsKey);

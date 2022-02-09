@@ -16,7 +16,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -124,6 +123,7 @@ public class CustomEffectGUI
         itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
         itemMeta.displayName(ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key));
         itemMeta.lore(customEffectLore(customEffect));
+        itemMeta.setCustomModelData(5200 + effectType.ordinal());
         itemStack.setItemMeta(itemMeta);
         if (effectType.isRightClickRemovable())
         {
@@ -143,8 +143,10 @@ public class CustomEffectGUI
         ItemStack itemStack = new ItemStack(Material.POTION, Math.min(64, potionEffect.getAmplifier() + 1));
         PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
         potionMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
-        potionMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
         String effectKey = TranslatableKeyParser.getKey(effectType);
+        @SuppressWarnings("deprecation")
+        int id = potionEffect.getType().getId() + 15200;
+        potionMeta.setCustomModelData(id);
         potionMeta.displayName(ComponentUtil.translate((CustomEffectManager.isVanillaNegative(effectType) ? "&c" : "&a") + effectKey));
         potionMeta.setColor(effectType.getColor());
         potionMeta.lore(potionEffectLore(potionEffect));

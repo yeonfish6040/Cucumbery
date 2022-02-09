@@ -19,6 +19,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -30,8 +31,6 @@ import org.bukkit.block.*;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -192,6 +191,7 @@ public class BlockBreak implements Listener
     Object value = player.getWorld().getGameRuleValue(GameRule.DO_TILE_DROPS);
 
     boolean isTelekinesis = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.TELEKINESIS.toString()) ||
+            (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.TELEKINESIS)) ||
             CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS),
             isSmeltingTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.SMELTING_TOUCH.toString()) ||
                     CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH),
@@ -378,17 +378,7 @@ public class BlockBreak implements Listener
                 }
                 if (guaranteeXp > 0)
                 {
-                  ExperienceOrb xpOrb = (ExperienceOrb) player.getWorld().spawnEntity(player.getLocation(), EntityType.EXPERIENCE_ORB);
-                  xpOrb.setExperience(guaranteeXp);
-                  if (!Method.configContainsLocation(xpOrb.getLocation(), Cucumbery.config.getStringList("no-display-xp-orb-value-worlds")))
-                  {
-                    String configString = Cucumbery.config.getString("display-xp-orb-value-format");
-                    if (configString != null)
-                    {
-                      xpOrb.setCustomName(MessageUtil.n2s(
-                              "§경§험§치" + configString.replace("%value%", guaranteeXp + "")));
-                    }
-                  }
+                  player.giveExp(guaranteeXp, true);
                 }
               }
             }
@@ -405,17 +395,7 @@ public class BlockBreak implements Listener
               {
                 if (!noExpDropDueToForcePreverse)
                 {
-                  ExperienceOrb xpOrb = (ExperienceOrb) player.getWorld().spawnEntity(player.getLocation(), EntityType.EXPERIENCE_ORB);
-                  xpOrb.setExperience(event.getExpToDrop());
-                  if (!Method.configContainsLocation(xpOrb.getLocation(), Cucumbery.config.getStringList("no-display-xp-orb-value-worlds")))
-                  {
-                    String configString = Cucumbery.config.getString("display-xp-orb-value-format");
-                    if (configString != null)
-                    {
-                      xpOrb.setCustomName(MessageUtil.n2s(
-                              "§경§험§치" + configString.replace("%value%", event.getExpToDrop() + "")));
-                    }
-                  }
+                  player.giveExp(event.getExpToDrop(), true);
                 }
                 event.setExpToDrop(0);
               }

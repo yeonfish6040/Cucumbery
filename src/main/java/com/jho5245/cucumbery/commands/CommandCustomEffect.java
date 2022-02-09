@@ -409,11 +409,11 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
       }
       if (!successEntitiesIsEmpty)
       {
+        MessageUtil.info(sender, "commands.effect.give.success.single", customEffect, successEntities);
+        MessageUtil.sendAdminMessage(sender, null, "commands.effect.give.success.single", customEffect, successEntities);
         List<Audience> infoTarget = new ArrayList<>(successEntities);
         infoTarget.remove(sender);
-        MessageUtil.info(sender, "commands.effect.give.success.single", customEffect, successEntities);
         MessageUtil.info(infoTarget, "%s이(가) 당신에게 %s 효과를 적용했습니다", sender, customEffect);
-        MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), "commands.effect.give.success.single", customEffect, successEntities);
       }
     }
     return !successEntitiesIsEmpty;
@@ -463,14 +463,14 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         if (all)
         {
           MessageUtil.info(sender, "commands.effect.clear.everything.success.single", successEntities);
+          MessageUtil.sendAdminMessage(sender, null, "commands.effect.clear.everything.success.single", successEntities);
           MessageUtil.info(infoTarget, "%s이(가) 당신의 모든 효과를 제거했습니다", sender);
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), "commands.effect.clear.everything.success.single", sender, successEntities);
         }
         else
         {
           MessageUtil.info(sender, "commands.effect.clear.specific.success.single", customEffectType, successEntities);
+          MessageUtil.sendAdminMessage(sender, null, "commands.effect.clear.specific.success.single", customEffectType, successEntities);
           MessageUtil.info(infoTarget, "%s이(가) 당신의 %s 효과를 제거했습니다", sender, customEffectType);
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities), "commands.effect.clear.specific.success.single", sender, customEffectType, successEntities);
         }
       }
     }

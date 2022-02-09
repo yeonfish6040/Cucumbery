@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import org.bukkit.EntityEffect;
@@ -23,6 +24,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,11 +86,15 @@ public class EntityDeath implements Listener
     LivingEntity entity = event.getEntity();
     EntityDamageEvent lastDamageCause = entity.getLastDamageCause();
     if (!(lastDamageCause instanceof EntityDamageByEntityEvent damageEvent))
+    {
       return;
+    }
     Entity damagerEntity = damageEvent.getDamager();
     EntityType damagerEntityType = damagerEntity.getType();
     if (damagerEntityType != EntityType.PLAYER && !(damagerEntity instanceof Projectile))
+    {
       return;
+    }
     Player player;
     if (damagerEntityType == EntityType.PLAYER)
     {
@@ -102,14 +108,21 @@ public class EntityDeath implements Listener
         player = (Player) projectile.getShooter();
       }
       else
+      {
         return;
+      }
     }
     EntityType entityType = entity.getType();
     boolean entityIsPlayer = entityType == EntityType.PLAYER;
     List<ItemStack> drops = event.getDrops();
     int dropExp = event.getDroppedExp();
-    ItemStack maindHand = player.getInventory().getItemInMainHand();
-    NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(maindHand), CucumberyTag.CUSTOM_ENCHANTS_KEY);
+    ItemStack mainHand = player.getInventory().getItemInMainHand();
+    ItemMeta itemMeta = null;
+    if (mainHand.hasItemMeta())
+    {
+      itemMeta = mainHand.getItemMeta();
+    }
+    NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(mainHand), CucumberyTag.CUSTOM_ENCHANTS_KEY);
     boolean hasCoarseTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.COARSE_TOUCH.toString());
     if (hasCoarseTouch)
     {
@@ -120,25 +133,30 @@ public class EntityDeath implements Listener
     {
       event.setDroppedExp(0);
     }
-    boolean isTelekinesis = (NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.TELEKINESIS_PVP.toString()) && entityIsPlayer)
-            || (NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.TELEKINESIS.toString()) && !entityIsPlayer);
+    boolean isTelekinesis = (entityIsPlayer && (
+            NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, CustomEnchant.TELEKINESIS_PVP.toString())
+            )) || (!entityIsPlayer && (
+            NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, CustomEnchant.TELEKINESIS.toString()) ||
+                    (itemMeta != null && (itemMeta.hasEnchant(com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant.TELEKINESIS)))
+            ));
     boolean isSmeltingTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.SMELTING_TOUCH.toString()) && Cucumbery.config.getBoolean("use-smelting-touch-on-entities");
 
     if (isTelekinesis || isSmeltingTouch)
     {
       if (!hasUnskilledTouch && isTelekinesis && dropExp > 0)
       {
-        ExperienceOrb xpOrb = (ExperienceOrb) player.getWorld().spawnEntity(player.getLocation(), EntityType.EXPERIENCE_ORB);
-        xpOrb.setExperience(dropExp);
+        player.giveExp(dropExp, true);
         event.setDroppedExp(0);
       }
-      if (!hasCoarseTouch && drops.size() > 0)
+      if (!hasCoarseTouch && !drops.isEmpty())
       {
         List<ItemStack> dropsClone = new ArrayList<>(drops);
         drops.clear();
         List<Double> expOutput = new ArrayList<>();
         if (isSmeltingTouch)
+        {
           dropsClone = ItemStackUtil.getSmeltedResult(player, dropsClone, expOutput);
+        }
         String worldName = player.getLocation().getWorld().getName();
         boolean setItemLore = UserData.USE_HELPFUL_LORE_FEATURE.getBoolean(player.getUniqueId())
                 && Cucumbery.config.getBoolean("use-helpful-lore-feature")
@@ -148,11 +166,15 @@ public class EntityDeath implements Listener
           if (isTelekinesis)
           {
             if (setItemLore)
+            {
               ItemLore.setItemLore(dropClone);
+            }
             else
+            {
               ItemLore.removeItemLore(dropClone);
+            }
             HashMap<Integer, ItemStack> lostDrops = player.getInventory().addItem(dropClone);
-            if (lostDrops.size() > 0)
+            if (!lostDrops.isEmpty())
             {
               for (int j = 0; j < lostDrops.size(); j++)
               {
