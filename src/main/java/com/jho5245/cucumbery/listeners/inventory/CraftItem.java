@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;

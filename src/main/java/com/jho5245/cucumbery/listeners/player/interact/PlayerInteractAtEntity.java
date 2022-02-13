@@ -1,10 +1,10 @@
 package com.jho5245.cucumbery.listeners.player.interact;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;

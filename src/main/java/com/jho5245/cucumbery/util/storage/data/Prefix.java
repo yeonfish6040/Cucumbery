@@ -1,6 +1,6 @@
 package com.jho5245.cucumbery.util.storage.data;
 
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;

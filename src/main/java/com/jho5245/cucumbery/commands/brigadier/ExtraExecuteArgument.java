@@ -1,8 +1,8 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.jorel.commandapi.Brigadier;

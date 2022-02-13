@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.commands.debug;
 
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandWhatIs implements CommandExecutor, TabCompleter
 {
@@ -72,6 +73,7 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
         return true;
       }
       String worldName = world.getName();
+      world.getDifficulty().translationKey();
       String difficulty = switch (world.getDifficulty())
               {
                 case EASY -> "쉬움";
@@ -92,24 +94,30 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
               };
       String fullTime = MessageUtil.periodRealTimeAndGameTime(world.getFullTime());
       Component gamerule = Component.empty();
-      for (int i = 0; i < GameRule.values().length; i++)
+      GameRule<?>[] gameRules = GameRule.values();
+      for (int i = 0; i < gameRules.length; i++)
       {
         String color = "&" + Integer.toHexString((i + 1) % 2 + 10);
-        GameRule<?> rule = GameRule.values()[i];
+        GameRule<?> rule = gameRules[i];
         String ruleString = rule.getName();
         String key = rule.translationKey();
-        Object value = world.getGameRuleValue(rule);
+        Object value = world.getGameRuleValue(rule), defaultValue = world.getGameRuleDefault(rule);
+        boolean isDefault = Objects.equals(value, defaultValue);
         if (value == null)
         {
           value = "&ff0000;null";
         }
         if (value.equals(true))
         {
-          value = "&b" + value;
+          value = (isDefault ? "&3" : "&9") + value;
         }
         else if (value.equals(false))
         {
-          value = "&c" + value;
+          value = (isDefault ? "&c" : "&4") + value;
+        }
+        else if (value instanceof Number)
+        {
+          value = (isDefault ? "&e" : "&6") + value;
         }
         Component component =  ComponentUtil.create(color + ruleString);
         Component hover = Component.empty().append(ComponentUtil.translate(color + key));

@@ -1,8 +1,8 @@
 package com.jho5245.cucumbery.listeners.server;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.PlaceHolderUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

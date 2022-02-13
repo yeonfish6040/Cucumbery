@@ -1,14 +1,14 @@
 package com.jho5245.cucumbery.listeners.entity.customeffect;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.customeffect.CustomEffect;
-import com.jho5245.cucumbery.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.customeffect.children.group.AttributeCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectApplyEvent;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.Updater;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -16,10 +16,7 @@ import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffect;
@@ -27,6 +24,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class EntityCustomEffectApply implements Listener
@@ -142,6 +140,61 @@ public class EntityCustomEffectApply implements Listener
       if (attributeInstance != null)
       {
         attributeInstance.addModifier(new AttributeModifier(uuid, "cucumbery-" + customEffectType.translationKey(), (amplifier + 1) * attributeCustomEffect.getMultiplier(), attributeCustomEffect.getOperation()));
+      }
+    }
+
+    if (customEffectType == CustomEffectType.VAR_DETOXICATE || customEffectType == CustomEffectType.VAR_PODAGRA || customEffectType == CustomEffectType.VAR_PNEUMONIA || customEffectType == CustomEffectType.VAR_STOMACHACHE)
+    {
+      CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectType.SPREAD, duration, amplifier));
+    }
+
+    if (customEffectType == CustomEffectType.VAR_DETOXICATE && entity instanceof LivingEntity livingEntity)
+    {
+      if (!CustomEffectManager.hasEffect(entity, CustomEffectType.VAR_DETOXICATE_ACTIVATED))
+      {
+        boolean doubleDecreased = Math.random() < (amplifier + 1), tripledDecreased = Math.random() < (amplifier + 1) * 0.1, allRemoved = doubleDecreased && tripledDecreased;
+        if (allRemoved)
+        {
+          livingEntity.removePotionEffect(PotionEffectType.POISON);
+          livingEntity.removePotionEffect(PotionEffectType.CONFUSION);
+          livingEntity.removePotionEffect(PotionEffectType.BLINDNESS);
+          livingEntity.removePotionEffect(PotionEffectType.UNLUCK);
+          MessageUtil.sendMessage(livingEntity, Prefix.INFO_CUSTOM_EFFECT, "와 샌즈! %s의 효과로 인해 디버프가 제거되었습니다!", customEffect);
+        }
+        else if (doubleDecreased || tripledDecreased)
+        {
+          int decreation = doubleDecreased ? 2 : 3;
+          PotionEffectType potionEffectType = switch ((int) (Math.random() * 4))
+                  {
+                    case 0 -> PotionEffectType.POISON;
+                    case 1 -> PotionEffectType.CONFUSION;
+                    case 2 -> PotionEffectType.BLINDNESS;
+                    default -> PotionEffectType.UNLUCK;
+                  };
+          PotionEffect potionEffect = livingEntity.getPotionEffect(potionEffectType);
+          if (potionEffect != null)
+          {
+            livingEntity.removePotionEffect(potionEffectType);
+            if (potionEffect.getAmplifier() - decreation > 0)
+            {
+              potionEffect = potionEffect.withAmplifier(potionEffect.getAmplifier() - decreation);
+              livingEntity.addPotionEffect(potionEffect);
+            }
+          }
+        }
+      }
+      CustomEffectManager.addEffect(entity, CustomEffectType.VAR_DETOXICATE_ACTIVATED);
+    }
+
+    if (customEffectType == CustomEffectType.NO_ENTITY_AGGRO)
+    {
+      List<Entity> nearbyEntities = entity.getWorld().getEntities();
+      for (Entity e : nearbyEntities)
+      {
+        if (e instanceof Mob mob && Objects.equals(mob.getTarget(), entity))
+        {
+          mob.setTarget(null);
+        }
       }
     }
   }

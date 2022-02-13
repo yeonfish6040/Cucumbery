@@ -19,22 +19,22 @@ public enum DeathMessage
   ANVIL_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 모루에 짓눌렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 모루에 짓눌렸습니다
    */
   ANVIL_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 자살을 시도하다가 떨어지는 모루에 짓눌렸습니다.
+   * %1$s이(가) 자살을 시도하다가 떨어지는 모루에 짓눌렸습니다
    */
   ANVIL_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하며 자살을 시도하다가 떨어지는 모루에 짓눌렸습니다.
+   * %1$s이(가) %3$s을(를) 사용하며 자살을 시도하다가 떨어지는 모루에 짓눌렸습니다
    */
   ANVIL_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 화살에게 저격당했습니다.
+   * %1$s이(가) 화살에게 저격당했습니다
    */
   ARROW,
 
@@ -49,17 +49,17 @@ public enum DeathMessage
   ARROW_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 스스로를 저격했습니다.
+   * %1$s이(가) 스스로를 저격했습니다
    */
   ARROW_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하여 스스로를 저격했습니다.
+   * %1$s이(가) %3$s을(를) 사용하여 스스로를 저격했습니다
    */
   ARROW_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다.
+   * %1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다
    */
   ARROW_COMBAT_UNKNOWN,
 
@@ -69,22 +69,22 @@ public enum DeathMessage
   BAD_RESPAWN,
 
   /**
-   * %1$s이(가) %2$s와(과) 싸우다 %3$s에게 목숨을 빼앗겼습니다.
+   * %1$s이(가) %2$s와(과) 싸우다 %3$s에게 목숨을 빼앗겼습니다
    */
   BAD_RESPAWN_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 목숨을 빼앗겼습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 목숨을 빼앗겼습니다
    */
   BAD_RESPAWN_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) %3$s으(로) 자살했습니다.
+   * %1$s이(가) %3$s으(로) 자살했습니다
    */
   BAD_RESPAWN_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하고 %4$s으(로) 자살했습니다.
+   * %1$s이(가) %3$s을(를) 사용하고 %4$s으(로) 자살했습니다
    */
   BAD_RESPAWN_COMBAT_SUICIDE_ITEM,
 
@@ -104,37 +104,37 @@ public enum DeathMessage
   CACTUS_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 스스로를 %3$s에 찔려 죽었습니다.
+   * %1$s이(가) 스스로를 %3$s에 찔려 죽었습니다
    */
   CACTUS_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하고 스스로를 %4$s에 찔려 죽었습니다.
+   * %1$s이(가) %3$s을(를) 사용하고 스스로를 %4$s에 찔려 죽었습니다
    */
   CACTUS_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) %2$s에 닿아 죽었습니다.
+   * %1$s이(가) %2$s에 닿아 죽었습니다
    */
   CONTACT,
 
   /**
-   * %1$s이(가) %2$s에게서 도망치려다 %3$s에 닿아 죽었습니다.
+   * %1$s이(가) %2$s에게서 도망치려다 %3$s에 닿아 죽었습니다
    */
   CONTACT_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 닿아 죽었습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 닿아 죽었습니다
    */
   CONTACT_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 스스로를 %3$s에 닿아 죽었습니다.
+   * %1$s이(가) 스스로를 %3$s에 닿아 죽었습니다
    */
   CONTACT_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하고 스스로를 %4$s에 닿아 죽었습니다.
+   * %1$s이(가) %3$s을(를) 사용하고 스스로를 %4$s에 닿아 죽었습니다
    */
   CONTACT_COMBAT_SUICIDE_ITEM,
 
@@ -149,42 +149,42 @@ public enum DeathMessage
   CRAMMING_COMBAT,
 
   /**
-   * %1$s이(가) %3s을(를) 사용한 %2$s과(와) 싸우다 짓눌렸습니다.
+   * %1$s이(가) %3s을(를) 사용한 %2$s과(와) 싸우다 짓눌렸습니다
    */
   CRAMMING_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 자살을 시도하다가 %3$s에게 짓눌렸습니다.
+   * %1$s이(가) 자살을 시도하다가 %3$s에게 짓눌렸습니다
    */
   CRAMMING_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3s을(를) 사용하여 자살을 시도하다가 %4$s에게 짓눌렸습니다.
+   * %1$s이(가) %3s을(를) 사용하여 자살을 시도하다가 %4$s에게 짓눌렸습니다
    */
   CRAMMING_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) %2$s에게 어깨빵을 당했습니다.
+   * %1$s이(가) %2$s에게 어깨빵을 당했습니다
    */
   CRAMMING_SOLO,
 
   /**
-   * %1$s이(가) %2$s와(과) 싸우다 %3$s에게 어깨빵을 당했습니다.
+   * %1$s이(가) %2$s와(과) 싸우다 %3$s에게 어깨빵을 당했습니다
    */
   CRAMMING_SOLO_COMBAT,
 
   /**
-   * %1$s이(가) %3s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 어깨빵을 당했습니다.
+   * %1$s이(가) %3s을(를) 사용한 %2$s와(과) 싸우다 %4$s에게 어깨빵을 당했습니다
    */
   CRAMMING_SOLO_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 자살을 시도하다가 %3$s에게 어깨빵을 당했습니다.
+   * %1$s이(가) 자살을 시도하다가 %3$s에게 어깨빵을 당했습니다
    */
   CRAMMING_SOLO_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하여 자살을 시도하다가 %4$s에게 어깨빵을 당했습니다.
+   * %1$s이(가) %3$s을(를) 사용하여 자살을 시도하다가 %4$s에게 어깨빵을 당했습니다
    */
   CRAMMING_SOLO_COMBAT_SUICIDE_ITEM,
 
@@ -199,7 +199,7 @@ public enum DeathMessage
   DRAGON_BREATH_COMBAT,
 
   /**
-   * %1$s이(가) %3s을(를) 사용한 %2$s 때문에 드래곤의 숨결에 구워졌습니다.
+   * %1$s이(가) %3s을(를) 사용한 %2$s 때문에 드래곤의 숨결에 구워졌습니다
    */
   DRAGON_BREATH_COMBAT_ITEM,
 
@@ -224,7 +224,7 @@ public enum DeathMessage
   DROWN_COMBAT,
 
   /**
-   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 익사했습니다.
+   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 익사했습니다
    */
   DROWN_COMBAT_ITEM,
 
@@ -249,7 +249,7 @@ public enum DeathMessage
   DROWN_TOGETHER_COMBAT,
 
   /**
-   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 익사했습니다.
+   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 도망치려다 익사했습니다
    */
   DROWN_TOGETHER_COMBAT_ITEM,
 
@@ -264,7 +264,7 @@ public enum DeathMessage
   DROWN_TOGETHER_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 물 밖에서 놀다가 익사했습니다.
+   * %1$s이(가) 물 밖에서 놀다가 익사했습니다
    */
   DROWN_WATER,
 
@@ -274,7 +274,7 @@ public enum DeathMessage
   DROWN_WATER_COMBAT,
 
   /**
-   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 물 밖으로 도망치려다 익사했습니다.
+   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 물 밖으로 도망치려다 익사했습니다
    */
   DROWN_WATER_COMBAT_ITEM,
 
@@ -284,12 +284,12 @@ public enum DeathMessage
   DROWN_WATER_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하여 물 밖에서 자살했습니다.
+   * %1$s이(가) %3$s을(를) 사용하여 물 밖에서 자살했습니다
    */
   DROWN_WATER_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 물 밖에서 놀다가 익사했습니다.
+   * %1$s이(가) 물 밖에서 놀다가 익사했습니다
    */
   DROWN_WATER_TOGETHER,
 
@@ -299,7 +299,7 @@ public enum DeathMessage
   DROWN_WATER_TOGETHER_COMBAT,
 
   /**
-   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 물 밖으로 도망치려다 익사했습니다.
+   * %1$s이(가) %3s을(를) 사용한 %2$s에게서 물 밖으로 도망치려다 익사했습니다
    */
   DROWN_WATER_TOGHETER_COMBAT_ITEM,
 
@@ -309,7 +309,7 @@ public enum DeathMessage
   DROWN_WATER_TOGETHER_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하여 물 밖에서 자살했습니다.
+   * %1$s이(가) %3$s을(를) 사용하여 물 밖에서 자살했습니다
    */
   DROWN_WATER_TOGETHER_COMBAT_SUICIDE_ITEM,
 
@@ -349,7 +349,7 @@ public enum DeathMessage
   ELYTRA_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 운동 에너지를 온몸으로 느꼈습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 운동 에너지를 온몸으로 느꼈습니다
    */
   ELYTRA_COMBAT_ITEM,
 
@@ -364,17 +364,17 @@ public enum DeathMessage
   ELYTRA_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) %2$s을(를) 잘못 사용하였습니다.
+   * %1$s이(가) %2$s을(를) 잘못 사용하였습니다
    */
   ENDER_PEARL,
 
   /**
-   * %1$s이(가) %2$s에게서 도망치려다 %3$s을(를) 잘못 사용하였습니다.
+   * %1$s이(가) %2$s에게서 도망치려다 %3$s을(를) 잘못 사용하였습니다
    */
   ENDER_PEARL_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s을(를) 잘못 사용하였습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s을(를) 잘못 사용하였습니다
    */
   ENDER_PEARL_COMBAT_ITEM,
 
@@ -429,7 +429,7 @@ public enum DeathMessage
   FALL_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 땅바닥으로 곤두박질쳤습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 땅바닥으로 곤두박질쳤습니다
    */
   FALL_COMBAT_ITEM,
 
@@ -454,7 +454,7 @@ public enum DeathMessage
   FALL_HIGH_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 높은 곳에서 떨어졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 높은 곳에서 떨어졌습니다
    */
   FALL_HIGH_COMBAT_ITEM,
 
@@ -469,17 +469,17 @@ public enum DeathMessage
   FALL_HIGH_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) %2$s에서 땅바닥으로 곤두박질쳤습니다.
+   * %1$s이(가) %2$s에서 땅바닥으로 곤두박질쳤습니다
    */
   FALL_BLOCK,
 
   /**
-   * %1$s이(가) %2$s에게서 도망치려다 %3$s에서 땅바닥으로 곤두박질쳤습니다.
+   * %1$s이(가) %2$s에게서 도망치려다 %3$s에서 땅바닥으로 곤두박질쳤습니다
    */
   FALL_BLOCK_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에서 땅바닥으로 곤두박질쳤습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에서 땅바닥으로 곤두박질쳤습니다
    */
   FALL_BLOCK_COMBAT_ITEM,
 
@@ -494,17 +494,17 @@ public enum DeathMessage
   FALL_BLOCK_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 높은 %2$s에서 떨어졌습니다.
+   * %1$s이(가) 높은 %2$s에서 떨어졌습니다
    */
   FALL_BLOCK_HIGH,
 
   /**
-   * %1$s이(가) %2$s 때문에 높은 %3$s에서 떨어졌습니다.
+   * %1$s이(가) %2$s 때문에 높은 %3$s에서 떨어졌습니다
    */
   FALL_BLOCK_HIGH_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 높은 %4$s에서 떨어졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 높은 %4$s에서 떨어졌습니다
    */
   FALL_BLOCK_HIGH_COMBAT_ITEM,
 
@@ -529,7 +529,7 @@ public enum DeathMessage
   FALLING_BLOCK_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 짓눌렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 짓눌렸습니다
    */
   FALLING_BLOCK_COMBAT_ITEM,
 
@@ -539,7 +539,7 @@ public enum DeathMessage
   FALLING_BLOCK_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 짓눌렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 짓눌렸습니다
    */
   FALLING_BLOCK_COMBAT_SUICIDE_ITEM,
 
@@ -554,7 +554,7 @@ public enum DeathMessage
   FALLING_STALACTITE_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 찔렸습니다. 아야야야.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 떨어지는 %4$s에 찔렸습니다 아야야야.
    */
   FALLING_STALACTITE_COMBAT_ITEM,
 
@@ -569,12 +569,12 @@ public enum DeathMessage
   FIRE_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 바삭하게 구워졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 바삭하게 구워졌습니다
    */
   FIRE_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 화염구에 맞았습니다.
+   * %1$s이(가) 화염구에 맞았습니다
    */
   FIREBALL,
 
@@ -589,22 +589,22 @@ public enum DeathMessage
   FIREBALL_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 어딘가에서 날아온 %2$s에 맞았습니다.
+   * %1$s이(가) 어딘가에서 날아온 %2$s에 맞았습니다
    */
   FIREBALL_COMBAT_UNKNOWN,
 
   /**
-   * %1$s이(가) 굉음과 함께 폭사했습니다.
+   * %1$s이(가) 굉음과 함께 폭사했습니다
    */
   FIREWORKS,
 
   /**
-   * %1$s이(가) %2$s이(가) 쏜 폭죽 때문에 굉음과 함께 폭사했습니다.
+   * %1$s이(가) %2$s이(가) 쏜 폭죽 때문에 굉음과 함께 폭사했습니다
    */
   FIREWORKS_COMBAT,
 
   /**
-   * %1$s이(가) %2$s이(가) 쏜 %3$s 때문에 굉음과 함께 폭사했습니다.
+   * %1$s이(가) %2$s이(가) 쏜 %3$s 때문에 굉음과 함께 폭사했습니다
    */
   FIREWORKS_COMBAT_ITEM,
 
@@ -619,7 +619,7 @@ public enum DeathMessage
   FIREWORKS_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 어딘가에서 날아온 %2$s 때문에 굉음과 함께 폭사했습니다.
+   * %1$s이(가) 어딘가에서 날아온 %2$s 때문에 굉음과 함께 폭사했습니다
    */
   FIREWORKS_COMBAT_UNKNOWN,
 
@@ -659,7 +659,7 @@ public enum DeathMessage
   FIRE_BLOCK_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 불에 빠졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 불에 빠졌습니다
    */
   FIRE_BLOCK_COMBAT_ITEM,
 
@@ -669,7 +669,7 @@ public enum DeathMessage
   FIRE_BLOCK_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 불에 빠졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 불에 빠졌습니다
    */
   FIRE_BLOCK_COMBAT_SUICIDE_ITEM,
 
@@ -684,7 +684,7 @@ public enum DeathMessage
   FREEZE_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 얼어 죽었습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 얼어 죽었습니다
    */
   FREEZE_COMBAT_ITEM,
 
@@ -694,7 +694,7 @@ public enum DeathMessage
   FREEZE_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 얼어 죽었습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 얼어 죽었습니다
    */
   FREEZE_COMBAT_SUICIDE_ITEM,
 
@@ -724,27 +724,27 @@ public enum DeathMessage
   GENERIC_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) /kill %2$s 당했습니다.
+   * %1$s이(가) /kill %2$s 당했습니다
    */
   KILL,
 
   /**
-   * %1$s이(가) %2$s와(과) 싸우다가 /kill %3$s 당했습니다.
+   * %1$s이(가) %2$s와(과) 싸우다가 /kill %3$s 당했습니다
    */
   KILL_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 /kill %4$s 당했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 /kill %4$s 당했습니다
    */
   KILL_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) %2$s와(과) 싸우다가 /kill %3$s 당했습니다.
+   * %1$s이(가) %2$s와(과) 싸우다가 /kill %3$s 당했습니다
    */
   KILL_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 /kill %4$s 당했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 /kill %4$s 당했습니다
    */
   KILL_COMBAT_SUICIDE_ITEM,
 
@@ -759,7 +759,7 @@ public enum DeathMessage
   LAVA_COMBAT,
 
   /**
-   * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다.
+   * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다
    */
   LAVA_COMBAT_ITEM,
 
@@ -769,7 +769,7 @@ public enum DeathMessage
   LAVA_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다.
+   * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다
    */
   LAVA_COMBAT_SUICIDE_ITEM,
 
@@ -784,7 +784,7 @@ public enum DeathMessage
   LAVA_CAULDRON_COMBAT,
 
   /**
-   * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다.
+   * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다
    */
   LAVA_CAULDRON_COMBAT_ITEM,
 
@@ -794,7 +794,7 @@ public enum DeathMessage
   LAVA_CAULDRON_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다.
+   * %1$s이(가) %3$s(을)를 사용한 %2$s에게서 도망치려다 용암에 빠졌습니다
    */
   LAVA_CAULDRON_COMBAT_SUICIDE_ITEM,
 
@@ -809,7 +809,7 @@ public enum DeathMessage
   LIGHTNING_BOLT_COMBAT,
 
   /**
-   * %1$s이(가) %3$s(을)를 사용한 %2$s과(와) 싸우다가 벼락을 맞았습니다.
+   * %1$s이(가) %3$s(을)를 사용한 %2$s과(와) 싸우다가 벼락을 맞았습니다
    */
   LIGHTNING_BOLT_COMBAT_ITEM,
 
@@ -819,7 +819,7 @@ public enum DeathMessage
   LIGHTNING_BOLT_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s(을)를 사용한 %2$s과(와) 싸우다가 벼락을 맞았습니다.
+   * %1$s이(가) %3$s(을)를 사용한 %2$s과(와) 싸우다가 벼락을 맞았습니다
    */
   LIGHTNING_BOLT_COMBAT_SUICIDE_ITEM,
 
@@ -849,7 +849,7 @@ public enum DeathMessage
   MAGIC_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 어딘가에서 날아온 %2$s 때문에 마법으로 살해당했습니다.
+   * %1$s이(가) 어딘가에서 날아온 %2$s 때문에 마법으로 살해당했습니다
    */
   MAGIC_COMBAT_UNKNOWN,
 
@@ -864,7 +864,7 @@ public enum DeathMessage
   MAGMA_BLOCK_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 위험 지대에 빠졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 위험 지대에 빠졌습니다
    */
   MAGMA_BLOCK_COMBAT_ITEM,
 
@@ -874,7 +874,7 @@ public enum DeathMessage
   MAGMA_BLOCK_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 위험 지대에 빠졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s 때문에 위험 지대에 빠졌습니다
    */
   MAGMA_BLOCK_COMBAT_SUICIDE_ITEM,
 
@@ -894,122 +894,122 @@ public enum DeathMessage
   MELEE_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 자살했습니다.
+   * %1$s이(가) 자살했습니다
    */
   MELEE_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하여 자살했습니다.
+   * %1$s이(가) %3$s을(를) 사용하여 자살했습니다
    */
   MELEE_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 썰렸습니다.
+   * %1$s이(가) 썰렸습니다
    */
   MELEE_SWEEP,
 
   /**
-   * %1$s이(가) %2$s에게 썰렸습니다.
+   * %1$s이(가) %2$s에게 썰렸습니다
    */
   MELEE_SWEEP_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다
    */
   MELEE_SWEEP_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) %2$s에게 썰렸습니다.
+   * %1$s이(가) %2$s에게 썰렸습니다
    */
   MELEE_SWEEP_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다
    */
   MELEE_SWEEP_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 썰렸습니다.
+   * %1$s이(가) 썰렸습니다
    */
   MELEE_SWORD,
 
   /**
-   * %1$s이(가) %2$s에게 썰렸습니다.
+   * %1$s이(가) %2$s에게 썰렸습니다
    */
   MELEE_SWORD_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 썰렸습니다
    */
   MELEE_SWORD_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) 자살했습니다.
+   * %1$s이(가) 자살했습니다
    */
   MELEE_SWORD_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하여 자살했습니다.
+   * %1$s이(가) %3$s을(를) 사용하여 자살했습니다
    */
   MELEE_SWORD_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 녹아내렸습니다.
+   * %1$s이(가) 녹아내렸습니다
    */
   MELTING,
 
   /**
-   * %1$s이(가) %2$s와(과) 싸우다 녹아내렸습니다.
+   * %1$s이(가) %2$s와(과) 싸우다 녹아내렸습니다
    */
   MELTING_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 녹아내렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 녹아내렸습니다
    */
   MELTING_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) %2$s와(과) 싸우다 녹아내렸습니다.
+   * %1$s이(가) %2$s와(과) 싸우다 녹아내렸습니다
    */
   MELTING_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 녹아내렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 녹아내렸습니다
    */
   MELTING_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %2$s이(가) %1$s에게 %3$s을(를) 먹여 죽였습니다.
+   * %2$s이(가) %1$s에게 %3$s을(를) 먹여 죽였습니다
    */
   PARROT_COOKIE_COMBAT_ITEM,
 
   /**
-   *%1$s이(가) 독살당했습니다.
+   *%1$s이(가) 독살당했습니다
    */
   POISON,
 
   /**
-   *%1$s이(가) %2$s에게 독살당했습니다.
+   *%1$s이(가) %2$s에게 독살당했습니다
    */
   POISON_COMBAT,
 
   /**
-   *%1$s이(가) %3$s을(를) 사용한 %2$s에게 독살당했습니다.
+   *%1$s이(가) %3$s을(를) 사용한 %2$s에게 독살당했습니다
    */
   POISON_COMBAT_ITEM,
 
   /**
-   *%1$s이(가) 스스로를 독살하였습니다.
+   *%1$s이(가) 스스로를 독살하였습니다
    */
   POISON_COMBAT_SUICIDE,
 
   /**
-   *%1$s이(가) %3$s을(를) 사용하여 스스로를 독살하였습니다.
+   *%1$s이(가) %3$s을(를) 사용하여 스스로를 독살하였습니다
    */
   POISON_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 발사체에게 저격당했습니다.
+   * %1$s이(가) 발사체에게 저격당했습니다
    */
   PROJECTILE,
 
@@ -1034,42 +1034,42 @@ public enum DeathMessage
   PROJECTILE_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다.
+   * %1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다
    */
   PROJECTILE_COMBAT_UNKNOWN,
 
   /**
-   * %1$s이(가) 셜커 탄환에게 살해당했습니다.
+   * %1$s이(가) 셜커 탄환에게 살해당했습니다
    */
   SHULKER_BULLET,
 
   /**
-   * %1$s이(가) %2%s에게 살해당했습니다.
+   * %1$s이(가) %2%s에게 살해당했습니다
    */
   SHULKER_BULLET_COMBAT, // minecraft bug probably?
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2%s에게 살해당했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2%s에게 살해당했습니다
    */
   SHULKER_BULLET_COMBAT_ITEM,
 
   /**
-   * %1$s이(가) %2%s에게 살해당했습니다.
+   * %1$s이(가) %2%s에게 살해당했습니다
    */
   SHULKER_BULLET_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2%s에게 살해당했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2%s에게 살해당했습니다
    */
   SHULKER_BULLET_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 어딘가에서 날아온 %2%s에게 살해당했습니다.
+   * %1$s이(가) 어딘가에서 날아온 %2%s에게 살해당했습니다
    */
   SHULKER_BULLET_COMBAT_UNKNOWN,
 
   /**
-   * %1$s이(가) 어딘가에서 날아온 %2%s에게 살해당했습니다.
+   * %1$s이(가) 어딘가에서 날아온 %2%s에게 살해당했습니다
    */
   SHULKER_BULLET_UNKNOWN,
 
@@ -1084,7 +1084,7 @@ public enum DeathMessage
   STALAGMITE_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4%s에 찔렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4%s에 찔렸습니다
    */
   STALAGMITE_COMBAT_ITEM,
 
@@ -1094,7 +1094,7 @@ public enum DeathMessage
   STALAGMITE_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4%s에 찔렸습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4%s에 찔렸습니다
    */
   STALAGMITE_COMBAT_SUICIDE_ITEM,
 
@@ -1109,7 +1109,7 @@ public enum DeathMessage
   STARVE_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다
    */
   STARVE_COMBAT_ITEM,
 
@@ -1119,7 +1119,7 @@ public enum DeathMessage
   STARVE_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다
    */
   STARVE_COMBAT_SUICIDE_ITEM,
 
@@ -1134,7 +1134,7 @@ public enum DeathMessage
   STING_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다
    */
   STING_COMBAT_ITEM,
 
@@ -1144,7 +1144,7 @@ public enum DeathMessage
   STING_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다
    */
   STING_COMBAT_SUICIDE_ITEM,
 
@@ -1159,7 +1159,7 @@ public enum DeathMessage
   SUFFOCATION_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다
    */
   SUFFOCATION_COMBAT_ITEM,
 
@@ -1169,22 +1169,22 @@ public enum DeathMessage
   SUFFOCATION_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다
    */
   SUFFOCATION_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 자살했습니다.
+   * %1$s이(가) 자살했습니다
    */
   SUICIDE,
 
   /**
-   * %1$s이(가) 자살했습니다.
+   * %1$s이(가) 자살했습니다
    */
   SUICIDE_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용하여 자살했습니다.
+   * %1$s이(가) %3$s을(를) 사용하여 자살했습니다
    */
   SUICIDE_COMBAT_ITEM,
 
@@ -1199,7 +1199,7 @@ public enum DeathMessage
   SWEET_BERRY_BUSH_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다
    */
   SWEET_BERRY_BUSH_COMBAT_ITEM,
 
@@ -1209,12 +1209,12 @@ public enum DeathMessage
   SWEET_BERRY_BUSH_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다
    */
   SWEET_BERRY_BUSH_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 누군가를 해치려다 살해당했습니다.
+   * %1$s이(가) 누군가를 해치려다 살해당했습니다
    */
   THORNS,
 
@@ -1264,12 +1264,12 @@ public enum DeathMessage
   TRIDENT_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 어딘가에서 날아온 %2$s에게 찔렸습니다.
+   * %1$s이(가) 어딘가에서 날아온 %2$s에게 찔렸습니다
    */
   TRIDENT_COMBAT_UNKNOWN,
 
   /**
-   * %1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요!
+   * %1$s이(가) 알 수 없는 이유로 죽었습니다 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요!
    */
   UNKNOWN,
 
@@ -1284,7 +1284,7 @@ public enum DeathMessage
   VOID_COMBAT,
 
   /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_COMBAT_ITEM,
 
@@ -1294,37 +1294,37 @@ public enum DeathMessage
   VOID_COMBAT_SUICIDE,
 
   /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다.
+   * %1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다
    */
   VOID_HIGH,
 
   /**
-   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_HIGH_COMBAT,
 
   /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_HIGH_COMBAT_ITEM,
 
   /**
-   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_HIGH_COMBAT_SUICIDE,
 
   /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_HIGH_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) %2$s에서 세계 밖으로 떨어졌습니다.+
+   * %1$s이(가) %2$s에서 세계 밖으로 떨어졌습니다+
    *
    */
   VOID_BLOCK,
@@ -1335,7 +1335,7 @@ public enum DeathMessage
   VOID_BLOCK_COMBAT,
 
   /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_BLOCK_COMBAT_ITEM,
 
@@ -1345,32 +1345,32 @@ public enum DeathMessage
   VOID_BLOCK_COMBAT_SUICIDE,
 
   /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_BLOCK_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다.
+   * %1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다
    */
   VOID_BLOCK_HIGH,
 
   /**
-   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_BLOCK_HIGH_COMBAT,
 
   /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_BLOCK_HIGH_COMBAT_ITEM,
 
   /**
-   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_BLOCK_HIGH_COMBAT_SUICIDE,
 
   /**
-   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다.
+   * %1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다
    */
   VOID_BLOCK_HIGH_COMBAT_SUICIDE_ITEM,
 
@@ -1390,7 +1390,7 @@ public enum DeathMessage
   WITHER_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다
    */
   WITHER_COMBAT_ITEM,
 
@@ -1400,7 +1400,7 @@ public enum DeathMessage
   WITHER_COMBAT_SUICIDE,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다.
+   * %1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다
    */
   WITHER_COMBAT_SUICIDE_ITEM,
 
@@ -1435,34 +1435,39 @@ public enum DeathMessage
   WITHER_SKULL_COMBAT_ITEM_SUICIDE,
 
   /**
-   * %1$s이(가) %2$s 밖으로 탈출하려다 질식사했습니다.
+   * %1$s이(가) %2$s 밖으로 탈출하려다 질식사했습니다
    */
   WORLD_BORDER,
 
   /**
-   *%1$s이(가) %2$s과(와) 싸우고 %3$s 밖으로 탈출하려다 질식사했습니다.
+   *%1$s이(가) %2$s과(와) 싸우고 %3$s 밖으로 탈출하려다 질식사했습니다
    */
   WORLD_BORDER_COMBAT,
 
   /**
-   *%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우고 %4$s 밖으로 탈출하려다 질식사했습니다.
+   *%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우고 %4$s 밖으로 탈출하려다 질식사했습니다
    */
   WORLD_BORDER_COMBAT_ITEM,
 
   /**
-   *%1$s이(가) %3$s 밖으로 스스로의 몸을 던져 질식사했습니다.
+   *%1$s이(가) %3$s 밖으로 스스로의 몸을 던져 질식사했습니다
    */
   WORLD_BORDER_COMBAT_SUICIDE,
 
   /**
-   *%1$s이(가) %3$s을(를) 사용하여 %4$s 밖으로 스스로의 몸을 던져 질식사했습니다.
+   *%1$s이(가) %3$s을(를) 사용하여 %4$s 밖으로 스스로의 몸을 던져 질식사했습니다
    */
   WORLD_BORDER_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다.
+   * %1$s이(가) 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
    */
   CUSTOM_DARKNESS_TERROR,
+
+  /**
+   * %1$s이(가) 경험을 소화하려다 탈이 나 죽었습니다
+   */
+  CUSTOM_STOMACHACHE,
   ;
 
   @NotNull

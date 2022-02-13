@@ -6,8 +6,8 @@ import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 

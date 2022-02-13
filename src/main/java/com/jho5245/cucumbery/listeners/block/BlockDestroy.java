@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.listeners.block;
 
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.data.Constant;

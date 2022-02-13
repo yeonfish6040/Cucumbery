@@ -1,6 +1,6 @@
 package com.jho5245.cucumbery.listeners.entity.item;
 
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

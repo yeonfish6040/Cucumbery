@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.listeners.enchantment;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.data.Permission;

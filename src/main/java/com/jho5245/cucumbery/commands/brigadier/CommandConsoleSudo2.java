@@ -4,8 +4,8 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.commands.msg;
 
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -1,7 +1,6 @@
 package com.jho5245.cucumbery.listeners.addon.noteblockapi;
 
 import com.jho5245.cucumbery.commands.sound.CommandSong;
-import com.jho5245.cucumbery.util.MessageUtil;
 import com.xxmicloxx.NoteBlockAPI.event.SongEndEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -1,9 +1,9 @@
 package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.storage.ColorCode;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.ColorCode;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;

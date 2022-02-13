@@ -2,8 +2,8 @@ package com.jho5245.cucumbery.listeners.block;
 
 import com.destroystokyo.paper.event.block.TNTPrimeEvent;
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.SoundPlay;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;

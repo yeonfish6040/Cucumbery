@@ -1,6 +1,6 @@
 package com.jho5245.cucumbery.events.entity;
 
-import com.jho5245.cucumbery.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;

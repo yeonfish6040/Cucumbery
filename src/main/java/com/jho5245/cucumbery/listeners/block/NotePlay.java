@@ -1,8 +1,8 @@
 package com.jho5245.cucumbery.listeners.block;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.PlaceHolderUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.NoteBlock;

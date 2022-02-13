@@ -1,9 +1,9 @@
 package com.jho5245.cucumbery.commands.addon;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ItemInfo;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemInfo;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;

@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
-import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.DoubleArgument;

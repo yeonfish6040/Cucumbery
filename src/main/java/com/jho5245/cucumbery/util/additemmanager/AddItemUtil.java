@@ -16,12 +16,12 @@ public class AddItemUtil
   {
     return addItemResult2(sender, new ArrayList<>(Collections.singletonList(inventoryHolder)), itemStack, amount);
   }
+
   @NotNull
   public static Data addItemResult2(@NotNull CommandSender sender, @NotNull Collection<? extends InventoryHolder> inventoryHolder, @NotNull ItemStack itemStack, int amount)
   {
     itemStack = itemStack.clone();
     HashMap<UUID, Integer> hashMap = new HashMap<>();
-    List<UUID> success = new ArrayList<>();
     List<UUID> failure = new ArrayList<>();
     List<UUID> uuids = new ArrayList<>();
     for (InventoryHolder holder : inventoryHolder)
@@ -33,16 +33,12 @@ public class AddItemUtil
         Collection<ItemStack> lostItem = holder.getInventory().addItem(itemStack).values();
         int lostAmount = !lostItem.isEmpty() ? lostItem.iterator().next().getAmount() : 0;
         hashMap.put(uuid, lostAmount);
-        if (lostItem.isEmpty() && lostAmount == 0)
-        {
-          success.add(uuid);
-        }
-        else
+        if (!(lostItem.isEmpty() && lostAmount == 0))
         {
           failure.add(uuid);
         }
       }
     }
-    return new Data(sender, uuids, hashMap, success, failure, itemStack, amount);
+    return new Data(sender, uuids, hashMap, failure, itemStack, amount);
   }
 }

@@ -1,9 +1,9 @@
 package com.jho5245.cucumbery.util.plugin_support;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

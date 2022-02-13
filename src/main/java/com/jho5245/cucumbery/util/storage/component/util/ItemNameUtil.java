@@ -1,6 +1,6 @@
 package com.jho5245.cucumbery.util.storage.component.util;
 
-import com.jho5245.cucumbery.util.storage.PlayerHeadInfo;
+import com.jho5245.cucumbery.util.storage.no_groups.PlayerHeadInfo;
 import io.papermc.paper.inventory.ItemRarity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

@@ -1,9 +1,9 @@
 package com.jho5245.cucumbery.listeners.inventory;
 
 import com.destroystokyo.paper.event.inventory.PrepareResultEvent;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

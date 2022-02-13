@@ -1,8 +1,8 @@
 package com.jho5245.cucumbery.util.nbt;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import de.tr7zw.changeme.nbtapi.*;
 import org.bukkit.Material;

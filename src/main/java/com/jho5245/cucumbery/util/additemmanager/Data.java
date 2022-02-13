@@ -1,22 +1,21 @@
 package com.jho5245.cucumbery.util.additemmanager;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class Data
 {
@@ -26,27 +25,24 @@ public class Data
 
   private final HashMap<UUID, Integer> lostAmounts;
 
-  private final List<UUID> success;
-
   private final List<UUID> failure;
 
-  private final Component item;
+  private final ItemStack item;
 
   private final int amount;
 
   private final Component amountComponent;
 
   public Data(@NotNull CommandSender sender, @NotNull Collection<UUID> targets, HashMap<UUID, Integer> lostAmounts,
-              @NotNull List<UUID> success, @NotNull List<UUID> failure, @NotNull ItemStack given, int amount)
+              @NotNull List<UUID> failure, @NotNull ItemStack given, int amount)
   {
     this.sender = sender;
     this.targets = targets;
     this.lostAmounts = lostAmounts;
-    this.success = success;
     this.failure = failure;
     this.amount = amount;
     this.amountComponent = Component.text(amount, Constant.THE_COLOR);
-    this.item = ItemNameUtil.itemName(given, Constant.THE_COLOR).hoverEvent(given.asHoverEvent());
+    this.item = given;
   }
 
   public void sendFeedback(boolean hideOutput)
@@ -60,16 +56,7 @@ public class Data
       MessageUtil.sendError(sender, Prefix.NO_PLAYER);
       return;
     }
-    List<Permissible> newList = new ArrayList<>();
-    for (UUID holder : success)
-    {
-      Entity entity = Bukkit.getEntity(holder);
-      if (entity != null)
-      {
-        newList.add(entity);
-      }
-    }
-    MessageUtil.sendAdminMessage(sender, newList, "commands.give.success.single", amountComponent, item, targets);
+    MessageUtil.sendAdminMessage(sender, null, "commands.give.success.single", amountComponent, item, targets);
 
     if (!failure.isEmpty())
     {

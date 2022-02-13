@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.util.itemlore;
 
-import com.jho5245.cucumbery.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;

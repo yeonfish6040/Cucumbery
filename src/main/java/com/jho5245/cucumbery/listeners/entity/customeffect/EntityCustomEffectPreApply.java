@@ -1,11 +1,11 @@
 package com.jho5245.cucumbery.listeners.entity.customeffect;
 
-import com.jho5245.cucumbery.customeffect.CustomEffect;
-import com.jho5245.cucumbery.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.customeffect.children.group.AttributeCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreApplyEvent;
-import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attributable;
@@ -48,8 +48,8 @@ public class EntityCustomEffectPreApply implements Listener
       switch (customEffectType)
       {
         case CUCUMBERY_UPDATER, SERVER_RADIO_LISTENING, COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR_ACTIVATED, DARKNESS_TERROR_RESISTANCE, MUNDANE,
-                UNCRAFTABLE, BUFF_FREEZE, DEBUG_WATCHER, CHEESE_EXPERIMENT, CURSE_OF_BEANS, CURSE_OF_CONSUMPTION, CURSE_OF_INVENTORY, CURSE_OF_MUSHROOM, WHAT_TO_DO
-                , ELYTRA_BOOSTER, MUTE, THICK -> {
+                UNCRAFTABLE, BUFF_FREEZE, DEBUG_WATCHER, CHEESE_EXPERIMENT, CURSE_OF_BEANS, CURSE_OF_CONSUMPTION, CURSE_OF_INVENTORY, CURSE_OF_MUSHROOM, SPREAD,
+                VAR_STOMACHACHE, VAR_DETOXICATE, VAR_PNEUMONIA, VAR_PODAGRA, ELYTRA_BOOSTER, MUTE, THICK -> {
           event.setCancelled(true);
           return;
         }

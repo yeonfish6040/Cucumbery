@@ -1,4 +1,4 @@
-config-version: 2
+config-version: 3
 # 데스 메시지 기능 편집
 death-messages:
   enable: true # 사용 여부. true 또는 false
@@ -136,11 +136,11 @@ death-messages:
       - "%1$s이(가) %3$s을(를) 사용하여 익사했습니다"
       - "%1$s이(가) %3$s을(를) 사용하여 물고기와 친구가 되었습니다"
     drown-together:
-      - "%1$s이(가) %2$s와(과) 친구가 되었습니다"
+      - "%1$s이(가) %2$s와(과) 친구가 되려다 익사했습니다"
     drown-together-combat:
-      - "%1$s이(가) %2$s에게서 도망치려다 %3$s와(과) 친구가 되었습니다"
+      - "%1$s이(가) %2$s에게서 도망치고 %3$s와(과) 친구가 되려다 익사했습니다"
     drown-together-combat-item:
-      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s와(과) 친구가 되었습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치고 %4$s와(과) 친구가 되려다 익사했습니다"
     drown-together-combat-suicide:
       - "%1$s이(가) 물속으로 투신자살했습니다"
     drown-together-combat-suicide-item:
@@ -159,11 +159,11 @@ death-messages:
     drown-water-combat-suicide-item:
       - "%1$s이(가) %3$s을(를) 사용하여 물 밖에서 자살했습니다"
     drown-water-together:
-      - "%1$s이(가) %2$s와(과) 친구가 되었습니다"
+      - "%1$s이(가) %2$s와(과) 친구가 되려다 익사했습니다"
     drown-water-together-combat:
-      - "%1$s이(가) %2$s에게서 도망치려다 %3$s와(과) 친구가 되었습니다"
+      - "%1$s이(가) %2$s에게서 도망치고 %3$s와(과) 친구가 되려다 익사했습니다"
     drown-water-together-combat-item:
-      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s와(과) 친구가 되었습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치고 %4$s와(과) 친구가 되려다 익사했습니다"
     drown-water-together-combat-suicide:
       - "%1$s이(가) 물 밖에서 자살했습니다"
     drown-water-together-combat-suicide-item:
@@ -497,6 +497,10 @@ death-messages:
       - "%1$s이(가) %2$s와(과) 싸우다 녹아내렸습니다"
     melting-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 녹아내렸습니다"
+    melting-combat-suicide:
+      - "%1$s이(가) 자기 자신과 싸우다 녹아내렸습니다"
+    melting-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 자기 자신과 싸우다 녹아내렸습니다"
     parrot-cookie-combat-item:
       - "%2$s이(가) %1$s에게 %3$s을(를) 먹여 죽였습니다"
     poison:
@@ -515,6 +519,10 @@ death-messages:
       - "death.attack.arrow" # %1$s이(가) %2$s에게 저격당했습니다
     projectile-combat-item:
       - "death.attack.arrow.item" # %1$s이(가) %3$s을(를) 사용한 %2$s에게 저격당했습니다
+    projectile-combat-suicide:
+      - "%1$s이(가) 스스로에게 저격당했습니다"
+    projectile-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 스스로에게 저격당했습니다"
     projectile-combat-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다"
     shulker-bullet:
@@ -523,6 +531,10 @@ death-messages:
       - "%1$s이(가) %2$s이(가) 날린 %3$s을(를) 맞아 죽었습니다"
     shulker-bullet-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 날린 %4$s을(를) 맞아 죽었습니다"
+    shulker-bullet-combat-suicide:
+      - "%1$s이(가) 스스로가 날린 %3$s을(를) 맞아 죽었습니다"
+    shulker-bullet-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 스스로가 날린 %4$s을(를) 맞아 죽었습니다"
     shulker-bullet-combat-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s에게 맞아 죽었습니다"
     shulker-bullet-unknown:
@@ -538,6 +550,12 @@ death-messages:
     stalagmite-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4$s에 찔렸습니다"
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 %4$s에 찔려 죽었습니다"
+    stalagmite-combat-suicide:
+      - "%1$s이(가) 자기 자신과 싸우다가 %3$s에 찔렸습니다"
+      - "%1$s이(가) 자기 자신과 싸우다가 %3$s에 찔려 죽었습니다"
+    stalagmite-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 자기 자신과 싸우다가 %4$s에 찔렸습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 자기 자신과 싸우다가 %4$s에 찔려 죽었습니다"
     starve:
       - "death.attack.starve" # %1$s이(가) 아사했습니다
       - "%1$s이(가) 낑깡이 되었습니다"
@@ -547,11 +565,21 @@ death-messages:
     starve-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다"
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 낑깡이 되었습니다"
+    starve-combat-suicide:
+      - "death.attack.starve.player" # %1$s이(가) %2$s과(와) 싸우다가 아사했습니다
+      - "%1$s이(가) %2$s과(와) 싸우다가 낑깡이 되었습니다"
+    starve-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 아사했습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 낑깡이 되었습니다"
     sting:
       - "death.attack.sting" # %1$s이(가) 쏘여 사망했습니다
     sting-combat:
       - "death.attack.sting.player" # %1$s이(가) %2$s에게 쏘여 사망했습니다
-    sting-player-item:
+    sting-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다"
+    sting-combat-suicide:
+      - "death.attack.sting.player" # %1$s이(가) %2$s에게 쏘여 사망했습니다
+    sting-combat-suicide-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 쏘여 사망했습니다"
     suffocation:
      # - "death.attack.inWall" # %1$s이(가) 벽 속에서 질식했습니다
@@ -562,6 +590,13 @@ death-messages:
       - "%1$s이(가) %2$s과(와) 싸우다가 %3$s 속에서 질식했습니다"
       - "%1$s이(가) %2$s과(와) 싸우다가  %3$s와(과) 하나가 되었습니다"
     suffocation-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s와(과) 하나가 되었습니다"
+    suffocation-combat-suicide:
+      # - "death.attack.inWall.player" # %1$s이(가) %2$s과(와) 싸우다가 벽 속에서 질식했습니다
+      - "%1$s이(가) %2$s과(와) 싸우다가 %3$s 속에서 질식했습니다"
+      - "%1$s이(가) %2$s과(와) 싸우다가  %3$s와(과) 하나가 되었습니다"
+    suffocation-combat-suicide-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s 속에서 질식했습니다"
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 %4$s와(과) 하나가 되었습니다"
     suicide:
@@ -577,6 +612,11 @@ death-messages:
       - "%1$s이(가) %2$s에게서 도망치려다 %3$s에 찔려 죽었습니다"
     sweet-berry-bush-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다"
+      - "%1$s이(가) %2$s에 찔려 죽었습니다"
+    sweet-berry-bush-combat-suicide:
+      - "%1$s이(가) %2$s에게서 도망치려다 %3$s에 찔려 죽었습니다"
+    sweet-berry-bush-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s에 찔려 죽었습니다"
     thorns:
       - "%1$s이(가) 누군가를 해치려다 살해당했습니다"
     thorns-combat:
@@ -585,12 +625,24 @@ death-messages:
     thorns-combat-item:
       - "%1$s이(가) %3$s(으)로 %2$s을(를) 해치려다 살해당했습니다"
       - "%1$s이(가) %3$s(으)로 %2$s을(를) 해치려다 역관광당했습니다"
+    thorns-combat-suicide:
+      - "death.attack.thorns" # %1$s이(가) %2$s을(를) 해치려다 살해당했습니다
+      - "%1$s이(가) %2$s을(를) 해치려다 역관광당했습니다"
+    thorns-combat-suicide-item:
+      - "%1$s이(가) %3$s(으)로 %2$s을(를) 해치려다 살해당했습니다"
+      - "%1$s이(가) %3$s(으)로 %2$s을(를) 해치려다 역관광당했습니다"
     trident:
       - "%1$s이(가) 삼지창에게 찔렸습니다"
     trident-combat:
       - "death.attack.trident" # %1$s이(가) %2$s에게 찔렸습니다
       - "%1$s이(가) %2$s에게 찔렸습니다"
     trident-combat-item:
+      - "death.attack.trident.item" # %1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다"
+    trident-combat-suicide:
+      - "death.attack.trident" # %1$s이(가) %2$s에게 찔렸습니다
+      - "%1$s이(가) %2$s에게 찔렸습니다"
+    trident-combat-suicide-item:
       - "death.attack.trident.item" # %1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게 찔렸습니다"
     trident-combat-unknown:
@@ -603,12 +655,23 @@ death-messages:
     void-combat-item:
       - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다"
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 세계 밖으로 떨어졌습니다"
+    void-combat-suicide:
+      - "death.attack.outOfWorld.player" # %1$s은(는) %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다
+      - "%1$s이(가) %2$s와(과) 싸우다 세계 밖으로 떨어졌습니다"
+    void-combat-suicide-item:
+      - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 하늘을 같이 이고 살 수 없었습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 세계 밖으로 떨어졌습니다"
     void-high:
       - "%1$s이(가) 너무 높은 곳에서 세계 밖으로 떨어졌습니다"
     void-high-combat:
       - "%1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다"
       - "%1$s이(가) %2$s와(과) 싸우다 세계 밖으로 떨어졌습니다"
     void-high-combat-item:
+      - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다"
+    void-high-combat-suicide:
+      - "%1$s은(는) %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다"
+      - "%1$s이(가) %2$s와(과) 싸우다 세계 밖으로 떨어졌습니다"
+    void-high-combat-suicide-item:
       - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 하늘을 같이 이고 살 수 없었습니다"
     void-block:
       - "%1$s이(가) %2$s에서 세계 밖으로 떨어졌습니다"
@@ -618,12 +681,24 @@ death-messages:
     void-block-combat-item:
       - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 %4$s을(를) 같이 이고 살 수 없었습니다"
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에서 세계 밖으로 떨어졌습니다"
+    void-block-combat-suicide:
+      - "%1$s은(는) %2$s과(와)는 도저히 한 %3$s을(를) 같이 이고 살 수 없었습니다"
+      - "%1$s이(가) %2$s와(과) 싸우다 %3$s에서 세계 밖으로 떨어졌습니다"
+    void-block-combat-suicide-item:
+      - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 %4$s을(를) 같이 이고 살 수 없었습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 %4$s에서 세계 밖으로 떨어졌습니다"
     void-block-high:
       - "%1$s이(가) 너무 높은 %2$s에서 세계 밖으로 떨어졌습니다"
     void-block-high-combat:
       - "%1$s은(는) %2$s과(와)는 도저히 한 높은 %3$s을(를) 같이 이고 살 수 없었습니다"
       - "%1$s이(가) %2$s와(과) 싸우다 높은 %3$s에서 세계 밖으로 떨어졌습니다"
     void-block-high-combat-item:
+      - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 %4$s을(를) 같이 이고 살 수 없었습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 높은 %4$s에서 세계 밖으로 떨어졌습니다"
+    void-block-high-combat-suicide:
+      - "%1$s은(는) %2$s과(와)는 도저히 한 높은 %3$s을(를) 같이 이고 살 수 없었습니다"
+      - "%1$s이(가) %2$s와(과) 싸우다 높은 %3$s에서 세계 밖으로 떨어졌습니다"
+    void-block-high-combat-suicide-item:
       - "%1$s은(는) %3$s을(를) 사용한 %2$s과(와)는 도저히 한 높은 %4$s을(를) 같이 이고 살 수 없었습니다"
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다 높은 %4$s에서 세계 밖으로 떨어졌습니다"
     water-accident: # meme
@@ -636,12 +711,21 @@ death-messages:
       - "%1$s이(가) %2$s과(와) 싸우다가 사그라졌습니다"
     wither-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다"
+    wither-combat-suicide:
+      - "death.attack.wither.player" # %1$s이(가) %2$s과(와) 싸우다가 사그라졌습니다
+      - "%1$s이(가) %2$s과(와) 싸우다가 사그라졌습니다"
+    wither-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s과(와) 싸우다가 사그라졌습니다"
     wither-skull:
       #- "death.attack.witherSkull" # %1$s이(가) %2$s의 해골에게 저격당했습니다
       - "%1$s이(가) %2$s에게 저격당했습니다"
     wither-skull-combat:
       - "%1$s이(가) %2$s이(가) 발사한 %3$s에게 저격당했습니다"
     wither-skull-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 발사한 %4$s에게 저격당했습니다"
+    wither-skull-combat-suicide:
+      - "%1$s이(가) %2$s이(가) 발사한 %3$s에게 저격당했습니다"
+    wither-skull-combat-suicide-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s이(가) 발사한 %4$s에게 저격당했습니다"
     wither-skull-combat-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s에게 저격당했습니다"
@@ -657,6 +741,8 @@ death-messages:
       - "%1$s이(가) %3$s을(를) 사용하여 %4$s 밖으로 스스로의 몸을 던져 질식사했습니다"
     custom-darkness-terror:
       - "%1$s이(가) 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"
+    custom-stomachache:
+      - "%1$s이(가) 경험을 소화하려다 탈이 나 죽었습니다"
   custom-messages:
     # 특정 조건을 만족할 때만 특정 데스 메시지가 나오도록 커스텀할 수 있다.
     #

@@ -1,13 +1,13 @@
 package com.jho5245.cucumbery.deathmessages;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.ItemSerializer;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -489,8 +489,14 @@ public class DeathManager
         case DRYOUT -> key = "dry_out";
         case FREEZE -> key = "freeze";
       }
+      if (Variable.customDeathMessageKey.containsKey(entity.getUniqueId()))
+      {
+        key = Variable.customDeathMessageKey.get(entity.getUniqueId());
+        Variable.customDeathMessageKey.remove(entity.getUniqueId());
+      }
       if (Variable.darknessTerrorFlag.contains(entity.getUniqueId()))
       {
+        Variable.darknessTerrorFlag.remove(entity.getUniqueId());
         key = "custom_darkness_terror";
       }
       if (damager != null)

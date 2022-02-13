@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.deathmessages;
 
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Location;
 import org.bukkit.Material;

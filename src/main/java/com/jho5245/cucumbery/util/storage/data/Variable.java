@@ -1,6 +1,6 @@
 package com.jho5245.cucumbery.util.storage.data;
 
-import com.jho5245.cucumbery.util.BossBarMessage;
+import com.jho5245.cucumbery.util.no_groups.BossBarMessage;
 import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -222,6 +222,8 @@ public class Variable
   public static HashMap<UUID, List<BossBarMessage>> sendBossBarMap = new HashMap<>();
 
   public static Set<UUID> darknessTerrorFlag = new HashSet<>();
+
+  public static HashMap<UUID, String> customDeathMessageKey = new HashMap<>();
 
   public static HashMap<UUID, Collection<PotionEffect>> buffFreezerEffects = new HashMap<>();
 

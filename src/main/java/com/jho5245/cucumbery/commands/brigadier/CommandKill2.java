@@ -1,8 +1,8 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.storage.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
@@ -101,7 +101,7 @@ public class CommandKill2 extends CommandBase
         {
           MessageUtil.info(sender, ComponentUtil.translate("commands.kill.success.single", successEntities));
           MessageUtil.info(successEntities, ComponentUtil.translate("%s이(가) 당신을 죽였습니다", sender));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),"commands.kill.success.single", successEntities);
+          MessageUtil.sendAdminMessage(sender, null,"commands.kill.success.single", successEntities);
         }
       }
       else if (successEntities.isEmpty() && commandSender instanceof BlockCommandSender)

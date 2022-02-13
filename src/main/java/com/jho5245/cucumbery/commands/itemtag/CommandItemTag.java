@@ -1,17 +1,17 @@
 package com.jho5245.cucumbery.commands.itemtag;
 
-import com.jho5245.cucumbery.customeffect.CustomEffect;
-import com.jho5245.cucumbery.customeffect.CustomEffect.DisplayType;
-import com.jho5245.cucumbery.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.MessageUtil.ConsonantType;
-import com.jho5245.cucumbery.util.MessageUtil.N2SType;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil.ConsonantType;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil.N2SType;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.ItemCategory.Rarity;
-import com.jho5245.cucumbery.util.storage.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;

@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.listeners.entity.item;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.Method;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import org.bukkit.entity.Item;

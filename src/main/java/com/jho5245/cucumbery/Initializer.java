@@ -1,14 +1,14 @@
 package com.jho5245.cucumbery;
 
-import com.jho5245.cucumbery.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custommerchant.MerchantData;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.custommerchant.MerchantData;
 import com.jho5245.cucumbery.deathmessages.CustomDeathMessage;
-import com.jho5245.cucumbery.util.ItemSerializer;
-import com.jho5245.cucumbery.util.MessageUtil;
-import com.jho5245.cucumbery.util.Method;
-import com.jho5245.cucumbery.util.SelectorUtil;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;

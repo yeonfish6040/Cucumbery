@@ -1,6 +1,6 @@
 package com.jho5245.cucumbery.listeners.addon.quickshop;
 
-import com.jho5245.cucumbery.util.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import org.bukkit.entity.Player;
