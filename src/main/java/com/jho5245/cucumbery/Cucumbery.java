@@ -32,10 +32,7 @@ import com.jho5245.cucumbery.listeners.block.piston.BlockPistonExtend;
 import com.jho5245.cucumbery.listeners.block.piston.BlockPistonRetract;
 import com.jho5245.cucumbery.listeners.enchantment.EnchantItem;
 import com.jho5245.cucumbery.listeners.enchantment.PrepareItemEnchant;
-import com.jho5245.cucumbery.listeners.entity.customeffect.EntityCustomEffectApply;
-import com.jho5245.cucumbery.listeners.entity.customeffect.EntityCustomEffectPreApply;
-import com.jho5245.cucumbery.listeners.entity.customeffect.EntityCustomEffectPreRemove;
-import com.jho5245.cucumbery.listeners.entity.customeffect.EntityCustomEffectRemove;
+import com.jho5245.cucumbery.listeners.entity.customeffect.*;
 import com.jho5245.cucumbery.listeners.entity.damage.EntityDamage;
 import com.jho5245.cucumbery.listeners.entity.damage.EntityDamageByBlock;
 import com.jho5245.cucumbery.listeners.entity.damage.EntityDamageByEntity;
@@ -258,7 +255,14 @@ public class Cucumbery extends JavaPlugin
       }
     }
     Updater.onDisable();
-    CustomEnchant.onDisable();
+    try
+    {
+      CustomEnchant.onDisable();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
     if (Cucumbery.using_CommandAPI)
     {
       brigadierService.shutdownNow();
@@ -298,7 +302,14 @@ public class Cucumbery extends JavaPlugin
     {
       e.printStackTrace();
     }
-    CustomEnchant.onEnable();
+    try
+    {
+      CustomEnchant.onEnable();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
     if (using_CommandAPI)
     {
       try
@@ -549,6 +560,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new WitchThrowPotion());
     // listener.entity.customeffect
     Initializer.registerEvent(new EntityCustomEffectApply());
+    Initializer.registerEvent(new EntityCustomEffectPostApply());
     Initializer.registerEvent(new EntityCustomEffectPreApply());
     Initializer.registerEvent(new EntityCustomEffectPreRemove());
     Initializer.registerEvent(new EntityCustomEffectRemove());

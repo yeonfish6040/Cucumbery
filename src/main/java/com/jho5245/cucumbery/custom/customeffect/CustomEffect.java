@@ -6,7 +6,6 @@ import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
@@ -42,8 +41,16 @@ public class CustomEffect
   public CustomEffect(CustomEffectType effectType, int duration, int amplifier, @NotNull DisplayType displayType)
   {
     this.effectType = effectType;
-    this.duration = duration;
-    this.initDuration = duration;
+    if (effectType.isToggle())
+    {
+      this.duration = -1;
+      this.initDuration = -1;
+    }
+    else
+    {
+      this.duration = duration;
+      this.initDuration = duration;
+    }
     this.amplifier = amplifier;
     this.initAmplifier = amplifier;
     this.displayType = displayType;
@@ -233,7 +240,7 @@ public class CustomEffect
   }
 
   @NotNull
-  public CustomEffect copy()
+  protected CustomEffect copy()
   {
     return new CustomEffect(this.getType(), this.getDuration(), this.getAmplifier(), this.getDisplayType());
   }
@@ -254,12 +261,9 @@ public class CustomEffect
     return this.effectType.isTimeHiddenWhenFull() && this.duration + 1 >= this.initDuration;
   }
 
-  @Nullable
-  public Color getColor()
-  {
-    return this.effectType.getColor();
-  }
-
+  /**
+   * @return 해당 효과의 아이콘이 있으면 아이콘을 반환하고 없으면 <code>null</code>을 반환합니다.
+   */
   @Nullable
   public ItemStack getIcon()
   {
@@ -271,12 +275,31 @@ public class CustomEffect
     return this.effectType.isHiddenEnum();
   }
 
+  /**
+   * 효과의 표시 유형
+   */
   public enum DisplayType
   {
+    /**
+     * 액션바
+     */
     ACTION_BAR,
+    /**
+     * 플레이어 리스트 - Tab 키를 눌렀을 때 나오는 플레이어 목록의 하단에 표시됨
+     * <p>번지코드 플레이어 리스트 플러그인은 호환되지 않을 수 있음
+     */
     PLAYER_LIST,
+    /**
+     * 보스바. 일반적으로 가장 많이 표시되는 기본 유형
+     */
     BOSS_BAR,
+    /**
+     * /effect3 query 명령어를 통해 보이는 GUI에서만 보이는 효과
+     */
     GUI,
+    /**
+     * 어디에도 표시하지 않음. 관리자가 /effect3 query [개체] 명령어를 통해서만 참조 가능
+     */
     NONE
   }
 }

@@ -498,9 +498,7 @@ public class BlockBreak implements Listener
         {
           switch (blockType)
           {
-            case ICE:
-            case BLUE_ICE:
-            case PACKED_ICE:
+            case ICE, BLUE_ICE, PACKED_ICE -> {
               ItemStack result = new ItemStack(Material.ICE);
               NBTItem nbtItem = new NBTItem(result);
               NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
@@ -617,9 +615,9 @@ public class BlockBreak implements Listener
                 ItemLore.setItemLore(result);
               }
               player.getInventory().addItem(result);
-              break;
-            default:
-              break;
+            }
+            default -> {
+            }
           }
         }
         else if (!isCoarseTouch && NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.WARM_TOUCH.toString()) && blockType == Material.CACTUS)

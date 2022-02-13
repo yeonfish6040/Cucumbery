@@ -3,15 +3,18 @@ package com.jho5245.cucumbery.custom.customeffect;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.*;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectApplyEvent;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreApplyEvent;
+import com.jho5245.cucumbery.events.entity.*;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -83,7 +86,7 @@ public class CustomEffectManager
     {
       return false;
     }
-    ArrayList<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
+    List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
     @NotNull CustomEffect finalEffect = effect;
     customEffects.removeIf(customEffect ->
     {
@@ -143,10 +146,16 @@ public class CustomEffectManager
         }
       }
     }
-    customEffects.add(effect);
-    effectMap.put(entity.getUniqueId(), customEffects);
     EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect);
     Cucumbery.getPlugin().getPluginManager().callEvent(applyEvent);
+    if (applyEvent.isCancelled())
+    {
+      return true;
+    }
+    customEffects.add(effect);
+    effectMap.put(entity.getUniqueId(), customEffects);
+    EntityCustomEffectPostApplyEvent postApplyEvent = new EntityCustomEffectPostApplyEvent(entity, effect);
+    Cucumbery.getPlugin().getPluginManager().callEvent(postApplyEvent);
     return true;
   }
 
@@ -171,46 +180,27 @@ public class CustomEffectManager
       return false;
     }
     List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
+    List<CustomEffect> removed = new ArrayList<>();
     customEffects.removeIf(effect ->
     {
       if (effect.getType() == effectType)
       {
-        if (entity instanceof Attributable attributable && effect instanceof AttributeCustomEffect attributeCustomEffect)
-        {
-          UUID uuid = attributeCustomEffect.getUniqueId();
-          Attribute attribute = attributeCustomEffect.getAttribute();
-          AttributeInstance attributeInstance = attributable.getAttribute(attribute);
-          if (attributeInstance != null)
-          {
-            AttributeModifier attributeModifier = null;
-            for (AttributeModifier modifier : attributeInstance.getModifiers())
-            {
-              if (modifier.getUniqueId().equals(uuid))
-              {
-                attributeModifier = modifier;
-                break;
-              }
-            }
-            if (attributeModifier != null)
-            {
-              attributeInstance.removeModifier(attributeModifier);
-            }
-            // update max health
-            if (attribute == Attribute.GENERIC_MAX_HEALTH && entity instanceof Damageable damageable)
-            {
-              double maxHealth = attributeInstance.getValue();
-              if (damageable.getHealth() > maxHealth)
-              {
-                damageable.setHealth(maxHealth);
-              }
-            }
-          }
-        }
+        EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect);
+        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        removed.add(effect);
         return true;
       }
       return false;
     });
     effectMap.put(entity.getUniqueId(), customEffects);
+    if (!removed.isEmpty())
+    {
+      for (CustomEffect effect : removed)
+      {
+        EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect);
+        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+      }
+    }
     return true;
   }
 
@@ -221,45 +211,26 @@ public class CustomEffectManager
       return;
     }
     List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
+    List<CustomEffect> removed = new ArrayList<>();
     customEffects.removeIf(effect ->
     {
       if (effect.getType() == effectType && effect.getAmplifier() == amplifier)
       {
-        if (entity instanceof Attributable attributable && effect instanceof AttributeCustomEffect attributeCustomEffect)
-        {
-          UUID uuid = attributeCustomEffect.getUniqueId();
-          Attribute attribute = attributeCustomEffect.getAttribute();
-          AttributeInstance attributeInstance = attributable.getAttribute(attribute);
-          if (attributeInstance != null)
-          {
-            AttributeModifier attributeModifier = null;
-            for (AttributeModifier modifier : attributeInstance.getModifiers())
-            {
-              if (modifier.getUniqueId().equals(uuid))
-              {
-                attributeModifier = modifier;
-                break;
-              }
-            }
-            if (attributeModifier != null)
-            {
-              attributeInstance.removeModifier(attributeModifier);
-            }
-            // update max health
-            if (attribute == Attribute.GENERIC_MAX_HEALTH && entity instanceof Damageable damageable)
-            {
-              double maxHealth = attributeInstance.getValue();
-              if (damageable.getHealth() > maxHealth)
-              {
-                damageable.setHealth(maxHealth);
-              }
-            }
-          }
-        }
+        EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect);
+        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        removed.add(effect);
         return true;
       }
       return false;
     });
+    if (!removed.isEmpty())
+    {
+      for (CustomEffect effect : removed)
+      {
+        EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect);
+        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+      }
+    }
     effectMap.put(entity.getUniqueId(), customEffects);
   }
 
@@ -272,39 +243,15 @@ public class CustomEffectManager
     List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
     for (CustomEffect effect : customEffects)
     {
-      if (entity instanceof Attributable attributable && effect instanceof AttributeCustomEffect attributeCustomEffect)
-      {
-        UUID uuid = attributeCustomEffect.getUniqueId();
-        Attribute attribute = attributeCustomEffect.getAttribute();
-        AttributeInstance attributeInstance = attributable.getAttribute(attribute);
-        if (attributeInstance != null)
-        {
-          AttributeModifier attributeModifier = null;
-          for (AttributeModifier modifier : attributeInstance.getModifiers())
-          {
-            if (modifier.getUniqueId().equals(uuid))
-            {
-              attributeModifier = modifier;
-              break;
-            }
-          }
-          if (attributeModifier != null)
-          {
-            attributeInstance.removeModifier(attributeModifier);
-          }
-          // update max health
-          if (attribute == Attribute.GENERIC_MAX_HEALTH && entity instanceof Damageable damageable)
-          {
-            double maxHealth = attributeInstance.getValue();
-            if (damageable.getHealth() > maxHealth)
-            {
-              damageable.setHealth(maxHealth);
-            }
-          }
-        }
-      }
+      EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect);
+      Cucumbery.getPlugin().getPluginManager().callEvent(event);
     }
     effectMap.put(entity.getUniqueId(), Collections.emptyList());
+    for (CustomEffect effect : customEffects)
+    {
+      EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect);
+      Cucumbery.getPlugin().getPluginManager().callEvent(event);
+    }
     return true;
   }
 
@@ -671,14 +618,20 @@ public class CustomEffectManager
           key2 = "%1$s %3$s%2$s";
         }
       }
+      CustomEffectType effectType = customEffect.getType();
+      Component effectComponent = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + (showDuration ? effectType.translationKey() : effectType.shortTranslationKey()));
       arguments.add(
-              ComponentUtil.translate(key2, customEffect,
+              ComponentUtil.translate(key2, effectComponent,
                       !customEffect.isTimeHidden() ?
-                              timePrefixColor + " (" + Method.timeFormatMilli(duration * 50L, less10Sec, 1, true) + ")" :
+                              timePrefixColor + (showDuration ? " (" : "(") + Method.timeFormatMilli(duration * 50L, less10Sec, 1, true) + ")" :
                               ""
                       , "rgb200,200,30;" + (amplifier + 1))
       );
-      key.append("%s, ");
+      key.append("%s,");
+      if (showDuration)
+      {
+        key.append(" ");
+      }
     }
     key = new StringBuilder(key.substring(0, key.length() - 2));
     return ComponentUtil.translate(key.toString(), arguments);
@@ -751,16 +704,100 @@ public class CustomEffectManager
           key2 = "%1$s %3$s%2$s";
         }
       }
+      PotionEffectType effectType = potionEffect.getType();
+      Component effectComponent = ComponentUtil.translate((isVanillaNegative(effectType) ? "&c" : "&a") + (showDuration ? TranslatableKeyParser.getKey(effectType) : getVanillaShortTranslationKey(effectType)));
       arguments.add(
               ComponentUtil.translate(key2,
-                      potionEffect,
-                      timePrefixColor + " (" + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")"
+                      effectComponent,
+                      timePrefixColor + (showDuration ? " (" : "(") + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")"
                       , "rgb200,200,30;" + (amplifier + 1))
       );
-      key.append("%s, ");
+      key.append("%s,");
+      if (showDuration)
+      {
+        key.append(" ");
+      }
     }
     key = new StringBuilder(key.substring(0, key.length() - 2));
     return ComponentUtil.translate(key.toString(), arguments);
+  }
+
+  @NotNull
+  public static String getVanillaShortTranslationKey(@NotNull PotionEffectType potionEffectType)
+  {
+    if (potionEffectType.equals(PotionEffectType.SPEED))
+    {
+      return "신속";
+    }
+    if (potionEffectType.equals(PotionEffectType.SLOW))
+    {
+      return "신속";
+    }
+    if (potionEffectType.equals(PotionEffectType.FAST_DIGGING))
+    {
+      return "채광+";
+    }
+    if (potionEffectType.equals(PotionEffectType.SLOW_DIGGING))
+    {
+      return "채광-";
+    }
+    if (potionEffectType.equals(PotionEffectType.INCREASE_DAMAGE))
+    {
+      return "힘+";
+    }
+    if (potionEffectType.equals(PotionEffectType.WEAKNESS))
+    {
+      return "힘-";
+    }
+    if (potionEffectType.equals(PotionEffectType.HARM))
+    {
+      return "즉피해";
+    }
+    if (potionEffectType.equals(PotionEffectType.HEAL))
+    {
+      return "즉회복";
+    }
+    if (potionEffectType.equals(PotionEffectType.JUMP))
+    {
+      return "점강";
+    }
+    if (potionEffectType.equals(PotionEffectType.FIRE_RESISTANCE))
+    {
+      return "불X";
+    }
+    if (potionEffectType.equals(PotionEffectType.WATER_BREATHING))
+    {
+      return "물호흡";
+    }
+    if (potionEffectType.equals(PotionEffectType.NIGHT_VISION))
+    {
+      return "야투";
+    }
+    if (potionEffectType.equals(PotionEffectType.HEALTH_BOOST))
+    {
+      return "피뻥";
+    }
+    if (potionEffectType.equals(PotionEffectType.LEVITATION))
+    {
+      return "공부";
+    }
+    if (potionEffectType.equals(PotionEffectType.SLOW_FALLING))
+    {
+      return "느낙";
+    }
+    if (potionEffectType.equals(PotionEffectType.CONDUIT_POWER))
+    {
+      return "전달체";
+    }
+    if (potionEffectType.equals(PotionEffectType.DOLPHINS_GRACE))
+    {
+      return "돌고래";
+    }
+    if (potionEffectType.equals(PotionEffectType.HERO_OF_THE_VILLAGE))
+    {
+      return "영웅";
+    }
+    return TranslatableKeyParser.getKey(potionEffectType);
   }
 
   @SuppressWarnings("all")

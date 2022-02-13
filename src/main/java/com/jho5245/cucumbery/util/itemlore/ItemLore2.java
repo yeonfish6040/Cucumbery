@@ -3,17 +3,12 @@ package com.jho5245.cucumbery.util.itemlore;
 import com.destroystokyo.paper.Namespaced;
 import com.google.common.collect.Multimap;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
-import com.jho5245.cucumbery.util.nbt.CucumberyTag;
-import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.ColorCode;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
 import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -23,6 +18,11 @@ import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
+import com.jho5245.cucumbery.util.storage.no_groups.ColorCode;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -388,7 +388,7 @@ public class ItemLore2
       lore.add(ComponentUtil.translate("rgb203,164,12;누적 모루 합성 횟수 : %s", ComponentUtil.translate("&e%s회", anvilUsedTime + "")));
     }
 
-    boolean hideEnchant = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.ENCHANTS.toString());
+    boolean hideEnchant = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.ENCHANTS);
     NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(itemTag, CucumberyTag.CUSTOM_ENCHANTS_KEY);
     boolean hasCustomEnchants = customEnchantsTag != null && !customEnchantsTag.isEmpty();
 
@@ -486,6 +486,8 @@ public class ItemLore2
       }
     }
 
+    boolean hideAttributes = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.ATTRIBUTE_MODIFIERS);
+
     if (!Constant.DEFAULT_MODIFIER_ITEMS.contains(type) && !itemMeta.hasAttributeModifiers())
     {
       itemMeta.removeItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -493,293 +495,284 @@ public class ItemLore2
     else
     {
       itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-      if (!Constant.DEFAULT_MODIFIER_ITEMS.contains(type) || (Constant.DEFAULT_MODIFIER_ITEMS.contains(type) && itemMeta.hasAttributeModifiers()))
+      if (!hideAttributes)
       {
-        for (EquipmentSlot slot : EquipmentSlot.values())
+        if (!Constant.DEFAULT_MODIFIER_ITEMS.contains(type) || (Constant.DEFAULT_MODIFIER_ITEMS.contains(type) && itemMeta.hasAttributeModifiers()))
         {
-          Multimap<Attribute, AttributeModifier> attrs = itemMeta.getAttributeModifiers(slot);
-          if (attrs.isEmpty())
+          for (EquipmentSlot slot : EquipmentSlot.values())
           {
-            continue;
-          }
-          lore.add(Component.empty());
-          switch (slot)
-          {
-            case HAND -> lore.add(Constant.ITEM_MODIFIERS_MAINHAND);
-            case OFF_HAND -> lore.add(Constant.ITEM_MODIFIERS_OFFHAND);
-            case FEET -> lore.add(Constant.ITEM_MODIFIERS_FEET);
-            case LEGS -> lore.add(Constant.ITEM_MODIFIERS_LEGS);
-            case CHEST -> lore.add(Constant.ITEM_MODIFIERS_CHEST);
-            case HEAD -> lore.add(Constant.ITEM_MODIFIERS_HEAD);
-          }
-          for (Attribute attribute : Attribute.values())
-          {
-            Collection<AttributeModifier> attr = attrs.get(attribute);
-            for (AttributeModifier modifier : attr)
+            Multimap<Attribute, AttributeModifier> attrs = itemMeta.getAttributeModifiers(slot);
+            if (attrs.isEmpty())
             {
-              double amount = modifier.getAmount();
-              if (amount == 0d)
+              continue;
+            }
+            lore.add(Component.empty());
+            switch (slot)
+            {
+              case HAND -> lore.add(Constant.ITEM_MODIFIERS_MAINHAND);
+              case OFF_HAND -> lore.add(Constant.ITEM_MODIFIERS_OFFHAND);
+              case FEET -> lore.add(Constant.ITEM_MODIFIERS_FEET);
+              case LEGS -> lore.add(Constant.ITEM_MODIFIERS_LEGS);
+              case CHEST -> lore.add(Constant.ITEM_MODIFIERS_CHEST);
+              case HEAD -> lore.add(Constant.ITEM_MODIFIERS_HEAD);
+            }
+            for (Attribute attribute : Attribute.values())
+            {
+              Collection<AttributeModifier> attr = attrs.get(attribute);
+              for (AttributeModifier modifier : attr)
               {
-                continue;
+                double amount = modifier.getAmount();
+                if (amount == 0d)
+                {
+                  continue;
+                }
+                AttributeModifier.Operation operation = modifier.getOperation();
+                if (operation != AttributeModifier.Operation.ADD_NUMBER)
+                {
+                  amount *= 100d;
+                }
+                String operationString = ItemLoreUtil.operationValue(operation);
+                Component component = ComponentUtil.translate("rgb255,142,82;%s : %s",
+                        Component.translatable(attribute.translationKey()), (amount > 0 ? "+" : "") + Constant.Sosu2.format(amount) + operationString);
+                lore.add(component);
               }
-              AttributeModifier.Operation operation = modifier.getOperation();
-              if (operation != AttributeModifier.Operation.ADD_NUMBER)
-              {
-                amount *= 100d;
-              }
-              String operationString = ItemLoreUtil.operationValue(operation);
-              Component component = ComponentUtil.translate("rgb255,142,82;%s : %s",
-                      Component.translatable(attribute.translationKey()), (amount > 0 ? "+" : "") + Constant.Sosu2.format(amount) + operationString);
-              lore.add(component);
             }
           }
         }
-      }
-      else if (!itemMeta.hasAttributeModifiers())
-      {
-        Component mainHand = Constant.ITEM_MODIFIERS_MAINHAND;
-        Component helmet = Constant.ITEM_MODIFIERS_HEAD;
-        Component chestplate = Constant.ITEM_MODIFIERS_CHEST;
-        Component leggings = Constant.ITEM_MODIFIERS_LEGS;
-        Component boots = Constant.ITEM_MODIFIERS_FEET;
-        Component attackSpeed = Component.translatable("attribute.name.generic.attack_speed");
-        Component damage = Component.translatable("attribute.name.generic.attack_damage");
-        Component armor = Component.translatable("attribute.name.generic.armor");
-        Component armorToughness = Component.translatable("attribute.name.generic.armor_toughness");
-        Component knockbackResistance = Component.translatable("attribute.name.generic.knockback_resistance");
-        lore.add(Component.empty());
-        switch (type)
+        else if (!itemMeta.hasAttributeModifiers())
         {
-          case WOODEN_AXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.2"));
-            break;
-          case STONE_AXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.2"));
-            break;
-          case IRON_AXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.1"));
-            break;
-          case DIAMOND_AXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case GOLDEN_AXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case WOODEN_PICKAXE:
-          case GOLDEN_PICKAXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+1"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
-            break;
-          case STONE_PICKAXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+2"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
-            break;
-          case IRON_PICKAXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
-            break;
-          case DIAMOND_PICKAXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
-            break;
-          case WOODEN_SHOVEL:
-          case GOLDEN_SHOVEL:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+1.5"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case STONE_SHOVEL:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+2.5"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case IRON_SHOVEL:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3.5"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case DIAMOND_SHOVEL:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4.5"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case WOODEN_HOE:
-          case GOLDEN_HOE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case STONE_HOE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2"));
-            break;
-          case IRON_HOE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-1"));
-            break;
-          case DIAMOND_HOE:
-          case NETHERITE_HOE:
-            lore.remove(lore.size() - 1);
-            break;
-          case WOODEN_SWORD:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
-            break;
-          case STONE_SWORD:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
-            break;
-          case IRON_SWORD:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
-            break;
-          case DIAMOND_SWORD:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
-            break;
-          case GOLDEN_SWORD:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
-            break;
-          case TRIDENT:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.9"));
-            break;
-          case LEATHER_HELMET:
-            lore.add(helmet);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+1"));
-            break;
-          case LEATHER_CHESTPLATE:
-            lore.add(chestplate);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
-            break;
-          case LEATHER_LEGGINGS:
-            lore.add(leggings);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
-            break;
-          case LEATHER_BOOTS:
-          case CHAINMAIL_BOOTS:
-          case GOLDEN_BOOTS:
-            lore.add(boots);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+1"));
-            break;
-          case CHAINMAIL_HELMET:
-          case TURTLE_HELMET:
-          case IRON_HELMET:
-          case GOLDEN_HELMET:
-            lore.add(helmet);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
-            break;
-          case CHAINMAIL_CHESTPLATE:
-          case GOLDEN_CHESTPLATE:
-            lore.add(chestplate);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+5"));
-            break;
-          case CHAINMAIL_LEGGINGS:
-            lore.add(leggings);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+4"));
-            break;
-          case IRON_CHESTPLATE:
-            lore.add(chestplate);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
-            break;
-          case IRON_LEGGINGS:
-            lore.add(leggings);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+5"));
-            break;
-          case IRON_BOOTS:
-            lore.add(boots);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
-            break;
-          case GOLDEN_LEGGINGS:
-            lore.add(leggings);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
-            break;
-          case DIAMOND_HELMET:
-            lore.add(helmet);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
-            break;
-          case DIAMOND_CHESTPLATE:
-            lore.add(chestplate);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+8"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
-            break;
-          case DIAMOND_LEGGINGS:
-            lore.add(leggings);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
-            break;
-          case DIAMOND_BOOTS:
-            lore.add(boots);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
-            break;
-          case NETHERITE_AXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+9"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case NETHERITE_PICKAXE:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
-            break;
-          case NETHERITE_SHOVEL:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5.5"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
-            break;
-          case NETHERITE_SWORD:
-            lore.add(mainHand);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+7"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
-            break;
-          case NETHERITE_HELMET:
-            lore.add(helmet);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
-            break;
-          case NETHERITE_CHESTPLATE:
-            lore.add(chestplate);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+8"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
-            break;
-          case NETHERITE_LEGGINGS:
-            lore.add(leggings);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
-            break;
-          case NETHERITE_BOOTS:
-            lore.add(boots);
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
-            lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
-            break;
-          default:
-            break;
+          Component mainHand = Constant.ITEM_MODIFIERS_MAINHAND;
+          Component helmet = Constant.ITEM_MODIFIERS_HEAD;
+          Component chestplate = Constant.ITEM_MODIFIERS_CHEST;
+          Component leggings = Constant.ITEM_MODIFIERS_LEGS;
+          Component boots = Constant.ITEM_MODIFIERS_FEET;
+          Component attackSpeed = Component.translatable("attribute.name.generic.attack_speed");
+          Component damage = Component.translatable("attribute.name.generic.attack_damage");
+          Component armor = Component.translatable("attribute.name.generic.armor");
+          Component armorToughness = Component.translatable("attribute.name.generic.armor_toughness");
+          Component knockbackResistance = Component.translatable("attribute.name.generic.knockback_resistance");
+          lore.add(Component.empty());
+          switch (type)
+          {
+            case WOODEN_AXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.2"));
+            }
+            case STONE_AXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.2"));
+            }
+            case IRON_AXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3.1"));
+            }
+            case DIAMOND_AXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case GOLDEN_AXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case WOODEN_PICKAXE, GOLDEN_PICKAXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+1"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            }
+            case STONE_PICKAXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+2"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            }
+            case IRON_PICKAXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            }
+            case DIAMOND_PICKAXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            }
+            case WOODEN_SHOVEL, GOLDEN_SHOVEL -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+1.5"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case STONE_SHOVEL -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+2.5"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case IRON_SHOVEL -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3.5"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case DIAMOND_SHOVEL -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4.5"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case WOODEN_HOE, GOLDEN_HOE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case STONE_HOE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2"));
+            }
+            case IRON_HOE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-1"));
+            }
+            case DIAMOND_HOE, NETHERITE_HOE -> lore.remove(lore.size() - 1);
+            case WOODEN_SWORD -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            }
+            case STONE_SWORD -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+4"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            }
+            case IRON_SWORD -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            }
+            case DIAMOND_SWORD -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+6"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            }
+            case GOLDEN_SWORD -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            }
+            case TRIDENT -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+8"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.9"));
+            }
+            case LEATHER_HELMET -> {
+              lore.add(helmet);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+1"));
+            }
+            case LEATHER_CHESTPLATE -> {
+              lore.add(chestplate);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+            }
+            case LEATHER_LEGGINGS -> {
+              lore.add(leggings);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
+            }
+            case LEATHER_BOOTS, CHAINMAIL_BOOTS, GOLDEN_BOOTS -> {
+              lore.add(boots);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+1"));
+            }
+            case CHAINMAIL_HELMET, TURTLE_HELMET, IRON_HELMET, GOLDEN_HELMET -> {
+              lore.add(helmet);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
+            }
+            case CHAINMAIL_CHESTPLATE, GOLDEN_CHESTPLATE -> {
+              lore.add(chestplate);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+5"));
+            }
+            case CHAINMAIL_LEGGINGS -> {
+              lore.add(leggings);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+4"));
+            }
+            case IRON_CHESTPLATE -> {
+              lore.add(chestplate);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
+            }
+            case IRON_LEGGINGS -> {
+              lore.add(leggings);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+5"));
+            }
+            case IRON_BOOTS -> {
+              lore.add(boots);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+2"));
+            }
+            case GOLDEN_LEGGINGS -> {
+              lore.add(leggings);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+            }
+            case DIAMOND_HELMET -> {
+              lore.add(helmet);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+            }
+            case DIAMOND_CHESTPLATE -> {
+              lore.add(chestplate);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+8"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
+            }
+            case DIAMOND_LEGGINGS -> {
+              lore.add(leggings);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
+            }
+            case DIAMOND_BOOTS -> {
+              lore.add(boots);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+2"));
+            }
+            case NETHERITE_AXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+9"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case NETHERITE_PICKAXE -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.8"));
+            }
+            case NETHERITE_SHOVEL -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+5.5"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-3"));
+            }
+            case NETHERITE_SWORD -> {
+              lore.add(mainHand);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", damage, "+7"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-2.4"));
+            }
+            case NETHERITE_HELMET -> {
+              lore.add(helmet);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
+            }
+            case NETHERITE_CHESTPLATE -> {
+              lore.add(chestplate);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+8"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
+            }
+            case NETHERITE_LEGGINGS -> {
+              lore.add(leggings);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+6"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
+            }
+            case NETHERITE_BOOTS -> {
+              lore.add(boots);
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armor, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", armorToughness, "+3"));
+              lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", knockbackResistance, "+1"));
+            }
+            default -> {
+            }
+          }
         }
       }
     }

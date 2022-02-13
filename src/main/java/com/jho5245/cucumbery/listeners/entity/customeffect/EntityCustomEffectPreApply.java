@@ -38,6 +38,7 @@ public class EntityCustomEffectPreApply implements Listener
               customEffect));
       return;
     }
+
     if (customEffectType == CustomEffectType.PARROTS_CHEER && !(entity instanceof AnimalTamer && entity instanceof Damageable))
     {
       event.setCancelled(true);
@@ -77,6 +78,27 @@ public class EntityCustomEffectPreApply implements Listener
         }
       }
     }
+
+    if (customEffectType == CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED && !CustomEffectManager.hasEffect(entity, CustomEffectType.FANCY_SPOTLIGHT))
+    {
+      event.setCancelled(true);
+      return;
+    }
+
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.COMBAT_MODE_COOLDOWN))
+    {
+      if (customEffectType == CustomEffectType.COMBAT_MODE_MELEE && CustomEffectManager.hasEffect(entity, CustomEffectType.COMBAT_MODE_RANGED))
+      {
+        event.setCancelled(true);
+        return;
+      }
+      if (customEffectType == CustomEffectType.COMBAT_MODE_RANGED && CustomEffectManager.hasEffect(entity, CustomEffectType.COMBAT_MODE_MELEE))
+      {
+        event.setCancelled(true);
+        return;
+      }
+    }
+
     if (customEffect instanceof AttributeCustomEffect)
     {
       if (!(entity instanceof Attributable attributable))

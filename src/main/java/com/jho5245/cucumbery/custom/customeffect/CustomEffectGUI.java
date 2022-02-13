@@ -5,10 +5,10 @@ import com.jho5245.cucumbery.util.no_groups.ColorUtil;
 import com.jho5245.cucumbery.util.no_groups.ColorUtil.Type;
 import com.jho5245.cucumbery.util.no_groups.CreateGUI;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
+import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -91,6 +91,10 @@ public class CustomEffectGUI
     customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE || effect.isHidden());
     List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
     potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
+    potionEffects.removeIf(potionEffect ->
+            CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT) &&
+                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
     boolean isEmpty = customEffects.isEmpty() && potionEffects.isEmpty();
     if (isEmpty)
     {
@@ -108,15 +112,18 @@ public class CustomEffectGUI
         }
         CustomEffectType effectType = customEffect.getType();
         String key = effectType.translationKey();
-        ItemStack itemStack = customEffect.getIcon() != null ? customEffect.getIcon() : new ItemStack(Material.POTION);
+        ItemStack itemStack = customEffect.getIcon();
+        if (itemStack == null)
+        {
+          itemStack = new ItemStack(Material.POTION);
+        }
         itemStack.setAmount(Math.min(64, customEffect.getAmplifier() + 1));
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemStack.getType() == Material.POTION)
         {
-          Color color = effectType.getColor();
           ColorUtil colorUtil = new ColorUtil(Type.HSL, "" + ((i * 30) % 255) + ",100,50;");
           PotionMeta potionMeta = (PotionMeta) itemMeta;
-          potionMeta.setColor(color != null ? color : Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+          potionMeta.setColor(Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
           itemStack.setItemMeta(potionMeta);
         }
         itemMeta = itemStack.getItemMeta();

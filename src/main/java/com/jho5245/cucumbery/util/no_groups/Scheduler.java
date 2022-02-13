@@ -16,15 +16,15 @@ import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventory
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -47,6 +47,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -67,23 +68,10 @@ public class Scheduler
   {
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
-      // 특정 인벤토리(숫돌, 지도 제작대, 석재 절단기 등)의 인벤토리 결과물 실시간 업데이트
-      itemLore();
-      // 관전 제한 루프 (관전 권한이 없을 때 관전 취소)
-      spectateLoop();
-      // 장착 불가 갑옷 사용 제한
-      armorEquipRestriction();
-      // 주로 사용하는 손에 들고 있는 아이템의 재사용/재발동 대기 시간 액션바에 표시
-      showCooldownActionbar();
-      // 명령 블록 명령어 미리 보기
-      commandBlockPreview();
-
-      // 관전 중인 개체의 정보 표시
-      showSpectatorTargetInfoActionbar();
-      // 커스텀 인챈트
-      customEnchant();
+      // 틱 단위로 무한 반복하는 애들
+      tickSchedules();
+      // 서버 라디오
       serverRadio();
-
       // sendBossBar
       BossBarMessage.tick();
       // 플러그인 실행 시간
@@ -122,7 +110,61 @@ public class Scheduler
       CustomEffectManager.save();
     }, 1200L, 20L * 60L * 5L);
     reinforceChancetime();
-    CustomEffectScheduler.schedule(cucumbery);
+  }
+
+  private static void tickSchedules()
+  {
+    entityTick();
+    playerTick();
+  }
+
+  private static void entityTick()
+  {
+    for (World world : Bukkit.getWorlds())
+    {
+      for (Entity entity : world.getEntities())
+      {
+        // 커스텀 인챈트
+        customEnchant(entity);
+        CustomEffectScheduler.tick(entity);
+        CustomEffectScheduler.trueInvisibility(entity);
+        CustomEffectScheduler.axolotlsGrace(entity);
+        CustomEffectScheduler.stop(entity);
+      }
+    }
+  }
+
+  private static void playerTick()
+  {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      // 관전 중인 개체의 정보 표시
+      showSpectatorTargetInfoActionbar(player);
+      // 주로 사용하는 손에 들고 있는 아이템의 재사용/재발동 대기 시간 액션바에 표시
+      showCooldownActionbar(player);
+      // 특정 인벤토리(숫돌, 지도 제작대, 석재 절단기 등)의 인벤토리 결과물 실시간 업데이트
+      if (Cucumbery.config.getBoolean("use-helpful-lore-feature"))
+      {
+        itemLore(player);
+      }
+      // 관전 제한 루프 (관전 권한이 없을 때 관전 취소)
+      spectateLoop(player);
+      // 장착 불가 갑옷 사용 제한
+      if (!Cucumbery.getPlugin().getConfig().getBoolean("disable-item-usage-restriction"))
+      {
+        armorEquipRestriction(player);
+      }
+      // 명령 블록 명령어 미리 보기
+      commandBlockPreview(player);
+
+      CustomEffectScheduler.display(player);
+      CustomEffectScheduler.spreadAndVariation(player);
+      CustomEffectScheduler.fancySpotlight(player);
+      CustomEffectScheduler.newbieShield(player);
+      CustomEffectScheduler.darknessTerror(player);
+      CustomEffectScheduler.serverRadio(player);
+      CustomEffectScheduler.trollInventoryProperty(player);
+    }
   }
 
   private static void serverRadio()
@@ -210,96 +252,88 @@ public class Scheduler
     }
   }
 
-  private static void customEnchant()
+  private static void customEnchant(@NotNull Entity entity)
   {
-    for (World world : Bukkit.getWorlds())
+    if (!(entity instanceof LivingEntity livingEntity))
     {
-      for (Entity entity : world.getEntities())
-      {
-        if (!(entity instanceof LivingEntity livingEntity))
-        {
-          continue;
-        }
-        EntityEquipment equipment = livingEntity.getEquipment();
-        if (equipment == null)
-        {
-          continue;
-        }
-        ItemStack helmet = equipment.getHelmet();
-        if (!ItemStackUtil.itemExists(helmet))
-        {
-          continue;
-        }
-        ItemMeta itemMeta = helmet.getItemMeta();
-      }
+      return;
     }
+    EntityEquipment equipment = livingEntity.getEquipment();
+    if (equipment == null)
+    {
+      return;
+    }
+    ItemStack helmet = equipment.getHelmet();
+    if (!ItemStackUtil.itemExists(helmet))
+    {
+      return;
+    }
+    ItemMeta itemMeta = helmet.getItemMeta();
   }
 
-  private static void showSpectatorTargetInfoActionbar()
+  private static void showSpectatorTargetInfoActionbar(@NotNull Player player)
   {
-    for (Player player : Bukkit.getServer().getOnlinePlayers())
+    if (player.getGameMode() != GameMode.SPECTATOR)
     {
-      if (player.getGameMode() != GameMode.SPECTATOR)
-      {
-        continue;
-      }
-      Entity target = player.getSpectatorTarget();
-      if (target == null)
-      {
-        continue;
-      }
-      if (!UserData.SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR.getBoolean(player))
-      {
-        continue;
-      }
-      Component message = ComponentUtil.translate("%s 관전 중", target);
-      if (target instanceof Player targetPlayer)
-      {
-        int level = targetPlayer.getLevel();
-        float exp = targetPlayer.getExp();
-        message = message.append(ComponentUtil.create(" | &aLv." + level + "(" + Constant.Sosu2.format(exp * 100) + "%)"));
-      }
-      if (target instanceof Damageable && target instanceof Attributable attributable)
-      {
-        AttributeInstance attributeInstanceMaxHealth = attributable.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (attributeInstanceMaxHealth != null)
-        {
-          Damageable damageable = (Damageable) target;
-          double hp = damageable.getHealth();
-          double mhp = attributeInstanceMaxHealth.getValue();
-          message = message.append(ComponentUtil.create(" | &c" + Constant.Sosu2.format(hp) + "&7/&c" + Constant.Sosu2.format(mhp) + "❤"));
-        }
-
-        AttributeInstance attributeInstanceArmor = attributable.getAttribute(Attribute.GENERIC_ARMOR);
-        AttributeInstance attributeInstanceArmorToughness = attributable.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS);
-
-        if (attributeInstanceArmor != null && attributeInstanceArmorToughness != null)
-        {
-          double armor = attributeInstanceArmor.getValue();
-          double armorToughness = attributeInstanceArmorToughness.getValue();
-          message = message.append(ComponentUtil.create(" | &b" + Constant.Sosu2.format(armor) + (armorToughness != 0 ? "(" + Constant.Sosu2.format(armorToughness) + ")" : "") + "⛨"));
-        }
-      }
-      if (target instanceof Player targetPlayer)
-      {
-
-        int foodLevel = targetPlayer.getFoodLevel();
-        float saturation = targetPlayer.getSaturation();
-        float exhaustion = targetPlayer.getExhaustion();
-
-        if (UserData.SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE.getBoolean(player))
-        {
-          message = message.append(ComponentUtil.create(" | &6" + foodLevel + "⛁ " + Constant.Sosu2.format(saturation)
-                  + "s " + Constant.Sosu2Force.format(Math.max(0, 4 - exhaustion) * 25) + "%&l⚡ " + EXHAUSTION_GUAGE.charAt(Math.max(0, 8 - (int) (exhaustion * 2) - 1))));
-        }
-        else
-        {
-          message = message.append(ComponentUtil.create(
-                  " | &6" + Constant.Sosu2.format(foodLevel + saturation) + (exhaustion != 0 ? "(" + EXHAUSTION_GUAGE.charAt(Math.max(0, 8 - (int) (exhaustion * 2) - 1)) + ")" : "") + "⛁"));
-        }
-      }
-      MessageUtil.sendActionBar(player, message);
+      return;
     }
+    Entity target = player.getSpectatorTarget();
+    if (target == null)
+    {
+      return;
+    }
+    if (!UserData.SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR.getBoolean(player))
+    {
+      return;
+    }
+    Component message = ComponentUtil.translate("%s 관전 중", target);
+    if (target instanceof Player targetPlayer)
+    {
+      int level = targetPlayer.getLevel();
+      float exp = targetPlayer.getExp();
+      message = message.append(ComponentUtil.create(" | &aLv." + level + "(" + Constant.Sosu2.format(exp * 100) + "%)"));
+    }
+    if (target instanceof Damageable && target instanceof Attributable attributable)
+    {
+      AttributeInstance attributeInstanceMaxHealth = attributable.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+      if (attributeInstanceMaxHealth != null)
+      {
+        Damageable damageable = (Damageable) target;
+        double hp = damageable.getHealth();
+        double mhp = attributeInstanceMaxHealth.getValue();
+        message = message.append(ComponentUtil.create(" | &c" + Constant.Sosu2.format(hp) + "&7/&c" + Constant.Sosu2.format(mhp) + "❤"));
+      }
+
+      AttributeInstance attributeInstanceArmor = attributable.getAttribute(Attribute.GENERIC_ARMOR);
+      AttributeInstance attributeInstanceArmorToughness = attributable.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS);
+
+      if (attributeInstanceArmor != null && attributeInstanceArmorToughness != null)
+      {
+        double armor = attributeInstanceArmor.getValue();
+        double armorToughness = attributeInstanceArmorToughness.getValue();
+        message = message.append(ComponentUtil.create(" | &b" + Constant.Sosu2.format(armor) + (armorToughness != 0 ? "(" + Constant.Sosu2.format(armorToughness) + ")" : "") + "⛨"));
+      }
+    }
+    if (target instanceof Player targetPlayer)
+    {
+
+      int foodLevel = targetPlayer.getFoodLevel();
+      float saturation = targetPlayer.getSaturation();
+      float exhaustion = targetPlayer.getExhaustion();
+
+      if (UserData.SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE.getBoolean(player))
+      {
+        message = message.append(ComponentUtil.create(" | &6" + foodLevel + "⛁ " + Constant.Sosu2.format(saturation)
+                + "s " + Constant.Sosu2Force.format(Math.max(0, 4 - exhaustion) * 25) + "%&l⚡ " + EXHAUSTION_GUAGE.charAt(Math.max(0, 8 - (int) (exhaustion * 2) - 1))));
+      }
+      else
+      {
+        message = message.append(ComponentUtil.create(
+                " | &6" + Constant.Sosu2.format(foodLevel + saturation) + (exhaustion != 0 ? "(" + EXHAUSTION_GUAGE.charAt(Math.max(0, 8 - (int) (exhaustion * 2) - 1)) + ")" : "") + "⛁"));
+      }
+    }
+    MessageUtil.sendActionBar(player, message);
+
   }
 
   private static String getCooldownActionbar(UUID uuid, ItemStack item, boolean mainHand)
@@ -531,46 +565,43 @@ public class Scheduler
     return returnValue;
   }
 
-  private static void showCooldownActionbar()
+  private static void showCooldownActionbar(@NotNull Player player)
   {
-    for (Player player : Bukkit.getServer().getOnlinePlayers())
+    if (player.getGameMode() == GameMode.SPECTATOR)
     {
-      if (player.getGameMode() == GameMode.SPECTATOR)
+      return;
+    }
+    if (!UserData.SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN.getBoolean(player.getUniqueId()) || UserData.FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN
+            .getBoolean(player.getUniqueId()))
+    {
+      return;
+    }
+    String actionbar = "";
+    ItemStack item = player.getInventory().getItemInOffHand();
+    UUID uuid = player.getUniqueId();
+    if (ItemStackUtil.itemExists(item))
+    {
+      actionbar += getCooldownActionbar(uuid, item, false);
+    }
+    item = player.getInventory().getItemInMainHand();
+    if (ItemStackUtil.itemExists(item))
+    {
+      actionbar += getCooldownActionbar(uuid, item, true);
+    }
+    if (!actionbar.equals(""))
+    {
+      if (actionbar.endsWith(", "))
       {
-        continue;
+        actionbar = actionbar.substring(0, actionbar.length() - 2);
       }
-      if (!UserData.SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN.getBoolean(player.getUniqueId()) || UserData.FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN
-              .getBoolean(player.getUniqueId()))
-      {
-        continue;
-      }
-      String actionbar = "";
-      ItemStack item = player.getInventory().getItemInOffHand();
-      UUID uuid = player.getUniqueId();
-      if (ItemStackUtil.itemExists(item))
-      {
-        actionbar += getCooldownActionbar(uuid, item, false);
-      }
-      item = player.getInventory().getItemInMainHand();
-      if (ItemStackUtil.itemExists(item))
-      {
-        actionbar += getCooldownActionbar(uuid, item, true);
-      }
-      if (!actionbar.equals(""))
-      {
-        if (actionbar.endsWith(", "))
-        {
-          actionbar = actionbar.substring(0, actionbar.length() - 2);
-        }
-        MessageUtil.sendActionBar(player, actionbar);
-        Variable.playerActionbarCooldownIsShowing.add(uuid);
-      }
+      MessageUtil.sendActionBar(player, actionbar);
+      Variable.playerActionbarCooldownIsShowing.add(uuid);
     }
   }
 
   private static void inventoryFullNotify()
   {
-    for (Player player : Bukkit.getServer().getOnlinePlayers())
+    for (Player player : Bukkit.getOnlinePlayers())
     {
       if (player.getGameMode() == GameMode.SPECTATOR)
       {
@@ -723,51 +754,48 @@ public class Scheduler
     }
   }
 
-  private static void commandBlockPreview()
+  private static void commandBlockPreview(@NotNull Player player)
   {
-    for (Player player : Bukkit.getServer().getOnlinePlayers())
+    if (player.getGameMode() == GameMode.SPECTATOR)
     {
-      if (player.getGameMode() == GameMode.SPECTATOR)
-      {
-        continue;
-      }
-      if (!player.isOp())
-      {
-        continue;
-      }
-      ItemStack item = player.getInventory().getItemInMainHand();
-      if (!ItemStackUtil.itemExists(item))
-      {
-        continue;
-      }
-      if (!UserData.SHOW_PREVIEW_COMMAND_BLOCK_COMMAND.getBoolean(player.getUniqueId()))
-      {
-        continue;
-      }
-      switch (item.getType())
-      {
-        case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK, NETHERITE_SWORD, DIAMOND_SWORD, GOLDEN_SWORD,
-                IRON_SWORD, STONE_SWORD, WOODEN_SWORD, COMPASS, DEBUG_STICK, REDSTONE_BLOCK, WOODEN_AXE, IRON_BLOCK, BARRIER, COMMAND_BLOCK_MINECART, TRIDENT -> {
-          Set<Material> transparent = new HashSet<>();
-          for (Material material : Material.values())
+      return;
+    }
+    if (!player.isOp())
+    {
+      return;
+    }
+    ItemStack item = player.getInventory().getItemInMainHand();
+    if (!ItemStackUtil.itemExists(item))
+    {
+      return;
+    }
+    if (!UserData.SHOW_PREVIEW_COMMAND_BLOCK_COMMAND.getBoolean(player.getUniqueId()))
+    {
+      return;
+    }
+    switch (item.getType())
+    {
+      case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK, NETHERITE_SWORD, DIAMOND_SWORD, GOLDEN_SWORD,
+              IRON_SWORD, STONE_SWORD, WOODEN_SWORD, COMPASS, DEBUG_STICK, REDSTONE_BLOCK, WOODEN_AXE, IRON_BLOCK, BARRIER, COMMAND_BLOCK_MINECART, TRIDENT -> {
+        Set<Material> transparent = new HashSet<>();
+        for (Material material : Material.values())
+        {
+          if (!material.isOccluding())
           {
-            if (!material.isOccluding())
-            {
-              transparent.add(material);
-            }
+            transparent.add(material);
           }
-          Block block = player.getTargetBlock(transparent, 10);
-          switch (block.getType())
-          {
-            case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK -> {
-              CommandBlock commandBlock = (CommandBlock) block.getState();
-              String command = commandBlock.getCommand();
-              if (command.isEmpty())
-              {
-                command = " ";
-              }
-              MessageUtil.sendActionBar(player, command, false);
+        }
+        Block block = player.getTargetBlock(transparent, 10);
+        switch (block.getType())
+        {
+          case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK -> {
+            CommandBlock commandBlock = (CommandBlock) block.getState();
+            String command = commandBlock.getCommand();
+            if (command.isEmpty())
+            {
+              command = " ";
             }
+            MessageUtil.sendActionBar(player, command, false);
           }
         }
       }
@@ -818,7 +846,7 @@ public class Scheduler
 
   // GUI 아이템 사용 제한(화로 - 땔감, 제련 아이템/양조기 - 물병 등)
   @SuppressWarnings("all")
-  private static void guiItemRestriction(Player player)
+  private static void guiItemRestriction(@NotNull Player player)
   {
     // WIP TODO
     boolean isNotImplemented = true;
@@ -847,214 +875,205 @@ public class Scheduler
     }
   }
 
-  private static void armorEquipRestriction()
+  private static void armorEquipRestriction(@NotNull Player player)
   {
     if (Cucumbery.getPlugin().getConfig().getBoolean("disable-item-usage-restriction"))
     {
       return;
     }
-    for (Player player : Bukkit.getServer().getOnlinePlayers())
+    GameMode gameMode = player.getGameMode();
+    if (gameMode == GameMode.SURVIVAL || gameMode == GameMode.ADVENTURE)
     {
-      GameMode gameMode = player.getGameMode();
-      if (gameMode == GameMode.SURVIVAL || gameMode == GameMode.ADVENTURE)
+      guiItemRestriction(player);
+      PlayerInventory inv = player.getInventory();
+      ItemStack helmet = inv.getHelmet(), chestplate = inv.getChestplate(), leggings = inv.getLeggings(), boots = inv.getBoots();
+      ItemStack cursor = player.getItemOnCursor();
+      boolean cursorExists = ItemStackUtil.itemExists(cursor);
+      if (ItemStackUtil.itemExists(helmet) && NBTAPI.isRestricted(player, helmet, RestrictionType.NO_EQUIP))
       {
-        guiItemRestriction(player);
-        PlayerInventory inv = player.getInventory();
-        ItemStack helmet = inv.getHelmet(), chestplate = inv.getChestplate(), leggings = inv.getLeggings(), boots = inv.getBoots();
-        ItemStack cursor = player.getItemOnCursor();
-        boolean cursorExists = ItemStackUtil.itemExists(cursor);
-        if (ItemStackUtil.itemExists(helmet) && NBTAPI.isRestricted(player, helmet, RestrictionType.NO_EQUIP))
+        helmet = helmet.clone();
+        boolean addItem = false;
+        if (cursorExists)
         {
-          helmet = helmet.clone();
-          boolean addItem = false;
-          if (cursorExists)
+          cursor = cursor.clone();
+          if (NBTAPI.isRestricted(player, cursor, RestrictionType.NO_EQUIP))
           {
-            cursor = cursor.clone();
-            if (NBTAPI.isRestricted(player, cursor, RestrictionType.NO_EQUIP))
-            {
-              inv.addItem(cursor);
-              addItem = true;
-            }
-            else
-            {
-              inv.setHelmet(cursor);
-            }
+            inv.addItem(cursor);
+            addItem = true;
           }
           else
           {
-            inv.setHelmet(null);
+            inv.setHelmet(cursor);
           }
-          if (!addItem)
-          {
-            ItemStack cursor2 = player.getItemOnCursor();
-            if (ItemStackUtil.itemExists(cursor2))
-            {
-              inv.addItem(cursor2);
-            }
-            player.setItemOnCursor(helmet);
-          }
-          player.updateInventory();
         }
-        if (ItemStackUtil.itemExists(chestplate) && NBTAPI.isRestricted(player, chestplate, RestrictionType.NO_EQUIP))
+        else
         {
-          chestplate = chestplate.clone();
-          boolean addItem = false;
-          if (cursorExists)
-          {
-            cursor = cursor.clone();
-            if (NBTAPI.isRestricted(player, cursor, RestrictionType.NO_EQUIP))
-            {
-              inv.addItem(cursor);
-              addItem = true;
-            }
-            else
-            {
-              inv.setChestplate(cursor);
-            }
-          }
-          else
-          {
-            inv.setChestplate(null);
-          }
-          if (!addItem)
-          {
-            ItemStack cursor2 = player.getItemOnCursor();
-            if (ItemStackUtil.itemExists(cursor2))
-            {
-              inv.addItem(cursor2);
-            }
-            player.setItemOnCursor(chestplate);
-          }
-          player.updateInventory();
+          inv.setHelmet(null);
         }
-        if (ItemStackUtil.itemExists(leggings) && NBTAPI.isRestricted(player, leggings, RestrictionType.NO_EQUIP))
+        if (!addItem)
         {
-          leggings = leggings.clone();
-          boolean addItem = false;
-          if (cursorExists)
+          ItemStack cursor2 = player.getItemOnCursor();
+          if (ItemStackUtil.itemExists(cursor2))
           {
-            cursor = cursor.clone();
-            if (NBTAPI.isRestricted(player, cursor, RestrictionType.NO_EQUIP))
-            {
-              inv.addItem(cursor);
-              addItem = true;
-            }
-            else
-            {
-              inv.setLeggings(cursor);
-            }
+            inv.addItem(cursor2);
+          }
+          player.setItemOnCursor(helmet);
+        }
+        player.updateInventory();
+      }
+      if (ItemStackUtil.itemExists(chestplate) && NBTAPI.isRestricted(player, chestplate, RestrictionType.NO_EQUIP))
+      {
+        chestplate = chestplate.clone();
+        boolean addItem = false;
+        if (cursorExists)
+        {
+          cursor = cursor.clone();
+          if (NBTAPI.isRestricted(player, cursor, RestrictionType.NO_EQUIP))
+          {
+            inv.addItem(cursor);
+            addItem = true;
           }
           else
           {
-            inv.setLeggings(null);
+            inv.setChestplate(cursor);
           }
-          if (!addItem)
+        }
+        else
+        {
+          inv.setChestplate(null);
+        }
+        if (!addItem)
+        {
+          ItemStack cursor2 = player.getItemOnCursor();
+          if (ItemStackUtil.itemExists(cursor2))
           {
-            ItemStack cursor2 = player.getItemOnCursor();
-            if (ItemStackUtil.itemExists(cursor2))
-            {
-              inv.addItem(cursor2);
-            }
-            player.setItemOnCursor(leggings);
+            inv.addItem(cursor2);
           }
-          player.updateInventory();
+          player.setItemOnCursor(chestplate);
+        }
+        player.updateInventory();
+      }
+      if (ItemStackUtil.itemExists(leggings) && NBTAPI.isRestricted(player, leggings, RestrictionType.NO_EQUIP))
+      {
+        leggings = leggings.clone();
+        boolean addItem = false;
+        if (cursorExists)
+        {
+          cursor = cursor.clone();
+          if (NBTAPI.isRestricted(player, cursor, RestrictionType.NO_EQUIP))
+          {
+            inv.addItem(cursor);
+            addItem = true;
+          }
+          else
+          {
+            inv.setLeggings(cursor);
+          }
+        }
+        else
+        {
+          inv.setLeggings(null);
+        }
+        if (!addItem)
+        {
+          ItemStack cursor2 = player.getItemOnCursor();
+          if (ItemStackUtil.itemExists(cursor2))
+          {
+            inv.addItem(cursor2);
+          }
+          player.setItemOnCursor(leggings);
+        }
+        player.updateInventory();
 
-        }
-        if (ItemStackUtil.itemExists(boots) && NBTAPI.isRestricted(player, boots, RestrictionType.NO_EQUIP))
+      }
+      if (ItemStackUtil.itemExists(boots) && NBTAPI.isRestricted(player, boots, RestrictionType.NO_EQUIP))
+      {
+        boots = boots.clone();
+        boolean addItem = false;
+        if (cursorExists)
         {
-          boots = boots.clone();
-          boolean addItem = false;
-          if (cursorExists)
+          cursor = cursor.clone();
+          if (NBTAPI.isRestricted(player, cursor, RestrictionType.NO_EQUIP))
           {
-            cursor = cursor.clone();
-            if (NBTAPI.isRestricted(player, cursor, RestrictionType.NO_EQUIP))
-            {
-              inv.addItem(cursor);
-              addItem = true;
-            }
-            else
-            {
-              inv.setBoots(cursor);
-            }
+            inv.addItem(cursor);
+            addItem = true;
           }
           else
           {
-            inv.setBoots(null);
+            inv.setBoots(cursor);
           }
-          if (!addItem)
-          {
-            ItemStack cursor2 = player.getItemOnCursor();
-            if (ItemStackUtil.itemExists(cursor2))
-            {
-              inv.addItem(cursor2);
-            }
-            player.setItemOnCursor(boots);
-          }
-          player.updateInventory();
         }
+        else
+        {
+          inv.setBoots(null);
+        }
+        if (!addItem)
+        {
+          ItemStack cursor2 = player.getItemOnCursor();
+          if (ItemStackUtil.itemExists(cursor2))
+          {
+            inv.addItem(cursor2);
+          }
+          player.setItemOnCursor(boots);
+        }
+        player.updateInventory();
       }
     }
   }
 
-  public static void itemLore() // 아이템 설명 자동설정
+  public static void itemLore(@NotNull Player player) // 아이템 설명 자동설정
   {
-    if (Cucumbery.config.getBoolean("use-helpful-lore-feature"))
+    if (player.getGameMode() == GameMode.SPECTATOR)
     {
-      for (Player player : Bukkit.getServer().getOnlinePlayers())
+      return;
+    }
+    World world = player.getLocation().getWorld();
+    if (!Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(world.getName()))
+    {
+      if (UserData.USE_HELPFUL_LORE_FEATURE.getBoolean(player.getUniqueId()))
       {
-        if (player.getGameMode() == GameMode.SPECTATOR)
+        if (player.getOpenInventory().getType() == InventoryType.CARTOGRAPHY)
         {
-          continue;
-        }
-        World world = player.getLocation().getWorld();
-        if (!Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(world.getName()))
-        {
-          if (UserData.USE_HELPFUL_LORE_FEATURE.getBoolean(player.getUniqueId()))
+          ItemStack item = player.getOpenInventory().getTopInventory().getItem(2);
+          if (item != null)
           {
-            if (player.getOpenInventory().getType() == InventoryType.CARTOGRAPHY)
+            ItemLore.setItemLore(item);
+          }
+          // 지도 제작대에서 지도 결과물 아이템 실시간 반영
+        }
+        if (player.getOpenInventory().getType() == InventoryType.STONECUTTER)
+        {
+          ItemStack item = player.getOpenInventory().getTopInventory().getItem(1);
+          if (item != null)
+          {
+            ItemLore.setItemLore(item);
+          }
+          // 석재 절단기에서 석재 결과물 아이템 실시간 반영
+        }
+        ItemStack mainHand = player.getInventory().getItemInMainHand(), offHand = player.getInventory().getItemInOffHand();
+        if (ItemStackUtil.itemExists(mainHand))
+        {
+          ItemMeta itemMeta = mainHand.getItemMeta();
+          Material type = mainHand.getType();
+          if (type == Material.WRITABLE_BOOK)
+          {
+            // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
+            if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
             {
-              ItemStack item = player.getOpenInventory().getTopInventory().getItem(2);
-              if (item != null)
-              {
-                ItemLore.setItemLore(item);
-              }
-              // 지도 제작대에서 지도 결과물 아이템 실시간 반영
+              ItemLore.setItemLore(mainHand);
             }
-            if (player.getOpenInventory().getType() == InventoryType.STONECUTTER)
+          }
+        }
+        if (ItemStackUtil.itemExists(offHand))
+        {
+          ItemMeta itemMeta = offHand.getItemMeta();
+          Material type = offHand.getType();
+          if (type == Material.WRITABLE_BOOK)
+          {
+            // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
+            if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
             {
-              ItemStack item = player.getOpenInventory().getTopInventory().getItem(1);
-              if (item != null)
-              {
-                ItemLore.setItemLore(item);
-              }
-              // 석재 절단기에서 석재 결과물 아이템 실시간 반영
-            }
-            ItemStack mainHand = player.getInventory().getItemInMainHand(), offHand = player.getInventory().getItemInOffHand();
-            if (ItemStackUtil.itemExists(mainHand))
-            {
-              ItemMeta itemMeta = mainHand.getItemMeta();
-              Material type = mainHand.getType();
-              if (type == Material.WRITABLE_BOOK)
-              {
-                // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
-                if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
-                {
-                  ItemLore.setItemLore(mainHand);
-                }
-              }
-            }
-            if (ItemStackUtil.itemExists(offHand))
-            {
-              ItemMeta itemMeta = offHand.getItemMeta();
-              Material type = offHand.getType();
-              if (type == Material.WRITABLE_BOOK)
-              {
-                // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
-                if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
-                {
-                  ItemLore.setItemLore(offHand);
-                }
-              }
+              ItemLore.setItemLore(offHand);
             }
           }
         }
@@ -1322,69 +1341,66 @@ public class Scheduler
     }
   }
 
-  private static void spectateLoop()
+  private static void spectateLoop(@NotNull Player player)
   {
-    for (Player player : Bukkit.getServer().getOnlinePlayers())
+    if (player.getOpenInventory().getType() != InventoryType.CRAFTING)
     {
-      if (player.getOpenInventory().getType() != InventoryType.CRAFTING)
+      return;
+    }
+    if (player.getGameMode() == GameMode.SPECTATOR)
+    {
+      Entity spectatorTarget = player.getSpectatorTarget();
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING))
       {
-        continue;
-      }
-      if (player.getGameMode() == GameMode.SPECTATOR)
-      {
-        Entity spectatorTarget = player.getSpectatorTarget();
-        if (CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING))
+        CustomEffect effect = CustomEffectManager.getEffect(player, CustomEffectType.CONTINUAL_SPECTATING);
+        if (effect instanceof PlayerCustomEffect playerCustomEffect)
         {
-          CustomEffect effect = CustomEffectManager.getEffect(player, CustomEffectType.CONTINUAL_SPECTATING);
-          if (effect instanceof PlayerCustomEffect playerCustomEffect)
+          Player target = playerCustomEffect.getPlayer();
+          if (!target.equals(spectatorTarget) && spectatorTarget instanceof Player newTarget)
           {
-            Player target = playerCustomEffect.getPlayer();
-            if (!target.equals(spectatorTarget) && spectatorTarget instanceof Player newTarget)
-            {
-              playerCustomEffect.setPlayer(newTarget);
-              target = newTarget;
-            }
-            if (spectatorTarget == null && !target.isDead() && target.isOnline() && target.isValid() && player.canSee(target))
-            {
-              player.setSpectatorTarget(null);
-              player.teleport(target);
-              player.setSpectatorTarget(target);
-            }
+            playerCustomEffect.setPlayer(newTarget);
+            target = newTarget;
           }
-          else if (spectatorTarget instanceof Player target)
-          {
-            int dura = effect.getDuration(), ample = effect.getAmplifier();
-            effect = new PlayerCustomEffectImple(effect.getType(), effect.getInitDuration(), effect.getInitAmplifier(), effect.getDisplayType(), target);
-            effect.setDuration(dura);
-            effect.setAmplifier(ample);
-            CustomEffectManager.addEffect(player, effect, true);
-          }
-        }
-        if (spectatorTarget instanceof Player target)
-        {
-          if (!Cucumbery.config.getBoolean("grant-default-permission-to-players") && Method
-                  .hasPermission(target, Permission.EVENT2_ANTI_SPECTATE, false) && !Method.hasPermission(player, Permission.EVENT2_ANTI_SPECTATE_BYPASS, false))
-          {
-            player.setSpectatorTarget(null);
-            UUID uuid = player.getUniqueId();
-            if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.antispecateAlertCooldown.contains(uuid))
-            {
-              Variable.antispecateAlertCooldown.add(uuid);
-              MessageUtil.sendTitle(player, "&c관전 불가!", "&r관전할 수 없는 플레이어입니다", 5, 80, 15);
-              SoundPlay.playSound(player, Constant.ERROR_SOUND);
-              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.antispecateAlertCooldown.remove(uuid), 100L);
-            }
-            continue;
-          }
-          Location plLoc = player.getLocation(), tarLoc = target.getLocation();
-          Collection<Entity> entities = plLoc.getWorld().getNearbyEntities(plLoc, 1D, 1D, 1D);
-          if (!entities.contains(target) && plLoc != tarLoc)
+          if (spectatorTarget == null && !target.isDead() && target.isOnline() && target.isValid() && player.canSee(target))
           {
             player.setSpectatorTarget(null);
             player.teleport(target);
             player.setSpectatorTarget(target);
-            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.setSpectatorTarget(target), 1L);
           }
+        }
+        else if (spectatorTarget instanceof Player target)
+        {
+          int dura = effect.getDuration(), ample = effect.getAmplifier();
+          effect = new PlayerCustomEffectImple(effect.getType(), effect.getInitDuration(), effect.getInitAmplifier(), effect.getDisplayType(), target);
+          effect.setDuration(dura);
+          effect.setAmplifier(ample);
+          CustomEffectManager.addEffect(player, effect, true);
+        }
+      }
+      if (spectatorTarget instanceof Player target)
+      {
+        if (!Cucumbery.config.getBoolean("grant-default-permission-to-players") && Method
+                .hasPermission(target, Permission.EVENT2_ANTI_SPECTATE, false) && !Method.hasPermission(player, Permission.EVENT2_ANTI_SPECTATE_BYPASS, false))
+        {
+          player.setSpectatorTarget(null);
+          UUID uuid = player.getUniqueId();
+          if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.antispecateAlertCooldown.contains(uuid))
+          {
+            Variable.antispecateAlertCooldown.add(uuid);
+            MessageUtil.sendTitle(player, "&c관전 불가!", "&r관전할 수 없는 플레이어입니다", 5, 80, 15);
+            SoundPlay.playSound(player, Constant.ERROR_SOUND);
+            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.antispecateAlertCooldown.remove(uuid), 100L);
+          }
+          return;
+        }
+        Location plLoc = player.getLocation(), tarLoc = target.getLocation();
+        Collection<Entity> entities = plLoc.getWorld().getNearbyEntities(plLoc, 1D, 1D, 1D);
+        if (!entities.contains(target) && plLoc != tarLoc)
+        {
+          player.setSpectatorTarget(null);
+          player.teleport(target);
+          player.setSpectatorTarget(target);
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.setSpectatorTarget(target), 1L);
         }
       }
     }

@@ -9,7 +9,6 @@ import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.translation.Translatable;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -357,6 +356,18 @@ public enum CustomEffectType implements Translatable, EnumHideable
    * 변이 소화불량
    */
   VAR_STOMACHACHE(99, false, true, true),
+  /**
+   * 전투 모드 - 근거리
+   */
+  COMBAT_MODE_MELEE(false, false, false),
+  /**
+   * 전투 모드 - 원거리
+   */
+  COMBAT_MODE_RANGED(false, false, false),
+  /**
+   * 전투 모드 - 쿨타임
+   */
+  COMBAT_MODE_COOLDOWN(false, false, true),
   ;
 
   private final int maxAmplifier;
@@ -473,6 +484,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case VAR_DETOXICATE, VAR_DETOXICATE_ACTIVATED -> "변이 해독";
               case VAR_PODAGRA, VAR_PODAGRA_ACTIVATED -> "변이 통풍";
               case NO_ENTITY_AGGRO -> "몹 적대 무효화";
+              case COMBAT_MODE_MELEE -> "전투 모드 - 근거리";
+              case COMBAT_MODE_RANGED -> "전투 모드 - 원거리";
+              case COMBAT_MODE_COOLDOWN -> "전투 모드 - 쿨타임";
               case MINECRAFT_SPEED -> TranslatableKeyParser.getKey(PotionEffectType.SPEED);
               case MINECRAFT_SLOWNESS -> TranslatableKeyParser.getKey(PotionEffectType.SLOW);
               case MINECRAFT_HASTE -> TranslatableKeyParser.getKey(PotionEffectType.FAST_DIGGING);
@@ -508,6 +522,80 @@ public enum CustomEffectType implements Translatable, EnumHideable
             };
   }
 
+  /**
+   * 효과가 너무 많아 짧게 표시할 경우에 사용할 이름입니다
+   * @return 짧은 이름 혹은 원래 짧을 경우 그대로의 이름
+   */
+  @NotNull
+  public String shortTranslationKey()
+  {
+    return switch (this)
+            {
+              case AWKWARD -> "어색";
+              case BUFF_FREEZE -> "버프";
+              case CHEESE_EXPERIMENT -> "치즈";
+              case CONTINUAL_SPECTATING -> "관전";
+              case COOLDOWN_CHAT -> "챗쿨";
+              case COOLDOWN_ITEM_MEGAPHONE -> "아확쿨";
+              case CURSE_OF_BEANS -> "콩콩";
+              case CURSE_OF_CONSUMPTION -> "소비X";
+              case CURSE_OF_CREATIVITY -> "건축X";
+              case CURSE_OF_CREATIVITY_BREAK -> "파괴X";
+              case CURSE_OF_CREATIVITY_PLACE -> "설치X";
+              case CURSE_OF_DROP -> "드롭X";
+              case CURSE_OF_INVENTORY -> "인벤셉X";
+              case CURSE_OF_JUMPING -> "점프X";
+              case CURSE_OF_MUSHROOM -> "버섯";
+              case CURSE_OF_PICKUP -> "줍기X";
+              case DARKNESS_TERROR -> "어두워";
+              case DARKNESS_TERROR_ACTIVATED -> "어둡다";
+              case DARKNESS_TERROR_RESISTANCE -> "안어둡";
+              case DEBUG_WATCHER -> "디버그";
+              case DO_NOT_PICKUP_BUT_THROW_IT -> "노줍던";
+              case ELYTRA_BOOSTER -> "겉가";
+              case FANCY_SPOTLIGHT -> "조명";
+              case FANCY_SPOTLIGHT_ACTIVATED -> "조명!";
+              case FEATHER_FALLING -> "가착";
+              case FROST_WALKER -> "차걸";
+              case HEALTH_INCREASE -> "체력";
+              case HEROS_ECHO, HEROS_ECHO_OTHERS -> "영메";
+              case INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, RESURRECTION_INVINCIBLE -> "무적";
+              case KEEP_INVENTORY -> "인벤O";
+              case KINETIC_RESISTANCE -> "운동젛";
+              case KNOCKBACK_RESISTANCE -> "넉젛";
+              case KNOCKBACK_RESISTANCE_COMBAT -> "전넉젛";
+              case KNOCKBACK_RESISTANCE_NON_COMBAT -> "!넉젛";
+              case LEVITATION_RESISTANCE -> "공젛";
+              case MUTE -> "채금";
+              case NEWBIE_SHIELD -> "늅실드";
+              case NOTHING -> ".";
+              case NO_ENTITY_AGGRO -> "노어글";
+              case PARROTS_CHEER -> "앵가호";
+              case RESURRECTION -> "리저";
+              case RESURRECTION_COOLDOWN -> "리저쿨";
+              case BLESS_OF_SANS -> "샌축";
+              case SERVER_RADIO_LISTENING -> "라디오";
+              case SHARPNESS -> "날카";
+              case SILK_TOUCH -> "섬세";
+              case SMELTING_TOUCH -> "제련손";
+              case TROLL_INVENTORY_PROPERTY, TROLL_INVENTORY_PROPERTY_MIN -> "트롤";
+              case TRUE_INVISIBILITY -> "찐투명";
+              case UNCRAFTABLE -> "노제작";
+              case VAR_DETOXICATE -> "해독";
+              case VAR_PNEUMONIA -> "폐렴";
+              case VAR_PODAGRA -> "통풍";
+              case VAR_STOMACHACHE -> "복통";
+              case COMBAT_MODE_MELEE -> "전모근";
+              case COMBAT_MODE_RANGED -> "전모원";
+              case COMBAT_MODE_COOLDOWN -> "전모클";
+              default -> translationKey();
+            };
+  }
+
+  /**
+   * 효과에 해당하는 설명을 Component 형태로 반환합니다.
+   * @return Component 설명
+   */
   @NotNull
   public Component getDescription()
   {
@@ -655,6 +743,21 @@ public enum CustomEffectType implements Translatable, EnumHideable
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("경우 1의 피해를 입고 그 이상의 높이에서 낙하할 경우 낙하 피해량이 50% 증가합니다"));
               case NO_ENTITY_AGGRO -> ComponentUtil.translate("중립적이거나 적대적 몹이 적대적이지 않게 됩니다");
+              case COMBAT_MODE_MELEE -> ComponentUtil.translate("근거리 전투에 대한 집중력이 비약적으로 상승하여")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("상대방에게 입히는 근거리 공격 피해량은 100% 증가하는 대신"))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("상대방에게서 받는 원거리 공격 피해량이 100% 증가합니다"))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("이 효과는 %s 효과와 동시에 적용되지 않습니다", ComponentUtil.translate("&a" + CustomEffectType.COMBAT_MODE_RANGED.translationKey())));
+              case COMBAT_MODE_RANGED -> ComponentUtil.translate("원거리 전투에 대한 집중력이 비약적으로 상승하여")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("상대방에게 입히는 원거리 공격 피해량은 100% 증가하는 대신"))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("상대방에게서 받는 근거리 공격 피해량이 100% 증가합니다"))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("이 효과는 %s 효과와 동시에 적용되지 않습니다", ComponentUtil.translate("&a" + CustomEffectType.COMBAT_MODE_RANGED.translationKey())));
+              case COMBAT_MODE_COOLDOWN -> ComponentUtil.translate("전투 모드를 변경할 수 없는 상태입니다");
               case MINECRAFT_SPEED -> VanillaEffectDescription.getDescription(PotionEffectType.SPEED);
               case MINECRAFT_SLOWNESS -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW);
               case MINECRAFT_HASTE -> VanillaEffectDescription.getDescription(PotionEffectType.FAST_DIGGING);
@@ -691,26 +794,10 @@ public enum CustomEffectType implements Translatable, EnumHideable
             };
   }
 
-  public boolean isKeepOnDeath()
-  {
-    return isKeepOnDeath;
-  }
-
-  public boolean isKeepOnQuit()
-  {
-    return isKeepOnQuit;
-  }
-
-  public boolean isKeepOnMilk()
-  {
-    return !isInstant() && switch (this)
-            {
-              // 우유 마시면 사라짐
-              case CONFUSION, NOTHING, THICK, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING, CHEESE_EXPERIMENT, TRUE_INVISIBILITY, NO_ENTITY_AGGRO -> false;
-              default -> true;
-            };
-  }
-
+  /**
+   * 즉발형 효과는 버프창에 표시되지 않고 효과가 적용되는 즉시 능력이 발동됩니다.
+   * @return 즉발형 효과면 true 이외에는 false
+   */
   public boolean isInstant()
   {
     return switch (this)
@@ -724,16 +811,26 @@ public enum CustomEffectType implements Translatable, EnumHideable
             };
   }
 
+  /**
+   * 각 효과의 기본 지속 시간을 틱 단위로 반환합니다. -1의 경우 무제한입니다.
+   * <p>온오프 버프의 경우 항상 -1입니다.
+   * @return 효과에 따른 기본 지속 시간 혹은 30초 (600틱)
+   */
   public int getDefaultDuration()
   {
+    if (isToggle())
+    {
+      return -1;
+    }
     return switch (this)
             {
               case RESURRECTION, CUCUMBERY_UPDATER, DARKNESS_TERROR_ACTIVATED, CONTINUAL_SPECTATING -> -1;
-              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED, VAR_DETOXICATE_ACTIVATED -> 2;
+              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, VAR_DETOXICATE_ACTIVATED -> 2;
               case VAR_PODAGRA_ACTIVATED -> 5;
+              case FANCY_SPOTLIGHT_ACTIVATED -> 20;
               case RESURRECTION_INVINCIBLE -> 20 * 2;
               case COOLDOWN_CHAT -> 20 * 3;
-              case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN -> 20 * 5;
+              case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, COMBAT_MODE_COOLDOWN -> 20 * 5;
               case STOP, COOLDOWN_ITEM_MEGAPHONE -> 20 * 10;
               case RESURRECTION_COOLDOWN -> 20 * 60 * 10;
               case HEROS_ECHO, HEROS_ECHO_OTHERS -> 20 * 60 * 60 * 2;
@@ -741,98 +838,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
             };
   }
 
-  @NotNull
-  public List<CustomEffectType> getConflictEffects()
-  {
-    return switch (this)
-            {
-              case SHARPNESS -> Arrays.asList(CustomEffectType.SMITE, CustomEffectType.BANE_OF_ARTHROPODS);
-              case SMITE -> Arrays.asList(CustomEffectType.SHARPNESS, CustomEffectType.BANE_OF_ARTHROPODS);
-              case BANE_OF_ARTHROPODS -> Arrays.asList(CustomEffectType.SHARPNESS, CustomEffectType.SMITE);
-              case INSIDER -> Collections.singletonList(CustomEffectType.OUTSIDER);
-              case OUTSIDER -> Collections.singletonList(CustomEffectType.INSIDER);
-              case HEROS_ECHO -> Collections.singletonList(CustomEffectType.HEROS_ECHO_OTHERS);
-              case HEROS_ECHO_OTHERS -> Collections.singletonList(CustomEffectType.HEROS_ECHO);
-              default -> Collections.emptyList();
-            };
-  }
-
-  @SuppressWarnings("all")
-  public boolean isHidden()
-  {
-    return switch (this)
-            {
-              case TROLL_INVENTORY_PROPERTY_MIN, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED -> true;
-              default -> false;
-            };
-  }
-
-  public boolean isTimeHidden()
-  {
-    return isTimeHiddenWhenFull() || switch (this)
-            {
-              case DARKNESS_TERROR_ACTIVATED, SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED -> true;
-              default -> false;
-            };
-  }
-
   /**
-   * 커스텀 효과의 지속 시간이 하나도 경과하지 않았을 때 사간을 표시할지 말지 확인합니다.
-   *
-   * @return 시간을 표시하지 않는 버프면 true 이외에는 false
+   * @return 해당 효과의 아이콘이 있으면 아이콘을 반환하고 없으면 <code>null</code>을 반환합니다.
    */
-  @SuppressWarnings("all")
-  public boolean isTimeHiddenWhenFull()
-  {
-    return switch (this)
-            {
-              case PARROTS_CHEER -> true;
-              default -> false;
-            };
-  }
-
-  public boolean isRightClickRemovable()
-  {
-    return !isNegative() && switch (this)
-            {
-              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED, VAR_DETOXICATE -> false;
-              default -> true;
-            };
-  }
-
-  public boolean isBuffFreezable()
-  {
-    return switch (this)
-            {
-              case INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN -> false;
-              default -> true;
-            };
-  }
-
-  /**
-   * @return 효과가 같은 여러 농도의 효과를 가지고 있을 때 해당 효과를 전부 표시할 효과면 true 이외에는 false
-   */
-  @SuppressWarnings("all")
-  public boolean isStackDisplayed()
-  {
-    return getMaxAmplifier() > 0 && switch (this)
-            {
-              case HEALTH_INCREASE -> true;
-              default -> false;
-            };
-  }
-
-  @Nullable
-  public Color getColor()
-  {
-    return switch (this)
-            {
-              case MUTE -> Color.fromRGB(200, 100, 100);
-              case AWKWARD, MUNDANE, THICK, NOTHING -> Color.fromRGB(10, 50, 255);
-              default -> null;
-            };
-  }
-
   @Nullable
   public ItemStack getIcon()
   {
@@ -908,8 +916,12 @@ public enum CustomEffectType implements Translatable, EnumHideable
     return itemStack;
   }
 
+  /**
+   * @return 아이콘에 부여할 CustomModelData magic value입니다
+   */
   int getId()
   {
+    // 가장 높은 버프 숫자 : 74
     return switch (this)
             {
               case AWKWARD -> 1;
@@ -917,6 +929,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case BLESS_OF_SANS -> 54;
               case BUFF_FREEZE -> 3;
               case CHEESE_EXPERIMENT -> 4;
+              case COMBAT_MODE_COOLDOWN -> 74;
+              case COMBAT_MODE_MELEE -> 72;
+              case COMBAT_MODE_RANGED -> 73;
               case CONFUSION -> 5;
               case CONTINUAL_SPECTATING -> 6;
               case COOLDOWN_CHAT -> 7;
@@ -987,6 +1002,122 @@ public enum CustomEffectType implements Translatable, EnumHideable
             };
   }
 
+  /**
+   * 온오프 효과는 해당 효과를 적용받고 있지 않은 상태에서 효과를 받으면 무제한으로 적용이 되고
+   * <p>해당 효과를 적용받고 있는 상태에서 해당 효과를 다시 받으면 해당 효과가 사라지는 효과임
+   * @return 온오프 효과면 true, 이외에는 false
+   */
+  public boolean isToggle()
+  {
+    return switch (this)
+            {
+              case COMBAT_MODE_MELEE, COMBAT_MODE_RANGED -> true;
+              default -> false;
+            };
+  }
+
+  /**
+   * 다른 효과와 중첩되지 않는 효과를 반환합니다.
+   * @return 중첩되지 않는 효과 목록 혹은 빈 목록
+   */
+  @NotNull
+  public List<CustomEffectType> getConflictEffects()
+  {
+    return switch (this)
+            {
+              case SHARPNESS -> Arrays.asList(CustomEffectType.SMITE, CustomEffectType.BANE_OF_ARTHROPODS);
+              case SMITE -> Arrays.asList(CustomEffectType.SHARPNESS, CustomEffectType.BANE_OF_ARTHROPODS);
+              case BANE_OF_ARTHROPODS -> Arrays.asList(CustomEffectType.SHARPNESS, CustomEffectType.SMITE);
+              case INSIDER -> Collections.singletonList(CustomEffectType.OUTSIDER);
+              case OUTSIDER -> Collections.singletonList(CustomEffectType.INSIDER);
+              case HEROS_ECHO -> Collections.singletonList(CustomEffectType.HEROS_ECHO_OTHERS);
+              case HEROS_ECHO_OTHERS -> Collections.singletonList(CustomEffectType.HEROS_ECHO);
+              case COMBAT_MODE_MELEE -> Collections.singletonList(CustomEffectType.COMBAT_MODE_RANGED);
+              case COMBAT_MODE_RANGED -> Collections.singletonList(CustomEffectType.COMBAT_MODE_MELEE);
+              default -> Collections.emptyList();
+            };
+  }
+
+  /**
+   * 해당 효과는 버프창에 표시되지 않으며 오로지 관리자가 명령어로만 참조할 수 있습니다.
+   * @return 숨겨진 효과면 true 이외에는 false
+   */
+  @SuppressWarnings("all")
+  public boolean isHidden()
+  {
+    return switch (this)
+            {
+              case TROLL_INVENTORY_PROPERTY_MIN, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED, COMBAT_MODE_COOLDOWN -> true;
+              default -> false;
+            };
+  }
+
+  /**
+   * @return 버프창에서 시간을 표시할 효과면 true 이외에는 false
+   */
+  public boolean isTimeHidden()
+  {
+    return isToggle() || isTimeHiddenWhenFull() || switch (this)
+            {
+              case DARKNESS_TERROR_ACTIVATED, SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED -> true;
+              default -> false;
+            };
+  }
+
+  /**
+   * 커스텀 효과의 지속 시간이 하나도 경과하지 않았을 때 사간을 표시할지 말지 확인합니다.
+   * @return 시간을 표시하지 않는 버프면 true 이외에는 false
+   */
+  @SuppressWarnings("all")
+  public boolean isTimeHiddenWhenFull()
+  {
+    return switch (this)
+            {
+              case PARROTS_CHEER -> true;
+              default -> false;
+            };
+  }
+
+  /**
+   * @return 디버프가 아니며, 우클릭으로 제거할 수 있는 효과면 true, 이외에는 false
+   */
+  public boolean isRightClickRemovable()
+  {
+    return !isNegative() && switch (this)
+            {
+              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED, VAR_DETOXICATE -> false;
+              default -> true;
+            };
+  }
+
+  /**
+   * @return {@link CustomEffectType#BUFF_FREEZE} 효과로 인해 사망해도 효과가 사라지지 않으면 true, 이외에는 false
+   */
+  public boolean isBuffFreezable()
+  {
+    return switch (this)
+            {
+              case INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN -> false;
+              default -> true;
+            };
+  }
+
+  /**
+   * @return 효과가 같은 여러 농도의 효과를 가지고 있을 때 해당 효과를 전부 표시할 효과면 true 이외에는 false
+   */
+  @SuppressWarnings("all")
+  public boolean isStackDisplayed()
+  {
+    return getMaxAmplifier() > 0 && switch (this)
+            {
+              case HEALTH_INCREASE -> true;
+              default -> false;
+            };
+  }
+
+  /**
+   * @return 해당 효과의 애니메이션 아이콘입니다.
+   */
   @SuppressWarnings("unused")
   @NotNull
   private ItemStack getAnimatedIcon()
@@ -1005,17 +1136,10 @@ public enum CustomEffectType implements Translatable, EnumHideable
     return itemStack;
   }
 
-  @Override
-  public boolean isHiddenEnum()
-  {
-    return switch (this)
-            {
-              case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR_ACTIVATED, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER,
-                      INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, HEROS_ECHO_OTHERS, FANCY_SPOTLIGHT_ACTIVATED, NEWBIE_SHIELD, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED -> true;
-              default -> false;
-            };
-  }
-
+  /**
+   * 효과의 기본 표시 유형을 반환합니다. 대부분의 경우 {@link DisplayType#BOSS_BAR}입니다.
+   * @return 해당 효과의 기본 표시 유형
+   */
   @NotNull
   @SuppressWarnings("all")
   public DisplayType getDefaultDisplayType()
@@ -1031,16 +1155,66 @@ public enum CustomEffectType implements Translatable, EnumHideable
             };
   }
 
+  @Override
+  public boolean isHiddenEnum()
+  {
+    return switch (this)
+            {
+              case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR_ACTIVATED, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER,
+                      INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, HEROS_ECHO_OTHERS, FANCY_SPOTLIGHT_ACTIVATED, NEWBIE_SHIELD, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED -> true;
+              default -> false;
+            };
+  }
+
+  /**
+   * @return 해당 효과의 최대 농도 레벨, 0부터 시작한다
+   */
   public int getMaxAmplifier()
   {
     return maxAmplifier;
   }
 
+  /**
+   * @return 사망해도 사라지지 않을 효과면 true 이외에는 false
+   */
+  public boolean isKeepOnDeath()
+  {
+    return isKeepOnDeath;
+  }
+
+  /**
+   * @return 접속을 종료해도 사라지지 않을 효과면 true 이외에는 false
+   */
+  public boolean isKeepOnQuit()
+  {
+    return isKeepOnQuit;
+  }
+
+  /**
+   * @return 우유를 마셔도 사라지지 않을 효과면 true 이외에는 false
+   */
+  public boolean isKeepOnMilk()
+  {
+    return !isInstant() && switch (this)
+            {
+              // 우유 마시면 사라짐
+              case CONFUSION, NOTHING, THICK, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING, CHEESE_EXPERIMENT, TRUE_INVISIBILITY, NO_ENTITY_AGGRO -> false;
+              default -> true;
+            };
+  }
+
+  /**
+   * 디버프는 일반적으로 개체에게 부정적인 효과를 제공하며, 우클릭으로 제거할 수 없다.
+   * @return 디버프일 경우 true, 아닐 경우 false
+   */
   public boolean isNegative()
   {
     return isNegative;
   }
 
+  /**
+   * @return 해당 효과의 농도 레벨이나 지속 시간 등 공통되는 설명 부분을 {@link Component}로 반환
+   */
   @NotNull
   public Component getPropertyDescription()
   {
@@ -1075,6 +1249,14 @@ public enum CustomEffectType implements Translatable, EnumHideable
     if (!buffFreezable)
     {
       description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c%s의 영향을 받지 않습니다", CustomEffectType.BUFF_FREEZE));
+    }
+    if (isToggle())
+    {
+      description = description.append(Component.text("\n"));
+      description = description.append(Component.text("\n"));
+      description = description.append(ComponentUtil.translate("&6온오프 효과입니다 - 효과의 지속 시간이 무제한이고"));
+      description = description.append(Component.text("\n"));
+      description = description.append(ComponentUtil.translate("&6효과가 있을 때 효과를 적용받으면 사라지는 효과"));
     }
     return description;
   }
