@@ -122,8 +122,12 @@ public class CommandSong implements CommandExecutor, TabCompleter
               category = SoundCategory.RECORDS;
             }
             boolean random = fileName.startsWith("--random");
+            String contain = random && fileName.startsWith("--random/")? fileName.substring("--random/".length()) : "";
             List<String> list = new ArrayList<>(Songs.list);
-            list.removeIf(name -> name.toLowerCase().contains("vibrato"));
+            if (!contain.equals(""))
+            {
+              list.removeIf(s -> !s.toLowerCase().replace(" ", "").contains(contain.toLowerCase()));
+            }
             if (random && !list.isEmpty())
             {
               fileName = list.get((int) (list.size() * Math.random()));

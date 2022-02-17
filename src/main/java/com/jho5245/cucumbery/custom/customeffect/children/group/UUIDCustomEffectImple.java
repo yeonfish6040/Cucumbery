@@ -45,4 +45,10 @@ public class UUIDCustomEffectImple extends CustomEffect implements UUIDCustomEff
   {
     this.uuid = uuid;
   }
+  @Override
+  @NotNull
+  protected UUIDCustomEffectImple copy()
+  {
+    return new UUIDCustomEffectImple(this.getType(), this.getDuration(), this.getAmplifier(), this.getDisplayType(), this.getUniqueId());
+  }
 }

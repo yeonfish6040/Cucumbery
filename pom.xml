@@ -55,6 +55,13 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+
+        <!-- MythicMobs Repository -->
+        <repository>
+            <id>nexus</id>
+            <name>Lumine Releases</name>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -127,6 +134,15 @@
             <version>2.10.11</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- MythicMobs Dependency -->
+        <dependency>
+            <groupId>io.lumine.xikage</groupId>
+            <artifactId>MythicMobs</artifactId>
+            <version>4.9.1</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
 

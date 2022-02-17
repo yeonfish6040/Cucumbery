@@ -81,4 +81,11 @@ public class AttributeCustomEffectImple extends UUIDCustomEffectImple implements
   {
     this.multiplier = multiplier;
   }
+
+  @Override
+  @NotNull
+  protected AttributeCustomEffectImple copy()
+  {
+    return new AttributeCustomEffectImple(this.getType(), this.getDuration(), this.getAmplifier(), this.getDisplayType(), this.getUniqueId(), this.getAttribute(), this.getOperation(), this.getMultiplier());
+  }
 }

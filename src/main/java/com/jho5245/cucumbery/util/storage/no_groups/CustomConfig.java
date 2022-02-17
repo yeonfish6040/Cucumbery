@@ -355,6 +355,8 @@ public class CustomConfig
     ENTITY_HOVER_EVENT_TMI_MODE("개체-호버-이벤트-TMI-모드", false),
     NEWBIE_BUFF_ENABLED("뉴비-환영-효과-사용", true),
     FORCE_PLAY_SERVER_RADIO("서버-라디오-강제-재생", false),
+    INVINCIBLE_TIME("무적-시간", -1),
+    INVINCIBLE_TIME_JOIN("접속-무적-시간", -1),
     ;
 
     private final String key;

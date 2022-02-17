@@ -70,6 +70,11 @@ public class EntityCustomEffectRemove implements Listener
       CustomEffectManager.removeEffect(entity, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED);
     }
 
+    if (customEffectType == CustomEffectType.BREAD_KIMOCHI)
+    {
+      CustomEffectManager.removeEffect(entity, CustomEffectType.BREAD_KIMOCHI_SECONDARY_EFFECT);
+    }
+
     if (entity instanceof Attributable attributable && customEffect instanceof AttributeCustomEffect attributeCustomEffect)
     {
       UUID effectUniqueId = attributeCustomEffect.getUniqueId();
@@ -100,6 +105,11 @@ public class EntityCustomEffectRemove implements Listener
           }
         }
       }
+    }
+
+    if (!(entity instanceof Player) && customEffectType == CustomEffectType.DISAPPEAR)
+    {
+      entity.remove();
     }
   }
 }

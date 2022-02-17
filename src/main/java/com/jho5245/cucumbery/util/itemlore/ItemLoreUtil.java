@@ -298,8 +298,8 @@ public class ItemLoreUtil
           lore.add(ComponentUtil.translate(msg, "&a" + Constant.Sosu2.format(2.5 * enchantLevel)));
           lore.add(ComponentUtil.translate("&7및 %s 확률로 %s %s (%s) 적용",
                   ComponentUtil.create("&e100%"), ComponentUtil.translate("rgb255,97,144;effect.minecraft.slowness"),
-                  ComponentUtil.translate("rgb255,97,144;%s단계", "4"),
-                  ComponentUtil.create("&a1~").append(ComponentUtil.translate("%s초", Constant.Sosu2.format(1 + 0.5 * enchantLevel)))));
+                  ComponentUtil.translate("rgb255,97,144;4단계"),
+                  ComponentUtil.translate("&a1~%s초", Constant.Sosu2.format(1 + 0.5 * enchantLevel))));
         }
         if (enchant.equals(Enchantment.DAMAGE_UNDEAD))
         {

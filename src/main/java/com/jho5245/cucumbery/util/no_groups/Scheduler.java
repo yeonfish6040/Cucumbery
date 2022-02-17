@@ -164,6 +164,7 @@ public class Scheduler
       CustomEffectScheduler.darknessTerror(player);
       CustomEffectScheduler.serverRadio(player);
       CustomEffectScheduler.trollInventoryProperty(player);
+      CustomEffectScheduler.townShield(player);
     }
   }
 
@@ -1361,7 +1362,7 @@ public class Scheduler
             playerCustomEffect.setPlayer(newTarget);
             target = newTarget;
           }
-          if (spectatorTarget == null && !target.isDead() && target.isOnline() && target.isValid() && player.canSee(target))
+          if (!CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING_EXEMPT) && spectatorTarget == null && !target.isDead() && target.isOnline() && target.isValid() && player.canSee(target))
           {
             player.setSpectatorTarget(null);
             player.teleport(target);

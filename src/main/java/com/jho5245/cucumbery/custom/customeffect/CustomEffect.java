@@ -8,12 +8,17 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Custom Effect of {@link PotionEffect#getType()}
+ */
 public class CustomEffect
 {
   private final CustomEffectType effectType;
@@ -120,12 +125,12 @@ public class CustomEffect
               case FEATHER_FALLING -> ComponentUtil.translate("낙하 피해를 받기 위한 최소 높이가 %sm 증가하고,", "&e" + ((amplifier + 1) * 5))
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("낙하 피해량이 %s 감소합니다", "&e" + ((amplifier + 1) * 8) + "%"));
-              case BLESS_OF_SANS -> ComponentUtil.translate("근거리 공격 피해량이 %s 증가합니다", "&e" + ((amplifier + 1) * 10) + "%");
-              case SHARPNESS -> ComponentUtil.translate("근거리 공격 피해량이 %s 증가합니다", "&e" + (amplifier + 1.5));
-              case SMITE -> ComponentUtil.translate("언데드 개체에게 주는 근거리 공격 피해량이 %s 증가합니다", "&e" + Constant.Sosu1.format((amplifier + 1) * 2.5));
-              case BANE_OF_ARTHROPODS -> ComponentUtil.translate("절지동물류 개체에게 주는 근거리 공격 피해량이 %s 증가하고,", "&e" + Constant.Sosu1.format((amplifier + 1) * 2.5))
+              case BLESS_OF_SANS -> ComponentUtil.translate("근거리 대미지가 %s 증가합니다", "&e" + ((amplifier + 1) * 10) + "%");
+              case SHARPNESS -> ComponentUtil.translate("근거리 대미지가 %s 증가합니다", "&e" + (amplifier + 1.5));
+              case SMITE -> ComponentUtil.translate("언데드 개체 공격 시 근거리 대미지가 %s 증가합니다", "&e" + Constant.Sosu1.format((amplifier + 1) * 2.5));
+              case BANE_OF_ARTHROPODS -> ComponentUtil.translate("절지동물류 개체 공격 시 근거리 대미지가 %s 증가하고,", "&e" + Constant.Sosu1.format((amplifier + 1) * 2.5))
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("%s 효과를 1~%s초간 지급합니다", ComponentUtil.translate("effect.minecraft.slowness"), "&r" + Constant.Sosu1.format((amplifier + 1) * 0.5)));
+                      .append(ComponentUtil.translate("%s 4단계 효과를 %s초간 부여합니다", ComponentUtil.translate("&ceffect.minecraft.slowness"), "&a1~" + Constant.Sosu1.format((amplifier + 3) * 0.5)));
               case INSIDER -> ComponentUtil.translate("채팅이 %s배로 입력되고, 죽을 때 모든 플레이어에게", amplifier + 2)
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("타이틀로 자신의 데스 메시지를 띄워줍니다"));
@@ -143,15 +148,15 @@ public class CustomEffect
                       .append(ComponentUtil.translate("공중 부양 상태 효과가 적용되지 않습니다"));
               case UNCRAFTABLE -> switch (amplifier)
                       {
-                        case 0 -> ComponentUtil.translate("인벤토리에서 아이템을 제작할 수 없습니다");
-                        case 1 -> ComponentUtil.translate("제작대에서 아이템을 제작할 수 없습니다");
-                        default -> ComponentUtil.translate("아이템을 제작할 수 없습니다");
+                        case 0 -> ComponentUtil.translate("인벤토리에서 아이템을 제작할 수 없는 상태입니다");
+                        case 1 -> ComponentUtil.translate("제작대에서 아이템을 제작할 수 없는 상태입니다");
+                        default -> ComponentUtil.translate("아이템을 제작할 수 없는 상태입니다");
                       };
-              case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 주는 피해량이 %s 증가합니다", "&e" + ((amplifier + 2) * 5) + "%");
+              case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 대미지가 %s 증가합니다", "&e" + ((amplifier + 2) * 5) + "%");
               case DODGE -> ComponentUtil.translate("%s 확률로 공격을 회피합니다", "&e" + (amplifier + 1) + "%");
               case NEWBIE_SHIELD -> ComponentUtil.translate("플레이 시간이 1시간 미만인 당신!")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("받는 피해량이 %s 감소하고 주는 피해량이 %s 증가합니다", "&e" + (switch (amplifier + 1)
+                      .append(ComponentUtil.translate("받는 피해량이 %s 감소하고 대미지가 %s 증가합니다", "&e" + (switch (amplifier + 1)
                               {
                                 case 1 -> "10%";
                                 case 2 -> "20%";
@@ -167,8 +172,8 @@ public class CustomEffect
                       .append(ComponentUtil.translate("플레이 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
               case WA_SANS -> ComponentUtil.translate("스켈레톤 유형의 개체에게 받는")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("피해량이 %s 감소하고 주는 피해량이 %s 증가합니다", "&e" + ((amplifier + 1) * 3) + "%", "&e" + ((amplifier + 1) * 10) + "%"));
-              case HEALTH_INCREASE -> ComponentUtil.translate("최대 HP가 %s 증가합니다", "&e" + ((amplifier + 1) * 10) + "%p");
+                      .append(ComponentUtil.translate("피해량이 %s 감소하고 대미지가 %s 증가합니다", "&e" + ((amplifier + 1) * 3) + "%", "&e" + ((amplifier + 1) * 10) + "%"));
+              case HEALTH_INCREASE -> ComponentUtil.translate("최대 HP가 %s 증가합니다", "&e" + ((amplifier + 1) * 10) + "%");
               case SPREAD -> ComponentUtil.translate("주변 %s블록 내의 다른 플레이어에게 자신이 가장 최근에 획득한 전이 효과를 옮깁니다", amplifier + 1)
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("추가로, 1분 마다 0.08% 확률로 변이 효과가 생기거나 사라질 수 있습니다"))
@@ -197,7 +202,42 @@ public class CustomEffect
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("3초마다 %s의 피해를 입습니다. 추가로 3.5블록 미만의 높이에서 낙하할", Constant.Sosu1.format(0.2 + (amplifier * 0.1))))
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("경우 1의 피해를 입고 그 이상의 높이에서 낙하할 경우 낙하 피해량이 50% 증가합니다"));
+                      .append(ComponentUtil.translate("경우 1의 피해를 입고 그 이상의 높이에서 낙하할 경우 받는 피해량이 50% 증가합니다"));
+              case ENDER_SLAYER -> ComponentUtil.translate("%s, %s 또는 %s 공격 시 대미지가 %s 증가합니다", EntityType.ENDERMAN, EntityType.ENDERMITE, EntityType.ENDER_DRAGON, "&e" + ((amplifier + 1) * 10) + "%");
+              case BOSS_SLAYER -> ComponentUtil.translate("보스 몬스터 공격 시 대미지가 %s 증가합니다", "&e" + ((amplifier + 1) * 10) + "%");
+              case EXPERIENCE_BOOST -> ComponentUtil.translate("경험치 획득량이 %s 증가합니다", "&e" + ((amplifier + 1) * 5) + "%");
+              case MINECRAFT_SPEED -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SPEED, duration, amplifier));
+              case MINECRAFT_SLOWNESS -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SLOW, duration, amplifier));
+              case MINECRAFT_HASTE -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, amplifier));
+              case MINECRAFT_MINING_FATIGUE -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SLOW_DIGGING, duration, amplifier));
+              case MINECRAFT_STRENGTH -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, amplifier));
+              case MINECRAFT_WEAKNESS -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.WEAKNESS, duration, amplifier));
+              case MINECRAFT_INSTANT_DAMAGE -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.HARM, duration, amplifier));
+              case MINECRAFT_INSTANT_HEAL -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.HEAL, duration, amplifier));
+              case MINECRAFT_JUMP_BOOST -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.JUMP, duration, amplifier));
+              case MINECRAFT_NAUSEA -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.CONFUSION, duration, amplifier));
+              case MINECRAFT_REGENERATION -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.REGENERATION, duration, amplifier));
+              case MINECRAFT_RESISTANCE -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, amplifier));
+              case MINECRAFT_FIRE_RESISTANCE -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, amplifier));
+              case MINECRAFT_WATER_BREATHING -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.WATER_BREATHING, duration, amplifier));
+              case MINECRAFT_BLINDNESS -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.BLINDNESS, duration, amplifier));
+              case MINECRAFT_INVISIBILITY -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.INVISIBILITY, duration, amplifier));
+              case MINECRAFT_NIGHT_VISION -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.NIGHT_VISION, duration, amplifier));
+              case MINECRAFT_HUNGER -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.HUNGER, duration, amplifier));
+              case MINECRAFT_POISON -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.POISON, duration, amplifier));
+              case MINECRAFT_WITHER -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.WITHER, duration, amplifier));
+              case MINECRAFT_HEALTH_BOOST -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.HEALTH_BOOST, duration, amplifier));
+              case MINECRAFT_ABSORPTION -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.ABSORPTION, duration, amplifier));
+              case MINECRAFT_SATURATION -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SATURATION, duration, amplifier));
+              case MINECRAFT_LEVITATION -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.LEVITATION, duration, amplifier));
+              case MINECRAFT_SLOW_FALLING -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SLOW_FALLING, duration, amplifier));
+              case MINECRAFT_GLOWING -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.GLOWING, duration, amplifier));
+              case MINECRAFT_LUCK -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.LUCK, duration, amplifier));
+              case MINECRAFT_UNLUCK -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.UNLUCK, duration, amplifier));
+              case MINECRAFT_CONDUIT_POWER -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.CONDUIT_POWER, duration, amplifier));
+              case MINECRAFT_DOLPHINS_GRACE -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, duration, amplifier));
+              case MINECRAFT_BAD_OMEN -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.BAD_OMEN, duration, amplifier));
+              case MINECRAFT_HERO_OF_THE_VILLAGE -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, amplifier));
               default -> effectType.getDescription();
             };
     if (this instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)

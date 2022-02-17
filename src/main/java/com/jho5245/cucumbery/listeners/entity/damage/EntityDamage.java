@@ -5,20 +5,28 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -26,6 +34,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Consumer;
 
 public class EntityDamage implements Listener
 {
@@ -46,8 +56,18 @@ public class EntityDamage implements Listener
       }
     }
     this.cancelEntityDamage(event);
-    this.cancelLavaBurnItem(event);
-    this.customEffect(event);
+    if (!event.isCancelled())
+    {
+      this.cancelLavaBurnItem(event);
+    }
+    if (!event.isCancelled())
+    {
+      this.customEffect(event);
+    }
+    if (!event.isCancelled())
+    {
+      this.displayDamage(event);
+    }
   }
 
   private void customEffect(EntityDamageEvent event)
@@ -85,6 +105,10 @@ public class EntityDamage implements Listener
         case 2 -> finalDamageMultiplier *= 0.8;
         default -> finalDamageMultiplier *= 0.6;
       }
+    }
+    if (CustomEffectManager.hasEffect(victim, CustomEffectType.TOWN_SHIELD))
+    {
+      finalDamageMultiplier *= 0.5;
     }
     DamageCause damageCause = event.getCause();
     switch (damageCause)
@@ -184,13 +208,31 @@ public class EntityDamage implements Listener
             }
             if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.WA_SANS) && victim instanceof AbstractSkeleton)
             {
-              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
+              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.NEWBIE_SHIELD).getAmplifier();
               damageMultiplier += (amplifier + 1) * 0.1;
             }
             if (CustomEffectManager.hasEffect(victim, CustomEffectType.WA_SANS) && damagerEntity instanceof AbstractSkeleton)
             {
-              int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
-              finalDamageMultiplier *= 1 - 0.03 * amplifier;
+              int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.NEWBIE_SHIELD).getAmplifier();
+              finalDamageMultiplier *= 1 - 0.03 * (amplifier + 1);
+            }
+            if (CustomEffectManager.hasEffect(victim, CustomEffectType.COMBAT_MODE_RANGED) || CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.COMBAT_MODE_MELEE))
+            {
+              damageMultiplier += 1d;
+            }
+            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.ENDER_SLAYER) && (victim instanceof Enderman || victim instanceof EnderDragon || victim instanceof Endermite))
+            {
+              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.ENDER_SLAYER).getAmplifier();
+              damageMultiplier += (amplifier + 1) * 0.1;
+            }
+            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.BOSS_SLAYER) && (victim instanceof Boss || victim.getScoreboardTags().contains("boss") || MythicMobManager.hasTag(victim, "boss")))
+            {
+              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BOSS_SLAYER).getAmplifier();
+              damageMultiplier += (amplifier + 1) * 0.1;
+            }
+            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.BLESS_OF_VILLAGER))
+            {
+              damageMultiplier += 0.1;
             }
           }
         }
@@ -270,6 +312,24 @@ public class EntityDamage implements Listener
               {
                 int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
                 finalDamageMultiplier *= 1 - 0.03 * amplifier;
+              }
+              if (CustomEffectManager.hasEffect(victim, CustomEffectType.COMBAT_MODE_MELEE) || CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.COMBAT_MODE_RANGED))
+              {
+                damageMultiplier += 1d;
+              }
+              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.ENDER_SLAYER) && (victim instanceof Enderman || victim instanceof EnderDragon || victim instanceof Endermite))
+              {
+                int amplifier = CustomEffectManager.getEffect(projectileDamager, CustomEffectType.ENDER_SLAYER).getAmplifier();
+                damageMultiplier += (amplifier + 1) * 0.1;
+              }
+              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.BOSS_SLAYER) && (victim instanceof Boss || victim.getScoreboardTags().contains("boss") || MythicMobManager.hasTag(victim, "boss")))
+              {
+                int amplifier = CustomEffectManager.getEffect(projectileDamager, CustomEffectType.BOSS_SLAYER).getAmplifier();
+                damageMultiplier += (amplifier + 1) * 0.1;
+              }
+              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.BLESS_OF_VILLAGER))
+              {
+                damageMultiplier += 0.1;
               }
             }
             if (projectile instanceof AbstractArrow arrow)
@@ -413,5 +473,41 @@ public class EntityDamage implements Listener
         Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> itemEntity.setInvulnerable(false), 0L);
       }
     }
+  }
+
+  private void displayDamage(EntityDamageEvent event)
+  {
+    double damage = event.getFinalDamage();
+    boolean isCrit = (event instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.isCritical());
+    Component display;
+    if (damage <= 0)
+    {
+      display = ComponentUtil.translate("&e&lMISS!");
+    }
+    else
+    {
+      display = ComponentUtil.create("&7" + Constant.Sosu2Floor.format(damage));
+      if (isCrit)
+      {
+        display = display.color(NamedTextColor.RED).decoration(TextDecoration.BOLD, State.TRUE);
+      }
+    }
+    Entity entity = event.getEntity();
+    Location location = event.getEntity().getLocation();
+    BoundingBox boundingBox = entity.getBoundingBox();
+    location.setX(boundingBox.getCenterX());
+    location.setY(boundingBox.getMaxY());
+    location.setZ(boundingBox.getCenterZ());
+    Component finalDisplay = display;
+    Consumer<Entity> consumer = e -> {
+      ArmorStand armorStand = (ArmorStand) e;
+      armorStand.setVisible(false);
+      armorStand.setMarker(true);
+      armorStand.setSmall(true);
+      armorStand.customName(finalDisplay);
+      armorStand.setCustomNameVisible(true);
+    };
+    Entity armorStand = location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND, SpawnReason.DEFAULT, consumer);
+    CustomEffectManager.addEffect(armorStand, CustomEffectType.DISAPPEAR);
   }
 }

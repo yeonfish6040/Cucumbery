@@ -1,13 +1,16 @@
 package com.jho5245.cucumbery.listeners.player.item;
 
-import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Item;
@@ -31,27 +34,23 @@ public class PlayerAttemptPickupItem implements Listener
     Player player = event.getPlayer();
     if (UserData.SPECTATOR_MODE.getBoolean(player))
     {
-      event.setCancelled(true);
       return;
     }
     Item item = event.getItem();
     ItemStack itemStack = item.getItemStack();
     if (NBTAPI.isRestricted(player, itemStack, Constant.RestrictionType.NO_PICKUP))
     {
-      event.setCancelled(true);
       return;
     }
     UUID uuid = player.getUniqueId();
     // 아이템 섭취 사용에서 사라지지 않을 경우 아이템 소실 방지를 위한 쿨타임
     if (Variable.playerItemConsumeCauseSwapCooldown.contains(uuid))
     {
-      event.setCancelled(true);
       return;
     }
     // 아이템 줍기 모드가 비활성화 되어 있을때
     if (UserData.ITEM_PICKUP_MODE.getString(uuid).equals("disabled"))
     {
-      event.setCancelled(true);
       return;
     }
     // 아이템 줍기 모드가 시프트 드롭일때 시프트 상태가 아니면
@@ -59,10 +58,15 @@ public class PlayerAttemptPickupItem implements Listener
     {
       if (!player.isSneaking())
       {
-        event.setCancelled(true);
         return;
       }
     }
+
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_PICKUP) || Variable.scrollReinforcing.contains(uuid) || (!Permission.EVENT2_ANTI_ALLPLAYER.has(player) && Constant.AllPlayer.ITEM_PICKUP.isEnabled()))
+    {
+      return;
+    }
+
     if (Method.usingLoreFeature(player))
     {
       ItemLore.setItemLore(itemStack);

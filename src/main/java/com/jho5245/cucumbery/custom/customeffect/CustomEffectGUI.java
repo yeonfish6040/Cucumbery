@@ -87,7 +87,7 @@ public class CustomEffectGUI
         menu.setItem(i, null);
       }
     }
-    List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
+    List<CustomEffect> customEffects = new ArrayList<>(CustomEffectManager.getEffects(player));
     customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE || effect.isHidden());
     List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
     potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
@@ -129,7 +129,7 @@ public class CustomEffectGUI
         itemMeta = itemStack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
         itemMeta.displayName(ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key));
-        itemMeta.lore(customEffectLore(customEffect));
+        itemMeta.lore(customEffectLore(player, customEffect));
         itemMeta.setCustomModelData(5200 + effectType.getId());
         itemStack.setItemMeta(itemMeta);
         if (effectType.isRightClickRemovable())
@@ -156,7 +156,7 @@ public class CustomEffectGUI
         potionMeta.setCustomModelData(id);
         potionMeta.displayName(ComponentUtil.translate((CustomEffectManager.isVanillaNegative(effectType) ? "&c" : "&a") + effectKey));
         potionMeta.setColor(effectType.getColor());
-        potionMeta.lore(potionEffectLore(potionEffect));
+        potionMeta.lore(potionEffectLore(player, potionEffect));
         itemStack.setItemMeta(potionMeta);
         if (!CustomEffectManager.isVanillaNegative(effectType))
         {
@@ -184,7 +184,7 @@ public class CustomEffectGUI
 
   @SuppressWarnings("all")
   @NotNull
-  private static List<Component> customEffectLore(@NotNull CustomEffect customEffect)
+  private static List<Component> customEffectLore(@NotNull Player player, @NotNull CustomEffect customEffect)
   {
     List<Component> lore = new ArrayList<>();
     CustomEffectType effectType = customEffect.getType();
@@ -247,7 +247,15 @@ public class CustomEffectGUI
     if (effectType.isRightClickRemovable())
     {
       lore.add(Component.empty());
-      lore.add(ComponentUtil.translate("&e우클릭하여 효과 제거"));
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.NO_BUFF_REMOVE))
+      {
+        lore.add(ComponentUtil.translate("&e&m우클릭하여 효과 제거"));
+        lore.add(ComponentUtil.translate("&c%s - 효과를 제거할 수 없는 상태입니다", CustomEffectType.NO_BUFF_REMOVE));
+      }
+      else
+      {
+        lore.add(ComponentUtil.translate("&e우클릭하여 효과 제거"));
+      }
     }
     return lore;
   }
@@ -255,14 +263,46 @@ public class CustomEffectGUI
 
   @NotNull
   @SuppressWarnings("all")
-  private static List<Component> potionEffectLore(@NotNull PotionEffect potionEffect)
+  private static List<Component> potionEffectLore(@NotNull Player player, @NotNull PotionEffect potionEffect)
   {
     List<Component> lore = new ArrayList<>();
 
     PotionEffectType potionEffectType = potionEffect.getType();
     String effectKey = TranslatableKeyParser.getKey(potionEffectType);
     String id = effectKey.substring(17);
-    lore.add(VanillaEffectDescription.getDescription(potionEffect).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, State.FALSE));
+    Component description = VanillaEffectDescription.getDescription(potionEffect);
+    if (!description.equals(Component.empty()))
+    {
+      try
+      {
+        List<Component> children = new ArrayList<>(Collections.singletonList(description.children(Collections.emptyList())));
+        children.addAll(description.children());
+        for (int i = 0; i < children.size(); i++)
+        {
+          Component child = children.get(i);
+          if (child.equals(Component.text("\n")) && i + 1 != children.size() && children.get(i + 1).equals(Component.text("\n")))
+          {
+            lore.add(Component.empty());
+          }
+          if (!child.equals(Component.text("\n")))
+          {
+            if (child.color() == null)
+            {
+              child = child.color(NamedTextColor.WHITE);
+            }
+            if (child.decoration(TextDecoration.ITALIC) == State.NOT_SET)
+            {
+              child = child.decoration(TextDecoration.ITALIC, State.FALSE);
+            }
+            lore.add(child);
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
     int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
     lore.add(Component.empty());
     if (duration <= 20 * 60 * 60 * 24 * 365)
@@ -273,7 +313,15 @@ public class CustomEffectGUI
     if (!CustomEffectManager.isVanillaNegative(potionEffect.getType()))
     {
       lore.add(Component.empty());
-      lore.add(ComponentUtil.translate("&e우클릭하여 효과 제거"));
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.NO_BUFF_REMOVE))
+      {
+        lore.add(ComponentUtil.translate("&e&m우클릭하여 효과 제거"));
+        lore.add(ComponentUtil.translate("&c%s - 효과를 제거할 수 없는 상태입니다", CustomEffectType.NO_BUFF_REMOVE));
+      }
+      else
+      {
+        lore.add(ComponentUtil.translate("&e우클릭하여 효과 제거"));
+      }
     }
 //    PotionEffectType potionEffectType = potionEffect.getType();
 //    String effectKey = TranslatableKeyParser.getKey(potionEffectType);

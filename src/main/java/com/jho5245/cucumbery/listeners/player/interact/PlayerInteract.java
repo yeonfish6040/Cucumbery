@@ -1209,6 +1209,10 @@ public class PlayerInteract implements Listener
       if (customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_RAILGUN_DAMAGE))
       {
         damage = customItemTagCompound.getDouble(CucumberyTag.CUSTOM_ITEM_RAILGUN_DAMAGE);
+        if (damage < Long.MAX_VALUE)
+        {
+          damage = Long.MAX_VALUE;
+        }
         isRailgun[2] = true;
       }
       if (customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_RAILGUN_LASER_WIDTH))
@@ -1659,8 +1663,8 @@ public class PlayerInteract implements Listener
                     ComponentUtil.translate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다", item), 5, 100, 15);
           }
         }
-        Method.itemBreakParticle(player, item);
-        Method.playSoundLocation(player.getLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, Math.random() / 3d + 0.8);
+//        Method.itemBreakParticle(player, item);
+//        Method.playSoundLocation(player.getLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, Math.random() / 3d + 0.8);
         item.setAmount(item.getAmount() - 1);
         if (item.getAmount() > 0)
         {

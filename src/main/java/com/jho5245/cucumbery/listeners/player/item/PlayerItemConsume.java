@@ -5,20 +5,20 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTList;
@@ -246,7 +246,13 @@ public class PlayerItemConsume implements Listener
           }, 0L);
         }
         List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
-        customEffects.removeIf(effect -> !effect.isKeepOnMilk());
+        for (CustomEffect customEffect : customEffects)
+        {
+          if (!customEffect.isKeepOnMilk())
+          {
+            CustomEffectManager.removeEffect(player, customEffect.getType());
+          }
+        }
       }
     }
   }

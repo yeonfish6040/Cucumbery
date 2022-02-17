@@ -44,4 +44,11 @@ public class OfflinePlayerCustomEffectImple extends CustomEffect implements Offl
   {
     this.offlinePlayer = offlinePlayer;
   }
+
+  @Override
+  @NotNull
+  protected OfflinePlayerCustomEffectImple copy()
+  {
+    return new OfflinePlayerCustomEffectImple(this.getType(), this.getDuration(), this.getAmplifier(), this.getDisplayType(), this.getOfflinePlayer());
+  }
 }

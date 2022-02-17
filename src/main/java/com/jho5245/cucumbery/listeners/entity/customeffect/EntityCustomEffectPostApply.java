@@ -2,20 +2,23 @@ package com.jho5245.cucumbery.listeners.entity.customeffect;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffectImple;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPostApplyEvent;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,8 +37,8 @@ public class EntityCustomEffectPostApply implements Listener
   {
     Entity entity = event.getEntity();
     CustomEffect customEffect = event.getCustomEffect();
-    int duration = customEffect.getDuration();
-    int amplifier = customEffect.getAmplifier();
+    int duration = customEffect.getDuration(), initDuration = customEffect.getInitDuration();
+    int amplifier = customEffect.getAmplifier(), initAmplifier = customEffect.getInitAmplifier();
     CustomEffectType customEffectType = customEffect.getType();
     List<CustomEffectType> conflictEffects = customEffectType.getConflictEffects();
 
@@ -199,9 +202,20 @@ public class EntityCustomEffectPostApply implements Listener
       }
     }
 
-    if (customEffectType == CustomEffectType.COMBAT_MODE_MELEE || customEffectType == CustomEffectType.COMBAT_MODE_RANGED)
+    if (customEffectType == CustomEffectType.COMBAT_MODE_MELEE)
     {
-      CustomEffectManager.addEffect(entity, CustomEffectType.COMBAT_MODE_COOLDOWN);
+      CustomEffectManager.addEffect(entity, CustomEffectType.COMBAT_MODE_MELEE_COOLDOWN);
+    }
+
+    if (customEffectType == CustomEffectType.COMBAT_MODE_RANGED)
+    {
+      CustomEffectManager.addEffect(entity, CustomEffectType.COMBAT_MODE_RANGED_COOLDOWN);
+    }
+
+    if (customEffectType == CustomEffectType.BREAD_KIMOCHI)
+    {
+      CustomEffectManager.addEffect(entity, new AttributeCustomEffectImple(
+              CustomEffectType.BREAD_KIMOCHI_SECONDARY_EFFECT, initDuration, initAmplifier, DisplayType.NONE, UUID.randomUUID(), Attribute.GENERIC_ARMOR, Operation.ADD_NUMBER, 2));
     }
   }
 }

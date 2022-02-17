@@ -286,17 +286,6 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
         {
           return Collections.singletonList(Prefix.NO_ENTITY.toString());
         }
-        if (!args[2].equals(""))
-        {
-          try
-          {
-            CustomEffectType.valueOf(args[2].toUpperCase());
-          }
-          catch (Exception e)
-          {
-            return Collections.singletonList("'" + args[2] + "'" + MessageUtil.getFinalConsonant(args[2], MessageUtil.ConsonantType.은는) + " 잘못되거나 알 수 없는 효과입니다");
-          }
-        }
         if (length == 3)
         {
           List<String> list = new ArrayList<>();

@@ -11,6 +11,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -361,13 +362,61 @@ public enum CustomEffectType implements Translatable, EnumHideable
    */
   COMBAT_MODE_MELEE(false, false, false),
   /**
+   * 전투 모드 - 쿨타임
+   */
+  COMBAT_MODE_MELEE_COOLDOWN(false, false, true),
+  /**
    * 전투 모드 - 원거리
    */
   COMBAT_MODE_RANGED(false, false, false),
   /**
    * 전투 모드 - 쿨타임
    */
-  COMBAT_MODE_COOLDOWN(false, false, true),
+  COMBAT_MODE_RANGED_COOLDOWN(false, false, true),
+  /**
+   * 엔더 슬레이어
+   */
+  ENDER_SLAYER(9999),
+  /**
+   * 보스 슬레이어
+   */
+  BOSS_SLAYER(9999),
+  /**
+   * 주민의 축복
+   */
+  BLESS_OF_VILLAGER,
+  /**
+   * 빵 기모띠
+   */
+  BREAD_KIMOCHI,
+  /**
+   * 빵 기모띠
+   */
+  BREAD_KIMOCHI_SECONDARY_EFFECT,
+  /**
+   * 마을 보호막
+   */
+  TOWN_SHIELD,
+  /**
+   * 관전 지속 외출
+   */
+  CONTINUAL_SPECTATING_EXEMPT,
+  /**
+   * EXP 부스트
+   */
+  EXPERIENCE_BOOST(199),
+  /**
+   * 사라짐
+   */
+  DISAPPEAR(true, true, true),
+  /**
+   * 버프 해제 불가
+   */
+  NO_BUFF_REMOVE(true, true, true),
+  /**
+   * 재생 불능
+   */
+  NO_REGENERATION(false, true, true),
   ;
 
   private final int maxAmplifier;
@@ -486,7 +535,17 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case NO_ENTITY_AGGRO -> "몹 적대 무효화";
               case COMBAT_MODE_MELEE -> "전투 모드 - 근거리";
               case COMBAT_MODE_RANGED -> "전투 모드 - 원거리";
-              case COMBAT_MODE_COOLDOWN -> "전투 모드 - 쿨타임";
+              case COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN -> "전투 모드 - 쿨타임";
+              case ENDER_SLAYER -> "엔더 슬레이어";
+              case BOSS_SLAYER -> "보스 슬레이어";
+              case BLESS_OF_VILLAGER -> "주민의 축복";
+              case BREAD_KIMOCHI, BREAD_KIMOCHI_SECONDARY_EFFECT -> "빵 기모띠";
+              case TOWN_SHIELD -> "마을 보호막";
+              case CONTINUAL_SPECTATING_EXEMPT -> "관전 지속 외출";
+              case EXPERIENCE_BOOST -> "EXP 부스트";
+              case DISAPPEAR -> "사라짐";
+              case NO_BUFF_REMOVE -> "버프 해제 불가";
+              case NO_REGENERATION -> "재생 불능";
               case MINECRAFT_SPEED -> TranslatableKeyParser.getKey(PotionEffectType.SPEED);
               case MINECRAFT_SLOWNESS -> TranslatableKeyParser.getKey(PotionEffectType.SLOW);
               case MINECRAFT_HASTE -> TranslatableKeyParser.getKey(PotionEffectType.FAST_DIGGING);
@@ -524,6 +583,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
 
   /**
    * 효과가 너무 많아 짧게 표시할 경우에 사용할 이름입니다
+   *
    * @return 짧은 이름 혹은 원래 짧을 경우 그대로의 이름
    */
   @NotNull
@@ -534,7 +594,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case AWKWARD -> "어색";
               case BUFF_FREEZE -> "버프";
               case CHEESE_EXPERIMENT -> "치즈";
-              case CONTINUAL_SPECTATING -> "관전";
+              case CONTINUAL_SPECTATING, CONTINUAL_SPECTATING_EXEMPT -> "관전";
               case COOLDOWN_CHAT -> "챗쿨";
               case COOLDOWN_ITEM_MEGAPHONE -> "아확쿨";
               case CURSE_OF_BEANS -> "콩콩";
@@ -585,15 +645,25 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case VAR_PNEUMONIA -> "폐렴";
               case VAR_PODAGRA -> "통풍";
               case VAR_STOMACHACHE -> "복통";
+              case WA_SANS -> "와샌";
               case COMBAT_MODE_MELEE -> "전모근";
               case COMBAT_MODE_RANGED -> "전모원";
-              case COMBAT_MODE_COOLDOWN -> "전모클";
+              case COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN -> "전모클";
+              case ENDER_SLAYER -> "엔슬";
+              case BOSS_SLAYER -> "보슬";
+              case BLESS_OF_VILLAGER -> "주축";
+              case BREAD_KIMOCHI, BREAD_KIMOCHI_SECONDARY_EFFECT -> "빵";
+              case TOWN_SHIELD -> "마을";
+              case EXPERIENCE_BOOST -> "EXP";
+              case NO_BUFF_REMOVE -> "버해불";
+              case NO_REGENERATION -> "재불";
               default -> translationKey();
             };
   }
 
   /**
    * 효과에 해당하는 설명을 Component 형태로 반환합니다.
+   *
    * @return Component 설명
    */
   @NotNull
@@ -604,7 +674,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case MUTE -> ComponentUtil.translate("채팅을 할 수 없는 상태입니다");
               case CURSE_OF_MUSHROOM -> ComponentUtil.translate("농도 레벨 * 0.1% 확률로 5초마다 인벤토리에 버섯이 들어옵니다");
               case INVINCIBLE -> ComponentUtil.translate("어떠한 형태의 피해도 받지 않습니다");
-              case BUFF_FREEZE -> ComponentUtil.translate("사망시 버프를 소모하여 일부 버프를 제외한 버프가 사라지지 않습니다");
+              case BUFF_FREEZE -> ComponentUtil.translate("사망 시 버프를 소모하여 일부 버프를 제외한 버프가 사라지지 않습니다");
               case CONFUSION -> ComponentUtil.translate("방향키가 반대로 작동합니다");
               case RESURRECTION -> ComponentUtil.translate("죽음에 이르는 피해를 입었을 때, 죽지 않고")
                       .append(Component.text("\n"))
@@ -612,17 +682,17 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case RESURRECTION_INVINCIBLE -> ComponentUtil.translate("2초간 무적이 됩니다");
               case RESURRECTION_COOLDOWN -> ComponentUtil.translate("%s 버프를 받을 수 없는 상태입니다", CustomEffectType.RESURRECTION);
               case FROST_WALKER -> ComponentUtil.translate("마그마 블록 위를 걸어도 피해를 입지 않습니다");
-              case FEATHER_FALLING -> ComponentUtil.translate("낙하 피해를 받기 위한 최소 높이가 증가하고,")
+              case FEATHER_FALLING -> ComponentUtil.translate("낙하 대미지를 받기 위한 최소 높이가 증가하고,")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("낙하 피해량이 감소합니다"));
-              case BLESS_OF_SANS, SHARPNESS -> ComponentUtil.translate("근거리 공격 피해량이 증가합니다");
+              case BLESS_OF_SANS, SHARPNESS -> ComponentUtil.translate("근거리 대미지가 증가합니다");
               case PARROTS_CHEER -> ComponentUtil.translate("HP가 5 이하일 때 15 블록 이내에 자신이 길들인 앵무새가")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("있으면 받는 피해가 45% 감소하고 주는 피해량이 10% 증가합니다"));
-              case SMITE -> ComponentUtil.translate("언데드 개체에게 주는 근거리 공격 피해량이 증가합니다");
-              case BANE_OF_ARTHROPODS -> ComponentUtil.translate("절지동물류 개체에게 주는 근거리 공격 피해량이 증가하고,")
+                      .append(ComponentUtil.translate("있으면 받는 피해량이 45% 감소하고 대미지가 10% 증가합니다"));
+              case SMITE -> ComponentUtil.translate("언데드 개체 공격 시 근거리 대미지가 증가합니다");
+              case BANE_OF_ARTHROPODS -> ComponentUtil.translate("절지동물류 개체 공격 시 근거리 대미지가 증가하고,")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("%s 효과를 지급합니다", ComponentUtil.translate("effect.minecraft.slowness")));
+                      .append(ComponentUtil.translate("%s 4단계 효과를 부여합니다", ComponentUtil.translate("&ceffect.minecraft.slowness")));
               case STOP -> ComponentUtil.translate("모든 행동을 할 수 없는 상태입니다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("좌우이동, 웅크리기를 할 때마다 지속 시간이 6초씩 감소합니다"));
@@ -630,7 +700,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case DO_NOT_PICKUP_BUT_THROW_IT -> ComponentUtil.translate("아이템을 줍는 대신 던집니다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("농도 레벨이 높을 수록 더 멀리 던집니다"));
-              case INSIDER -> ComponentUtil.translate("채팅이 여러번 입력되고, 죽을 때 모든 플레이어에게")
+              case INSIDER -> ComponentUtil.translate("채팅이 여러번 입력되고, 사망 시 모든 플레이어에게")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("타이틀로 자신의 데스 메시지를 띄워줍니다"));
               case OUTSIDER -> ComponentUtil.translate("일정 확률로 채팅 메시지가 보내지지 않고")
@@ -642,23 +712,25 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case SILK_TOUCH -> ComponentUtil.translate("블록을 캐면 섬세한 손길 마법과")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("동일하게 아이템을 얻을 수 있습니다"));
-              case TELEKINESIS -> ComponentUtil.translate("블록을 캐거나 적을 잡았을 때 드롭하는")
+              case TELEKINESIS -> ComponentUtil.translate("블록을 캐거나 적을 처치했을 때 드롭하는")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("아이템과 경험치가 즉시 인벤토리에 들어옵니다"));
-              case SMELTING_TOUCH -> ComponentUtil.translate("블록을 캐거나 적을 잡았을 때 드롭하는")
+              case SMELTING_TOUCH -> ComponentUtil.translate("블록을 캐거나 적을 처치했을 때 드롭하는")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("아이템을 제련된 형태로 바꿔줍니다"));
-              case CURSE_OF_INVENTORY -> ComponentUtil.translate("죽으면 가지고 있는 모든 아이템을 떨어뜨립니다");
-              case CURSE_OF_CREATIVITY -> ComponentUtil.translate("블록을 설치하거나 파괴할 수 없습니다");
-              case CURSE_OF_CREATIVITY_BREAK -> ComponentUtil.translate("블록을 파괴할 수 없습니다");
-              case CURSE_OF_CREATIVITY_PLACE -> ComponentUtil.translate("블록을 설치할 수 없습니다");
-              case CURSE_OF_CONSUMPTION -> ComponentUtil.translate("음식이나 포션을 사용할 수 없습니다");
-              case CURSE_OF_PICKUP -> ComponentUtil.translate("아이템을 주울 수 없습니다");
-              case CURSE_OF_DROP -> ComponentUtil.translate("아이템을 버릴 수 없습니다");
-              case CURSE_OF_JUMPING -> ComponentUtil.translate("점프를 할 수 없습니다");
-              case KINETIC_RESISTANCE -> ComponentUtil.translate("겉날개 활강 중 블록에 부딪혀서 받는 피해량이 감소됩니다")
+              case CURSE_OF_INVENTORY -> ComponentUtil.translate("사망 시 인벤세이브 여부와 관계없이")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("낙하 피해량은 감소되지 않습니다"));
+                      .append(ComponentUtil.translate("가지고 있는 모든 아이템과 경험치를 떨어뜨립니다"));
+              case CURSE_OF_CREATIVITY -> ComponentUtil.translate("블록을 설치하거나 파괴할 수 없는 상태입니다");
+              case CURSE_OF_CREATIVITY_BREAK -> ComponentUtil.translate("블록을 파괴할 수 없는 상태입니다");
+              case CURSE_OF_CREATIVITY_PLACE -> ComponentUtil.translate("블록을 설치할 수 없는 상태입니다");
+              case CURSE_OF_CONSUMPTION -> ComponentUtil.translate("음식이나 포션을 사용할 수 없는 상태입니다");
+              case CURSE_OF_PICKUP -> ComponentUtil.translate("아이템을 주울 수 없는 상태입니다");
+              case CURSE_OF_DROP -> ComponentUtil.translate("아이템을 버릴 수 없는 상태입니다");
+              case CURSE_OF_JUMPING -> ComponentUtil.translate("점프를 할 수 없는 상태입니다");
+              case KINETIC_RESISTANCE -> ComponentUtil.translate("겉날개 활강 중 블록에 부딪혀서 받는 피해량이 감소합니다")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("낙하 대미지는 감소하지 않습니다"));
               case ELYTRA_BOOSTER -> ComponentUtil.translate("겉날개 활강 중 폭죽으로 가속할 때")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("일정 확률로 폭죽을 소비하지 않습니다"));
@@ -679,21 +751,21 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case AWKWARD -> ComponentUtil.translate("어... 그게.. 어색? 해 진다? 라고 생각? 합니다");
               case THICK -> ComponentUtil.translate("채팅이 진해집니다");
               case UNCRAFTABLE -> ComponentUtil.translate("아이템을 제작할 수 없습니다");
-              case COOLDOWN_CHAT -> ComponentUtil.translate("채팅 쿨타임동안은 채팅하실 수 없습니다");
-              case COOLDOWN_ITEM_MEGAPHONE -> ComponentUtil.translate("아이템 확성기 쿨타임동안은 아이템 확성기를 사용하실 수 없습니다");
-              case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 주는 피해량이 증가합니다");
+              case COOLDOWN_CHAT -> ComponentUtil.translate("쿨타임 동안 채팅을 할 수 없습니다");
+              case COOLDOWN_ITEM_MEGAPHONE -> ComponentUtil.translate("쿨타임 동안 아이템 확성기를 사용할 수 없습니다");
+              case SERVER_RADIO_LISTENING -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 대미지가 증가합니다");
               case DARKNESS_TERROR -> ComponentUtil.translate("어두운거.. 무섭다..")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("%s 효과나 손에 빛을 내는 아이템 없이 어두운 곳에 가면 %s 효과가 걸립니다",
                               Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.NIGHT_VISION), NamedTextColor.GREEN), DARKNESS_TERROR_ACTIVATED));
-              case DARKNESS_TERROR_ACTIVATED -> ComponentUtil.translate("너무 어둡습니다! 받는 피해량이 30% 증가하고 블록을 캘 때마다")
+              case DARKNESS_TERROR_ACTIVATED -> ComponentUtil.translate("너무 어둡습니다! 피해량이 30% 증가하고 블록을 캘 때마다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("%s 확률로 받는 피해량 증가에 영향을 받는 1의 피해를 입습니다", "&e5%"));
               case DARKNESS_TERROR_RESISTANCE -> ComponentUtil.translate("%s 효과에 대한 내성이 생깁니다", DARKNESS_TERROR_ACTIVATED);
               case DODGE -> ComponentUtil.translate("일정 확률로 공격을 회피합니다");
               case NEWBIE_SHIELD -> ComponentUtil.translate("플레이 시간이 1시간 미만인 당신!")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("받는 피해량이 감소하고 주는 피해량이 증가합니다"))
+                      .append(ComponentUtil.translate("받는 피해량이 감소하고 대미지가 증가합니다"))
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("플레이 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
               case INVINCIBLE_PLUGIN_RELOAD -> ComponentUtil.translate("플러그인을 리도드하는 중입니다");
@@ -705,9 +777,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
                               Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN)));
               case FANCY_SPOTLIGHT_ACTIVATED -> ComponentUtil.translate("주변에 충분히 밝은 블록이 있어 %s와(과) %s이(가) 적용됩니다",
                       Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN));
-              case WA_SANS -> ComponentUtil.translate("스켈레톤 유형의 개체에게 주는")
+              case WA_SANS -> ComponentUtil.translate("스켈레톤 유형의 개체에게 받는")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("피해량이 증가하고 받는 피해량이 감소합니다"));
+                      .append(ComponentUtil.translate("피해량이 감소하고 대미지가 증가합니다"));
               case HEALTH_INCREASE -> ComponentUtil.translate("최대 HP가 증가합니다");
               case CONTINUAL_SPECTATING -> ComponentUtil.translate("플레이어를 지속적으로 관전합니다")
                       .append(Component.text("\n"))
@@ -741,23 +813,34 @@ public enum CustomEffectType implements Translatable, EnumHideable
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("3초마다 0.2의 피해를 입습니다. 추가로 3.5블록 미만의 높이에서 낙하할"))
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("경우 1의 피해를 입고 그 이상의 높이에서 낙하할 경우 낙하 피해량이 50% 증가합니다"));
+                      .append(ComponentUtil.translate("경우 1의 피해를 입고 그 이상의 높이에서 낙하할 경우 낙하 대미지가 50% 증가합니다"));
               case NO_ENTITY_AGGRO -> ComponentUtil.translate("중립적이거나 적대적 몹이 적대적이지 않게 됩니다");
               case COMBAT_MODE_MELEE -> ComponentUtil.translate("근거리 전투에 대한 집중력이 비약적으로 상승하여")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("상대방에게 입히는 근거리 공격 피해량은 100% 증가하는 대신"))
+                      .append(ComponentUtil.translate("상대방에게 입히는 근거리 대미지가 100% 증가하는 대신"))
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("상대방에게서 받는 원거리 공격 피해량이 100% 증가합니다"))
+                      .append(ComponentUtil.translate("상대방에게서 받는 원거리 피해량이 100% 증가합니다"))
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("이 효과는 %s 효과와 동시에 적용되지 않습니다", ComponentUtil.translate("&a" + CustomEffectType.COMBAT_MODE_RANGED.translationKey())));
               case COMBAT_MODE_RANGED -> ComponentUtil.translate("원거리 전투에 대한 집중력이 비약적으로 상승하여")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("상대방에게 입히는 원거리 공격 피해량은 100% 증가하는 대신"))
+                      .append(ComponentUtil.translate("상대방에게 입히는 원거리 대미지가 100% 증가하는 대신"))
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("상대방에게서 받는 근거리 공격 피해량이 100% 증가합니다"))
+                      .append(ComponentUtil.translate("상대방에게서 받는 근거리 피해량이 100% 증가합니다"))
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("이 효과는 %s 효과와 동시에 적용되지 않습니다", ComponentUtil.translate("&a" + CustomEffectType.COMBAT_MODE_RANGED.translationKey())));
-              case COMBAT_MODE_COOLDOWN -> ComponentUtil.translate("전투 모드를 변경할 수 없는 상태입니다");
+              case BLESS_OF_VILLAGER -> ComponentUtil.translate("대미지가 10% 증가합니다");
+              case BREAD_KIMOCHI, BREAD_KIMOCHI_SECONDARY_EFFECT -> ComponentUtil.translate("이동 속도가 10% 증가하고 방어력이 2 증가합니다");
+              case COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN -> ComponentUtil.translate("전투 모드를 변경할 수 없는 상태입니다");
+              case ENDER_SLAYER -> ComponentUtil.translate("%s, %s 또는 %s 공격 시 대미지가 증가합니다", EntityType.ENDERMAN, EntityType.ENDERMITE, EntityType.ENDER_DRAGON);
+              case BOSS_SLAYER -> ComponentUtil.translate("보스 몬스터 공격 시 대미지가 증가합니다");
+              case TOWN_SHIELD -> ComponentUtil.translate("평화로운 마을입니다! %s 효과가 적용되며", ComponentUtil.translate("&a" + TranslatableKeyParser.getKey(PotionEffectType.SATURATION)))
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("이동 속도가 30% 증가하고 받는 피해량이 50% 감소합니다"));
+              case CONTINUAL_SPECTATING_EXEMPT -> ComponentUtil.translate("지속시간 동안은 강제 관전이 되지 않습니다");
+              case EXPERIENCE_BOOST -> ComponentUtil.translate("경험치 획득량이 증가합니다");
+              case NO_BUFF_REMOVE -> ComponentUtil.translate("버프를 해제할 수 없는 상태입니다");
+              case NO_REGENERATION -> ComponentUtil.translate("HP가 재생되지 않습니다");
               case MINECRAFT_SPEED -> VanillaEffectDescription.getDescription(PotionEffectType.SPEED);
               case MINECRAFT_SLOWNESS -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW);
               case MINECRAFT_HASTE -> VanillaEffectDescription.getDescription(PotionEffectType.FAST_DIGGING);
@@ -796,6 +879,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
 
   /**
    * 즉발형 효과는 버프창에 표시되지 않고 효과가 적용되는 즉시 능력이 발동됩니다.
+   *
    * @return 즉발형 효과면 true 이외에는 false
    */
   public boolean isInstant()
@@ -814,6 +898,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   /**
    * 각 효과의 기본 지속 시간을 틱 단위로 반환합니다. -1의 경우 무제한입니다.
    * <p>온오프 버프의 경우 항상 -1입니다.
+   *
    * @return 효과에 따른 기본 지속 시간 혹은 30초 (600틱)
    */
   public int getDefaultDuration()
@@ -828,10 +913,11 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, VAR_DETOXICATE_ACTIVATED -> 2;
               case VAR_PODAGRA_ACTIVATED -> 5;
               case FANCY_SPOTLIGHT_ACTIVATED -> 20;
-              case RESURRECTION_INVINCIBLE -> 20 * 2;
+              case RESURRECTION_INVINCIBLE, DISAPPEAR -> 20 * 2;
               case COOLDOWN_CHAT -> 20 * 3;
-              case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, COMBAT_MODE_COOLDOWN -> 20 * 5;
+              case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN, TOWN_SHIELD -> 20 * 5;
               case STOP, COOLDOWN_ITEM_MEGAPHONE -> 20 * 10;
+              case BREAD_KIMOCHI -> 20 * 60 * 3;
               case RESURRECTION_COOLDOWN -> 20 * 60 * 10;
               case HEROS_ECHO, HEROS_ECHO_OTHERS -> 20 * 60 * 60 * 2;
               default -> 20 * 30;
@@ -851,9 +937,13 @@ public enum CustomEffectType implements Translatable, EnumHideable
       case AWKWARD, CHEESE_EXPERIMENT, VAR_PNEUMONIA -> itemStack = new ItemStack(Material.PUFFERFISH);
       case BANE_OF_ARTHROPODS, DARKNESS_TERROR_RESISTANCE -> itemStack = new ItemStack(Material.GLOW_INK_SAC);
       case BLESS_OF_SANS, WA_SANS -> itemStack = new ItemStack(Material.BONE);
+      case BLESS_OF_VILLAGER, TOWN_SHIELD -> itemStack = new ItemStack(Material.EMERALD);
+      case BOSS_SLAYER, COMBAT_MODE_MELEE, COMBAT_MODE_MELEE_COOLDOWN, SHARPNESS -> itemStack = new ItemStack(Material.IRON_SWORD);
+      case BREAD_KIMOCHI -> itemStack = new ItemStack(Material.BREAD);
       case BUFF_FREEZE -> itemStack = new ItemStack(Material.RABBIT_FOOT);
-      case CONFUSION, TELEKINESIS -> itemStack = new ItemStack(Material.ENDER_PEARL);
-      case CONTINUAL_SPECTATING -> itemStack = new ItemStack(Material.ENDER_EYE);
+      case COMBAT_MODE_RANGED, COMBAT_MODE_RANGED_COOLDOWN, IDIOT_SHOOTER -> itemStack = new ItemStack(Material.BOW);
+      case CONFUSION, TELEKINESIS, CONTINUAL_SPECTATING_EXEMPT -> itemStack = new ItemStack(Material.ENDER_PEARL);
+      case CONTINUAL_SPECTATING, ENDER_SLAYER -> itemStack = new ItemStack(Material.ENDER_EYE);
       case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE -> itemStack = new ItemStack(Material.CLOCK);
       case CURSE_OF_BEANS -> itemStack = new ItemStack(Material.COCOA_BEANS);
       case CURSE_OF_CONSUMPTION, VAR_STOMACHACHE -> itemStack = new ItemStack(Material.POISONOUS_POTATO);
@@ -870,6 +960,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
       case DO_NOT_PICKUP_BUT_THROW_IT -> itemStack = new ItemStack(Material.POPPED_CHORUS_FRUIT);
       case DODGE -> itemStack = new ItemStack(Material.PHANTOM_MEMBRANE);
       case ELYTRA_BOOSTER -> itemStack = new ItemStack(Material.FIREWORK_ROCKET);
+      case EXPERIENCE_BOOST -> itemStack = new ItemStack(Material.EXPERIENCE_BOTTLE);
       case FANCY_SPOTLIGHT, FANCY_SPOTLIGHT_ACTIVATED -> itemStack = new ItemStack(Material.SEA_LANTERN);
       case FEATHER_FALLING -> itemStack = new ItemStack(Material.FEATHER);
       case FROST_WALKER -> {
@@ -878,17 +969,17 @@ public enum CustomEffectType implements Translatable, EnumHideable
       }
       case HEALTH_INCREASE -> itemStack = new ItemStack(Material.RED_DYE);
       case HEROS_ECHO, HEROS_ECHO_OTHERS -> itemStack = new ItemStack(Material.BEACON);
-      case IDIOT_SHOOTER -> itemStack = new ItemStack(Material.BOW);
       case INSIDER -> itemStack = new ItemStack(Material.CAKE);
       case INVINCIBLE, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, RESURRECTION, RESURRECTION_INVINCIBLE -> itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
       case KEEP_INVENTORY -> itemStack = new ItemStack(Material.BARREL);
       case KINETIC_RESISTANCE -> itemStack = new ItemStack(Material.SPONGE);
       case KNOCKBACK_RESISTANCE, KNOCKBACK_RESISTANCE_COMBAT, KNOCKBACK_RESISTANCE_NON_COMBAT, LEVITATION_RESISTANCE -> itemStack = new ItemStack(Material.SHIELD);
       case MUNDANE -> itemStack = new ItemStack(Material.GRASS_BLOCK);
-      case MUTE, STOP -> itemStack = new ItemStack(Material.BARRIER);
+      case MUTE, NO_BUFF_REMOVE, STOP -> itemStack = new ItemStack(Material.BARRIER);
       case NEWBIE_SHIELD -> itemStack = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
       case NOTHING, TRUE_INVISIBILITY -> itemStack = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE);
       case NO_ENTITY_AGGRO -> itemStack = new ItemStack(Material.BROWN_DYE);
+      case NO_REGENERATION -> itemStack = new ItemStack(Material.REDSTONE);
       case OUTSIDER -> itemStack = new ItemStack(Material.DEAD_TUBE_CORAL_FAN);
       case PARROTS_CHEER -> itemStack = new ItemStack(Material.PARROT_SPAWN_EGG);
       case RESURRECTION_COOLDOWN -> {
@@ -896,7 +987,6 @@ public enum CustomEffectType implements Translatable, EnumHideable
         itemMeta.addEnchant(CustomEnchant.GLOW, 1, true);
       }
       case SERVER_RADIO_LISTENING -> itemStack = new ItemStack(Material.JUKEBOX);
-      case SHARPNESS -> itemStack = new ItemStack(Material.IRON_SWORD);
       case SILK_TOUCH -> itemStack = new ItemStack(Material.SHEARS);
       case SMELTING_TOUCH -> itemStack = new ItemStack(Material.LAVA_BUCKET);
       case SMITE -> itemStack = new ItemStack(Material.LIGHTNING_ROD);
@@ -906,6 +996,12 @@ public enum CustomEffectType implements Translatable, EnumHideable
       case UNCRAFTABLE -> itemStack = new ItemStack(Material.CRAFTING_TABLE);
       case VAR_DETOXICATE, VAR_DETOXICATE_ACTIVATED -> itemStack = new ItemStack(Material.MILK_BUCKET);
       case VAR_PODAGRA, VAR_PODAGRA_ACTIVATED -> itemStack = new ItemStack(Material.GRINDSTONE);
+      case CUCUMBERY_UPDATER, BREAD_KIMOCHI_SECONDARY_EFFECT, MINECRAFT_WITHER, MINECRAFT_WEAKNESS, MINECRAFT_WATER_BREATHING, MINECRAFT_UNLUCK, MINECRAFT_STRENGTH, MINECRAFT_SPEED, MINECRAFT_SLOW_FALLING,
+              MINECRAFT_ABSORPTION, MINECRAFT_BAD_OMEN, MINECRAFT_BLINDNESS, MINECRAFT_CONDUIT_POWER, MINECRAFT_DOLPHINS_GRACE, MINECRAFT_FIRE_RESISTANCE, MINECRAFT_GLOWING, MINECRAFT_HASTE, MINECRAFT_HEALTH_BOOST,
+              MINECRAFT_HERO_OF_THE_VILLAGE, MINECRAFT_HUNGER, MINECRAFT_INSTANT_DAMAGE, MINECRAFT_INSTANT_HEAL, MINECRAFT_INVISIBILITY, MINECRAFT_JUMP_BOOST, MINECRAFT_LEVITATION, MINECRAFT_LUCK, MINECRAFT_MINING_FATIGUE,
+              MINECRAFT_NAUSEA, MINECRAFT_NIGHT_VISION, MINECRAFT_POISON, MINECRAFT_REGENERATION, MINECRAFT_RESISTANCE, MINECRAFT_SATURATION, MINECRAFT_SLOWNESS, DISAPPEAR -> {
+        return null;
+      }
     }
     if (itemStack.getType() == Material.STONE)
     {
@@ -921,19 +1017,24 @@ public enum CustomEffectType implements Translatable, EnumHideable
    */
   int getId()
   {
-    // 가장 높은 버프 숫자 : 74
+    // 가장 높은 버프 숫자 : 84 = NO_REGENRATION
     return switch (this)
             {
               case AWKWARD -> 1;
               case BANE_OF_ARTHROPODS -> 2;
               case BLESS_OF_SANS -> 54;
+              case BLESS_OF_VILLAGER -> 79;
+              case BOSS_SLAYER -> 76;
+              case BREAD_KIMOCHI -> 78;
               case BUFF_FREEZE -> 3;
               case CHEESE_EXPERIMENT -> 4;
-              case COMBAT_MODE_COOLDOWN -> 74;
               case COMBAT_MODE_MELEE -> 72;
-              case COMBAT_MODE_RANGED -> 73;
+              case COMBAT_MODE_MELEE_COOLDOWN -> 73;
+              case COMBAT_MODE_RANGED -> 74;
+              case COMBAT_MODE_RANGED_COOLDOWN -> 75;
               case CONFUSION -> 5;
               case CONTINUAL_SPECTATING -> 6;
+              case CONTINUAL_SPECTATING_EXEMPT -> 81;
               case COOLDOWN_CHAT -> 7;
               case COOLDOWN_ITEM_MEGAPHONE -> 8;
               case CURSE_OF_BEANS -> 9;
@@ -953,6 +1054,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case DO_NOT_PICKUP_BUT_THROW_IT -> 23;
               case DODGE -> 24;
               case ELYTRA_BOOSTER -> 25;
+              case EXPERIENCE_BOOST -> 82;
+              case ENDER_SLAYER -> 77;
               case FANCY_SPOTLIGHT -> 26;
               case FANCY_SPOTLIGHT_ACTIVATED -> 27;
               case FEATHER_FALLING -> 28;
@@ -974,7 +1077,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case MUNDANE -> 44;
               case MUTE -> 45;
               case NEWBIE_SHIELD -> 46;
+              case NO_BUFF_REMOVE -> 83;
               case NO_ENTITY_AGGRO -> 47;
+              case NO_REGENERATION -> 84;  ///////////////////////////////// <--[HERE]
               case NOTHING -> 48;
               case OUTSIDER -> 49;
               case PARROTS_CHEER -> 50;
@@ -990,6 +1095,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case STOP -> 62;
               case TELEKINESIS -> 63;
               case THICK -> 64;
+              case TOWN_SHIELD -> 80;
               case TROLL_INVENTORY_PROPERTY -> 65;
               case TRUE_INVISIBILITY -> 66;
               case UNCRAFTABLE -> 67;
@@ -1005,6 +1111,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   /**
    * 온오프 효과는 해당 효과를 적용받고 있지 않은 상태에서 효과를 받으면 무제한으로 적용이 되고
    * <p>해당 효과를 적용받고 있는 상태에서 해당 효과를 다시 받으면 해당 효과가 사라지는 효과임
+   *
    * @return 온오프 효과면 true, 이외에는 false
    */
   public boolean isToggle()
@@ -1018,6 +1125,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
 
   /**
    * 다른 효과와 중첩되지 않는 효과를 반환합니다.
+   *
    * @return 중첩되지 않는 효과 목록 혹은 빈 목록
    */
   @NotNull
@@ -1040,6 +1148,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
 
   /**
    * 해당 효과는 버프창에 표시되지 않으며 오로지 관리자가 명령어로만 참조할 수 있습니다.
+   *
    * @return 숨겨진 효과면 true 이외에는 false
    */
   @SuppressWarnings("all")
@@ -1047,7 +1156,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return switch (this)
             {
-              case TROLL_INVENTORY_PROPERTY_MIN, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED, COMBAT_MODE_COOLDOWN -> true;
+              case TROLL_INVENTORY_PROPERTY_MIN, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED, BREAD_KIMOCHI_SECONDARY_EFFECT, DISAPPEAR -> true;
               default -> false;
             };
   }
@@ -1059,13 +1168,14 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return isToggle() || isTimeHiddenWhenFull() || switch (this)
             {
-              case DARKNESS_TERROR_ACTIVATED, SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED -> true;
+              case DARKNESS_TERROR_ACTIVATED, SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED, TOWN_SHIELD -> true;
               default -> false;
             };
   }
 
   /**
    * 커스텀 효과의 지속 시간이 하나도 경과하지 않았을 때 사간을 표시할지 말지 확인합니다.
+   *
    * @return 시간을 표시하지 않는 버프면 true 이외에는 false
    */
   @SuppressWarnings("all")
@@ -1085,7 +1195,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return !isNegative() && switch (this)
             {
-              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED, VAR_DETOXICATE -> false;
+              case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, FANCY_SPOTLIGHT_ACTIVATED, VAR_DETOXICATE, TOWN_SHIELD -> false;
               default -> true;
             };
   }
@@ -1138,6 +1248,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
 
   /**
    * 효과의 기본 표시 유형을 반환합니다. 대부분의 경우 {@link DisplayType#BOSS_BAR}입니다.
+   *
    * @return 해당 효과의 기본 표시 유형
    */
   @NotNull
@@ -1161,7 +1272,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
     return switch (this)
             {
               case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR_ACTIVATED, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER,
-                      INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, HEROS_ECHO_OTHERS, FANCY_SPOTLIGHT_ACTIVATED, NEWBIE_SHIELD, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED -> true;
+                      INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, HEROS_ECHO_OTHERS, FANCY_SPOTLIGHT_ACTIVATED, NEWBIE_SHIELD, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED,
+                      COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN, BREAD_KIMOCHI_SECONDARY_EFFECT, DISAPPEAR -> true;
               default -> false;
             };
   }
@@ -1198,18 +1310,35 @@ public enum CustomEffectType implements Translatable, EnumHideable
     return !isInstant() && switch (this)
             {
               // 우유 마시면 사라짐
-              case CONFUSION, NOTHING, THICK, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING, CHEESE_EXPERIMENT, TRUE_INVISIBILITY, NO_ENTITY_AGGRO -> false;
+              case CONFUSION, NOTHING, THICK, AWKWARD, UNCRAFTABLE, MUNDANE, FROST_WALKER, FEATHER_FALLING, CHEESE_EXPERIMENT, TRUE_INVISIBILITY, NO_ENTITY_AGGRO,
+                      BREAD_KIMOCHI, BREAD_KIMOCHI_SECONDARY_EFFECT -> false;
               default -> true;
             };
   }
 
   /**
    * 디버프는 일반적으로 개체에게 부정적인 효과를 제공하며, 우클릭으로 제거할 수 없다.
+   *
    * @return 디버프일 경우 true, 아닐 경우 false
    */
   public boolean isNegative()
   {
     return isNegative;
+  }
+
+  /**
+   * 일반적으로 효과의 지속 시간은 접속을 유지한 상태에서만 흐르지만 이 효과는 접속을 하지 않아도 흐르는 효과를 나타냅니다
+   *
+   * @return 접속을 해도 시간이 흐르는 효과면 true, 이외에는 false
+   */
+  @SuppressWarnings("all")
+  public boolean isRealDuration()
+  {
+    return switch (this)
+            {
+              case BLESS_OF_VILLAGER -> true;
+              default -> false;
+            };
   }
 
   /**
@@ -1221,8 +1350,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
     Component description = Component.empty();
     boolean isNegative = this.isNegative();
     boolean keepOnDeath = this.isKeepOnDeath(), keepOnQuit = this.isKeepOnQuit(), keepOnMilk = this.isKeepOnMilk(), buffFreezable = this.isBuffFreezable();
+    boolean isRealDuration = isRealDuration();
 
-    if (!this.getDescription().equals(Component.empty()) && (keepOnDeath || !keepOnQuit || keepOnMilk || !buffFreezable))
+    if (!this.getDescription().equals(Component.empty()) && (keepOnDeath || !keepOnQuit || keepOnMilk || !buffFreezable || isRealDuration))
     {
       description = description.append(Component.text("\n"));
     }
@@ -1236,7 +1366,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
     }
     if (!keepOnQuit)
     {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c접속을 종료하면 효과가 사라집니다"));
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&" + (isNegative ? "a" : "c") + "접속을 종료하면 효과가 사라집니다"));
     }
     if (keepOnMilk)
     {
@@ -1249,6 +1379,11 @@ public enum CustomEffectType implements Translatable, EnumHideable
     if (!buffFreezable)
     {
       description = description.append(Component.text("\n")).append(ComponentUtil.translate("&c%s의 영향을 받지 않습니다", CustomEffectType.BUFF_FREEZE));
+    }
+    if (isRealDuration)
+    {
+      description = description.append(Component.text("\n")).append(
+              ComponentUtil.translate("&" + (isNegative ? "a" : "c") + "접속을 유지하지 않아도 시간이 흐르는 효과입니다"));
     }
     if (isToggle())
     {

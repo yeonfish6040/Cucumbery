@@ -79,24 +79,16 @@ public class EntityCustomEffectPreApply implements Listener
       }
     }
 
-    if (customEffectType == CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED && !CustomEffectManager.hasEffect(entity, CustomEffectType.FANCY_SPOTLIGHT))
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.COMBAT_MODE_MELEE_COOLDOWN) && customEffectType == CustomEffectType.COMBAT_MODE_RANGED)
     {
       event.setCancelled(true);
       return;
     }
 
-    if (CustomEffectManager.hasEffect(entity, CustomEffectType.COMBAT_MODE_COOLDOWN))
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.COMBAT_MODE_RANGED_COOLDOWN) && customEffectType == CustomEffectType.COMBAT_MODE_MELEE)
     {
-      if (customEffectType == CustomEffectType.COMBAT_MODE_MELEE && CustomEffectManager.hasEffect(entity, CustomEffectType.COMBAT_MODE_RANGED))
-      {
-        event.setCancelled(true);
-        return;
-      }
-      if (customEffectType == CustomEffectType.COMBAT_MODE_RANGED && CustomEffectManager.hasEffect(entity, CustomEffectType.COMBAT_MODE_MELEE))
-      {
-        event.setCancelled(true);
-        return;
-      }
+      event.setCancelled(true);
+      return;
     }
 
     if (customEffect instanceof AttributeCustomEffect)

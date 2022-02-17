@@ -3,7 +3,6 @@ package com.jho5245.cucumbery.commands.no_groups;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.command.*;
@@ -77,10 +76,11 @@ public class CommandKill3 implements CommandExecutor, TabCompleter
     boolean hideOutput = args.length == 2 && args[1].equals("true");
     if (!hideOutput)
     {
-      MessageUtil.sendMessage(sender, Prefix.INFO, ComponentUtil.translate("%s을(를) 죽였습니다", successEntities));
+      MessageUtil.info(sender, "%s을(를) 죽였습니다", successEntities);
     }
     return true;
   }
+
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))

@@ -3,18 +3,18 @@ package com.jho5245.cucumbery.listeners.entity.no_groups;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -30,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,8 +61,8 @@ public class EntityPickupItem implements Listener
         if (!Variable.itemPickupAlertCooldown.contains(uuid))
         {
           Variable.itemPickupAlertCooldown.add(uuid);
-          MessageUtil.sendMessage(player, Prefix.INFO_ALLPLAYER, "아이템을 주울 수 없는 상태입니다");
-          SoundPlay.playSound(player, Constant.ERROR_SOUND);
+          MessageUtil.sendError(player, "%s 효과로 인해 아이템을 주울 수 없는 상태입니다",
+                  CustomEffectManager.getDisplay(Collections.singletonList(CustomEffectManager.getEffect(player, CustomEffectType.CURSE_OF_PICKUP))));
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown.remove(uuid), 100L);
         }
       }
@@ -138,11 +139,6 @@ public class EntityPickupItem implements Listener
           SoundPlay.playSound(player, Constant.ERROR_SOUND);
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown2.remove(uuid), 100L);
         }
-        return;
-      }
-      if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_PICKUP))
-      {
-        event.setCancelled(true);
         return;
       }
 

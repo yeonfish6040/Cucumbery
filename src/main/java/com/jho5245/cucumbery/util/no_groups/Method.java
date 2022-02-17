@@ -5,14 +5,14 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.*;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
@@ -253,6 +253,7 @@ public class Method extends SoundPlay
   /**
    * min 이상, max 이하의 랜덤한 정수를 반환합니다.
    * <p>만약 min이 max보다 클 경우 min을 반환합니다.
+   *
    * @param min 랜덤 숫자의 최솟값
    * @param max 랜덤 숫자의 최댓값
    * @return min 이상, max 이하의 랜덤한 정수
@@ -2848,7 +2849,9 @@ public class Method extends SoundPlay
       for (Entity entity : player.getWorld().getNearbyEntities(location, 3d, 2d, 3d))
       {
         if (excludeNonPlayerEntity && !(entity instanceof Player))
+        {
           continue;
+        }
         if ((!entity.equals(player)))
         {
           String type = MessageUtil.stripColor(ComponentUtil.serialize(Component.translatable(entity.getType().translationKey())));
@@ -2872,7 +2875,9 @@ public class Method extends SoundPlay
           }
           list.add(entity.getUniqueId().toString());
           if (!Method.isUUID(lastArg))
-          list.add(entity.getUniqueId() + "[" + display + "]");
+          {
+            list.add(Constant.TAB_COMPLETER_QUOTE_ESCAPE + entity.getUniqueId() + "[" + display + "]");
+          }
         }
       }
     }
@@ -3496,21 +3501,6 @@ public class Method extends SoundPlay
     player.getLocation().getWorld().spawnParticle(Particle.ITEM_CRACK, player.getEyeLocation().add(player.getLocation().getDirection().multiply(1D)), 20, 0, 0, 0, 0.1, item);
   }
 
-
-  public enum ReinforceSound
-  {
-    OPERATION,
-    SUCCESS,
-    FAIL,
-    DESTROY
-  }
-
-  public enum ReinforceType
-  {
-    COMMAND,
-    SCROLL
-  }
-
   public static float getPitchFromNote(@NotNull Note note)
   {
     int octave = note.getOctave();
@@ -3575,5 +3565,19 @@ public class Method extends SoundPlay
       }
     }
     return 0F;
+  }
+
+  public enum ReinforceSound
+  {
+    OPERATION,
+    SUCCESS,
+    FAIL,
+    DESTROY
+  }
+
+  public enum ReinforceType
+  {
+    COMMAND,
+    SCROLL
   }
 }

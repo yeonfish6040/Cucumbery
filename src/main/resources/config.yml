@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 16
+config-version: 17
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -59,7 +59,9 @@ use-hook-plugins:
   # 마인크래프트 기반 명령어(give2, summon2, ride, updateitem, kill2 등) 추가 및 execute if,unless에 추가 조건문(haspermission, random, weather, period 등) 등록
   CommandAPI: true
   # Cucumbery에서 돈 관련 기능 사용
-  Vault: true
+  Vault-Economy: true
+  # Cucumbery에서 채팅 관련 기능 사용
+  Vault-Chat: true
   # Cucumbery에서 소리 블록 노래를 플레이하기 위해 사용 (/csong)
   NoteBlockAPI: true
   # Cucumbery에서 QuickShop의 상점을 관리하기 위해 사용
@@ -70,6 +72,8 @@ use-hook-plugins:
   ItemEdit: true
   # Cucumbery에서 TMI 설명 기능 사용 시 양조기에서 mcMMO의 양조 기술과 충돌하는 것을 방지하기 위해 사용
   mcMMO: true
+  # Cucumbery에 있는 효과인 '보스 슬레이어' 효과로 인한 대상이 MythicMobs 보스일 경우 대미지 증가 기능 활성화
+  MythicMobs: true
 
 # 알 수 없는 명령어 사용 시 뜰 메시지 굳검버리화 해버리기
 use-custom-unknown-command-message: true

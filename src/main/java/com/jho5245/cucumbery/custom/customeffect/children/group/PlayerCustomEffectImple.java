@@ -45,5 +45,10 @@ public class PlayerCustomEffectImple extends CustomEffect implements PlayerCusto
     this.player = player;
   }
 
-
+  @Override
+  @NotNull
+  protected PlayerCustomEffectImple copy()
+  {
+    return new PlayerCustomEffectImple(this.getType(), this.getDuration(), this.getAmplifier(), this.getDisplayType(), this.getPlayer());
+  }
 }

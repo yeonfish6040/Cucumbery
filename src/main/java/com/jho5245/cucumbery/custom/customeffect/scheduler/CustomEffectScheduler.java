@@ -8,8 +8,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectGUI;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreRemoveEvent;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
+import com.jho5245.cucumbery.custom.customeffect.children.group.RealDurationCustomEffect;
 import com.jho5245.cucumbery.util.no_groups.CreateGUI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -58,6 +57,13 @@ public class CustomEffectScheduler
     List<CustomEffect> removed = new ArrayList<>();
     for (CustomEffect customEffect : customEffects)
     {
+      if (customEffect instanceof RealDurationCustomEffect realDurationCustomEffect)
+      {
+        long current = System.currentTimeMillis(), endTime = realDurationCustomEffect.getEndTimeInMillis();
+        int remain = (int) ((endTime - current) / 50L);
+        // 시간이 다 되면 바로 없애는게 아니라 0.05초 지연을 줌 (실제 개체가 효과를 가지고 있는 판정은 생기지 않음)
+        customEffect.setDuration(Math.max(1, remain));
+      }
       customEffect.tick();
       if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
       {
@@ -74,25 +80,15 @@ public class CustomEffectScheduler
       }
       if (customEffect.getDuration() == 0)
       {
-        EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, customEffect);
-        Cucumbery.getPlugin().getPluginManager().callEvent(event);
-        removed.add(customEffect);
+        CustomEffectManager.removeEffect(entity, customEffect.getType(), customEffect.getAmplifier());
       }
     }
-    customEffects.removeIf(effect -> effect.getDuration() == 0);
-    CustomEffectManager.effectMap.put(uuid, customEffects);
-    for (CustomEffect remove : removed)
-    {
-      EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, remove);
-      Cucumbery.getPlugin().getPluginManager().callEvent(event);
-    }
-
   }
 
   public static void display(@NotNull Player player)
   {
     UUID uuid = player.getUniqueId();
-    List<CustomEffect> customEffects = CustomEffectManager.getEffects(player, DisplayType.ACTION_BAR);
+    List<CustomEffect> customEffects = new ArrayList<>(CustomEffectManager.getEffects(player, DisplayType.ACTION_BAR));
     if (!customEffects.isEmpty())
     {
       customEffects.removeIf(CustomEffect::isHidden);
@@ -111,7 +107,7 @@ public class CustomEffectScheduler
       });
       MessageUtil.sendActionBar(player, CustomEffectManager.getDisplay(customEffects, customEffects.size() <= 10));
     }
-    customEffects = CustomEffectManager.getEffects(player, DisplayType.BOSS_BAR);
+    customEffects = new ArrayList<>(CustomEffectManager.getEffects(player, DisplayType.BOSS_BAR));
     customEffects.removeIf(CustomEffect::isHidden);
     @NotNull List<CustomEffect> finalCustomEffects = new ArrayList<>(customEffects);
     customEffects.removeIf(e ->
@@ -144,6 +140,7 @@ public class CustomEffectScheduler
     else
     {
       int size = customEffects.size() + potionEffects.size();
+      boolean showDuration = size <= 10;
       if (!Variable.customEffectBossBarMap.containsKey(uuid))
       {
         BossBar bossBar = BossBar.bossBar(Component.empty(), 1f, BossBar.Color.GREEN, Overlay.PROGRESS);
@@ -153,15 +150,15 @@ public class CustomEffectScheduler
       Component display = Component.empty();
       if (!customEffects.isEmpty())
       {
-        display = display.append(CustomEffectManager.getDisplay(customEffects, size <= 10));
+        display = display.append(CustomEffectManager.getDisplay(customEffects, showDuration));
       }
       if (showPotionEffect)
       {
         if (!customEffects.isEmpty())
         {
-          display = display.append(Component.text(", "));
+          display = display.append(Component.text(showDuration ? ", " : ","));
         }
-        display = display.append(CustomEffectManager.getVanillaDisplay(potionEffects, size <= 10));
+        display = display.append(CustomEffectManager.getVanillaDisplay(potionEffects, showDuration));
       }
       bossBar.name(ComponentUtil.stripEvent(display));
       float progress = 0f;
@@ -248,8 +245,20 @@ public class CustomEffectScheduler
     }
   }
 
+  public static void townShield(@NotNull Player player)
+  {
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.TOWN_SHIELD))
+    {
+      player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2, 0, true, false, false));
+    }
+  }
+
   public static void spreadAndVariation(@NotNull Player player)
   {
+    if (player.getGameMode() == GameMode.SPECTATOR)
+    {
+      return;
+    }
     if (CustomEffectManager.hasEffect(player, CustomEffectType.SPREAD) && player.getGameMode() != GameMode.SPECTATOR)
     {
       CustomEffect customEffectSpread = CustomEffectManager.getEffect(player, CustomEffectType.SPREAD);
@@ -262,6 +271,10 @@ public class CustomEffectScheduler
       Collection<Player> nearbyPlayers = player.getWorld().getNearbyPlayers(player.getLocation(), spreadAmplifier + 1);
       for (Player nearbyPlayer : nearbyPlayers)
       {
+        if (nearbyPlayer.getGameMode() == GameMode.SPECTATOR)
+        {
+          continue;
+        }
         CustomEffectManager.addEffect(nearbyPlayer, customEffectSpread);
         if (detoxicate)
         {
@@ -442,10 +455,6 @@ public class CustomEffectScheduler
       {
         CustomEffectManager.addEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED);
       }
-    }
-    else
-    {
-      CustomEffectManager.removeEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED);
     }
     if (CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED))
     {

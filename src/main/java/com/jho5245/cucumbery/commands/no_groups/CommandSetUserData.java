@@ -4,10 +4,10 @@ import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -55,7 +55,6 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
       {
         key = UserData.valueOf(keyString.toUpperCase());
       }
-
       catch (Exception e)
       {
         MessageUtil.noArg(sender, Prefix.NO_KEY, keyString);
@@ -98,6 +97,18 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
           }
           config.getConfig().set(key.getKey(), intVal);
         }
+        case INVINCIBLE_TIME, INVINCIBLE_TIME_JOIN -> {
+          if (!MessageUtil.isInteger(sender, value, true))
+          {
+            return true;
+          }
+          int intVal = Integer.parseInt(value);
+          if (!MessageUtil.checkNumberSize(sender, intVal, -1, 2000))
+          {
+            return true;
+          }
+          config.getConfig().set(key.getKey(), intVal);
+        }
         default -> {
           if (!value.equals("true") && !value.equals("false"))
           {
@@ -125,6 +136,7 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
       }
       if (isOnline)
       {
+        Player online = (Player) player;
         if (key == UserData.HEALTH_SCALED)
         {
           ((Player) player).setHealthScaled(!UserData.HEALTH_SCALED.getBoolean(uuid));
@@ -133,35 +145,30 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
         {
           if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
           {
-            CommandSong.radioSongPlayer.addPlayer((Player) player);
+            CommandSong.radioSongPlayer.addPlayer(online);
           }
           else
           {
-            CommandSong.radioSongPlayer.removePlayer((Player) player);
+            CommandSong.radioSongPlayer.removePlayer(online);
           }
         }
         if (CommandSong.playerRadio.containsKey(uuid))
         {
           if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
           {
-            CommandSong.playerRadio.get(uuid).addPlayer((Player) player);
+            CommandSong.playerRadio.get(uuid).addPlayer(online);
           }
           else
           {
-            CommandSong.playerRadio.get(uuid).removePlayer((Player) player);
+            CommandSong.playerRadio.get(uuid).removePlayer(online);
           }
         }
         switch (key)
         {
-          case USE_HELPFUL_LORE_FEATURE:
-          case DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE:
-            Method.updateInventory((Player) player);
-            break;
-          case ENTITY_AGGRO:
-          case SPECTATOR_MODE:
+          case USE_HELPFUL_LORE_FEATURE, DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE -> Method.updateInventory(online);
+          case ENTITY_AGGRO, SPECTATOR_MODE -> {
             if (!UserData.ENTITY_AGGRO.getBoolean(player) || UserData.SPECTATOR_MODE.getBoolean(player))
             {
-              Player online = (Player) player;
               if (UserData.SPECTATOR_MODE.getBoolean(player))
               {
                 online.setGameMode(GameMode.SPECTATOR);
@@ -178,8 +185,18 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
                 }
               }
             }
-          default:
-            break;
+          }
+          case INVINCIBLE_TIME -> {
+            int time = UserData.INVINCIBLE_TIME.getInt(uuid);
+            if (time >= 0)
+            {
+              online.setMaximumNoDamageTicks(UserData.INVINCIBLE_TIME.getInt(uuid));
+            }
+            else
+            {
+              online.setMaximumNoDamageTicks(20);
+            }
+          }
         }
       }
     }
@@ -233,11 +250,12 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
       return switch (key)
               {
                 case ITEM_DROP_MODE, ITEM_PICKUP_MODE -> Method.tabCompleterList(args, "<모드>", "normal", "sneak", "disabled");
-                default -> Method.tabCompleterBoolean(args, "<값>");
                 case DISPLAY_NAME, PLAYER_LIST_NAME -> Collections.singletonList("닉네임은 닉네임 명령어(/nick, /nickothers)를 사용하여 변경해주세요.");
                 case HEALTH_BAR -> Collections.singletonList("HP바는 hp바 명령어(/shp)를 사용하여 변경해주세요.");
                 case ID, UUID -> Collections.singletonList(args[1] + "(" + key.getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다");
                 case ITEM_USE_DELAY, ITEM_DROP_DELAY -> Method.tabCompleterIntegerRadius(args, 0, 200, "<틱>");
+                case INVINCIBLE_TIME, INVINCIBLE_TIME_JOIN -> Method.tabCompleterIntegerRadius(args, -1, 2000, "<틱>");
+                default -> Method.tabCompleterBoolean(args, "<값>");
               };
     }
     else if (length == 4)

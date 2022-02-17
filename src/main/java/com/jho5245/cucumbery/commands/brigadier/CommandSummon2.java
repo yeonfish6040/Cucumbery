@@ -18,6 +18,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Mob;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.util.Consumer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -208,13 +210,14 @@ public class CommandSummon2 extends CommandBase
       }
       for (int i = 0; i < amount; i++)
       {
-        entity = location.getWorld().spawnEntity(location, entityType);
-        NBTEntity nbtEntity = new NBTEntity(entity);
-        nbtEntity.mergeCompound(nbtContainer);
+        Consumer<Entity> consumer = e -> {
+          NBTEntity nbtEntity = new NBTEntity(e);
+          nbtEntity.mergeCompound(nbtContainer);
+        };
+        entity = location.getWorld().spawnEntity(location, entityType, SpawnReason.DEFAULT, consumer);
         if (entity instanceof Item itemEntity)
         {
           Method.updateItem(itemEntity);
-          nbtEntity.mergeCompound(nbtContainer);
         }
         success = !entity.isDead();
       }

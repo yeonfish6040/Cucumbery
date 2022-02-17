@@ -42,11 +42,11 @@ public class PlayerDeath implements Listener
       return;
     }
     boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY);
-    boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player);
+    boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY);
     if (keepInv)
     {
       event.setKeepInventory(true);
-      event.getDrops().removeAll(event.getDrops());
+      event.getDrops().clear();
     }
     if (keepExp)
     {
@@ -80,8 +80,14 @@ public class PlayerDeath implements Listener
       CustomEffectManager.removeEffect(player, CustomEffectType.BUFF_FREEZE);
     }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
-    customEffects.removeIf(customEffect -> !customEffect.isKeepOnDeath() &&
-            (!hasBuffFreeze || (!customEffect.getType().isBuffFreezable() && !customEffect.getType().isNegative())));
+    for (CustomEffect customEffect : customEffects)
+    {
+      if (!customEffect.isKeepOnDeath() &&
+              (!hasBuffFreeze || (!customEffect.getType().isBuffFreezable() && !customEffect.getType().isNegative())))
+      {
+        CustomEffectManager.removeEffect(player, customEffect.getType());
+      }
+    }
 
     if (UserData.IMMEDIATE_RESPAWN.getBoolean(player))
     {

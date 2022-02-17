@@ -396,7 +396,13 @@ public class BlockBreak implements Listener
               {
                 if (!noExpDropDueToForcePreverse)
                 {
-                  player.giveExp(event.getExpToDrop(), true);
+                  int experience = event.getExpToDrop();
+                  if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
+                  {
+                    int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.EXPERIENCE_BOOST).getAmplifier();
+                    experience = (int) (1d * experience * (1 + (amplifier + 1) * 0.05));
+                  }
+                  player.giveExp(experience, true);
                 }
                 event.setExpToDrop(0);
               }

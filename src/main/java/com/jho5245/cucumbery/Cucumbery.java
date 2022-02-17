@@ -63,6 +63,8 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -85,8 +87,8 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 16;
-  public static final int DEATH_MESSAGES_CONFIG_VERSION = 2;
+  public static final int CONFIG_VERSION = 17;
+  public static final int DEATH_MESSAGES_CONFIG_VERSION = 3;
   public static final int LANG_CONFIG_VERSION = 1;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
@@ -98,6 +100,11 @@ public class Cucumbery extends JavaPlugin
   public static boolean using_PlaceHolderAPI;
   public static boolean using_ItemEdit;
   public static boolean using_mcMMO;
+  public static boolean using_MythicMobs;
+  /**
+   * MythicMobs API
+   */
+  public static BukkitAPIHelper bukkitAPIHelper;
   public static Economy eco;
   public static Chat chat;
   public static File file;
@@ -306,9 +313,9 @@ public class Cucumbery extends JavaPlugin
     {
       CustomEnchant.onEnable();
     }
-    catch (Exception e)
+    catch (Exception ignored)
     {
-      e.printStackTrace();
+
     }
     if (using_CommandAPI)
     {
@@ -342,13 +349,53 @@ public class Cucumbery extends JavaPlugin
   private void checkUsingAddons()
   {
     Cucumbery.using_CommandAPI = Cucumbery.config.getBoolean("use-hook-plugins.CommandAPI") && this.pluginManager.getPlugin("CommandAPI") != null;
-    Cucumbery.using_Vault_Economy = Cucumbery.config.getBoolean("use-hook-plugins.Vault") && Initializer.setupEconomy() && eco != null;
-    Cucumbery.using_Vault_Chat = Cucumbery.config.getBoolean("use-hook-plugins.Vault") && Initializer.setupChat() && chat != null;
+    Cucumbery.using_Vault_Economy = Cucumbery.config.getBoolean("use-hook-plugins.Vault-Economy") && Initializer.setupEconomy() && eco != null;
+    Cucumbery.using_Vault_Chat = Cucumbery.config.getBoolean("use-hook-plugins.Vault-Chat") && Initializer.setupChat() && chat != null;
     Cucumbery.using_NoteBlockAPI = Cucumbery.config.getBoolean("use-hook-plugins.NoteBlockAPI") && this.pluginManager.getPlugin("NoteBlockAPI") != null;
     Cucumbery.using_QuickShop = Cucumbery.config.getBoolean("use-hook-plugins.QuickShop") && this.pluginManager.getPlugin("QuickShop") != null;
     Cucumbery.using_PlaceHolderAPI = Cucumbery.config.getBoolean("use-hook-plugins.PlaceHolderAPI") && this.pluginManager.getPlugin("PlaceHolderAPI") != null;
     Cucumbery.using_ItemEdit = Cucumbery.config.getBoolean("use-hook-plugins.ItemEdit") && this.pluginManager.getPlugin("ItemEdit") != null;
     Cucumbery.using_mcMMO = Cucumbery.config.getBoolean("use-hook-plugins.mcMMO") && this.pluginManager.getPlugin("mcMMO") != null;
+    Cucumbery.using_MythicMobs = Cucumbery.config.getBoolean("use-hook-plugins.MythicMobs") && this.pluginManager.getPlugin("MythicMobs") != null;
+    if (Cucumbery.config.getBoolean("console-messages.hook-plugins"))
+    {
+      if (using_CommandAPI)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "CommandAPI 플러그인을 연동하였습니다");
+      }
+      if (using_Vault_Economy)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "Vault-Economy 플러그인을 연동하였습니다");
+      }
+      if (using_Vault_Chat)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "Vault-Chat 플러그인을 연동하였습니다");
+      }
+      if (using_NoteBlockAPI)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "NoteBlockAPI 플러그인을 연동하였습니다");
+      }
+      if (using_QuickShop)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "QuickShop 플러그인을 연동하였습니다");
+      }
+      if (using_PlaceHolderAPI)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "PlaceHolderAPI 플러그인을 연동하였습니다");
+      }
+      if (using_ItemEdit)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "ItemEdit 플러그인을 연동하였습니다");
+      }
+      if (using_mcMMO)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "mcMMO 플러그인을 연동하였습니다");
+      }
+      if (using_MythicMobs)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "MythicMobs 플러그인을 연동하였습니다");
+      }
+    }
     if (using_QuickShop)
     {
       Bukkit.getServer().getScheduler().runTaskLater(this, () ->
@@ -368,6 +415,10 @@ public class Cucumbery extends JavaPlugin
           e.printStackTrace();
         }
       }, 100L);
+    }
+    if (using_MythicMobs)
+    {
+      bukkitAPIHelper = MythicMobs.inst().getAPIHelper();
     }
   }
 
@@ -546,6 +597,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new EntityMove());
     Initializer.registerEvent(new EntityPickupItem());
     Initializer.registerEvent(new EntityPotionEffect());
+    Initializer.registerEvent(new EntityRegainHealth());
     Initializer.registerEvent(new EntityRemoveFromWorld());
     Initializer.registerEvent(new EntityResurrect());
     Initializer.registerEvent(new EntityShootBow());
@@ -603,6 +655,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerDeath());
     Initializer.registerEvent(new PlayerEditBook());
     Initializer.registerEvent(new PlayerElytraBoost());
+    Initializer.registerEvent(new PlayerExpChange());
     Initializer.registerEvent(new PlayerFish());
     Initializer.registerEvent(new PlayerFlowerPotManipulate());
     Initializer.registerEvent(new PlayerGameModeChange());

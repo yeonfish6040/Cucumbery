@@ -159,6 +159,8 @@ public class Constant
 
   public static final DecimalFormat Sosu2 = new DecimalFormat("#,##0.##");
 
+  public static final DecimalFormat Sosu2Floor = new DecimalFormat("#,##0.##");
+
   public static final DecimalFormat Sosu2Force = new DecimalFormat("#,##0.00");
 
   public static final DecimalFormat Sosu3 = new DecimalFormat("#,##0.###");
@@ -172,6 +174,7 @@ public class Constant
   static
   {
     Sosu1ForceFloor.setRoundingMode(RoundingMode.FLOOR);
+    Sosu2Floor.setRoundingMode(RoundingMode.FLOOR);
     JeongsuFloor.setRoundingMode(RoundingMode.FLOOR);
   }
 

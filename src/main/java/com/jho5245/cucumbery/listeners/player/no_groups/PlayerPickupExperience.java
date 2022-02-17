@@ -29,6 +29,12 @@ public class PlayerPickupExperience implements Listener
     }
     ExperienceOrb experienceOrb = event.getExperienceOrb();
     int experience = experienceOrb.getExperience();
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
+    {
+      int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.EXPERIENCE_BOOST).getAmplifier();
+      experience = (int) (1d * experience * (1 + (amplifier + 1) * 0.05));
+      experienceOrb.setExperience(experience);
+    }
     if (CustomEffectManager.hasEffect(player, CustomEffectType.VAR_STOMACHACHE))
     {
       if (player.getTotalExperience() > experience)

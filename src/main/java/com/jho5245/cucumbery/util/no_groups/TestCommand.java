@@ -1,8 +1,5 @@
 package com.jho5245.cucumbery.util.no_groups;
 
-import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,7 +26,7 @@ public class TestCommand implements CommandExecutor, TabCompleter
     {
       if (sender instanceof Player player)
       {
-        player.setMaximumNoDamageTicks(Integer.parseInt(args[0]));
+        player.lockFreezeTicks(!player.isFreezeTickingLocked());
       }
       if (args.length >= 2)
       {
@@ -38,14 +35,6 @@ public class TestCommand implements CommandExecutor, TabCompleter
           case "entities" -> {
             List<Entity> entities = SelectorUtil.getEntities(sender, args[1], true);
             MessageUtil.sendMessage(sender, entities != null ? entities : "null");
-            if (entities != null)
-            {
-              CustomEffect customEffect = new CustomEffect(CustomEffectType.MUTE, Integer.parseInt(args[2]), 0);
-              for (Entity entity : entities)
-              {
-                CustomEffectManager.addEffect(entity, customEffect);
-              }
-            }
           }
           case "entity" -> {
             Entity entity = SelectorUtil.getEntity(sender, args[1], true);

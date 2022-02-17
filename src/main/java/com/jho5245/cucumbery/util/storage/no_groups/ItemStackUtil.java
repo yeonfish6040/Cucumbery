@@ -1,10 +1,12 @@
 package com.jho5245.cucumbery.util.storage.no_groups;
 
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
-import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
@@ -505,7 +507,13 @@ public class ItemStackUtil
           if (furnaceRecipe.getInput().getType() == drop.getType())
           {
             drop.setType(furnaceRecipe.getResult().getType());
-            expOutput.add((double) furnaceRecipe.getExperience());
+            double exp = furnaceRecipe.getExperience();
+            if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
+            {
+              int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.EXPERIENCE_BOOST).getAmplifier();
+              exp = (1d * exp * (1 + (amplifier + 1) * 0.05));
+            }
+            expOutput.add(exp);
           }
         }
       }

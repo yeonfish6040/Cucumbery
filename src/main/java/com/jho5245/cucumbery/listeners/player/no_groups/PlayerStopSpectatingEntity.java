@@ -16,6 +16,7 @@ import java.util.Collection;
 
 public class PlayerStopSpectatingEntity implements Listener
 {
+  @SuppressWarnings("deprecation")
   @EventHandler
   public void onPlayerStopSpectatingEntity(PlayerStopSpectatingEntityEvent event)
   {
@@ -27,8 +28,9 @@ public class PlayerStopSpectatingEntity implements Listener
     Entity spectatorTarget = event.getSpectatorTarget();
     Location plLoc = player.getLocation(), tarLoc = spectatorTarget.getLocation();
     Collection<Entity> entities = plLoc.getWorld().getNearbyEntities(plLoc, 1D, 1D, 1D);
-    if (CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING) && player.getGameMode() == GameMode.SPECTATOR && !spectatorTarget.isDead() && spectatorTarget.isValid() &&
-    player.canSee(spectatorTarget) && plLoc.equals(tarLoc) && entities.contains(spectatorTarget))
+    if (!CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING_EXEMPT) && CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING) &&
+            player.getGameMode() == GameMode.SPECTATOR && !spectatorTarget.isDead() && spectatorTarget.isValid() &&
+            player.canSee(spectatorTarget) && plLoc.equals(tarLoc) && entities.contains(spectatorTarget))
     {
       event.setCancelled(true);
       return;

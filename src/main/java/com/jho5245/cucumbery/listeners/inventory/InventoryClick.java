@@ -8,6 +8,7 @@ import com.jho5245.cucumbery.custom.customrecipe.CustomRecipeUtil;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryRecipe;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.Reason;
 import com.jho5245.cucumbery.util.gui.GUI;
 import com.jho5245.cucumbery.util.gui.GUI.GUIType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -1853,7 +1854,7 @@ public class InventoryClick implements Listener
               {
                 removeEffect = removeEffect.substring("potion:".length());
                 PotionEffectType potionEffectType = PotionEffectType.getByName(removeEffect);
-                if (potionEffectType != null)
+                if (!CustomEffectManager.hasEffect(player, CustomEffectType.NO_BUFF_REMOVE) && potionEffectType != null)
                 {
                   player.removePotionEffect(potionEffectType);
                 }
@@ -1865,11 +1866,11 @@ public class InventoryClick implements Listener
                 Integer amplifier = nbtItem.getInteger("removeEffectAmplifier");
                 if (amplifier == null)
                 {
-                  CustomEffectManager.removeEffect(player, effectType);
+                  CustomEffectManager.removeEffect(player, effectType, Reason.PLAYER);
                 }
                 else
                 {
-                  CustomEffectManager.removeEffect(player, effectType, amplifier);
+                  CustomEffectManager.removeEffect(player, effectType, amplifier, Reason.PLAYER);
                 }
                 if (effectType == CustomEffectType.CONTINUAL_SPECTATING && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() instanceof Player)
                 {
