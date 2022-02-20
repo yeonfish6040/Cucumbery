@@ -33,11 +33,11 @@ public class CommandRepeat2 extends CommandBase
     }
   }
 
-  final private  List<Argument> arguments = Arrays.asList(new IntegerArgument("반복 횟수", 1, 10000), new IntegerArgument("딜레이", 0, 20 * 60 * 60), new GreedyStringArgument("명령어").overrideSuggestions(commands));
+  final private  List<Argument> arguments = Arrays.asList(new IntegerArgument("반복 횟수", 1, 10000), new IntegerArgument("딜레이", 0, 20 * 60 * 60), new GreedyStringArgument("명령어")
+          .overrideSuggestions(commands));
 
   public void registerCommand(String command, String permission, String... aliases)
   {
-
     CommandAPICommand commandAPICommand = getCommandBase(command, permission, aliases);
     commandAPICommand = commandAPICommand.withArguments(arguments);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
