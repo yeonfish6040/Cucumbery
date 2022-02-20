@@ -142,7 +142,7 @@ public class CustomEffectManager
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MOVEMENT_SPEED, Operation.ADD_SCALAR, 0.3);
       }
       case COMBAT_BOOSTER -> {
-        effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_ATTACK_SPEED, Operation.ADD_NUMBER, 0.5);
+        effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_ATTACK_SPEED, Operation.ADD_SCALAR, 0.25);
       }
     }
     if (effectType.isRealDuration())

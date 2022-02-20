@@ -22,7 +22,7 @@ public class CommandRepeat2 extends CommandBase
 
   static
   {
-    if (commandList.size() == 0)
+    if (commandList.isEmpty())
     {
       commandList = Method.getAllServerCommands();
     }
