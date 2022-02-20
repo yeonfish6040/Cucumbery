@@ -107,9 +107,14 @@ public class EntityCustomEffectRemove implements Listener
       }
     }
 
-    if (!(entity instanceof Player) && customEffectType == CustomEffectType.DISAPPEAR)
+    if (!(entity instanceof Player) && (customEffectType == CustomEffectType.DISAPPEAR || customEffectType == CustomEffectType.DAMAGE_INDICATOR))
     {
       entity.remove();
+    }
+
+    if (customEffectType == CustomEffectType.FREEZING)
+    {
+      entity.lockFreezeTicks(false);
     }
   }
 }

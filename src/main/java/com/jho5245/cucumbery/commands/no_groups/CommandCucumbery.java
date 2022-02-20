@@ -7,27 +7,25 @@ import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.plugin_support.CustomRecipeSupport;
 import com.jho5245.cucumbery.util.plugin_support.QuickShopSupport;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
-import com.jho5245.cucumbery.util.storage.no_groups.PluginLoader;
-import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
-import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.PluginLoader;
+import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
+import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.maxgamer.quickshop.api.QuickShopAPI;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -81,13 +79,7 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
 
             }
           }
-
-          RecipeChecker.recipes.clear();
-          Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
-          while (recipeIterator.hasNext())
-          {
-            RecipeChecker.recipes.add(recipeIterator.next());
-          }
+          RecipeChecker.setRecipes();
           for (Player player : Bukkit.getOnlinePlayers())
           {
             Method.updateInventory(player);

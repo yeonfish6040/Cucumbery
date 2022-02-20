@@ -5,16 +5,15 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.deathmessages.DeathManager;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.data.Constant;
-import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import org.bukkit.EntityEffect;
 import org.bukkit.entity.*;
@@ -75,7 +74,7 @@ public class EntityDeath implements Listener
 
     if (Variable.deathMessages.getBoolean("death-messages.enable"))
     {
-      DeathManager.what(event);
+      DeathManager.manageDeathMessages(event);
     }
 
     this.telekinesis(event);
@@ -123,23 +122,28 @@ public class EntityDeath implements Listener
       itemMeta = mainHand.getItemMeta();
     }
     NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(mainHand), CucumberyTag.CUSTOM_ENCHANTS_KEY);
-    boolean hasCoarseTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.COARSE_TOUCH.toString());
+    boolean hasCoarseTouch = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.COARSE_TOUCH);
     if (hasCoarseTouch)
     {
       drops.clear();
     }
-    boolean hasUnskilledTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.UNSKILLED_TOUCH.toString());
+    boolean hasUnskilledTouch = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.UNSKILLED_TOUCH);
     if (hasUnskilledTouch)
     {
       event.setDroppedExp(0);
     }
     boolean isTelekinesis = (entityIsPlayer && (
             NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, CustomEnchant.TELEKINESIS_PVP.toString())
-            )) || (!entityIsPlayer && (
+            )) ||
+            (!entityIsPlayer && (
             NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, CustomEnchant.TELEKINESIS.toString()) ||
-                    (itemMeta != null && (itemMeta.hasEnchant(com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant.TELEKINESIS)))
+                    (itemMeta != null && (itemMeta.hasEnchant(com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant.TELEKINESIS))) ||
+                    CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS)
             ));
-    boolean isSmeltingTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.SMELTING_TOUCH.toString()) && Cucumbery.config.getBoolean("use-smelting-touch-on-entities");
+    boolean isSmeltingTouch = Cucumbery.config.getBoolean("use-smelting-touch-on-entities") && (
+                    (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
+                    CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH)
+            );
 
     if (isTelekinesis || isSmeltingTouch)
     {

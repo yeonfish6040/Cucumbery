@@ -387,26 +387,4 @@ public class NBTAPI
     nbtContainer.setUUID("uuid", uuid);
     return nbtContainer.getIntArray("uuid");
   }
-
-  public static int getCustomEnchantLevel(@Nullable ItemStack item, @NotNull Constant.CustomEnchant key)
-  {
-    if (!ItemStackUtil.itemExists(item))
-    {
-      return -1;
-    }
-    NBTCompound itemTag = getMainCompound(item);
-    NBTCompoundList customEnchants = getCompoundList(itemTag, CucumberyTag.CUSTOM_ENCHANTS_KEY);
-    if (customEnchants == null)
-    {
-      return -1;
-    }
-    for (NBTCompound customEnchant : customEnchants)
-    {
-      if (customEnchant.getString(CucumberyTag.ID_KEY).equals(key.toString()))
-      {
-        return customEnchant.getInteger(CucumberyTag.CUSTOM_ENCHANTS_LEVEL_KEY);
-      }
-    }
-    return -1;
-  }
 }

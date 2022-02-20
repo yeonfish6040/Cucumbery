@@ -198,7 +198,7 @@ public class CommandEffect2 extends CommandBase
       if (!successEntitiesIsEmpty)
       {
         MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s 효과를 적용했습니다", successEntities, potionEffect));
-        MessageUtil.sendAdminMessage(sender, null, "%s에게 %s 효과를 적용했습니다", successEntities, potionEffect);
+        MessageUtil.sendAdminMessage(sender, "%s에게 %s 효과를 적용했습니다", successEntities, potionEffect);
         List<Audience> infoTarget = new ArrayList<>(successEntities);
         infoTarget.remove(sender.getCallee());
         MessageUtil.info(infoTarget, ComponentUtil.translate("%1$s이(가) 당신에게 %2$s 효과를 적용했습니다", sender, potionEffect));

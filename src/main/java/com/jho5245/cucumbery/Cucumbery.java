@@ -52,16 +52,18 @@ import com.jho5245.cucumbery.listeners.player.item.*;
 import com.jho5245.cucumbery.listeners.player.no_groups.*;
 import com.jho5245.cucumbery.listeners.server.ServerCommand;
 import com.jho5245.cucumbery.listeners.server.ServerListPing;
+import com.jho5245.cucumbery.util.addons.ProtocolLibManager;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.no_groups.*;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
-import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
@@ -69,7 +71,9 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
@@ -87,7 +91,7 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 17;
+  public static final int CONFIG_VERSION = 20;
   public static final int DEATH_MESSAGES_CONFIG_VERSION = 3;
   public static final int LANG_CONFIG_VERSION = 1;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
@@ -101,6 +105,7 @@ public class Cucumbery extends JavaPlugin
   public static boolean using_ItemEdit;
   public static boolean using_mcMMO;
   public static boolean using_MythicMobs;
+  public static boolean using_ProtocolLib;
   /**
    * MythicMobs API
    */
@@ -217,6 +222,16 @@ public class Cucumbery extends JavaPlugin
     {
       Method.updateInventory(player);
     }
+    for (World world : Bukkit.getWorlds())
+    {
+      for (Entity entity : world.getEntities())
+      {
+        if (entity.getScoreboardTags().contains("damage_indicator") && !CustomEffectManager.hasEffect(entity, CustomEffectType.DAMAGE_INDICATOR))
+        {
+          entity.remove();
+        }
+      }
+    }
   }
 
   // 플러그인 비활성화 시 처리 과정
@@ -302,6 +317,7 @@ public class Cucumbery extends JavaPlugin
     this.registerConfig();
     try
     {
+      RecipeChecker.setRecipes();
       this.checkUsingAddons();
       this.registerCustomConfig();
     }
@@ -357,6 +373,7 @@ public class Cucumbery extends JavaPlugin
     Cucumbery.using_ItemEdit = Cucumbery.config.getBoolean("use-hook-plugins.ItemEdit") && this.pluginManager.getPlugin("ItemEdit") != null;
     Cucumbery.using_mcMMO = Cucumbery.config.getBoolean("use-hook-plugins.mcMMO") && this.pluginManager.getPlugin("mcMMO") != null;
     Cucumbery.using_MythicMobs = Cucumbery.config.getBoolean("use-hook-plugins.MythicMobs") && this.pluginManager.getPlugin("MythicMobs") != null;
+    Cucumbery.using_ProtocolLib = Cucumbery.config.getBoolean("use-hook-plugins.ProtocolLib") && this.pluginManager.getPlugin("ProtocolLib") != null;
     if (Cucumbery.config.getBoolean("console-messages.hook-plugins"))
     {
       if (using_CommandAPI)
@@ -395,6 +412,10 @@ public class Cucumbery extends JavaPlugin
       {
         MessageUtil.consoleSendMessage(Prefix.INFO, "MythicMobs 플러그인을 연동하였습니다");
       }
+      if (using_ProtocolLib)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "ProtocolLib 플러그인을 연동하였습니다");
+      }
     }
     if (using_QuickShop)
     {
@@ -419,6 +440,17 @@ public class Cucumbery extends JavaPlugin
     if (using_MythicMobs)
     {
       bukkitAPIHelper = MythicMobs.inst().getAPIHelper();
+    }
+    if (using_ProtocolLib)
+    {
+      try
+      {
+        ProtocolLibManager.manage();
+      }
+      catch (Throwable throwable)
+      {
+        throwable.printStackTrace();
+      }
     }
   }
 
@@ -551,6 +583,8 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("modifyexplosive", new CommandModifyExplosive());
     Initializer.registerCommand("sendtoast", new CommandSendToast());
     Initializer.registerCommand("sendbossbar", new CommandSendBossbar());
+    Initializer.registerCommand("delay", new CommandDelay());
+    Initializer.registerCommand("setnodamageticks", new CommandSetNoDamageTicks());
   }
 
   private void registerEvents()

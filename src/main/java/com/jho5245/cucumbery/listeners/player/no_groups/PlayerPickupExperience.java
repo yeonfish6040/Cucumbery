@@ -27,6 +27,21 @@ public class PlayerPickupExperience implements Listener
       event.setCancelled(true);
       return;
     }
+    String pickUpMode = UserData.ITEM_PICKUP_MODE.getString(player);
+    switch (pickUpMode)
+    {
+      case "sneak" -> {
+        if (!player.isSneaking())
+        {
+          event.setCancelled(true);
+          return;
+        }
+      }
+      case "disabled" -> {
+        event.setCancelled(true);
+        return;
+      }
+    }
     ExperienceOrb experienceOrb = event.getExperienceOrb();
     int experience = experienceOrb.getExperience();
     if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))

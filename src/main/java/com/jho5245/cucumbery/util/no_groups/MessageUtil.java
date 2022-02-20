@@ -53,7 +53,7 @@ public class MessageUtil
   public static String[] wrapWithQuote(boolean forTabComplete, @NotNull String[] args)
   {
     String input = listToString(" ", args);
-    input = PlaceHolderUtil.evalString(PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), input, null));
+    input = forTabComplete ? PlaceHolderUtil.evalString(PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), input, null)) : input;
     if (input.equals("'") || input.equals("\""))
     {
       return new String[]{(ComponentUtil.serialize(Component.translatable("command.expected.separator")))};
@@ -473,6 +473,16 @@ public class MessageUtil
   public static void sendAdminMessage(@NotNull Object commandSender, @Nullable List<Permissible> exception, @NotNull String key, @NotNull Object... args)
   {
     sendAdminMessage(commandSender, exception, ComponentUtil.translate(key, args));
+  }
+
+  public static void sendAdminMessage(@NotNull Object commandSender, @NotNull String key)
+  {
+    sendAdminMessage(commandSender, null, ComponentUtil.translate(key));
+  }
+
+  public static void sendAdminMessage(@NotNull Object commandSender, @NotNull String key, @NotNull Object... args)
+  {
+    sendAdminMessage(commandSender, null, ComponentUtil.translate(key, args));
   }
 
   @NotNull
@@ -902,6 +912,17 @@ public class MessageUtil
     {
       audience.showTitle(t);
     }
+
+    if (player instanceof Collection<?> collection)
+    {
+      for (Object o : collection)
+      {
+        if (o instanceof Audience audience)
+        {
+          audience.showTitle(t);
+        }
+      }
+    }
   }
 
   public static void sendTitle(@NotNull Object player, @Nullable Object[] title, @Nullable Object[] subTitle, int fadeIn, int stay, int fadeOut)
@@ -913,10 +934,27 @@ public class MessageUtil
     {
       audience.showTitle(t);
     }
+    if (player instanceof Collection<?> collection)
+    {
+      for (Object o : collection)
+      {
+        if (o instanceof Audience audience)
+        {
+          audience.showTitle(t);
+        }
+      }
+    }
   }
 
   public static void sendActionBar(@NotNull Object player, @NotNull Object... objects)
   {
+    if (player instanceof Collection<?> collection)
+    {
+      for (Object o : collection)
+      {
+        sendActionBar(o, objects);
+      }
+    }
     if (player instanceof Audience audience)
     {
       audience.sendActionBar(ComponentUtil.stripEvent(ComponentUtil.create(objects)));

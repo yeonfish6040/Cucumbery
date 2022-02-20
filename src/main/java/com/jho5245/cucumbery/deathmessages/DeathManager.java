@@ -3,15 +3,15 @@ package com.jho5245.cucumbery.deathmessages;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -50,7 +50,7 @@ public class DeathManager
           BRACKET, ComponentUtil.translate(Variable.deathMessages.getString("death-messages.prefix.pvp")));
   private static boolean goBack = false;
 
-  public static void what(EntityDeathEvent event)
+  public static void manageDeathMessages(EntityDeathEvent event)
   {
     LivingEntity entity = event.getEntity();
     if (deathMessageApplicable(entity))
@@ -546,7 +546,7 @@ public class DeathManager
         if (msg instanceof TranslatableComponent translatableComponent)
         {
           String k = translatableComponent.key();
-         // MessageUtil.broadcastDebug(k);
+          // MessageUtil.broadcastDebug(k);
           if (k.equals("death.fell.accident.water"))
           {
             key = "water_accident";
@@ -575,19 +575,27 @@ public class DeathManager
         args.add(SenderComponentUtil.senderComponent(entity));
         args.add(reportBugURL);
         args.add(Component.text(key).hoverEvent(Component.translatable("chat.copy.click")).clickEvent(ClickEvent.copyToClipboard(key)).color(Constant.THE_COLOR));
-        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요! 키 : %3$s");
+          keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요! 키 : %3$s");
       }
 
       if (key.equals("kill_combat"))
       {
         extraArgs.add(downloadURL);
-        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요! 사실 이 메시지는 이스터 에그이며, 플러그인 다운로드 주소는 %" + (extraArgs.size() + args.size()) + "$s입니다!");
+        keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요! 사실 이 메시지는 이스터 에그이며, 플러그인 다운로드 주소는 %"
+                + (extraArgs.size() + args.size()) + "$s입니다!");
       }
       // 해당 키 목록에서 랜덤 키를 하나 가져옴
       if (!keys.isEmpty())
       {
         int random = Method.random(0, keys.size() - 1);
         key = keys.get(random);
+      }
+      else
+      {
+        keys.add(key);
+        args.clear();
+        args.add(SenderComponentUtil.senderComponent(entity));
+        key = "%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 서버 관리자가 플러그인 업데이트 유지 보수를 안 한겁니다! 서버 관리자에게 문의해주세요! 키 : %2$s";
       }
       args.addAll(extraArgs);
       @Nullable Component deathMessageComponent = ComponentUtil.translate(key, args);
@@ -598,7 +606,8 @@ public class DeathManager
           Object o = args.get(i);
           if (o instanceof Component component)
           {
-            if (component.hoverEvent() != null && Objects.requireNonNull(component.hoverEvent()).action() == HoverEvent.Action.SHOW_ITEM)
+            HoverEvent<?> hoverEvent = component.hoverEvent();
+            if (hoverEvent != null && hoverEvent.action() == HoverEvent.Action.SHOW_ITEM)
             {
               args.set(i, component.hoverEvent(null));
             }
@@ -694,6 +703,10 @@ public class DeathManager
 
   public static boolean deathMessageApplicable(@NotNull Entity entity)
   {
+    if (entity.getScoreboardTags().contains("damage_indicator"))
+    {
+      return false;
+    }
     Location location = entity.getLocation();
     boolean success = entity instanceof Player;
     if (entity.customName() != null)

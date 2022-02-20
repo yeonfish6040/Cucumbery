@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util.no_groups;
 
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import org.jetbrains.annotations.NotNull;
 
 public class NumberHangulConverter
@@ -10,6 +11,7 @@ public class NumberHangulConverter
 
   /**
    * 숫자를 한글로 변환합니다.
+   *
    * @param input 변환할 숫자
    * @return 한글로 변환된 숫자
    */
@@ -18,13 +20,13 @@ public class NumberHangulConverter
   {
     int radix = 0;
     StringBuffer[] sbList = new StringBuffer[5];
-    for (int i = 0; i < 5; i ++)
+    for (int i = 0; i < 5; i++)
     {
       sbList[i] = new StringBuffer();
     }
 
     outer:
-    for (int i = 0 ; i < 5; i++)
+    for (int i = 0; i < 5; i++)
     {
       int numTemp;
       for (int j = 0; j < 4; j++) // 일, 십, 백, 천
@@ -82,11 +84,114 @@ public class NumberHangulConverter
 
   /**
    * 한글을 숫자로 변환합니다. 올바르지 않은 한글일 경우, {@link NumberFormatException} 예외를 발생시킵니다.
+   *
    * @param input 숫자로 변환할 한글
    * @return 숫자로 변환된 한글
    */
   public static long convert(@NotNull String input)
   {
     return -1;
+  }
+
+  /**
+   * 숫자의 큰 자리수(만, 억, 조 단위)만 한글로 변환합니다
+   *
+   * @param input 변환될 숫자
+   * @return 한글로 변환된 숫자
+   */
+  @NotNull
+  public static String convert2(double input)
+  {
+    return convert2(input, false);
+  }
+
+  /**
+   * 숫자의 큰 자리수(만, 억, 조 단위)만 한글로 변환합니다
+   *
+   * @param input     변환될 숫자
+   * @param withColor 색상 대입 여부
+   * @return 한글로 변환된 숫자
+   */
+  @NotNull
+  public static String convert2(double input, boolean withColor)
+  {
+    String c = withColor ? Constant.THE_COLOR_HEX : "";
+    if (input < 10000d)
+    {
+      return c + Constant.Sosu2Floor.format(input);
+    }
+    else if (input < 1_0000_0000d)
+    {
+      double small = input % 1_0000d, big = input - small;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS;
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000d) + (withColor ? "&e" : "") + "만" + c + smallS;
+    }
+    else if (input < 1_0000_0000_0000d)
+    {
+      double small = input % 1_0000_0000d, big = input - small;
+      small /= 1_0000d;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS + (withColor ? "&e" : "") + "만";
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000_0000d) + (withColor ? "&c" : "") + "억" + c + smallS;
+    }
+    else if (input < 1_0000_0000_0000_0000d)
+    {
+      double small = input % 1_0000_0000_0000d, big = input - small;
+      small /= 1_0000_00000d;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS + (withColor ? "&c" : "") + "억";
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000_0000_0000d) + (withColor ? "rgb255,30,30;" : "") + "조" + c + smallS;
+    }
+    else if (input < 1_0000_0000_0000_0000_0000d)
+    {
+      double small = input % 1_0000_0000_0000_0000d, big = input - small;
+      small /= 1_0000_0000_0000d;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS + (withColor ? "rgb255,30,30;" : "") + "조";
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000_0000_0000_0000d) + (withColor ? "&b" : "") + "경" + c + smallS;
+    }
+    else if (input < 1_0000_0000_0000_0000_0000_0000d)
+    {
+      double small = input % 1_0000_0000_0000_0000_0000d, big = input - small;
+      small /= 1_0000_0000_0000_0000d;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS + (withColor ? "&b" : "") + "경";
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000_0000_0000_0000_0000d) + (withColor ? "&3" : "") + "해" + c + smallS;
+    }
+    else if (input < 1_0000_0000_0000_0000_0000_0000_0000d)
+    {
+      double small = input % 1_0000_0000_0000_0000_0000_0000d, big = input - small;
+      small /= 1_0000_0000_0000_0000_0000d;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS + (withColor ? "&3" : "") + "해";
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000_0000_0000_0000_0000_0000d) + (withColor ? "&9" : "") + "자" + c + smallS;
+    }
+    else if (input < 1_0000_0000_0000_0000_0000_0000_0000_0000d)
+    {
+      double small = input % 1_0000_0000_0000_0000_0000_0000_0000d, big = input - small;
+      small /= 1_0000_0000_0000_0000_0000_0000d;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS + (withColor ? "&9" : "") + "자";
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000_0000_0000_0000_0000_0000_0000d) + (withColor ? "&a" : "") + "양" + c + smallS;
+    }
+    else if (input < 1_0000_0000_0000_0000_0000_0000_0000_0000_0000d)
+    {
+      double small = input % 1_0000_0000_0000_0000_0000_0000_0000d, big = input - small;
+      small /= 1_0000_0000_0000_0000_0000_0000_0000d;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS + (withColor ? "&a" : "") + "양";
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000_0000_0000_0000_0000_0000_0000_0000d) + (withColor ? "&2" : "") + "구" + c + smallS;
+    }
+    else if (input < 1_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000d)
+    {
+      double small = input % 1_0000_0000_0000_0000_0000_0000_0000_0000d, big = input - small;
+      small /= 1_0000_0000_0000_0000_0000_0000_0000_0000d;
+      String smallS = Constant.JeongsuRawFloor.format(small);
+      smallS = smallS.equals("0") ? "" : smallS + (withColor ? "&2" : "") + "구";
+
+      return c + Constant.JeongsuRawFloor.format(big / 1_0000_0000_0000_0000_0000_0000_0000_0000_0000d) + (withColor ? "&1" : "") + "간" + c + smallS;
+    }
+    return "" + input;
   }
 }

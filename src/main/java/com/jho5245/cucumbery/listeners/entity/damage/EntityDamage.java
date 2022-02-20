@@ -10,17 +10,16 @@ import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
+import com.jho5245.cucumbery.util.no_groups.NumberHangulConverter;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
@@ -30,12 +29,16 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Consumer;
+
+import java.util.UUID;
 
 public class EntityDamage implements Listener
 {
@@ -63,9 +66,15 @@ public class EntityDamage implements Listener
     if (!event.isCancelled())
     {
       this.customEffect(event);
+      this.customEnchant(event);
     }
     if (!event.isCancelled())
     {
+      if (entity instanceof LivingEntity livingEntity && (livingEntity.getScoreboardTags().contains("remove_no_damage_ticks") || MythicMobManager.hasTag(entity, "remove_no_damage_ticks")))
+      {
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                livingEntity.setNoDamageTicks(0), 0L);
+      }
       this.displayDamage(event);
     }
   }
@@ -73,6 +82,8 @@ public class EntityDamage implements Listener
   private void customEffect(EntityDamageEvent event)
   {
     double damage = event.getDamage();
+    // 대미지 % 증가에 영향을 받지 않는 고정 수치
+    double fixedDamage = 0d;
     double damageMultiplier = 1d, finalDamageMultiplier = 1d;
     Entity victim = event.getEntity();
     if (CustomEffectManager.hasEffect(victim, CustomEffectType.INVINCIBLE))
@@ -375,7 +386,53 @@ public class EntityDamage implements Listener
     finalDamageMultiplier *= damageMultiplier;
     if (finalDamageMultiplier != 1d || damage != event.getDamage())
     {
-      event.setDamage(Math.max(0d, damage * finalDamageMultiplier));
+      event.setDamage(Math.max(0d, damage * finalDamageMultiplier + fixedDamage));
+    }
+  }
+
+  private void customEnchant(EntityDamageEvent event)
+  {
+    Entity entity = event.getEntity();
+    if (entity instanceof LivingEntity living)
+    {
+      if (event instanceof EntityDamageByEntityEvent damageByEntityEvent)
+      {
+        Entity damager = damageByEntityEvent.getDamager();
+        if (damager instanceof LivingEntity livingEntity)
+        {
+          EntityEquipment entityEquipment = livingEntity.getEquipment();
+          if (entityEquipment != null)
+          {
+            ItemStack mainHand = entityEquipment.getItemInMainHand();
+            if (mainHand.hasItemMeta())
+            {
+              ItemMeta itemMeta = mainHand.getItemMeta();
+              if (itemMeta.hasEnchant(CustomEnchant.JUSTIFICATION))
+              {
+                Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                        living.setNoDamageTicks(0), 0L);
+              }
+            }
+          }
+        }
+        if (damager instanceof Projectile projectile)
+        {
+          ProjectileSource projectileSource = projectile.getShooter();
+          if (projectileSource instanceof LivingEntity livingEntity)
+          {
+            ItemStack weapon = Variable.attackerAndWeapon.get(livingEntity.getUniqueId());
+            if (weapon != null && weapon.hasItemMeta())
+            {
+              ItemMeta itemMeta = weapon.getItemMeta();
+              if (itemMeta.hasEnchant(CustomEnchant.JUSTIFICATION_BOW))
+              {
+                Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                        living.setNoDamageTicks(0), 0L);
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -477,37 +534,85 @@ public class EntityDamage implements Listener
 
   private void displayDamage(EntityDamageEvent event)
   {
+    if (!Cucumbery.config.getBoolean("use-damage-indicator.enabled"))
+    {
+      return;
+    }
+    Entity entity = event.getEntity();
+    if (!(entity instanceof Player) && !(entity instanceof Mob))
+    {
+      return;
+    }
+    Damageable damageable = (Damageable) entity;
+    boolean viewSelf = Cucumbery.config.getBoolean("use-damage-indicator.view-self"), maplelized = Cucumbery.config.getBoolean("use-damage-indicator.maplelized");
     double damage = event.getFinalDamage();
-    boolean isCrit = (event instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.isCritical());
     Component display;
-    if (damage <= 0)
+    double health = damageable.getHealth();
+    if (health - damage >= health - 0.01 || damage <= 0.0001 || health - damage >= health)
     {
       display = ComponentUtil.translate("&e&lMISS!");
     }
     else
     {
-      display = ComponentUtil.create("&7" + Constant.Sosu2Floor.format(damage));
-      if (isCrit)
-      {
-        display = display.color(NamedTextColor.RED).decoration(TextDecoration.BOLD, State.TRUE);
-      }
+      display = maplelized ? ComponentUtil.create(NumberHangulConverter.convert2(damage, true)) : Component.text(Constant.Sosu2Floor.format(damage), Constant.THE_COLOR);
     }
-    Entity entity = event.getEntity();
+    UUID uuid = entity.getUniqueId();
+    long current = System.currentTimeMillis(), before = Variable.lastDamageMillis.containsKey(uuid) ? Variable.lastDamageMillis.get(uuid) : 0, diff = before == 0 ? 0 : current - before;
+    if (diff >= 500)
+    {
+      diff = 50;
+      Variable.damageIndicatorStack.remove(uuid);
+    }
+    Variable.lastDamageMillis.put(uuid, current);
+    if (!Variable.damageIndicatorStack.containsKey(uuid))
+    {
+      Variable.damageIndicatorStack.put(uuid, (int) (30 + diff / 20d));
+    }
+    else
+    {
+      int stack = Variable.damageIndicatorStack.get(uuid);
+      Variable.damageIndicatorStack.put(uuid, (int) (stack + 30 + diff / 20d));
+    }
+    double offset = Math.max(0, Variable.damageIndicatorStack.get(uuid) / 100d) - 0.5d;
+//    boolean nearby = false;
+//    for (Entity nearbyEntitiy : entity.getNearbyEntities(0.1, 0.3, 0.1))
+//    {
+//      if (nearbyEntitiy instanceof ArmorStand && nearbyEntitiy.getScoreboardTags().contains("damage_indicator"))
+//      {
+//        nearby = true;
+//        break;
+//      }
+//    }
+//    if (!nearby)
+//    {
+//      offset = 0d;
+//    }
     Location location = event.getEntity().getLocation();
     BoundingBox boundingBox = entity.getBoundingBox();
+    offset += (entity.getFireTicks() > 0 ? ((boundingBox.getMaxY() - boundingBox.getCenterY()) * 1.1) : 0);
     location.setX(boundingBox.getCenterX());
-    location.setY(boundingBox.getMaxY());
+    location.setY(boundingBox.getMaxY() + offset);
     location.setZ(boundingBox.getCenterZ());
     Component finalDisplay = display;
-    Consumer<Entity> consumer = e -> {
+    Consumer<Entity> consumer = e ->
+    {
       ArmorStand armorStand = (ArmorStand) e;
       armorStand.setVisible(false);
       armorStand.setMarker(true);
       armorStand.setSmall(true);
       armorStand.customName(finalDisplay);
       armorStand.setCustomNameVisible(true);
+      armorStand.addScoreboardTag("damage_indicator");
+      if (!viewSelf)
+      {
+        armorStand.addScoreboardTag("no_cucumbery_true_invisibility");
+        if (entity instanceof Player player)
+        {
+          player.hideEntity(Cucumbery.getPlugin(), armorStand);
+        }
+      }
     };
     Entity armorStand = location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND, SpawnReason.DEFAULT, consumer);
-    CustomEffectManager.addEffect(armorStand, CustomEffectType.DISAPPEAR);
+    CustomEffectManager.addEffect(armorStand, CustomEffectType.DAMAGE_INDICATOR);
   }
 }

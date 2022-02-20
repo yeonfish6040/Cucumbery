@@ -21,6 +21,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -221,6 +222,13 @@ public class PlaceHolderUtil
     return cmd;
   }
 
+
+  @NotNull
+  public static String placeholder(@NotNull CommandSender sender, @NotNull String cmd, @Nullable Object extraParams)
+  {
+    return placeholder(sender, cmd, extraParams, false);
+  }
+
   /**
    * 명령어의 플레이스 홀더를 사용합니다.
    *
@@ -228,8 +236,12 @@ public class PlaceHolderUtil
    * @return 플레이스 홀더가 넣어진 반환될 명령어
    */
   @NotNull
-  public static String placeholder(@NotNull CommandSender sender, @NotNull String cmd, @Nullable Object extraParams)
+  public static String placeholder(@NotNull CommandSender sender, @NotNull String cmd, @Nullable Object extraParams, boolean parseOnlyExtraParams)
   {
+    if (extraParams == null && parseOnlyExtraParams)
+    {
+      return cmd;
+    }
     int repeat = 0;
     // Pattern placeHolderPattern = Pattern.compile("%(.*){1,100}%");
     // Matcher placeHolderMatcher = placeHolderPattern.matcher(cmd);
@@ -253,6 +265,8 @@ public class PlaceHolderUtil
           Entity entity = event.getEntity();
           String uuid = entity.getUniqueId().toString();
           String name = entity.getName();
+          cmd = cmd.replace("%original_damage%", Constant.Sosu2.format(event.getOriginalDamage(DamageModifier.BASE)));
+          cmd = cmd.replace("%original_damage_raw%", Constant.Sosu2rawFormat.format(event.getOriginalDamage(DamageModifier.BASE)));
           cmd = cmd.replace("%damage%", Constant.Sosu2.format(event.getDamage()));
           cmd = cmd.replace("%damage_raw%", Constant.Sosu2rawFormat.format(event.getDamage()));
           cmd = cmd.replace("%final_damage%", Constant.Sosu2.format(event.getFinalDamage()));

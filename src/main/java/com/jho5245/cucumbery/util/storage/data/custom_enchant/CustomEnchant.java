@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.storage.data.custom_enchant;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.touch.*;
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
@@ -20,14 +21,39 @@ import java.util.*;
 public abstract class CustomEnchant extends EnchantmentWrapper
 {
   public static Enchantment GLOW;
+
+  public static Enchantment COLD_TOUCH;
+  public static Enchantment JUSTIFICATION;
+  public static Enchantment JUSTIFICATION_BOW;
+  public static Enchantment SMELTING_TOUCH;
   public static Enchantment TELEKINESIS;
+  public static Enchantment TELEKINESIS_PVP;
+  public static Enchantment WARM_TOUCH;
+
+  public static Enchantment COARSE_TOUCH;
+  public static Enchantment DULL_TOUCH;
+  public static Enchantment UNSKILLED_TOUCH;
+  public static Enchantment VANISHING_TOUCH;
+
   private static final Map<NamespacedKey, Enchantment> byKey = new HashMap<>();
   private static final Map<String, Enchantment> byName = new HashMap<>();
 
   private static void registerEnchants()
   {
     GLOW = registerEnchant(new EnchantGlow("glow"));
+
+    COLD_TOUCH = registerEnchant(new EnchantColdTouch("cold_touch"));
+    JUSTIFICATION = registerEnchant(new EnchantJustification("justification"));
+    JUSTIFICATION_BOW = registerEnchant(new EnchantJustificationBow("justification_bow"));
+    SMELTING_TOUCH = registerEnchant(new EnchantSmeltingTouch("smelting_touch"));
     TELEKINESIS = registerEnchant(new EnchantTelekinesis("telekinesis"));
+    TELEKINESIS_PVP = registerEnchant(new EnchantTelekinesisPVP("telekinesis_pvp"));
+    WARM_TOUCH = registerEnchant(new EnchantWarmTouch("warm_touch"));
+
+    COARSE_TOUCH = registerEnchant(new EnchantCoarseTouch("coarse_touch"));
+    DULL_TOUCH = registerEnchant(new EnchantDullTouch("dull_touch"));
+    UNSKILLED_TOUCH = registerEnchant(new EnchantUnskilledTouch("unskilled_touch"));
+    VANISHING_TOUCH = registerEnchant(new EnchantVanishingTouch("vanishing_touch"));
   }
 
   private static CustomEnchant registerEnchant(@NotNull CustomEnchant enchant)
@@ -70,7 +96,10 @@ public abstract class CustomEnchant extends EnchantmentWrapper
 
   @Override
   @NotNull
-  public abstract String getName();
+  public final String getName()
+  {
+    return translationKey();
+  }
 
   @Override
   public boolean isTreasure()

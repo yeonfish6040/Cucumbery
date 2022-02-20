@@ -56,7 +56,7 @@ public class Data
       MessageUtil.sendError(sender, Prefix.NO_PLAYER);
       return;
     }
-    MessageUtil.sendAdminMessage(sender, null, "commands.give.success.single", amountComponent, item, targets);
+    MessageUtil.sendAdminMessage(sender, "commands.give.success.single", amountComponent, item, targets);
 
     if (!failure.isEmpty())
     {

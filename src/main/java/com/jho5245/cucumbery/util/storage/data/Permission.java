@@ -132,6 +132,8 @@ public enum Permission
   CMD_MODIFY_EXPLOSIVE(C + "modifyexplosive"),
   CMD_SEND_TOAST(C + "sendtoast"),
   CMD_SEND_BOSSBAR(C + "sendbossbar"),
+  CMD_DELAY(C + "delay"),
+  CMD_SET_NO_DAMAGE_TICKS(C + "setnodamageticks"),
 
   OTHER_EVAL("eval"),
   OTHER_PLACEHOLDER("placeholder"),

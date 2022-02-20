@@ -1842,7 +1842,7 @@ public class InventoryClick implements Listener
       String key = ((TextComponent) ((TranslatableComponent) title).args().get(1)).content();
       if (Constant.POTION_EFFECTS.equals(key))
       {
-        if (event.getClick() == ClickType.RIGHT)
+        if (event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.LEFT)
         {
           NBTItem nbtItem = new NBTItem(item);
           String removeEffect = nbtItem.getString("removeEffect");
@@ -1850,31 +1850,50 @@ public class InventoryClick implements Listener
           {
             try
             {
-              if (removeEffect.startsWith("potion:"))
+              if (event.getClick() == ClickType.RIGHT)
               {
-                removeEffect = removeEffect.substring("potion:".length());
-                PotionEffectType potionEffectType = PotionEffectType.getByName(removeEffect);
-                if (!CustomEffectManager.hasEffect(player, CustomEffectType.NO_BUFF_REMOVE) && potionEffectType != null)
+                if (removeEffect.startsWith("potion:"))
                 {
-                  player.removePotionEffect(potionEffectType);
+                  removeEffect = removeEffect.substring("potion:".length());
+                  PotionEffectType potionEffectType = PotionEffectType.getByName(removeEffect);
+                  if (!CustomEffectManager.hasEffect(player, CustomEffectType.NO_BUFF_REMOVE) && potionEffectType != null)
+                  {
+                    player.removePotionEffect(potionEffectType);
+                  }
                 }
               }
               if (removeEffect.startsWith("custom:"))
               {
                 removeEffect = removeEffect.substring("custom:".length());
                 CustomEffectType effectType = CustomEffectType.valueOf(removeEffect);
-                Integer amplifier = nbtItem.getInteger("removeEffectAmplifier");
-                if (amplifier == null)
+                if (event.getClick() == ClickType.RIGHT)
                 {
-                  CustomEffectManager.removeEffect(player, effectType, Reason.PLAYER);
+                  Integer amplifier = nbtItem.getInteger("removeEffectAmplifier");
+                  if (amplifier == null)
+                  {
+                    CustomEffectManager.removeEffect(player, effectType, Reason.PLAYER);
+                  }
+                  else
+                  {
+                    CustomEffectManager.removeEffect(player, effectType, amplifier, Reason.PLAYER);
+                  }
+                  if (effectType == CustomEffectType.CONTINUAL_SPECTATING && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() instanceof Player)
+                  {
+                    player.setSpectatorTarget(null);
+                  }
+                  if (effectType == CustomEffectType.CONTINUAL_SPECTATING_EXEMPT)
+                  {
+                    player.closeInventory();
+                  }
                 }
                 else
                 {
-                  CustomEffectManager.removeEffect(player, effectType, amplifier, Reason.PLAYER);
-                }
-                if (effectType == CustomEffectType.CONTINUAL_SPECTATING && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() instanceof Player)
-                {
-                  player.setSpectatorTarget(null);
+                  if (effectType == CustomEffectType.CONTINUAL_SPECTATING && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() instanceof Player)
+                  {
+                    CustomEffectManager.addEffect(player, CustomEffectType.CONTINUAL_SPECTATING_EXEMPT);
+                    player.closeInventory();
+                    player.setSpectatorTarget(null);
+                  }
                 }
               }
             }

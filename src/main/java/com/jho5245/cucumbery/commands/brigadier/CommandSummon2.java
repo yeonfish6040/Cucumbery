@@ -90,7 +90,7 @@ public class CommandSummon2 extends CommandBase
       else
       {
         MessageUtil.info(commandSender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
+        MessageUtil.sendAdminMessage(sender, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
       }
     });
     commandAPICommand.register();
@@ -116,7 +116,7 @@ public class CommandSummon2 extends CommandBase
       else
       {
         MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
+        MessageUtil.sendAdminMessage(sender, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
       }
     });
     commandAPICommand.register();
@@ -156,7 +156,7 @@ public class CommandSummon2 extends CommandBase
       else if (!hideOutput)
       {
         MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
+        MessageUtil.sendAdminMessage(sender, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
       }
     });
     commandAPICommand.register();
@@ -183,7 +183,7 @@ public class CommandSummon2 extends CommandBase
       else if (!hideOutput)
       {
         MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
+        MessageUtil.sendAdminMessage(sender, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
       }
     });
     commandAPICommand.register();
@@ -228,7 +228,7 @@ public class CommandSummon2 extends CommandBase
       else if (!hideOutput)
       {
         MessageUtil.info(sender, ComponentUtil.translate("새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount));
-        MessageUtil.sendAdminMessage(sender, null, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
+        MessageUtil.sendAdminMessage(sender, "새로운 %s을(를) %s" + (entity instanceof Mob ? "마리" : "개") + " 소환하였습니다", entity, Constant.THE_COLOR_HEX + amount);
       }
     });
     commandAPICommand.register();

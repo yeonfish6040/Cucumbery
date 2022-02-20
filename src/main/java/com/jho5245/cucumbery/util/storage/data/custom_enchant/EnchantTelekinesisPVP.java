@@ -2,9 +2,9 @@ package com.jho5245.cucumbery.util.storage.data.custom_enchant;
 
 import org.jetbrains.annotations.NotNull;
 
-public class EnchantTelekinesis extends CustomEnchant
+public class EnchantTelekinesisPVP extends CustomEnchant
 {
-  public EnchantTelekinesis(@NotNull String name)
+  public EnchantTelekinesisPVP(@NotNull String name)
   {
     super(name);
   }
@@ -12,6 +12,6 @@ public class EnchantTelekinesis extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "염력";
+    return "염력(PvP)";
   }
 }

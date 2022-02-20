@@ -151,6 +151,8 @@ public class Constant
 
   public static final DecimalFormat JeongsuFloor = new DecimalFormat("#,##0");
 
+  public static final DecimalFormat JeongsuRawFloor = new DecimalFormat("####");
+
   public static final DecimalFormat Sosu1 = new DecimalFormat("#,##0.#");
 
   public static final DecimalFormat Sosu1Force = new DecimalFormat("#,##0.0");
@@ -176,6 +178,7 @@ public class Constant
     Sosu1ForceFloor.setRoundingMode(RoundingMode.FLOOR);
     Sosu2Floor.setRoundingMode(RoundingMode.FLOOR);
     JeongsuFloor.setRoundingMode(RoundingMode.FLOOR);
+    JeongsuRawFloor.setRoundingMode(RoundingMode.FLOOR);
   }
 
   public static String Sosu5Force(double input)
@@ -717,33 +720,6 @@ public class Constant
     private final String display;
 
     ExtraTag(String display)
-    {
-      this.display = display;
-    }
-
-    public String getDisplay()
-    {
-      return display;
-    }
-  }
-
-  public enum CustomEnchant
-  {
-    COARSE_TOUCH("거친 손길"),
-    UNSKILLED_TOUCH("서투른 손길"),
-    VANISHING_TOUCH("소실의 손길"),
-    TELEKINESIS("염력"),
-    TELEKINESIS_PVP("염력(PVP)"),
-    SMELTING_TOUCH("제련의 손길"),
-    COLD_TOUCH("차가운 손길"),
-    WARM_TOUCH("따뜻한 손길"),
-    DULL_TOUCH("둔한 손길"),
-    ENCHANT_CURSE("마법 부여 불가 저주"),
-    ;
-
-    private final String display;
-
-    CustomEnchant(String display)
     {
       this.display = display;
     }

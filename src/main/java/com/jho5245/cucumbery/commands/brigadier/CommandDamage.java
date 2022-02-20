@@ -1,15 +1,14 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil;
-import com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil.ArgumentType;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.*;
+import dev.jorel.commandapi.arguments.EntitySelectorArgument.EntitySelector;
 import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import org.bukkit.command.BlockCommandSender;
@@ -30,12 +29,39 @@ import static com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil.MANY_EN
 
 public class CommandDamage extends CommandBase
 {
-  final private List<Argument> list1 = List.of(MANY_ENTITIES, ArgumentUtil.of(ArgumentType.DOUBLE, 0));
-  final private List<Argument> list2 = List.of(MANY_ENTITIES, ArgumentUtil.of(ArgumentType.DOUBLE, 0), HIDE_OUTPUT);
-  final private List<Argument> list3 = List.of(MANY_ENTITIES, ArgumentUtil.of(ArgumentType.DOUBLE, 0), ArgumentUtil.of(ArgumentType.ONE_ENTITY, "가해 개체"));
-  final private List<Argument> list4 = List.of(MANY_ENTITIES, ArgumentUtil.of(ArgumentType.DOUBLE, 0), ArgumentUtil.of(ArgumentType.ONE_ENTITY, "가해 개체"), HIDE_OUTPUT);
+  final private DoubleArgument DAMAGE = new DoubleArgument("대미지", 0);
+  final private IntegerArgument INVINCIBLE = new IntegerArgument("무적 시간(틱)", 0, 200);
+  final private MultiLiteralArgument NO_INVINCIBLE = new MultiLiteralArgument("-1");
+  final private EntitySelectorArgument DAMAGER = new EntitySelectorArgument("가해 개체", EntitySelector.ONE_ENTITY);
+  final private List<Argument> list01 = List.of(MANY_ENTITIES, DAMAGE);
+  final private List<Argument> list02 = List.of(MANY_ENTITIES, DAMAGE, HIDE_OUTPUT);
+  final private List<Argument> list03 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE);
+  final private List<Argument> list04 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, HIDE_OUTPUT);
+  final private List<Argument> list05 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE);
+  final private List<Argument> list06 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, HIDE_OUTPUT);
+  final private List<Argument> list07 = List.of(MANY_ENTITIES, DAMAGE, DAMAGER);
+  final private List<Argument> list08 = List.of(MANY_ENTITIES, DAMAGE, DAMAGER, HIDE_OUTPUT);
+  final private List<Argument> list09 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, DAMAGER);
+  final private List<Argument> list10 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, DAMAGER, HIDE_OUTPUT);
+  final private List<Argument> list11 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, DAMAGER);
+  final private List<Argument> list12 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, DAMAGER, HIDE_OUTPUT);
+
+  private void damage(@NotNull NativeProxyCommandSender sender, @NotNull Collection<Entity> entities, double damage, boolean hideOutput) throws WrapperCommandSyntaxException
+  {
+    damage(sender, entities, damage, -1, hideOutput);
+  }
+
+  private void damage(@NotNull NativeProxyCommandSender sender, @NotNull Collection<Entity> entities, double damage, int invincibleTimeTicks, boolean hideOutput) throws WrapperCommandSyntaxException
+  {
+    damage(sender, entities, damage, invincibleTimeTicks, null, hideOutput);
+  }
 
   private void damage(@NotNull NativeProxyCommandSender sender, @NotNull Collection<Entity> entities, double damage, @Nullable Entity damager, boolean hideOutput) throws WrapperCommandSyntaxException
+  {
+    damage(sender, entities, damage, -1, damager, hideOutput);
+  }
+
+  private void damage(@NotNull NativeProxyCommandSender sender, @NotNull Collection<Entity> entities, double damage, int invincibleTimeTicks, @Nullable Entity damager, boolean hideOutput) throws WrapperCommandSyntaxException
   {
     CommandSender commandSender = sender.getCallee();
     if (entities.isEmpty())
@@ -44,7 +70,7 @@ public class CommandDamage extends CommandBase
       {
         CommandAPI.fail("개체를 찾을 수 없습니다");
       }
-      else
+      else if (!hideOutput)
       {
         MessageUtil.sendError(commandSender, "개체를 찾을 수 없습니다");
       }
@@ -55,28 +81,36 @@ public class CommandDamage extends CommandBase
     {
       if (entity instanceof LivingEntity livingEntity)
       {
-        if (!livingEntity.isDead())
+        if (livingEntity.isDead())
         {
-          double hp = livingEntity.getHealth();
-          if (damager == null)
+          continue;
+        }
+        if (livingEntity.getNoDamageTicks() > 0)
+        {
+          continue;
+        }
+        double hp = livingEntity.getHealth();
+        if (damager == null)
+        {
+          livingEntity.damage(damage);
+        }
+        else
+        {
+          if (!(damager instanceof LivingEntity))
           {
-            livingEntity.damage(damage);
-            livingEntity.setNoDamageTicks(0);
+            @SuppressWarnings("deprecation")
+            EntityDamageByEntityEvent damageByEntityEvent = new EntityDamageByEntityEvent(damager, entity, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage);
+            Cucumbery.getPlugin().getPluginManager().callEvent(damageByEntityEvent);
           }
-          else
-          {
-            if (!(damager instanceof LivingEntity))
-            {
-              EntityDamageByEntityEvent damageByEntityEvent = new EntityDamageByEntityEvent(damager, entity, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage);
-              Cucumbery.getPlugin().getPluginManager().callEvent(damageByEntityEvent);
-            }
-            livingEntity.damage(damage, damager);
-            livingEntity.setNoDamageTicks(0);
-          }
-          if (hp != livingEntity.getHealth())
-          {
-            successEntities.add(livingEntity);
-          }
+          livingEntity.damage(damage, damager);
+        }
+        if (invincibleTimeTicks != -1)
+        {
+          livingEntity.setNoDamageTicks(invincibleTimeTicks / 2);
+        }
+        if (hp != livingEntity.getHealth())
+        {
+          successEntities.add(livingEntity);
         }
       }
     }
@@ -105,14 +139,12 @@ public class CommandDamage extends CommandBase
         if (damager == null)
         {
           MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s만큼의 피해를 주었습니다", successEntities, damageString));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                  "%s에게 %s만큼의 피해를 주었습니다", successEntities, damageString);
+          MessageUtil.sendAdminMessage(sender, "%s에게 %s만큼의 피해를 주었습니다", successEntities, damageString);
         }
         else
         {
           MessageUtil.info(sender, ComponentUtil.translate("%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다", successEntities, damager, damageString));
-          MessageUtil.sendAdminMessage(sender, new ArrayList<>(successEntities),
-                  "%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다", successEntities, damager, damageString);
+          MessageUtil.sendAdminMessage(sender, "%s에게 %s을(를) 가해 개체로 하는 %s만큼의 피해를 주었습니다", successEntities, damager, damageString);
         }
       }
     }
@@ -126,24 +158,59 @@ public class CommandDamage extends CommandBase
   public void registerCommand(String command, String permission, String... aliases)
   {
     CommandAPICommand commandAPICommand = getCommandBase(command, permission, aliases);
-    commandAPICommand = commandAPICommand.withArguments(list1);
-    commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      damage(sender, (Collection<Entity>) args[0], (double) args[1], null, false);
-    });
-    commandAPICommand.register();
+      commandAPICommand = commandAPICommand.withArguments(list01);
+      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+      {
+        damage(sender, (Collection<Entity>) args[0], (double) args[1], false);
+      });
+      commandAPICommand.register();
+
+      commandAPICommand = getCommandBase(command, permission, aliases);
+      commandAPICommand = commandAPICommand.withArguments(list02);
+      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+      {
+        damage(sender, (Collection<Entity>) args[0], (double) args[1], (boolean) args[2]);
+      });
+      commandAPICommand.register();
+
+
+      commandAPICommand = getCommandBase(command, permission, aliases);
+      commandAPICommand = commandAPICommand.withArguments(list03);
+      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+      {
+        damage(sender, (Collection<Entity>) args[0], (double) args[1], (int) args[2], false);
+      });
+      commandAPICommand.register();
+
+      commandAPICommand = getCommandBase(command, permission, aliases);
+      commandAPICommand = commandAPICommand.withArguments(list04);
+      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+      {
+        damage(sender, (Collection<Entity>) args[0], (double) args[1], (int) args[2], (boolean) args[3]);
+      });
+      commandAPICommand.register();
+
+
+      commandAPICommand = getCommandBase(command, permission, aliases);
+      commandAPICommand = commandAPICommand.withArguments(list05);
+      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+      {
+        damage(sender, (Collection<Entity>) args[0], (double) args[1], -1, false);
+      });
+      commandAPICommand.register();
+
+      commandAPICommand = getCommandBase(command, permission, aliases);
+      commandAPICommand = commandAPICommand.withArguments(list06);
+      commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+      {
+        damage(sender, (Collection<Entity>) args[0], (double) args[1], -1, (boolean) args[3]);
+      });
+      commandAPICommand.register();
+    }
 
     commandAPICommand = getCommandBase(command, permission, aliases);
-    commandAPICommand = commandAPICommand.withArguments(list2);
-    commandAPICommand = commandAPICommand.executesNative((sender, args) ->
-    {
-      damage(sender, (Collection<Entity>) args[0], (double) args[1], null, (boolean) args[2]);
-    });
-    commandAPICommand.register();
-
-
-    commandAPICommand = getCommandBase(command, permission, aliases);
-    commandAPICommand = commandAPICommand.withArguments(list3);
+    commandAPICommand = commandAPICommand.withArguments(list07);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       damage(sender, (Collection<Entity>) args[0], (double) args[1], (Entity) args[2], false);
@@ -151,10 +218,44 @@ public class CommandDamage extends CommandBase
     commandAPICommand.register();
 
     commandAPICommand = getCommandBase(command, permission, aliases);
-    commandAPICommand = commandAPICommand.withArguments(list4);
+    commandAPICommand = commandAPICommand.withArguments(list08);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       damage(sender, (Collection<Entity>) args[0], (double) args[1], (Entity) args[2], (boolean) args[3]);
+    });
+    commandAPICommand.register();
+
+
+    commandAPICommand = getCommandBase(command, permission, aliases);
+    commandAPICommand = commandAPICommand.withArguments(list09);
+    commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+    {
+      damage(sender, (Collection<Entity>) args[0], (double) args[1], (int) args[2], (Entity) args[3], false);
+    });
+    commandAPICommand.register();
+
+    commandAPICommand = getCommandBase(command, permission, aliases);
+    commandAPICommand = commandAPICommand.withArguments(list10);
+    commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+    {
+      damage(sender, (Collection<Entity>) args[0], (double) args[1], (int) args[2], (Entity) args[3], (boolean) args[4]);
+    });
+    commandAPICommand.register();
+
+
+    commandAPICommand = getCommandBase(command, permission, aliases);
+    commandAPICommand = commandAPICommand.withArguments(list11);
+    commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+    {
+      damage(sender, (Collection<Entity>) args[0], (double) args[1], -1, (Entity) args[3], false);
+    });
+    commandAPICommand.register();
+
+    commandAPICommand = getCommandBase(command, permission, aliases);
+    commandAPICommand = commandAPICommand.withArguments(list12);
+    commandAPICommand = commandAPICommand.executesNative((sender, args) ->
+    {
+      damage(sender, (Collection<Entity>) args[0], (double) args[1], -1, (Entity) args[3], (boolean) args[4]);
     });
     commandAPICommand.register();
   }

@@ -32,8 +32,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -389,36 +387,13 @@ public class ItemLore2
     }
 
     boolean hideEnchant = hideFlagsTagExists && NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.ENCHANTS);
-    NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(itemTag, CucumberyTag.CUSTOM_ENCHANTS_KEY);
-    boolean hasCustomEnchants = customEnchantsTag != null && !customEnchantsTag.isEmpty();
 
     if (itemMeta.hasEnchants())
     {
       itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-    }
-
-    if (itemMeta.hasEnchants() || hasCustomEnchants)
-    {
       if (!hideEnchant)
       {
         List<Component> enchantLore = new ArrayList<>();
-        if (hasCustomEnchants)
-        {
-          for (NBTCompound customEnchant : customEnchantsTag)
-          {
-            String id = customEnchant.getString(CucumberyTag.ID_KEY);
-            Integer level = customEnchant.getInteger(CucumberyTag.CUSTOM_ENCHANTS_LEVEL_KEY);
-            if (level > 255)
-            {
-              level = 255;
-            }
-            if (level <= 0)
-            {
-              level = 1;
-            }
-            enchantLore.addAll(ItemLoreUtil.enchantTMIDescription(itemMeta, type, id, level));
-          }
-        }
         for (Enchantment enchantment : itemMeta.getEnchants().keySet())
         {
           if (enchantment.equals(CustomEnchant.GLOW))
@@ -1980,32 +1955,32 @@ public class ItemLore2
     Component itemRarityComponent = ComponentUtil.translate("&7아이템 등급 : %s", rarityComponent);
     lore.set(2, itemRarityComponent);
     itemMeta.lore(lore);
-    if (NBTAPI.isRestricted(item, RestrictionType.NO_ANVIL) && itemTag.hasKey("FollowRarityColor"))
-    {
-      Boolean b = itemTag.getBoolean("FollowRarityColor");
-      if (b != null && b)
-      {
-        item.setItemMeta(itemMeta);
-        Component itemName;
-        try
-        {
-          itemName = itemMeta.displayName();
-          if (itemName == null || itemName.color(null).decoration(TextDecoration.ITALIC, State.NOT_SET).equals(ItemNameUtil.itemName(item).color(null).decoration(TextDecoration.ITALIC, State.NOT_SET)))
-          {
-            throw new Exception();
-          }
-        }
-        catch (Exception e)
-        {
-          itemName = ItemNameUtil.itemName(item);
-          if (itemName.decoration(TextDecoration.ITALIC) == State.NOT_SET)
-          {
-            itemName = itemName.decoration(TextDecoration.ITALIC, State.FALSE);
-          }
-        }
-        itemMeta.displayName(itemName.color(rarityComponent.color()));
-      }
-    }
+//    if (NBTAPI.isRestricted(item, RestrictionType.NO_ANVIL) && itemTag.hasKey("FollowRarityColor"))
+//    {
+//      Boolean b = itemTag.getBoolean("FollowRarityColor");
+//      if (b != null && b)
+//      {
+//        item.setItemMeta(itemMeta);
+//        Component itemName;
+//        try
+//        {
+//          itemName = itemMeta.displayName();
+//          if (itemName == null || itemName.color(null).decoration(TextDecoration.ITALIC, State.NOT_SET).equals(ItemNameUtil.itemName(item).color(null).decoration(TextDecoration.ITALIC, State.NOT_SET)))
+//          {
+//            throw new Exception();
+//          }
+//        }
+//        catch (Exception e)
+//        {
+//          itemName = ItemNameUtil.itemName(item);
+//          if (itemName.decoration(TextDecoration.ITALIC) == State.NOT_SET)
+//          {
+//            itemName = itemName.decoration(TextDecoration.ITALIC, State.FALSE);
+//          }
+//        }
+//        itemMeta.displayName(itemName.color(rarityComponent.color()));
+//      }
+//    }
     item.setItemMeta(itemMeta);
     return item;
   }

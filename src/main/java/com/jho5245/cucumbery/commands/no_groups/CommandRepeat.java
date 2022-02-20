@@ -53,24 +53,23 @@ public class CommandRepeat implements CommandExecutor, TabCompleter
     {
       for (int i = 1; i <= repeat; i++)
       {
+        command = originalCommand;
         command = command.replace("%repeat%", i + "");
         command = Method.parseCommandString(sender, command);
         Bukkit.dispatchCommand(sender, command);
-        command = originalCommand;
       }
     }
     else
     {
       for (int i = 1; i <= repeat; i++)
       {
+        command = originalCommand;
         command = command.replace("%repeat%", i + "");
-        String finalCommand1 = command;
+        String finalCommand = Method.parseCommandString(sender, command);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
         {
-          String finalCommand = Method.parseCommandString(sender, finalCommand1);
           Bukkit.dispatchCommand(sender, finalCommand);
         }, (long) (i - 1) * (long) delay);
-        command = originalCommand;
       }
     }
     return true;

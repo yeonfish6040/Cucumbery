@@ -9,9 +9,11 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.RealDurationCustomEffect;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.Reason;
 import com.jho5245.cucumbery.util.no_groups.CreateGUI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -39,6 +41,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/**
+ * see {@link Scheduler#tickSchedules()}
+ */
 public class CustomEffectScheduler
 {
   public static final HashMap<UUID, BukkitTask> spreadTimerTask = new HashMap<>();
@@ -48,13 +53,11 @@ public class CustomEffectScheduler
 
   public static void tick(@NotNull Entity entity)
   {
-    UUID uuid = entity.getUniqueId();
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(entity);
     if (customEffects.isEmpty())
     {
       return;
     }
-    List<CustomEffect> removed = new ArrayList<>();
     for (CustomEffect customEffect : customEffects)
     {
       if (customEffect instanceof RealDurationCustomEffect realDurationCustomEffect)
@@ -64,7 +67,6 @@ public class CustomEffectScheduler
         // 시간이 다 되면 바로 없애는게 아니라 0.05초 지연을 줌 (실제 개체가 효과를 가지고 있는 판정은 생기지 않음)
         customEffect.setDuration(Math.max(1, remain));
       }
-      customEffect.tick();
       if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
       {
         Player player = playerCustomEffect.getPlayer();
@@ -78,9 +80,10 @@ public class CustomEffectScheduler
           }
         }
       }
+      customEffect.tick();
       if (customEffect.getDuration() == 0)
       {
-        CustomEffectManager.removeEffect(entity, customEffect.getType(), customEffect.getAmplifier());
+        CustomEffectManager.removeEffect(entity, customEffect.getType(), customEffect.getAmplifier(), Reason.TIME_OUT);
       }
     }
   }
@@ -242,6 +245,19 @@ public class CustomEffectScheduler
     if (CreateGUI.isGUITitle(title) && title instanceof TranslatableComponent translatableComponent && translatableComponent.args().get(1) instanceof TextComponent textComponent && textComponent.content().equals(Constant.POTION_EFFECTS))
     {
       CustomEffectGUI.openGUI(player, false);
+    }
+  }
+
+  public static void damageIndicator(@NotNull Entity entity)
+  {
+    if (!(entity instanceof ArmorStand))
+    {
+      return;
+    }
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.DAMAGE_INDICATOR))
+    {
+      Location location = entity.getLocation().add(0, 0.02, 0);
+      entity.teleport(location);
     }
   }
 
@@ -423,6 +439,10 @@ public class CustomEffectScheduler
   public static void trueInvisibility(@NotNull Entity entity)
   {
     Set<String> scoreboardTags = entity.getScoreboardTags();
+    if (scoreboardTags.contains("no_cucumbery_true_invisibility"))
+    {
+      return;
+    }
     if (scoreboardTags.contains("true_invisibility") || CustomEffectManager.hasEffect(entity, CustomEffectType.TRUE_INVISIBILITY))
     {
       for (Player player : Bukkit.getOnlinePlayers())

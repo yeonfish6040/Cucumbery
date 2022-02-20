@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public enum DeathMessage
@@ -1462,17 +1463,74 @@ public enum DeathMessage
   /**
    * %1$s이(가) 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
    */
-  CUSTOM_DARKNESS_TERROR,
+  CUSTOM_DARKNESS_TERROR("%1$s이(가) 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
+
+  /**
+   * %1$s이(가) %2$s와(과) 싸우면서 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
+   */
+  CUSTOM_DARKNESS_TERROR_COMBAT("%1$s이(가) %2$s와(과) 싸우면서 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우면서 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
+   */
+  CUSTOM_DARKNESS_TERROR_COMBAT_ITEM("%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우면서 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
+
+  /**
+   * %1$s이(가) 스스로와의 단련을 하며 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
+   */
+  CUSTOM_DARKNESS_TERROR_COMBAT_SUICIDE("%1$s이(가) 스스로와의 단련을 하며 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 스스로와의 단련을 하며 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
+   */
+  CUSTOM_DARKNESS_TERROR_COMBAT_SUICIDE_ITEM("%1$s이(가) %3$s을(를) 사용한 스스로와의 단련을 하며 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
 
   /**
    * %1$s이(가) 경험을 소화하려다 탈이 나 죽었습니다
    */
-  CUSTOM_STOMACHACHE,
+  CUSTOM_STOMACHACHE("%1$s이(가) 경험을 소화하려다 탈이 나 죽었습니다"),
+
+  /**
+   * %1$s이(가) %2$s와(과) 싸우면서 경험을 소화하려다 탈이 나 죽었습니다
+   */
+  CUSTOM_STOMACHACHE_COMBAT("%1$s이(가) %2$s와(과) 싸우면서 경험을 소화하려다 탈이 나 죽었습니다"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우면서 경험을 소화하려다 탈이 나 죽었습니다
+   */
+  CUSTOM_STOMACHACHE_COMBAT_ITEM("%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우면서 경험을 소화하려다 탈이 나 죽었습니다"),
+
+  /**
+   * %1$s이(가) 나 자신과의 싸움을 하면서 경험을 소화하려다 탈이 나 죽었습니다
+   */
+  CUSTOM_STOMACHACHE_COMBAT_SUICIDE("%1$s이(가) 나 자신과의 싸움을 하면서 경험을 소화하려다 탈이 나 죽었습니다"),
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 나 자신과의 싸움을 하면서 경험을 소화하려다 탈이 나 죽었습니다
+   */
+  CUSTOM_STOMACHACHE_COMBAT_SUICIDE_ITEM("%1$s이(가) %3$s을(를) 사용한 나 자신과의 싸움을 하면서 경험을 소화하려다 탈이 나 죽었습니다"),
   ;
+  
+  private final String defaultString;
+  
+  DeathMessage()
+  {
+    this(null);
+  }
+
+  DeathMessage(String defaultString)
+  {
+    this.defaultString = defaultString;
+  }
 
   @NotNull
   public List<String> getKeys()
   {
-    return new ArrayList<>(Variable.deathMessages.getStringList("death-messages.messages." + this.toString().toLowerCase().replace("_", "-")));
+    List<String> list = new ArrayList<>(Variable.deathMessages.getStringList("death-messages.messages." + this.toString().toLowerCase().replace("_", "-")));
+    if (!list.isEmpty() || defaultString == null)
+    {
+      return list;
+    }
+    return Collections.singletonList(defaultString);
   }
 }

@@ -217,6 +217,12 @@ public class EntityCustomEffectPostApply implements Listener
       CustomEffectManager.addEffect(entity, new AttributeCustomEffectImple(
               CustomEffectType.BREAD_KIMOCHI_SECONDARY_EFFECT, initDuration, initAmplifier, DisplayType.NONE, UUID.randomUUID(), Attribute.GENERIC_ARMOR, Operation.ADD_NUMBER, 2));
     }
+
+    if (customEffectType == CustomEffectType.FREEZING)
+    {
+      entity.setFreezeTicks(entity.getMaxFreezeTicks());
+      entity.lockFreezeTicks(true);
+    }
   }
 }
 

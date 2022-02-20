@@ -2,10 +2,9 @@ package com.jho5245.cucumbery.listeners.enchantment;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
-import com.jho5245.cucumbery.util.storage.data.Constant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -47,10 +46,6 @@ public class PrepareItemEnchant implements Listener
 				return;
 			}
 			if (ItemStackUtil.itemExists(lapis) && NBTAPI.isRestricted(player, lapis, Constant.RestrictionType.NO_ENCHANT))
-			{
-				event.setCancelled(true);
-			}
-			if (NBTAPI.getCustomEnchantLevel(item, CustomEnchant.ENCHANT_CURSE) > 0)
 			{
 				event.setCancelled(true);
 			}

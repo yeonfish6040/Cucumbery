@@ -1170,7 +1170,7 @@ public class PlayerInteract implements Listener
     if (id.equals("railgun"))
     {
       int range = 0;
-      double damage = 0D;
+      Double damage = 0D;
       int cooldown = 0;
       int piercing = 1;
       boolean penetration = customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_RAILGUN_BLOCK_PENETRATE);
@@ -1209,9 +1209,9 @@ public class PlayerInteract implements Listener
       if (customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_RAILGUN_DAMAGE))
       {
         damage = customItemTagCompound.getDouble(CucumberyTag.CUSTOM_ITEM_RAILGUN_DAMAGE);
-        if (damage < Long.MAX_VALUE)
+        if (damage == null || damage.isNaN() || damage.isInfinite() || damage > Long.MAX_VALUE)
         {
-          damage = Long.MAX_VALUE;
+          damage = 1d * Long.MAX_VALUE;
         }
         isRailgun[2] = true;
       }
@@ -1236,7 +1236,7 @@ public class PlayerInteract implements Listener
         }
         if (damage > 1000)
         {
-          damage = 1000;
+          damage = 1000d;
         }
         if (cooldown < 5)
         {

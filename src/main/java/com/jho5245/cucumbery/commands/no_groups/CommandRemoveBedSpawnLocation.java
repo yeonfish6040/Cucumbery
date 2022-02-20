@@ -78,7 +78,7 @@ public class CommandRemoveBedSpawnLocation implements CommandExecutor, TabComple
         if (!successPlayers.isEmpty())
         {
           MessageUtil.info(sender, ComponentUtil.translate("%s의 스폰 포인트를 제거하였습니다", successPlayers));
-          MessageUtil.sendAdminMessage(sender, null, "%s의 스폰 포인트를 제거하였습니다", successPlayers);
+          MessageUtil.sendAdminMessage(sender, "%s의 스폰 포인트를 제거하였습니다", successPlayers);
           return true;
         }
       }

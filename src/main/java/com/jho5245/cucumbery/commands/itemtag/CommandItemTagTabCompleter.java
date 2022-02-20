@@ -57,7 +57,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
       {
         List<String> list = Method.tabCompleterList(args, "<태그>", "restriction", "customlore", "extratag", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "customdurability" + (!Constant.DURABLE_ITEMS.contains(material) ? "(내구도가 있는 아이템 전용)" : ""),
                 "customitemtype", "hideflag", "customrarity", "usage", "expiredate", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "tnt" + (material != Material.TNT ? "(TNT 전용)" : ""), "abovecustomlore",
-                "customenchant", "customitem", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt", "customtag", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "potion" +
+                "customitem", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt", "customtag", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "potion" +
                         (isPotionType ? "" : "(음식 또는 포션 유형의 아이템 전용)"), "customdisplayname");
         if (args[0].equals("tnt") && material != Material.TNT)
         {
@@ -104,8 +104,6 @@ public class CommandItemTagTabCompleter implements TabCompleter
               return Collections.singletonList("해당 태그는 TNT에만 사용할 수 있습니다");
             }
             return Method.tabCompleterList(args, "<인수>", "unstable", "ignite", "fuse", "fire", "explode-power");
-          case "customenchant":
-            return Method.tabCompleterList(args, "<인수>", "list", "add", "remove");
           case "customitem":
             return Method.tabCompleterList(args, "<인수>", "setid", "modify");
           case "food":
@@ -221,14 +219,6 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 return Method.tabCompleterBoolean(args, "<폭발 시 불 번짐 여부>");
               case "explode-power":
                 return Method.tabCompleterDoubleRadius(args, 0, 500, "<폭발 강도>", "-1", "-1(초기화)");
-            }
-            break;
-          case "customenchant":
-            switch (args[1])
-            {
-              case "add":
-              case "remove":
-                return Method.tabCompleterList(args, Constant.CustomEnchant.values(), "<커스텀 마법>");
             }
             break;
           case "customitem":

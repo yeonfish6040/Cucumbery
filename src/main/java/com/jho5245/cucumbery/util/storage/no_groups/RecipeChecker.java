@@ -6,30 +6,70 @@ import org.bukkit.Material;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RecipeChecker
 {
-  private final static Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+  public static List<Recipe> recipes;
 
-  public static List<Recipe> recipes = new ArrayList<>();
-
-  static
+//  @SuppressWarnings("ConstantConditions")
+  public static void setRecipes()
   {
+    recipes = new ArrayList<>();
+    Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
     while (recipeIterator.hasNext())
     {
-      recipes.add(recipeIterator.next());
+      try
+      {
+        Recipe recipe = recipeIterator.next();
+        recipes.add(recipe);
+//        if (recipe instanceof ShapedRecipe shapedRecipe)
+//        {
+//          Map<Character, RecipeChoice> itemStackMap = shapedRecipe.getChoiceMap();
+//          String keyValue = shapedRecipe.getKey().getKey();
+//          ShapedRecipe newShapedRecipe = new ShapedRecipe(NamespacedKey.fromString("cucumbery:" + keyValue), recipe.getResult());
+//          for (char c : itemStackMap.keySet())
+//          {
+//            RecipeChoice recipeChoice = itemStackMap.get(c);
+//            if (recipeChoice instanceof MaterialChoice materialChoice)
+//            {
+//              List<Material> materials = materialChoice.getChoices();
+//              List<ItemStack> itemStacks = new ArrayList<>();
+//              for (Material material : materials)
+//              {
+//                itemStacks.add(ItemStackUtil.loredItemStack(material));
+//              }
+//              recipeChoice = new RecipeChoice.ExactChoice(itemStacks);
+//            }
+//            if (recipeChoice instanceof ExactChoice exactChoice)
+//            {
+//              List<ItemStack> itemStacks = new ArrayList<>(exactChoice.getChoices());
+//              for (int i = 0; i < itemStacks.size(); i++)
+//              {
+//                itemStacks.set(i, ItemLore.setItemLore(itemStacks.get(i)));
+//              }
+//              recipeChoice = new RecipeChoice.ExactChoice(itemStacks);
+//            }
+//            newShapedRecipe.setIngredient(c, recipeChoice);
+//          }
+//          recipes.add(newShapedRecipe);
+//        }
+      }
+      catch (Exception ignored)
+      {
+
+      }
     }
+    recipes = Collections.unmodifiableList(recipes);
   }
 
   public static boolean hasCraftingRecipe(@NotNull Material type)
   {
     // SpecialCase
     if (Constant.DURABLE_ITEMS.contains(type))
+    {
       return true;
+    }
     switch (type)
     {
       case ACACIA_WOOD:
@@ -164,30 +204,9 @@ public class RecipeChecker
     {
       for (Recipe recipe : recipes)
       {
-        if (recipe instanceof FurnaceRecipe furnaceRecipe)
+        if (recipe instanceof CookingRecipe furnaceRecipe)
         {
           if (furnaceRecipe.getInput().getType() == type)
-          {
-            return true;
-          }
-        }
-        if (recipe instanceof BlastingRecipe blastingRecipe)
-        {
-          if (blastingRecipe.getInput().getType() == type)
-          {
-            return true;
-          }
-        }
-        if (recipe instanceof SmokingRecipe smokingRecipe)
-        {
-          if (smokingRecipe.getInput().getType() == type)
-          {
-            return true;
-          }
-        }
-        if (recipe instanceof CampfireRecipe campfireRecipe)
-        {
-          if (campfireRecipe.getInput().getType() == type)
           {
             return true;
           }

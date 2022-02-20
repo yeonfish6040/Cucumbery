@@ -11,13 +11,6 @@ public class EnchantGlow extends CustomEnchant
 
   @Override
   @NotNull
-  public String getName()
-  {
-    return "Glow";
-  }
-
-  @Override
-  @NotNull
   public String translationKey()
   {
     return "발광";

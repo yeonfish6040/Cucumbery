@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Custom Effect of {@link PotionEffect#getType()}
+ * Custom Effect of {@link PotionEffect}
  */
 public class CustomEffect
 {
@@ -282,7 +282,7 @@ public class CustomEffect
   @NotNull
   protected CustomEffect copy()
   {
-    return new CustomEffect(this.getType(), this.getDuration(), this.getAmplifier(), this.getDisplayType());
+    return new CustomEffect(getType(), getInitDuration(), getInitAmplifier(), getDisplayType());
   }
 
   public boolean isHidden()
@@ -293,12 +293,12 @@ public class CustomEffect
   @SuppressWarnings("all")
   public boolean isTimeHidden()
   {
-    return isTimeHiddenWhenFull() || this.duration == -1 || this.effectType.isTimeHidden();
+    return effectType.isTimeHidden() || duration == -1;
   }
 
   public boolean isTimeHiddenWhenFull()
   {
-    return this.effectType.isTimeHiddenWhenFull() && this.duration + 1 >= this.initDuration;
+    return effectType.isTimeHiddenWhenFull() || duration + 1 >= initDuration;
   }
 
   /**

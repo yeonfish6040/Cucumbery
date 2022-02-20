@@ -35,7 +35,7 @@ public class CommandVanillaTeleport extends CommandBase
       if (!hideOutput && Boolean.TRUE.equals(sender.getWorld().getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK)))
       {
         MessageUtil.info(sender, ComponentUtil.translate("%s(으)로 순간이동하였습니다", location));
-        MessageUtil.sendAdminMessage(sender, null, "%s(으)로 순간이동하였습니다", location);
+        MessageUtil.sendAdminMessage(sender, "%s(으)로 순간이동하였습니다", location);
       }
     }
     else

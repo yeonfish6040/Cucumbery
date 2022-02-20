@@ -2404,11 +2404,27 @@ public class Method extends SoundPlay
   {
     if (placeholder)
     {
-      command = PlaceHolderUtil.placeholder(sender, command, extraParams);
+      if (command.contains("--noph"))
+      {
+        command = command.replaceFirst("--noph", "");
+        command = PlaceHolderUtil.placeholder(sender, command, extraParams, true);
+      }
+      else
+      {
+        command = PlaceHolderUtil.placeholder(sender, command, extraParams);
+      }
     }
     if (calculate)
     {
-      command = PlaceHolderUtil.evalString(command);
+      if (command.contains("--noeval") || command.contains("--nocalc"))
+      {
+        command = command.replaceFirst("--noeval", "");
+        command = command.replaceFirst("--nocalc", "");
+      }
+      else
+      {
+        command = PlaceHolderUtil.evalString(command);
+      }
     }
     boolean senderIsPlayer = sender instanceof Player;
     boolean isOp = !senderIsPlayer || sender.isOp();

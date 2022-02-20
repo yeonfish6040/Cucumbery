@@ -4,22 +4,22 @@ import com.destroystokyo.paper.Namespaced;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
-import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.nbt.CucumberyTag;
-import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -178,7 +178,7 @@ public class BlockBreak implements Listener
       return;
     }
 
-    if (CustomEffectManager.hasEffect(player, CustomEffectType.DARKNESS_TERROR_ACTIVATED) && Math.random() < 0.05)
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.DARKNESS_TERROR_ACTIVATED) && Math.random() < 0.15)
     {
       Variable.darknessTerrorFlag.add(player.getUniqueId());
       MessageUtil.sendActionBar(player, "&c아야! 너무 어두워서 블록을 캐다가 파편에 맞았습니다!");
@@ -187,14 +187,11 @@ public class BlockBreak implements Listener
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), ()-> Variable.darknessTerrorFlag.remove(player.getUniqueId()), 10L);
     }
 
-    NBTCompoundList customEnchantsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_ENCHANTS_KEY);
-
     Object value = player.getWorld().getGameRuleValue(GameRule.DO_TILE_DROPS);
 
-    boolean isTelekinesis = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.TELEKINESIS.toString()) ||
-            (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.TELEKINESIS)) ||
+    boolean isTelekinesis = (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.TELEKINESIS)) ||
             CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS),
-            isSmeltingTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.SMELTING_TOUCH.toString()) ||
+            isSmeltingTouch = (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
                     CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH),
             isSilkTouch = CustomEffectManager.hasEffect(player, CustomEffectType.SILK_TOUCH);
     Collection<ItemStack> drops = block.getDrops(item, player);
@@ -207,20 +204,20 @@ public class BlockBreak implements Listener
       drops = block.getDrops(silk, player);
     }
     boolean vanilliaDrop = !drops.isEmpty() && player.getGameMode() != GameMode.CREATIVE && event.isDropItems() && value != null && value.equals(true);
-    boolean isCoarseTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.COARSE_TOUCH.toString());
+    boolean isCoarseTouch = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.COARSE_TOUCH);
 
     if (isCoarseTouch)
     {
       event.setDropItems(false);
     }
 
-    boolean isUnskilledTouch = NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.UNSKILLED_TOUCH.toString());
+    boolean isUnskilledTouch = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.UNSKILLED_TOUCH);
 
     if (isUnskilledTouch || isSilkTouch)
     {
       event.setExpToDrop(0);
     }
-    if (NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.VANISHING_TOUCH.toString()))
+    if (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.VANISHING_TOUCH))
     {
       if (block.getState() instanceof Container container)
       {
@@ -273,15 +270,15 @@ public class BlockBreak implements Listener
       customDrops = new ArrayList<>(drops);
     }
 
-    if (vanilliaDrop && !isCoarseTouch && !isUnskilledTouch && NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.DULL_TOUCH.toString()))
+    if (vanilliaDrop && !isCoarseTouch && !isUnskilledTouch && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.DULL_TOUCH)))
     {
-      int level = NBTAPI.getCustomEnchantLevel(item, Constant.CustomEnchant.DULL_TOUCH);
+      int level = itemMeta.getEnchantLevel(CustomEnchant.DULL_TOUCH);
       if (Method.random(1, 100) <= level)
       {
         event.setDropItems(false);
         event.setExpToDrop(0);
         ItemStack flint = Method.usingLoreFeature(player) ? ItemStackUtil.loredItemStack(Material.FLINT) : new ItemStack(Material.FLINT);
-        if (ItemStackUtil.countSpace(player.getInventory(), flint) >= 1 && NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.TELEKINESIS.toString()))
+        if (ItemStackUtil.countSpace(player.getInventory(), flint) >= 1 && isTelekinesis)
         {
           player.getInventory().addItem(flint);
         }
@@ -498,9 +495,7 @@ public class BlockBreak implements Listener
             player.getWorld().dropItemNaturally(location, drop);
           }
         }
-        if (!blockPlaceDataApplied && !isCoarseTouch && NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.COLD_TOUCH.toString()) && !Objects.requireNonNull(itemMeta)
-                .hasEnchant(
-                        Enchantment.SILK_TOUCH))
+        if (!blockPlaceDataApplied && !isCoarseTouch && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.COLD_TOUCH) && itemMeta.hasEnchant(Enchantment.SILK_TOUCH)))
         {
           switch (blockType)
           {
@@ -626,7 +621,7 @@ public class BlockBreak implements Listener
             }
           }
         }
-        else if (!isCoarseTouch && NBTAPI.commpoundListContainsValue(customEnchantsTag, CucumberyTag.ID_KEY, Constant.CustomEnchant.WARM_TOUCH.toString()) && blockType == Material.CACTUS)
+        else if (!isCoarseTouch && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.WARM_TOUCH)) && blockType == Material.CACTUS)
         {
           event.setDropItems(false);
           ItemStack result = new ItemStack(Material.CACTUS);

@@ -384,6 +384,19 @@ public class CustomConfig
       return key;
     }
 
+    @NotNull
+    public static UserData getByKey(@NotNull String s)
+    {
+      for (UserData userData : UserData.values())
+      {
+        if (userData.getKey().equals(s))
+        {
+          return userData;
+        }
+      }
+      throw new IllegalArgumentException("no user data key: "  + s);
+    }
+
     public Object getDefault()
     {
       return defaultValue;

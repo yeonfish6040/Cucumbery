@@ -5,7 +5,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,7 +28,7 @@ public class EntityTarget implements Listener
         return;
       }
     }
-    if (reason != TargetReason.TEMPT && entity.getType() != EntityType.EXPERIENCE_ORB && target instanceof Player player)
+    if (reason != TargetReason.TEMPT && !(entity instanceof ExperienceOrb) && target instanceof Player player)
     {
       GameMode gamemode = player.getGameMode();
       if (gamemode != GameMode.SURVIVAL && gamemode != GameMode.ADVENTURE)
@@ -39,6 +39,28 @@ public class EntityTarget implements Listener
       {
         event.setTarget(null);
         event.setCancelled(true);
+        return;
+      }
+    }
+
+    if (reason == TargetReason.CLOSEST_PLAYER && entity instanceof ExperienceOrb && target instanceof Player player)
+    {
+      String pickUpMode = UserData.ITEM_PICKUP_MODE.getString(player);
+      switch (pickUpMode)
+      {
+        case "sneak" -> {
+          if (!player.isSneaking())
+          {
+            event.setTarget(null);
+            event.setCancelled(true);
+            entity.teleport(entity);
+          }
+        }
+        case "disabled" -> {
+          event.setTarget(null);
+          event.setCancelled(true);
+          entity.teleport(entity);
+        }
       }
     }
   }

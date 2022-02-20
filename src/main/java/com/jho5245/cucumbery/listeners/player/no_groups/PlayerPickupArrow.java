@@ -1,8 +1,8 @@
 package com.jho5245.cucumbery.listeners.player.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,6 +28,21 @@ public class PlayerPickupArrow implements Listener
     {
       event.setCancelled(true);
       return;
+    }
+    String pickUpMode = UserData.ITEM_PICKUP_MODE.getString(player);
+    switch (pickUpMode)
+    {
+      case "sneak" -> {
+        if (!player.isSneaking())
+        {
+          event.setCancelled(true);
+          return;
+        }
+      }
+      case "disabled" -> {
+        event.setCancelled(true);
+        return;
+      }
     }
     if (Method.usingLoreFeature(player))
     {

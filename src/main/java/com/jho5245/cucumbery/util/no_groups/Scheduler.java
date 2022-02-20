@@ -116,6 +116,26 @@ public class Scheduler
   {
     entityTick();
     playerTick();
+    damageIndicator();
+  }
+
+  private static void damageIndicator()
+  {
+    Variable.lastDamageMillis.keySet().removeIf(uuid ->
+    {
+      Entity entity = Bukkit.getEntity(uuid);
+      return entity == null || !entity.isValid() || entity.isDead();
+    });
+    Variable.damageIndicatorStack.keySet().removeIf(uuid ->
+    {
+      int stack = Variable.damageIndicatorStack.get(uuid);
+      if (stack > 300)
+      {
+        return true;
+      }
+      Entity entity = Bukkit.getEntity(uuid);
+      return entity == null || !entity.isValid() || entity.isDead();
+    });
   }
 
   private static void entityTick()
@@ -130,6 +150,7 @@ public class Scheduler
         CustomEffectScheduler.trueInvisibility(entity);
         CustomEffectScheduler.axolotlsGrace(entity);
         CustomEffectScheduler.stop(entity);
+        CustomEffectScheduler.damageIndicator(entity);
       }
     }
   }

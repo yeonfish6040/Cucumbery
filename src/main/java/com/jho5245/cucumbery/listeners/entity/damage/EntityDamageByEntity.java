@@ -1,20 +1,22 @@
 package com.jho5245.cucumbery.listeners.entity.damage;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.deathmessages.DeathManager;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.nbt.CucumberyTag;
-import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -172,7 +174,6 @@ public class EntityDamageByEntity implements Listener
         }
       }
     }
-
     if (damager instanceof Player player)
     {
       UUID uuid = player.getUniqueId();
@@ -233,7 +234,7 @@ public class EntityDamageByEntity implements Listener
     {
       attcker = (Player) ((Projectile) damager).getShooter();
     }
-    if (attcker != null)
+    if (attcker != null && !CustomEffectManager.hasEffect(victim, CustomEffectType.NO_CUCUMBERY_ITEM_USAGE_ATTACK))
     {
       boolean isMelee = damager instanceof Player;
       boolean isPvP = event.getEntity() instanceof Player;
@@ -263,7 +264,6 @@ public class EntityDamageByEntity implements Listener
       this.sneakAttackPlayerRangedCommand(event, attcker, isMelee, isPvP, isSneaking);
       this.sneakAttackEntityRangedCommand(event, attcker, isMelee, isPvP, isSneaking);
     }
-//    this.rpg(event);
     this.damageActionbar(event);
     this.cancelFireworkDamage(event);
   }

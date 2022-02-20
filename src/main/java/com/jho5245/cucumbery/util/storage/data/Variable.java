@@ -228,4 +228,11 @@ public class Variable
   public static HashMap<UUID, Collection<PotionEffect>> buffFreezerEffects = new HashMap<>();
 
   public static HashMap<UUID, List<InventoryView>> lastInventory = new HashMap<>();
+
+  /**
+   * 개체가 피해를 입을 때 머리에 뜨는 대미지 표시기가 뜰 좌표값 스택을 위한 해시맵(UUID - 개체의 UUID, Integer - 스택 수)
+   */
+  public static HashMap<UUID, Integer> damageIndicatorStack = new HashMap<>();
+
+  public static HashMap<UUID, Long> lastDamageMillis = new HashMap<>();
 }

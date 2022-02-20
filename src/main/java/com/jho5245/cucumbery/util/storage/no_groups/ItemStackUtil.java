@@ -502,18 +502,20 @@ public class ItemStackUtil
     {
       for (Recipe recipe : RecipeChecker.recipes)
       {
-        if (recipe instanceof FurnaceRecipe furnaceRecipe)
+        if (recipe instanceof CookingRecipe cookingRecipe)
         {
-          if (furnaceRecipe.getInput().getType() == drop.getType())
+          RecipeChoice recipeChoice = cookingRecipe.getInputChoice();
+          if (recipeChoice.test(drop))
           {
-            drop.setType(furnaceRecipe.getResult().getType());
-            double exp = furnaceRecipe.getExperience();
+            drop.setType(cookingRecipe.getResult().getType());
+            double exp = cookingRecipe.getExperience();
             if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
             {
               int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.EXPERIENCE_BOOST).getAmplifier();
               exp = (1d * exp * (1 + (amplifier + 1) * 0.05));
             }
             expOutput.add(exp);
+            break;
           }
         }
       }

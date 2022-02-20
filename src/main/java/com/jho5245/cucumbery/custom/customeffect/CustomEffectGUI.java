@@ -15,6 +15,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Color;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -191,7 +192,7 @@ public class CustomEffectGUI
     int duration = customEffect.getDuration();
     int amplifier = customEffect.getAmplifier();
     Component description = customEffect.getDescription();
-    boolean isFinite = duration != -1, isAmplifiable = effectType.getMaxAmplifier() > 0, isTimeHidden = effectType.isTimeHidden();
+    boolean isFinite = duration != -1, isAmplifiable = effectType.getMaxAmplifier() > 0, isTimeHidden = effectType.isTimeHidden() || (effectType.isTimeHiddenWhenFull() && duration == customEffect.getInitDuration());
     if (!description.equals(Component.empty()))
     {
       try
@@ -256,6 +257,11 @@ public class CustomEffectGUI
       {
         lore.add(ComponentUtil.translate("&e우클릭하여 효과 제거"));
       }
+    }
+    if (effectType == CustomEffectType.CONTINUAL_SPECTATING && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() instanceof Player)
+    {
+      lore.add(Component.empty());
+      lore.add(ComponentUtil.translate("&e좌클릭하여 30초간 관전 외출"));
     }
     return lore;
   }
