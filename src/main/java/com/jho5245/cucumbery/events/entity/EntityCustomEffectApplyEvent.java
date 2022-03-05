@@ -5,12 +5,20 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 
-public class EntityCustomEffectApplyEvent extends EntityCustomEffectEvent implements Cancellable
+/**
+ * called when an {@link Entity} was applied a {@link CustomEffect}.
+ */
+public class EntityCustomEffectApplyEvent extends EntityCustomEffectAbstractApplyEvent implements Cancellable
 {
   private boolean cancelled;
   public EntityCustomEffectApplyEvent(@NotNull Entity what, @NotNull CustomEffect customEffect)
   {
-    super(what, customEffect);
+    this(what, customEffect, ApplyReason.PLUGIN);
+  }
+
+  public EntityCustomEffectApplyEvent(@NotNull Entity what, @NotNull CustomEffect customEffect, @NotNull ApplyReason reason)
+  {
+    super(what, customEffect, reason);
   }
 
   @Override

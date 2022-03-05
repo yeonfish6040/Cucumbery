@@ -434,6 +434,26 @@ public enum CustomEffectType implements Translatable, EnumHideable
    * 컴뱃 부스터
    */
   COMBAT_BOOSTER,
+
+  /**
+   * PvP 모드
+   */
+  PVP_MODE(true, true, false),
+
+  /**
+   * PvP 활성화
+   */
+  PVP_MODE_ENABLED(true, true,  false),
+
+  /**
+   * PvP 비활성화
+   */
+  PVP_MODE_DISABLED(true, true, true),
+
+  /**
+   * PvP 활성화 쿨타임
+   */
+  PVP_MODE_COOLDOWN(false, false, true),
   ;
 
   private final int maxAmplifier;
@@ -568,6 +588,10 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case FREEZING -> "얼어붙음";
               case NO_CUCUMBERY_ITEM_USAGE_ATTACK -> "대미지 이벤트 무시";
               case COMBAT_BOOSTER -> "컴뱃 부스터";
+              case PVP_MODE -> "PvP 모드";
+              case PVP_MODE_ENABLED -> "PvP 모드 활성화";
+              case PVP_MODE_DISABLED -> "PvP 모드 비활성화";
+              case PVP_MODE_COOLDOWN -> "PvP 모드 쿨타임";
               case MINECRAFT_SPEED -> TranslatableKeyParser.getKey(PotionEffectType.SPEED);
               case MINECRAFT_SLOWNESS -> TranslatableKeyParser.getKey(PotionEffectType.SLOW);
               case MINECRAFT_HASTE -> TranslatableKeyParser.getKey(PotionEffectType.FAST_DIGGING);
@@ -867,6 +891,10 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case NO_REGENERATION -> ComponentUtil.translate("HP가 재생되지 않습니다");
               case FREEZING -> ComponentUtil.translate("춥다.. 매우.. 춥다..");
               case COMBAT_BOOSTER -> ComponentUtil.translate("공격 속도가 25% 증가합니다");
+              case PVP_MODE -> ComponentUtil.translate("%s 효과가 있어야 PvP를 할 수 있습니다", ComponentUtil.translate("&a" + CustomEffectType.PVP_MODE_ENABLED.translationKey()));
+              case PVP_MODE_ENABLED -> ComponentUtil.translate("이 효과를 동시에 가지고 있는")
+                      .append(ComponentUtil.translate("플레이어와 PvP할 수 있습니다"));
+              case PVP_MODE_DISABLED -> ComponentUtil.translate("");
               case MINECRAFT_SPEED -> VanillaEffectDescription.getDescription(PotionEffectType.SPEED);
               case MINECRAFT_SLOWNESS -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW);
               case MINECRAFT_HASTE -> VanillaEffectDescription.getDescription(PotionEffectType.FAST_DIGGING);
@@ -942,7 +970,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case FANCY_SPOTLIGHT_ACTIVATED -> 20;
               case RESURRECTION_INVINCIBLE, DISAPPEAR -> 20 * 2;
               case COOLDOWN_CHAT -> 20 * 3;
-              case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN, TOWN_SHIELD -> 20 * 5;
+              case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN, TOWN_SHIELD,
+                      PVP_MODE_COOLDOWN -> 20 * 5;
               case STOP, COOLDOWN_ITEM_MEGAPHONE -> 20 * 10;
               case BREAD_KIMOCHI -> 20 * 60 * 3;
               case RESURRECTION_COOLDOWN -> 20 * 60 * 10;
@@ -965,7 +994,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
       case BANE_OF_ARTHROPODS, DARKNESS_TERROR_RESISTANCE -> itemStack = new ItemStack(Material.GLOW_INK_SAC);
       case BLESS_OF_SANS, WA_SANS -> itemStack = new ItemStack(Material.BONE);
       case BLESS_OF_VILLAGER, TOWN_SHIELD -> itemStack = new ItemStack(Material.EMERALD);
-      case BOSS_SLAYER, COMBAT_MODE_MELEE, COMBAT_MODE_MELEE_COOLDOWN, SHARPNESS -> itemStack = new ItemStack(Material.IRON_SWORD);
+      case BOSS_SLAYER, COMBAT_MODE_MELEE, COMBAT_MODE_MELEE_COOLDOWN, PVP_MODE, PVP_MODE_ENABLED, PVP_MODE_COOLDOWN, SHARPNESS -> itemStack = new ItemStack(Material.IRON_SWORD);
       case BREAD_KIMOCHI -> itemStack = new ItemStack(Material.BREAD);
       case BUFF_FREEZE -> itemStack = new ItemStack(Material.RABBIT_FOOT);
       case COMBAT_BOOSTER -> itemStack = new ItemStack(Material.SUGAR);
@@ -1046,7 +1075,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
    */
   int getId()
   {
-    // 가장 높은 버프 숫자 : 86 = COMBAT_BOOSTER
+    // 가장 높은 버프 숫자 : 89 = PVP_MODE_COOLDOWN
     return switch (this)
             {
               case AWKWARD -> 1;
@@ -1114,6 +1143,9 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case NOTHING -> 48;
               case OUTSIDER -> 49;
               case PARROTS_CHEER -> 50;
+              case PVP_MODE -> 87;
+              case PVP_MODE_ENABLED -> 88;
+              case PVP_MODE_COOLDOWN -> 89;
               case RESURRECTION -> 51;
               case RESURRECTION_COOLDOWN -> 52;
               case RESURRECTION_INVINCIBLE -> 53;
@@ -1149,7 +1181,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return switch (this)
             {
-              case COMBAT_MODE_MELEE, COMBAT_MODE_RANGED -> true;
+              case COMBAT_MODE_MELEE, COMBAT_MODE_RANGED, PVP_MODE_ENABLED -> true;
               default -> false;
             };
   }
@@ -1238,7 +1270,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return switch (this)
             {
-              case INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN -> false;
+              case INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, PVP_MODE_ENABLED, PVP_MODE_COOLDOWN -> false;
               default -> true;
             };
   }
@@ -1303,7 +1335,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
             {
               case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR_ACTIVATED, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER,
                       INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, HEROS_ECHO_OTHERS, FANCY_SPOTLIGHT_ACTIVATED, NEWBIE_SHIELD, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED,
-                      COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN, BREAD_KIMOCHI_SECONDARY_EFFECT, DISAPPEAR, DAMAGE_INDICATOR, NO_CUCUMBERY_ITEM_USAGE_ATTACK -> true;
+                      COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN, BREAD_KIMOCHI_SECONDARY_EFFECT, DISAPPEAR, DAMAGE_INDICATOR, NO_CUCUMBERY_ITEM_USAGE_ATTACK,
+                      PVP_MODE_COOLDOWN -> true;
               default -> false;
             };
   }

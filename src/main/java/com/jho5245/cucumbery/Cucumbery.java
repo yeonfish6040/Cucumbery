@@ -480,6 +480,7 @@ public class Cucumbery extends JavaPlugin
     new CommandVanillaTeleport().registerCommand("teleport", "minecraft.command.teleport", "tp");
     new CommandSellItem().registerCommand("sellitem", "cucumbery.command.sellitem", "csellitem");
     new CommandClear2().registerCommand("clear2", "cucumbery.command.clear2", "cclear");
+    new CommandSearchChestItem().registerCommand("search-container-item", "cucumbey.command.search_container_item", "search-container-item");
   }
 
   private void registerCommands()

@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectGUI;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
@@ -381,7 +382,7 @@ public class CommandCustomEffect implements CommandExecutor, TabCompleter
     List<Entity> successEntities = new ArrayList<>();
     for (Entity entity : entities)
     {
-      if (CustomEffectManager.addEffect(entity, customEffect, force))
+      if (CustomEffectManager.addEffect(entity, customEffect, ApplyReason.COMMAND, force))
       {
         successEntities.add(entity);
       }

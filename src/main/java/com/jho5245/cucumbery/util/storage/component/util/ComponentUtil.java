@@ -6,13 +6,12 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.VanillaEffectDescription;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
-import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
@@ -20,8 +19,8 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import io.papermc.paper.advancement.AdvancementDisplay.Frame;
@@ -137,42 +136,11 @@ public class ComponentUtil
       }
       else if (object instanceof ItemStack itemStack)
       {
-        final ItemStack giveItem = ItemLore.removeItemLore(itemStack.clone());
-        itemStack = itemStack.clone();
-        Material type = itemStack.getType();
-        if (type.isItem() && type != Material.AIR)
+        Component concat = ItemStackComponent.itemStackComponent(itemStack, 1, null, false);
+        if (concat.color() == null)
         {
-          NBTItem nbtItem = new NBTItem(itemStack);
-          nbtItem.removeKey("BlockEntityTag");
-          itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
+          concat = concat.color(Constant.THE_COLOR);
         }
-        if (player != null)
-        {
-          ItemLore.setItemLore(itemStack, player);
-        }
-        Component concat = ItemNameUtil.itemName(itemStack, Constant.THE_COLOR);
-        if (concat instanceof TextComponent textComponent && textComponent.content().equals(""))
-        {
-          List<Component> children = new ArrayList<>(concat.children());
-          for (int i = 0; i < children.size(); i++)
-          {
-            Component child = children.get(i).hoverEvent(itemStack.asHoverEvent());
-            children.set(i, child);
-          }
-          concat = concat.children(children);
-        }
-        else
-        {
-          concat = concat.hoverEvent(itemStack.asHoverEvent());
-        }
-        String nbt = new NBTItem(giveItem).toString();
-        if (nbt.equals("{}"))
-        {
-          nbt = "";
-        }
-        String giveCommand = Cucumbery.using_CommandAPI ? "/cgive" : "/give";
-        ClickEvent clickEvent = ClickEvent.copyToClipboard(giveCommand + " @p minecraft:" + itemStack.getType().toString().toLowerCase() + nbt);
-        concat = concat.clickEvent(clickEvent);
         component = component.append(concat);
       }
       else if (object instanceof Prefix prefix)
@@ -1008,7 +976,6 @@ public class ComponentUtil
             }
           }
         }
-
       }
       else if (audience instanceof Player player && c == '[')
       {
@@ -1029,7 +996,12 @@ public class ComponentUtil
                 builder = new StringBuilder();
                 components.add(old);
               }
-              components.add(ItemStackComponent.itemStackComponent(itemStack, Constant.THE_COLOR));
+              Component com = ItemStackComponent.itemStackComponent(itemStack, itemStack.getAmount(), Constant.THE_COLOR, true);
+              if (com.color() == null)
+              {
+                com = com.color(Constant.THE_COLOR);
+              }
+              components.add(com);
             }
           }
           else

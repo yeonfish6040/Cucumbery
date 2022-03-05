@@ -8,7 +8,7 @@ import com.jho5245.cucumbery.custom.customrecipe.CustomRecipeUtil;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryRecipe;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.Reason;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.gui.GUI;
 import com.jho5245.cucumbery.util.gui.GUI.GUIType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -1871,11 +1871,11 @@ public class InventoryClick implements Listener
                   Integer amplifier = nbtItem.getInteger("removeEffectAmplifier");
                   if (amplifier == null)
                   {
-                    CustomEffectManager.removeEffect(player, effectType, Reason.PLAYER);
+                    CustomEffectManager.removeEffect(player, effectType, RemoveReason.PLAYER);
                   }
                   else
                   {
-                    CustomEffectManager.removeEffect(player, effectType, amplifier, Reason.PLAYER);
+                    CustomEffectManager.removeEffect(player, effectType, amplifier, RemoveReason.PLAYER);
                   }
                   if (effectType == CustomEffectType.CONTINUAL_SPECTATING && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() instanceof Player)
                   {

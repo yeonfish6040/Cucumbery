@@ -1,30 +1,32 @@
 package com.jho5245.cucumbery.events.entity;
 
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityCustomEffectRemoveEvent extends EntityCustomEffectEvent
 {
-  private final Reason reason;
+  private final RemoveReason reason;
 
   public EntityCustomEffectRemoveEvent(@NotNull Entity what, @NotNull CustomEffect customEffect)
   {
-    this(what, customEffect, Reason.PLUGIN);
+    this(what, customEffect, RemoveReason.PLUGIN);
   }
 
-  public EntityCustomEffectRemoveEvent(@NotNull Entity what, @NotNull CustomEffect customEffect, @NotNull Reason reason)
+  public EntityCustomEffectRemoveEvent(@NotNull Entity what, @NotNull CustomEffect customEffect, @NotNull RemoveReason reason)
   {
     super(what, customEffect);
     this.reason = reason;
   }
 
   /**
-   * see {@link Reason}
+   * see {@link RemoveReason}
    * @return the reason that the {@link CustomEffect} was removed
    */
-  public Reason getReason()
+  public RemoveReason getReason()
   {
     return reason;
   }
@@ -32,11 +34,11 @@ public class EntityCustomEffectRemoveEvent extends EntityCustomEffectEvent
   /**
    * Type of effect removal
    */
-  public enum Reason
+  public enum RemoveReason
   {
     /**
      * when effect is removed by
-     * {@link com.jho5245.cucumbery.custom.customeffect.CustomEffectManager#removeEffect(Entity, CustomEffectType)}
+     * {@link CustomEffectManager#removeEffect(Entity, CustomEffectType)}
      */
     PLUGIN,
     /**
@@ -44,7 +46,7 @@ public class EntityCustomEffectRemoveEvent extends EntityCustomEffectEvent
      */
     TIME_OUT,
     /**
-     * When the {@link org.bukkit.entity.Player} has right-clicked the effect icon in GUI
+     * When the {@link Player} has right-clicked the effect icon in GUI
      */
     PLAYER,
   }

@@ -104,5 +104,29 @@ public class EntityCustomEffectPreApply implements Listener
         event.setCancelled(true);
       }
     }
+
+    if (customEffectType == CustomEffectType.PVP_MODE_ENABLED && CustomEffectManager.hasEffect(entity, CustomEffectType.PVP_MODE_COOLDOWN))
+    {
+      event.setCancelled(true);
+    }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

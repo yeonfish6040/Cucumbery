@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -41,7 +42,7 @@ public class AreaEffectCloudApply implements Listener
                   DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase()));
           for (Entity entity : event.getAffectedEntities())
           {
-            CustomEffectManager.addEffect(entity, customEffect);
+            CustomEffectManager.addEffect(entity, customEffect, ApplyReason.LINGERING_POTION);
           }
         }
         catch (Exception ignored)

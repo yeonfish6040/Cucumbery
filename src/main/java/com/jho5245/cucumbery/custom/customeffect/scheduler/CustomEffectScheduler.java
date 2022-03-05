@@ -9,7 +9,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.RealDurationCustomEffect;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.Reason;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.CreateGUI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -83,7 +83,7 @@ public class CustomEffectScheduler
       customEffect.tick();
       if (customEffect.getDuration() == 0)
       {
-        CustomEffectManager.removeEffect(entity, customEffect.getType(), customEffect.getAmplifier(), Reason.TIME_OUT);
+        CustomEffectManager.removeEffect(entity, customEffect.getType(), customEffect.getAmplifier(), RemoveReason.TIME_OUT);
       }
     }
   }

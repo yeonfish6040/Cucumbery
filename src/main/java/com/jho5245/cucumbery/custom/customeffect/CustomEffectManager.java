@@ -4,7 +4,8 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.*;
 import com.jho5245.cucumbery.events.entity.*;
-import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.Reason;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -66,8 +67,18 @@ public class CustomEffectManager
     return addEffect(entity, customEffect, false);
   }
 
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect, boolean force)
+  {
+    return addEffect(entity, customEffect, ApplyReason.PLUGIN, force);
+  }
+
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect, @NotNull ApplyReason reason)
+  {
+    return addEffect(entity, customEffect, reason, false);
+  }
+
   @SuppressWarnings("all")
-  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect effect, boolean force)
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect effect, @NotNull ApplyReason reason, boolean force)
   {
     if (!force && hasEffect(entity, effect.getType()))
     {
@@ -80,7 +91,7 @@ public class CustomEffectManager
       }
     }
     effect = effect.copy();
-    EntityCustomEffectPreApplyEvent preApplyEvent = new EntityCustomEffectPreApplyEvent(entity, effect);
+    EntityCustomEffectPreApplyEvent preApplyEvent = new EntityCustomEffectPreApplyEvent(entity, effect, reason);
     Cucumbery.getPlugin().getPluginManager().callEvent(preApplyEvent);
     if (preApplyEvent.isCancelled() && !force)
     {
@@ -149,7 +160,7 @@ public class CustomEffectManager
     {
       effect = new RealDurationCustomEffectImple(effectType, initDura, initAmple, displayType, System.currentTimeMillis(), System.currentTimeMillis() + initDura * 50L);
     }
-    EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect);
+    EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect, reason);
     Cucumbery.getPlugin().getPluginManager().callEvent(applyEvent);
     if (applyEvent.isCancelled())
     {
@@ -157,31 +168,17 @@ public class CustomEffectManager
     }
     customEffects.add(effect);
     effectMap.put(entity.getUniqueId(), customEffects);
-    EntityCustomEffectPostApplyEvent postApplyEvent = new EntityCustomEffectPostApplyEvent(entity, effect);
+    EntityCustomEffectPostApplyEvent postApplyEvent = new EntityCustomEffectPostApplyEvent(entity, effect, reason);
     Cucumbery.getPlugin().getPluginManager().callEvent(postApplyEvent);
     return true;
   }
 
-  public static void addEffects(@NotNull Entity entity, @NotNull List<CustomEffect> effects)
-  {
-    addEffects(entity, effects, false);
-  }
-
-  public static void addEffects(@NotNull Entity entity, @NotNull List<CustomEffect> effects, boolean force)
-  {
-    boolean success = true;
-    for (CustomEffect customEffect : effects)
-    {
-      success = success && addEffect(entity, customEffect, force);
-    }
-  }
-
   public static boolean removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType)
   {
-    return removeEffect(entity, effectType, Reason.PLUGIN);
+    return removeEffect(entity, effectType, RemoveReason.PLUGIN);
   }
 
-  public static boolean removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType, @NotNull Reason reason)
+  public static boolean removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType, @NotNull EntityCustomEffectRemoveEvent.RemoveReason reason)
   {
     if (!hasEffect(entity, effectType))
     {
@@ -218,10 +215,10 @@ public class CustomEffectManager
 
   public static void removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType, int amplifier)
   {
-    removeEffect(entity, effectType, amplifier, Reason.PLUGIN);
+    removeEffect(entity, effectType, amplifier, RemoveReason.PLUGIN);
   }
 
-  public static void removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType, int amplifier, @NotNull Reason reason)
+  public static void removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType, int amplifier, @NotNull EntityCustomEffectRemoveEvent.RemoveReason reason)
   {
     if (!hasEffect(entity, effectType))
     {

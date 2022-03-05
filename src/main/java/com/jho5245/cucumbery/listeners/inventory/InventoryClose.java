@@ -81,7 +81,8 @@ public class InventoryClose implements Listener
             shulker.setItemMeta(boxMeta);
             SoundPlay.playSound(player, Sound.BLOCK_SHULKER_BOX_CLOSE, SoundCategory.BLOCKS);
             // 휴대용 셜커 상자의 설명 업데이트
-            Method.updateInventory(player);
+            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+            Method.updateInventory(player), 0L);
             return;
           }
         }

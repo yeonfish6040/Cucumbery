@@ -880,7 +880,7 @@ public class MessageUtil
 
   public static void noArg(@NotNull Object audience, @NotNull Prefix reason, @NotNull String arg)
   {
-    sendError(audience, reason + " &r(&e" + arg + "&r)");
+    sendError(audience, "%s (%s)", reason, arg);
   }
 
   public static void shortArg(@NotNull Object audience, int input, @NotNull String[] args)

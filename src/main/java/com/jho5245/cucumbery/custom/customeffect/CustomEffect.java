@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Custom Effect of {@link PotionEffect}
+ * Represents a custom effect of {@link PotionEffect}.
  */
 public class CustomEffect
 {

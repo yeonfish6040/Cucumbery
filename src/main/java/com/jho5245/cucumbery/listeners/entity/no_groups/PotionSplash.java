@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -74,7 +75,7 @@ public class PotionSplash implements Listener
                     duration == -1 ? -1 : Math.max(1, (int) (duration * intensity)),
                     potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
                     DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())
-            ));
+            ), ApplyReason.SPLASH_POTION);
           }
         }
         catch (Exception ignored)

@@ -21,5 +21,9 @@ public class EntityCustomEffectApply implements Listener
       CustomEffectManager.removeEffect(entity, customEffectType);
       event.setCancelled(true);
     }
+    if (customEffectType == CustomEffectType.PVP_MODE_ENABLED)
+    {
+      CustomEffectManager.addEffect(entity, CustomEffectType.PVP_MODE_COOLDOWN);
+    }
   }
 }
