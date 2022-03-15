@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,7 +14,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Action;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 public class EntityPotionEffect implements Listener
 {
@@ -25,7 +30,27 @@ public class EntityPotionEffect implements Listener
       return;
     }
     Entity entity = event.getEntity();
+    UUID uuid = entity.getUniqueId();
     Action action = event.getAction();
+    PotionEffect potionEffect = event.getNewEffect();
+
+    if (potionEffect != null && (action == Action.ADDED || action == Action.CHANGED))
+    {
+      int duration = potionEffect.getDuration();
+      PotionEffectType effectType = potionEffect.getType();
+      HashMap<String, Integer> hashMap;
+      if (Variable.potionEffectApplyMap.containsKey(uuid))
+      {
+        hashMap = Variable.potionEffectApplyMap.get(uuid);
+      }
+      else
+      {
+        hashMap = new HashMap<>();
+      }
+      hashMap.put(effectType.translationKey(), duration);
+      Variable.potionEffectApplyMap.put(uuid, hashMap);
+    }
+
     Cause cause = event.getCause();
     PotionEffectType effectType = event.getModifiedType();
 

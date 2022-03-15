@@ -1,26 +1,21 @@
 package com.jho5245.cucumbery.util.no_groups;
 
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("all")
-public class TestCommand implements CommandExecutor, TabCompleter
+public class TestCommand implements CommandExecutor, AsyncTabCompleter
 {
   private static final NamespacedKey test = NamespacedKey.fromString("test");
 
@@ -35,6 +30,14 @@ public class TestCommand implements CommandExecutor, TabCompleter
     {
       if (sender instanceof Player player)
       {
+        Location location = LocationUtil.location(sender, args[0], false, true);
+        if (location != null)
+        {
+          MessageUtil.info(player, player.getLocation());
+          MessageUtil.info(player, location);
+        }
+        /*
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
         switch (args[0])
         {
           case "add" -> {
@@ -50,7 +53,7 @@ public class TestCommand implements CommandExecutor, TabCompleter
           case "remove" -> {
             MessageUtil.sendMessage(player, Bukkit.removeRecipe(test) ? "recipe removed!" : "could not reipce that recipe!");
           }
-        }
+        }*/
       }
       if (args.length >= 2)
       {
@@ -113,6 +116,17 @@ public class TestCommand implements CommandExecutor, TabCompleter
       return Collections.EMPTY_LIST;
     }
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  @NotNull
+  public List<Completion> completion(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {
+    int length = args.length;
+    if (length == 1)
+    {
+      return TabCompleterUtil.locationArgument(sender, args, "<위치>", null, false);
+    }
+    return Collections.singletonList(TabCompleterUtil.ARGS_LONG);
   }
 }
 

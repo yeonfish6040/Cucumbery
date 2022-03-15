@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 20
+config-version: 21
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -746,3 +746,6 @@ use-damage-indicator:
     # 마인크래프트에서 대미지가 너무 높을 경우 입자가 너무 많이 나와 크래시가 나는 경우를 방지해줌
     # -1을 입력하여 비활성화
     max-vanilla-damage-indicator-particles: 100
+
+# 적용 중인 효과가 없을 때도 보스바를 띄울 것인가?
+show-boss-bar-when-no-effects: true

@@ -1635,6 +1635,26 @@ public class Method extends SoundPlay
     return Method.startsWith(input, Method.arrayToList(args), reverse);
   }
 
+  public static boolean allStartsWith(String input, boolean reverse, String... args)
+  {
+    if (input == null || args == null)
+    {
+      return false;
+    }
+    for (String arg : args)
+    {
+      if (arg == null)
+      {
+        continue;
+      }
+      if ((!reverse && !input.startsWith(arg)) || (reverse && !arg.startsWith(input)))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public static boolean startsWith(String input, List<String> args, boolean reverse)
   {
     if (input == null || args == null)
@@ -2846,7 +2866,7 @@ public class Method extends SoundPlay
   private static List<String> tabCompleterEntity(CommandSender sender, String lastArg, boolean excludeNonPlayerEntity)
   {
     List<String> list = new ArrayList<>(Arrays.asList("@p", "@r", "@a", "@s"));
-    if (!sender.hasPermission("asdf"))
+    if (!sender.hasPermission("minecraft.command.selector"))
     {
       list.clear();
     }
@@ -2921,6 +2941,7 @@ public class Method extends SoundPlay
       return Collections.singletonList(ComponentUtil.serialize(ComponentUtil.translate("argument.entity.selector.not_allowed")));
     }
     List<String> list = new ArrayList<>(tabCompleterEntity(sender, args[args.length - 1]));
+    if (sender.hasPermission("minecraft.command.selector"))
     list.add("@e");
     List<String> returnList = Method.tabCompleterList(args, list, key, true);
     if ((Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") || !list.contains(args[args.length - 1]))

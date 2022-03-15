@@ -4,17 +4,26 @@ import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.josautil.KoreanUtils;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import io.papermc.paper.advancement.AdvancementDisplay.Frame;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.event.HoverEvent.Action;
+import net.kyori.adventure.text.event.HoverEvent.ShowItem;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
@@ -25,6 +34,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BundleMeta;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -136,6 +147,104 @@ public class MessageUtil
       if (isInDoubleQuote || isInQuote)
       {
         return new String[]{(ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end")))};
+      }
+      a.add(builder.toString());
+    }
+    if ((forTabComplete && a.isEmpty()) || input.endsWith(" "))
+    {
+      a.add("");
+    }
+    return Method.listToArray(a);
+  }
+
+  @Deprecated
+  @NotNull
+  public static String[] wrapWithQuote2(boolean forTabComplete, @NotNull String[] args)
+  {
+    String input = listToString(" ", args);
+    input = forTabComplete ? PlaceHolderUtil.evalString(PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), input, null)) : input;
+    if (input.equals("'") || input.equals("\""))
+    {
+      return new String[]{"command.expected.separator"};
+    }
+    List<String> a = new ArrayList<>();
+    StringBuilder builder = new StringBuilder();
+    boolean isInQuote = false;
+    boolean isInDoubleQuote = false;
+    for (int i = 0; i < input.length(); i++)
+    {
+      char c = input.charAt(i);
+      final boolean b = i + 1 < input.length() && input.charAt(i + 1) != ' ';
+      if (c == '\"' && !isInQuote)
+      {
+        if (isInDoubleQuote)
+        {
+          if (i + 1 < input.length() && input.charAt(i + 1) == '\"')
+          {
+            builder.append("\"");
+            i++;
+            continue;
+          }
+          if (b)
+          {
+            return new String[]{"command.expected.separator"};
+          }
+          if (!builder.isEmpty())
+          {
+            a.add(builder.toString());
+            builder = new StringBuilder();
+            isInDoubleQuote = false;
+          }
+        }
+        else
+        {
+          isInDoubleQuote = true;
+        }
+      }
+      else if (c == '\'' && !isInDoubleQuote)
+      {
+        if (isInQuote)
+        {
+          if (i + 1 < input.length() && input.charAt(i + 1) == '\'')
+          {
+            builder.append("'");
+            i++;
+            continue;
+          }
+          if (b)
+          {
+            return new String[]{"command.expected.separator"};
+          }
+          if (!builder.isEmpty())
+          {
+            a.add(builder.toString());
+            builder = new StringBuilder();
+            isInQuote = false;
+          }
+        }
+        else
+        {
+          isInQuote = true;
+        }
+      }
+      else if (c == ' ' && !isInQuote && !isInDoubleQuote)
+      {
+        if (!builder.isEmpty() && !builder.toString().equals(" "))
+        {
+          a.add(builder.toString());
+        }
+        builder = new StringBuilder();
+      }
+      else
+      {
+        builder.append(c);
+      }
+    }
+    if (!builder.isEmpty())
+    {
+      if (isInDoubleQuote || isInQuote)
+      {
+        return new String[]{"parsing.quote.expected.end"};
       }
       a.add(builder.toString());
     }
@@ -260,6 +369,59 @@ public class MessageUtil
   }
 
   /**
+   * 플레이어마다 컵포넌트의 내용물을(주로 아이템) 다르게 하기 위함
+   */
+  @NotNull
+  private static Component translate(@NotNull Player player, @NotNull Component component)
+  {
+    HoverEvent<?> hoverEvent = component.hoverEvent();
+    if (hoverEvent != null && hoverEvent.action() == Action.SHOW_ITEM)
+    {
+      ShowItem showItem = (ShowItem) hoverEvent.value();
+      Material material = Material.valueOf(showItem.item().value().toUpperCase());
+      ItemStack itemStack = new ItemStack(material, showItem.count());
+      BinaryTagHolder binaryTagHolder = showItem.nbt();
+      if (binaryTagHolder != null)
+      {
+        NBTItem nbtItem = new NBTItem(itemStack, true);
+        nbtItem.mergeCompound(new NBTContainer(binaryTagHolder.string()));
+      }
+      if (material == Material.BUNDLE && "test".equals(new NBTItem(itemStack).getString("test")))
+      {
+        itemStack = ((BundleMeta) itemStack.getItemMeta()).getItems().get(0);
+      }
+      if (Method.usingLoreFeature(player))
+      {
+        ItemLore.setItemLore(itemStack, new ItemLoreView(player));
+      }
+      else
+      {
+        ItemLore.removeItemLore(itemStack);
+      }
+      component = component.hoverEvent(ItemStackComponent.itemStackComponent(itemStack).hoverEvent());
+    }
+    if (component instanceof TranslatableComponent translatableComponent)
+    {
+      List<Component> args = new ArrayList<>(translatableComponent.args());
+      for (int i = 0; i < args.size(); i++)
+      {
+        args.set(i, translate(player, args.get(i)));
+      }
+      component = translatableComponent.args(args);
+    }
+    if (!component.children().isEmpty())
+    {
+      List<Component> children = new ArrayList<>(component.children());
+      for (int i = 0; i < children.size(); i++)
+      {
+        children.set(i, translate(player, children.get(i)));
+      }
+      component = component.children(children);
+    }
+    return component;
+  }
+
+  /**
    * 메시지를 보냅니다.
    *
    * @param audience 메시지를 받는 대상
@@ -282,14 +444,10 @@ public class MessageUtil
     }
     if (audience instanceof Collection<?> list)
     {
-      if (list.stream().allMatch(Predicates.instanceOf(Audience.class)::apply))
-      {
-        Collection<Audience> audiences = (Collection<Audience>) list;
-        for (Audience a : audiences)
+        for (Object o : list)
         {
-          MessageUtil.sendMessage(a, objects);
+          MessageUtil.sendMessage(o, objects);
         }
-      }
     }
     if (audience instanceof Audience a)
     {
@@ -297,10 +455,21 @@ public class MessageUtil
       if (objects.length == 1 && objects[0] instanceof Component component)
       {
         message = component;
+        if (a instanceof Player player)
+        {
+          message = translate(player, message);
+        }
       }
       else
       {
-        message = ComponentUtil.create(objects);
+        if (a instanceof Player player)
+        {
+          message = ComponentUtil.create(player, objects);
+        }
+        else
+        {
+          message = ComponentUtil.create(objects);
+        }
       }
       if (a instanceof ConsoleCommandSender)
       {
@@ -689,6 +858,12 @@ public class MessageUtil
       return false;
     }
     return true;
+  }
+
+  @Deprecated
+  public static boolean checkQuoteIsValidInArgs2(@NotNull CommandSender sender, @NotNull String[] args)
+  {
+    return (args.length != 1 || !args[0].equals("parsing.quote.expected.end")) && (args.length != 1 || !args[0].equals("command.expected.separator"));
   }
 
   /**
@@ -1085,6 +1260,7 @@ public class MessageUtil
       word = word.replaceAll("[&%!?\"'\\\\$_,\\-ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅙㅞㅚㅟㅢㅝㅘㅐㅖ∞ㄷ+]", "가");
       word = word.replaceAll("[.#@ㄱㄲㄴㄷㄸㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ]", "각");
       word = word.replaceAll("[*ㄹ~]", "갈");
+      word = word.replace("'", "").replace("\"", "");
       char c;
       boolean b = true;
       String test = KoreanUtils.format("%s는", word);

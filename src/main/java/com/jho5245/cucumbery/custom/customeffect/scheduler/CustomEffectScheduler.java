@@ -65,6 +65,7 @@ public class CustomEffectScheduler
         long current = System.currentTimeMillis(), endTime = realDurationCustomEffect.getEndTimeInMillis();
         int remain = (int) ((endTime - current) / 50L);
         // 시간이 다 되면 바로 없애는게 아니라 0.05초 지연을 줌 (실제 개체가 효과를 가지고 있는 판정은 생기지 않음)
+        if (customEffect.getDuration() != -1)
         customEffect.setDuration(Math.max(1, remain));
       }
       if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
@@ -108,7 +109,7 @@ public class CustomEffectScheduler
         }
         return false;
       });
-      MessageUtil.sendActionBar(player, CustomEffectManager.getDisplay(customEffects, customEffects.size() <= 10));
+      MessageUtil.sendActionBar(player, CustomEffectManager.getDisplay(player, customEffects, customEffects.size() <= 10));
     }
     customEffects = new ArrayList<>(CustomEffectManager.getEffects(player, DisplayType.BOSS_BAR));
     customEffects.removeIf(CustomEffect::isHidden);
@@ -134,10 +135,26 @@ public class CustomEffectScheduler
     boolean showPotionEffect = Cucumbery.config.getBoolean("show-vanilla-potion-effects-on-bossbar") && !potionEffects.isEmpty();
     if (!showPotionEffect && customEffects.isEmpty())
     {
-      if (Variable.customEffectBossBarMap.containsKey(uuid))
+      if (Cucumbery.config.getBoolean("show-boss-bar-when-no-effects"))
       {
-        player.hideBossBar(Variable.customEffectBossBarMap.get(uuid));
-        Variable.customEffectBossBarMap.remove(uuid);
+        if (!Variable.customEffectBossBarMap.containsKey(uuid))
+        {
+          BossBar bossBar = BossBar.bossBar(Component.empty(), 0f, Color.WHITE, Overlay.PROGRESS);
+          Variable.customEffectBossBarMap.put(uuid, bossBar);
+        }
+        BossBar bossBar = Variable.customEffectBossBarMap.get(uuid);
+        player.showBossBar(bossBar.color(Color.WHITE).progress(0f)
+                .name(
+                        ComponentUtil.translate("&7적용 중인 효과 없음")
+                ));
+      }
+      else
+      {
+        if (Variable.customEffectBossBarMap.containsKey(uuid))
+        {
+          player.hideBossBar(Variable.customEffectBossBarMap.get(uuid));
+          Variable.customEffectBossBarMap.remove(uuid);
+        }
       }
     }
     else
@@ -153,7 +170,7 @@ public class CustomEffectScheduler
       Component display = Component.empty();
       if (!customEffects.isEmpty())
       {
-        display = display.append(CustomEffectManager.getDisplay(customEffects, showDuration));
+        display = display.append(CustomEffectManager.getDisplay(player, customEffects, showDuration));
       }
       if (showPotionEffect)
       {
@@ -161,18 +178,17 @@ public class CustomEffectScheduler
         {
           display = display.append(Component.text(showDuration ? ", " : ","));
         }
-        display = display.append(CustomEffectManager.getVanillaDisplay(potionEffects, showDuration));
+        display = display.append(CustomEffectManager.getVanillaDisplay(player, potionEffects, showDuration));
       }
       bossBar.name(ComponentUtil.stripEvent(display));
-      float progress = 0f;
       boolean allIsPositive = true, allIsNegative = true;
+      long totalTick = 0, currentTick = 0;
       for (CustomEffect customEffect : customEffects)
       {
         int initDuration = customEffect.getInitDuration();
-        progress += (initDuration == -1 || customEffect.isTimeHidden() ? 1f : 1f * customEffect.getDuration() / initDuration) / size;
-      }
-      for (CustomEffect customEffect : customEffects)
-      {
+        int duration = customEffect.getDuration();
+        totalTick += (initDuration == -1 || customEffect.isTimeHidden() ? 0 : initDuration);
+        currentTick += (duration == -1 || customEffect.isTimeHidden() ? 0 : duration);
         if (customEffect.getType().isNegative())
         {
           allIsPositive = false;
@@ -184,6 +200,18 @@ public class CustomEffectScheduler
       }
       for (PotionEffect potionEffect : potionEffects)
       {
+        int initDuration = -1;
+        if (Variable.potionEffectApplyMap.containsKey(uuid))
+        {
+          HashMap<String, Integer> hashMap = Variable.potionEffectApplyMap.get(uuid);
+          if (hashMap.containsKey(potionEffect.getType().translationKey()))
+          {
+            initDuration = hashMap.get(potionEffect.getType().translationKey());
+          }
+        }
+        int duration = potionEffect.getDuration();
+        totalTick += (initDuration == -1 || initDuration > 20 * 60 * 60 * 24 * 365 ? 0 : initDuration);
+        currentTick += (duration == -1 || duration > 20 * 60 * 60 * 24 * 365 ? 0 : duration);
         if (CustomEffectManager.isVanillaNegative(potionEffect.getType()))
         {
           allIsPositive = false;
@@ -212,7 +240,11 @@ public class CustomEffectScheduler
           bossBar.color(Color.YELLOW);
         }
       }
-      progress += 1f * potionEffects.size() / size;
+      float progress = 1f;
+      if (totalTick > 0)
+      {
+        progress = 1f * currentTick / totalTick;
+      }
       progress = Math.min(Math.max(progress, 0f), 1f);
       player.showBossBar(bossBar.progress(progress));
     }

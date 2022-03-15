@@ -11,6 +11,7 @@ import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -103,7 +104,6 @@ public class CustomEffectManager
     {
       int originAmpl = customEffect.getAmplifier(), newAmpl = finalEffect.getAmplifier();
       int originDura = customEffect.getDuration(), newDura = finalEffect.getDuration();
-
       if (customEffect.getType() == finalEffect.getType() && (originAmpl == newAmpl) && (force || newDura == -1 || (originDura != -1 && originDura < newDura)))
       {
         if (entity instanceof Attributable attributable && customEffect instanceof AttributeCustomEffect attributeCustomEffect)
@@ -156,7 +156,7 @@ public class CustomEffectManager
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_ATTACK_SPEED, Operation.ADD_SCALAR, 0.25);
       }
     }
-    if (effectType.isRealDuration())
+    if (effectType.isRealDuration() && effect.getDuration() != -1)
     {
       effect = new RealDurationCustomEffectImple(effectType, initDura, initAmple, displayType, System.currentTimeMillis(), System.currentTimeMillis() + initDura * 50L);
     }
@@ -576,13 +576,13 @@ public class CustomEffectManager
   }
 
   @NotNull
-  public static Component getDisplay(@NotNull List<CustomEffect> customEffects)
+  public static Component getDisplay(@NotNull Entity entity, @NotNull List<CustomEffect> customEffects)
   {
-    return getDisplay(customEffects, true);
+    return getDisplay(entity, customEffects, true);
   }
 
   @NotNull
-  public static Component getDisplay(@NotNull List<CustomEffect> customEffects, boolean showDuration)
+  public static Component getDisplay(@NotNull Entity entity, @NotNull List<CustomEffect> customEffects, boolean showDuration)
   {
     StringBuilder key = new StringBuilder();
     List<Component> arguments = new ArrayList<>();
@@ -654,7 +654,7 @@ public class CustomEffectManager
       }
       CustomEffectType effectType = customEffect.getType();
       Component effectComponent = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + (showDuration ? effectType.translationKey() : effectType.shortTranslationKey()));
-      Component create = ComponentUtil.create(customEffect);
+      Component create = ComponentUtil.create(entity instanceof Player player ? player : null, customEffect);
       effectComponent = effectComponent.hoverEvent(create.hoverEvent()).clickEvent(create.clickEvent());
       arguments.add(
               ComponentUtil.translate(key2, effectComponent,
@@ -674,20 +674,33 @@ public class CustomEffectManager
   }
 
   @NotNull
-  public static Component getVanillaDisplay(@NotNull Collection<PotionEffect> potionEffects, boolean showDuration)
+  public static Component getVanillaDisplay(@NotNull Entity entity, @NotNull Collection<PotionEffect> potionEffects, boolean showDuration)
   {
+    UUID uuid = entity.getUniqueId();
     StringBuilder key = new StringBuilder();
     List<Component> arguments = new ArrayList<>();
     for (PotionEffect potionEffect : potionEffects)
     {
       int duration = potionEffect.getDuration();
+      int initDuration = duration;
+      if (Variable.potionEffectApplyMap.containsKey(uuid))
+      {
+        HashMap<String, Integer> hashMap = Variable.potionEffectApplyMap.get(uuid);
+        if (hashMap.containsKey(potionEffect.getType().translationKey()))
+        {
+          initDuration = hashMap.get(potionEffect.getType().translationKey());
+        }
+      }
       int amplifier = potionEffect.getAmplifier();
       boolean isInfinite = duration > 20 * 60 * 60 * 24 * 365, less10Sec = duration > 0 && duration < 200, less1Min = duration > 0 && duration < 1200;
       boolean ampleZero = amplifier == 0;
       int remain = 255 - (duration % 20 * 10 + 56);
-      String timePrefixColor = CustomEffectManager.isVanillaNegative(potionEffect.getType()) ?
-              (less10Sec ? "rgb" + remain + ",255," + remain + ";" : "") :
-              (less10Sec ? "rgb255," + remain + "," + remain + ";" : "");
+      String timePrefixColor = initDuration > 200 && (initDuration > 20 * 60 || duration * 1d / initDuration <= 0.2) && less10Sec ?
+              (isVanillaNegative(potionEffect.getType()) ?
+                      ("rgb" + remain + ",255," + remain + ";") :
+                      ("rgb255," + remain + "," + remain + ";")
+              )
+              : "";
       // showDuration = 효과 개수 < 10
 
       // 지속 시간이 1분 이하거나 효과 10개 미만이며, 농도 레벨이 0

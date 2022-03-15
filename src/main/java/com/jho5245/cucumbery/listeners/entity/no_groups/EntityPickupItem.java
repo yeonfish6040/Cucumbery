@@ -62,7 +62,7 @@ public class EntityPickupItem implements Listener
         {
           Variable.itemPickupAlertCooldown.add(uuid);
           MessageUtil.sendError(player, "%s 효과로 인해 아이템을 주울 수 없는 상태입니다",
-                  CustomEffectManager.getDisplay(Collections.singletonList(CustomEffectManager.getEffect(player, CustomEffectType.CURSE_OF_PICKUP))));
+                  CustomEffectManager.getDisplay(player, Collections.singletonList(CustomEffectManager.getEffect(player, CustomEffectType.CURSE_OF_PICKUP))));
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemPickupAlertCooldown.remove(uuid), 100L);
         }
       }

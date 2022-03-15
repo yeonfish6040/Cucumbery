@@ -1858,6 +1858,12 @@ public class ItemLore2
       lore.add(ComponentUtil.translate(Constant.ITEM_LORE_MATERIAL_COMPOSTABLE, Component.text(Constant.Sosu2.format(ItemStackUtil.getCompostChance(type)) + "%")));
     }
 
+    if (params instanceof ItemLoreView itemLoreView)
+    {
+      Player viewer = itemLoreView.getPlayer();
+   //   lore.add(Component.text(viewer.getName()));
+    }
+
     // CucumberyItemTag - CustomItemType
     String customItemType = NBTAPI.getString(itemTag, CucumberyTag.CUSTOM_ITEM_TYPE_KEY);
     if (customItemType != null)

@@ -47,6 +47,7 @@ public class EntityCustomEffectPostApply implements Listener
       CustomEffectManager.removeEffect(entity, conflictEffect);
     }
 
+
     if (customEffectType == CustomEffectType.RESURRECTION)
     {
       CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectType.RESURRECTION_COOLDOWN));

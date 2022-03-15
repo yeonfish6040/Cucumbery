@@ -136,7 +136,20 @@ public class ComponentUtil
       }
       else if (object instanceof ItemStack itemStack)
       {
+        itemStack = itemStack.clone();
+        if (player == null || Method.usingLoreFeature(player))
+        {
+          ItemLore.setItemLore(itemStack, player);
+        }
+        else
+        {
+          ItemLore.removeItemLore(itemStack);
+        }
         Component concat = ItemStackComponent.itemStackComponent(itemStack, 1, null, false);
+        if (player != null && !player.hasPermission("asdf"))
+        {
+          concat = concat.clickEvent(null);
+        }
         if (concat.color() == null)
         {
           concat = concat.color(Constant.THE_COLOR);
@@ -156,10 +169,6 @@ public class ComponentUtil
         {
           concat = concat.color(Constant.THE_COLOR);
         }
-        if (player != null && player.hasPermission("asdf"))
-        {
-          concat = concat.clickEvent(ClickEvent.suggestCommand("/whatis " + world.getName()));
-        }
         int playerCount = world.getPlayerCount();
         Component hover = Component.empty().append(ComponentUtil.create(worldName));
         String environmentKey = switch (world.getEnvironment())
@@ -176,27 +185,34 @@ public class ComponentUtil
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("UUID : %s", Constant.THE_COLOR_HEX + world.getUID()));
         hover = hover.append(Component.text("\n"));
-        Location spawnLocation = world.getSpawnLocation();
-        hover = hover.append(ComponentUtil.translate("스폰 포인트 : %s",
-                ComponentUtil.translate("&7%s, %s, %s", Constant.THE_COLOR_HEX + spawnLocation.getBlockX(), Constant.THE_COLOR_HEX + spawnLocation.getBlockY(), Constant.THE_COLOR_HEX + spawnLocation.getBlockX())
-        ));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.translate("난이도 : %s", ComponentUtil.translate(Constant.THE_COLOR_HEX + world.getDifficulty().translationKey())));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.translate("Y축 제한 범위 : %s", Constant.THE_COLOR_HEX + world.getMinHeight() + "~" + world.getMaxHeight()));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.translate("플레이어 수 : %s", ComponentUtil.translate("%s명", Constant.THE_COLOR_HEX + playerCount)));
-        concat = concat.hoverEvent(hover.asHoverEvent());
         if (player == null || player.hasPermission("asdf"))
         {
+          Location spawnLocation = world.getSpawnLocation();
+          hover = hover.append(ComponentUtil.translate("스폰 포인트 : %s",
+                  ComponentUtil.translate("&7%s, %s, %s", Constant.THE_COLOR_HEX + spawnLocation.getBlockX(), Constant.THE_COLOR_HEX + spawnLocation.getBlockY(), Constant.THE_COLOR_HEX + spawnLocation.getBlockX())
+          ));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("난이도 : %s", ComponentUtil.translate(Constant.THE_COLOR_HEX + world.getDifficulty().translationKey())));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("Y축 제한 범위 : %s", Constant.THE_COLOR_HEX + world.getMinHeight() + "~" + world.getMaxHeight()));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("플레이어 수 : %s", ComponentUtil.translate("%s명", Constant.THE_COLOR_HEX + playerCount)));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("&7클릭하여 자세한 월드 정보 보기"));
           concat = concat.clickEvent(ClickEvent.suggestCommand(
                   "/whatis " + world.getName()));
         }
+        concat = concat.hoverEvent(hover);
         component = component.append(concat);
       }
       else if (object instanceof Location location)
       {
-        component = component.append(LocationComponent.locationComponent(location));
+        Component concat = LocationComponent.locationComponent(location);
+        if (player != null && !player.hasPermission("asdf"))
+        {
+          concat = concat.hoverEvent(null).clickEvent(null);
+        }
+        component = component.append(concat);
       }
       else if (object instanceof PotionEffectType potionEffectType)
       {
@@ -205,13 +221,14 @@ public class ComponentUtil
         Component concat = Component.translatable(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(effectKey);
         hover = hover.append(VanillaEffectDescription.getDescription(potionEffectType));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(Component.text("minecraft:" + id, NamedTextColor.DARK_GRAY));
-        concat = concat.hoverEvent(hover);
         if (player == null || player.hasPermission("asdf"))
         {
-          concat = concat.clickEvent(ClickEvent.suggestCommand("/ceffect @s minecraft:" + id));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("&7클릭하여 효과를 자신에게 부여"));
+          concat = concat.clickEvent(ClickEvent.suggestCommand(Cucumbery.using_CommandAPI ? "/ceffect @s minecraft:" + id : "/effect give @s minecraft:" + id));
         }
+        concat = concat.hoverEvent(hover);
         component = component.append(concat);
       }
       else if (object instanceof PotionEffect potionEffect)
@@ -230,29 +247,30 @@ public class ComponentUtil
         hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("농도 레벨 : %s단계", amplifier + 1));
-        if (!hasParticles)
-        {
-          hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.translate("&a입자 숨김"));
-        }
-        if (!hasIcon)
-        {
-          hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.translate("&a우측 상단 아이콘 숨김"));
-        }
-        if (isAmbient)
-        {
-          hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.translate("&a우측 상단 효과 빛남"));
-        }
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(Component.text("minecraft:" + id, NamedTextColor.DARK_GRAY));
-        concat = concat.hoverEvent(hover);
         if (player == null || player.hasPermission("asdf"))
         {
+          if (!hasParticles)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.translate("&a입자 숨김"));
+          }
+          if (!hasIcon)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.translate("&a우측 상단 아이콘 숨김"));
+          }
+          if (isAmbient)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.translate("&a우측 상단 효과 빛남"));
+          }
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("&7클릭하여 효과를 자신에게 부여"));
           concat = concat.clickEvent(ClickEvent.suggestCommand(
                   "/ceffect @s minecraft:" + id + " " + duration + " " + amplifier + " " + !hasParticles + " " + !hasIcon + " " + !isAmbient));
         }
+        concat = concat.hoverEvent(hover);
         component = component.append(concat);
       }
       else if (object instanceof CustomEffectType effectType)
@@ -271,18 +289,15 @@ public class ComponentUtil
         {
           hover = hover.append(Component.text("\n"));
         }
-        hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
-        if (effectType == CustomEffectType.CURSE_OF_BEANS)
-        {
-          hover = hover.append(Component.text("\n"));
-          hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
-        }
-        String click = "/customeffect give @s " + effectType.toString().toLowerCase();
-        concat = concat.hoverEvent(hover);
         if (player == null || player.hasPermission("asdf"))
         {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("&7클릭하여 효과를 자신에게 부여"));
+          String click = "/customeffect give @s " + effectType.toString().toLowerCase();
           concat = concat.clickEvent(ClickEvent.suggestCommand(click));
         }
+        concat = concat.hoverEvent(hover);
         component = component.append(concat);
       }
       else if (object instanceof CustomEffect customEffect)
@@ -308,11 +323,6 @@ public class ComponentUtil
         {
           hover = hover.append(Component.text("\n"));
           hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
-          if (effectType == CustomEffectType.CURSE_OF_BEANS)
-          {
-            hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
-          }
           if (customEffect.isTimeHidden())
           {
             hover = hover.append(Component.text("\n"));
@@ -323,32 +333,24 @@ public class ComponentUtil
         {
           hover = hover.append(Component.text("\n"));
           hover = hover.append(ComponentUtil.translate("농도 레벨 : %s단계", amplifier + 1));
-          if (effectType == CustomEffectType.CURSE_OF_BEANS)
-          {
-            hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.translate("농도 레벨 : %s단계", amplifier + 1));
-          }
         }
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
-        if (effectType == CustomEffectType.CURSE_OF_BEANS)
-        {
-          hover = hover.append(Component.text("\n"));
-          hover = hover.append(Component.text("cucumbery:" + effectType.toString().toLowerCase(), NamedTextColor.DARK_GRAY));
-        }
-        DisplayType displayType = customEffect.getDisplayType();
-        String click = "/customeffect give @s " + effectType.toString().toLowerCase() + " " + (duration != -1 ? duration / 20d : "infinite") + " " + amplifier + " " + displayType.toString().toLowerCase();
-        concat = concat.hoverEvent(hover);
         if (player == null || player.hasPermission("asdf"))
         {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("&7클릭하여 효과를 자신에게 부여"));
+          DisplayType displayType = customEffect.getDisplayType();
+          String click = "/customeffect give @s " + effectType.toString().toLowerCase() + " " + (duration != -1 ? duration / 20d : "infinite") + " " + amplifier + " " + displayType.toString().toLowerCase();
           concat = concat.clickEvent(ClickEvent.suggestCommand(click));
         }
+        concat = concat.hoverEvent(hover);
         component = component.append(concat);
       }
       else if (Cucumbery.using_NoteBlockAPI && object instanceof Song song)
       {
         String display = song.getPath().getName();
         display = display.substring(0, display.length() - 4);
+        Component concat = Component.text(display).color(Constant.THE_COLOR);
         Component hover = Component.translatable(display);
         String title = song.getTitle(), description = song.getDescription();
         String author = song.getAuthor(), originalAuthor = song.getOriginalAuthor();
@@ -381,10 +383,21 @@ public class ComponentUtil
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("속도 : %sTPS", Constant.THE_COLOR_HEX + song.getSpeed()));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.translate("길이 : %s",Constant.THE_COLOR_HEX + Method.timeFormatMilli((long) ((song.getLength() / song.getSpeed()) * 1000L), true, 1)));
+        hover = hover.append(ComponentUtil.translate("길이 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli((long) ((song.getLength() / song.getSpeed()) * 1000L), true, 1)));
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("딜레이 : %s", Constant.THE_COLOR_HEX + song.getDelay()));
-        Component concat = Component.text(display).color(Constant.THE_COLOR).hoverEvent(hover);
+        if (player != null && player.hasPermission("cucumbery.command.song"))
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("&7클릭하여 노래 재생"));
+          if (display.contains(" "))
+          {
+            display = "'" + display.replace("'", "''") + "'";
+          }
+          concat = concat.clickEvent(ClickEvent.suggestCommand("/csong play " + display));
+        }
+        concat = concat.hoverEvent(hover);
         component = component.append(concat);
       }
       else if (object instanceof Advancement advancement)
@@ -414,6 +427,7 @@ public class ComponentUtil
           NamespacedKey namespacedKey = advancement.getKey();
           if (player == null || player.hasPermission("asdf"))
           {
+
             String suggest = "/advancement grant @s only " + namespacedKey.namespace() + ":" + namespacedKey.value();
             concat = concat.clickEvent(ClickEvent.suggestCommand(suggest));
           }
@@ -510,7 +524,7 @@ public class ComponentUtil
             itemMeta.displayName(ComponentUtil.translate("&c잘못된 아이템"));
             itemStack.setItemMeta(itemMeta);
           }
-          else
+          else if (player == null || Method.usingLoreFeature(player))
           {
             ItemLore.setItemLore(itemStack, player);
           }
@@ -526,7 +540,7 @@ public class ComponentUtil
             itemMeta.displayName(ComponentUtil.translate("&c잘못된 아이템"));
             itemStack.setItemMeta(itemMeta);
           }
-          else
+          else if (player == null || Method.usingLoreFeature(player))
           {
             ItemLore.setItemLore(itemStack, player);
           }
@@ -700,7 +714,7 @@ public class ComponentUtil
   private static String yeet2(@NotNull String key, @NotNull String serial)
   {
     Matcher matcher = yeet.matcher(key);
-    String[] split = serial.split(q);
+    String[] split = serial.replace("'", "").split(q);
     int loop = 0;
     int count = 1;
     while (matcher.find())

@@ -286,6 +286,7 @@ public class ItemStackUtil
   public static ItemStack loredItemStack(@NotNull Material type, @Nullable Player player)
   {
     ItemStack item = new ItemStack(type);
+    if (player == null || Method.usingLoreFeature(player))
     ItemLore.setItemLore(item, player);
     return item;
   }

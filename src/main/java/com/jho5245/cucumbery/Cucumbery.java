@@ -21,6 +21,7 @@ import com.jho5245.cucumbery.commands.teleport.CommandTeleport;
 import com.jho5245.cucumbery.commands.teleport.CommandWarp;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.listeners.AsyncTabComplete;
 import com.jho5245.cucumbery.listeners.UnknownCommand;
 import com.jho5245.cucumbery.listeners.addon.noteblockapi.SongEnd;
 import com.jho5245.cucumbery.listeners.addon.quickshop.ShopDelete;
@@ -91,7 +92,7 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 20;
+  public static final int CONFIG_VERSION = 21;
   public static final int DEATH_MESSAGES_CONFIG_VERSION = 3;
   public static final int LANG_CONFIG_VERSION = 1;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
@@ -591,6 +592,7 @@ public class Cucumbery extends JavaPlugin
   private void registerEvents()
   {
     // listener
+    Initializer.registerEvent(new AsyncTabComplete());
     Initializer.registerEvent(new UnknownCommand());
 
     // listener.block

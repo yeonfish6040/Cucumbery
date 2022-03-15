@@ -119,7 +119,7 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
           }
         }
       }
-      MessageUtil.broadcastPlayer(Prefix.INFO_ITEMSTORAGE, ComponentUtil.translate("%s이(가) %s을(를) 채팅창에 올렸습니다", player, ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR)));
+      MessageUtil.broadcastPlayer(Prefix.INFO_ITEMSTORAGE,"%s이(가) %s을(를) 채팅창에 올렸습니다", player, ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR));
       return true;
     }
     if (!msg.contains("[i]") && !msg.contains("[i1]") && !msg.contains("[i2]") && !msg.contains("[i3]") && !msg.contains("[i4]") && !msg.contains("[i5]") && !msg.contains("[i6]") && !msg.contains(

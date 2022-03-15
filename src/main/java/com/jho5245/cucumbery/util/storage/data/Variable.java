@@ -9,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.util.*;
@@ -235,4 +236,10 @@ public class Variable
   public static HashMap<UUID, Integer> damageIndicatorStack = new HashMap<>();
 
   public static HashMap<UUID, Long> lastDamageMillis = new HashMap<>();
+
+  /**
+   * 특정 개체가 특정 효과를 지급받았을 때 해당 효과의 최초 지속 시간
+   * <p>String : {@link PotionEffectType#translationKey()}
+   */
+  public static HashMap<UUID, HashMap<String, Integer>> potionEffectApplyMap = new HashMap<>();
 }

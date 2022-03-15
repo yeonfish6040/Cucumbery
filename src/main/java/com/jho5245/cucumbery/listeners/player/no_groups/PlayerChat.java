@@ -7,15 +7,15 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -72,24 +72,28 @@ public class PlayerChat implements Listener
     }
     switch (message.toLowerCase())
     {
-      case Constant.REINFORCE_QUIT:
+      case Constant.REINFORCE_QUIT -> {
         event.setCancelled(true);
         Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 quit"));
         return;
-      case Constant.REINFORCE_USE_ANTI_DESTRUCTION:
+      }
+      case Constant.REINFORCE_USE_ANTI_DESTRUCTION -> {
         event.setCancelled(true);
         Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 파괴방지사용"));
         return;
-      case Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION:
+      }
+      case Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION -> {
         event.setCancelled(true);
         Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 파괴방지미사용"));
         return;
-      case Constant.REINFORCE_START:
+      }
+      case Constant.REINFORCE_START -> {
         event.setCancelled(true);
         Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 realstart"));
         return;
-      default:
-        break;
+      }
+      default -> {
+      }
     }
     if (!Cucumbery.config.getBoolean("grant-default-permission-to-players") && !Permission.EVENT_CHAT.has(player))
     {
@@ -273,5 +277,4 @@ public class PlayerChat implements Listener
       event.message(MessageUtil.boldify(event.message()));
     }
   }
-
 }

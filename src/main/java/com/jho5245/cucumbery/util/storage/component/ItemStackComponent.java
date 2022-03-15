@@ -47,15 +47,12 @@ public class ItemStackComponent
     final ItemStack giveItem = ItemLore.removeItemLore(itemStack.clone());
     itemStack = itemStack.clone();
     NBTItem nbtItem = new NBTItem(itemStack);
-    int tagSize = nbtItem.getKeys().size();
     nbtItem.removeKey("BlockEntityTag");
     nbtItem.removeKey("BlockStateTag");
     itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
     Component itemName = ItemNameUtil.itemName(itemStack, showAmount ? defaultColor : null);
     ItemStack hover = new ItemStack(Material.BUNDLE);
     BundleMeta bundleMeta = (BundleMeta) hover.getItemMeta();
-    //   ItemStack frame = ItemSerializer.deserialize("{id:light_gray_stained_glass_pane,Count:1,tag:{CustomModelData:5248}}");
-    //   bundleMeta.addItem(frame);
     bundleMeta.addItem(itemStack);
     bundleMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
     bundleMeta.displayName(ItemNameUtil.itemName(itemStack));
@@ -64,14 +61,10 @@ public class ItemStackComponent
     {
       lore = new ArrayList<>();
     }
-   // lore.add(Component.text("minecraft:" + itemStack.getType().toString().toLowerCase(), NamedTextColor.DARK_GRAY));
-    if (tagSize > 0)
-    {
-    //  lore.add(ComponentUtil.translate("&8item.nbt_tags", tagSize));
-    }
-    //lore.add(ComponentUtil.create(Constant.SEPARATOR));
     bundleMeta.lore(lore);
     hover.setItemMeta(bundleMeta);
+    nbtItem = new NBTItem(hover, true);
+    nbtItem.setString("test", "test");
     if (itemName instanceof TextComponent textComponent && textComponent.content().equals(""))
     {
       List<Component> children = new ArrayList<>(itemName.children());

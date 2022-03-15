@@ -6,7 +6,6 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPreApplyEvent;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -32,10 +31,10 @@ public class EntityCustomEffectPreApply implements Listener
     if (customEffectType == CustomEffectType.RESURRECTION && CustomEffectManager.hasEffect(entity, CustomEffectType.RESURRECTION_COOLDOWN))
     {
       event.setCancelled(true);
-      MessageUtil.sendWarn(entity, ComponentUtil.translate("%s 효과가 적용중이여서 %s 효과를 적용받지 못했습니다",
-              CustomEffectManager.getDisplay(Collections.singletonList(
+      MessageUtil.sendWarn(entity,"%s 효과가 적용중이여서 %s 효과를 적용받지 못했습니다",
+              CustomEffectManager.getDisplay(entity, Collections.singletonList(
                       CustomEffectManager.getEffect(entity, CustomEffectType.RESURRECTION_COOLDOWN)), true),
-              customEffect));
+              customEffect);
       return;
     }
 

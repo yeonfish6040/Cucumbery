@@ -2,10 +2,9 @@ package com.jho5245.cucumbery.util.storage.component.util.sendercomponent;
 
 import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.text.Component;
@@ -15,6 +14,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
@@ -73,6 +73,7 @@ public class SenderComponentUtil
     }
     Location location = null;
     Component typeComponent = null; // Component.translatable(entity.getType().translationKey());
+    boolean customNameNull = false;
     if (object instanceof BlockCommandSender blockCommandSender)
     {
       Block block = blockCommandSender.getBlock();
@@ -83,17 +84,17 @@ public class SenderComponentUtil
     {
       location = entity.getLocation();
       typeComponent = Component.translatable(entity.getType().translationKey());
+      customNameNull = entity.customName() == null;
     }
     if (location != null)
     {
-      Component locationComponent = LocationComponent.locationComponent(location);
-      if (object instanceof Player player && !player.getName().equals(ComponentUtil.serialize(player.displayName())))
+      if (object instanceof Player player && !player.getName().equals(MessageUtil.stripColor(ComponentUtil.serialize(player.displayName()))))
       {
-        component = ComponentUtil.translate("&7%s@%s [%s/%s]", component, locationComponent, player.getName(), typeComponent);
+        component = ComponentUtil.translate("&7%s@%s [%s]", component, location, player.getName());
       }
       else
       {
-        component = ComponentUtil.translate("&7%s@%s [%s]", component, locationComponent, typeComponent);
+        component = ComponentUtil.translate(customNameNull ? "&7%s@%s" : "&7%s@%s [%s]", component, location, typeComponent);
       }
     }
     if (extraComponent != null)
@@ -131,17 +132,16 @@ public class SenderComponentUtil
       CommandSender caller = sender.getCaller(), callee = sender.getCallee();
       if (caller.equals(callee))
       {
-        return senderComponent(caller);
+        return senderComponent(player, caller, defaultColor);
       }
-      return senderComponent(callee);
-//      return ComponentUtil.createTranslate("%s에 의한 %s", senderComponent(sender.getCaller(), defaultColor), senderComponent(sender.getCallee(), defaultColor));
+      return senderComponent(player, callee, defaultColor);
     }
     if (object instanceof UUID uuid)
     {
       Entity entity = Bukkit.getEntity(uuid);
       if (entity != null)
       {
-        return senderComponent(entity, defaultColor);
+        return senderComponent(player, entity, defaultColor);
       }
     }
     if (object instanceof List<?> list && !list.isEmpty())
@@ -161,7 +161,7 @@ public class SenderComponentUtil
         }
         if (!entities.isEmpty())
         {
-          return senderComponent(entities, defaultColor);
+          return senderComponent(player, entities, defaultColor);
         }
       }
       if (list.stream().allMatch(Predicates.instanceOf(Entity.class)::apply))
@@ -170,7 +170,7 @@ public class SenderComponentUtil
         List<Entity> entities = (List<Entity>) list;
         if (entities.size() == 1)
         {
-          return senderComponent(entities.get(0), defaultColor);
+          return senderComponent(player, entities.get(0), defaultColor);
         }
         boolean isPlayer = entities.stream().allMatch(Predicates.instanceOf(Player.class)::apply);
         Component component = ComponentUtil.translate(isPlayer ? "플레이어 %s명" : "개체 %s개", Component.text(list.size())).color(defaultColor);
@@ -193,35 +193,63 @@ public class SenderComponentUtil
     if (object instanceof ConsoleCommandSender commandSender)
     {
       Component component = ComponentUtil.translate("&d서버");
+      Component name = commandSender.name();
+      if (name.color() == null)
+      {
+        name = name.color(Constant.THE_COLOR);
+      }
       Component hover = Component.empty().append(ComponentUtil.translate("&d서버"));
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("유형 : %s", Constant.THE_COLOR_HEX + Bukkit.getName()));
       hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.translate("이름 : %s", name));
+      hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("버전 : %s", Constant.THE_COLOR_HEX + Bukkit.getVersion()));
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("접속 인원 : %s명", Constant.THE_COLOR_HEX + Bukkit.getOnlinePlayers().size()));
-      hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("월드 수 : %s개", Constant.THE_COLOR_HEX + Bukkit.getWorlds().size()));
-      return component.hoverEvent(hover).clickEvent(ClickEvent.runCommand("/version"));
+      if (player == null || player.hasPermission("asdf"))
+      {
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("월드 수 : %s개", Constant.THE_COLOR_HEX + Bukkit.getWorlds().size()));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("&7클릭하여 서버 버전 참조"));
+        component = component.clickEvent(ClickEvent.runCommand("/version"));
+      }
+      component = component.hoverEvent(hover);
+      return component;
     }
     else if (object instanceof BlockCommandSender blockCommandSender)
     {
       Block block = blockCommandSender.getBlock();
+      Material type = block.getType();
       Location location = block.getLocation();
       Component name = blockCommandSender.name();
-      Component component = name.equals(Component.text("@")) ? ItemNameUtil.itemName(block.getType()) : name;
-      if (component.color() == null)
-      {
-        component = component.color(NamedTextColor.LIGHT_PURPLE);
-      }
-
-      Component hover = name.equals(Component.text("@")) ? ItemNameUtil.itemName(block.getType()).hoverEvent(null).clickEvent(null).color(null) : Component.empty().append(name.hoverEvent(null).clickEvent(null));
+      boolean nameNull = name.equals(Component.text("@"));
+      Component defaultName = Component.translatable(block.translationKey());
+      defaultName = switch (type)
+              {
+                case COMMAND_BLOCK -> defaultName.color(TextColor.color(215, 180, 157));
+                case REPEATING_COMMAND_BLOCK -> defaultName.color(TextColor.color(169, 153, 214));
+                case CHAIN_COMMAND_BLOCK -> defaultName.color(TextColor.color(168, 209, 191));
+                default -> defaultName.color(NamedTextColor.LIGHT_PURPLE);
+              };
+      Component component = nameNull ? defaultName : name;
+      Component hover = nameNull ? defaultName.color(null) : Component.empty().append(name.hoverEvent(null).clickEvent(null));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("유형 : %s", block.getType()));
-      hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("좌표 : %s", location));
+      hover = hover.append(ComponentUtil.translate("유형 : %s", defaultName));
       int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
-      return component.hoverEvent(hover).clickEvent(ClickEvent.suggestCommand("/atp @s " + location.getWorld().getName() + " " + (x + 0.5) + " " + (y + 1) + " " + (z + 0.5) + " ~ 180"));
+      if (player == null || player.hasPermission("asdf"))
+      {
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("좌표 : %s", location));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("&7클릭하여 해당 명령 블록 위치로 텔레포트"));
+        component = component.clickEvent(ClickEvent.suggestCommand("/atp @s " + location.getWorld().getName() + " " + (x + 0.5) + " " + (y + 1) + " " + (z + 0.5) + " ~ 180"));
+      }
+      component = component.hoverEvent(hover);
+      return component;
     }
     else if (object instanceof Entity entity)
     {
