@@ -776,50 +776,30 @@ public class ItemLore2
     {
       switch (type)
       {
-        case GOLDEN_APPLE:
-          foodLore.addAll(Arrays.asList(
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.REGENERATION, 5 * 20, 2),
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 1)));
-          break;
-        case ENCHANTED_GOLDEN_APPLE:
-          foodLore.addAll(Arrays.asList(
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.REGENERATION, 20 * 20, 2),
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 4),
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.RESISTANCE, 5 * 60 * 20, 1),
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.FIRE_RESISTANCE, 5 * 60 * 20, 1)));
-          break;
-        case POISONOUS_POTATO:
-          foodLore.addAll(List.of(
-                  ItemLorePotionDescription.getDescription(60d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
-          break;
-        case SPIDER_EYE:
-          foodLore.addAll(List.of(
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
-          break;
-        case PUFFERFISH:
-          foodLore.addAll(Arrays.asList(
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.HUNGER, 15 * 20, 3),
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.NAUSEA, 15 * 20, 2),
-                  ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 60 * 20, 4)));
-          break;
-        case ROTTEN_FLESH:
-          foodLore.addAll(List.of(
-                  ItemLorePotionDescription.getDescription(80d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
-          break;
-        case CHICKEN:
-          foodLore.addAll(List.of(
-                  ItemLorePotionDescription.getDescription(30d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
-          break;
-        case HONEY_BOTTLE:
-          foodLore.addAll(List.of(
-                  ComponentUtil.translate("rgb255,97,144;%s 확률로 %s 효과 제거", "100%", ItemLorePotionDescription.getComponent(PotionEffectType.POISON))));
-          break;
-        case MILK_BUCKET:
-          foodLore.addAll(List.of(
-                  ComponentUtil.translate("rgb255,97,144;%s 확률로 모든 효과 제거", "100%")));
-          break;
-        default:
-          break;
+        case GOLDEN_APPLE -> foodLore.addAll(Arrays.asList(
+                ItemLorePotionDescription.getDescription(ItemLorePotionDescription.REGENERATION, 5 * 20, 2),
+                ItemLorePotionDescription.getDescription(ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 1)));
+        case ENCHANTED_GOLDEN_APPLE -> foodLore.addAll(Arrays.asList(
+                ItemLorePotionDescription.getDescription(ItemLorePotionDescription.REGENERATION, 20 * 20, 2),
+                ItemLorePotionDescription.getDescription(ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 4),
+                ItemLorePotionDescription.getDescription(ItemLorePotionDescription.RESISTANCE, 5 * 60 * 20, 1),
+                ItemLorePotionDescription.getDescription(ItemLorePotionDescription.FIRE_RESISTANCE, 5 * 60 * 20, 1)));
+        case POISONOUS_POTATO -> foodLore.addAll(List.of(
+                ItemLorePotionDescription.getDescription(60d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
+        case SPIDER_EYE -> foodLore.addAll(List.of(
+                ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
+        case PUFFERFISH -> foodLore.addAll(Arrays.asList(
+                ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.HUNGER, 15 * 20, 3),
+                ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.NAUSEA, 15 * 20, 2),
+                ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 60 * 20, 4)));
+        case ROTTEN_FLESH -> foodLore.addAll(List.of(
+                ItemLorePotionDescription.getDescription(80d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
+        case CHICKEN -> foodLore.addAll(List.of(
+                ItemLorePotionDescription.getDescription(30d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
+        case HONEY_BOTTLE -> foodLore.addAll(List.of(
+                ComponentUtil.translate(ItemLorePotionDescription.POTION_DESCRIPTION_COLOR + "%s 효과 제거", ItemLorePotionDescription.getComponent(PotionEffectType.POISON))));
+        case MILK_BUCKET -> foodLore.addAll(List.of(
+                ComponentUtil.translate(ItemLorePotionDescription.POTION_DESCRIPTION_COLOR + "모든 효과 제거 (일부 효과 제외)")));
       }
     }
 
@@ -1043,24 +1023,11 @@ public class ItemLore2
             ItemLoreUtil.setItemRarityValue(lore, +10);
             switch (pattern.getPattern())
             {
-              case CREEPER:
-              case SKULL:
-                ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.UNIQUE.getRarityValue());
-                break;
-              case FLOWER:
-                ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.NORMAL.getRarityValue());
-                break;
-              case GLOBE:
-                ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.ELITE.getRarityValue());
-                break;
-              case MOJANG:
-                ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.UNIQUE.getRarityValue() + 300);
-                break;
-              case PIGLIN:
-                ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.UNIQUE.getRarityValue() + 100);
-                break;
-              default:
-                break;
+              case CREEPER, SKULL -> ItemLoreUtil.setItemRarityValue(lore, Rarity.UNIQUE.getRarityValue());
+              case FLOWER -> ItemLoreUtil.setItemRarityValue(lore, Rarity.NORMAL.getRarityValue());
+              case GLOBE -> ItemLoreUtil.setItemRarityValue(lore, Rarity.ELITE.getRarityValue());
+              case MOJANG -> ItemLoreUtil.setItemRarityValue(lore, Rarity.UNIQUE.getRarityValue() + 300);
+              case PIGLIN -> ItemLoreUtil.setItemRarityValue(lore, Rarity.UNIQUE.getRarityValue() + 100);
             }
             String patternTranslate = ColorCode.getColorCode(pattern.getColor())
                     + "block.minecraft.banner." + pattern.getPattern().toString().toLowerCase()

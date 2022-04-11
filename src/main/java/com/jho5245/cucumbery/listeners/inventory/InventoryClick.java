@@ -1871,11 +1871,11 @@ public class InventoryClick implements Listener
                   Integer amplifier = nbtItem.getInteger("removeEffectAmplifier");
                   if (amplifier == null)
                   {
-                    CustomEffectManager.removeEffect(player, effectType, RemoveReason.PLAYER);
+                    CustomEffectManager.removeEffect(player, effectType, RemoveReason.GUI);
                   }
                   else
                   {
-                    CustomEffectManager.removeEffect(player, effectType, amplifier, RemoveReason.PLAYER);
+                    CustomEffectManager.removeEffect(player, effectType, amplifier, RemoveReason.GUI);
                   }
                   if (effectType == CustomEffectType.CONTINUAL_SPECTATING && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() instanceof Player)
                   {
@@ -1893,6 +1893,10 @@ public class InventoryClick implements Listener
                     CustomEffectManager.addEffect(player, CustomEffectType.CONTINUAL_SPECTATING_EXEMPT);
                     player.closeInventory();
                     player.setSpectatorTarget(null);
+                  }
+                  if (effectType == CustomEffectType.POSITION_MEMORIZE)
+                  {
+                    CustomEffectManager.removeEffect(player, CustomEffectType.POSITION_MEMORIZE, RemoveReason.PLUGIN);
                   }
                 }
               }

@@ -1,18 +1,22 @@
 package com.jho5245.cucumbery.commands.no_groups;
 
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.command.*;
+import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -22,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandSetData implements CommandExecutor, TabCompleter
+public class CommandSetData implements CommandExecutor, AsyncTabCompleter
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -333,5 +337,72 @@ public class CommandSetData implements CommandExecutor, TabCompleter
       return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
     }
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  @Override
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {
+    int length = args.length;
+    if (length == 1)
+    {
+      return TabCompleterUtil.tabCompleterList(args, "<인수>", false,
+              Completion.completion("amount", Component.translatable("손에 들고 있는 아이템의 개수를 변경합니다")),
+              Completion.completion("durability", Component.translatable("손에 들고 있는 아이템의 내구도를 변경합니다")),
+              Completion.completion("material", Component.translatable("손에 들고 있는 아이템의 종류를 변경합니다"))
+      );
+    }
+    Player other = length >= 3 ? Bukkit.getPlayer(args[2]) : null;
+    ItemStack itemStack = sender instanceof Player player ? player.getInventory().getItemInMainHand() :
+            (other != null ? other.getInventory().getItemInMainHand() : null);
+    if (!ItemStackUtil.itemExists(itemStack))
+    {
+      return TabCompleterUtil.errorMessage(Prefix.NO_HOLDING_ITEM.toString());
+    }
+    switch (args[0])
+    {
+      case "amount" -> {
+        if (length == 2)
+        {
+          return TabCompleterUtil.tabCompleterIntegerRadius(args, 0,127, "<개수>");
+        }
+        if (length == 3)
+        {
+          return TabCompleterUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 개수를 변경합니다")));
+        }
+        if (length == 4)
+        {
+          return TabCompleterUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+        }
+      }
+      case "durability" -> {
+        if (length == 2)
+        {
+          return TabCompleterUtil.tabCompleterIntegerRadius(args, 0,32767, "<내구도>");
+        }
+        if (length == 3)
+        {
+          return TabCompleterUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 내구도를 변경합니다")));
+        }
+        if (length == 4)
+        {
+          return TabCompleterUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+        }
+      }
+      case "material" -> {
+        if (length == 2)
+        {
+          return TabCompleterUtil.tabCompleterList(args, Material.values(), "<아이템>", e -> e instanceof Material material && (!material.isItem() || material.isAir()));
+        }
+        if (length == 3)
+        {
+          return TabCompleterUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 종류를 변경합니다")));
+        }
+        if (length == 4)
+        {
+          return TabCompleterUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+        }
+      }
+    }
+    return Collections.singletonList(TabCompleterUtil.ARGS_LONG);
   }
 }

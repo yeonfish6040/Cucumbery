@@ -3,8 +3,8 @@ package com.jho5245.cucumbery.listeners.entity.no_groups;
 import com.google.common.base.Function;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffectImple;
 import com.jho5245.cucumbery.events.entity.EntityLandOnGroundEvent;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -51,7 +51,7 @@ public class EntityLandOnGround implements Listener
         {
           lastDamageCause = new EntityDamageEvent(entity, DamageCause.FALL, 1);
         }
-        Variable.customDeathMessageKey.put(entity.getUniqueId(), "fall");
+        CustomEffectManager.addEffect(entity, new StringCustomEffectImple(CustomEffectType.CUSTOM_DEATH_MESSAGE, "fall"));
         player.damage(1);
         player.setNoDamageTicks(0);
         entity.setLastDamageCause(lastDamageCause);

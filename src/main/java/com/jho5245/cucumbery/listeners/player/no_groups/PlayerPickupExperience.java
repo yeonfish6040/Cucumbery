@@ -3,10 +3,10 @@ package com.jho5245.cucumbery.listeners.player.no_groups;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffectImple;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -58,7 +58,7 @@ public class PlayerPickupExperience implements Listener
       }
       else
       {
-        Variable.customDeathMessageKey.put(player.getUniqueId(), "custom_stomachache");
+        CustomEffectManager.addEffect(player, new StringCustomEffectImple(CustomEffectType.CUSTOM_DEATH_MESSAGE, 10, "custom_stomachache"));
         int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.VAR_STOMACHACHE).getAmplifier();
         if (experience < 100 || !(Math.random() * 100d < amplifier * 0.1d))
         {

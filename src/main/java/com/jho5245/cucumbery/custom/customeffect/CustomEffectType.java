@@ -454,6 +454,17 @@ public enum CustomEffectType implements Translatable, EnumHideable
    * PvP 활성화 쿨타임
    */
   PVP_MODE_COOLDOWN(false, false, true),
+  GLIDING(false, false, false),
+  NOTIFY_NO_TRADE_ITEM_DROP(false, false, false),
+  /**
+   * 위치 기억
+   */
+  POSITION_MEMORIZE,
+  /**
+   * 도르마무
+   */
+  DORMAMMU(false, false, true),
+  CUSTOM_DEATH_MESSAGE,
   ;
 
   private final int maxAmplifier;
@@ -592,6 +603,11 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case PVP_MODE_ENABLED -> "PvP 모드 활성화";
               case PVP_MODE_DISABLED -> "PvP 모드 비활성화";
               case PVP_MODE_COOLDOWN -> "PvP 모드 쿨타임";
+              case GLIDING -> "활강 중";
+              case NOTIFY_NO_TRADE_ITEM_DROP -> "캐릭터 귀속 아이템 버리기 알림";
+              case POSITION_MEMORIZE -> "위치 기억";
+              case DORMAMMU -> "도르마무";
+              case CUSTOM_DEATH_MESSAGE -> "커스텀 데스 메시지";
               case MINECRAFT_SPEED -> TranslatableKeyParser.getKey(PotionEffectType.SPEED);
               case MINECRAFT_SLOWNESS -> TranslatableKeyParser.getKey(PotionEffectType.SLOW);
               case MINECRAFT_HASTE -> TranslatableKeyParser.getKey(PotionEffectType.FAST_DIGGING);
@@ -705,6 +721,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case NO_REGENERATION -> "재불";
               case FREEZING -> "추움";
               case COMBAT_BOOSTER -> "부스터";
+              case POSITION_MEMORIZE -> "위치";
               default -> translationKey();
             };
   }
@@ -893,8 +910,13 @@ public enum CustomEffectType implements Translatable, EnumHideable
               case COMBAT_BOOSTER -> ComponentUtil.translate("공격 속도가 25% 증가합니다");
               case PVP_MODE -> ComponentUtil.translate("%s 효과가 있어야 PvP를 할 수 있습니다", ComponentUtil.translate("&a" + CustomEffectType.PVP_MODE_ENABLED.translationKey()));
               case PVP_MODE_ENABLED -> ComponentUtil.translate("이 효과를 동시에 가지고 있는")
+                      .append(Component.text("\n"))
                       .append(ComponentUtil.translate("플레이어와 PvP할 수 있습니다"));
               case PVP_MODE_DISABLED -> ComponentUtil.translate("");
+              case POSITION_MEMORIZE -> ComponentUtil.translate("현재 위치를 기억합니다")
+                      .append(Component.text("\n"))
+                      .append(ComponentUtil.translate("버프를 좌클릭하여 즉시 이동할 수 있습니다"));
+              case DORMAMMU -> ComponentUtil.translate("잠시 후, 원래 있던 곳으로 강제 이동됩니다");
               case MINECRAFT_SPEED -> VanillaEffectDescription.getDescription(PotionEffectType.SPEED);
               case MINECRAFT_SLOWNESS -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW);
               case MINECRAFT_HASTE -> VanillaEffectDescription.getDescription(PotionEffectType.FAST_DIGGING);
@@ -965,14 +987,16 @@ public enum CustomEffectType implements Translatable, EnumHideable
             {
               case RESURRECTION, CUCUMBERY_UPDATER, DARKNESS_TERROR_ACTIVATED, CONTINUAL_SPECTATING -> -1;
               case SERVER_RADIO_LISTENING, NEWBIE_SHIELD, VAR_DETOXICATE_ACTIVATED, NO_CUCUMBERY_ITEM_USAGE_ATTACK -> 2;
+              case GLIDING -> 3;
               case VAR_PODAGRA_ACTIVATED -> 5;
               case DAMAGE_INDICATOR -> 16;
               case FANCY_SPOTLIGHT_ACTIVATED -> 20;
               case RESURRECTION_INVINCIBLE, DISAPPEAR -> 20 * 2;
               case COOLDOWN_CHAT -> 20 * 3;
               case PARROTS_CHEER, INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, COMBAT_MODE_MELEE_COOLDOWN, COMBAT_MODE_RANGED_COOLDOWN, TOWN_SHIELD,
-                      PVP_MODE_COOLDOWN -> 20 * 5;
-              case STOP, COOLDOWN_ITEM_MEGAPHONE -> 20 * 10;
+                      PVP_MODE_COOLDOWN, DORMAMMU -> 20 * 5;
+              case STOP, COOLDOWN_ITEM_MEGAPHONE, NOTIFY_NO_TRADE_ITEM_DROP -> 20 * 10;
+              case CUSTOM_DEATH_MESSAGE -> 20 * 15;
               case BREAD_KIMOCHI -> 20 * 60 * 3;
               case RESURRECTION_COOLDOWN -> 20 * 60 * 10;
               case HEROS_ECHO, HEROS_ECHO_OTHERS -> 20 * 60 * 60 * 2;
@@ -1219,7 +1243,8 @@ public enum CustomEffectType implements Translatable, EnumHideable
   {
     return switch (this)
             {
-              case TROLL_INVENTORY_PROPERTY_MIN, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED, BREAD_KIMOCHI_SECONDARY_EFFECT, DISAPPEAR, DAMAGE_INDICATOR, NO_CUCUMBERY_ITEM_USAGE_ATTACK -> true;
+              case TROLL_INVENTORY_PROPERTY_MIN, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED, BREAD_KIMOCHI_SECONDARY_EFFECT, DISAPPEAR, DAMAGE_INDICATOR, NO_CUCUMBERY_ITEM_USAGE_ATTACK,
+                      GLIDING, NOTIFY_NO_TRADE_ITEM_DROP, CUSTOM_DEATH_MESSAGE-> true;
               default -> false;
             };
   }
@@ -1331,7 +1356,7 @@ public enum CustomEffectType implements Translatable, EnumHideable
   @Override
   public boolean isHiddenEnum()
   {
-    return switch (this)
+    return isHidden() || switch (this)
             {
               case COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE, DARKNESS_TERROR_ACTIVATED, RESURRECTION_INVINCIBLE, RESURRECTION_COOLDOWN, SERVER_RADIO_LISTENING, PARROTS_CHEER,
                       INVINCIBLE_PLUGIN_RELOAD, INVINCIBLE_RESPAWN, HEROS_ECHO_OTHERS, FANCY_SPOTLIGHT_ACTIVATED, NEWBIE_SHIELD, VAR_PODAGRA_ACTIVATED, VAR_DETOXICATE_ACTIVATED,

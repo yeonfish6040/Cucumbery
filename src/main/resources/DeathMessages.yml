@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 # 데스 메시지 기능 편집
 death-messages:
   enable: true # 사용 여부. true 또는 false
@@ -272,6 +272,21 @@ death-messages:
       - "%1$s이(가) %3$s에서 스스로 몸을 던져 죽었습니다"
     fall-block-high-combat-suicide-item:
       - "%1$s이(가) %3$s을(를) 사용하여 %4$s에서 스스로 몸을 던져 죽었습니다"
+    fall-elytra:
+      - "%1$s이(가) 새가 되려다 곤두박질쳤습니다"
+      - "%1$s이(가) 겉날개를 지나치게 맹신하여 바닥에 처박았습니다"
+    fall-elytra-combat:
+      - "%1$s이(가) %2$s에게서 도망치려다 곤두박질쳤습니다"
+      - "%1$s이(가) %2$s에게서 도망치려다 겉날개를 지나치게 맹신하여 바닥에 처박았습니다"
+    fall-elytra-combat-item:
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 곤두박질쳤습니다"
+      - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 겉날개를 지나치게 맹신하여 바닥에 처박았습니다"
+    fall-elytra-combat-suicide:
+      - "%1$s이(가) 새가 되려다 곤두박질쳤습니다"
+      - "%1$s이(가) 겉날개를 지나치게 맹신하여 바닥에 처박았습니다"
+    fall-elytra-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하여 새가 되려다 곤두박질쳤습니다"
+      - "%1$s이(가) %3$s을(를) 사용하여 겉날개를 지나치게 맹신하여 바닥에 처박았습니다"
     falling-block:
      # - "death.attack.fallingBlock" # %1$s이(가) 떨어지는 블록에 짓눌렸습니다
       - "%1$s이(가) 떨어지는 %2$s에 짓눌렸습니다"

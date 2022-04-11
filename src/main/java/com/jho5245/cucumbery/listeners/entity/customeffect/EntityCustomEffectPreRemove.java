@@ -17,7 +17,7 @@ public class EntityCustomEffectPreRemove implements Listener
     CustomEffect customEffect = event.getCustomEffect();
     CustomEffectType customEffectType = customEffect.getType();
     RemoveReason reason = event.getReason();
-    if (reason == RemoveReason.PLAYER && event.getEntity() instanceof Player player)
+    if (reason == RemoveReason.GUI && event.getEntity() instanceof Player player)
     {
       if (CustomEffectManager.hasEffect(player, CustomEffectType.NO_BUFF_REMOVE))
       {

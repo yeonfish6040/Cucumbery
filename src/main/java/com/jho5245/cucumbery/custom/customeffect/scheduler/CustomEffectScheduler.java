@@ -201,15 +201,20 @@ public class CustomEffectScheduler
       for (PotionEffect potionEffect : potionEffects)
       {
         int initDuration = -1;
+        int duration = potionEffect.getDuration();
         if (Variable.potionEffectApplyMap.containsKey(uuid))
         {
           HashMap<String, Integer> hashMap = Variable.potionEffectApplyMap.get(uuid);
           if (hashMap.containsKey(potionEffect.getType().translationKey()))
           {
             initDuration = hashMap.get(potionEffect.getType().translationKey());
+            if (duration > initDuration)
+            {
+              hashMap.put(potionEffect.getType().translationKey(), duration);
+              initDuration = duration;
+            }
           }
         }
-        int duration = potionEffect.getDuration();
         totalTick += (initDuration == -1 || initDuration > 20 * 60 * 60 * 24 * 365 ? 0 : initDuration);
         currentTick += (duration == -1 || duration > 20 * 60 * 60 * 24 * 365 ? 0 : duration);
         if (CustomEffectManager.isVanillaNegative(potionEffect.getType()))
@@ -277,6 +282,14 @@ public class CustomEffectScheduler
     if (CreateGUI.isGUITitle(title) && title instanceof TranslatableComponent translatableComponent && translatableComponent.args().get(1) instanceof TextComponent textComponent && textComponent.content().equals(Constant.POTION_EFFECTS))
     {
       CustomEffectGUI.openGUI(player, false);
+    }
+  }
+
+  public static void gliding(@NotNull Player player)
+  {
+    if (player.isGliding())
+    {
+      CustomEffectManager.addEffect(player, CustomEffectType.GLIDING);
     }
   }
 

@@ -3,9 +3,11 @@ package com.jho5245.cucumbery.listeners.player.item;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.ItemStackCustomEffectImple;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -126,14 +128,23 @@ public class PlayerDropItem implements Listener
     if (NBTAPI.isRestricted(player, item, RestrictionType.NO_TRADE))
     {
       event.setCancelled(true);
-      if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemDropAlertCooldown2.contains(uuid))
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP))
       {
-        Variable.itemDropAlertCooldown2.add(uuid);
-        MessageUtil.sendTitle(player, "&c버리기 불가!", "&r캐릭터 귀속 아이템은 버릴 수 없습니다", 5, 60, 15);
-        MessageUtil.info(player, ComponentUtil.create("이 메시지를 클릭하여 쓰레기통을 엽니다").clickEvent(ClickEvent.runCommand("/trashcan")));
-        SoundPlay.playSound(player, Constant.ERROR_SOUND);
-        Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemDropAlertCooldown2.remove(uuid), 100L);
+        CustomEffectManager.removeEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP);
       }
+      CustomEffectManager.addEffect(player, new ItemStackCustomEffectImple(CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP, item.clone()));
+      Component itemDisplay = ItemStackComponent.itemStackComponent(item, Constant.THE_COLOR);
+      MessageUtil.sendWarn(player, ComponentUtil.translate("&e%s은(는) 버린 후 다시 습득할 수 없습니다. 그래도 버리시겠습니까?", itemDisplay).append(Component.text(" "))
+              .append(ComponentUtil.translate("&a[버리기]").hoverEvent(ComponentUtil.translate("클릭하여 %s을(를) 제거합니다", itemDisplay))
+              .clickEvent(ClickEvent.runCommand("/testcommand"))));
+//      if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.itemDropAlertCooldown2.contains(uuid))
+//      {
+//        Variable.itemDropAlertCooldown2.add(uuid);
+//        MessageUtil.sendTitle(player, "&c버리기 불가!", "&r캐릭터 귀속 아이템은 버릴 수 없습니다", 5, 60, 15);
+//        MessageUtil.info(player, ComponentUtil.create("이 메시지를 클릭하여 쓰레기통을 엽니다").clickEvent(ClickEvent.runCommand("/trashcan")));
+//        SoundPlay.playSound(player, Constant.ERROR_SOUND);
+//        Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.itemDropAlertCooldown2.remove(uuid), 100L);
+//      }
       return;
     }
     if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_DROP))

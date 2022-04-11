@@ -1,15 +1,15 @@
 package com.jho5245.cucumbery.util.no_groups;
 
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Method2 extends Method
 {
@@ -154,4 +154,43 @@ public class Method2 extends Method
     int size = array.length;
     return array[((int) (current / size / (period / 1000d) % 1000d * size / 1000d))];
   }
+
+  @Nullable
+  public static Entity getEntityAsync(@NotNull UUID uuid)
+  {
+    for (World world : Bukkit.getWorlds())
+    {
+      for (Chunk chunk : world.getLoadedChunks())
+      {
+        for (Entity entity : chunk.getEntities())
+        {
+          if (entity.getUniqueId().equals(uuid))
+          {
+            return entity;
+          }
+        }
+      }
+    }
+    return null;
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

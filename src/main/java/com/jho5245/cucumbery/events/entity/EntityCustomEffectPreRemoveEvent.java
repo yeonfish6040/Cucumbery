@@ -37,14 +37,14 @@ public class EntityCustomEffectPreRemoveEvent extends EntityCustomEffectEvent im
   }
 
   /**
-   * WARNING! should only be cancelled when the {@link RemoveReason} is {@link RemoveReason#PLAYER}!
+   * WARNING! should only be cancelled when the {@link RemoveReason} is {@link RemoveReason#GUI}!
    * @param cancelled whether the event is cancelled or not.
-   * @throws IllegalStateException when the {@link RemoveReason} is not {@link RemoveReason#PLAYER}
+   * @throws IllegalStateException when the {@link RemoveReason} is not {@link RemoveReason#GUI}
    */
   @Override
   public void setCancelled(boolean cancelled) throws IllegalStateException
   {
-    if (this.reason != RemoveReason.PLAYER)
+    if (this.reason != RemoveReason.GUI)
     {
       throw new IllegalStateException();
     }

@@ -4,6 +4,7 @@ import com.destroystokyo.paper.Namespaced;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffectImple;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -180,11 +181,10 @@ public class BlockBreak implements Listener
 
     if (CustomEffectManager.hasEffect(player, CustomEffectType.DARKNESS_TERROR_ACTIVATED) && Math.random() < 0.15)
     {
-      Variable.darknessTerrorFlag.add(player.getUniqueId());
+      CustomEffectManager.addEffect(player, new StringCustomEffectImple(CustomEffectType.CUSTOM_DEATH_MESSAGE, 10, "custom_darkness_terror"));
       MessageUtil.sendActionBar(player, "&c아야! 너무 어두워서 블록을 캐다가 파편에 맞았습니다!");
       player.damage(1);
       player.setNoDamageTicks(0);
-      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), ()-> Variable.darknessTerrorFlag.remove(player.getUniqueId()), 10L);
     }
 
     Object value = player.getWorld().getGameRuleValue(GameRule.DO_TILE_DROPS);

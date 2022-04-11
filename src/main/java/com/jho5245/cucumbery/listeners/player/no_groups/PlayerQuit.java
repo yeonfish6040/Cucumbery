@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
@@ -118,7 +119,7 @@ public class PlayerQuit implements Listener
     {
       if (!customEffect.isKeepOnQuit())
       {
-        CustomEffectManager.removeEffect(player, customEffect.getType());
+        CustomEffectManager.removeEffect(player, customEffect.getType(), RemoveReason.QUIT);
       }
     }
   }

@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.commands.debug;
 
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -9,7 +9,10 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
-import org.bukkit.command.*;
+import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class CommandWhatIs implements CommandExecutor, TabCompleter
+public class CommandWhatIs implements CommandExecutor, AsyncTabCompleter
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -41,17 +44,16 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
     else if (args.length <= 2)
     {
       World world;
-      if (sender instanceof Player && args.length == 0)
+      if (sender instanceof Player player && args.length == 0)
       {
-        world = ((Player) sender).getLocation().getWorld();
+        world = player.getLocation().getWorld();
       }
       else
       {
-        world = Bukkit.getServer().getWorld(args[0]);
+        world = LocationUtil.world(sender, args[0], true);
       }
       if (world == null)
       {
-        MessageUtil.noArg(sender, Prefix.NO_WORLD, args[0]);
         return true;
       }
       if (args.length == 2)
@@ -240,6 +242,21 @@ public class CommandWhatIs implements CommandExecutor, TabCompleter
       return Method.tabCompleterList(args, "[인수]", "forecast");
     }
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  @Override
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {
+    int length = args.length;
+    if (length == 1)
+    {
+      return TabCompleterUtil.worldArgument(sender, args, "<월드>");
+    }
+    if (length == 2)
+    {
+      return TabCompleterUtil.tabCompleterList(args, "<인수>", false, Completion.completion("forecast", Component.translatable("현재 월드의 날씨 정보만 참조")));
+    }
+    return Collections.singletonList(TabCompleterUtil.ARGS_LONG);
   }
 
   /**

@@ -22,12 +22,14 @@ public abstract class CustomEnchant extends EnchantmentWrapper
 {
   public static Enchantment GLOW;
 
+  public static Enchantment KEEP_INVENTORY;
+  public static Enchantment TELEKINESIS;
+  public static Enchantment TELEKINESIS_PVP;
+
   public static Enchantment COLD_TOUCH;
   public static Enchantment JUSTIFICATION;
   public static Enchantment JUSTIFICATION_BOW;
   public static Enchantment SMELTING_TOUCH;
-  public static Enchantment TELEKINESIS;
-  public static Enchantment TELEKINESIS_PVP;
   public static Enchantment WARM_TOUCH;
 
   public static Enchantment COARSE_TOUCH;
@@ -42,12 +44,14 @@ public abstract class CustomEnchant extends EnchantmentWrapper
   {
     GLOW = registerEnchant(new EnchantGlow("glow"));
 
+    KEEP_INVENTORY = registerEnchant(new EnchantKeepInventory("keep_inventory"));
+    TELEKINESIS = registerEnchant(new EnchantTelekinesis("telekinesis"));
+    TELEKINESIS_PVP = registerEnchant(new EnchantTelekinesisPVP("telekinesis_pvp"));
+
     COLD_TOUCH = registerEnchant(new EnchantColdTouch("cold_touch"));
     JUSTIFICATION = registerEnchant(new EnchantJustification("justification"));
     JUSTIFICATION_BOW = registerEnchant(new EnchantJustificationBow("justification_bow"));
     SMELTING_TOUCH = registerEnchant(new EnchantSmeltingTouch("smelting_touch"));
-    TELEKINESIS = registerEnchant(new EnchantTelekinesis("telekinesis"));
-    TELEKINESIS_PVP = registerEnchant(new EnchantTelekinesisPVP("telekinesis_pvp"));
     WARM_TOUCH = registerEnchant(new EnchantWarmTouch("warm_touch"));
 
     COARSE_TOUCH = registerEnchant(new EnchantCoarseTouch("coarse_touch"));

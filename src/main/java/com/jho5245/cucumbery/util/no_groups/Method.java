@@ -93,44 +93,43 @@ public class Method extends SoundPlay
     {
       return "0초";
     }
-    long mills = ms;
     if (shorten)
     {
-      if (mills >= 1000L * 60 * 60 * 24 * 365)
+      if (ms >= 1000L * 60 * 60 * 24 * 365)
       {
-        return Constant.Sosu1ForceFloor.format(1d * mills / (1000L * 60 * 60 * 24 * 365)) + "년";
+        return Constant.Sosu1ForceFloor.format(1d * ms / (1000L * 60 * 60 * 24 * 365)) + "년";
       }
-      if (mills >= 1000L * 60 * 60 * 24)
+      if (ms >= 1000L * 60 * 60 * 24)
       {
-        return Constant.Sosu1ForceFloor.format(1d * mills / (1000L * 60 * 60 * 24)) + "일";
+        return Constant.Sosu1ForceFloor.format(1d * ms / (1000L * 60 * 60 * 24)) + "일";
       }
-      if (mills >= 1000L * 60 * 999)
+      if (ms >= 1000L * 60 * 999)
       {
-        return Constant.Sosu1ForceFloor.format(1d * mills / (1000L * 60 * 60)) + "시간";
+        return Constant.Sosu1ForceFloor.format(1d * ms / (1000L * 60 * 60)) + "시간";
       }
-      if (mills >= 1000L * 60 * 10)
+      if (ms >= 1000L * 60 * 10)
       {
-        return Constant.JeongsuFloor.format(Math.floor(1d * mills / (1000L * 60))) + "분";
+        return Constant.JeongsuFloor.format(Math.floor(1d * ms / (1000L * 60))) + "분";
       }
-      if (mills >= 1000L * 60)
+      if (ms >= 1000L * 60)
       {
-        return Constant.Sosu1ForceFloor.format(1d * mills / (1000L * 60)) + "분";
+        return Constant.Sosu1ForceFloor.format(1d * ms / (1000L * 60)) + "분";
       }
-      if (mills >= 1000L * 10)
+      if (ms >= 1000L * 10)
       {
-        return Constant.JeongsuFloor.format(1d * mills / 1000L) + "초";
+        return Constant.JeongsuFloor.format(1d * ms / 1000L) + "초";
       }
-      return Constant.Sosu1ForceFloor.format(1d * mills / 1000L) + "초";
+      return Constant.Sosu1ForceFloor.format(1d * ms / 1000L) + "초";
     }
-    long year = mills / (1000L * 60 * 60 * 24 * 365);
-    mills %= (1000L * 60 * 60 * 24 * 365);
-    long day = mills / (1000L * 60 * 60 * 24);
-    mills %= (1000L * 60 * 60 * 24);
-    long hour = mills / (1000L * 60 * 60);
-    mills %= (1000L * 60 * 60);
-    long min = mills / (1000L * 60);
-    mills %= (1000L * 60);
-    double sec = mills / 1000D;
+    long year = ms / (1000L * 60 * 60 * 24 * 365);
+    ms %= (1000L * 60 * 60 * 24 * 365);
+    long day = ms / (1000L * 60 * 60 * 24);
+    ms %= (1000L * 60 * 60 * 24);
+    long hour = ms / (1000L * 60 * 60);
+    ms %= (1000L * 60 * 60);
+    long min = ms / (1000L * 60);
+    ms %= (1000L * 60);
+    double sec = ms / 1000D;
     if (!showMs)
     {
       sec = Math.floor(sec);
@@ -160,7 +159,7 @@ public class Method extends SoundPlay
     }
     else
     {
-      displaySec = Constant.Jeongsu.format(Math.floor(mills / 1000d));
+      displaySec = Constant.Jeongsu.format(Math.floor(ms / 1000d));
     }
     return ((year != 0) ? year + "년" : "") +
             ((day != 0) ? ((year != 0) ? " " : "") + day + "일" : "") +

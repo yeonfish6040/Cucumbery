@@ -126,7 +126,7 @@ public class ItemLoreUtil
   {
     ItemMeta itemMeta = itemStack.getItemMeta();
     List<Component> lore = itemMeta.lore();
-    if (lore == null || lore.size() == 0)
+    if (lore == null || lore.isEmpty())
     {
       return;
     }
@@ -159,7 +159,7 @@ public class ItemLoreUtil
       }
 
       List<Component> children = component.children();
-      if (children.size() > 0 && children.get(0) instanceof TextComponent childTextComponent)
+      if (!children.isEmpty() && children.get(0) instanceof TextComponent childTextComponent)
       {
         return childTextComponent.content().equals("(+NBT)");
       }
@@ -175,7 +175,7 @@ public class ItemLoreUtil
    */
   public static long getItemRarityValue(@NotNull List<Component> lore)
   {
-    if (lore.size() == 0)
+    if (lore.isEmpty())
     {
       return 0L;
     }
@@ -576,6 +576,27 @@ public class ItemLoreUtil
       // Custom Enchant
 
       // Non Cursed Enchant
+      if (enchant.equals(CustomEnchant.KEEP_INVENTORY))
+      {
+        lore.add(
+                ComponentUtil.translate("&7사망해도 아이템을 떨어트리지 않음")
+        );
+      }
+      if (enchant.equals(CustomEnchant.TELEKINESIS))
+      {
+        lore.addAll(Arrays.asList(
+                ComponentUtil.translate("&7블록을 캐거나 적을 잡았을 때 "),
+                ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
+        );
+      }
+      if (enchant.equals(CustomEnchant.TELEKINESIS_PVP))
+      {
+        lore.addAll(Arrays.asList(
+                ComponentUtil.translate("&7인벤세이브가 꺼져 있는 경우에 플레이어와 싸웠을 때 "),
+                ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
+        );
+      }
+
       if (enchant.equals(CustomEnchant.COLD_TOUCH))
       {
         lore.add(
@@ -594,20 +615,6 @@ public class ItemLoreUtil
         lore.addAll(Arrays.asList(
                 ComponentUtil.translate("&7블록을 캐거나 적을 잡았을 때 "),
                 ComponentUtil.translate("&7드롭하는 아이템을 %s로 바꿔줌", ComponentUtil.translate("&a제련된 형태")))
-        );
-      }
-      if (enchant.equals(CustomEnchant.TELEKINESIS))
-      {
-        lore.addAll(Arrays.asList(
-                ComponentUtil.translate("&7블록을 캐거나 적을 잡았을 때 "),
-                ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
-        );
-      }
-      if (enchant.equals(CustomEnchant.TELEKINESIS_PVP))
-      {
-        lore.addAll(Arrays.asList(
-                ComponentUtil.translate("&7인벤세이브가 꺼져 있는 경우에 플레이어와 싸웠을 때 "),
-                ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
         );
       }
       if (enchant.equals(CustomEnchant.WARM_TOUCH))

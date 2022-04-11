@@ -60,6 +60,7 @@ public class TranslatableKeyParser
               case RECORD_PLAYED -> "play_record";
               case PLAY_ONE_MINUTE -> "play_time";
               case TRAPPED_CHEST_TRIGGERED -> "trigger_trapped_chest";
+              case DROP_COUNT -> "drop";
               default -> statistic.toString().toLowerCase();
             };
   }

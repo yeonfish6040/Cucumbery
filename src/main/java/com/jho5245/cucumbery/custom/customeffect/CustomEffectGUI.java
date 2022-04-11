@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.util.no_groups.ColorUtil.Type;
 import com.jho5245.cucumbery.util.no_groups.CreateGUI;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil.TimeFormatType;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
@@ -167,7 +168,7 @@ public class CustomEffectGUI
         menu.addItem(itemStack);
       }
     }
-    int size = potionEffects.size() + CustomEffectManager.getEffects(player).size();
+    int size = potionEffects.size() + customEffects.size();
     ItemStack info = new ItemStack(Material.PLAYER_HEAD);
     SkullMeta skullMeta = (SkullMeta) info.getItemMeta();
     skullMeta.setOwningPlayer(player);
@@ -235,10 +236,14 @@ public class CustomEffectGUI
     }
     if (isFinite && !isTimeHidden)
     {
-      lore.add(ComponentUtil.translate("&f지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
+      Component time =
+              ComponentUtil.timeFormat(
+                      duration * 50L, duration < 200 ? TimeFormatType.FULL_SINGLE_DECIMAL : TimeFormatType.FULL_NO_DECIMALS)
+                      .color(Constant.THE_COLOR);
+      lore.add(              ComponentUtil.translate("&f지속 시간 : %s", time));
       if (effectType == CustomEffectType.CURSE_OF_BEANS)
       {
-        lore.add(ComponentUtil.translate("&f지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
+        lore.add(ComponentUtil.translate("&f지속 시간 : %s", time));
       }
     }
     if (isAmplifiable)
@@ -262,6 +267,11 @@ public class CustomEffectGUI
     {
       lore.add(Component.empty());
       lore.add(ComponentUtil.translate("&e좌클릭하여 30초간 관전 외출"));
+    }
+    if (effectType == CustomEffectType.POSITION_MEMORIZE)
+    {
+      lore.add(Component.empty());
+      lore.add(ComponentUtil.translate("&e좌클릭하여 즉시 저장된 위치로 이동"));
     }
     return lore;
   }

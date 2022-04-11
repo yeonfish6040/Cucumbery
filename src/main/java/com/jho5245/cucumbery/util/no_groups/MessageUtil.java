@@ -444,10 +444,10 @@ public class MessageUtil
     }
     if (audience instanceof Collection<?> list)
     {
-        for (Object o : list)
-        {
-          MessageUtil.sendMessage(o, objects);
-        }
+      for (Object o : list)
+      {
+        MessageUtil.sendMessage(o, objects);
+      }
     }
     if (audience instanceof Audience a)
     {
@@ -508,13 +508,23 @@ public class MessageUtil
    */
   public static void sendMessage(@NotNull Object audience, @Nullable Prefix prefix, @NotNull String key, @NotNull Object... args)
   {
-    Player p = audience instanceof Player player ? player : null;
-    Component component = ComponentUtil.translate(p, key, args);
-    if (prefix != null)
+    if (audience instanceof List<?> list)
     {
-      component = ComponentUtil.create(prefix, component);
+      for (Object o : list)
+      {
+        sendMessage(o, prefix, key, args);
+      }
     }
-    sendMessage(audience, component);
+    else
+    {
+      Player p = audience instanceof Player player ? player : null;
+      Component component = ComponentUtil.translate(p, key, args);
+      if (prefix != null)
+      {
+        component = ComponentUtil.create(prefix, component);
+      }
+      sendMessage(audience, component);
+    }
   }
 
   public static void sendWarn(@NotNull Object audience, @NotNull String key)
@@ -592,7 +602,7 @@ public class MessageUtil
    *
    * @param commandSender 해당 메시지를 실행한 주체
    * @param exception     추가로 메시지를 보여주지 않을 개체
-   * @param component       출력할 메시지
+   * @param component     출력할 메시지
    */
   public static void sendAdminMessage(@NotNull Object commandSender, @Nullable List<Permissible> exception, @NotNull Component component)
   {

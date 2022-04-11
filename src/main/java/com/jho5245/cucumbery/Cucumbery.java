@@ -93,7 +93,7 @@ import java.util.concurrent.Executors;
 public class Cucumbery extends JavaPlugin
 {
   public static final int CONFIG_VERSION = 21;
-  public static final int DEATH_MESSAGES_CONFIG_VERSION = 3;
+  public static final int DEATH_MESSAGES_CONFIG_VERSION = 4;
   public static final int LANG_CONFIG_VERSION = 1;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
@@ -645,6 +645,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new LingeringPotionSplash());
     Initializer.registerEvent(new PotionSplash());
     Initializer.registerEvent(new ProjectileLaunch());
+    Initializer.registerEvent(new TameableDeathMessage());
     Initializer.registerEvent(new VillagerAcquireTrade());
     Initializer.registerEvent(new WitchThrowPotion());
     // listener.entity.customeffect

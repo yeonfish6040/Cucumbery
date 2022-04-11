@@ -1,11 +1,13 @@
 package com.jho5245.cucumbery.custom.customeffect;
 
+import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.OfflinePlayerCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.entity.EntityType;
@@ -28,22 +30,22 @@ public class CustomEffect
   private int amplifier;
   private DisplayType displayType;
 
-  public CustomEffect(CustomEffectType effectType)
+  public CustomEffect(@NotNull CustomEffectType effectType)
   {
     this(effectType, effectType.getDefaultDuration());
   }
 
-  public CustomEffect(CustomEffectType effectType, int duration)
+  public CustomEffect(@NotNull CustomEffectType effectType, int duration)
   {
     this(effectType, duration, 0);
   }
 
-  public CustomEffect(CustomEffectType effectType, int duration, int amplifier)
+  public CustomEffect(@NotNull CustomEffectType effectType, int duration, int amplifier)
   {
     this(effectType, duration, amplifier, effectType.getDefaultDisplayType());
   }
 
-  public CustomEffect(CustomEffectType effectType, int duration, int amplifier, @NotNull DisplayType displayType)
+  public CustomEffect(@NotNull CustomEffectType effectType, int duration, int amplifier, @NotNull DisplayType displayType)
   {
     this.effectType = effectType;
     if (effectType.isToggle())
@@ -258,6 +260,16 @@ public class CustomEffect
         description = description.append(Component.text("\n"));
         description = description.append(Component.text("\n"));
         description = description.append(ComponentUtil.translate("&7관전 중인 플레이어 : %s", player));
+      }
+    }
+    if (this instanceof LocationCustomEffect locationCustomEffect)
+    {
+      Location location = locationCustomEffect.getLocation();
+      if (effectType == CustomEffectType.POSITION_MEMORIZE)
+      {
+        description = description.append(Component.text("\n"));
+        description = description.append(Component.text("\n"));
+        description = description.append(ComponentUtil.translate("&7저장된 위치 : %s", location));
       }
     }
     description = ComponentUtil.create(description, effectType.getPropertyDescription());

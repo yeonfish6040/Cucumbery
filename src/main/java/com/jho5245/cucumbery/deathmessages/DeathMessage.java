@@ -520,6 +520,31 @@ public enum DeathMessage
   FALL_BLOCK_HIGH_COMBAT_SUICIDE_ITEM,
 
   /**
+   * %1$s이(가) 땅바닥으로 곤두박질쳤습니다
+   */
+  FALL_ELYTRA,
+
+  /**
+   * %1$s이(가) %2$s에게서 도망치려다 땅바닥으로 곤두박질쳤습니다
+   */
+  FALL_ELYTRA_COMBAT,
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 땅바닥으로 곤두박질쳤습니다
+   */
+  FALL_ELYTRA_COMBAT_ITEM,
+
+  /**
+   - "%1$s이(가) 높지는 않지만 스스로 몸을 던져 죽었습니다"
+   */
+  FALL_ELYTRA_COMBAT_SUICIDE,
+
+  /**
+   - "%1$s이(가) 높지는 않지만 %3$s을(를) 사용하여 스스로 몸을 던져 죽었습니다"
+   */
+  FALL_ELYTRA_COMBAT_SUICIDE_ITEM,
+
+  /**
    * %1$s이(가) 떨어지는 블록에 짓눌렸습니다
    */
   FALLING_BLOCK,

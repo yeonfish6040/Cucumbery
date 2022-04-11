@@ -4,14 +4,16 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
 import de.tr7zw.changeme.nbtapi.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.Material;
+import org.bukkit.inventory.CreativeCategory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -101,7 +103,7 @@ public class ItemLore
     }
     boolean hasOnlyNbtTagLore = ItemLoreUtil.hasOnlyNbtTagLore(itemStack);
     // 아이템의 등급
-    ItemCategory.Rarity rarity = ItemCategory.getItemRarirty(type);
+    Rarity rarity = ItemCategory.getItemRarirty(type);
     // 아이템의 등급(숫자)
     long rarityValue = rarity.getRarityValue();
     ItemMeta itemMeta = itemStack.getItemMeta();
@@ -110,14 +112,21 @@ public class ItemLore
     List<Component> defaultLore = new ArrayList<>(Collections.singletonList(Component.translatable("").args(Component.text(rarityValue))));
     // 그 다음 2번째 설명에는 아이템의 종류를 추가
     TranslatableComponent itemGroup;
-    ItemCategory.ItemCategoryType itemCategoryType = ItemCategory.getItemCategoryType(type);
+    CreativeCategory itemCategoryType = type.getCreativeCategory();
+    if (itemCategoryType == null)
+    {
+      itemGroup = Component.translatable("치트");
+    }
+    else
     switch (itemCategoryType)
     {
-      case BUILDING -> itemGroup = Component.translatable("itemGroup.buildingBlocks");
+      case BUILDING_BLOCKS -> itemGroup = Component.translatable("itemGroup.buildingBlocks");
       case REDSTONE, TRANSPORTATION, MISC, FOOD, COMBAT, BREWING, DECORATIONS, TOOLS -> itemGroup = Component.translatable("itemGroup." + itemCategoryType.toString().toLowerCase());
-      case ENCHANTED_BOOK -> itemGroup = Component.translatable("item.minecraft.enchanted_book");
-      case CHEAT_ONLY -> itemGroup = Component.translatable("selectWorld.cheats");
-      default -> itemGroup = Component.translatable("selectWorld.versionUnknown");
+      default -> itemGroup = Component.translatable("알 수 없음");
+    }
+    if (type == Material.ENCHANTED_BOOK)
+    {
+      itemGroup = Component.translatable("item.minecraft.enchanted_book");
     }
     Component itemGroupComponent = ComponentUtil.translate("&7아이템 종류 : [%s]", itemGroup);
     defaultLore.add(itemGroupComponent);

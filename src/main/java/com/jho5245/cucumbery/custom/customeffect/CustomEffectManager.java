@@ -3,12 +3,14 @@ package com.jho5245.cucumbery.custom.customeffect;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.*;
-import com.jho5245.cucumbery.events.entity.*;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
+import com.jho5245.cucumbery.events.entity.*;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil.TimeFormatType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -17,6 +19,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -27,8 +30,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -154,6 +159,12 @@ public class CustomEffectManager
       }
       case COMBAT_BOOSTER -> {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_ATTACK_SPEED, Operation.ADD_SCALAR, 0.25);
+      }
+      case POSITION_MEMORIZE -> {
+        effect = new LocationCustomEffectImple(effectType, initDura, initAmple, displayType, entity.getLocation());
+      }
+      case DORMAMMU -> {
+        effect = new LocationVelocityCustomEffectImple(effectType, initDura, initAmple, displayType, entity.getLocation(), entity.getVelocity());
       }
     }
     if (effectType.isRealDuration() && effect.getDuration() != -1)
@@ -450,11 +461,11 @@ public class CustomEffectManager
         {
           config.set("effects." + i + ".player", playerCustomEffect.getPlayer().getUniqueId().toString());
         }
-        else if (customEffect instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)
+        if (customEffect instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)
         {
           config.set("effects." + i + ".offline-player", offlinePlayerCustomEffect.getOfflinePlayer().getUniqueId().toString());
         }
-        else if (customEffect instanceof UUIDCustomEffect uuidCustomEffect)
+        if (customEffect instanceof UUIDCustomEffect uuidCustomEffect)
         {
           config.set("effects." + i + ".uuid", uuidCustomEffect.getUniqueId().toString());
           if (uuidCustomEffect instanceof AttributeCustomEffect attributeCustomEffect)
@@ -464,10 +475,35 @@ public class CustomEffectManager
             config.set("effects." + i + ".multiplier", attributeCustomEffect.getMultiplier());
           }
         }
-        else if (customEffect instanceof RealDurationCustomEffect realDurationCustomEffect)
+        if (customEffect instanceof RealDurationCustomEffect realDurationCustomEffect)
         {
           config.set("effects." + i + ".start-time", realDurationCustomEffect.getStartTimeInMillis());
           config.set("effects." + i + ".end-time", realDurationCustomEffect.getEndTimeInMillis());
+        }
+        if (customEffect instanceof ItemStackCustomEffect itemStackCustomEffect)
+        {
+          config.set("effects." + i + ".item", ItemSerializer.serialize(itemStackCustomEffect.getItemStack()));
+        }
+        if (customEffect instanceof LocationCustomEffect locationCustomEffect)
+        {
+          Location location = locationCustomEffect.getLocation();
+          config.set("effects." + i + ".location.world", location.getWorld().getName());
+          config.set("effects." + i + ".location.x", location.getX());
+          config.set("effects." + i + ".location.y", location.getY());
+          config.set("effects." + i + ".location.z", location.getZ());
+          config.set("effects." + i + ".location.yaw", location.getYaw());
+          config.set("effects." + i + ".location.pitch", location.getPitch());
+        }
+        if (customEffect instanceof VelocityCustomEffect velocityCustomEffect)
+        {
+          Vector vector = velocityCustomEffect.getVelocity();
+          config.set("effects." + i + ".velocity.x", vector.getX());
+          config.set("effects." + i + ".velocity.y", vector.getY());
+          config.set("effects." + i + ".velocity.z", vector.getZ());
+        }
+        if (customEffect instanceof StringCustomEffect stringCustomEffect)
+        {
+          config.set("effects." + i + ".string", stringCustomEffect.getString());
         }
       }
       customConfig.saveConfig();
@@ -561,6 +597,47 @@ public class CustomEffectManager
           {
             long startTime = root.getLong(typeString + ".start-time"), endTime = root.getLong(typeString + ".end-time");
             customEffect = new RealDurationCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, startTime, endTime);
+          }
+          String itemStackString = root.getString(typeString + ".item");
+          if (itemStackString != null)
+          {
+            ItemStack itemStack = ItemSerializer.deserialize(itemStackString);
+            customEffect = new ItemStackCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, itemStack);
+          }
+          String worldName = root.getString(typeString + ".location.world");
+          ConfigurationSection velocities = root.getConfigurationSection(typeString + ".velocity");
+          if (worldName != null)
+          {
+            World world = Bukkit.getWorld(worldName);
+            if (world != null)
+            {
+              double x = root.getDouble(typeString + ".location.x");
+              double y = root.getDouble(typeString + ".location.y");
+              double z = root.getDouble(typeString + ".location.z");
+              float yaw = (float) root.getDouble(typeString + ".location.yaw");
+              float pitch = (float) root.getDouble(typeString + ".location.pitch");
+              customEffect = new LocationCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType,
+                      new Location(world, x, y, z, yaw, pitch));
+            }
+          }
+          if (velocities != null)
+          {
+            double x = root.getDouble(typeString + ".velocity.x");
+            double y = root.getDouble(typeString + ".velocity.y");
+            double z = root.getDouble(typeString + ".velocity.z");
+            if (customEffect instanceof LocationCustomEffect locationCustomEffect)
+            {
+              customEffect = new LocationVelocityCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, locationCustomEffect.getLocation(), new Vector(x, y, z));
+            }
+            else
+            {
+              customEffect = new VelocityCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, new Vector(x, y, z));
+            }
+          }
+          String stringValue = root.getString(typeString + ".string");
+          if (stringValue != null)
+          {
+            customEffect = new StringCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, stringValue);
           }
           customEffect.setDuration(duration);
           customEffect.setAmplifier(amplifier);
@@ -658,9 +735,10 @@ public class CustomEffectManager
       effectComponent = effectComponent.hoverEvent(create.hoverEvent()).clickEvent(create.clickEvent());
       arguments.add(
               ComponentUtil.translate(key2, effectComponent,
-                      !customEffect.isTimeHidden() ?
-                              timePrefixColor + (showDuration ? " (" : "(") + Method.timeFormatMilli(duration * 50L, less10Sec, 1, true) + ")" :
-                              ""
+                      !customEffect.isTimeHidden() && showDuration ?
+                              ComponentUtil.translate(
+                                      timePrefixColor + " %s", ComponentUtil.timeFormat(duration * 50L, TimeFormatType.SHORT))
+                              : ""
                       , "rgb200,200,30;" + (amplifier + 1))
       );
       key.append("%s,");
@@ -759,8 +837,10 @@ public class CustomEffectManager
       effectComponent = effectComponent.hoverEvent(create.hoverEvent()).clickEvent(create.clickEvent());
       arguments.add(
               ComponentUtil.translate(key2,
-                      effectComponent,
-                      timePrefixColor + (showDuration ? " (" : "(") + Method.timeFormatMilli(duration * 50L, duration < 200, 1, true) + ")"
+                      effectComponent, showDuration ?
+                              ComponentUtil.translate(
+                                      timePrefixColor + " %s", ComponentUtil.timeFormat(duration * 50L, TimeFormatType.SHORT))
+                              : ""
                       , "rgb200,200,30;" + (amplifier + 1))
       );
       key.append("%s,");

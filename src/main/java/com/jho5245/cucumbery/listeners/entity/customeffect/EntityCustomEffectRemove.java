@@ -5,8 +5,11 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LocationVelocityCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.scheduler.CustomEffectScheduler;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
@@ -32,6 +35,7 @@ public class EntityCustomEffectRemove implements Listener
     UUID uuid = entity.getUniqueId();
     CustomEffect customEffect = event.getCustomEffect();
     CustomEffectType customEffectType = customEffect.getType();
+    RemoveReason removeReason = event.getReason();
     if (entity instanceof Player player && customEffect.getDisplayType() == DisplayType.PLAYER_LIST && CustomEffectManager.getEffects(entity, DisplayType.PLAYER_LIST).isEmpty())
     {
       player.sendPlayerListFooter(Component.empty());
@@ -115,6 +119,32 @@ public class EntityCustomEffectRemove implements Listener
     if (customEffectType == CustomEffectType.FREEZING)
     {
       entity.lockFreezeTicks(false);
+    }
+
+    if (customEffectType == CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP)
+    {
+      switch (removeReason)
+      {
+        case DEATH, TIME_OUT -> MessageUtil.info(entity, "아이템 제거가 취소되었습니다");
+      }
+    }
+
+    if (customEffectType == CustomEffectType.POSITION_MEMORIZE && removeReason == RemoveReason.PLUGIN)
+    {
+      if (customEffect instanceof LocationCustomEffect locationCustomEffect)
+      {
+        entity.teleport(locationCustomEffect.getLocation());
+        MessageUtil.info(entity, "%s 효과의 능력을 사용하여 원래 있던 위치로 되돌아갔습니다", customEffect);
+      }
+    }
+
+    if (customEffectType == CustomEffectType.DORMAMMU && removeReason == RemoveReason.TIME_OUT)
+    {
+      if (customEffect instanceof LocationVelocityCustomEffect locationVelocityCustomEffect)
+      {
+        entity.teleport(locationVelocityCustomEffect.getLocation());
+        entity.setVelocity(locationVelocityCustomEffect.getVelocity());
+      }
     }
   }
 }

@@ -457,7 +457,7 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
         if (length == 4)
         {
           int defaultDuration = effectType.getDefaultDuration();
-         List<Completion> list = new ArrayList<>(TabCompleterUtil.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]"));
+         List<Completion> list = TabCompleterUtil.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]");
          String time = Method.timeFormatMilli(defaultDuration * 50L, true, 2);
          List<Completion> list1 = TabCompleterUtil.tabCompleterList(args, "[인수]", false,
          Completion.completion("infinite", Component.translatable("무제한 지속시간")),
@@ -552,7 +552,7 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
       {
         if (all)
         {
-          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,"%s에게 제거할 호과가 없습니다", failureEntities);
+          MessageUtil.sendWarnOrError(successEntitiesIsEmpty, sender,"%s에게 제거할 효과가 없습니다", failureEntities);
         }
         else
         {

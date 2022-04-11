@@ -259,7 +259,7 @@ public class EntityComponentUtil
                 Component.translatable("merchant.level." + villager.getVillagerLevel()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + villagerExperience));
       }
       Villager.Type villagerType = villager.getVillagerType();
-      Biome biome = Biome.valueOf(villagerType.toString().replace("SNOW", "SNOWY_TUNDRA"));
+      Biome biome = Biome.valueOf(villagerType.toString().replace("SNOW", "SNOWY_PLAINS"));
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("기후 : %s", Component.translatable("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
       Map<UUID, Reputation> reputationMap = villager.getReputations();
@@ -272,7 +272,7 @@ public class EntityComponentUtil
         hover = hover.append(ComponentUtil.translate("%s의 평판", nameComponent));
         for (UUID targetUUID : uuidSet)
         {
-          Object target = Bukkit.getEntity(targetUUID);
+          Object target = Method2.getEntityAsync(targetUUID);
           if (target == null)
           {
             target = Bukkit.getOfflinePlayer(targetUUID);
@@ -355,7 +355,7 @@ public class EntityComponentUtil
       UUID spawningEntityUUID = phantom.getSpawningEntity();
       if (spawningEntityUUID != null)
       {
-        Entity spawningEntity = Bukkit.getEntity(spawningEntityUUID);
+        Entity spawningEntity = Method2.getEntityAsync(spawningEntityUUID);
         if (spawningEntity != null)
         {
           hover = hover.append(Component.text("\n"));
@@ -462,15 +462,15 @@ public class EntityComponentUtil
     if (entity instanceof Animals animals)
     {
       UUID breedCause = animals.getBreedCause();
-      if (breedCause != null)
-      {
-        Entity breedCauseEntity = Bukkit.getEntity(breedCause);
-        if (breedCauseEntity != null)
+        if (breedCause != null)
         {
-          hover = hover.append(Component.text("\n"));
-          hover = hover.append(ComponentUtil.translate("사육사 : %s", breedCauseEntity));
+          Entity breedCauseEntity = Method2.getEntityAsync(breedCause);
+          if (breedCauseEntity != null)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(ComponentUtil.translate("사육사 : %s", breedCauseEntity));
+          }
         }
-      }
     }
     if (entity instanceof CommandMinecart commandMinecart)
     {
@@ -588,7 +588,7 @@ public class EntityComponentUtil
         UUID spawningEntityUUID = firework.getSpawningEntity();
         if (spawningEntityUUID != null)
         {
-          Entity spawningEntity = Bukkit.getEntity(spawningEntityUUID);
+          Entity spawningEntity = Method2.getEntityAsync(spawningEntityUUID);
           if (spawningEntity != null)
           {
             hover = hover.append(Component.text("\n"));

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemCategory
 {
-  public enum ItemCategoryType
+/*  public enum ItemCategoryType
   {
     BUILDING,
     DECORATIONS,
@@ -1123,7 +1123,7 @@ public class ItemCategory
                       COMMAND_BLOCK_MINECART -> ItemCategoryType.CHEAT_ONLY;
               default -> ItemCategoryType.WORK_IN_PROGRESS;
             };
-  }
+  }*/
 
   @NotNull
   public static Rarity getItemRarirty(@NotNull Material type)

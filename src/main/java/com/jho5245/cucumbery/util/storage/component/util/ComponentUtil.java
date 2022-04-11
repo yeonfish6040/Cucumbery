@@ -285,10 +285,6 @@ public class ComponentUtil
         {
           hover = hover.append(propertyDescription);
         }
-        if (!effectType.getDescription().equals(Component.empty()))
-        {
-          hover = hover.append(Component.text("\n"));
-        }
         if (player == null || player.hasPermission("asdf"))
         {
           hover = hover.append(Component.text("\n"));
@@ -606,12 +602,17 @@ public class ComponentUtil
       }
     }
     component = component.children(children);
-    if (component instanceof TextComponent && ((TextComponent) component).content().equals(""))
+    if (component instanceof TextComponent textComponent && textComponent.content().equals(""))
     {
       List<Component> children2 = component.children();
       if (children2.size() == 1)
       {
-        return children2.get(0);
+        Component newComponent = children2.get(0);
+        if (newComponent.color() == null)
+        {
+          newComponent = newComponent.color(component.color());
+        }
+        return newComponent;
       }
     }
     return component;
@@ -1476,7 +1477,120 @@ public class ComponentUtil
     }
     return component;
   }
+
+  @NotNull
+  public static Component timeFormat(long ms)
+  {
+    return timeFormat(ms, TimeFormatType.DEFAULT);
+  }
+
+  @NotNull
+  public static Component timeFormat(long ms, @NotNull TimeFormatType formatType)
+  {
+    if (ms == 0 || (ms < 1000 && formatType == TimeFormatType.FULL_NO_DECIMALS))
+    {
+      return ComponentUtil.translate("%s초", 0);
+    }
+    if (formatType == TimeFormatType.SHORT)
+    {
+      if (ms >= 1000L * 60 * 60 * 24 * 365)
+      {
+        return ComponentUtil.translate("%s년", Constant.Sosu1ForceFloor.format(1d * ms / (1000L * 60 * 60 * 24 * 365)));
+      }
+      if (ms >= 1000L * 60 * 60 * 24)
+      {
+        return ComponentUtil.translate("%s일", Constant.Sosu1ForceFloor.format(1d * ms / (1000L * 60 * 60 * 24)));
+      }
+      if (ms >= 1000L * 60 * 999)
+      {
+        return ComponentUtil.translate("%s시간", Constant.Sosu1ForceFloor.format(1d * ms / (1000L * 60 * 60)));
+      }
+      if (ms >= 1000L * 60 * 10)
+      {
+        return ComponentUtil.translate("%s분", Constant.JeongsuFloor.format(Math.floor(1d * ms / (1000L * 60))));
+      }
+      if (ms >= 1000L * 60)
+      {
+        return ComponentUtil.translate("%s분", Constant.Sosu1ForceFloor.format(1d * ms / (1000L * 60)));
+      }
+      if (ms >= 1000L * 10)
+      {
+        return ComponentUtil.translate("%s초", Constant.JeongsuFloor.format(1d * ms / 1000L));
+      }
+      return ComponentUtil.translate("%s초", Constant.Sosu1ForceFloor.format(1d * ms / 1000L));
+    }
+    long year = ms / (1000L * 60 * 60 * 24 * 365);
+    ms %= (1000L * 60 * 60 * 24 * 365);
+    long day = ms / (1000L * 60 * 60 * 24);
+    ms %= (1000L * 60 * 60 * 24);
+    long hour = ms / (1000L * 60 * 60);
+    ms %= (1000L * 60 * 60);
+    long min = ms / (1000L * 60);
+    ms %= (1000L * 60);
+    double sec = ms / 1000D;
+    String displaySec = switch (formatType)
+    {
+      case FULL_NO_DECIMALS -> Constant.Jeongsu.format(Math.floor(sec));
+      case FULL_SINGLE_DECIMAL -> Constant.Sosu1Force.format(sec);
+      default -> Constant.Sosu2.format(sec);
+    };
+    Component component = Component.empty();
+    component = component.append(Component.empty());
+    if (year > 0)
+    {
+      component = component.append(ComponentUtil.translate("%s년", year));
+    }
+    if (day > 0)
+    {
+      if (year > 0)
+      {
+        component = component.append(Component.text(" "));
+      }
+      component = component.append(ComponentUtil.translate("%s일", day));
+    }
+    if (hour > 0)
+    {
+      if (year > 0 || day > 0)
+      {
+        component = component.append(Component.text(" "));
+      }
+      component = component.append(ComponentUtil.translate("%s시간", hour));
+    }
+    if (min > 0)
+    {
+      if (year > 0 || day > 0 || hour > 0)
+      {
+        component = component.append(Component.text(" "));
+      }
+      component = component.append(ComponentUtil.translate("%s분", min));
+    }
+    if (sec > 0)
+    {
+      if (year > 0 || day > 0 || hour > 0 || min > 0)
+      {
+        component = component.append(Component.text(" "));
+      }
+      component = component.append(ComponentUtil.translate("%s초", displaySec));
+    }
+    return component;
+  }
+
+  public enum TimeFormatType
+  {
+    DEFAULT,
+    FULL_SINGLE_DECIMAL,
+    FULL_NO_DECIMALS,
+    SHORT
+  }
 }
+
+
+
+
+
+
+
+
 
 
 

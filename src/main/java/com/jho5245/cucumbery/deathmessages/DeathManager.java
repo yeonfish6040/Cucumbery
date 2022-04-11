@@ -1,8 +1,10 @@
 package com.jho5245.cucumbery.deathmessages;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffect;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -274,6 +276,10 @@ public class DeathManager
             key = "ender_pearl";
             extraArgs.add(ComponentUtil.create(enderPearl.getItem()));
           }
+          else if (CustomEffectManager.hasEffect(entity, CustomEffectType.GLIDING))
+          {
+            key = "fall_elytra";
+          }
           else
           {
             key = "fall";
@@ -489,15 +495,13 @@ public class DeathManager
         case DRYOUT -> key = "dry_out";
         case FREEZE -> key = "freeze";
       }
-      if (Variable.customDeathMessageKey.containsKey(entity.getUniqueId()))
+      if (CustomEffectManager.hasEffect(entity, CustomEffectType.CUSTOM_DEATH_MESSAGE))
       {
-        key = Variable.customDeathMessageKey.get(entity.getUniqueId());
-        Variable.customDeathMessageKey.remove(entity.getUniqueId());
-      }
-      if (Variable.darknessTerrorFlag.contains(entity.getUniqueId()))
-      {
-        Variable.darknessTerrorFlag.remove(entity.getUniqueId());
-        key = "custom_darkness_terror";
+        CustomEffect customEffect = CustomEffectManager.getEffect(entity, CustomEffectType.CUSTOM_DEATH_MESSAGE);
+        if (customEffect instanceof StringCustomEffect stringCustomEffect)
+        {
+          key = stringCustomEffect.getString();
+        }
       }
       if (damager != null)
       {

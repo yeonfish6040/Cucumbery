@@ -179,6 +179,7 @@ public class Scheduler
       commandBlockPreview(player);
 
       CustomEffectScheduler.display(player);
+      CustomEffectScheduler.gliding(player);
       CustomEffectScheduler.spreadAndVariation(player);
       CustomEffectScheduler.fancySpotlight(player);
       CustomEffectScheduler.newbieShield(player);

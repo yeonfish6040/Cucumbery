@@ -1,7 +1,6 @@
 package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -223,19 +222,45 @@ public class ItemLorePotionDescription
     return NONE;
   }
 
+  public static final String POTION_DESCRIPTION_COLOR = "rgb255,97,144;";
+
+  /**
+   * @param level must be amplifier + 1
+   * @return description
+   */
   @NotNull
-  public static Component getDescription(double chance, @NotNull Component effect, long duration, int amplifier)
+  public static Component getDescription(double chance, @NotNull Component effect, long duration, int level)
   {
     List<Component> args = new ArrayList<>();
-    args.add(ComponentUtil.create(Constant.Sosu2.format(chance) + "%"));
+    if (chance != 100d)
+    args.add(Component.text(Constant.Sosu2.format(chance) + "%"));
     args.add(effect);
-    if (amplifier > 1)
-    args.add(Component.text(amplifier));
+    if (level > 1)
+    {
+      args.add(Component.text(level));
+    }
     if (duration > 0)
     {
-      args.add(ComponentUtil.create(" (" + Method.timeFormatMilli(duration * 50, true, 2) + ")"));
+      args.add(ComponentUtil.timeFormat(duration * 50L));
     }
-    return ComponentUtil.translate(amplifier > 1 ? "rgb255,97,144;%1$s 확률로 %2$s %3$s단계%4$s 적용" : "rgb255,97,144;%1$s 확률로 %2$s%3$s 적용", args);
+    String key = POTION_DESCRIPTION_COLOR + (chance == 100d ? "" : "%s 확률로 ");
+    if (level > 1 && duration > 0)
+    {
+      key += "%s %s단계 (%s)";
+    }
+    else if (level == 1 && duration > 0)
+    {
+      key += "%s (%s)";
+    }
+    else if (level > 1 && duration == 0)
+    {
+      key += "%s %s단계";
+    }
+    else
+    {
+      key += "%s";
+    }
+    return ComponentUtil.translate(key, args);
   }
 
   @NotNull
@@ -244,10 +269,14 @@ public class ItemLorePotionDescription
     return getDescription(100d, effect, duration, 1);
   }
 
+  /**
+   * @param level must be amplifier + 1
+   * @return description
+   */
   @NotNull
-  public static Component getDescription(@NotNull Component effect, long duration, int amplifier)
+  public static Component getDescription(@NotNull Component effect, long duration, int level)
   {
-    return getDescription(100d, effect, duration, amplifier);
+    return getDescription(100d, effect, duration, level);
   }
 
   public static List<Component> getPotionList(ItemStack item)

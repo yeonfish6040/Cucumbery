@@ -104,6 +104,7 @@ public class CommandTeleport implements CommandExecutor, AsyncTabCompleter
     }
     return true;
   }
+
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))

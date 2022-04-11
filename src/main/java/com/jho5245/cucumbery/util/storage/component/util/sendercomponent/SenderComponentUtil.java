@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.text.Component;
@@ -20,8 +21,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.entity.Rabbit.Type;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,7 +67,83 @@ public class SenderComponentUtil
   @NotNull
   public static Component senderComponent(@NotNull Object object, @Nullable TextColor defaultColor, boolean hoverTextMode, @Nullable Component extraComponent)
   {
-    Component component = senderComponent(object, defaultColor).hoverEvent(null).clickEvent(null);
+    Component component;
+    if (object instanceof Entity entity)
+    {
+      Component nameComponent;
+      if (entity instanceof Player player)
+      {
+        nameComponent = player.displayName().hoverEvent(null).clickEvent(null);
+        if (Cucumbery.using_Vault_Chat)
+        {
+          try
+          {
+            String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
+            if (prefix != null)
+            {
+              nameComponent = ComponentUtil.create(false, prefix, nameComponent);
+            }
+            if (suffix != null)
+            {
+              nameComponent = ComponentUtil.create(false, nameComponent, suffix);
+            }
+          }
+          catch (Exception e)
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+      else
+      {
+        nameComponent = entity.customName();
+        if (nameComponent != null)
+        {
+          nameComponent = nameComponent.hoverEvent(null).clickEvent(null);
+        }
+      }
+      if (nameComponent == null)
+      {
+        String key = entity.getType().translationKey();
+        if (entity instanceof Creeper creeper && creeper.isPowered())
+        {
+          key = "충전된 크리퍼";
+        }
+        if (entity instanceof Rabbit rabbit && rabbit.getRabbitType() == Type.THE_KILLER_BUNNY)
+        {
+          key = "entity.minecraft.killer_bunny";
+        }
+        if (entity instanceof FallingBlock fallingBlock)
+        {
+          nameComponent = ItemNameUtil.itemName(fallingBlock.getBlockData().getMaterial());
+        }
+        else
+        {
+          nameComponent = Component.translatable(key);
+        }
+        if (entity instanceof MushroomCow mushroomCow && mushroomCow.getVariant() == MushroomCow.Variant.BROWN)
+        {
+          nameComponent = ComponentUtil.translate("%s %s", Component.translatable("color.minecraft.brown"), nameComponent);
+        }
+        if (entity instanceof Villager villager)
+        {
+          nameComponent = ComponentUtil.translate(entity.getType().translationKey() + "." + villager.getProfession().toString().toLowerCase());
+        }
+        if (entity instanceof Ageable ageable && !ageable.isAdult())
+        {
+          nameComponent = ComponentUtil.translate("%s %s", "아기", nameComponent);
+        }
+      }
+      if (defaultColor != null && nameComponent.color() == null)
+      {
+        nameComponent = nameComponent.color(defaultColor);
+      }
+      component = nameComponent;
+    }
+    else
+    {
+      component = senderComponent(object, defaultColor).hoverEvent(null).clickEvent(null);
+    }
     if (!hoverTextMode)
     {
       return component;

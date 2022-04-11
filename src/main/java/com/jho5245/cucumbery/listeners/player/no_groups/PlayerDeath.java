@@ -4,20 +4,23 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PlayerDeath implements Listener
@@ -33,7 +36,7 @@ public class PlayerDeath implements Listener
     if (UserData.SPECTATOR_MODE.getBoolean(player))
     {
       event.setCancelled(true);
-      MessageUtil.info(player, ComponentUtil.translate("관전 모드여서 죽지 않았습니다"));
+      MessageUtil.info(player, "관전 모드여서 죽지 않았습니다");
       return;
     }
     if (UserData.GOD_MODE.getBoolean(player))
@@ -43,11 +46,6 @@ public class PlayerDeath implements Listener
     }
     boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY);
     boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY);
-    if (keepInv)
-    {
-      event.setKeepInventory(true);
-      event.getDrops().clear();
-    }
     if (keepExp)
     {
       event.setKeepLevel(true);
@@ -59,18 +57,15 @@ public class PlayerDeath implements Listener
       event.setKeepInventory(false);
     }
 
-    if (!event.getKeepInventory())
+    for (Iterator<ItemStack> iterator = event.getDrops().iterator(); iterator.hasNext(); )
     {
-      List<ItemStack> drops = event.getDrops();
-      List<ItemStack> removals = new ArrayList<>();
-      for (ItemStack drop : drops)
+      ItemStack drop = iterator.next();
+      ItemMeta itemMeta = drop.getItemMeta();
+      if (keepInv || itemMeta.hasEnchant(CustomEnchant.KEEP_INVENTORY) || NBTAPI.isRestricted(player, drop, RestrictionType.NO_TRADE))
       {
-        if (NBTAPI.isRestricted(player, drop, RestrictionType.NO_TRADE))
-        {
-          removals.add(drop);
-        }
+        iterator.remove();
+        event.getItemsToKeep().add(drop);
       }
-      drops.removeAll(removals);
     }
 
     boolean hasBuffFreeze = CustomEffectManager.hasEffect(player, CustomEffectType.BUFF_FREEZE);
@@ -85,7 +80,7 @@ public class PlayerDeath implements Listener
       if (!customEffect.isKeepOnDeath() &&
               (!hasBuffFreeze || (!customEffect.getType().isBuffFreezable() && !customEffect.getType().isNegative())))
       {
-        CustomEffectManager.removeEffect(player, customEffect.getType());
+        CustomEffectManager.removeEffect(player, customEffect.getType(), RemoveReason.DEATH);
       }
     }
 

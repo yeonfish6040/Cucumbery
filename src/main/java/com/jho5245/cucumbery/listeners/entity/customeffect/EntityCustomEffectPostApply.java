@@ -8,6 +8,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffectImple;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPostApplyEvent;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -44,7 +45,7 @@ public class EntityCustomEffectPostApply implements Listener
 
     for (CustomEffectType conflictEffect : conflictEffects)
     {
-      CustomEffectManager.removeEffect(entity, conflictEffect);
+      CustomEffectManager.removeEffect(entity, conflictEffect, RemoveReason.CONFLICT);
     }
 
 

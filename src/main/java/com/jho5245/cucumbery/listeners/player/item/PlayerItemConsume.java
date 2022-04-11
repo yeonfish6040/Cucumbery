@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -251,7 +252,7 @@ public class PlayerItemConsume implements Listener
         {
           if (!customEffect.isKeepOnMilk())
           {
-            CustomEffectManager.removeEffect(player, customEffect.getType());
+            CustomEffectManager.removeEffect(player, customEffect.getType(), RemoveReason.MILK);
           }
         }
       }

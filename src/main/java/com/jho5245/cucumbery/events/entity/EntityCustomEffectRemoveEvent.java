@@ -37,17 +37,33 @@ public class EntityCustomEffectRemoveEvent extends EntityCustomEffectEvent
   public enum RemoveReason
   {
     /**
+     * When the {@link CustomEffectType} is conflict with others.
+     */
+    CONFLICT,
+    /**
+     * When the {@link Player} is died and the {@link CustomEffectType#isKeepOnDeath()} is <code>false</code>.
+     */
+    DEATH,
+    /**
+     * When the {@link Player} has right-clicked the effect icon in GUI
+     */
+    GUI,
+    /**
+     * When the {@link Player} uses {@link org.bukkit.Material#MILK_BUCKET} and the {@link CustomEffectType#isKeepOnMilk()} is <code>false</code>.
+     */
+    MILK,
+    /**
      * when effect is removed by
      * {@link CustomEffectManager#removeEffect(Entity, CustomEffectType)}
      */
     PLUGIN,
     /**
+     * When the {@link Player} quit the server and the {@link CustomEffectType#isKeepOnQuit()} is <code>false</code>.
+     */
+    QUIT,
+    /**
      * When the {@link CustomEffect#getDuration()} expires
      */
     TIME_OUT,
-    /**
-     * When the {@link Player} has right-clicked the effect icon in GUI
-     */
-    PLAYER,
   }
 }

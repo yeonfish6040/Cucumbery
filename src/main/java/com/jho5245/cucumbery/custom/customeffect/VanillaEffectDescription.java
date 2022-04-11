@@ -301,7 +301,7 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.ABSORPTION))
     {
-      return ComponentUtil.translate("최대 HP가 %S 증가합니다. 해당 HP는 잃으면 회복되지 않습니다", "&e" + (amplifier + 1) * 4);
+      return ComponentUtil.translate("최대 HP가 %s 증가합니다. 해당 HP는 잃으면 회복되지 않습니다", "&e" + (amplifier + 1) * 4);
     }
     if (type.equals(PotionEffectType.SATURATION))
     {

@@ -637,6 +637,8 @@ public class CommandSong implements CommandExecutor, TabCompleter
           }
           case "play" -> {
             Variable.songFiles.addAll(Songs.list);
+            // encoding troll
+            Variable.songFiles.removeIf(s -> s.startsWith("?") || s.startsWith("�"));
             if (!Variable.songFiles.isEmpty())
             {
               Variable.songFiles.add("--random");
@@ -684,6 +686,8 @@ public class CommandSong implements CommandExecutor, TabCompleter
       {
         if (args.length == 4)
         {
+          // encoding troll
+          Variable.songFiles.removeIf(s -> s.startsWith("?") || s.startsWith("�"));
           return Method.tabCompleterList(args, Variable.songFiles, "<노래 파일>", true);
         }
         return Method.tabCompleterList(args, "<노래 파일>", true);

@@ -222,10 +222,6 @@ public class Variable
 
   public static HashMap<UUID, List<BossBarMessage>> sendBossBarMap = new HashMap<>();
 
-  public static Set<UUID> darknessTerrorFlag = new HashSet<>();
-
-  public static HashMap<UUID, String> customDeathMessageKey = new HashMap<>();
-
   public static HashMap<UUID, Collection<PotionEffect>> buffFreezerEffects = new HashMap<>();
 
   public static HashMap<UUID, List<InventoryView>> lastInventory = new HashMap<>();
