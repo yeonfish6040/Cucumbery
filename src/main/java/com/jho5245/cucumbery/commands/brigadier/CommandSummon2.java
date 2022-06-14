@@ -27,27 +27,27 @@ import java.util.List;
 public class CommandSummon2 extends CommandBase
 {
 
-  private final List<Argument> argumentList1 = Arrays.asList(
+  private final List<Argument<?>> argumentList1 = Arrays.asList(
           new EntityTypeArgument("개체"),
           new IntegerArgument("마리수", 1, 10000));
 
-  private final List<Argument> argumentList2 = Arrays.asList(
+  private final List<Argument<?>> argumentList2 = Arrays.asList(
           new EntityTypeArgument("개체"),
           new IntegerArgument("마리수", 1, 10000),
           new LocationArgument("위치"));
 
-  private final List<Argument> argumentList3 = Arrays.asList(
+  private final List<Argument<?>> argumentList3 = Arrays.asList(
           new EntityTypeArgument("개체"),
           new IntegerArgument("마리수", 1, 10000),
           new BooleanArgument("명령어 출력 숨김 여부"));
 
-  private final List<Argument> argumentList4 = Arrays.asList(
+  private final List<Argument<?>> argumentList4 = Arrays.asList(
           new EntityTypeArgument("개체"),
           new IntegerArgument("마리수", 1, 10000),
           new LocationArgument("위치"),
           new BooleanArgument("명령어 출력 숨김 여부"));
 
-  private final List<Argument> argumentList5 = Arrays.asList(
+  private final List<Argument<?>> argumentList5 = Arrays.asList(
           new EntityTypeArgument("개체"),
           new IntegerArgument("마리수", 1, 10000),
           new LocationArgument("위치"),

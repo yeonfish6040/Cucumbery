@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.commands.no_groups;
 
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.TabCompleterUtil;
+import com.jho5245.cucumbery.util.no_groups.CommandTabUtil;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
@@ -171,7 +171,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
       switch (args[0])
       {
         case "command":
-          return TabCompleterUtil.getCommandsTabCompleter(sender, args, 2, false);
+          return CommandTabUtil.getCommandsTabCompleter(sender, args, 2, false);
         case "name":
           if (args.length == 2)
           {

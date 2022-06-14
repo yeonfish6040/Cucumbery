@@ -52,11 +52,8 @@ public class BlockPlace implements Listener
     {
       EquipmentSlot hand = event.getHand();
       ItemStack item = player.getInventory().getItem(hand);
-      if (item != null)
-      {
-        Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                ItemLore.setItemLore(item), 0L);
-      }
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+              ItemLore.setItemLore(item), 0L);
     }
 
     UUID uuid = player.getUniqueId();
@@ -73,7 +70,7 @@ public class BlockPlace implements Listener
       event.setCancelled(true);
       Method.playSound(player, Constant.ERROR_SOUND);
       MessageUtil.sendError(player, "강화중에는 블록을 설치하실 수 없습니다");
-      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다", ClickEvent.Action.RUN_COMMAND, "/강화 quit");
+      Component a = ComponentUtil.create(Prefix.INFO, "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.").hoverEvent(ComponentUtil.create("클릭하면 강화를 중지합니다")).clickEvent(ClickEvent.runCommand("/강화 quit"));
       player.sendMessage(a);
       return;
     }

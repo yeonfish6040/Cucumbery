@@ -66,7 +66,9 @@ public class CustomEffectScheduler
         int remain = (int) ((endTime - current) / 50L);
         // 시간이 다 되면 바로 없애는게 아니라 0.05초 지연을 줌 (실제 개체가 효과를 가지고 있는 판정은 생기지 않음)
         if (customEffect.getDuration() != -1)
-        customEffect.setDuration(Math.max(1, remain));
+        {
+          customEffect.setDuration(Math.max(1, remain));
+        }
       }
       if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
       {
@@ -126,12 +128,7 @@ public class CustomEffectScheduler
       }
       return false;
     });
-    List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
-    potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
-    potionEffects.removeIf(potionEffect ->
-            (CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT) || CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED)) &&
-                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
+    List<PotionEffect> potionEffects = CustomEffectManager.removeDisplay(player, player.getActivePotionEffects());
     boolean showPotionEffect = Cucumbery.config.getBoolean("show-vanilla-potion-effects-on-bossbar") && !potionEffects.isEmpty();
     if (!showPotionEffect && customEffects.isEmpty())
     {
@@ -285,11 +282,270 @@ public class CustomEffectScheduler
     }
   }
 
+  public static void vanillaEffect(@NotNull Entity entity)
+  {
+    if (!(entity instanceof LivingEntity livingEntity))
+    {
+      return;
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_SPEED))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_SPEED);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_SLOWNESS))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_SLOWNESS);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_HASTE))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_HASTE);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_MINING_FATIGUE))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_MINING_FATIGUE);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_INSTANT_HEALTH))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_INSTANT_HEALTH);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_INSTANT_DAMAGE))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_INSTANT_DAMAGE);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HARM, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_JUMP_BOOST))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_JUMP_BOOST);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_NAUSEA))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_NAUSEA);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 62, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_REGENERATION))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_REGENERATION);
+      PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.REGENERATION);
+      if (potionEffect == null || (potionEffect.getDuration() <= 48 && potionEffect.getAmplifier() == 0))
+      {
+        livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 98, customEffect.getAmplifier(), false, false, false));
+      }
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_RESISTANCE))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_RESISTANCE);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_RESISTANCE))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_RESISTANCE);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_FIRE_RESISTANCE))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_FIRE_RESISTANCE);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_WATER_BREATHING))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_WATER_BREATHING);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_INVISIBILITY))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_INVISIBILITY);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_BLINDNESS))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_BLINDNESS);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 21, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_NIGHT_VISION))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_NIGHT_VISION);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_HUNGER))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_HUNGER);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_WEAKNESS))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_WEAKNESS);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_POISON))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_POISON);
+      PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.POISON);
+      if (potionEffect == null || (potionEffect.getDuration() <= 48 && potionEffect.getAmplifier() == 0))
+      {
+        livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 98, customEffect.getAmplifier(), false, false, false));
+      }
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_WITHER))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_WITHER);
+      PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.WITHER);
+      if (potionEffect == null || (potionEffect.getDuration() <= 48 && potionEffect.getAmplifier() == 0))
+      {
+        livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 98, customEffect.getAmplifier(), false, false, false));
+      }
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_HEALTH_BOOST))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_HEALTH_BOOST);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_ABSORPTION))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_ABSORPTION);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_SATURATION))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_SATURATION);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_GLOWING))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_GLOWING);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_LEVITATION))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_LEVITATION);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_LUCK))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_LUCK);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_UNLUCK))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_UNLUCK);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_SLOW_FALLING))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_SLOW_FALLING);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_CONDUIT_POWER))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_CONDUIT_POWER);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.CONDUIT_POWER, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_DOLPHINS_GRACE))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_DOLPHINS_GRACE);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_BAD_OMEN))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_BAD_OMEN);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_HERO_OF_THE_VILLAGE))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_HERO_OF_THE_VILLAGE);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, 2, customEffect.getAmplifier(), false, false, false));
+    }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.MINECRAFT_DARKNESS))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.MINECRAFT_DARKNESS);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, customEffect.getAmplifier(), false, false, false));
+    }
+  }
+
   public static void gliding(@NotNull Player player)
   {
     if (player.isGliding())
     {
       CustomEffectManager.addEffect(player, CustomEffectType.GLIDING);
+    }
+  }
+
+  public static void starCatch(@NotNull Player player)
+  {
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.STAR_CATCH_PROCESS))
+    {
+      int duration = CustomEffectManager.getEffect(player, CustomEffectType.STAR_CATCH_PROCESS).getDuration();
+      boolean ok = false;
+      Integer penalty = Variable.starCatchPenalty.get(player.getUniqueId());
+      if (penalty == null)
+      {
+        penalty = 0;
+      }
+      int level = Math.min(4, penalty / 20);
+      Outter:
+      for (int i = 1; i <= 10; i++)
+      {
+        switch (level)
+        {
+          case 0 -> {
+            if (duration >= i * 20 - 14 && duration <= i * 20 - 6)
+            {
+              ok = true;
+              break Outter;
+            }
+          }
+          case 1 -> {
+            if (duration >= i * 20 - 13 && duration <= i * 20 - 7)
+            {
+              ok = true;
+              break Outter;
+            }
+          }
+          case 2 -> {
+            if (duration >= i * 20 - 11 && duration <= i * 20 - 8)
+            {
+              ok = true;
+              break Outter;
+            }
+          }
+          case 3 -> {
+            if (duration >= i * 20 - 10 && duration <= i * 20 - 9)
+            {
+              ok = true;
+              break Outter;
+            }
+          }
+          default -> {
+            if (duration == i * 20 - 10)
+            {
+              ok = true;
+              break Outter;
+            }
+          }
+        }
+      }
+      String meh = "---------------------";
+      char[] m = meh.toCharArray();
+      int offset = duration % 40;
+      if (offset <= 20)
+      {
+        m[offset] = '★';
+      }
+      else
+      {
+        m[40 - offset] = '★';
+      }
+      if (offset == 0 || offset == 20)
+      {
+        player.playSound(player.getLocation(), "star_catch_" + (level + 1), SoundCategory.PLAYERS, 2F, 1F);
+      }
+      meh = "" + new String(m) + "";
+      MessageUtil.sendTitle(player, ComponentUtil.translate(meh.replace("★", "%s").replace("-", "─"), (ok ? "&a" : "&c") + "★"), "&e" + Constant.Jeongsu.format(duration / 20), 0, 5, 0);
     }
   }
 
@@ -480,11 +736,10 @@ public class CustomEffectScheduler
     }
   }
 
-  @SuppressWarnings("deprecation")
   public static void trueInvisibility(@NotNull Entity entity)
   {
     Set<String> scoreboardTags = entity.getScoreboardTags();
-    if (scoreboardTags.contains("no_cucumbery_true_invisibility"))
+    if (scoreboardTags.contains("no_cucumbery_true_invisibility") || CustomEffectManager.hasEffect(entity, CustomEffectType.COMBO_EXPERIENCE))
     {
       return;
     }

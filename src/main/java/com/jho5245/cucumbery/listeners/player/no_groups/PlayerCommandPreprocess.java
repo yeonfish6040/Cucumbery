@@ -107,12 +107,12 @@ public class PlayerCommandPreprocess implements Listener
     }
     if (Variable.scrollReinforcing.contains(uuid) && !message.equalsIgnoreCase("/강화 quit")
             && !message.equalsIgnoreCase("/강화 realstart") && !message.equalsIgnoreCase("/강화 파괴방지사용")
-            && !message.equalsIgnoreCase("/강화 파괴방지미사용"))
+            && !message.equalsIgnoreCase("/강화 파괴방지미사용")&& !message.equalsIgnoreCase("/강화 스타캐치해제사용")
+            && !message.equalsIgnoreCase("/강화 스타캐치해제미사용"))
     {
       event.setCancelled(true);
       MessageUtil.sendError(player, "강화중에는 명령어를 사용할 수 없습니다");
-      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다",
-              ClickEvent.Action.RUN_COMMAND, "/강화 quit");
+Component a = ComponentUtil.create(Prefix.INFO, "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.").hoverEvent(ComponentUtil.create("클릭하면 강화를 중지합니다")).clickEvent(ClickEvent.runCommand("/강화 quit"));
       player.sendMessage(a);
       return;
     }

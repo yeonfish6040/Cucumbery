@@ -50,7 +50,7 @@ public class CommandWhatIs implements CommandExecutor, AsyncTabCompleter
       }
       else
       {
-        world = LocationUtil.world(sender, args[0], true);
+        world = CommandArgumentUtil.world(sender, args[0], true);
       }
       if (world == null)
       {
@@ -245,18 +245,18 @@ public class CommandWhatIs implements CommandExecutor, AsyncTabCompleter
   }
 
   @Override
-  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
     int length = args.length;
     if (length == 1)
     {
-      return TabCompleterUtil.worldArgument(sender, args, "<월드>");
+      return CommandTabUtil.worldArgument(sender, args, "<월드>");
     }
     if (length == 2)
     {
-      return TabCompleterUtil.tabCompleterList(args, "<인수>", false, Completion.completion("forecast", Component.translatable("현재 월드의 날씨 정보만 참조")));
+      return CommandTabUtil.tabCompleterList(args, "<인수>", false, Completion.completion("forecast", Component.translatable("현재 월드의 날씨 정보만 참조")));
     }
-    return Collections.singletonList(TabCompleterUtil.ARGS_LONG);
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 
   /**

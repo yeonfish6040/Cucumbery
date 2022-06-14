@@ -1,9 +1,9 @@
 package com.jho5245.cucumbery.util.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
-import io.lumine.xikage.mythicmobs.io.MythicConfig;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.lumine.mythic.api.config.MythicConfig;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link io.lumine.xikage.mythicmobs.MythicMobs} 플러그인 관련 유틸 제공
+ * {@link io.lumine.mythic.api.MythicPlugin} 플러그인 관련 유틸 제공
  */
 public class MythicMobManager
 {

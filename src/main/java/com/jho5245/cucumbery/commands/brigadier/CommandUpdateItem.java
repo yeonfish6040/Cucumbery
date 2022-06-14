@@ -18,13 +18,13 @@ import java.util.List;
 
 public class CommandUpdateItem extends CommandBase
 {
-  private final List<Argument> argument = new ArrayList<>();
+  private final List<Argument<?>> argument = new ArrayList<>();
 
   {
     argument.add(new EntitySelectorArgument("아이템", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
   }
 
-  private final List<Argument> argument2 = new ArrayList<>();
+  private final List<Argument<?>> argument2 = new ArrayList<>();
 
   {
     argument2.add(new EntitySelectorArgument("아이템", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));

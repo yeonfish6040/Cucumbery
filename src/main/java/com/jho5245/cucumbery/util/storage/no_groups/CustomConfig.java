@@ -357,6 +357,7 @@ public class CustomConfig
     FORCE_PLAY_SERVER_RADIO("서버-라디오-강제-재생", false),
     INVINCIBLE_TIME("무적-시간", -1),
     INVINCIBLE_TIME_JOIN("접속-무적-시간", -1),
+    SHOW_WORLDEDIT_POSITION_PARTICLE("월드에딧-포지션-입자-표시", false),
     ;
 
     private final String key;

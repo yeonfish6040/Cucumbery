@@ -3,7 +3,7 @@ package com.jho5245.cucumbery.commands.no_groups;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.TabCompleterUtil;
+import com.jho5245.cucumbery.util.no_groups.CommandTabUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
@@ -56,7 +56,7 @@ public class CommandDelay implements CommandExecutor, TabCompleter
     }
     else
     {
-      return TabCompleterUtil.getCommandsTabCompleter(sender, args, 2, true);
+      return CommandTabUtil.getCommandsTabCompleter(sender, args, 2, true);
     }
   }
 }

@@ -27,6 +27,7 @@ import de.tr7zw.changeme.nbtapi.NBTList;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -199,12 +200,18 @@ public class PlayerItemConsume implements Listener
       {
         try
         {
-          CustomEffectManager.addEffect(player, new CustomEffect(
-                  CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase()),
-                  potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
-                  potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
-                  DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())
-          ), ApplyReason.POTION);
+
+          String rawKey = potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID);
+          String[] rawKeySplit = rawKey.split(":");
+          CustomEffectType customEffectType = CustomEffectType.getByKey(new NamespacedKey(rawKeySplit[0], rawKeySplit[1]));
+          if (customEffectType != null)
+          {
+            CustomEffectManager.addEffect(player, new CustomEffect(customEffectType,
+                    potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
+                    potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
+                    DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())
+            ), ApplyReason.POTION);
+          }
         }
         catch (Exception ignored)
         {

@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.commands.itemtag.CommandItemTag;
 import com.jho5245.cucumbery.commands.itemtag.CommandItemTagTabCompleter;
 import com.jho5245.cucumbery.commands.msg.*;
 import com.jho5245.cucumbery.commands.no_groups.*;
+import com.jho5245.cucumbery.commands.reinforce.CommandReinforce;
 import com.jho5245.cucumbery.commands.sound.CommandPlaySound;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.commands.teleport.CommandAdvancedTeleport;
@@ -65,9 +66,9 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
+import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -92,9 +93,9 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 21;
-  public static final int DEATH_MESSAGES_CONFIG_VERSION = 4;
-  public static final int LANG_CONFIG_VERSION = 1;
+  public static final int CONFIG_VERSION = 23;
+  public static final int DEATH_MESSAGES_CONFIG_VERSION = 5;
+  public static final int LANG_CONFIG_VERSION = 2;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   public static boolean using_CommandAPI;
@@ -107,12 +108,14 @@ public class Cucumbery extends JavaPlugin
   public static boolean using_mcMMO;
   public static boolean using_MythicMobs;
   public static boolean using_ProtocolLib;
+  public static boolean using_WorldEdit;
   /**
    * MythicMobs API
    */
   public static BukkitAPIHelper bukkitAPIHelper;
   public static Economy eco;
   public static Chat chat;
+  public static WorldEditPlugin worldEditPlugin;
   public static File file;
   public static File dataFolder;
   public static long runTime;
@@ -375,6 +378,19 @@ public class Cucumbery extends JavaPlugin
     Cucumbery.using_mcMMO = Cucumbery.config.getBoolean("use-hook-plugins.mcMMO") && this.pluginManager.getPlugin("mcMMO") != null;
     Cucumbery.using_MythicMobs = Cucumbery.config.getBoolean("use-hook-plugins.MythicMobs") && this.pluginManager.getPlugin("MythicMobs") != null;
     Cucumbery.using_ProtocolLib = Cucumbery.config.getBoolean("use-hook-plugins.ProtocolLib") && this.pluginManager.getPlugin("ProtocolLib") != null;
+    Cucumbery.using_WorldEdit = Cucumbery.config.getBoolean("use-hook-plugins.WorldEdit");
+    if (using_WorldEdit)
+    {
+       Plugin plugin =  this.pluginManager.getPlugin("WorldEdit");
+       if (plugin instanceof WorldEditPlugin worldEdit)
+       {
+         worldEditPlugin = worldEdit;
+       }
+       else
+       {
+         using_WorldEdit = false;
+       }
+    }
     if (Cucumbery.config.getBoolean("console-messages.hook-plugins"))
     {
       if (using_CommandAPI)
@@ -440,7 +456,7 @@ public class Cucumbery extends JavaPlugin
     }
     if (using_MythicMobs)
     {
-      bukkitAPIHelper = MythicMobs.inst().getAPIHelper();
+      bukkitAPIHelper = new BukkitAPIHelper();
     }
     if (using_ProtocolLib)
     {

@@ -141,7 +141,7 @@ public class ExtraExecuteArgument
 
     List<Argument> arguments = new ArrayList<>();
     arguments.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.ONE_ENTITY));
-    arguments.add(new StringArgument("월드").replaceSuggestionsT(info -> worldNames));
+    arguments.add(new StringArgument("월드").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(worldNames)));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "개체");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "월드");
@@ -182,7 +182,7 @@ public class ExtraExecuteArgument
 
     List<Argument> arguments = new ArrayList<>();
     arguments.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.ONE_ENTITY));
-    arguments.add(new StringArgument("월드").replaceSuggestionsT(info -> worldNames));
+    arguments.add(new StringArgument("월드").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(worldNames)));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "개체");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "월드");
@@ -222,8 +222,8 @@ public class ExtraExecuteArgument
     LiteralCommandNode weather = Brigadier.fromLiteralArgument(new LiteralArgument("weather")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new StringArgument("월드").replaceSuggestionsT(info -> worldNames));
-    arguments.add(new StringArgument("날씨").replaceSuggestionsT(info -> weatherTypes));
+    arguments.add(new StringArgument("월드").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(worldNames)));
+    arguments.add(new StringArgument("날씨").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(weatherTypes)));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "월드");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "날씨");
@@ -269,8 +269,8 @@ public class ExtraExecuteArgument
     LiteralCommandNode weather = Brigadier.fromLiteralArgument(new LiteralArgument("weather")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new StringArgument("월드").replaceSuggestionsT(info -> worldNames));
-    arguments.add(new StringArgument("날씨").replaceSuggestionsT(info -> weatherTypes));
+    arguments.add(new StringArgument("월드").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(worldNames)));
+    arguments.add(new StringArgument("날씨").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(weatherTypes)));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "월드");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "날씨");

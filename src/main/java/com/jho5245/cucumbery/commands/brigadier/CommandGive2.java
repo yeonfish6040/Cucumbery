@@ -25,29 +25,29 @@ import static com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil.*;
 
 public class CommandGive2 extends CommandBase
 {
-  private final List<Argument> list1 = Arrays.asList(MANY_PLAYERS, ITEMSTACK);
+  private final List<Argument<?>> list1 = Arrays.asList(MANY_PLAYERS, ITEMSTACK);
 
-  private final List<Argument> list2 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, HIDE_OUTPUT);
+  private final List<Argument<?>> list2 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, HIDE_OUTPUT);
 
-  private final List<Argument> list3 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, ArgumentUtil.of(ArgumentType.INTEGER, "개수", 1, 2304));
+  private final List<Argument<?>> list3 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, ArgumentUtil.of(ArgumentType.INTEGER, "개수", 1, 2304));
 
-  private final List<Argument> list4 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, ArgumentUtil.of(ArgumentType.INTEGER, "개수", 1, 2304), HIDE_OUTPUT);
+  private final List<Argument<?>> list4 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, ArgumentUtil.of(ArgumentType.INTEGER, "개수", 1, 2304), HIDE_OUTPUT);
 
-  private final List<Argument> list5 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, ArgumentUtil.of(ArgumentType.LITERAL, "max-stack"));
+  private final List<Argument<?>> list5 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, ArgumentUtil.of(ArgumentType.LITERAL, "max-stack"));
 
-  private final List<Argument> list6 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, ArgumentUtil.of(ArgumentType.LITERAL, "max-stack"), HIDE_OUTPUT);
+  private final List<Argument<?>> list6 = Arrays.asList(MANY_PLAYERS, ITEMSTACK, ArgumentUtil.of(ArgumentType.LITERAL, "max-stack"), HIDE_OUTPUT);
 
-  private final List<Argument> list7 = Collections.singletonList(ITEMSTACK);
+  private final List<Argument<?>> list7 = Collections.singletonList(ITEMSTACK);
 
-  private final List<Argument> list8 = Arrays.asList(ITEMSTACK, HIDE_OUTPUT);
+  private final List<Argument<?>> list8 = Arrays.asList(ITEMSTACK, HIDE_OUTPUT);
 
-  private final List<Argument> list9 = Arrays.asList(ITEMSTACK, ArgumentUtil.of(ArgumentType.INTEGER, "개수", 1, 2304));
+  private final List<Argument<?>> list9 = Arrays.asList(ITEMSTACK, ArgumentUtil.of(ArgumentType.INTEGER, "개수", 1, 2304));
 
-  private final List<Argument> list10 = Arrays.asList(ITEMSTACK, ArgumentUtil.of(ArgumentType.INTEGER, "개수", 1, 2304), HIDE_OUTPUT);
+  private final List<Argument<?>> list10 = Arrays.asList(ITEMSTACK, ArgumentUtil.of(ArgumentType.INTEGER, "개수", 1, 2304), HIDE_OUTPUT);
 
-  private final List<Argument> list11 = Arrays.asList(ITEMSTACK, ArgumentUtil.of(ArgumentType.LITERAL, "max-stack"));
+  private final List<Argument<?>> list11 = Arrays.asList(ITEMSTACK, ArgumentUtil.of(ArgumentType.LITERAL, "max-stack"));
 
-  private final List<Argument> list12 = Arrays.asList(ITEMSTACK, ArgumentUtil.of(ArgumentType.LITERAL, "max-stack"), HIDE_OUTPUT);
+  private final List<Argument<?>> list12 = Arrays.asList(ITEMSTACK, ArgumentUtil.of(ArgumentType.LITERAL, "max-stack"), HIDE_OUTPUT);
 
   private void give(@NotNull NativeProxyCommandSender sender, @NotNull Collection<Player> players, @NotNull ItemStack itemStack, int amount, boolean hideOutput) throws WrapperCommandSyntaxException
   {

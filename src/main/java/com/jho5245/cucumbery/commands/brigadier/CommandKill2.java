@@ -27,8 +27,8 @@ import static com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil.MANY_EN
 
 public class CommandKill2 extends CommandBase
 {
-  private final List<Argument> arguments = List.of(MANY_ENTITIES);
-  private final List<Argument> arguments2 = List.of(MANY_ENTITIES, HIDE_OUTPUT);
+  private final List<Argument<?>> arguments = List.of(MANY_ENTITIES);
+  private final List<Argument<?>> arguments2 = List.of(MANY_ENTITIES, HIDE_OUTPUT);
 
   private void kill(@NotNull NativeProxyCommandSender sender, @Nullable Collection<Entity> entities, boolean hideOutput) throws WrapperCommandSyntaxException
   {

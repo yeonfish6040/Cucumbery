@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.no_groups;
 
 import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -49,6 +50,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Method extends SoundPlay
@@ -2135,18 +2137,18 @@ public class Method extends SoundPlay
       case DESTROY:
         if (use)
         {
-          playSound(player, "reinforce_destroy", 100F, 1F);
+          playSound(player, "reinforce_destroy", SoundCategory.PLAYERS, 1F, 1F);
         }
         else
         {
-          playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 100F, 1F);
-          playSound(player, Sound.ENTITY_BLAZE_HURT, 100F, 0.5F);
-          playSound(player, Sound.ENTITY_SHULKER_BULLET_HIT, 100F, 0.8F);
-          playSound(player, Sound.ENTITY_SKELETON_DEATH, 100F, 2F);
-          playSound(player, Sound.ENTITY_SKELETON_DEATH, 100F, 1F);
-          playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 100F, 0.5F);
-          playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 100F, 1F);
-          playSound(player, Sound.ENTITY_CREEPER_DEATH, 100F, 0.5F);
+          playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.PLAYERS, 1F, 1F);
+          playSound(player, Sound.ENTITY_BLAZE_HURT, SoundCategory.PLAYERS, 1F, 0.5F);
+          playSound(player, Sound.ENTITY_SHULKER_BULLET_HIT, SoundCategory.PLAYERS, 1F, 0.8F);
+          playSound(player, Sound.ENTITY_SKELETON_DEATH, SoundCategory.PLAYERS, 1F, 2F);
+          playSound(player, Sound.ENTITY_SKELETON_DEATH, SoundCategory.PLAYERS, 1F, 1F);
+          playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, SoundCategory.PLAYERS, 1F, 0.5F);
+          playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, SoundCategory.PLAYERS, 1F, 1F);
+          playSound(player, Sound.ENTITY_CREEPER_DEATH, SoundCategory.PLAYERS, 1F, 0.5F);
 
           Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> player.stopSound(Sound.ENTITY_CREEPER_DEATH), 10L);
         }
@@ -2154,20 +2156,20 @@ public class Method extends SoundPlay
       case FAIL:
         if (use)
         {
-          playSound(player, "reinforce_fail", 100F, 1F);
+          playSound(player, "reinforce_fail", SoundCategory.PLAYERS, 1F, 1F);
         }
         else
         {
           for (int i = 5; i < 8; i++)
           {
-            playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 100F, i / 10F);
+            playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.PLAYERS, 1F, i / 10F);
           }
 
           Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () ->
           {
             for (int i = 5; i < 8; i++)
             {
-              playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 100F, i / 10F);
+              playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.PLAYERS, 1F, i / 10F);
             }
           }, 1L);
 
@@ -2175,7 +2177,7 @@ public class Method extends SoundPlay
           {
             for (int i = 5; i < 8; i++)
             {
-              playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 100F, i / 10F);
+              playSound(player, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.PLAYERS, 1F, i / 10F);
             }
           }, 2L);
         }
@@ -2183,37 +2185,37 @@ public class Method extends SoundPlay
       case OPERATION:
         if (use && reinforceType == ReinforceType.SCROLL)
         {
-          playSound(player, "reinforce_start_2", 100F, 1F);
+          playSound(player, "reinforce_start_2", SoundCategory.PLAYERS, 1F, 1F);
         }
         else if (use && reinforceType == ReinforceType.COMMAND)
         {
-          playSound(player, "reinforce_start", 100F, 1F);
+          playSound(player, "reinforce_start", SoundCategory.PLAYERS, 1F, 1F);
         }
         else
         {
-          playSound(player, Sound.BLOCK_ANVIL_LAND, 100F, 2F);
+          playSound(player, Sound.BLOCK_ANVIL_LAND, SoundCategory.PLAYERS, 1F, 2F);
 
-          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> playSound(player, Sound.BLOCK_ANVIL_LAND, 100F, 1.98F), 2L);
+          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> playSound(player, Sound.BLOCK_ANVIL_LAND, 1F, 1.98F), 1L);
 
-          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> playSound(player, Sound.BLOCK_ANVIL_LAND, 100F, 2F), 12L);
+          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> playSound(player, Sound.BLOCK_ANVIL_LAND, 1F, 2F), 4L);
 
-          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> playSound(player, Sound.BLOCK_ANVIL_LAND, 100F, 1.98F), 14L);
+          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> playSound(player, Sound.BLOCK_ANVIL_LAND, 1F, 1.98F), 5L);
 
-          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> playSound(player, Sound.BLOCK_PORTAL_TRIGGER, 100F, 2F), 14L);
+          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> playSound(player, Sound.BLOCK_PORTAL_TRIGGER, 1F, 2F), 10L);
 
-          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> player.stopSound(Sound.BLOCK_PORTAL_TRIGGER), 60L);
+          Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () -> player.stopSound(Sound.BLOCK_PORTAL_TRIGGER), 20L);
         }
         break;
 
       case SUCCESS:
         if (use)
         {
-          playSound(player, "reinforce_success", 100F, 1F);
+          playSound(player, "reinforce_success", SoundCategory.PLAYERS, 1F, 1F);
         }
         else
         {
-          playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 100F, 1F);
-          playSound(player, Sound.ENTITY_FIREWORK_ROCKET_TWINKLE, 100F, 1F);
+          playSound(player, Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1F, 1F);
+          playSound(player, Sound.ENTITY_FIREWORK_ROCKET_TWINKLE, SoundCategory.PLAYERS, 1F, 1F);
         }
         break;
       default:
@@ -2707,6 +2709,32 @@ public class Method extends SoundPlay
   public static List<String> tabCompleterList(String[] args, Enum<?>[] array, String key, boolean ignoreEmpty)
   {
     return Method.tabCompleterList(args, enumToList(array), key, ignoreEmpty);
+  }
+
+  @NotNull
+  public static List<String> tabCompleterList(@NotNull String[] args, @NotNull Map<?, ?> map, @NotNull Object key)
+  {
+    return tabCompleterList(args, map, key, null);
+  }
+
+  @NotNull
+  public static List<String> tabCompleterList(@NotNull String[] args, @NotNull Map<?, ?> map, @NotNull Object key, Predicate<Object> exclude)
+  {
+    List<String> list = new ArrayList<>();
+    for (Object k : map.keySet())
+    {
+      if (exclude != null && exclude.test(k))
+      {
+        continue;
+      }
+      Object v = map.get(k);
+      if (v instanceof CustomEffectType customEffectType && customEffectType.isEnumHidden())
+      {
+        continue;
+      }
+      list.add(k.toString());
+    }
+    return Method.tabCompleterList(args, list, key.toString());
   }
 
   public static List<String> tabCompleterIntegerRadius(String[] args, int from, int to, String key)

@@ -14,11 +14,11 @@ import java.util.List;
 
 public class CommandSetBlock2 extends CommandBase
 {
-  private final List<Argument> argumentList = Arrays.asList(new LocationArgument("위치", LocationType.BLOCK_POSITION), new BlockStateArgument("블록 데이터"));
+  private final List<Argument<?>> argumentList = Arrays.asList(new LocationArgument("위치", LocationType.BLOCK_POSITION), new BlockStateArgument("블록 데이터"));
 
-  private final List<Argument> argumentList2 = Arrays.asList(new LocationArgument("위치", LocationType.BLOCK_POSITION), new BlockStateArgument("블록 데이터"), new BooleanArgument("블록 종류 보존 여부"));
+  private final List<Argument<?>> argumentList2 = Arrays.asList(new LocationArgument("위치", LocationType.BLOCK_POSITION), new BlockStateArgument("블록 데이터"), new BooleanArgument("블록 종류 보존 여부"));
 
-  private final List<Argument> argumentList3 = Arrays.asList(new LocationArgument("위치", LocationType.BLOCK_POSITION), new BlockStateArgument("블록 데이터"), new BooleanArgument("블록 종류 보존 여부"),
+  private final List<Argument<?>> argumentList3 = Arrays.asList(new LocationArgument("위치", LocationType.BLOCK_POSITION), new BlockStateArgument("블록 데이터"), new BooleanArgument("블록 종류 보존 여부"),
           new BooleanArgument("물리 적용 여부"));
 
   public void registerCommand(String command, String permission, String... aliases)

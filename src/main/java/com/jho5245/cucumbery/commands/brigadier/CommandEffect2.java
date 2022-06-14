@@ -31,55 +31,56 @@ import java.util.List;
 
 import static com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil.*;
 
+@SuppressWarnings("unchecked")
 public class CommandEffect2 extends CommandBase
 {
-  private final Argument OVERRIDE = new BooleanArgument("기존 효과 제거");
+  private final Argument<Boolean> OVERRIDE = new BooleanArgument("기존 효과 제거");
 
-  private final Argument DURATION_SECOND = new DoubleArgument("지속 시간(초)", 0.05, Integer.MAX_VALUE / 20d);
+  private final Argument<Double> DURATION_SECOND = new DoubleArgument("지속 시간(초)", 0.05, Integer.MAX_VALUE / 20d);
 
-  private final Argument INFINITE_DURATION = new MultiLiteralArgument("infinite");
+  private final Argument<String> INFINITE_DURATION = new MultiLiteralArgument("infinite");
 
-  private final Argument AMPLIFIER = new IntegerArgument("농도 레벨", 0, 255);
+  private final Argument<Integer> AMPLIFIER = new IntegerArgument("농도 레벨", 0, 255);
 
-  private final Argument PROPERTY = new MultiLiteralArgument("default", "hide-all", "hide-particle", "show-all");
+  private final Argument<String> PROPERTY = new MultiLiteralArgument("default", "hide-all", "hide-particle", "show-all");
 
-  private final Argument HIDE_PARTICLE = new BooleanArgument("입자 숨김");
+  private final Argument<Boolean> HIDE_PARTICLE = new BooleanArgument("입자 숨김");
 
-  private final Argument HIDE_ICON = new BooleanArgument("우측 상단 아이콘 숨김");
+  private final Argument<Boolean> HIDE_ICON = new BooleanArgument("우측 상단 아이콘 숨김");
 
-  private final Argument HIDE_AMBIENT = new BooleanArgument("우측 상단 효과 숨김");
+  private final Argument<Boolean> HIDE_AMBIENT = new BooleanArgument("우측 상단 효과 숨김");
 
-  private final List<Argument> list1_1 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE);
-  private final List<Argument> list1_2 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, OVERRIDE);
-  private final List<Argument> list1_3 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list1_1 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE);
+  private final List<Argument<?>> list1_2 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, OVERRIDE);
+  private final List<Argument<?>> list1_3 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, OVERRIDE, HIDE_OUTPUT);
 
-  private final List<Argument> list2_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND);
-  private final List<Argument> list2_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, OVERRIDE);
-  private final List<Argument> list2_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, OVERRIDE, HIDE_OUTPUT);
-  private final List<Argument> list2_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION);
-  private final List<Argument> list2_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, OVERRIDE);
-  private final List<Argument> list2_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list2_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND);
+  private final List<Argument<?>> list2_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, OVERRIDE);
+  private final List<Argument<?>> list2_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list2_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION);
+  private final List<Argument<?>> list2_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, OVERRIDE);
+  private final List<Argument<?>> list2_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, OVERRIDE, HIDE_OUTPUT);
 
-  private final List<Argument> list3_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER);
-  private final List<Argument> list3_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, OVERRIDE);
-  private final List<Argument> list3_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, OVERRIDE, HIDE_OUTPUT);
-  private final List<Argument> list3_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER);
-  private final List<Argument> list3_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, OVERRIDE);
-  private final List<Argument> list3_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list3_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER);
+  private final List<Argument<?>> list3_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, OVERRIDE);
+  private final List<Argument<?>> list3_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list3_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER);
+  private final List<Argument<?>> list3_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, OVERRIDE);
+  private final List<Argument<?>> list3_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, OVERRIDE, HIDE_OUTPUT);
 
-  private final List<Argument> list4_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY);
-  private final List<Argument> list4_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY, OVERRIDE);
-  private final List<Argument> list4_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY, OVERRIDE, HIDE_OUTPUT);
-  private final List<Argument> list4_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY);
-  private final List<Argument> list4_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY, OVERRIDE);
-  private final List<Argument> list4_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list4_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY);
+  private final List<Argument<?>> list4_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY, OVERRIDE);
+  private final List<Argument<?>> list4_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, PROPERTY, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list4_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY);
+  private final List<Argument<?>> list4_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY, OVERRIDE);
+  private final List<Argument<?>> list4_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, PROPERTY, OVERRIDE, HIDE_OUTPUT);
 
-  private final List<Argument> list5_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT);
-  private final List<Argument> list5_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE);
-  private final List<Argument> list5_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE, HIDE_OUTPUT);
-  private final List<Argument> list5_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT);
-  private final List<Argument> list5_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE);
-  private final List<Argument> list5_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list5_4 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT);
+  private final List<Argument<?>> list5_5 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE);
+  private final List<Argument<?>> list5_6 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, DURATION_SECOND, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE, HIDE_OUTPUT);
+  private final List<Argument<?>> list5_7 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT);
+  private final List<Argument<?>> list5_8 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE);
+  private final List<Argument<?>> list5_9 = List.of(MANY_ENTITIES, POTION_EFFECT_TYPE, INFINITE_DURATION, AMPLIFIER, HIDE_PARTICLE, HIDE_ICON, HIDE_AMBIENT, OVERRIDE, HIDE_OUTPUT);
 
   /**
    * gets booleans from property

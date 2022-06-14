@@ -11,7 +11,9 @@ import com.jho5245.cucumbery.events.entity.EntityCustomEffectPostApplyEvent;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -73,46 +75,6 @@ public class EntityCustomEffectPostApply implements Listener
     {
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
               Updater.defaultUpdater.updateLatest(amplifier == 1), 2L);
-    }
-
-    if (entity instanceof LivingEntity livingEntity)
-    {
-      int minecraftDuration = duration == -1 ? Integer.MAX_VALUE : duration;
-      switch (customEffectType)
-      {
-        case MINECRAFT_SPEED -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, minecraftDuration, amplifier));
-        case MINECRAFT_SLOWNESS -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, minecraftDuration, amplifier));
-        case MINECRAFT_HASTE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, minecraftDuration, amplifier));
-        case MINECRAFT_MINING_FATIGUE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, minecraftDuration, amplifier));
-        case MINECRAFT_STRENGTH -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, minecraftDuration, amplifier));
-        case MINECRAFT_WEAKNESS -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, minecraftDuration, amplifier));
-        case MINECRAFT_INSTANT_DAMAGE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HARM, minecraftDuration, amplifier));
-        case MINECRAFT_INSTANT_HEAL -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, minecraftDuration, amplifier));
-        case MINECRAFT_JUMP_BOOST -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, minecraftDuration, amplifier));
-        case MINECRAFT_NAUSEA -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, minecraftDuration, amplifier));
-        case MINECRAFT_REGENERATION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, minecraftDuration, amplifier));
-        case MINECRAFT_RESISTANCE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, minecraftDuration, amplifier));
-        case MINECRAFT_FIRE_RESISTANCE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, minecraftDuration, amplifier));
-        case MINECRAFT_WATER_BREATHING -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, minecraftDuration, amplifier));
-        case MINECRAFT_BLINDNESS -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, minecraftDuration, amplifier));
-        case MINECRAFT_INVISIBILITY -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, minecraftDuration, amplifier));
-        case MINECRAFT_NIGHT_VISION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, minecraftDuration, amplifier));
-        case MINECRAFT_HUNGER -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, minecraftDuration, amplifier));
-        case MINECRAFT_POISON -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.POISON, minecraftDuration, amplifier));
-        case MINECRAFT_WITHER -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, minecraftDuration, amplifier));
-        case MINECRAFT_HEALTH_BOOST -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, minecraftDuration, amplifier));
-        case MINECRAFT_ABSORPTION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, minecraftDuration, amplifier));
-        case MINECRAFT_SATURATION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, minecraftDuration, amplifier));
-        case MINECRAFT_LEVITATION -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, minecraftDuration, amplifier));
-        case MINECRAFT_SLOW_FALLING -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, minecraftDuration, amplifier));
-        case MINECRAFT_GLOWING -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, minecraftDuration, amplifier));
-        case MINECRAFT_LUCK -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, minecraftDuration, amplifier));
-        case MINECRAFT_UNLUCK -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.UNLUCK, minecraftDuration, amplifier));
-        case MINECRAFT_CONDUIT_POWER -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.CONDUIT_POWER, minecraftDuration, amplifier));
-        case MINECRAFT_DOLPHINS_GRACE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, minecraftDuration, amplifier));
-        case MINECRAFT_BAD_OMEN -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.BAD_OMEN, minecraftDuration, amplifier));
-        case MINECRAFT_HERO_OF_THE_VILLAGE -> livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, minecraftDuration, amplifier));
-      }
     }
 
     if (customEffectType == CustomEffectType.HEROS_ECHO)
@@ -224,6 +186,15 @@ public class EntityCustomEffectPostApply implements Listener
     {
       entity.setFreezeTicks(entity.getMaxFreezeTicks());
       entity.lockFreezeTicks(true);
+    }
+
+    if (customEffectType == CustomEffectType.STAR_CATCH_PREPARE && entity instanceof Player player)
+    {
+      Integer penalty = Variable.starCatchPenalty.get(player.getUniqueId());
+      MessageUtil.sendTitle(player, ComponentUtil.translate("&e스타캐치"), ComponentUtil.translate(
+              penalty != null && penalty >= 20 ? "연속해서 강화를 시도하면 스타캐치 난이도가 증가합니다" :
+                      "별이 초록색일 때 점프하거나 화면을 좌클릭하면 강화 성공률 증가!"
+      ), 0, 100, 0);
     }
   }
 }

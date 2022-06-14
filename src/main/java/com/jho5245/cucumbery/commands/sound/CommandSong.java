@@ -1,17 +1,15 @@
 package com.jho5245.cucumbery.commands.sound;
 
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.Scheduler;
-import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
 import com.jho5245.cucumbery.util.addons.Songs;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.model.SoundCategory;
@@ -20,6 +18,7 @@ import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 
-public class CommandSong implements CommandExecutor, TabCompleter
+public class CommandSong implements CommandExecutor, TabCompleter, AsyncTabCompleter
 {
   public static @Nullable RadioSongPlayer radioSongPlayer;
 
@@ -626,7 +625,8 @@ public class CommandSong implements CommandExecutor, TabCompleter
       }
       if (length == 1)
       {
-        return Method.tabCompleterList(args, "<인수>", "play", "stop", "info", "listening", "pause", "change-tick");
+        return Method.tabCompleterList(args, "<인수>", "play",
+                "stop", "info", "listening", "pause", "change-tick");
       }
       if (length == 2)
       {
@@ -637,8 +637,6 @@ public class CommandSong implements CommandExecutor, TabCompleter
           }
           case "play" -> {
             Variable.songFiles.addAll(Songs.list);
-            // encoding troll
-            Variable.songFiles.removeIf(s -> s.startsWith("?") || s.startsWith("�"));
             if (!Variable.songFiles.isEmpty())
             {
               Variable.songFiles.add("--random");
@@ -664,36 +662,90 @@ public class CommandSong implements CommandExecutor, TabCompleter
       {
         return Collections.singletonList("NoteBlockAPI 플러그인을 사용하고 있지 않습니다");
       }
-      if (length == 1)
-      {
-        return Method.tabCompleterPlayer(sender, args);
-      }
-      else if (length == 2)
-      {
-        return Method.tabCompleterList(args, "<인수>", "play", "stop", "info");
-      }
-      else if (length == 3)
-      {
-        switch (args[1])
-        {
-          case "play":
-            return Method.tabCompleterBoolean(args, "<명령어 출력 숨김 여부>");
-          case "stop":
-            return Method.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
-        }
-      }
-      else if (args[1].equals("play"))
-      {
-        if (args.length == 4)
-        {
-          // encoding troll
-          Variable.songFiles.removeIf(s -> s.startsWith("?") || s.startsWith("�"));
-          return Method.tabCompleterList(args, Variable.songFiles, "<노래 파일>", true);
-        }
-        return Method.tabCompleterList(args, "<노래 파일>", true);
-      }
     }
 
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  @NotNull
+  public List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {
+    if (!Cucumbery.using_NoteBlockAPI)
+    {
+      return CommandTabUtil.errorMessage("NoteBlockAPI 플러그인을 사용하고 있지 않습니다");
+    }
+    int length = args.length;
+    switch (cmd.getName())
+    {
+      case "csong" -> {
+        if (length == 1)
+        {
+          return CommandTabUtil.tabCompleterList(args, "<인수>", false,
+                  Completion.completion("play", Component.translatable("서버 전체에 노래를 재생함니다")),
+                  Completion.completion("stop", Component.translatable("재생 중인 노래를 먐춥니다")),
+                  Completion.completion("info", Component.translatable("재생 중인 노래의 정보를 참조합니다")),
+                  Completion.completion("listening", Component.translatable("재생 중인 노래를 듣오 있는 플레이어 목록을 참조합니다")),
+                  Completion.completion("pause", Component.translatable("재생 중인 노래를 일시 중지합니다")),
+                  Completion.completion("change-tick", Component.translatable("재생 중인 노래의 비율을 변경합니다")));
+        }
+        if (length == 2)
+        {
+          switch (args[0])
+          {
+            case "pause" -> {
+              return CommandTabUtil.tabCompleterList(args, "[인수]", false, "on", "toggle", "off");
+            }
+            case "play" -> {
+              Variable.songFiles.addAll(Songs.list);
+              List<Completion> list = new ArrayList<>();
+              Variable.songFiles.forEach(s -> list.add(Completion.completion(s)));
+              if (!Variable.songFiles.isEmpty())
+              {
+                list.add(Completion.completion("--random", Component.translatable("무작위 노래; '--random/(문자열)'으로 필터 가능")));
+              }
+              return CommandTabUtil.tabCompleterList(args, list, "<노래 파일>", true);
+            }
+            case "change-tick" -> {
+              return CommandTabUtil.tabCompleterDoubleRadius(args, 0, false, 100, true, "<재생 비율(%)>");
+            }
+          }
+        }
+        if (length == 3)
+        {
+          if ("pause".equals(args[0]))
+          {
+            return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+          }
+        }
+      }
+      case "csong2" -> {
+        if (length == 1)
+        {
+          return CommandTabUtil.tabCompleterPlayer(sender, args, "<플레이어>");
+        }
+        else if (length == 2)
+        {
+          return CommandTabUtil.tabCompleterList(args, "<인수>", false, "play", "stop", "info");
+        }
+        else if (length == 3)
+        {
+          switch (args[1])
+          {
+            case "play":
+              return CommandTabUtil.tabCompleterBoolean(args, "<명령어 출력 숨김 여부>");
+            case "stop":
+              return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+          }
+        }
+        else if (args[1].equals("play"))
+        {
+          if (args.length == 4)
+          {
+            return CommandTabUtil.tabCompleterList(args, new ArrayList<>(Variable.songFiles), "<노래 파일>", true);
+          }
+        }
+      }
+    }
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 }

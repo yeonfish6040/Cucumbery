@@ -33,7 +33,7 @@ public class CommandRepeat2 extends CommandBase
     }
   }
 
-  final private  List<Argument> arguments = Arrays.asList(new IntegerArgument("반복 횟수", 1, 10000), new IntegerArgument("딜레이", 0, 20 * 60 * 60),
+  final private  List<Argument<?>> arguments = Arrays.asList(new IntegerArgument("반복 횟수", 1, 10000), new IntegerArgument("딜레이", 0, 20 * 60 * 60),
           new GreedyStringArgument("명령어").replaceSuggestions(cmd -> commands));
 
   public void registerCommand(String command, String permission, String... aliases)

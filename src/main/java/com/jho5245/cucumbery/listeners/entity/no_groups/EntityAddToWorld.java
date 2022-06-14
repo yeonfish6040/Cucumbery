@@ -2,6 +2,8 @@ package com.jho5245.cucumbery.listeners.entity.no_groups;
 
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import org.bukkit.entity.Entity;
@@ -28,6 +30,10 @@ public class EntityAddToWorld implements Listener
     {
       return;
     }
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.COMBO_EXPERIENCE))
+    {
+      return;
+    }
 
     if (!Method.configContainsLocation(experienceOrb.getLocation(), Cucumbery.config.getStringList("no-display-xp-orb-value-worlds")))
     {
@@ -35,7 +41,6 @@ public class EntityAddToWorld implements Listener
       String configString = Cucumbery.config.getString("display-xp-orb-value-format");
       if (configString != null)
       {
-
         experienceOrb.setCustomNameVisible(true);
         experienceOrb.setCustomName(MessageUtil.n2s(
                 "§경§험§치" + configString.replace("%value%", xp + "")));

@@ -16,6 +16,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -139,7 +140,7 @@ public class ItemInfo
           Map<Enchantment, Integer> enchants = storeMeta.getStoredEnchants();
           for (Enchantment enchantment : enchants.keySet())
           {
-            int level = itemMeta.getEnchantLevel(enchantment);
+            int level = storeMeta.getStoredEnchantLevel(enchantment);
             int maxLevel = enchantment.getMaxLevel();
             boolean isCursed = enchantment.isCursed();
             Component component;
@@ -216,9 +217,9 @@ public class ItemInfo
           String uuid = PlayerHeadInfo.getPlayerHeadInfo(item, PlayerHeadInfo.PlayerHeadInfoType.UUID);
           String url = PlayerHeadInfo.getPlayerHeadInfo(item, PlayerHeadInfo.PlayerHeadInfoType.URL);
           MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "&9[플레이어 머리 정보]");
-          MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "&6닉네임 : &e" + (name != null ? name : "&c없음"));
-          MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "&6UUID : &e" + (uuid != null ? uuid : "&c없음"));
-          MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "&6url : &e" + url);
+          MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, Constant.THE_COLOR_HEX + "닉네임 : &e" + (name != null ? name : "&c없음"));
+          MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, Constant.THE_COLOR_HEX + "UUID : &e" + (uuid != null ? uuid : "&c없음"));
+          MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, Constant.THE_COLOR_HEX + "url : %s", Component.text(url).color(NamedTextColor.YELLOW).hoverEvent(Component.translatable("chat.link.open")).clickEvent(ClickEvent.openUrl(url)));
           break;
         case POTION:
         case SPLASH_POTION:

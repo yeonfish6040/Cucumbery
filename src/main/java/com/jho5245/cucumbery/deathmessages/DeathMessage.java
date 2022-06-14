@@ -1100,6 +1100,31 @@ public enum DeathMessage
   SHULKER_BULLET_UNKNOWN,
 
   /**
+   * %1$s은(는) 강한 음파의 비명에 말살됐습니다
+   */
+  SONIC_BOOM,
+
+  /**
+   * %1$s이(가) %2$s에게서 도망치려다 강한 음파의 비명에 말살됐습니다
+   */
+  SONIC_BOOM_COMBAT,
+
+  /**
+   * %1$s이(가) %3$s을(를) 든 %2$s에게서 도망치려다 강한 음파의 비명에 말살됐습니다
+   */
+  SONIC_BOOM_COMBAT_ITEM,
+
+  /**
+   * %1$s이(가) 스스로의 강한 음파의 비명에 말살됐습니다
+   */
+  SONIC_BOOM_COMBAT_SUICIDE,
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용하다 스스로의 강한 음파의 비명에 말살됐습니다
+   */
+  SONIC_BOOM_COMBAT_SUICIDE_ITEM,
+
+  /**
    * %1$s이(가) 석순에 찔렸습니다
    */
   STALAGMITE,

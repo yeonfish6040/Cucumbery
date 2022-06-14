@@ -15,14 +15,17 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Nameable;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
@@ -214,14 +217,33 @@ public class ItemStackUtil
   {
     return switch (type)
             {
-              case BAMBOO -> 2.5;
+              case BAMBOO, SCAFFOLDING -> 2.5;
               case BLACK_CARPET, BLUE_CARPET, BROWN_CARPET, CYAN_CARPET, GRAY_CARPET, GREEN_CARPET, LIGHT_BLUE_CARPET, LIGHT_GRAY_CARPET, LIME_CARPET, MAGENTA_CARPET, ORANGE_CARPET, PINK_CARPET, PURPLE_CARPET, RED_CARPET, WHITE_CARPET, YELLOW_CARPET -> 3.35;
-              case ACACIA_BUTTON, BIRCH_BUTTON, DARK_OAK_BUTTON, JUNGLE_BUTTON, OAK_BUTTON, SPRUCE_BUTTON, BOWL, ACACIA_SAPLING, BIRCH_SAPLING, DARK_OAK_SAPLING, JUNGLE_SAPLING, OAK_SAPLING, SPRUCE_SAPLING, STICK, BLACK_WOOL, BLUE_WOOL, BROWN_WOOL, CYAN_WOOL, GRAY_WOOL, GREEN_WOOL, LIGHT_BLUE_WOOL, LIGHT_GRAY_WOOL, LIME_WOOL, MAGENTA_WOOL, ORANGE_WOOL, PINK_WOOL, PURPLE_WOOL, RED_WOOL, WHITE_WOOL, YELLOW_WOOL, AZALEA -> 5;
-              case ACACIA_SLAB, BIRCH_SLAB, DARK_OAK_SLAB, JUNGLE_SLAB, OAK_SLAB, SPRUCE_SLAB -> 7.5;
-              case ACACIA_DOOR, BIRCH_DOOR, DARK_OAK_DOOR, JUNGLE_DOOR, OAK_DOOR, SPRUCE_DOOR, ACACIA_SIGN, BIRCH_SIGN, DARK_OAK_SIGN, JUNGLE_SIGN, OAK_SIGN, SPRUCE_SIGN, WOODEN_AXE, WOODEN_HOE, WOODEN_PICKAXE, WOODEN_SHOVEL, WOODEN_SWORD -> 10;
-              case ACACIA_LOG, BIRCH_LOG, DARK_OAK_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_BIRCH_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG, ACACIA_WOOD, BIRCH_WOOD, DARK_OAK_WOOD, JUNGLE_WOOD, OAK_WOOD, SPRUCE_WOOD, STRIPPED_ACACIA_WOOD, STRIPPED_BIRCH_WOOD, STRIPPED_DARK_OAK_WOOD, STRIPPED_JUNGLE_WOOD, STRIPPED_OAK_WOOD, STRIPPED_SPRUCE_WOOD, ACACIA_PLANKS, BIRCH_PLANKS, DARK_OAK_PLANKS, JUNGLE_PLANKS, OAK_PLANKS, SPRUCE_PLANKS, ACACIA_STAIRS, BIRCH_STAIRS, DARK_OAK_STAIRS, JUNGLE_STAIRS, OAK_STAIRS, SPRUCE_STAIRS, ACACIA_PRESSURE_PLATE, BIRCH_PRESSURE_PLATE, DARK_OAK_PRESSURE_PLATE, JUNGLE_PRESSURE_PLATE, OAK_PRESSURE_PLATE, SPRUCE_PRESSURE_PLATE, ACACIA_TRAPDOOR, BIRCH_TRAPDOOR, DARK_OAK_TRAPDOOR, JUNGLE_TRAPDOOR, OAK_TRAPDOOR, SPRUCE_TRAPDOOR, ACACIA_FENCE_GATE, BIRCH_FENCE_GATE, DARK_OAK_FENCE_GATE, JUNGLE_FENCE_GATE, OAK_FENCE_GATE, SPRUCE_FENCE_GATE, ACACIA_FENCE, BIRCH_FENCE, DARK_OAK_FENCE, JUNGLE_FENCE, OAK_FENCE, SPRUCE_FENCE, LADDER, CRAFTING_TABLE, CARTOGRAPHY_TABLE, FLETCHING_TABLE, SMITHING_TABLE, LOOM, BOOKSHELF, LECTERN, COMPOSTER, CHEST, TRAPPED_CHEST, BARREL, DAYLIGHT_DETECTOR, JUKEBOX, NOTE_BLOCK, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, MUSHROOM_STEM, BLACK_BANNER, BLUE_BANNER, BROWN_BANNER, CYAN_BANNER, GRAY_BANNER, GREEN_BANNER, LIGHT_BLUE_BANNER, LIGHT_GRAY_BANNER, LIME_BANNER, MAGENTA_BANNER, ORANGE_BANNER, PINK_BANNER, PURPLE_BANNER, RED_BANNER, WHITE_BANNER, YELLOW_BANNER, CROSSBOW, BOW, FISHING_ROD -> 15;
-              case SCAFFOLDING -> 20;
-              case ACACIA_BOAT, BIRCH_BOAT, DARK_OAK_BOAT, JUNGLE_BOAT, OAK_BOAT, SPRUCE_BOAT -> 60;
+              case ACACIA_BUTTON, BIRCH_BUTTON, DARK_OAK_BUTTON, MANGROVE_BUTTON, JUNGLE_BUTTON, OAK_BUTTON, SPRUCE_BUTTON,
+                      BOWL,
+                      ACACIA_SAPLING, BIRCH_SAPLING, DARK_OAK_SAPLING, MANGROVE_PROPAGULE, JUNGLE_SAPLING, OAK_SAPLING, SPRUCE_SAPLING,
+                      STICK,
+                      BLACK_WOOL, BLUE_WOOL, BROWN_WOOL, CYAN_WOOL, GRAY_WOOL, GREEN_WOOL, LIGHT_BLUE_WOOL, LIGHT_GRAY_WOOL, LIME_WOOL, MAGENTA_WOOL, ORANGE_WOOL, PINK_WOOL, PURPLE_WOOL, RED_WOOL, WHITE_WOOL, YELLOW_WOOL, AZALEA -> 5;
+              case ACACIA_SLAB, BIRCH_SLAB, DARK_OAK_SLAB, MANGROVE_SLAB, JUNGLE_SLAB, OAK_SLAB, SPRUCE_SLAB -> 7.5;
+              case ACACIA_DOOR, BIRCH_DOOR, DARK_OAK_DOOR, MANGROVE_DOOR, JUNGLE_DOOR, OAK_DOOR, SPRUCE_DOOR,
+                      ACACIA_SIGN, BIRCH_SIGN, DARK_OAK_SIGN, MANGROVE_SIGN, JUNGLE_SIGN, OAK_SIGN, SPRUCE_SIGN,
+                      WOODEN_AXE, WOODEN_HOE, WOODEN_PICKAXE, WOODEN_SHOVEL, WOODEN_SWORD -> 10;
+              case ACACIA_LOG, BIRCH_LOG, DARK_OAK_LOG, MANGROVE_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG,
+                      STRIPPED_ACACIA_LOG, STRIPPED_BIRCH_LOG, STRIPPED_DARK_OAK_LOG, STRIPPED_MANGROVE_LOG, STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG,
+                      ACACIA_WOOD, BIRCH_WOOD, DARK_OAK_WOOD, MANGROVE_WOOD, JUNGLE_WOOD, OAK_WOOD, SPRUCE_WOOD,
+                      STRIPPED_ACACIA_WOOD, STRIPPED_BIRCH_WOOD, STRIPPED_DARK_OAK_WOOD, STRIPPED_MANGROVE_WOOD, STRIPPED_JUNGLE_WOOD, STRIPPED_OAK_WOOD, STRIPPED_SPRUCE_WOOD,
+                      ACACIA_PLANKS, BIRCH_PLANKS, DARK_OAK_PLANKS, MANGROVE_PLANKS, JUNGLE_PLANKS, OAK_PLANKS, SPRUCE_PLANKS,
+                      ACACIA_STAIRS, BIRCH_STAIRS, DARK_OAK_STAIRS, MANGROVE_STAIRS, JUNGLE_STAIRS, OAK_STAIRS, SPRUCE_STAIRS,
+                      ACACIA_PRESSURE_PLATE, BIRCH_PRESSURE_PLATE, DARK_OAK_PRESSURE_PLATE, MANGROVE_PRESSURE_PLATE, JUNGLE_PRESSURE_PLATE, OAK_PRESSURE_PLATE, SPRUCE_PRESSURE_PLATE,
+                      ACACIA_TRAPDOOR, BIRCH_TRAPDOOR, DARK_OAK_TRAPDOOR, MANGROVE_TRAPDOOR, JUNGLE_TRAPDOOR, OAK_TRAPDOOR, SPRUCE_TRAPDOOR,
+                      ACACIA_FENCE_GATE, BIRCH_FENCE_GATE, DARK_OAK_FENCE_GATE, MANGROVE_FENCE_GATE, JUNGLE_FENCE_GATE, OAK_FENCE_GATE, SPRUCE_FENCE_GATE,
+                      ACACIA_FENCE, BIRCH_FENCE, DARK_OAK_FENCE, MANGROVE_FENCE, JUNGLE_FENCE, OAK_FENCE, SPRUCE_FENCE,
+                      LADDER, CRAFTING_TABLE, CARTOGRAPHY_TABLE, FLETCHING_TABLE, SMITHING_TABLE, LOOM, BOOKSHELF, LECTERN, COMPOSTER, CHEST, TRAPPED_CHEST, BARREL, DAYLIGHT_DETECTOR, JUKEBOX, NOTE_BLOCK,
+                      BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, MUSHROOM_STEM, MANGROVE_ROOTS,
+                      BLACK_BANNER, BLUE_BANNER, BROWN_BANNER, CYAN_BANNER, GRAY_BANNER, GREEN_BANNER, LIGHT_BLUE_BANNER, LIGHT_GRAY_BANNER, LIME_BANNER, MAGENTA_BANNER, ORANGE_BANNER, PINK_BANNER, PURPLE_BANNER, RED_BANNER, WHITE_BANNER, YELLOW_BANNER,
+                      CROSSBOW, BOW, FISHING_ROD -> 15;
+              case ACACIA_BOAT, BIRCH_BOAT, DARK_OAK_BOAT, MANGROVE_BOAT, JUNGLE_BOAT, OAK_BOAT, SPRUCE_BOAT,
+                      ACACIA_CHEST_BOAT, BIRCH_CHEST_BOAT, DARK_OAK_CHEST_BOAT, MANGROVE_CHEST_BOAT, JUNGLE_CHEST_BOAT, OAK_CHEST_BOAT, SPRUCE_CHEST_BOAT -> 60;
               case COAL, CHARCOAL -> 80;
               case BLAZE_ROD -> 120;
               case DRIED_KELP_BLOCK -> 200;
@@ -235,10 +257,17 @@ public class ItemStackUtil
   {
     return switch (type)
             {
-              case BEETROOT_SEEDS, DRIED_KELP, GRASS, KELP, ACACIA_LEAVES, BIRCH_LEAVES, DARK_OAK_LEAVES, JUNGLE_LEAVES, OAK_LEAVES, SPRUCE_LEAVES, MELON_SEEDS, NETHER_WART, PUMPKIN_SEEDS, ACACIA_SAPLING, BIRCH_SAPLING, SPRUCE_SAPLING, DARK_OAK_SAPLING, JUNGLE_SAPLING, OAK_SAPLING, SEAGRASS, TALL_SEAGRASS, SWEET_BERRIES, WHEAT_SEEDS, GLOW_BERRIES, HANGING_ROOTS, MOSS_CARPET, SMALL_DRIPLEAF -> 30;
-              case CACTUS, DRIED_KELP_BLOCK, MELON_SLICE, SUGAR_CANE, TALL_GRASS, VINE, WEEPING_VINES, TWISTING_VINES, NETHER_SPROUTS, FLOWERING_AZALEA_LEAVES, AZALEA_LEAVES, GLOW_LICHEN -> 50;
-              case APPLE, BEETROOT, CARROT, COCOA_BEANS, FERN, LARGE_FERN, DANDELION, POPPY, BLUE_ORCHID, ALLIUM, AZURE_BLUET, ORANGE_TULIP, PINK_TULIP, RED_TULIP, WHITE_TULIP, OXEYE_DAISY, CORNFLOWER, LILY_OF_THE_VALLEY, WITHER_ROSE, SUNFLOWER, LILAC, ROSE_BUSH, PEONY, LILY_PAD, MELON, BROWN_MUSHROOM, RED_MUSHROOM, MUSHROOM_STEM, POTATO, PUMPKIN, CARVED_PUMPKIN, SEA_PICKLE, SHROOMLIGHT, WHEAT, CRIMSON_FUNGUS, WARPED_FUNGUS, CRIMSON_ROOTS, WARPED_ROOTS, AZALEA, BIG_DRIPLEAF, MOSS_BLOCK, SPORE_BLOSSOM -> 65;
-              case BAKED_POTATO, BREAD, COOKIE, HAY_BLOCK, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, WARPED_WART_BLOCK, NETHER_WART_BLOCK, FLOWERING_AZALEA -> 85;
+              case BEETROOT_SEEDS, DRIED_KELP, GLOW_BERRIES, GRASS, HANGING_ROOTS, MANGROVE_ROOTS, KELP,
+                      ACACIA_LEAVES, AZALEA_LEAVES, BIRCH_LEAVES, DARK_OAK_LEAVES, JUNGLE_LEAVES, MANGROVE_LEAVES, OAK_LEAVES, SPRUCE_LEAVES,
+                      MELON_SEEDS, MOSS_CARPET, PUMPKIN_SEEDS,
+                      ACACIA_SAPLING, BIRCH_SAPLING, SPRUCE_SAPLING, DARK_OAK_SAPLING, JUNGLE_SAPLING, MANGROVE_PROPAGULE, OAK_SAPLING,
+                      SEAGRASS, TALL_SEAGRASS, SMALL_DRIPLEAF, SWEET_BERRIES, WHEAT_SEEDS -> 30d;
+              case CACTUS, DRIED_KELP_BLOCK, FLOWERING_AZALEA_LEAVES, GLOW_LICHEN, MELON_SLICE, NETHER_SPROUTS, SUGAR_CANE, TALL_GRASS, VINE, WEEPING_VINES, TWISTING_VINES -> 50d;
+              case APPLE, AZALEA, BEETROOT, BIG_DRIPLEAF, CARROT, COCOA_BEANS, FERN, LARGE_FERN,
+                      DANDELION, POPPY, BLUE_ORCHID, ALLIUM, AZURE_BLUET, RED_TULIP, ORANGE_TULIP, WHITE_TULIP, PINK_TULIP, OXEYE_DAISY, CORNFLOWER, LILY_OF_THE_VALLEY, WITHER_ROSE, SUNFLOWER, LILAC, ROSE_BUSH, PEONY,
+                      LILY_PAD, MELON, MOSS_BLOCK, BROWN_MUSHROOM, RED_MUSHROOM, MUSHROOM_STEM, NETHER_WART, POTATO, PUMPKIN, CARVED_PUMPKIN, SEA_PICKLE, SHROOMLIGHT, SPORE_BLOSSOM, WHEAT, CRIMSON_FUNGUS, WARPED_FUNGUS,
+                      CRIMSON_ROOTS, WARPED_ROOTS -> 65d;
+              case BAKED_POTATO, BREAD, COOKIE, FLOWERING_AZALEA, HAY_BLOCK, BROWN_MUSHROOM_BLOCK, RED_MUSHROOM_BLOCK, NETHER_WART_BLOCK, WARPED_WART_BLOCK -> 85d;
               case PUMPKIN_PIE, CAKE -> 100d;
               default -> 0d;
             };
@@ -259,7 +288,7 @@ public class ItemStackUtil
                       ZOMBIE_HORSE_SPAWN_EGG, ZOMBIFIED_PIGLIN_SPAWN_EGG, ZOMBIE_SPAWN_EGG, ZOMBIE_VILLAGER_SPAWN_EGG, ACACIA_BOAT, BIRCH_BOAT, DARK_OAK_BOAT, JUNGLE_BOAT, OAK_BOAT,
                       SPRUCE_BOAT, MINECART, CHEST_MINECART, COMMAND_BLOCK_MINECART, FURNACE_MINECART, HOPPER_MINECART, TNT_MINECART, LEAD, END_CRYSTAL, STRING, HOGLIN_SPAWN_EGG,
                       PIGLIN_SPAWN_EGG, STRIDER_SPAWN_EGG, ZOGLIN_SPAWN_EGG, AXOLOTL_SPAWN_EGG, GLOW_SQUID_SPAWN_EGG, GOAT_SPAWN_EGG, PIGLIN_BRUTE_SPAWN_EGG, POWDER_SNOW_BUCKET,
-                      GLOW_BERRIES -> true;
+                      GLOW_BERRIES, ALLAY_SPAWN_EGG, FROG_SPAWN_EGG, TADPOLE_SPAWN_EGG, WARDEN_SPAWN_EGG -> true;
               default -> false;
             };
   }
@@ -287,7 +316,9 @@ public class ItemStackUtil
   {
     ItemStack item = new ItemStack(type);
     if (player == null || Method.usingLoreFeature(player))
-    ItemLore.setItemLore(item, player);
+    {
+      ItemLore.setItemLore(item, player);
+    }
     return item;
   }
 
@@ -435,7 +466,7 @@ public class ItemStackUtil
     int amount = 0;
     for (ItemStack iStack : inv.getStorageContents())
     {
-      if (ItemStackUtil.predicateItem(iStack, predicate))
+      if (iStack != null && ItemStackUtil.predicateItem(iStack, predicate))
       {
         if (itemExists(iStack))
         {
@@ -929,6 +960,99 @@ public class ItemStackUtil
     itemStack.setItemMeta(itemMeta);
     ItemLore.setItemLore(itemStack);
     return itemStack;
+  }
+
+  @Nullable
+  public static ItemStack createItemStack(@Nullable CommandSender sender, @NotNull String input)
+  {
+    return createItemStack(sender, input, true);
+  }
+
+  @Nullable
+  public static ItemStack createItemStack(@Nullable CommandSender sender, @NotNull String input, boolean notice)
+  {
+    try
+    {
+      if (!input.contains("{") && input.endsWith("}"))
+      {
+        if (sender != null && notice)
+        {
+          MessageUtil.sendError(sender, "command.expected.separator");
+        }
+        return null;
+      }
+      if (!input.matches("(.*)(.[a-z0-9_}-])$"))
+      {
+        if (sender != null && notice)
+        {
+          MessageUtil.sendError(sender, "command.expected.separator");
+        }
+        return null;
+      }
+      return Bukkit.getItemFactory().createItemStack(input);
+    }
+    catch (Exception e)
+    {
+      if (sender != null && notice)
+      {
+        Throwable t = e.getCause();
+        MessageUtil.sendError(sender, getErrorCreateItemStack(t != null ? t : e));
+      }
+    }
+    return null;
+  }
+
+  @NotNull
+  public static TranslatableComponent getErrorCreateItemStack(@NotNull Throwable throwable)
+  {
+    String message = throwable.getMessage();
+    if (message.startsWith("Unknown item '"))
+    {
+      String s = message.split("'")[1];
+      try
+      {
+        s = s.split(":")[1];
+      }
+      catch (Exception ignored)
+      {
+      }
+      return ComponentUtil.translate("argument.item.id.invalid", s);
+    }
+    if (message.startsWith("Expected '"))
+    {
+      String s = message.split("'")[1];
+      return ComponentUtil.translate("parsing.expected", s);
+    }
+
+    if (message.startsWith("Invalid array type '"))
+    {
+      String s = message.split("'")[1];
+      return ComponentUtil.translate("argument.nbt.array.invalid", s);
+    }
+
+    if (message.startsWith("Can't insert"))
+    {
+      String[] split = message.split(" ");
+      if (message.contains("into list of"))
+      {
+        String s = split[2], s1 = split[6];
+        return ComponentUtil.translate("argument.nbt.list.mixed", s, s1);
+      }
+      else
+      {
+        String s = split[2], s1 = split[4];
+        return ComponentUtil.translate("argument.nbt.array.mixed", s, s1);
+      }
+    }
+    if (message.startsWith("Expected key"))
+    {
+      return Component.translatable("argument.nbt.expected.key");
+    }
+    if (message.startsWith("Expected value"))
+    {
+      return Component.translatable("argument.nbt.expected.value");
+    }
+    return Component.translatable("");
   }
 }
 

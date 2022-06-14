@@ -227,7 +227,7 @@ public class ItemLoreUtil
    *
    * @param itemMeta     아이템 메타
    * @param material     아이템의 종류
-   * @param enchant       마법
+   * @param enchant      마법
    * @param enchantLevel 마법 레벨
    * @return 설명
    */
@@ -572,6 +572,10 @@ public class ItemLoreUtil
         lore.add(ComponentUtil.translate("&7로 내구도가 깎이는 대신 이동 속도 %s 증가",
                 "&a" + Constant.Sosu2.format((enchantLevel * 0.125 - 0.1) * 100d) + "%"));
       }
+      if (enchant.equals(Enchantment.SWIFT_SNEAK))
+      {
+        lore.add(ComponentUtil.translate("&7웅크리고 걷는 속도 %s 증가", "&a" + Math.min(70, enchantLevel * 15) + "%p"));
+      }
 
       // Custom Enchant
 
@@ -579,24 +583,23 @@ public class ItemLoreUtil
       if (enchant.equals(CustomEnchant.KEEP_INVENTORY))
       {
         lore.add(
-                ComponentUtil.translate("&7사망해도 아이템을 떨어트리지 않음")
+                ComponentUtil.translate("&7사망해도 이 아이템은 떨어트리지 않음")
         );
       }
       if (enchant.equals(CustomEnchant.TELEKINESIS))
       {
         lore.addAll(Arrays.asList(
-                ComponentUtil.translate("&7블록을 캐거나 적을 잡았을 때 "),
+                ComponentUtil.translate("&7블록을 캐거나 적을 잡았을 때"),
                 ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
         );
       }
       if (enchant.equals(CustomEnchant.TELEKINESIS_PVP))
       {
         lore.addAll(Arrays.asList(
-                ComponentUtil.translate("&7인벤세이브가 꺼져 있는 경우에 플레이어와 싸웠을 때 "),
+                ComponentUtil.translate("&7인벤세이브가 꺼져 있는 경우에 플레이어와 싸웠을 때"),
                 ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
         );
       }
-
       if (enchant.equals(CustomEnchant.COLD_TOUCH))
       {
         lore.add(
@@ -766,24 +769,34 @@ public class ItemLoreUtil
         BlockState blockState = blockStateMeta.getBlockState();
         if (blockState instanceof InventoryHolder inventoryHolder)
         {
-          Inventory inventory = inventoryHolder.getInventory();
-          for (int i = 0; i < inventory.getSize(); i++)
+          try
           {
-            ItemStack innerItemStack = inventory.getItem(i);
-            try
+            Inventory inventory = inventoryHolder.getInventory();
+            for (int i = 0; i < inventory.getSize(); i++)
             {
-              if (ItemStackUtil.itemExists(innerItemStack))
+              ItemStack innerItemStack = inventory.getItem(i);
+              try
               {
-                removeInventoryItemLore(innerItemStack);
-                inventory.setItem(i, ItemLore.removeItemLore(innerItemStack));
+                if (ItemStackUtil.itemExists(innerItemStack))
+                {
+                  removeInventoryItemLore(innerItemStack);
+                  inventory.setItem(i, ItemLore.removeItemLore(innerItemStack));
+                }
+              }
+              catch (Exception ignored)
+              {
+
               }
             }
-            catch (Exception ignored)
-            {
-
-            }
+            blockStateMeta.setBlockState(blockState);
           }
-          blockStateMeta.setBlockState(blockState);
+          catch (NullPointerException ignored)
+          {
+          }
+          catch (Exception e)
+          {
+            e.printStackTrace();
+          }
         }
         itemStack.setItemMeta(blockStateMeta);
       }

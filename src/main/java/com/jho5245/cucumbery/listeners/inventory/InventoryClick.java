@@ -2354,7 +2354,7 @@ public class InventoryClick implements Listener
         if (isMenuItem)
         {
           List<String> itemLore = item.getItemMeta().getLore();
-          if (itemLore == null || itemLore.size() == 0)
+          if (itemLore == null || itemLore.isEmpty())
           {
             return;
           }

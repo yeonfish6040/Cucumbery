@@ -10,6 +10,7 @@ import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -35,14 +36,19 @@ public class AreaEffectCloudApply implements Listener
       {
         try
         {
-          CustomEffect customEffect = new CustomEffect(
-                  CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase()),
-                  potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
-                  potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
-                  DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase()));
-          for (Entity entity : event.getAffectedEntities())
+          String rawKey = potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID);
+          String[] rawKeySplit = rawKey.split(":");
+          CustomEffectType customEffectType = CustomEffectType.getByKey(new NamespacedKey(rawKeySplit[0], rawKeySplit[1]));
+          if (customEffectType != null)
           {
-            CustomEffectManager.addEffect(entity, customEffect, ApplyReason.LINGERING_POTION);
+            CustomEffect customEffect = new CustomEffect(customEffectType,
+                    potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
+                    potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
+                    DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase()));
+            for (Entity entity : event.getAffectedEntities())
+            {
+              CustomEffectManager.addEffect(entity, customEffect, ApplyReason.LINGERING_POTION);
+            }
           }
         }
         catch (Exception ignored)

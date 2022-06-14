@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.listeners.entity.customeffect;
 
+import com.jho5245.cucumbery.commands.reinforce.CommandReinforce;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
@@ -7,18 +8,22 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.LocationVelocityCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.scheduler.CustomEffectScheduler;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import net.kyori.adventure.text.Component;
+import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -113,7 +118,10 @@ public class EntityCustomEffectRemove implements Listener
 
     if (!(entity instanceof Player) && (customEffectType == CustomEffectType.DISAPPEAR || customEffectType == CustomEffectType.DAMAGE_INDICATOR))
     {
-      entity.remove();
+      if (entity.isValid())
+      {
+        entity.remove();
+      }
     }
 
     if (customEffectType == CustomEffectType.FREEZING)
@@ -145,6 +153,57 @@ public class EntityCustomEffectRemove implements Listener
         entity.teleport(locationVelocityCustomEffect.getLocation());
         entity.setVelocity(locationVelocityCustomEffect.getVelocity());
       }
+    }
+
+    if (customEffectType == CustomEffectType.COMBO_EXPERIENCE && entity instanceof ExperienceOrb)
+    {
+      if (entity.isValid())
+      {
+        entity.remove();
+      }
+    }
+
+    if (customEffectType == CustomEffectType.COMBO)
+    {
+      CustomEffectManager.removeEffect(entity, CustomEffectType.COMBO_STACK);
+      entity.getWorld().getEntities().forEach(e ->
+      {
+        if (e instanceof ExperienceOrb && CustomEffectManager.hasEffect(e, CustomEffectType.COMBO_EXPERIENCE))
+        {
+          CustomEffect effect = CustomEffectManager.getEffect(e, CustomEffectType.COMBO_EXPERIENCE);
+          if (effect instanceof PlayerCustomEffect playerCustomEffect)
+          {
+            if (entity.equals(playerCustomEffect.getPlayer()))
+            {
+              e.remove();
+            }
+          }
+        }
+      });
+    }
+
+    if (customEffectType == CustomEffectType.STAR_CATCH_PREPARE && entity instanceof Player player)
+    {
+      Integer i = Variable.starCatchPenalty.get(uuid);
+      if (i == null)
+      {
+        i = 0;
+      }
+      player.playSound(player.getLocation(), "star_catch_" + (Math.min(4, i / 20) + 1), SoundCategory.PLAYERS, 1F, 1F);
+      CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectType.STAR_CATCH_PROCESS, Math.max(20, 120 - i)));
+    }
+
+    if (customEffectType == CustomEffectType.STAR_CATCH_PROCESS && entity instanceof Player player)
+    {
+      CustomEffectManager.addEffect(player, CustomEffectType.STAR_CATCH_FINISHED);
+      Integer i = Variable.starCatchPenalty.get(uuid);
+      if (i == null)
+      {
+        i = 0;
+      }
+      Variable.starCatchPenalty.put(uuid, i + 1);
+      CommandReinforce.REINFORCE_OPERATING.remove(uuid);
+      player.performCommand("강화 realstart");
     }
   }
 }

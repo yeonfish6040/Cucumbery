@@ -4,7 +4,7 @@ import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent;
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.no_groups.AsyncTabCompleter;
-import com.jho5245.cucumbery.util.no_groups.LocationUtil;
+import com.jho5245.cucumbery.util.no_groups.CommandArgumentUtil;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -33,6 +33,10 @@ public class AsyncTabComplete implements Listener
     CommandSender sender = event.getSender();
     String buffer = event.getBuffer();
     Location location = event.getLocation();
+    if (buffer.length() < 1)
+    {
+      return;
+    }
     String commandString = buffer.substring(1).split(" ")[0];
     PluginCommand command = Bukkit.getPluginCommand(commandString);
     if (command != null && command.getPlugin() instanceof Cucumbery)
@@ -58,9 +62,9 @@ public class AsyncTabComplete implements Listener
         }
         if (location == null)
         {
-          location = LocationUtil.senderLocation(sender);
+          location = CommandArgumentUtil.senderLocation(sender);
         }
-        event.completions(tabCompleter.completion(sender, commandString, args, location));
+        event.completions(tabCompleter.completion(sender, command, commandString, args, location));
       }
     }
   }

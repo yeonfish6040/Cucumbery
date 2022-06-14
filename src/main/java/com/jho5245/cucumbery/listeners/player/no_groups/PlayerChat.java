@@ -4,9 +4,12 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.ItemStackCustomEffect;
+import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
+import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -26,6 +29,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -72,27 +76,60 @@ public class PlayerChat implements Listener
     }
     switch (message.toLowerCase())
     {
-      case Constant.REINFORCE_QUIT -> {
+      case "cucumbery-강화중지" -> {
         event.setCancelled(true);
         Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 quit"));
         return;
       }
-      case Constant.REINFORCE_USE_ANTI_DESTRUCTION -> {
+      case "cucumbery-강화파방" -> {
         event.setCancelled(true);
         Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 파괴방지사용"));
         return;
       }
-      case Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION -> {
+      case "cucumbery-강화파방끔" -> {
         event.setCancelled(true);
         Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 파괴방지미사용"));
         return;
       }
-      case Constant.REINFORCE_START -> {
+      case "cucumbery-강화" -> {
         event.setCancelled(true);
         Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 realstart"));
         return;
       }
-      default -> {
+      case "cucumbery-강화스타캐치해제" -> {
+        event.setCancelled(true);
+        Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 스타캐치해제사용"));
+        return;
+      }
+      case "cucumbery-강화스타캐치해제끔" -> {
+        event.setCancelled(true);
+        Bukkit.getScheduler().callSyncMethod(Cucumbery.getPlugin(), () -> Bukkit.getServer().dispatchCommand(player, "강화 스타캐치해제미사용"));
+        return;
+      }
+      case Constant.DROP_UNTRADABLE_ITEM -> {
+        if (CustomEffectManager.hasEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP))
+        {
+          CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP);
+          if (customEffect instanceof ItemStackCustomEffect itemStackCustomEffect)
+          {
+            ItemStack itemStack = itemStackCustomEffect.getItemStack();
+            Component itemComponent = ItemStackComponent.itemStackComponent(itemStack, Constant.THE_COLOR);
+            if (ItemStackUtil.countItem(player.getInventory(), itemStack) == 0)
+            {
+              MessageUtil.sendWarn(player, "인벤토리에 %s이(가) 충분히 없어 제거할 수 없었습니다", itemComponent);
+              Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                      CustomEffectManager.removeEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP, RemoveReason.TIME_OUT), 0L);
+              event.setCancelled(true);
+              return;
+            }
+            player.getInventory().removeItem(itemStack);
+            MessageUtil.info(player, "%s을(를) 인벤토리에서 제거하였습니다", itemComponent);
+            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                    CustomEffectManager.removeEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP), 0L);
+          }
+        }
+        event.setCancelled(true);
+        return;
       }
     }
     if (!Cucumbery.config.getBoolean("grant-default-permission-to-players") && !Permission.EVENT_CHAT.has(player))

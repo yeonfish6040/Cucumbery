@@ -494,6 +494,7 @@ public class DeathManager
         }
         case DRYOUT -> key = "dry_out";
         case FREEZE -> key = "freeze";
+        case SONIC_BOOM -> key = "sonic_boom";
       }
       if (CustomEffectManager.hasEffect(entity, CustomEffectType.CUSTOM_DEATH_MESSAGE))
       {

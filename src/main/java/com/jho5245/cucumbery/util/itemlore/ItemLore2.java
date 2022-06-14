@@ -23,10 +23,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTCompoundList;
-import de.tr7zw.changeme.nbtapi.NBTItem;
-import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -1828,7 +1825,104 @@ public class ItemLore2
     if (params instanceof ItemLoreView itemLoreView)
     {
       Player viewer = itemLoreView.getPlayer();
-   //   lore.add(Component.text(viewer.getName()));
+      //   lore.add(Component.text(viewer.getName()));
+    }
+
+    NBTCompound reinforceTag = NBTAPI.getCompound(itemTag, CucumberyTag.REINFORCE_TAG);
+    if (reinforceTag != null)
+    {
+      try
+      {
+        Integer current = reinforceTag.getInteger(CucumberyTag.REINFORCE_CURRENT_TAG), max = reinforceTag.getInteger(CucumberyTag.REINFORCE_MAX_TAG), itemLevel = reinforceTag.getInteger(CucumberyTag.REINFORCE_ITEM_LEVEL_TAG);
+        String reinforceType = reinforceTag.getString(CucumberyTag.REINFORCE_REINFORCE_TYPE_TAG), itemType = reinforceTag.getString(CucumberyTag.REINFORCE_ITEM_TYPE_TAG);
+        reinforceType = switch (reinforceType)
+                {
+                  case "starforce" -> "&e스타포스";
+                  case "superior" -> "&b슈페리얼";
+                  case "cucumberforce" -> "&a오이포스";
+                  case "ebebeb" -> "&d에베벱";
+                  default -> reinforceType;
+                };
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&3[강화 정보]"));
+        if (itemType != null && !itemType.equals(""))
+        {
+          lore.add(ComponentUtil.translate("&e아이템 분류 : %s", itemType));
+        }
+        if (itemLevel == null)
+        {
+          itemLevel = 10;
+        }
+        lore.add(ComponentUtil.translate("&e아이템 강화 등급(장착 레벨) : %s", itemLevel));
+        lore.add(ComponentUtil.translate("&f%s : %s / %s", reinforceType, current, max));
+        List<String> keys = new ArrayList<>();
+        reinforceTag.getKeys().forEach(s ->
+        {
+          if (reinforceTag.getType(s) == NBTType.NBTTagDouble)
+          {
+            keys.add(s);
+          }
+        });
+        if (!keys.isEmpty())
+        {
+          lore.add(ComponentUtil.translate("&8----------------------"));
+          if (reinforceTag.getType("STR") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("STR");
+            lore.add(ComponentUtil.translate("&f%s : %s", "STR", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("DEX") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("DEX");
+            lore.add(ComponentUtil.translate("&f%s : %s", "DEX", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("INT") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("INT");
+            lore.add(ComponentUtil.translate("&f%s : %s", "INT", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("LUK") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("LUK");
+            lore.add(ComponentUtil.translate("&f%s : %s", "LUK", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("최대 HP") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("최대 HP");
+            lore.add(ComponentUtil.translate("&f%s : %s", "최대 HP", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("최대 MP") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("최대 MP");
+            lore.add(ComponentUtil.translate("&f%s : %s", "최대 MP", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("공격력") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("공격력");
+            lore.add(ComponentUtil.translate("&f%s : %s", "공격력", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("마력") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("마력");
+            lore.add(ComponentUtil.translate("&f%s : %s", "마력", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("이동속도") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("이동속도");
+            lore.add(ComponentUtil.translate("&f%s : %s", "이동속도", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          if (reinforceTag.getType("점프력") == NBTType.NBTTagDouble)
+          {
+            double d = reinforceTag.getDouble("점프력");
+            lore.add(ComponentUtil.translate("&f%s : %s", "점프력", (d > 0 ? "+" : "") + Constant.Sosu2.format(d)));
+          }
+          lore.add(ComponentUtil.translate("&8----------------------"));
+        }
+      }
+      catch (Exception ignored)
+      {
+
+      }
     }
 
     // CucumberyItemTag - CustomItemType

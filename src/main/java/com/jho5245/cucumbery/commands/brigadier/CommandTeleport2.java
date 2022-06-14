@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CommandTeleport2 extends CommandBase
 {
-  private final List<Argument> args1 = new ArrayList<>(Collections.singletonList(new LocationArgument("좌표")
+  private final List<Argument<?>> args1 = new ArrayList<>(Collections.singletonList(new LocationArgument("좌표")
           .replaceWithSafeSuggestionsT(info ->
           {
             Player player = (Player) info.sender();
@@ -37,7 +37,7 @@ public class CommandTeleport2 extends CommandBase
           })
   ));
 
-  private final List<Argument> args2 = new ArrayList<>(Collections.singletonList(new MultiLiteralArgument("current", "world-spawn", "bed", "target-block")
+  private final List<Argument<?>> args2 = new ArrayList<>(Collections.singletonList(new MultiLiteralArgument("current", "world-spawn", "bed", "target-block")
           .replaceSuggestionsT(info -> new IStringTooltip[]{
                   StringTooltip.of("current", "현재 위치"),
                   StringTooltip.of("world-spawn", "월드 스폰 포인트"),

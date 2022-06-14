@@ -1,12 +1,12 @@
 package com.jho5245.cucumbery.commands.no_groups;
 
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import org.bukkit.Location;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandHandGive implements CommandExecutor, TabCompleter
+public class CommandHandGive implements CommandExecutor, AsyncTabCompleter
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -124,5 +124,35 @@ public class CommandHandGive implements CommandExecutor, TabCompleter
     }
 
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  @Override
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {
+    if (!(sender instanceof Player player))
+    {
+      return Collections.emptyList();
+    }
+
+    int length = args.length;
+
+    ItemStack item = player.getInventory().getItemInMainHand();
+    if (!ItemStackUtil.itemExists(item))
+    {
+      return CommandTabUtil.errorMessage(Prefix.NO_HOLDING_ITEM.toString());
+    }
+    if (length == 1)
+    {
+      return CommandTabUtil.tabCompleterPlayer(sender, args, "<플레이어>");
+    }
+    else if (length == 2)
+    {
+      return CommandTabUtil.tabCompleterIntegerRadius(args, 1, 2304, "[개수]");
+    }
+    else if (length == 3)
+    {
+      return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+    }
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 }

@@ -71,7 +71,7 @@ public class PotionSplash implements Listener
             }
             int duration = potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION);
             CustomEffectManager.addEffect(entity, new CustomEffect(
-                    CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase()),
+                    CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID)),
                     duration == -1 ? -1 : Math.max(1, (int) (duration * intensity)),
                     potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
                     DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())

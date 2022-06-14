@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.commands.debug;
 
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandGetPositions implements CommandExecutor, TabCompleter
+public class CommandGetPositions implements CommandExecutor, AsyncTabCompleter
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -34,10 +34,9 @@ public class CommandGetPositions implements CommandExecutor, TabCompleter
       World world = null;
       if (args.length == 1)
       {
-        world = Bukkit.getServer().getWorld(args[0]);
+        world = CommandArgumentUtil.world(sender, args[0], true);
         if (world == null)
         {
-          MessageUtil.noArg(sender, Prefix.NO_WORLD, args[0]);
           return true;
         }
         worldSpecified = true;
@@ -79,5 +78,29 @@ public class CommandGetPositions implements CommandExecutor, TabCompleter
       return Method.tabCompleterList(args, Method.listWorlds(), "[월드]");
     }
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  /**
+   * Requests a list of possible completions for a command argument.
+   *
+   * @param sender   Source of the command.  For players tab-completing a
+   *                 command inside a command block, this will be the player, not
+   *                 the command block.
+   * @param cmd      the command to be executed.
+   * @param label    Alias of the command which was used
+   * @param args     The arguments passed to the command, including final
+   *                 partial argument to be completed
+   * @param location The location of this command was executed.
+   * @return A List of possible completions for the final argument, or an empty list.
+   */
+  @Override
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {
+    int length = args.length;
+    if (length == 1)
+    {
+      return CommandTabUtil.worldArgument(sender, args, "[월드]");
+    }
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 }

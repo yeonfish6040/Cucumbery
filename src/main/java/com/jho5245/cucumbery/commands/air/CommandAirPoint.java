@@ -59,7 +59,7 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
             target.setRemainingAir(maxAir);
             if (!hideMessage)
             {
-              MessageUtil.sendWarn(sender, "설정한 산소량이 ", target, "의 최대 산소량보다 많습니다 (&e손해 본 값&r : &e" + (value - maxAir) + "&r)");
+              MessageUtil.sendWarn(sender,"설정한 산소량이 %s의 최대 산소량보다 많습니다 (손해 본 값 : %s)", target, "&e" + (value - maxAir));
               MessageUtil.sendMessage(target, Prefix.INFO_AIR, sender, "이 당신의 산소량을 &e" + maxAir + "&r으로 설정하였습니다 (&e산소량&r : &e" + target.getRemainingAir() + "&r / &e" + maxAir + "&r)");
               MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "의 산소량을 &e" + maxAir + "&r으로 설정하였습니다 (&e산소량&r : &e" + target.getRemainingAir() + "&r / &e" + maxAir + "&r)");
             }
@@ -74,7 +74,7 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
         case "give" -> {
           if (air >= maxAir)
           {
-            MessageUtil.sendError(sender, "더 이상 ", target, "에게 산소를 지급할 수 없습니다");
+            MessageUtil.sendError(sender, "더 이상 %s에게 산소를 지급할 수 없습니다", target);
             return true;
           }
           if (!MessageUtil.checkNumberSize(sender, value, 1, Integer.MAX_VALUE, false, false))
@@ -85,7 +85,7 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
           {
             if (!hideMessage)
             {
-              MessageUtil.sendWarn(sender, "지급한 산소량이 ", target, "의 최대 산소량보다 많습니다 (&e손해 본 값&r : &e" + (value + air - maxAir) + "&r)");
+              MessageUtil.sendWarn(sender, "지급한 산소량이 %s의 최대 산소량보다 많습니다 (&e손해 본 값&r : &e" + (value + air - maxAir) + "&r)", target);
             }
             target.setRemainingAir(maxAir);
             if (!hideMessage)
@@ -108,7 +108,7 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
         case "take" -> {
           if (air <= 0)
           {
-            MessageUtil.sendError(sender, "더 이상 ", target, "의 산소를 차감할 수 없습니다");
+            MessageUtil.sendError(sender, "더 이상 %s의 산소를 차감할 수 없습니다", target);
             return true;
           }
           if (!MessageUtil.checkNumberSize(sender, value, 1, Integer.MAX_VALUE, false, false))

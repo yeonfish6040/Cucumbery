@@ -1,11 +1,13 @@
 package com.jho5245.cucumbery.util.no_groups;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
@@ -14,7 +16,9 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LocationUtil
+import java.util.Locale;
+
+public class CommandArgumentUtil
 {
   @Nullable
   public static Location location(@NotNull CommandSender sender, @NotNull String arg, boolean isInteger, boolean notice)
@@ -427,6 +431,7 @@ public class LocationUtil
     return world;
   }
 
+  @NotNull
   private static Vector transformGlobal(Location reference, Vector local)
   {
     // Firstly a vector facing YAW = 0, on the XZ plane as start base
@@ -459,6 +464,31 @@ public class LocationUtil
       return blockCommandSender.getBlock().getLocation();
     }
     return new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+  }
+
+  @Nullable
+  public static NamespacedKey namespacedKey(@NotNull CommandSender sender, @NotNull String arg, @NotNull String argName, boolean notice)
+  {
+    String key = Cucumbery.getPlugin().getName().toLowerCase(Locale.ROOT);
+    String value = arg;
+    if (arg.contains(":"))
+    {
+      String[] split = arg.split(":");
+      key = split[0];
+      value = split[1];
+    }
+    try
+    {
+      return new NamespacedKey(key, value);
+    }
+    catch (Exception e)
+    {
+      if (notice)
+      {
+        MessageUtil.sendError(sender, "%s은(는) 알 수 없는 %s입니다", key + ":" + value, argName);
+      }
+    }
+    return null;
   }
 
   public record Rotation(float yaw, float pitch) {}

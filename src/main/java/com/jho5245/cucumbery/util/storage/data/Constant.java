@@ -8,9 +8,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.Tag;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -36,14 +38,161 @@ public class Constant
   public static final String SEPARATOR = "&8&m                                                                ";
 
   public static final String TAB_COMPLETER_QUOTE_ESCAPE = "tab_completer_quote_escape";
-
-  public static Sound WARNING_SOUND, ERROR_SOUND;
-
-  public static double WARNING_SOUND_VOLUME, WARNING_SOUND_PITCH, ERROR_SOUND_VOLUME, ERROR_SOUND_PITCH;
-
   public static final TextColor THE_COLOR = TextColor.color(255, 204, 0);
-
   public static final String THE_COLOR_HEX = THE_COLOR.asHexString() + ";";
+  public static final String ITEM_MODIFIERS_BRACKET = "rgb235,170,41;[%s]";
+  public static final Component ITEM_MODIFIERS_CHEST = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.chest"));
+  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.feet"));
+  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.head"));
+  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.legs"));
+  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.mainhand"));
+  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.offhand"));
+  public static final String TMI_LORE_NBT_TAG_COPIED = "[NBT 태그 복사됨]";
+  public static final String ITEM_LORE_MATERIAL_CRAFTABLE = "#F0E68C;[조합 가능]";
+  public static final String ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_CRAFTING_TABLE = "#F0E68C;[제작대에서만 조합 가능]";
+  public static final String ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_INVENTORY = "#F0E68C;[인벤토리에서만 조합 가능]";
+
+  // ItemLore 기능 관련 상수
+  public static final String ITEM_LORE_MATERIAL_BREWABLE = "rgb255,56,159;[양조 가능]";
+  public static final String ITEM_LORE_MATERIAL_SMELTABLE = "rgb255,79,48;[제련 가능]";
+  public static final String ITEM_LORE_MATERIAL_SMELTABLE_COOK = "#F07447;[조리 가능]";
+  public static final String ITEM_LORE_MATERIAL_COMPOSTABLE = "rgb200,151,119;퇴비 제작 확률 : %s";
+  public static final String ITEM_LORE_FUEL = "rgb255,49,18;[연소 가능]";
+  public static final String ITEM_LORE_STATUS_EFFECT = "rgb255,56,159;[상태 효과]";
+  public static final String ITEM_LORE_CONSUMABLE = "rgb213,114,0;[섭취 가능]";
+  public static final String ITEM_LORE_PLACABLE = "#32CD32;[설치 가능]";
+  public static final String ITEM_LORE_ENCHANTED = "rgb224,133,255;[부여된 마법]";
+  public static final String ITEM_LORE_STORED_ENCHANT = "rgb224,133,255;[부여 가능한 마법]";
+  public static final String ITEM_LORE_RETURN_BOWL_AFTER_EATEN = "&7섭취 후 그릇은 반환된다";
+  public static final String ITEM_LORE_GRAVITION = "&7중력의 영향을 받는다";
+  public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS = "%s이 부여된 아이템이나 %s로만 직접 얻을 수 있다";
+  public static final Component ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS_COMPONENT =
+          Component.translatable(ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS)
+                  .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                  .color(TextColor.color(170, 170, 170))
+                  .args(
+                          Component.translatable("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)),
+                          Component.translatable("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
+  public static final String ITEM_LORE_ONLY_WITH_SWEARS = "%s로만 직접 얻을 수 있다";
+  public static final Component ITEM_LORE_ONLY_WITH_SHEARS_COMPONENT =
+          Component.translatable(ITEM_LORE_ONLY_WITH_SWEARS)
+                  .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                  .color(TextColor.color(170, 170, 170))
+                  .args(
+                          Component.translatable("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
+  public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH = "%s이 부여된 아이템으로만 직접 얻을 수 있다";
+  public static final Component ITEM_LORE_ONLY_WITH_SILKTOUCH_COMPONENT =
+          Component.translatable(ITEM_LORE_ONLY_WITH_SILKTOUCH)
+                  .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                  .color(TextColor.color(170, 170, 170))
+                  .args(
+                          Component.translatable("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)));
+
+  // DecimalFormat
+  public static final DecimalFormat rawFormat = new DecimalFormat("###0.#############");
+  public static final DecimalFormat Sosu2rawFormat = new DecimalFormat("###0.##");
+  public static final DecimalFormat Jeongsu = new DecimalFormat("#,##0");
+  public static final DecimalFormat JeongsuFloor = new DecimalFormat("#,##0");
+  public static final DecimalFormat JeongsuRawFloor = new DecimalFormat("####");
+  public static final DecimalFormat Sosu1 = new DecimalFormat("#,##0.#");
+  public static final DecimalFormat Sosu1Force = new DecimalFormat("#,##0.0");
+  public static final DecimalFormat Sosu1ForceFloor = new DecimalFormat("#,##0.0");
+  public static final DecimalFormat Sosu2 = new DecimalFormat("#,##0.##");
+  public static final DecimalFormat Sosu2Floor = new DecimalFormat("#,##0.##");
+  public static final DecimalFormat Sosu2Force = new DecimalFormat("#,##0.00");
+  public static final DecimalFormat Sosu3 = new DecimalFormat("#,##0.###");
+  public static final DecimalFormat Sosu3Force = new DecimalFormat("#,##0.000");
+  public static final DecimalFormat Sosu4 = new DecimalFormat("#,##0.####");
+  public static final DecimalFormat Sosu15 = new DecimalFormat("#,##0.###############");
+  public static final String GUI_SUFFIX = "§큐§컴§버§리§G§U§I";
+  public static final String GUI_NO_ITEM_LORE_FEATURE = "§아§이§템§ §설§명§ §없§음" + GUI_SUFFIX;
+  public static final String CANCEL_STRING = "§클§릭§캔§슬" + GUI_SUFFIX;
+  public static final TranslatableComponent GUI_PREFIX = Component.translatable("%1$s").args(Component.empty(), Component.empty(), Component.text(CANCEL_STRING));
+  public static final String POTION_EFFECTS = "potion_effects";
+  public static final String TRASH_CAN = "§쓰§레§기§통" + GUI_SUFFIX;
+  public static final String MAIN_MENU = "§메§인§메§뉴§3[§2메뉴§3]" + GUI_SUFFIX;
+  public static final String SERVER_SETTINGS = "§개§인§서§버§ §설§정§2개인 서버 설정" + GUI_SUFFIX;
+  public static final String SERVER_SETTINGS_ADMIN = "§서§버§ §설§정§[§관§리§자§]§2서버 설정[관리자]" + GUI_SUFFIX;
+  public static final String ITEM_DROP_MODE_MENU = "§아§이§템§ §버§리§기§ §모§드§ §설§정§3아이템 버리기 모드 설정" + GUI_SUFFIX;
+
+  // GUI
+  public static final String ITEM_PICKUP_MODE_MENU = "§아§이§템§ §줍§기§ §모§드§ §설§정§3아이템 줍기 모드 설정" + GUI_SUFFIX;
+  public static final String ITEM_USE_MODE_MENU = "§아§이§템§ §사§용§ §모§드§ §설§정§3아이템 사용 모드 설정" + GUI_SUFFIX;
+  public static final String CUSTOM_RECIPE_RECIPE_LIST_MENU = "§커§스§텀§레§시§피§ §메§인§ §메§뉴§8레시피 목록" + GUI_SUFFIX;
+  public static final String CUSTOM_RECIPE_MENU = "§커§스§텀§레§시§피§ §카§테§고§리§ §메§뉴" + GUI_SUFFIX;
+  public static final String CUSTOM_RECIPE_CRAFTING_MENU = "§커§스§텀§레§시§피§ §제§작§ §메§뉴" + GUI_SUFFIX;
+  public static final String CUSTOM_RECIPE_CREATE_GUI = "§커§스§텀§레§시§피§ §생§성§ §메§뉴" + GUI_SUFFIX;
+  public static final String VIRTUAL_CHEST_MENU_PREFIX = "§가§상§창§고" + GUI_SUFFIX;
+  public static final String VIRTUAL_CHEST_ADMIN_MENU_PREFIX = "§가§상§창§고§관§리§자" + GUI_SUFFIX;
+  public static final String ITEM_PORTABLE_SHULKER_BOX_GUI = "휴대용 셜커 상자";
+  public static final String REINFORCE_QUIT = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 quit" : "cucumbery-강화중지";
+  public static final String REINFORCE_USE_ANTI_DESTRUCTION = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 파괴방지사용" : "cucumbery-강화파방";
+  public static final String REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 파괴방지미사용" : "cucumbery-강화파방끔";
+  public static final String REINFORCE_USE_DISABLE_STAR_CATCH = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 스타캐치해제사용" : "cucumbery-강화스타캐치해제";
+  public static final String REINFORCE_DO_NOT_USE_DISABLE_STAR_CATCH = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 스타캐치해제미사용" : "cucumbery-강화스타캐치해제끔";
+  public static final String REINFORCE_START = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 realstart" : "cucumbery-강화";
+  public static final String DROP_UNTRADABLE_ITEM = "cucumbery-drop-untradable-item";
+  public static final Set<Material> SWORDS = new HashSet<>(
+          Arrays.asList(Material.DIAMOND_SWORD, Material.GOLDEN_SWORD, Material.IRON_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD, Material.NETHERITE_SWORD));
+  public static final Set<Material> AXES = new HashSet<>(Arrays.asList(Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.STONE_AXE, Material.WOODEN_AXE, Material.NETHERITE_AXE));
+  public static final Set<Material> PICKAXES = new HashSet<>(
+          Arrays.asList(Material.DIAMOND_PICKAXE, Material.GOLDEN_PICKAXE, Material.IRON_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE, Material.NETHERITE_PICKAXE));
+  public static final Set<Material> SHOVELS = new HashSet<>(
+          Arrays.asList(Material.DIAMOND_SHOVEL, Material.GOLDEN_SHOVEL, Material.IRON_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL, Material.NETHERITE_SHOVEL));
+
+  // 강화
+  public static final Set<Material> HOES = new HashSet<>(Arrays.asList(Material.DIAMOND_HOE, Material.GOLDEN_HOE, Material.IRON_HOE, Material.STONE_HOE, Material.WOODEN_HOE, Material.NETHERITE_HOE));
+  public static final Set<Material> HELMETS = new HashSet<>(
+          Arrays.asList(Material.CHAINMAIL_HELMET, Material.DIAMOND_HELMET, Material.GOLDEN_HELMET, Material.IRON_HELMET, Material.LEATHER_HELMET, Material.NETHERITE_HELMET, Material.TURTLE_HELMET));
+  public static final Set<Material> CHESTPLATES = new HashSet<>(
+          Arrays.asList(Material.CHAINMAIL_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.IRON_CHESTPLATE, Material.LEATHER_CHESTPLATE, Material.NETHERITE_CHESTPLATE));
+  public static final Set<Material> LEGGINGSES = new HashSet<>(
+          Arrays.asList(Material.CHAINMAIL_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.IRON_LEGGINGS, Material.LEATHER_LEGGINGS, Material.NETHERITE_LEGGINGS));
+  public static final Set<Material> BOOTSES = new HashSet<>(
+          Arrays.asList(Material.CHAINMAIL_BOOTS, Material.DIAMOND_BOOTS, Material.GOLDEN_BOOTS, Material.IRON_BOOTS, Material.LEATHER_BOOTS, Material.NETHERITE_BOOTS));
+  public static final Set<Material> DURABLE_ITEMS = new HashSet<>();
+
+  // Material List
+  public static final Set<Material> DEFAULT_MODIFIER_ITEMS = new HashSet<>();
+  public static final Set<Material> TOOLS = new HashSet<>();
+  public static final Set<Material> ARMORS = new HashSet<>();
+  public static final Set<Material> INSTANTLY_BREAKABLE_BLOCKS, TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS;
+  public static final Set<Material> CROP_BLOCKS = new HashSet<>(Arrays.asList(Material.WHEAT, Material.CARROTS, Material.POTATOES, Material.NETHER_WART, Material.BEETROOTS));
+  public static final Set<Material> BUCKETS = new HashSet<>(Arrays.asList(Material.BUCKET, Material.WATER_BUCKET, Material.LAVA_BUCKET, Material.MILK_BUCKET, Material.PUFFERFISH_BUCKET,
+          Material.SALMON_BUCKET, Material.COD_BUCKET, Material.TROPICAL_FISH_BUCKET, Material.AXOLOTL_BUCKET));
+  public static final Set<Material> EQUIPABLE_HEADS = new HashSet<>(
+          Arrays.asList(Material.CREEPER_HEAD, Material.DRAGON_HEAD, Material.PLAYER_HEAD, Material.ZOMBIE_HEAD, Material.SKELETON_SKULL, Material.WITHER_SKELETON_SKULL));
+  /**
+   * 6면이 완전히 꽉찬 블록
+   */
+  public static final Set<Material> PENETRATABLE_BLOCKS = new HashSet<>(Arrays.asList(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR, Material.WATER, Material.LAVA));
+  public static final Set<Material> COMPOSTABLE_ITEMS = new HashSet<>(Arrays
+          .asList(Material.BEETROOT_SEEDS, Material.DRIED_KELP, Material.GRASS, Material.KELP, Material.MELON_SEEDS, Material.NETHER_WART,
+                  Material.PUMPKIN_SEEDS, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.SWEET_BERRIES, Material.WHEAT_SEEDS,
+                  Material.CACTUS, Material.DRIED_KELP_BLOCK, Material.MELON_SLICE, Material.SUGAR_CANE, Material.TALL_GRASS,
+                  Material.VINE, Material.WEEPING_VINES, Material.TWISTING_VINES, Material.NETHER_SPROUTS, Material.APPLE,
+                  Material.BEETROOT, Material.CARROT, Material.COCOA_BEANS, Material.FERN, Material.LARGE_FERN, Material.LILY_PAD,
+                  Material.MELON, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.MUSHROOM_STEM, Material.POTATO,
+                  Material.PUMPKIN, Material.CARVED_PUMPKIN, Material.SEA_PICKLE, Material.SHROOMLIGHT, Material.WHEAT,
+                  Material.CRIMSON_FUNGUS, Material.WARPED_FUNGUS, Material.CRIMSON_ROOTS, Material.WARPED_ROOTS, Material.BAKED_POTATO,
+                  Material.BREAD, Material.COOKIE, Material.HAY_BLOCK, Material.BROWN_MUSHROOM_BLOCK, Material.RED_MUSHROOM_BLOCK,
+                  Material.NETHER_WART_BLOCK, Material.WARPED_WART_BLOCK, Material.CAKE, Material.PUMPKIN_PIE, Material.GLOW_BERRIES,
+                  Material.HANGING_ROOTS, Material.MOSS_CARPET, Material.SMALL_DRIPLEAF, Material.AZALEA_LEAVES, Material.FLOWERING_AZALEA_LEAVES,
+                  Material.GLOW_LICHEN, Material.AZALEA, Material.BIG_DRIPLEAF, Material.MOSS_BLOCK, Material.SPORE_BLOSSOM, Material.FLOWERING_AZALEA));
+  public static final Set<Material> LEAVES = new HashSet<>(
+          Arrays.asList(Material.ACACIA_LEAVES, Material.BIRCH_LEAVES, Material.JUNGLE_LEAVES, Material.OAK_LEAVES, Material.SPRUCE_LEAVES, Material.DARK_OAK_LEAVES));
+  public static final Set<Material> SAPLINGS = new HashSet<>(
+          Arrays.asList(Material.ACACIA_SAPLING, Material.BIRCH_SAPLING, Material.JUNGLE_SAPLING, Material.OAK_SAPLING, Material.SPRUCE_SAPLING, Material.DARK_OAK_SAPLING));
+  public static final Set<Material> OCCLUDING_BLOCKS = new HashSet<>();
+  public static final List<Material> WOOL = new ArrayList<>(), PLANKS = new ArrayList<>(), FLOWERS = new ArrayList<>(), SMALL_FLOWERS = new ArrayList<>(), TALL_FLOWERS = new ArrayList<>(),
+          WITHER_IMMUNE = new ArrayList<>(), BEACON_BASE_BLOCKS = new ArrayList<>(), DYES = new ArrayList<>(), SHULKER_BOXES = new ArrayList<>();
+  public static final Set<Material> OPTIFINE_DYNAMIC_LIGHT_ITEMS = new HashSet<>(Arrays.asList(Material.TORCH, Material.REDSTONE_TORCH, Material.LAVA_BUCKET, Material.NETHER_STAR, Material.BEACON,
+          Material.GLOWSTONE, Material.SEA_LANTERN));
+  private static final DecimalFormat privateSosu5Force = new DecimalFormat("00000,000.00000");
+  private static final DecimalFormat privateSosu2Force = new DecimalFormat("00000,000.00");
+  private static final DecimalFormat privateOnlySosu2Force = new DecimalFormat("#,##0.00");
+  public static Sound WARNING_SOUND, ERROR_SOUND;
+  public static double WARNING_SOUND_VOLUME, WARNING_SOUND_PITCH, ERROR_SOUND_VOLUME, ERROR_SOUND_PITCH;
 
   static
   {
@@ -69,110 +218,6 @@ public class Constant
     ERROR_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.error-sound.volume");
   }
 
-  public static final String TMI_LORE_NBT_TAG_COPIED = "[NBT 태그 복사됨]";
-
-  public static final String ITEM_MODIFIERS_BRACKET = "rgb235,170,41;[%s]";
-
-  public static final Component ITEM_MODIFIERS_CHEST = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.chest"));
-  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.feet"));
-  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.head"));
-  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.legs"));
-  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.mainhand"));
-  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.offhand"));
-
-  // ItemLore 기능 관련 상수
-
-  public static final String ITEM_LORE_MATERIAL_CRAFTABLE = "#F0E68C;[조합 가능]";
-  
-  public static final String ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_CRAFTING_TABLE = "#F0E68C;[제작대에서만 조합 가능]";
-  
-  public static final String ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_INVENTORY = "#F0E68C;[인벤토리에서만 조합 가능]";
-
-  public static final String ITEM_LORE_MATERIAL_BREWABLE = "rgb255,56,159;[양조 가능]";
-
-  public static final String ITEM_LORE_MATERIAL_SMELTABLE = "rgb255,79,48;[제련 가능]";
-
-  public static final String ITEM_LORE_MATERIAL_SMELTABLE_COOK = "#F07447;[조리 가능]";
-
-  public static final String ITEM_LORE_MATERIAL_COMPOSTABLE = "rgb200,151,119;퇴비 제작 확률 : %s";
-
-  public static final String ITEM_LORE_FUEL = "rgb255,49,18;[연소 가능]";
-
-  public static final String ITEM_LORE_STATUS_EFFECT = "rgb255,56,159;[상태 효과]";
-
-  public static final String ITEM_LORE_CONSUMABLE = "rgb213,114,0;[섭취 가능]";
-
-  public static final String ITEM_LORE_PLACABLE = "#32CD32;[설치 가능]";
-
-  public static final String ITEM_LORE_ENCHANTED = "rgb224,133,255;[부여된 마법]";
-
-  public static final String ITEM_LORE_STORED_ENCHANT = "rgb224,133,255;[부여 가능한 마법]";
-
-  public static final String ITEM_LORE_RETURN_BOWL_AFTER_EATEN = "&7섭취 후 그릇은 반환된다";
-
-  public static final String ITEM_LORE_GRAVITION = "&7중력의 영향을 받는다";
-
-  public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS = "%s이 부여된 아이템이나 %s로만 직접 얻을 수 있다";
-
-  public static final Component ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS_COMPONENT =
-          Component.translatable(ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS)
-                  .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                  .color(TextColor.color(170, 170, 170))
-                  .args(
-                          Component.translatable("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)),
-                          Component.translatable("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
-
-  public static final String ITEM_LORE_ONLY_WITH_SWEARS = "%s로만 직접 얻을 수 있다";
-
-  public static final Component ITEM_LORE_ONLY_WITH_SHEARS_COMPONENT =
-          Component.translatable(ITEM_LORE_ONLY_WITH_SWEARS)
-                  .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                  .color(TextColor.color(170, 170, 170))
-                  .args(
-                          Component.translatable("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
-
-  public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH = "%s이 부여된 아이템으로만 직접 얻을 수 있다";
-
-  public static final Component ITEM_LORE_ONLY_WITH_SILKTOUCH_COMPONENT =
-          Component.translatable(ITEM_LORE_ONLY_WITH_SILKTOUCH)
-                  .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                  .color(TextColor.color(170, 170, 170))
-                  .args(
-                          Component.translatable("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)));
-
-
-  // DecimalFormat
-
-  public static final DecimalFormat rawFormat = new DecimalFormat("###0.#############");
-
-  public static final DecimalFormat Sosu2rawFormat = new DecimalFormat("###0.##");
-
-  public static final DecimalFormat Jeongsu = new DecimalFormat("#,##0");
-
-  public static final DecimalFormat JeongsuFloor = new DecimalFormat("#,##0");
-
-  public static final DecimalFormat JeongsuRawFloor = new DecimalFormat("####");
-
-  public static final DecimalFormat Sosu1 = new DecimalFormat("#,##0.#");
-
-  public static final DecimalFormat Sosu1Force = new DecimalFormat("#,##0.0");
-
-  public static final DecimalFormat Sosu1ForceFloor = new DecimalFormat("#,##0.0");
-
-  public static final DecimalFormat Sosu2 = new DecimalFormat("#,##0.##");
-
-  public static final DecimalFormat Sosu2Floor = new DecimalFormat("#,##0.##");
-
-  public static final DecimalFormat Sosu2Force = new DecimalFormat("#,##0.00");
-
-  public static final DecimalFormat Sosu3 = new DecimalFormat("#,##0.###");
-
-  public static final DecimalFormat Sosu3Force = new DecimalFormat("#,##0.000");
-
-  public static final DecimalFormat Sosu4 = new DecimalFormat("#,##0.####");
-
-  public static final DecimalFormat Sosu15 = new DecimalFormat("#,##0.###############");
-
   static
   {
     Sosu1ForceFloor.setRoundingMode(RoundingMode.FLOOR);
@@ -180,159 +225,6 @@ public class Constant
     JeongsuFloor.setRoundingMode(RoundingMode.FLOOR);
     JeongsuRawFloor.setRoundingMode(RoundingMode.FLOOR);
   }
-
-  public static String Sosu5Force(double input)
-  {
-    String value = Constant.privateSosu5Force.format(input);
-    return (!value.startsWith("-") ? "&a+" : "&c") + value;
-  }
-
-  private static final DecimalFormat privateSosu5Force = new DecimalFormat("00000,000.00000");
-
-  public static String Sosu2Force(double input)
-  {
-    String value = Constant.privateSosu2Force.format(input);
-    return (!value.startsWith("-") ? "&a+" : "&c") + value;
-  }
-
-  private static final DecimalFormat privateSosu2Force = new DecimalFormat("00000,000.00");
-
-  private static final DecimalFormat privateOnlySosu2Force = new DecimalFormat("#,##0.00");
-
-  public static String Sosu2OnlyForce(double input)
-  {
-    String value = Constant.privateOnlySosu2Force.format(input);
-    return (!value.startsWith("-") ? "&a+" : "&c") + value;
-  }
-
-  // GUI
-
-  public static final String GUI_SUFFIX = "§큐§컴§버§리§G§U§I";
-
-  public static final String GUI_NO_ITEM_LORE_FEATURE = "§아§이§템§ §설§명§ §없§음" + GUI_SUFFIX;
-
-  public static final String CANCEL_STRING = "§클§릭§캔§슬" + GUI_SUFFIX;
-
-  public static final TranslatableComponent GUI_PREFIX = Component.translatable("%1$s").args(Component.empty(), Component.empty(), Component.text(CANCEL_STRING));
-
-  public static final String POTION_EFFECTS = "potion_effects";
-
-  public static final String TRASH_CAN = "§쓰§레§기§통" + GUI_SUFFIX;
-
-  public static final String MAIN_MENU = "§메§인§메§뉴§3[§2메뉴§3]" + GUI_SUFFIX;
-
-  public static final String SERVER_SETTINGS = "§개§인§서§버§ §설§정§2개인 서버 설정" + GUI_SUFFIX;
-
-  public static final String SERVER_SETTINGS_ADMIN = "§서§버§ §설§정§[§관§리§자§]§2서버 설정[관리자]" + GUI_SUFFIX;
-
-  public static final String ITEM_DROP_MODE_MENU = "§아§이§템§ §버§리§기§ §모§드§ §설§정§3아이템 버리기 모드 설정" + GUI_SUFFIX;
-
-  public static final String ITEM_PICKUP_MODE_MENU = "§아§이§템§ §줍§기§ §모§드§ §설§정§3아이템 줍기 모드 설정" + GUI_SUFFIX;
-
-  public static final String ITEM_USE_MODE_MENU = "§아§이§템§ §사§용§ §모§드§ §설§정§3아이템 사용 모드 설정" + GUI_SUFFIX;
-
-  public static final String CUSTOM_RECIPE_RECIPE_LIST_MENU = "§커§스§텀§레§시§피§ §메§인§ §메§뉴§8레시피 목록" + GUI_SUFFIX;
-
-  public static final String CUSTOM_RECIPE_MENU = "§커§스§텀§레§시§피§ §카§테§고§리§ §메§뉴" + GUI_SUFFIX;
-
-  public static final String CUSTOM_RECIPE_CRAFTING_MENU = "§커§스§텀§레§시§피§ §제§작§ §메§뉴" + GUI_SUFFIX;
-
-  public static final String CUSTOM_RECIPE_CREATE_GUI = "§커§스§텀§레§시§피§ §생§성§ §메§뉴" + GUI_SUFFIX;
-
-  public static final String VIRTUAL_CHEST_MENU_PREFIX = "§가§상§창§고" + GUI_SUFFIX;
-
-  public static final String VIRTUAL_CHEST_ADMIN_MENU_PREFIX = "§가§상§창§고§관§리§자" + GUI_SUFFIX;
-
-  public static final String ITEM_PORTABLE_SHULKER_BOX_GUI = "휴대용 셜커 상자";
-
-  // 강화
-
-  public static final String REINFORCE_QUIT = "cucumbery_command_reinforce_execute_player_quit_this_action";
-
-  public static final String REINFORCE_USE_ANTI_DESTRUCTION = "cucumbery_command_reinforce_execute_player_use_anti_destruction_this_action";
-
-  public static final String REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION = "cucumbery_command_reinforce_execute_player_donot_use_anti_destruction_this_action";
-
-  public static final String REINFORCE_START = "cucumbery_command_reinforce_execute_player_start_this_action";
-
-  // Material List
-
-  public static final Set<Material> SWORDS = new HashSet<>(
-          Arrays.asList(Material.DIAMOND_SWORD, Material.GOLDEN_SWORD, Material.IRON_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD, Material.NETHERITE_SWORD));
-
-  public static final Set<Material> AXES = new HashSet<>(Arrays.asList(Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.STONE_AXE, Material.WOODEN_AXE, Material.NETHERITE_AXE));
-
-  public static final Set<Material> PICKAXES = new HashSet<>(
-          Arrays.asList(Material.DIAMOND_PICKAXE, Material.GOLDEN_PICKAXE, Material.IRON_PICKAXE, Material.STONE_PICKAXE, Material.WOODEN_PICKAXE, Material.NETHERITE_PICKAXE));
-
-  public static final Set<Material> SHOVELS = new HashSet<>(
-          Arrays.asList(Material.DIAMOND_SHOVEL, Material.GOLDEN_SHOVEL, Material.IRON_SHOVEL, Material.STONE_SHOVEL, Material.WOODEN_SHOVEL, Material.NETHERITE_SHOVEL));
-
-  public static final Set<Material> HOES = new HashSet<>(Arrays.asList(Material.DIAMOND_HOE, Material.GOLDEN_HOE, Material.IRON_HOE, Material.STONE_HOE, Material.WOODEN_HOE, Material.NETHERITE_HOE));
-
-  public static final Set<Material> HELMETS = new HashSet<>(
-          Arrays.asList(Material.CHAINMAIL_HELMET, Material.DIAMOND_HELMET, Material.GOLDEN_HELMET, Material.IRON_HELMET, Material.LEATHER_HELMET, Material.NETHERITE_HELMET, Material.TURTLE_HELMET));
-
-  public static final Set<Material> CHESTPLATES = new HashSet<>(
-          Arrays.asList(Material.CHAINMAIL_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.GOLDEN_CHESTPLATE, Material.IRON_CHESTPLATE, Material.LEATHER_CHESTPLATE, Material.NETHERITE_CHESTPLATE));
-
-  public static final Set<Material> LEGGINGSES = new HashSet<>(
-          Arrays.asList(Material.CHAINMAIL_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.GOLDEN_LEGGINGS, Material.IRON_LEGGINGS, Material.LEATHER_LEGGINGS, Material.NETHERITE_LEGGINGS));
-
-  public static final Set<Material> BOOTSES = new HashSet<>(
-          Arrays.asList(Material.CHAINMAIL_BOOTS, Material.DIAMOND_BOOTS, Material.GOLDEN_BOOTS, Material.IRON_BOOTS, Material.LEATHER_BOOTS, Material.NETHERITE_BOOTS));
-
-  public static final Set<Material> DURABLE_ITEMS = new HashSet<>();
-
-  public static final Set<Material> DEFAULT_MODIFIER_ITEMS = new HashSet<>();
-
-  public static final Set<Material> TOOLS = new HashSet<>();
-
-  public static final Set<Material> ARMORS = new HashSet<>();
-
-  public static final Set<Material> INSTANTLY_BREAKABLE_BLOCKS, TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS;
-
-  public static final Set<Material> CROP_BLOCKS = new HashSet<>(Arrays.asList(Material.WHEAT, Material.CARROTS, Material.POTATOES, Material.NETHER_WART, Material.BEETROOTS));
-
-  public static final Set<Material> BUCKETS = new HashSet<>(Arrays.asList(Material.BUCKET, Material.WATER_BUCKET, Material.LAVA_BUCKET, Material.MILK_BUCKET, Material.PUFFERFISH_BUCKET,
-          Material.SALMON_BUCKET, Material.COD_BUCKET, Material.TROPICAL_FISH_BUCKET, Material.AXOLOTL_BUCKET));
-
-  public static final Set<Material> EQUIPABLE_HEADS = new HashSet<>(
-          Arrays.asList(Material.CREEPER_HEAD, Material.DRAGON_HEAD, Material.PLAYER_HEAD, Material.ZOMBIE_HEAD, Material.SKELETON_SKULL, Material.WITHER_SKELETON_SKULL));
-
-  /**
-   * 6면이 완전히 꽉찬 블록
-   */
-  public static final Set<Material> PENETRATABLE_BLOCKS = new HashSet<>(Arrays.asList(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR, Material.WATER, Material.LAVA));
-
-  public static final Set<Material> COMPOSTABLE_ITEMS = new HashSet<>(Arrays
-          .asList(Material.BEETROOT_SEEDS, Material.DRIED_KELP, Material.GRASS, Material.KELP, Material.MELON_SEEDS, Material.NETHER_WART,
-                  Material.PUMPKIN_SEEDS, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.SWEET_BERRIES, Material.WHEAT_SEEDS,
-                  Material.CACTUS, Material.DRIED_KELP_BLOCK, Material.MELON_SLICE, Material.SUGAR_CANE, Material.TALL_GRASS,
-                  Material.VINE, Material.WEEPING_VINES, Material.TWISTING_VINES, Material.NETHER_SPROUTS, Material.APPLE,
-                  Material.BEETROOT, Material.CARROT, Material.COCOA_BEANS, Material.FERN, Material.LARGE_FERN, Material.LILY_PAD,
-                  Material.MELON, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.MUSHROOM_STEM, Material.POTATO,
-                  Material.PUMPKIN, Material.CARVED_PUMPKIN, Material.SEA_PICKLE, Material.SHROOMLIGHT, Material.WHEAT,
-                  Material.CRIMSON_FUNGUS, Material.WARPED_FUNGUS, Material.CRIMSON_ROOTS, Material.WARPED_ROOTS, Material.BAKED_POTATO,
-                  Material.BREAD, Material.COOKIE, Material.HAY_BLOCK, Material.BROWN_MUSHROOM_BLOCK, Material.RED_MUSHROOM_BLOCK,
-                  Material.NETHER_WART_BLOCK, Material.WARPED_WART_BLOCK, Material.CAKE, Material.PUMPKIN_PIE, Material.GLOW_BERRIES,
-                  Material.HANGING_ROOTS, Material.MOSS_CARPET, Material.SMALL_DRIPLEAF, Material.AZALEA_LEAVES, Material.FLOWERING_AZALEA_LEAVES,
-                  Material.GLOW_LICHEN, Material.AZALEA, Material.BIG_DRIPLEAF, Material.MOSS_BLOCK, Material.SPORE_BLOSSOM, Material.FLOWERING_AZALEA));
-
-  public static final Set<Material> LEAVES = new HashSet<>(
-          Arrays.asList(Material.ACACIA_LEAVES, Material.BIRCH_LEAVES, Material.JUNGLE_LEAVES, Material.OAK_LEAVES, Material.SPRUCE_LEAVES, Material.DARK_OAK_LEAVES));
-
-  public static final Set<Material> SAPLINGS = new HashSet<>(
-          Arrays.asList(Material.ACACIA_SAPLING, Material.BIRCH_SAPLING, Material.JUNGLE_SAPLING, Material.OAK_SAPLING, Material.SPRUCE_SAPLING, Material.DARK_OAK_SAPLING));
-
-
-  public static final Set<Material> OCCLUDING_BLOCKS = new HashSet<>();
-
-  public static final List<Material> WOOL = new ArrayList<>(), PLANKS = new ArrayList<>(), FLOWERS = new ArrayList<>(), SMALL_FLOWERS = new ArrayList<>(), TALL_FLOWERS = new ArrayList<>(),
-  WITHER_IMMUNE = new ArrayList<>(), BEACON_BASE_BLOCKS = new ArrayList<>(), DYES = new ArrayList<>(), SHULKER_BOXES = new ArrayList<>();
-
-  public static final Set<Material> OPTIFINE_DYNAMIC_LIGHT_ITEMS = new HashSet<>(Arrays.asList(Material.TORCH, Material.REDSTONE_TORCH, Material.LAVA_BUCKET, Material.NETHER_STAR, Material.BEACON,
-          Material.GLOWSTONE, Material.SEA_LANTERN));
 
   static
   {
@@ -436,6 +328,24 @@ public class Constant
                     Material.IRON_PICKAXE, Material.IRON_SHOVEL, Material.IRON_SWORD, Material.DIAMOND_AXE, Material.DIAMOND_PICKAXE,
                     Material.DIAMOND_SHOVEL, Material.DIAMOND_SWORD, Material.GOLDEN_AXE, Material.GOLDEN_PICKAXE, Material.GOLDEN_SHOVEL,
                     Material.GOLDEN_SWORD, Material.NETHERITE_AXE, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_SWORD));
+  }
+
+  public static String Sosu5Force(double input)
+  {
+    String value = Constant.privateSosu5Force.format(input);
+    return (!value.startsWith("-") ? "&a+" : "&c") + value;
+  }
+
+  public static String Sosu2Force(double input)
+  {
+    String value = Constant.privateSosu2Force.format(input);
+    return (!value.startsWith("-") ? "&a+" : "&c") + value;
+  }
+
+  public static String Sosu2OnlyForce(double input)
+  {
+    String value = Constant.privateOnlySosu2Force.format(input);
+    return (!value.startsWith("-") ? "&a+" : "&c") + value;
   }
 
   public enum RestrictionType
@@ -552,7 +462,7 @@ public class Constant
     }
   }
 
-  public enum AllPlayer
+  public enum AllPlayer implements Translatable
   {
     CHAT("채팅"),
     EXECUTE_COMMAND("명령어-실행"),
@@ -583,6 +493,18 @@ public class Constant
     {
       return Variable.allPlayerConfig.getBoolean(this.getKey());
     }
+
+    /**
+     * Gets the translation key.
+     *
+     * @return the translation key
+     * @since 4.8.0
+     */
+    @Override
+    public @NotNull String translationKey()
+    {
+      return this.key.replace("-", " ");
+    }
   }
 
   public enum CucumberyHideFlag
@@ -612,45 +534,42 @@ public class Constant
     EXPIRE_DATE_ABSOLUTE("유효 기간(절대값) 숨김"),
 
 
-
-
     COOLDOWN("대기 시간 숨김"),
 
     COOLDOWN_RIGHT_CLICK(ItemUsageType.RIGHT_CLICK.getDisplay() + " 대기 시간 숨김"),
-    COOLDOWN_LEFT_CLICK(ItemUsageType.LEFT_CLICK.getDisplay() +" 대기 시간 숨김"),
+    COOLDOWN_LEFT_CLICK(ItemUsageType.LEFT_CLICK.getDisplay() + " 대기 시간 숨김"),
 
     COOLDOWN_ATTACKS("공격 관련 대기 시간 숨김"),
 
-    COOLDOWN_ATTACK(ItemUsageType.ATTACK.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_ATTACK_PLAYER(ItemUsageType.ATTACK_PLAYER.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_ATTACK_ENTITY(ItemUsageType.ATTACK_ENTITY.getDisplay() +" 대기 시간 숨김"),
+    COOLDOWN_ATTACK(ItemUsageType.ATTACK.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_ATTACK_PLAYER(ItemUsageType.ATTACK_PLAYER.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_ATTACK_ENTITY(ItemUsageType.ATTACK_ENTITY.getDisplay() + " 대기 시간 숨김"),
 
-    COOLDOWN_ATTACK_MELEE(ItemUsageType.ATTACK_MELEE.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_ATTACK_PLAYER_MELEE(ItemUsageType.ATTACK_PLAYER_MELEE.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_ATTACK_ENTITY_MELEE(ItemUsageType.ATTACK_ENTITY_MELEE.getDisplay() +" 대기 시간 숨김"),
+    COOLDOWN_ATTACK_MELEE(ItemUsageType.ATTACK_MELEE.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_ATTACK_PLAYER_MELEE(ItemUsageType.ATTACK_PLAYER_MELEE.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_ATTACK_ENTITY_MELEE(ItemUsageType.ATTACK_ENTITY_MELEE.getDisplay() + " 대기 시간 숨김"),
 
-    COOLDOWN_ATTACK_RANGED(ItemUsageType.ATTACK_RANGED.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_ATTACK_PLAYER_RANGED(ItemUsageType.ATTACK_PLAYER_RANGED.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_ATTACK_ENTITY_RANGED(ItemUsageType.ATTACK_ENTITY_RANGED.getDisplay() +" 대기 시간 숨김"),
+    COOLDOWN_ATTACK_RANGED(ItemUsageType.ATTACK_RANGED.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_ATTACK_PLAYER_RANGED(ItemUsageType.ATTACK_PLAYER_RANGED.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_ATTACK_ENTITY_RANGED(ItemUsageType.ATTACK_ENTITY_RANGED.getDisplay() + " 대기 시간 숨김"),
 
-    COOLDOWN_SNEAK_ATTACK(ItemUsageType.SNEAK_ATTACK.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_SNEAK_ATTACK_PLAYER(ItemUsageType.SNEAK_ATTACK_PLAYER.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_SNEAK_ATTACK_ENTITY(ItemUsageType.SNEAK_ATTACK_ENTITY.getDisplay() +" 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK(ItemUsageType.SNEAK_ATTACK.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK_PLAYER(ItemUsageType.SNEAK_ATTACK_PLAYER.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK_ENTITY(ItemUsageType.SNEAK_ATTACK_ENTITY.getDisplay() + " 대기 시간 숨김"),
 
-    COOLDOWN_SNEAK_ATTACK_MELEE(ItemUsageType.SNEAK_ATTACK_MELEE.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_SNEAK_ATTACK_PLAYER_MELEE(ItemUsageType.SNEAK_ATTACK_PLAYER_MELEE.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_SNEAK_ATTACK_ENTITY_MELEE(ItemUsageType.SNEAK_ATTACK_ENTITY_MELEE.getDisplay() +" 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK_MELEE(ItemUsageType.SNEAK_ATTACK_MELEE.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK_PLAYER_MELEE(ItemUsageType.SNEAK_ATTACK_PLAYER_MELEE.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK_ENTITY_MELEE(ItemUsageType.SNEAK_ATTACK_ENTITY_MELEE.getDisplay() + " 대기 시간 숨김"),
 
-    COOLDOWN_SNEAK_ATTACK_RANGED(ItemUsageType.SNEAK_ATTACK_RANGED.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_SNEAK_ATTACK_PLAYER_RANGED(ItemUsageType.SNEAK_ATTACK_PLAYER_RANGED.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_SNEAK_ATTACK_ENTITY_RANGED(ItemUsageType.SNEAK_ATTACK_ENTITY_RANGED.getDisplay() +" 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK_RANGED(ItemUsageType.SNEAK_ATTACK_RANGED.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK_PLAYER_RANGED(ItemUsageType.SNEAK_ATTACK_PLAYER_RANGED.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_SNEAK_ATTACK_ENTITY_RANGED(ItemUsageType.SNEAK_ATTACK_ENTITY_RANGED.getDisplay() + " 대기 시간 숨김"),
 
 
-
-    COOLDOWN_CONSUME(ItemUsageType.CONSUME.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_RESURRECT(ItemUsageType.RESURRECT.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_SNEAK(ItemUsageType.SNEAK.getDisplay() +" 대기 시간 숨김"),
-    COOLDOWN_SWAP(ItemUsageType.SWAP.getDisplay() +" 대기 시간 숨김"),
+    COOLDOWN_CONSUME(ItemUsageType.CONSUME.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_RESURRECT(ItemUsageType.RESURRECT.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_SNEAK(ItemUsageType.SNEAK.getDisplay() + " 대기 시간 숨김"),
+    COOLDOWN_SWAP(ItemUsageType.SWAP.getDisplay() + " 대기 시간 숨김"),
 
     BANNER_PATTERN_ITEM("현수막 무늬의 무늬 설명 숨김"),
     CUSTOM_NAME("바닥에 떨어뜨렸을 때 네임 태그 숨김"),

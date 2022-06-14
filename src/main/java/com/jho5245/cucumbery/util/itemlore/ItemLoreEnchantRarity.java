@@ -201,6 +201,22 @@ public class ItemLoreEnchantRarity
       }
       value += level * (int) init;
     }
+    // 신발 -
+    if (itemMeta.hasEnchant(Enchantment.SWIFT_SNEAK))
+    {
+      int level = itemStack.getEnchantmentLevel(Enchantment.SWIFT_SNEAK);
+      init = 40D;
+      for (int i = 1; i < level; i++)
+      {
+        init = init * Math.pow(1.8, i);
+        if ((long) level * (int) init > 1_000_000_000)
+        {
+          init = 1_000_000_000 / level;
+        }
+
+      }
+      value += level * (int) init;
+    }
     // 날카로움
     if (itemMeta.hasEnchant(Enchantment.DAMAGE_ALL))
     {
@@ -743,6 +759,22 @@ public class ItemLoreEnchantRarity
     if (bookMeta.hasStoredEnchant(Enchantment.SOUL_SPEED))
     {
       int level = bookMeta.getStoredEnchantLevel(Enchantment.SOUL_SPEED);
+      init = 40D;
+      for (int i = 1; i < level; i++)
+      {
+        init = init * Math.pow(1.8, i);
+        if ((long) level * (int) init > 1_000_000_000)
+        {
+          init = 1_000_000_000 / level;
+        }
+
+      }
+      value += level * (int) init;
+    }
+    // 신발 - 신속한 잠행
+    if (bookMeta.hasStoredEnchant(Enchantment.SWIFT_SNEAK))
+    {
+      int level = bookMeta.getStoredEnchantLevel(Enchantment.SWIFT_SNEAK);
       init = 40D;
       for (int i = 1; i < level; i++)
       {

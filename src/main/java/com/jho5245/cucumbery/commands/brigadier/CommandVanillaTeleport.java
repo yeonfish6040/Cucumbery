@@ -18,9 +18,9 @@ import static com.jho5245.cucumbery.commands.brigadier.base.ArgumentUtil.*;
 
 public class CommandVanillaTeleport extends CommandBase
 {
-  private final List<Argument> list1 = List.of(LOCATION, ROTATION);
+  private final List<Argument<?>> list1 = List.of(LOCATION, ROTATION);
 
-  private final List<Argument> list2 = List.of(LOCATION, ROTATION, HIDE_OUTPUT);
+  private final List<Argument<?>> list2 = List.of(LOCATION, ROTATION, HIDE_OUTPUT);
 
   private void teleport(@NotNull Entity sender, @NotNull Location location, @NotNull Rotation rotation, boolean hideOutput)
   {

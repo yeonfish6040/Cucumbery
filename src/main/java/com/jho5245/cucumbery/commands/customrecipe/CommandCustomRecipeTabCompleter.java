@@ -1362,11 +1362,11 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
       {
         if (Method.equals(args[6], "set", "insert"))
         {
-          return TabCompleterUtil.getCommandsTabCompleter(sender, args, 9, true);
+          return CommandTabUtil.getCommandsTabCompleter(sender, args, 9, true);
         }
         else if (args[6].equals("add"))
         {
-          return TabCompleterUtil.getCommandsTabCompleter(sender, args, 8, true);
+          return CommandTabUtil.getCommandsTabCompleter(sender, args, 8, true);
         }
       }
     }

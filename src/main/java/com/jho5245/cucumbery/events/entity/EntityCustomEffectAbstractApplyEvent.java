@@ -60,7 +60,7 @@ public abstract class EntityCustomEffectAbstractApplyEvent extends EntityCustomE
      */
     LINGERING_POTION,
     /**
-     * when a {@link org.bukkit.entity.LivingEntity} was shot by {@link org.bukkit.entity.Arrow} with {@link org.bukkit.Material#TIPPED_ARROW,
+     * when a {@link org.bukkit.entity.LivingEntity} was shot by {@link org.bukkit.entity.Arrow} with {@link org.bukkit.Material#TIPPED_ARROW},
      * when called {@link org.bukkit.event.entity.EntityDamageByEntityEvent}
      */
     TIPPED_ARROW,

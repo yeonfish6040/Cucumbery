@@ -1,9 +1,12 @@
 package com.jho5245.cucumbery.listeners.entity.no_groups;
 
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -43,8 +46,23 @@ public class EntityTarget implements Listener
       }
     }
 
-    if (reason == TargetReason.CLOSEST_PLAYER && entity instanceof ExperienceOrb && target instanceof Player player)
+    if (reason == TargetReason.CLOSEST_PLAYER && entity instanceof ExperienceOrb experienceOrb && target instanceof Player player)
     {
+      if (CustomEffectManager.hasEffect(experienceOrb, CustomEffectType.COMBO_EXPERIENCE))
+      {
+        CustomEffect customEffect = CustomEffectManager.getEffect(experienceOrb, CustomEffectType.COMBO_EXPERIENCE);
+        if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
+        {
+          Player p = playerCustomEffect.getPlayer();
+          if (!(entity.getUniqueId().equals(p.getUniqueId())))
+          {
+            Location location = entity.getLocation();
+            entity.teleport(location);
+            event.setTarget(p);
+            entity.teleport(location);
+          }
+        }
+      }
       String pickUpMode = UserData.ITEM_PICKUP_MODE.getString(player);
       switch (pickUpMode)
       {

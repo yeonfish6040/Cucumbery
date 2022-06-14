@@ -2,6 +2,8 @@ package com.jho5245.cucumbery.listeners.entity.no_groups;
 
 import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import org.bukkit.entity.ExperienceOrb;
@@ -26,6 +28,12 @@ public class ExperienceOrbMerge implements Listener
 
     ExperienceOrb source = event.getMergeSource();
     ExperienceOrb target = event.getMergeTarget();
+
+    if (CustomEffectManager.hasEffect(source, CustomEffectType.COMBO_EXPERIENCE) || CustomEffectManager.hasEffect(target, CustomEffectType.COMBO_EXPERIENCE))
+    {
+      event.setCancelled(true);
+      return;
+    }
 
     if (!Method.configContainsLocation(target.getLocation(), Cucumbery.config.getStringList("no-display-xp-orb-value-worlds")))
     {

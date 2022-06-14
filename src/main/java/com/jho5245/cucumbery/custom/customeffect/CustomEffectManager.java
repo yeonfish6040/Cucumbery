@@ -16,10 +16,7 @@ import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -140,30 +137,30 @@ public class CustomEffectManager
     CustomEffectType effectType = effect.getType();
     int initDura = effect.getInitDuration(), initAmple = effect.getInitAmplifier();
     DisplayType displayType = effect.getDisplayType();
-    switch (effectType)
+    switch (effectType.getIdString().toUpperCase())
     {
-      case HEALTH_INCREASE -> {
+      case "HEALTH_INCREASE" -> {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MAX_HEALTH, Operation.ADD_SCALAR, 0.1);
       }
-      case NEWBIE_SHIELD -> {
+      case "NEWBIE_SHIELD" -> {
         if (entity instanceof OfflinePlayer offlinePlayer)
         {
           effect = new OfflinePlayerCustomEffectImple(effectType, initDura, initAmple, displayType, offlinePlayer);
         }
       }
-      case BREAD_KIMOCHI -> {
+      case "BREAD_KIMOCHI" -> {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MOVEMENT_SPEED, Operation.ADD_SCALAR, 0.1);
       }
-      case TOWN_SHIELD -> {
+      case "TOWN_SHIELD" -> {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MOVEMENT_SPEED, Operation.ADD_SCALAR, 0.3);
       }
-      case COMBAT_BOOSTER -> {
+      case "COMBAT_BOOSTER" -> {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_ATTACK_SPEED, Operation.ADD_SCALAR, 0.25);
       }
-      case POSITION_MEMORIZE -> {
+      case "POSITION_MEMORIZE" -> {
         effect = new LocationCustomEffectImple(effectType, initDura, initAmple, displayType, entity.getLocation());
       }
-      case DORMAMMU -> {
+      case "DORMAMMU" -> {
         effect = new LocationVelocityCustomEffectImple(effectType, initDura, initAmple, displayType, entity.getLocation(), entity.getVelocity());
       }
     }
@@ -405,7 +402,7 @@ public class CustomEffectManager
       List<CustomEffect> customEffects = effectMap.get(uuid);
       //MessageUtil.broadcastDebug("trying to save:" + uuid + ", effect size:" + customEffects.size());
       OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-      boolean isPlayer = offlinePlayer.hasPlayedBefore();
+      boolean isPlayer = offlinePlayer.hasPlayedBefore() || offlinePlayer.getStatistic(Statistic.PLAY_ONE_MINUTE) > 0;
       Entity entity = Bukkit.getEntity(uuid);
       if (customEffects.isEmpty() || (!isPlayer && entity == null))
       {
@@ -451,7 +448,7 @@ public class CustomEffectManager
         int amplifier = customEffect.getAmplifier();
         int initDuration = customEffect.getInitDuration();
         int initAmplifier = customEffect.getInitAmplifier();
-        config.set("effects." + i + ".type", effectType.toString());
+        config.set("effects." + i + ".type", effectType.getNamespacedKey().toString());
         config.set("effects." + i + ".init-duration", initDuration);
         config.set("effects." + i + ".init-amplifier", initAmplifier);
         config.set("effects." + i + ".duration", duration);
@@ -511,7 +508,8 @@ public class CustomEffectManager
     effectMap.keySet().removeIf(uuid ->
     {
       Entity entity = Bukkit.getEntity(uuid);
-      boolean isPlayer = Bukkit.getOfflinePlayer(uuid).hasPlayedBefore();
+      OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+      boolean isPlayer = offlinePlayer.hasPlayedBefore() || offlinePlayer.getStatistic(Statistic.PLAY_ONE_MINUTE) > 0;
       return effectMap.get(uuid).isEmpty() || (!isPlayer && entity == null);
     });
   }
@@ -527,13 +525,19 @@ public class CustomEffectManager
         try
         {
           CustomEffectType customEffectType;
+          String s = root.getString(typeString + ".type") + "";
           try
           {
-            customEffectType = CustomEffectType.valueOf(root.getString(typeString + ".type"));
+            s = s.toLowerCase();
+            if (!s.contains(":"))
+            {
+              s = "cucumbery:" + s;
+            }
+            customEffectType = CustomEffectType.valueOf(s);
           }
           catch (Exception e)
           {
-            MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "유효하지 않은 효과입니다: %s", root.getString(typeString + ".type") + "");
+            MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "유효하지 않은 효과입니다: %s", s);
             continue;
           }
           DisplayType displayType;
@@ -648,8 +652,58 @@ public class CustomEffectManager
           e.printStackTrace();
         }
       }
+      if (effectMap.containsKey(uuid))
+      {
+        MessageUtil.sendWarn(Bukkit.getConsoleSender(), "커스텀 이펙트 데이터를 불러오는 도중 이미 존재하는 데이터가 있습니다! UUID : %s", uuid.toString());
+      }
       effectMap.put(uuid, customEffects);
     }
+  }
+
+  /**
+   * 포션 효과가 표기되는것 일부 숨김(Wrapper 효과 등)
+   * @param player 해당 플레이어
+   * @param potionEffects 해당 플레이어의 효과 목록
+   * @return 숨겨진 효과를 제외한 효과들
+   */
+  @NotNull
+  public static List<PotionEffect> removeDisplay(@NotNull Player player, @NotNull Collection<PotionEffect> potionEffects)
+  {
+    potionEffects = new ArrayList<>(potionEffects);
+    potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
+    potionEffects.removeIf(potionEffect ->
+            (CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT) || CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED)) &&
+                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
+    potionEffects.removeIf(potionEffect ->
+            CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_NAUSEA) &&
+                    potionEffect.getType().equals(PotionEffectType.CONFUSION) && potionEffect.getDuration() < 64 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
+    potionEffects.removeIf(potionEffect ->
+            CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_REGENERATION) &&
+                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
+    potionEffects.removeIf(potionEffect ->
+            (CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_POISON) || CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_POISON_M)) &&
+                    potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
+    potionEffects.removeIf(potionEffect ->
+            CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_BLINDNESS) &&
+                    potionEffect.getType().equals(PotionEffectType.BLINDNESS) && potionEffect.getDuration() < 23 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
+    potionEffects.removeIf(potionEffect ->
+            CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_POISON) &&
+                    potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
+    potionEffects.removeIf(potionEffect ->
+            CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_WITHER) &&
+                    potionEffect.getType().equals(PotionEffectType.WITHER) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
+    potionEffects.removeIf(potionEffect ->
+            CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_DARKNESS) &&
+                    potionEffect.getType().equals(PotionEffectType.DARKNESS) && potionEffect.getDuration() < 62 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
+    return new ArrayList<>(potionEffects);
   }
 
   @NotNull
@@ -730,7 +784,7 @@ public class CustomEffectManager
         }
       }
       CustomEffectType effectType = customEffect.getType();
-      Component effectComponent = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + (showDuration ? effectType.translationKey() : effectType.shortTranslationKey()));
+      Component effectComponent = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + (showDuration ? effectType.translationKey() : effectType.getShortenTranslationKey()));
       Component create = ComponentUtil.create(entity instanceof Player player ? player : null, customEffect);
       effectComponent = effectComponent.hoverEvent(create.hoverEvent()).clickEvent(create.clickEvent());
       arguments.add(
@@ -979,6 +1033,10 @@ public class CustomEffectManager
       return true;
     }
     if (potionEffectType.equals(PotionEffectType.BAD_OMEN))
+    {
+      return true;
+    }
+    if (potionEffectType.equals(PotionEffectType.DARKNESS))
     {
       return true;
     }

@@ -238,4 +238,6 @@ public class Variable
    * <p>String : {@link PotionEffectType#translationKey()}
    */
   public static HashMap<UUID, HashMap<String, Integer>> potionEffectApplyMap = new HashMap<>();
+
+  public static HashMap<UUID, Integer> starCatchPenalty = new HashMap<>();
 }

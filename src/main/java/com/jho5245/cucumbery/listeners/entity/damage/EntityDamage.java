@@ -355,7 +355,7 @@ public class EntityDamage implements Listener
                   try
                   {
                     CustomEffectManager.addEffect(victim, new CustomEffect(
-                            CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase()),
+                            CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID)),
                             potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
                             potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
                             DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())
@@ -590,7 +590,7 @@ public class EntityDamage implements Listener
 //    }
     Location location = event.getEntity().getLocation();
     BoundingBox boundingBox = entity.getBoundingBox();
-    offset += (entity.getFireTicks() > 0 ? ((boundingBox.getMaxY() - boundingBox.getCenterY()) * 1.1) : 0);
+    offset += (entity.getFireTicks() > 0 ? ((boundingBox.getMaxY() - boundingBox.getCenterY()) * 1.7) : 0);
     location.setX(boundingBox.getCenterX());
     location.setY(boundingBox.getMaxY() + offset);
     location.setZ(boundingBox.getCenterZ());
@@ -598,9 +598,12 @@ public class EntityDamage implements Listener
     Consumer<Entity> consumer = e ->
     {
       ArmorStand armorStand = (ArmorStand) e;
-      armorStand.setVisible(false);
       armorStand.setMarker(true);
+      armorStand.setCanMove(false);
+      armorStand.setCanTick(false);
       armorStand.setSmall(true);
+      armorStand.setBasePlate(false);
+      armorStand.setInvisible(true);
       armorStand.customName(finalDisplay);
       armorStand.setCustomNameVisible(true);
       armorStand.addScoreboardTag("damage_indicator");

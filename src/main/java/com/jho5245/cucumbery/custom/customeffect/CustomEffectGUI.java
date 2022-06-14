@@ -4,7 +4,6 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.util.no_groups.ColorUtil;
 import com.jho5245.cucumbery.util.no_groups.ColorUtil.Type;
 import com.jho5245.cucumbery.util.no_groups.CreateGUI;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil.TimeFormatType;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -91,12 +90,7 @@ public class CustomEffectGUI
     }
     List<CustomEffect> customEffects = new ArrayList<>(CustomEffectManager.getEffects(player));
     customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE || effect.isHidden());
-    List<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
-    potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
-    potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT) &&
-                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
+    List<PotionEffect> potionEffects = CustomEffectManager.removeDisplay(player, player.getActivePotionEffects());
     boolean isEmpty = customEffects.isEmpty() && potionEffects.isEmpty();
     if (isEmpty)
     {
@@ -134,10 +128,10 @@ public class CustomEffectGUI
         itemMeta.lore(customEffectLore(player, customEffect));
         itemMeta.setCustomModelData(5200 + effectType.getId());
         itemStack.setItemMeta(itemMeta);
-        if (effectType.isRightClickRemovable())
+        if (effectType.isRemoveable())
         {
           NBTItem nbtItem = new NBTItem(itemStack, true);
-          nbtItem.setString("removeEffect", "custom:" + effectType);
+          nbtItem.setString("removeEffect", "custom:" + effectType.getNamespacedKey());
           nbtItem.setInteger("removeEffectAmplifier", customEffect.getAmplifier());
         }
         menu.addItem(itemStack);
@@ -238,9 +232,9 @@ public class CustomEffectGUI
     {
       Component time =
               ComponentUtil.timeFormat(
-                      duration * 50L, duration < 200 ? TimeFormatType.FULL_SINGLE_DECIMAL : TimeFormatType.FULL_NO_DECIMALS)
+                              duration * 50L, duration < 200 ? TimeFormatType.FULL_SINGLE_DECIMAL : TimeFormatType.FULL_NO_DECIMALS)
                       .color(Constant.THE_COLOR);
-      lore.add(              ComponentUtil.translate("&f지속 시간 : %s", time));
+      lore.add(ComponentUtil.translate("&f지속 시간 : %s", time));
       if (effectType == CustomEffectType.CURSE_OF_BEANS)
       {
         lore.add(ComponentUtil.translate("&f지속 시간 : %s", time));
@@ -250,7 +244,7 @@ public class CustomEffectGUI
     {
       lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
     }
-    if (effectType.isRightClickRemovable())
+    if (effectType.isRemoveable())
     {
       lore.add(Component.empty());
       if (CustomEffectManager.hasEffect(player, CustomEffectType.NO_BUFF_REMOVE))
@@ -323,7 +317,11 @@ public class CustomEffectGUI
     lore.add(Component.empty());
     if (duration <= 20 * 60 * 60 * 24 * 365)
     {
-      lore.add(ComponentUtil.translate("&f지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L, duration < 200, 1)));
+      Component time =
+              ComponentUtil.timeFormat(
+                              duration * 50L, duration < 200 ? TimeFormatType.FULL_SINGLE_DECIMAL : TimeFormatType.FULL_NO_DECIMALS)
+                      .color(Constant.THE_COLOR);
+      lore.add(ComponentUtil.translate("&f지속 시간 : %s", time));
     }
     lore.add(ComponentUtil.translate("&f농도 레벨 : %s단계", amplifier + 1));
     if (!CustomEffectManager.isVanillaNegative(potionEffect.getType()))

@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class CommandHealthPoint
 {
-  private final List<Argument> arguments1 = new ArrayList<>();
+  private final List<Argument<?>> arguments1 = new ArrayList<>();
 
   {
     arguments1.add(new MultiLiteralArgument("set", "give", "take"));
@@ -28,7 +28,7 @@ public class CommandHealthPoint
     arguments1.add(new DoubleArgument("값", 0, Double.MAX_VALUE));
   }
 
-  private final List<Argument> arguments2 = new ArrayList<>();
+  private final List<Argument<?>> arguments2 = new ArrayList<>();
 
   {
     arguments2.add(new MultiLiteralArgument("set", "give", "take"));
@@ -37,7 +37,7 @@ public class CommandHealthPoint
     arguments2.add(new BooleanArgument("경고 무시"));
   }
 
-  private final List<Argument> arguments3 = new ArrayList<>();
+  private final List<Argument<?>> arguments3 = new ArrayList<>();
 
   {
     arguments3.add(new MultiLiteralArgument("set", "give", "take"));

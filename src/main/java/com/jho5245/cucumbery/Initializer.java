@@ -8,8 +8,8 @@ import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -130,7 +130,7 @@ public class Initializer
   public static void loadCustomEffects()
   {
     CustomEffectManager.effectMap.clear();
-    File customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects");
+    File customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects/non-players");
     if (customEffectsFolder.exists())
     {
       File[] customEffectFiles = customEffectsFolder.listFiles();
@@ -153,7 +153,8 @@ public class Initializer
           }
         }
       }
-    }customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects/non-players");
+    }
+    customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects");
     if (customEffectsFolder.exists())
     {
       File[] customEffectFiles = customEffectsFolder.listFiles();

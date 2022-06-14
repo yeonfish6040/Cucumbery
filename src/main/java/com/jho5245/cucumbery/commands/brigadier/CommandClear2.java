@@ -26,9 +26,9 @@ public class CommandClear2 extends CommandBase
 
   private final Argument MAX_AMOUNT = new IntegerArgument("max amount", 1, 2304);
 
-  private final List<Argument> list1 = List.of(MANY_PLAYERS, ITEMSTACK);
+  private final List<Argument<?>> list1 = List.of(MANY_PLAYERS, ITEMSTACK);
 
-  private final List<Argument> list2 = List.of(MANY_PLAYERS, ITEMSTACK, MAX_AMOUNT);
+  private final List<Argument<?>> list2 = List.of(MANY_PLAYERS, ITEMSTACK, MAX_AMOUNT);
 
   private void clear(@NotNull NativeProxyCommandSender sender, @NotNull Collection<Player> players, @NotNull Predicate<ItemStack> predicate, int max)
   {

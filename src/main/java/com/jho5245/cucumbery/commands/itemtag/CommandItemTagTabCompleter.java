@@ -4,7 +4,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.TabCompleterUtil;
+import com.jho5245.cucumbery.util.no_groups.CommandTabUtil;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
@@ -232,7 +232,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 }
                 return list;
               case "modify":
-                return TabCompleterUtil.customItemTabCompleter(player, args);
+                return CommandTabUtil.customItemTabCompleter(player, args);
             }
             break;
           case "customdurability":
@@ -349,7 +349,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 return Method.tabCompleterIntegerRadius(args, 1, nbtCompoundList.size(), "<줄>");
               }
               case "add" -> {
-                return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
+                return Method.tabCompleterList(args, CustomEffectType.getEffectTypeMap(), "<효과>");
               }
             }
             break;
@@ -380,7 +380,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
           case "customitem":
             if ("modify".equals(args[1]))
             {
-              return TabCompleterUtil.customItemTabCompleter(player, args);
+              return CommandTabUtil.customItemTabCompleter(player, args);
             }
             break;
           case "customenchant":
@@ -499,7 +499,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
             switch (args[1])
             {
               case "set" -> {
-                return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
+                return Method.tabCompleterList(args, CustomEffectType.getEffectTypeMap(), "<효과>");
               }
               case "add" -> {
                 return Method.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]", "infinite", "default");
@@ -894,7 +894,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                 CustomEffectType customEffectType;
                 try
                 {
-                  customEffectType = CustomEffectType.valueOf(effect.toUpperCase());
+                  customEffectType = CustomEffectType.valueOf(effect);
                 }
                 catch (Exception e)
                 {

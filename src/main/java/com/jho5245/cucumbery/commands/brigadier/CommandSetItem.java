@@ -19,14 +19,14 @@ import java.util.List;
 
 @SuppressWarnings("all") public class CommandSetItem extends CommandBase
 {
-	private final List<Argument> argument = new ArrayList<>();
+	private final List<Argument<?>> argument = new ArrayList<>();
 
 	{
 		argument.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
 		argument.add( new MultiLiteralArgument("mainhand", "offhand", "helmet", "chestplate", "leggings", "boots"));
 	}
 
-	private final List<Argument> argument2 = new ArrayList<>();
+	private final List<Argument<?>> argument2 = new ArrayList<>();
 
 	{
 		argument2.add( new EntitySelectorArgument("개체",EntitySelectorArgument.EntitySelector.MANY_ENTITIES));

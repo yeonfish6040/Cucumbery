@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -15,9 +16,129 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SelectorUtil
 {
+  private static final Pattern scoreboardTag = Pattern.compile("#([A-Za-z0-9_.+-]+)");
+
+  @NotNull
+  private static List<Entity> get(@NotNull CommandSender sender, @NotNull String selector, boolean notice) throws IllegalArgumentException
+  {
+    // custom target selector
+    String selectorCopy = selector;
+    boolean allPlayersButNotSelf = selectorCopy.startsWith("@A"), allEntitiesButNotPlayers = selectorCopy.startsWith("@E"), randomEntity = selectorCopy.startsWith("@R"),
+            randomPlayerButNotSelf = selectorCopy.startsWith("@rr"), randomEntityButNotSelf = selectorCopy.startsWith("@rR"),
+            allEntitiesButNotSelf = selectorCopy.startsWith("@S"), nearestPlayerButNotSelf = selectorCopy.startsWith("@P"), nearestEntityButNotSelf = selectorCopy.startsWith("@pp");
+    String tagPredicate = null;
+    if (selectorCopy.startsWith("#"))
+    {
+      Matcher matcher = scoreboardTag.matcher(selectorCopy);
+      try
+      {
+        while (matcher.find())
+        {
+          tagPredicate = matcher.group(1);
+          if (tagPredicate != null)
+          {
+            break;
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
+    if (allPlayersButNotSelf || nearestPlayerButNotSelf)
+    {
+      selectorCopy = "@a" + selectorCopy.substring(2);
+    }
+    if (allEntitiesButNotPlayers || allEntitiesButNotSelf || randomEntity)
+    {
+      selectorCopy = "@e" + selectorCopy.substring(2);
+    }
+    if (randomPlayerButNotSelf)
+    {
+      selectorCopy = "@a" + selectorCopy.substring(3);
+    }
+    if (nearestEntityButNotSelf || randomEntityButNotSelf)
+    {
+      selectorCopy = "@e" + selectorCopy.substring(3);
+    }
+    if (tagPredicate != null)
+    {
+      selectorCopy = "@e" + selectorCopy.substring(tagPredicate.length() + 1);
+    }
+    List<Entity> entities = Bukkit.selectEntities(sender, selectorCopy);
+    entities.removeIf(e -> allEntitiesButNotPlayers && e instanceof Player);
+    @Nullable CommandSender finalSender = sender;
+    entities.removeIf(e -> allPlayersButNotSelf && finalSender instanceof Player p && e == p);
+    entities.removeIf(e -> allEntitiesButNotSelf && finalSender == e);
+    String finalTagPredicate = tagPredicate;
+    entities.removeIf(e -> finalTagPredicate != null && !e.getScoreboardTags().contains(finalTagPredicate));
+    if (randomEntity || randomEntityButNotSelf || randomPlayerButNotSelf)
+    {
+      if (randomEntityButNotSelf || randomPlayerButNotSelf)
+      {
+        entities.removeIf(e -> e == finalSender);
+      }
+      int i = Method.random(0, entities.size() - 1);
+      Entity en = entities.get(i);
+      entities = new ArrayList<>(Collections.singletonList(en));
+    }
+    if (nearestEntityButNotSelf || nearestPlayerButNotSelf)
+    {
+      Location senderLocation = CommandArgumentUtil.senderLocation(sender);
+      entities.removeIf(e -> !e.getWorld().getName().equals(senderLocation.getWorld().getName()));
+      entities.removeIf(e -> finalSender == e);
+      if (nearestEntityButNotSelf)
+      {
+        Entity result = null;
+        double lastDistance = Double.MAX_VALUE;
+        for (Entity entity : entities)
+        {
+          double distance = senderLocation.distance(entity.getLocation());
+          if (distance < lastDistance)
+          {
+            lastDistance = distance;
+            result = entity;
+          }
+        }
+        entities.clear();
+        if (result != null)
+        {
+          entities.add(result);
+        }
+      }
+      if (nearestPlayerButNotSelf)
+      {
+        Player result = null;
+        double lastDistance = Double.MAX_VALUE;
+        for (Entity entity : entities)
+        {
+          if (!(entity instanceof Player p))
+          {
+            continue;
+          }
+          double distance = senderLocation.distance(entity.getLocation());
+          if (distance < lastDistance)
+          {
+            lastDistance = distance;
+            result = p;
+          }
+        }
+        entities.clear();
+        if (result != null)
+        {
+          entities.add(result);
+        }
+      }
+    }
+    return entities;
+  }
+
   @Nullable
   public static Player getPlayer(@Nullable CommandSender sender, @NotNull String selector)
   {
@@ -38,7 +159,7 @@ public class SelectorUtil
       {
         sender = Bukkit.getConsoleSender();
       }
-      List<Entity> entities = Bukkit.selectEntities(sender, selector);
+      List<Entity> entities = get(sender, selector, notice);
       if (entities.isEmpty())
       {
         if (notice)
@@ -115,7 +236,7 @@ public class SelectorUtil
       {
         sender = Bukkit.getConsoleSender();
       }
-      List<Entity> entities = Bukkit.selectEntities(sender, selector);
+      List<Entity> entities = get(sender, selector, notice);
       if (entities.isEmpty())
       {
         if (notice)
@@ -179,7 +300,8 @@ public class SelectorUtil
       {
         sender = Bukkit.getConsoleSender();
       }
-      List<Entity> entities = Bukkit.selectEntities(sender, selector);
+
+      List<Entity> entities = get(sender, selector, notice);
       if (entities.isEmpty())
       {
         if (notice)
@@ -253,7 +375,8 @@ public class SelectorUtil
       {
         sender = Bukkit.getConsoleSender();
       }
-      List<Entity> entities = Bukkit.selectEntities(sender, selector);
+
+      List<Entity> entities = get(sender, selector, notice);
       if (entities.isEmpty() && notice)
       {
         MessageUtil.noArg(sender, Prefix.NO_ENTITY, selector);
@@ -299,7 +422,8 @@ public class SelectorUtil
       {
         return new ArrayList<>(Collections.singletonList(offlinePlayer));
       }
-      List<Entity> entities = Bukkit.selectEntities(sender, selector);
+
+      List<Entity> entities = get(sender, selector, notice);
       if (entities.isEmpty())
       {
         if (notice)
@@ -376,7 +500,8 @@ public class SelectorUtil
       {
         return offlinePlayer;
       }
-      List<Entity> entities = Bukkit.selectEntities(sender, selector);
+
+      List<Entity> entities = get(sender, selector, notice);
       if (entities.isEmpty())
       {
         if (notice)

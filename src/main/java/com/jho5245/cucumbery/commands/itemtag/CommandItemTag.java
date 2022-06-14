@@ -26,6 +26,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -3444,7 +3445,9 @@ public class CommandItemTag implements CommandExecutor
               {
                 try
                 {
-                  CustomEffectType customEffectType = CustomEffectType.valueOf(nbtCompound.getString(CucumberyTag.CUSTOM_EFFECTS_ID));
+                  String rawKey = nbtCompound.getString(CucumberyTag.CUSTOM_EFFECTS_ID);
+                  String[] rawKeySplit = rawKey.split(":");
+                  CustomEffectType customEffectType = CustomEffectType.getByKey(new NamespacedKey(rawKeySplit[0], rawKeySplit[1]));
                   int duration = nbtCompound.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION), amplifier = nbtCompound.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER);
                   String displayType = nbtCompound.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE);
                   Component component = ComponentUtil.create(new CustomEffect(customEffectType, duration, amplifier, DisplayType.valueOf(displayType)));
@@ -3485,8 +3488,10 @@ public class CommandItemTag implements CommandExecutor
               try
               {
                 NBTCompound potionTag = potionListTag.get(line - 1);
-                customEffect = new CustomEffect(
-                        CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase()),
+                String rawKey = potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID);
+                String[] rawKeySplit = rawKey.split(":");
+                CustomEffectType customEffectType = CustomEffectType.getByKey(new NamespacedKey(rawKeySplit[0], rawKeySplit[1]));
+                customEffect = new CustomEffect(customEffectType,
                         potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION),
                         potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER),
                         DisplayType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE).toUpperCase())
@@ -3514,7 +3519,12 @@ public class CommandItemTag implements CommandExecutor
               CustomEffectType customEffectType;
               try
               {
-                customEffectType = CustomEffectType.valueOf(args[2].toUpperCase());
+                String[] rawKeySplit = args[2].split(":");
+                customEffectType = CustomEffectType.getByKey(new NamespacedKey(rawKeySplit[0], rawKeySplit[1]));
+                if (customEffectType == null)
+                {
+                  throw new Exception();
+                }
               }
               catch (Exception e)
               {

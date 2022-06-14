@@ -1,11 +1,8 @@
 package com.jho5245.cucumbery.commands.no_groups;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.*;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectGUI;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
 import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -126,7 +123,7 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
         {
           try
           {
-            effectType = CustomEffectType.valueOf(args[2].toUpperCase());
+            effectType = CustomEffectType.valueOf(args[2]);
           }
           catch (Exception e)
           {
@@ -173,7 +170,7 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
         CustomEffectType customEffectType;
         try
         {
-          customEffectType = CustomEffectType.valueOf(args[2].toUpperCase());
+          customEffectType = CustomEffectType.valueOf(args[2]);
         }
         catch (Exception e)
         {
@@ -333,14 +330,16 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
             }
             else
             {
-              return Method.tabCompleterList(args, Method.addAll(CustomEffectType.values(), args[2] + "--force"), "<효과>");
+              List<String> list = new ArrayList<>(Method.tabCompleterList(args, CustomEffectType.getEffectTypeMap(), "<효과"));
+              list.add(args[2] + "--force");
+              return list;
             }
           }
           catch (Exception ignored)
           {
 
           }
-          return Method.tabCompleterList(args, CustomEffectType.values(), "<효과>");
+          return Method.tabCompleterList(args, CustomEffectType.getEffectTypeMap(), "<효과>");
         }
         CustomEffectType effectType;
         try
@@ -378,12 +377,12 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
   }
 
   @NotNull
-  public List<Completion> completion(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  public List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
     int length = args.length;
     if (length == 1)
     {
-      return TabCompleterUtil.tabCompleterList(args, "<인수>", false,
+      return CommandTabUtil.tabCompleterList(args, "<인수>", false,
               Completion.completion("give", Component.translatable("대상에게 효과를 부여합니다")),
               Completion.completion("clear", Component.translatable("대상으로부터 특정 효과 혹은 모든 효과를 제거합니다")),
               Completion.completion("query", Component.translatable("자신의 적용 중인 효과를 GUI로 참조하거나 다른 대상의 효과를 참조합니다")));
@@ -393,34 +392,34 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
       case "query" -> {
         if (length == 2)
         {
-          return TabCompleterUtil.tabCompleterEntity(sender, args, "[개체]");
+          return CommandTabUtil.tabCompleterEntity(sender, args, "[개체]");
         }
       }
       case "clear" -> {
         if (length == 2)
         {
-          return TabCompleterUtil.tabCompleterEntity(sender, args, "[개체]");
+          return CommandTabUtil.tabCompleterEntity(sender, args, "[개체]");
         }
         if (length == 3)
         {
-          return TabCompleterUtil.tabCompleterList(args, CustomEffectType.values(), "<효과>");
+          return CommandTabUtil.tabCompleterList(args, CustomEffectType.getEffectTypeMap(), "<효과>");
         }
         if (length == 4)
         {
-          return TabCompleterUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+          return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
       case "give" -> {
         if (length == 2)
         {
-          return TabCompleterUtil.tabCompleterEntity(sender, args, "<개체>");
+          return CommandTabUtil.tabCompleterEntity(sender, args, "<개체>");
         }
         boolean force = args[2].endsWith("--force");
         if (force)
         {
           args[2] = args[2].substring(0, args[2].length() - 7);
         }
-        String effect = args[2].toUpperCase();
+        String effect = args[2];
         if (length == 3)
         {
           try
@@ -429,12 +428,12 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
             if (force)
             {
               Component component = ComponentUtil.translate("%s 효과를 강제로 적용합니다", customEffectType.translationKey());
-              return TabCompleterUtil.completions(component);
+              return CommandTabUtil.completions(component);
             }
             else
             {
-              List<Completion> list = new ArrayList<>(TabCompleterUtil.tabCompleterList(args, CustomEffectType.values(), "<효과>"));
-              list.add(Completion.completion(args[2] + "--force"));
+              List<Completion> list = new ArrayList<>(CommandTabUtil.tabCompleterList(args, CustomEffectType.getEffectTypeMap(), "<효과>"));
+              list.add(Completion.completion(args[2] + "--force", ComponentUtil.translate("%s 효과를 강제로 적용합니다", customEffectType)));
               return list;
             }
           }
@@ -442,7 +441,7 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
           {
 
           }
-          return TabCompleterUtil.tabCompleterList(args, CustomEffectType.values(), "<효과>");
+          return CommandTabUtil.tabCompleterList(args, CustomEffectType.getEffectTypeMap(), "<효과>");
         }
         CustomEffectType effectType;
         try
@@ -452,41 +451,41 @@ public class CommandCustomEffect implements CommandExecutor, AsyncTabCompleter
         catch (Exception e)
         {
           Component component = ComponentUtil.translate("%s은(는) 잘못되거나 알 수 없는 효과입니다", args[2]);
-          return TabCompleterUtil.completions(component);
+          return CommandTabUtil.completions(component);
         }
         if (length == 4)
         {
           int defaultDuration = effectType.getDefaultDuration();
-         List<Completion> list = TabCompleterUtil.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]");
+         List<Completion> list = CommandTabUtil.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]");
          String time = Method.timeFormatMilli(defaultDuration * 50L, true, 2);
-         List<Completion> list1 = TabCompleterUtil.tabCompleterList(args, "[인수]", false,
+         List<Completion> list1 = CommandTabUtil.tabCompleterList(args, "[인수]", false,
          Completion.completion("infinite", Component.translatable("무제한 지속시간")),
          Completion.completion("default", ComponentUtil.translate("기본 지속시간(%s)",
                  (defaultDuration == -1 ? "무제한" : time))));
-         return TabCompleterUtil.sortError(list, list1);
+         return CommandTabUtil.sortError(list, list1);
         }
         if (length == 5)
         {
           int maxAmplifier = effectType.getMaxAmplifier();
-          List<Completion> list = new ArrayList<>(TabCompleterUtil.tabCompleterIntegerRadius(args, 0, maxAmplifier, "[농도 레벨]"));
-          List<Completion> list1 = TabCompleterUtil.tabCompleterList(args, "[인수]", false,
+          List<Completion> list = new ArrayList<>(CommandTabUtil.tabCompleterIntegerRadius(args, 0, maxAmplifier, "[농도 레벨]"));
+          List<Completion> list1 = CommandTabUtil.tabCompleterList(args, "[인수]", false,
                   Completion.completion("max", ComponentUtil.translate("최대 농도 레벨(%s)", maxAmplifier))
                   );
-          return TabCompleterUtil.sortError(list, list1);
+          return CommandTabUtil.sortError(list, list1);
         }
         if (length == 6)
         {
           List<Object> list = new ArrayList<>(Method.enumToList(DisplayType.values()));
           list.add(effectType.getDefaultDisplayType().toString().toLowerCase() + "(기본값)");
-          return TabCompleterUtil.tabCompleterList(args, list, "[표시 유형]");
+          return CommandTabUtil.tabCompleterList(args, list, "[표시 유형]");
         }
         if (length == 7)
         {
-          return TabCompleterUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+          return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
     }
-    return Collections.singletonList(TabCompleterUtil.ARGS_LONG);
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 
   private boolean giveEffect(@NotNull CommandSender sender, @NotNull List<Entity> entities, @NotNull CustomEffectType customEffectType, int duration, int amplifier, @NotNull DisplayType displayType, boolean hideOutput, boolean force)

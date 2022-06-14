@@ -3,7 +3,7 @@ package com.jho5245.cucumbery.commands.no_groups;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
-import com.jho5245.cucumbery.util.no_groups.TabCompleterUtil;
+import com.jho5245.cucumbery.util.no_groups.CommandTabUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -58,6 +58,6 @@ public class CommandConsoleSudo implements CommandExecutor, TabCompleter
     }
     int length = args.length;
 
-    return TabCompleterUtil.getCommandsTabCompleter(sender, args, 1, false);
+    return CommandTabUtil.getCommandsTabCompleter(sender, args, 1, false);
   }
 }

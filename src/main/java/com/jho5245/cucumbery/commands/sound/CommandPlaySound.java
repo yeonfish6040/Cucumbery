@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
@@ -112,11 +113,10 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter
             }
             if (!hideOutput)
             {
+              String s = Constant.THE_COLOR_HEX + ((isCustomSound) ? customSound : sound.toString().toLowerCase());
               MessageUtil.broadcastPlayer(
-                      Prefix.INFO_SOUND, SenderComponentUtil.senderComponent(sender), "이 모두에게 &e" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-                              + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다");
-              MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "모든 플레이어에게 &e" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-                      + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다");
+                      Prefix.INFO_SOUND, "%s이(가) 모두에게 %s을(를) 재생하였습니다", sender, s);
+              MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "모든 플레이어에게 %s을(를) 재생하였습니다", s);
             }
           }
           catch (Exception e)

@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.util.storage.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import org.bukkit.*;
@@ -101,11 +103,29 @@ public class SoundPlay
 
   public static void playWarnSound(@NotNull Object audience)
   {
+    if (audience instanceof Player player)
+    {
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ERROR_WARN_SOUND))
+      {
+        return;
+      }
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+              CustomEffectManager.addEffect(player, CustomEffectType.COOLDOWN_ERROR_WARN_SOUND), 0L);
+    }
     playSound(audience, Constant.WARNING_SOUND, Constant.WARNING_SOUND_VOLUME, Constant.WARNING_SOUND_PITCH);
   }
 
   public static void playErrorSound(@NotNull Object audience)
   {
+    if (audience instanceof Player player)
+    {
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ERROR_WARN_SOUND))
+      {
+        return;
+      }
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+              CustomEffectManager.addEffect(player, CustomEffectType.COOLDOWN_ERROR_WARN_SOUND), 0L);
+    }
     playSound(audience, Constant.ERROR_SOUND, Constant.ERROR_SOUND_VOLUME, Constant.ERROR_SOUND_PITCH);
   }
 
@@ -165,7 +185,9 @@ public class SoundPlay
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {
       if (player.getLocation().getWorld().equals(world))
+      {
         playSound(player, location, sound, category, volume, pitch);
+      }
     }
   }
 
@@ -175,7 +197,9 @@ public class SoundPlay
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {
       if (player.getLocation().getWorld().equals(world))
+      {
         playSound(player, location, sound, category, volume, pitch);
+      }
     }
   }
 

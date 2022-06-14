@@ -1,11 +1,8 @@
 package com.jho5245.cucumbery.util.storage.component.util;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.*;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.custom.customeffect.VanillaEffectDescription;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -293,6 +290,50 @@ public class ComponentUtil
           String click = "/customeffect give @s " + effectType.toString().toLowerCase();
           concat = concat.clickEvent(ClickEvent.suggestCommand(click));
         }
+
+/*        ItemStack icon = effectType.getIcon();
+        if (icon != null)
+        {
+          ItemMeta itemMeta = icon.getItemMeta();
+          itemMeta.displayName(concat);
+          List<Component> lore = new ArrayList<>();
+          if (!hover.equals(Component.empty()))
+          {
+            try
+            {
+              List<Component> children = new ArrayList<>(Collections.singletonList(hover.children(Collections.emptyList())));
+              children.addAll(hover.children());
+              for (int i = 0; i < children.size(); i++)
+              {
+                Component child = children.get(i);
+                if (child.equals(Component.text("\n")) && i + 1 != children.size() && children.get(i + 1).equals(Component.text("\n")))
+                {
+                  lore.add(Component.empty());
+                }
+                if (!child.equals(Component.text("\n")))
+                {
+                  if (child.color() == null)
+                  {
+                    child = child.color(NamedTextColor.WHITE);
+                  }
+                  if (child.decoration(TextDecoration.ITALIC) == State.NOT_SET)
+                  {
+                    child = child.decoration(TextDecoration.ITALIC, State.FALSE);
+                  }
+                  lore.add(child);
+                }
+              }
+            }
+            catch (Exception e)
+            {
+              e.printStackTrace();
+            }
+          }
+          itemMeta.lore(lore);
+          icon.setItemMeta(itemMeta);
+          concat = concat.hoverEvent(icon.asHoverEvent()).clickEvent(hover.clickEvent());
+        }
+        else*/
         concat = concat.hoverEvent(hover);
         component = component.append(concat);
       }

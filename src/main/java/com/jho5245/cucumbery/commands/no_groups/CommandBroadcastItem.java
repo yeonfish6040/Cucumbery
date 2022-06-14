@@ -7,14 +7,13 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import de.tr7zw.changeme.nbtapi.NBTItem;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -51,13 +50,6 @@ public class CommandBroadcastItem implements CommandExecutor, TabCompleter
       msg = MessageUtil.listToString(" ", args);
     }
     ItemStack item = player.getInventory().getItemInMainHand().clone();
-    if (ItemStackUtil.itemExists(item))
-    {
-      NBTItem nbtItem = new NBTItem(item);
-      nbtItem.removeKey("BlockEntityTag");
-      nbtItem.removeKey("BlockStateTag");
-      item = nbtItem.getItem();
-    }
     int length = ItemSerializer.serialize(item).length();
     if (length >= 25650)
     {

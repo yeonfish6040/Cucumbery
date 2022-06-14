@@ -46,10 +46,7 @@ public class ItemStackComponent
   {
     final ItemStack giveItem = ItemLore.removeItemLore(itemStack.clone());
     itemStack = itemStack.clone();
-    NBTItem nbtItem = new NBTItem(itemStack);
-    nbtItem.removeKey("BlockEntityTag");
-    nbtItem.removeKey("BlockStateTag");
-    itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
+    itemStack.setAmount(Math.max(1, Math.min(64, itemStack.getAmount())));
     Component itemName = ItemNameUtil.itemName(itemStack, showAmount ? defaultColor : null);
     ItemStack hover = new ItemStack(Material.BUNDLE);
     BundleMeta bundleMeta = (BundleMeta) hover.getItemMeta();
@@ -63,7 +60,7 @@ public class ItemStackComponent
     }
     bundleMeta.lore(lore);
     hover.setItemMeta(bundleMeta);
-    nbtItem = new NBTItem(hover, true);
+    NBTItem nbtItem = new NBTItem(hover, true);
     nbtItem.setString("test", "test");
     if (itemName instanceof TextComponent textComponent && textComponent.content().equals(""))
     {

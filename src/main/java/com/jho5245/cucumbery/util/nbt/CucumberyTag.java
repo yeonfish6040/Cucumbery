@@ -122,4 +122,13 @@ public class CucumberyTag
 
   public static final String ORIGINAL_NAME = "OriginalName";
   public static final String GUI_BUTTON_PREVIOUS = "GuiButtonPrevious";
+
+  public static final String REINFORCE_TAG = "Reinforce";
+  public static final String REINFORCE_CURRENT_TAG = "CurrentLevel";
+  public static final String REINFORCE_MAX_TAG = "MaxLevel";
+  public static final String REINFORCE_REINFORCE_TYPE_TAG = "ReinforceType";
+  public static final String REINFORCE_ITEM_TYPE_TAG = "ItemType";
+  public static final String REINFORCE_ITEM_LEVEL_TAG = "ItemLevel";
+  public static final String REINFORCE_DROP_AMOUNT_TAG = "DropAmount";
+  public static final String REINFORCE_FORCE_SUCCESS_TAG = "ForceSuccess";
 }

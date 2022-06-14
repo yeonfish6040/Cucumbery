@@ -15,20 +15,20 @@ import java.util.List;
 
 public class CommandVelocity extends CommandBase
 {
-  private final List<Argument> arguments = new ArrayList<>();
+  private final List<Argument<?>> arguments = new ArrayList<>();
 
   {
     arguments.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
     arguments.add(new LocationArgument("방향"));
   }
-  private final List<Argument> arguments2 = new ArrayList<>();
+  private final List<Argument<?>> arguments2 = new ArrayList<>();
 
   {
     arguments2.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
     arguments2.add(new LocationArgument("방향"));
     arguments2.add(new MultiLiteralArgument("absolute", "relative"));
   }
-  private final List<Argument> arguments3 = new ArrayList<>();
+  private final List<Argument<?>> arguments3 = new ArrayList<>();
 
   {
     arguments2.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
@@ -37,7 +37,7 @@ public class CommandVelocity extends CommandBase
     arguments3.add(new DoubleArgument("강도"));
   }
 
-  private final List<Argument> arguments4 = new ArrayList<>();
+  private final List<Argument<?>> arguments4 = new ArrayList<>();
   {
     arguments4.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
     arguments4.add(new LocationArgument("방향"));

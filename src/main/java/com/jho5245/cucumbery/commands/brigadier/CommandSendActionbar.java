@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CommandSendActionbar extends CommandBase
 {
-	final private List<Argument> argument = new ArrayList<>();
+	final private List<Argument<?>> argument = new ArrayList<>();
 	{
 		argument.add(new EntitySelectorArgument("플레이어", EntitySelector.MANY_PLAYERS));
 		argument.add( new GreedyStringArgument("메시지"));

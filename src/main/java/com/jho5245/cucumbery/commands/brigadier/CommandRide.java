@@ -23,12 +23,12 @@ import java.util.List;
 
 public class CommandRide extends CommandBase
 {
-  private final List<Argument> ride1 = new ArrayList<>();
-  private final List<Argument> rideOff1 = new ArrayList<>();
-  private final List<Argument> ride2 = new ArrayList<>();
-  private final List<Argument> ride2Hide = new ArrayList<>();
-  private final List<Argument> rideOff2 = new ArrayList<>();
-  private final List<Argument> rideOff2Hide = new ArrayList<>();
+  private final List<Argument<?>> ride1 = new ArrayList<>();
+  private final List<Argument<?>> rideOff1 = new ArrayList<>();
+  private final List<Argument<?>> ride2 = new ArrayList<>();
+  private final List<Argument<?>> ride2Hide = new ArrayList<>();
+  private final List<Argument<?>> rideOff2 = new ArrayList<>();
+  private final List<Argument<?>> rideOff2Hide = new ArrayList<>();
 
   {
     ride1.add(new EntitySelectorArgument("탑승할 개체", EntitySelector.ONE_ENTITY));

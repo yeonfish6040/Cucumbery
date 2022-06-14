@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffectImple;
 import com.jho5245.cucumbery.deathmessages.DeathManager;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
@@ -15,15 +16,24 @@ import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Consumer;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,6 +88,7 @@ public class EntityDeath implements Listener
     }
 
     this.telekinesis(event);
+    this.combo(event);
   }
 
   private void telekinesis(EntityDeathEvent event)
@@ -191,6 +202,61 @@ public class EntityDeath implements Listener
             entity.getWorld().dropItemNaturally(entity.getLocation(), dropClone);
           }
         }
+      }
+    }
+  }
+
+  private void combo(EntityDeathEvent event)
+  {
+    LivingEntity entity = event.getEntity();
+    Player killer = entity.getKiller();
+    if (killer != null && CustomEffectManager.hasEffect(killer, CustomEffectType.COMBO))
+    {
+      int stack = 0;
+      if (CustomEffectManager.hasEffect(killer, CustomEffectType.COMBO_STACK))
+      {
+        stack = CustomEffectManager.getEffect(killer, CustomEffectType.COMBO_STACK).getAmplifier() + 1;
+      }
+      if (!CustomEffectManager.hasEffect(killer, CustomEffectType.COMBO_DELAY))
+      {
+        CustomEffectManager.removeEffect(killer, CustomEffectType.COMBO_STACK);
+      }
+      double sec;
+      if (stack + 1 < 3000)
+      {
+        sec = -0.001 * (stack + 1) + 10;
+      }
+      else {
+        sec = 29700d / (stack + 1) - 2.9;
+      }
+      if (sec < 0.2)
+      {
+        sec = 0.2;
+      }
+      CustomEffectManager.addEffect(killer, new CustomEffect(CustomEffectType.COMBO_STACK, (int) Math.ceil(sec * 20), stack));
+      CustomEffectManager.addEffect(killer, CustomEffectType.COMBO_DELAY);
+      if ((stack + 1) % 10 == 0)
+      {
+        int finalStack = stack;
+        @Nullable Consumer<Entity> consumer = (e) -> {
+          ExperienceOrb experienceOrb = (ExperienceOrb) e;
+          experienceOrb.setExperience(finalStack + 1);
+          experienceOrb.customName(Component.translatable("콤보 구슬", NamedTextColor.YELLOW));
+          experienceOrb.setCustomNameVisible(true);
+          experienceOrb.setVelocity(new Vector(0, 0, 0));
+          experienceOrb.setGravity(false);
+          for (Player online : Bukkit.getOnlinePlayers())
+          {
+            if (killer == online)
+            {
+              continue;
+            }
+            online.hideEntity(Cucumbery.getPlugin(), experienceOrb);
+          }
+          CustomEffectManager.addEffect(experienceOrb, new PlayerCustomEffectImple(CustomEffectType.COMBO_EXPERIENCE, killer));
+        };
+        entity.getWorld().spawnEntity(entity.getLocation(), EntityType.EXPERIENCE_ORB, SpawnReason.CUSTOM, consumer);
+        killer.playSound(entity.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.5F, 0.5F);
       }
     }
   }

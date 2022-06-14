@@ -8,6 +8,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import net.kyori.adventure.text.Component;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
@@ -1180,9 +1181,16 @@ public class ItemLorePotionDescription
       {
         try
         {
-          Component effect = ComponentUtil.create(CustomEffectType.valueOf(potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID).toUpperCase())).color(null);
-          int duration = potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION), amplifier = potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER);
-          list.add(getDescription(effect, duration, amplifier + 1));
+          String rawKey = potionTag.getString(CucumberyTag.CUSTOM_EFFECTS_ID);
+          String[] rawKeySplit = rawKey.split(":");
+          CustomEffectType customEffectType = CustomEffectType.getByKey(new NamespacedKey(rawKeySplit[0], rawKeySplit[1]));
+          Component effect = null;
+          if (customEffectType != null)
+          {
+            effect = ComponentUtil.create(customEffectType).color(null);
+            int duration = potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_DURATION), amplifier = potionTag.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER);
+            list.add(getDescription(effect, duration, amplifier + 1));
+          }
         }
         catch (Exception ignored)
         {

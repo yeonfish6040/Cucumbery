@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.util.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
-import com.jho5245.cucumbery.commands.no_groups.CommandReinforce;
+import com.jho5245.cucumbery.commands.reinforce.CommandReinforce;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
@@ -25,6 +25,12 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.Region;
+import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -100,6 +106,10 @@ public class Scheduler
     }, 400L, 400L);
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
+      starCatchPenalty();
+    }, 20L * 60L * 10L, 20L * 60L * 10L);
+    Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+    {
       playerExpireHandItem();
     }, 1200L, 1200L);
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
@@ -151,6 +161,7 @@ public class Scheduler
         CustomEffectScheduler.axolotlsGrace(entity);
         CustomEffectScheduler.stop(entity);
         CustomEffectScheduler.damageIndicator(entity);
+        CustomEffectScheduler.vanillaEffect(entity);
       }
     }
   }
@@ -177,6 +188,7 @@ public class Scheduler
       }
       // 명령 블록 명령어 미리 보기
       commandBlockPreview(player);
+      worldEditPositionParticle(player);
 
       CustomEffectScheduler.display(player);
       CustomEffectScheduler.gliding(player);
@@ -187,6 +199,106 @@ public class Scheduler
       CustomEffectScheduler.serverRadio(player);
       CustomEffectScheduler.trollInventoryProperty(player);
       CustomEffectScheduler.townShield(player);
+      CustomEffectScheduler.starCatch(player);
+    }
+  }
+
+  private static void starCatchPenalty()
+  {
+    for (UUID uuid : Variable.starCatchPenalty.keySet())
+    {
+      int i = Variable.starCatchPenalty.get(uuid);
+      Variable.starCatchPenalty.put(uuid, Math.max(0, i - 20));
+    }
+  }
+
+  private static void worldEditPositionParticle(@NotNull Player player)
+  {
+    if (!Cucumbery.using_WorldEdit)
+    {
+      return;
+    }
+    if (!UserData.SHOW_WORLDEDIT_POSITION_PARTICLE.getBoolean(player))
+    {
+      return;
+    }
+    if (player.getInventory().getItemInMainHand().getType() != Material.WOODEN_AXE)
+    {
+      return;
+    }
+    BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);
+    LocalSession localSession = Cucumbery.worldEditPlugin.getSession(player);
+    Region region;
+    try {
+      localSession.getSelection();
+      region = localSession.getSelection(bukkitPlayer.getWorld());
+    } catch (Throwable t) {
+      return;
+    }
+    BlockVector3 max = region.getMaximumPoint();
+    BlockVector3 min = region.getMinimumPoint();
+    int maxx = Math.max(max.getBlockX(), min.getBlockX());
+    int maxy = Math.max(max.getBlockY(), min.getBlockY());
+    int maxz = Math.max(max.getBlockZ(), min.getBlockZ());
+    int minx = Math.min(max.getBlockX(), min.getBlockX());
+    int miny = Math.min(max.getBlockY(), min.getBlockY());
+    int minz = Math.min(max.getBlockZ(), min.getBlockZ());
+    double avgx = (maxx + minx) / 2.;
+    double avgy = (maxy + miny) / 2.;
+    double avgz = (maxz + minz) / 2.;
+    World world = player.getWorld();
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx, avgy, avgz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx + 1, avgy + 1, avgz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx, avgy + 1, avgz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx, avgy, avgz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx + 1, avgy + 1, avgz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx, avgy, avgz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx + 1, avgy, avgz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx + 1, avgy, avgz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location(world, avgx, avgy + 1, avgz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(245, 189, 4), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location((world), minx, miny, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location((world), minx, miny, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy + 1, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location((world), minx, maxy + 1, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location((world), minx, maxy + 1, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, miny, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, miny, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy + 1, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    for (int a = 0; !(maxx - minx == a); a++) {
+      player.spawnParticle(Particle.REDSTONE, new Location(world, minx + a + 1, miny, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int b = 0; !(maxy - miny == b); b++) {
+      player.spawnParticle(Particle.REDSTONE, new Location(world, minx, miny + b + 1, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int c = 0; !(maxz - minz == c); c++) {
+      player.spawnParticle(Particle.REDSTONE, new Location(world, minx, miny, minz + c + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int d = 0; !(maxx - d == minx); d++) {
+      player.spawnParticle(Particle.REDSTONE, new Location(world, maxx - d, maxy + 1, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int e = 0; !(maxz - e == minz); e++) {
+      player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy + 1, maxz - e), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int f = 0; !(maxy - f == miny); f++) {
+      player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy - f, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int g = 0; !(maxx - minx == g); g++) {
+      player.spawnParticle(Particle.REDSTONE, new Location(world, minx + g + 1, maxy + 1, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int h = 0; !(maxz - minz == h); h++) {
+      player.spawnParticle(Particle.REDSTONE, new Location(world, minx, maxy + 1, minz + h + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int i = 0; !(maxx - i == minx); i++) {
+      player.spawnParticle(Particle.REDSTONE, new Location(world, maxx - i, miny, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int j = 0; !(maxz - j == minz); j++) {
+      player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, miny, maxz - j), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int k = 0; !(maxy - k == miny); k++) {
+      player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy - k, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
+    }
+    for (int l = 0; !(maxy - l == miny); l++) {
+      player.spawnParticle(Particle.REDSTONE, new Location((world), minx, maxy - l, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
   }
 
@@ -259,7 +371,7 @@ public class Scheduler
               case PURPLE -> NamedTextColor.DARK_PURPLE;
               case WHITE -> NamedTextColor.WHITE;
             };
-    serverRadio.progress(ratio).name(ComponentUtil.translate((radio.isPlaying() ? "♬" : "■") + " %s",
+    serverRadio.progress(ratio).name(ComponentUtil.translate((radio.isPlaying() ? "♬" : "■") + " %s" + (radio.getRepeatMode() == RepeatMode.ONE ? " ♺" : ""),
             Component.text(songName, NamedTextColor.WHITE), Constant.JeongsuFloor.format(ratio * 100d) + "%", Constant.Sosu2.format(speed)).color(textColor));
 
     for (Player online : Bukkit.getOnlinePlayers())
@@ -1331,7 +1443,8 @@ public class Scheduler
       {
         for (Player player : Bukkit.getServer().getOnlinePlayers())
         {
-          if (CommandReinforce.chanceTime.contains(player))
+          UUID uuid = player.getUniqueId();
+          if (CommandReinforce.CHANCE_TIME.contains(uuid))
           {
             Method.playSound(player, "reinforce_chancetime", 1000F, 1F);
           }
@@ -1348,7 +1461,8 @@ public class Scheduler
       {
         for (Player player : Bukkit.getServer().getOnlinePlayers())
         {
-          if (CommandReinforce.chanceTime.contains(player))
+          UUID uuid = player.getUniqueId();
+          if (CommandReinforce.CHANCE_TIME.contains(uuid))
           {
             MessageUtil.sendTitle(player, "&eCHANCE TIME!", "&b강화 성공 확률 100%!", 0, 40, 0);
 

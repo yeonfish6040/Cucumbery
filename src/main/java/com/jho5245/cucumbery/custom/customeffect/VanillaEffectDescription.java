@@ -153,7 +153,13 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.HERO_OF_THE_VILLAGE))
     {
-      return ComponentUtil.translate("습격을 막아냈습니다! 주민의 거래 가격이 할인됩니다");
+      return ComponentUtil.translate("습격을 막아냈습니다! 주민의 거래 가격이 할인됩니다")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("추가로, 17성 미만의 스타포스 강화 비용이 할인됩니다"));
+    }
+    if (type.equals(PotionEffectType.DARKNESS))
+    {
+      return ComponentUtil.translate("주변이 어두워집니다");
     }
     return Component.empty();
   }
@@ -327,7 +333,9 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.HERO_OF_THE_VILLAGE))
     {
-      return ComponentUtil.translate("습격을 막아냈습니다! 주민의 거래 가격이 %s 할인됩니다", "&e" + Constant.Sosu2.format(Math.min(98.75, 30 + (amplifier) * 6.25)) + "%");
+      return ComponentUtil.translate("습격을 막아냈습니다! 주민의 거래 가격이 %s 할인됩니다", "&e" + Constant.Sosu2.format(Math.min(98.75, 30 + (amplifier) * 6.25)) + "%")
+              .append(Component.text("\n"))
+              .append(ComponentUtil.translate("추가로, 17성 미만의 스타포스 강화 비용이 %s 할인됩니다", "&e" + Constant.Sosu2.format(amplifier + 1) + "%"));
     }
     return getDescription(potionEffect.getType());
   }

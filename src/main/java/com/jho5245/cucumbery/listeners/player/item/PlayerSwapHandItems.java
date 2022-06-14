@@ -62,8 +62,7 @@ public class PlayerSwapHandItems implements Listener
       event.setCancelled(true);
       Method.playSound(player, Constant.ERROR_SOUND);
       MessageUtil.sendError(player, "강화중에는 주로 사용하는 손에 들고 있는 아이템을 바꿀 수 없습니다");
-      Component a = ComponentUtil.create(Prefix.INFO + "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.", "클릭하면 강화를 중지합니다",
-              ClickEvent.Action.RUN_COMMAND, "/강화 quit");
+Component a = ComponentUtil.create(Prefix.INFO, "만약 아이템 강화를 중지하시려면 이 문장을 클릭해주세요.").hoverEvent(ComponentUtil.create("클릭하면 강화를 중지합니다")).clickEvent(ClickEvent.runCommand("/강화 quit"));
       player.sendMessage(a);
       return;
     }

@@ -115,18 +115,21 @@ public class ItemLore
     CreativeCategory itemCategoryType = type.getCreativeCategory();
     if (itemCategoryType == null)
     {
-      itemGroup = Component.translatable("치트");
+      itemGroup = switch (type)
+              {
+                case SUSPICIOUS_STEW -> Component.translatable("itemGroup.food");
+                case ENCHANTED_BOOK -> Component.translatable("item.minecraft.enchanted_book");
+                default -> Component.translatable("치트");
+              };
     }
     else
-    switch (itemCategoryType)
     {
-      case BUILDING_BLOCKS -> itemGroup = Component.translatable("itemGroup.buildingBlocks");
-      case REDSTONE, TRANSPORTATION, MISC, FOOD, COMBAT, BREWING, DECORATIONS, TOOLS -> itemGroup = Component.translatable("itemGroup." + itemCategoryType.toString().toLowerCase());
-      default -> itemGroup = Component.translatable("알 수 없음");
-    }
-    if (type == Material.ENCHANTED_BOOK)
-    {
-      itemGroup = Component.translatable("item.minecraft.enchanted_book");
+      switch (itemCategoryType)
+      {
+        case BUILDING_BLOCKS -> itemGroup = Component.translatable("itemGroup.buildingBlocks");
+        case REDSTONE, TRANSPORTATION, MISC, FOOD, COMBAT, BREWING, DECORATIONS, TOOLS -> itemGroup = Component.translatable("itemGroup." + itemCategoryType.toString().toLowerCase());
+        default -> itemGroup = Component.translatable("알 수 없음");
+      }
     }
     Component itemGroupComponent = ComponentUtil.translate("&7아이템 종류 : [%s]", itemGroup);
     defaultLore.add(itemGroupComponent);
@@ -190,31 +193,6 @@ public class ItemLore
     itemStack.setItemMeta(itemMeta);
     return itemStack;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   @NotNull

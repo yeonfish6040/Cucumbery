@@ -1,16 +1,13 @@
 package com.jho5245.cucumbery.commands.brigadier;
 
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.Argument;
-import dev.jorel.commandapi.arguments.BooleanArgument;
-import dev.jorel.commandapi.arguments.EntitySelectorArgument;
+import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument.EntitySelector;
-import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -39,12 +36,12 @@ public class CommandSudo2 extends CommandBase
     }
   }
 
-  final private List<Argument> arguments = new ArrayList<>();
+  final private List<Argument<?>> arguments = new ArrayList<>();
 
   {
-    arguments.add(new EntitySelectorArgument("플레이어", EntitySelector.MANY_PLAYERS));
+    arguments.add(new EntitySelectorArgument<>("플레이어", EntitySelector.MANY_PLAYERS));
     arguments.add(new BooleanArgument("명령어 출력 숨김 여부"));
-    arguments.add(new GreedyStringArgument("명령어").overrideSuggestions(commands));
+    arguments.add(new GreedyStringArgument("명령어").replaceSuggestions(ArgumentSuggestions.strings(commands)));
   }
 
   @SuppressWarnings("unchecked")

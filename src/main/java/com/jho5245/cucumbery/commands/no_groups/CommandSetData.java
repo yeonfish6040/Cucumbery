@@ -340,12 +340,12 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
   }
 
   @Override
-  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
     int length = args.length;
     if (length == 1)
     {
-      return TabCompleterUtil.tabCompleterList(args, "<인수>", false,
+      return CommandTabUtil.tabCompleterList(args, "<인수>", false,
               Completion.completion("amount", Component.translatable("손에 들고 있는 아이템의 개수를 변경합니다")),
               Completion.completion("durability", Component.translatable("손에 들고 있는 아이템의 내구도를 변경합니다")),
               Completion.completion("material", Component.translatable("손에 들고 있는 아이템의 종류를 변경합니다"))
@@ -356,53 +356,53 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
             (other != null ? other.getInventory().getItemInMainHand() : null);
     if (!ItemStackUtil.itemExists(itemStack))
     {
-      return TabCompleterUtil.errorMessage(Prefix.NO_HOLDING_ITEM.toString());
+      return CommandTabUtil.errorMessage(Prefix.NO_HOLDING_ITEM.toString());
     }
     switch (args[0])
     {
       case "amount" -> {
         if (length == 2)
         {
-          return TabCompleterUtil.tabCompleterIntegerRadius(args, 0,127, "<개수>");
+          return CommandTabUtil.tabCompleterIntegerRadius(args, 0,127, "<개수>");
         }
         if (length == 3)
         {
-          return TabCompleterUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 개수를 변경합니다")));
+          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 개수를 변경합니다")));
         }
         if (length == 4)
         {
-          return TabCompleterUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+          return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
       case "durability" -> {
         if (length == 2)
         {
-          return TabCompleterUtil.tabCompleterIntegerRadius(args, 0,32767, "<내구도>");
+          return CommandTabUtil.tabCompleterIntegerRadius(args, 0,32767, "<내구도>");
         }
         if (length == 3)
         {
-          return TabCompleterUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 내구도를 변경합니다")));
+          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 내구도를 변경합니다")));
         }
         if (length == 4)
         {
-          return TabCompleterUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+          return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
       case "material" -> {
         if (length == 2)
         {
-          return TabCompleterUtil.tabCompleterList(args, Material.values(), "<아이템>", e -> e instanceof Material material && (!material.isItem() || material.isAir()));
+          return CommandTabUtil.tabCompleterList(args, Material.values(), "<아이템>", e -> e instanceof Material material && (!material.isItem() || material.isAir()));
         }
         if (length == 3)
         {
-          return TabCompleterUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 종류를 변경합니다")));
+          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 종류를 변경합니다")));
         }
         if (length == 4)
         {
-          return TabCompleterUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+          return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
     }
-    return Collections.singletonList(TabCompleterUtil.ARGS_LONG);
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 }

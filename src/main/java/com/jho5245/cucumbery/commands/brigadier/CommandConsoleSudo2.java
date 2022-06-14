@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.brigadier;
 
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
+import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
@@ -28,9 +29,9 @@ public class CommandConsoleSudo2 extends CommandBase
 		}
 	}
 
-	final private List<Argument> argument = new ArrayList<>();
+	final private List<Argument<?>> argument = new ArrayList<>();
 	{
-		argument.add( new GreedyStringArgument("명령어").overrideSuggestions(commands));
+		argument.add( new GreedyStringArgument("명령어").replaceSuggestions(ArgumentSuggestions.strings(commands)));
 	}
 
 	public void registerCommand(String command, String permission, String... aliases)

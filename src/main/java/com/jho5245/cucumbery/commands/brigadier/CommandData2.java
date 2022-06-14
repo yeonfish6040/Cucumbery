@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CommandData2 extends CommandBase
 {
-  final private List<Argument> argumentList = new ArrayList<>();
+  final private List<Argument<?>> argumentList = new ArrayList<>();
 
   {
     argumentList.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));

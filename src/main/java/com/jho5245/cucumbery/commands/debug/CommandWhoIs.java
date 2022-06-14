@@ -1023,16 +1023,16 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
   }
 
   @Override
-  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
     int length = args.length;
     if (length == 1)
     {
       if (label.equals("whois"))
       {
-        return TabCompleterUtil.tabCompleterPlayer(sender, args, "<플레이어>");
+        return CommandTabUtil.tabCompleterPlayer(sender, args, "<플레이어>");
       }
-      return TabCompleterUtil.tabCompleterOfflinePlayer(sender, args, "<플레이어>");
+      return CommandTabUtil.tabCompleterOfflinePlayer(sender, args, "<플레이어>");
     }
     else if (length == 2)
     {
@@ -1050,9 +1050,9 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
       {
         if (Method.equals(args[1], "pos", "state", "effect"))
         {
-          return TabCompleterUtil.errorMessage("해당 정보 유형은 온라인 상태의 플레이어에게만 사용할 수 있습니다");
+          return CommandTabUtil.errorMessage("해당 정보 유형은 온라인 상태의 플레이어에게만 사용할 수 있습니다");
         }
-        return TabCompleterUtil.tabCompleterList(args, "[정보 유형]", false, 
+        return CommandTabUtil.tabCompleterList(args, "[정보 유형]", false,
                 Completion.completion("name", Component.translatable("닉네임")),
                 Completion.completion("stats", Component.translatable("전체적인 통계")),
                 Completion.completion("stats_general", Component.translatable("일반 통계")),
@@ -1061,7 +1061,7 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
                 Completion.completion("offline", Component.translatable("접속 통계")));
       }
       boolean hasPotionEffects = player != null && !player.getActivePotionEffects().isEmpty();
-      return TabCompleterUtil.tabCompleterList(args, "[정보 유형]", false,
+      return CommandTabUtil.tabCompleterList(args, "[정보 유형]", false,
               Completion.completion("state", Component.translatable("정보")),
               Completion.completion("pos", Component.translatable("위치 및 스폰 포인트 위치")),
               Completion.completion(Constant.TAB_COMPLETER_QUOTE_ESCAPE + "effect" + (hasPotionEffects ? "" : "(적용 중인 표과 없음)"), Component.translatable("적용 중인 효과")),
@@ -1077,16 +1077,16 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
       switch (args[1])
       {
         case "stats" -> {
-          return TabCompleterUtil.tabCompleterIntegerRadius(args, 1, 4, "[페이지]");
+          return CommandTabUtil.tabCompleterIntegerRadius(args, 1, 4, "[페이지]");
         }
         case "stats_general" -> {
-          return TabCompleterUtil.tabCompleterList(args, Statistic.values(), "<일반 통계>", e -> e instanceof Statistic statistic && statistic.getType() != Type.UNTYPED);
+          return CommandTabUtil.tabCompleterList(args, Statistic.values(), "<일반 통계>", e -> e instanceof Statistic statistic && statistic.getType() != Type.UNTYPED);
         }
         case "stats_entity" -> {
-          return TabCompleterUtil.tabCompleterList(args, Statistic.values(), "<개체 통계>", e -> e instanceof Statistic statistic && statistic.getType() != Type.ENTITY);
+          return CommandTabUtil.tabCompleterList(args, Statistic.values(), "<개체 통계>", e -> e instanceof Statistic statistic && statistic.getType() != Type.ENTITY);
         }
         case "stats_material" -> {
-          return TabCompleterUtil.tabCompleterList(args, Statistic.values(), "<아이템 통계>", e -> e instanceof Statistic statistic && statistic.getType() != Type.ITEM && statistic.getType() != Type.BLOCK);
+          return CommandTabUtil.tabCompleterList(args, Statistic.values(), "<아이템 통계>", e -> e instanceof Statistic statistic && statistic.getType() != Type.ITEM && statistic.getType() != Type.BLOCK);
         }
       }
     }
@@ -1095,24 +1095,24 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
       switch (args[1])
       {
         case "stats_entity" -> {
-          return TabCompleterUtil.tabCompleterList(args, EntityType.values(), "<개체 유형>", e -> e instanceof EntityType entityType && !entityType.isAlive());
+          return CommandTabUtil.tabCompleterList(args, EntityType.values(), "<개체 유형>", e -> e instanceof EntityType entityType && !entityType.isAlive());
         }
         case "stats_material" -> {
           switch (args[2])
           {
             case "mine_block" -> {
-              return TabCompleterUtil.tabCompleterList(args, Material.values(), "<블록>", e -> e instanceof Material material && !material.isBlock());
+              return CommandTabUtil.tabCompleterList(args, Material.values(), "<블록>", e -> e instanceof Material material && !material.isBlock());
             }
             case "break_item" -> {
-              return TabCompleterUtil.tabCompleterList(args, Material.values(), "<내구도가 있는 아이템>", e -> e instanceof Material material && material.getMaxDurability() == 0);
+              return CommandTabUtil.tabCompleterList(args, Material.values(), "<내구도가 있는 아이템>", e -> e instanceof Material material && material.getMaxDurability() == 0);
             }
             case "use_item", "drop", "pickup", "craft_item" -> {
-              return TabCompleterUtil.tabCompleterList(args, Material.values(), "<아이템>", e -> e instanceof Material material && (!material.isItem() || material.isAir()));
+              return CommandTabUtil.tabCompleterList(args, Material.values(), "<아이템>", e -> e instanceof Material material && (!material.isItem() || material.isAir()));
             }
           }
         }
       }
     }
-    return Collections.singletonList(TabCompleterUtil.ARGS_LONG);
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 }

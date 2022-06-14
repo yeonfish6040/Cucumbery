@@ -21,16 +21,16 @@ import java.util.List;
 
 public class CommandReplaceEntity extends CommandBase
 {
-  private final List<Argument> argumentList = Arrays.asList(
+  private final List<Argument<?>> argumentList = Arrays.asList(
           new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES),
           new EntityTypeArgument("개체 종류"));
 
-  private final List<Argument> argumentList2 = Arrays.asList(
+  private final List<Argument<?>> argumentList2 = Arrays.asList(
           new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES),
           new EntityTypeArgument("개체 종류"),
           new BooleanArgument("명령어 출력 숨김 여부"));
 
-  private final List<Argument> argumentList3 = Arrays.asList(
+  private final List<Argument<?>> argumentList3 = Arrays.asList(
           new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES),
           new EntityTypeArgument("개체 종류"),
           new BooleanArgument("명령어 출력 숨김 여부"),

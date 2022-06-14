@@ -4,10 +4,12 @@ import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
-import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.command.*;
+import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -126,23 +128,17 @@ public class CommandTeleport implements CommandExecutor, AsyncTabCompleter
   }
 
   @NotNull
-  public List<Completion> completion(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  public List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
     int length = args.length;
     if (length == 1)
     {
-      List<Completion> list = new ArrayList<>(TabCompleterUtil.tabCompleterEntity(sender, args, Completion.completion("<개체>", Component.translatable("해당 개체에게 텔레포트합니다"))));
-      list.addAll(TabCompleterUtil.tabCompleterEntity(sender, args, Completion.completion("<여러 개체> <다른 개체>", Component.translatable("여러 개체를 다른 개체에게 텔레포트합니다"))));
-      return TabCompleterUtil.removeDupe(list);
+      return CommandTabUtil.tabCompleterEntity(sender, args, "<개체>");
     }
     else if (length == 2)
     {
-      return TabCompleterUtil.tabCompleterEntity(sender, args, Completion.completion("<다른 개체>", Component.translatable("여러 개체를 다른 개체에게 텔레포트합니다")));
+      return CommandTabUtil.tabCompleterEntity(sender, args, "[다른 개체]");
     }
-    else if (length == 3)
-    {
-      return TabCompleterUtil.locationArgument(sender, args, "loc", null, true);
-    }
-    return Collections.singletonList(TabCompleterUtil.ARGS_LONG);
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 }

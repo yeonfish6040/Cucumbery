@@ -1,13 +1,16 @@
 package com.jho5245.cucumbery.commands.no_groups;
 
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.GameMode;
-import org.bukkit.command.*;
+import org.bukkit.Location;
+import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -17,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandSpectate2 implements CommandExecutor, TabCompleter
+public class CommandSpectate2 implements CommandExecutor, AsyncTabCompleter
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -202,5 +205,48 @@ public class CommandSpectate2 implements CommandExecutor, TabCompleter
     }
 
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  /**
+   * Requests a list of possible completions for a command argument.
+   *
+   * @param sender   Source of the command.  For players tab-completing a
+   *                 command inside a command block, this will be the player, not
+   *                 the command block.
+   * @param cmd      the command to be executed.
+   * @param label    Alias of the command which was used
+   * @param args     The arguments passed to the command, including final
+   *                 partial argument to be completed
+   * @param location The location of this command was executed.
+   * @return A List of possible completions for the final argument, or an empty list.
+   */
+  @Override
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {    int length = args.length;
+
+    if (length == 1)
+    {
+      List<Completion> list = CommandTabUtil.tabCompleterEntity(sender, args, "<관전 개체>"),
+      list1 = CommandTabUtil.tabCompleterPlayer(sender, args, "<관전자>");
+      return CommandTabUtil.sortError(list, list1);
+    }
+    else if (length == 2)
+    {
+      return CommandTabUtil.tabCompleterEntity(sender, args, "<관전 개체>");
+    }
+    else if (length == 3)
+    {
+      return CommandTabUtil.tabCompleterBoolean(args, "[게임모드 자동 변경]");
+    }
+    else if (length == 4)
+    {
+      return CommandTabUtil.tabCompleterBoolean(args, "[권한 부족 우회]");
+    }
+    else if (length == 5)
+    {
+      return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
+    }
+
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 }

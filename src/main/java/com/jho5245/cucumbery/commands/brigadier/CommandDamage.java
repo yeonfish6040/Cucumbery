@@ -33,18 +33,18 @@ public class CommandDamage extends CommandBase
   final private IntegerArgument INVINCIBLE = new IntegerArgument("무적 시간(틱)", 0, 200);
   final private MultiLiteralArgument NO_INVINCIBLE = new MultiLiteralArgument("-1");
   final private EntitySelectorArgument DAMAGER = new EntitySelectorArgument("가해 개체", EntitySelector.ONE_ENTITY);
-  final private List<Argument> list01 = List.of(MANY_ENTITIES, DAMAGE);
-  final private List<Argument> list02 = List.of(MANY_ENTITIES, DAMAGE, HIDE_OUTPUT);
-  final private List<Argument> list03 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE);
-  final private List<Argument> list04 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, HIDE_OUTPUT);
-  final private List<Argument> list05 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE);
-  final private List<Argument> list06 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, HIDE_OUTPUT);
-  final private List<Argument> list07 = List.of(MANY_ENTITIES, DAMAGE, DAMAGER);
-  final private List<Argument> list08 = List.of(MANY_ENTITIES, DAMAGE, DAMAGER, HIDE_OUTPUT);
-  final private List<Argument> list09 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, DAMAGER);
-  final private List<Argument> list10 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, DAMAGER, HIDE_OUTPUT);
-  final private List<Argument> list11 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, DAMAGER);
-  final private List<Argument> list12 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, DAMAGER, HIDE_OUTPUT);
+  final private List<Argument<?>> list01 = List.of(MANY_ENTITIES, DAMAGE);
+  final private List<Argument<?>> list02 = List.of(MANY_ENTITIES, DAMAGE, HIDE_OUTPUT);
+  final private List<Argument<?>> list03 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE);
+  final private List<Argument<?>> list04 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, HIDE_OUTPUT);
+  final private List<Argument<?>> list05 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE);
+  final private List<Argument<?>> list06 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, HIDE_OUTPUT);
+  final private List<Argument<?>> list07 = List.of(MANY_ENTITIES, DAMAGE, DAMAGER);
+  final private List<Argument<?>> list08 = List.of(MANY_ENTITIES, DAMAGE, DAMAGER, HIDE_OUTPUT);
+  final private List<Argument<?>> list09 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, DAMAGER);
+  final private List<Argument<?>> list10 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE, DAMAGER, HIDE_OUTPUT);
+  final private List<Argument<?>> list11 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, DAMAGER);
+  final private List<Argument<?>> list12 = List.of(MANY_ENTITIES, DAMAGE, NO_INVINCIBLE, DAMAGER, HIDE_OUTPUT);
 
   private void damage(@NotNull NativeProxyCommandSender sender, @NotNull Collection<Entity> entities, double damage, boolean hideOutput) throws WrapperCommandSyntaxException
   {

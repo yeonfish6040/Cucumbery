@@ -29,9 +29,9 @@ public class CommandSellItem extends CommandBase
 
   private final Argument FEE = new DoubleArgument("fee", 0, 1);
 
-  private final List<Argument> list1 =  List.of(ONE_PLAYER, ITEMSTACK, PRICE);
+  private final List<Argument<?>> list1 =  List.of(ONE_PLAYER, ITEMSTACK, PRICE);
 
-  private final List<Argument> list2 =  List.of(ONE_PLAYER, ITEMSTACK, PRICE, AMOUNT);
+  private final List<Argument<?>> list2 =  List.of(ONE_PLAYER, ITEMSTACK, PRICE, AMOUNT);
 
   private void sellItem(@NotNull Player player, @NotNull Predicate<ItemStack> item, double price, int amount, int maxAmount, double fee)
   {

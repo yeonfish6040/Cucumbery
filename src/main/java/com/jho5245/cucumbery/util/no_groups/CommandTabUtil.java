@@ -4,7 +4,7 @@ import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.LocationUtil.LocationTooltip;
+import com.jho5245.cucumbery.util.no_groups.CommandArgumentUtil.LocationTooltip;
 import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
@@ -15,12 +15,15 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +34,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class TabCompleterUtil
+public class CommandTabUtil
 {
   public static final Completion ARGS_LONG = Completion.completion(Prefix.ARGS_LONG.toString(), Component.translatable(Prefix.ARGS_LONG.toString()));
   private static final List<Completion> SELECTORS = List.of(Completion.completion("@p", Component.translatable("argument.entity.selector.nearestPlayer")),
@@ -174,6 +177,68 @@ public class TabCompleterUtil
   }
 
   @NotNull
+  public static List<Completion> getCommandsTabCompleter2(@NotNull CommandSender sender, @NotNull String[] args, int length, boolean forSudo)
+  {
+    if (args.length == length)
+    {
+      if (!forSudo)
+      {
+        return tabCompleterList(args, Method.getAllServerCommands(), "<명령어>", true);
+      }
+      List<String> cmds = Method.getAllServerCommands();
+      List<String> newCmds = new ArrayList<>();
+      for (String cmd2 : cmds)
+      {
+        newCmds.add(cmd2);
+        newCmds.add("op:" + cmd2);
+      }
+      return tabCompleterList(args, newCmds, "<명령어>", true);
+    }
+    else
+    {
+      String cmdLabel = args[length - 1];
+      if (forSudo)
+      {
+        if (cmdLabel.startsWith("op:"))
+        {
+          cmdLabel = cmdLabel.substring(3);
+        }
+      }
+      if (args.length == length + 1 && Method.equals(cmdLabel, "?", "bukkit:?", "bukkit:help"))
+      {
+        return tabCompleterList(args, Method.getAllServerCommands(), "<명령어>", true);
+      }
+      PluginCommand command = Bukkit.getPluginCommand(cmdLabel);
+      String[] args2 = new String[args.length - length];
+      System.arraycopy(args, length, args2, 0, args.length - length);
+      if (command != null)
+      {
+        CommandExecutor executor = command.getExecutor();
+        if (executor instanceof AsyncTabCompleter asyncTabCompleter)
+        {
+          return asyncTabCompleter.completion(sender, command, command.getLabel(), args2, CommandArgumentUtil.senderLocation(sender));
+        }
+        else
+        {
+          TabCompleter completer = command.getTabCompleter();
+          if (completer != null)
+          {
+            List<String> list = completer.onTabComplete(sender, command, command.getLabel(), args2);
+            if (list != null)
+            {
+              List<Completion> completions = new ArrayList<>();
+              list.forEach(s -> completions.add(Completion.completion(s)));
+              return completions;
+            }
+          }
+
+        }
+      }
+      return Collections.singletonList(Completion.completion("[<인수>]"));
+    }
+  }
+
+  @NotNull
   public static Completion completion(@NotNull Component component)
   {
     return Completion.completion(ComponentUtil.serialize(component), component);
@@ -256,6 +321,20 @@ public class TabCompleterUtil
         list.add(Completion.completion(uuid, hover));
       }
     }
+    if (sender instanceof Player player && player.getGameMode() == GameMode.SPECTATOR)
+    {
+      Entity entity = player.getSpectatorTarget();
+      if (entity != null && (!excludeNonPlayerEntity || entity instanceof Player))
+      {
+        Component hover = ComponentUtil.translate("관전 중인 개체 (%s)", SenderComponentUtil.senderComponent(entity, Constant.THE_COLOR, true));
+        String uuid = entity.getUniqueId().toString();
+        list.add(Completion.completion(uuid, hover));
+      }
+    }
+    if (lastArg.equals(""))
+    {
+      list.add(Completion.completion("#", Component.translatable("특정 태그가 있는 개체 (예 : #foo)")));
+    }
     return list;
   }
 
@@ -270,37 +349,134 @@ public class TabCompleterUtil
   @NotNull
   public static List<Completion> tabCompleterEntity(@NotNull CommandSender sender, @NotNull String[] args, @NotNull Object key)
   {
-    if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("minecraft.command.selector"))
+    String arg = args[args.length - 1];
+    if (Method.equals(arg, "@a", "@e", "@p", "@r", "@s", "@A", "@E", "@R", "@S") && !sender.hasPermission("minecraft.command.selector"))
     {
       return errorMessage("argument.entity.selector.not_allowed");
     }
-    List<Completion> list = new ArrayList<>(tabCompleterEntity(sender, args[args.length - 1], false));
+    List<Completion> list = new ArrayList<>(tabCompleterEntity(sender, arg, false));
     if (sender.hasPermission("minecraft.command.selector"))
     {
       list.add(Completion.completion("@e", Component.translatable("argument.entity.selector.allEntities")));
+      if (arg.startsWith("@"))
+      {
+        list.add(Completion.completion("@A", Component.translatable("자신을 제외한 모든 플레이어")));
+        list.add(Completion.completion("@E", Component.translatable("플레이어를 제외한 모든 개체")));
+        list.add(Completion.completion("@R", Component.translatable("무작위 개체")));
+        if (arg.toLowerCase().startsWith("@r"))
+        {
+          list.add(Completion.completion("@rR", Component.translatable("자신을 제외한 무작위 개체")));
+        }
+        list.add(Completion.completion("@S", Component.translatable("자신을 제외한 모든 개체")));
+        if (arg.toLowerCase().startsWith("@p"))
+        {
+          list.add(Completion.completion("@P", Component.translatable("자신을 제외한 가장 가까운 플레이어")));
+          list.add(Completion.completion("@pp", Component.translatable("자신을 제외한 가장 가까운 개체")));
+        }
+      }
+      if (arg.startsWith("#"))
+      {
+        for (World world : Bukkit.getWorlds())
+        {
+          for (Chunk chunk : world.getLoadedChunks())
+          {
+            for (Entity entity : chunk.getEntities())
+            {
+              for (String tag : entity.getScoreboardTags())
+              {
+                list.add(Completion.completion("#" + tag, ComponentUtil.translate("%s 태그가 있는 개체", tag)));
+              }
+            }
+          }
+        }
+      }
     }
-    return tabCompleterList(args, list, key, true);
+    return tabCompleterList(args, list, key, arg.startsWith("@") || arg.startsWith("#"));
   }
 
   @NotNull
   public static List<Completion> tabCompleterPlayer(@NotNull CommandSender sender, @NotNull String[] args, @NotNull Object key)
   {
-    if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("minecraft.command.selector"))
+    String arg = args[args.length - 1];
+    if (Method.equals(arg, "@a", "@e", "@p", "@r", "@s", "@A", "@E") && !sender.hasPermission("minecraft.command.selector"))
     {
       return errorMessage("argument.entity.selector.not_allowed");
     }
-    List<Completion> list = new ArrayList<>(tabCompleterEntity(sender, args[args.length - 1], true));
-    return tabCompleterList(args, list, key, true);
+    List<Completion> list = new ArrayList<>(tabCompleterEntity(sender, arg, true));
+    if (sender.hasPermission("minecraft.command.selector"))
+    {
+      if (arg.startsWith("@"))
+      {
+        list.add(Completion.completion("@A", Component.translatable("자신을 제외한 모든 플레이어")));
+        if (arg.toLowerCase().startsWith("@r"))
+        {
+          list.add(Completion.completion("@rr", Component.translatable("자신을 제외한 무작위 플레이어")));
+        }
+        if (arg.toLowerCase().startsWith("@p"))
+        {
+          list.add(Completion.completion("@P", Component.translatable("자신을 제외한 가장 가까운 플레이어")));
+        }
+      }
+      if (arg.startsWith("#"))
+      {
+        for (World world : Bukkit.getWorlds())
+        {
+          for (Chunk chunk : world.getLoadedChunks())
+          {
+            for (Entity entity : chunk.getEntities())
+            {
+              for (String tag : entity.getScoreboardTags())
+              {
+                list.add(Completion.completion("#" + tag, ComponentUtil.translate("%s 태그가 있는 개체", tag)));
+              }
+            }
+          }
+        }
+      }
+    }
+    return tabCompleterList(args, list, key, arg.startsWith("@") || arg.startsWith("#"));
   }
 
   @NotNull
   public static List<Completion> tabCompleterOfflinePlayer(@NotNull CommandSender sender, @NotNull String[] args, @NotNull Object key)
   {
-    if (Method.equals(args[args.length - 1], "@a", "@e", "@p", "@r", "@s") && !sender.hasPermission("minecraft.command.selector"))
+    String arg = args[args.length - 1];
+    if (Method.equals(arg, "@a", "@e", "@p", "@r", "@s", "@A", "@E") && !sender.hasPermission("minecraft.command.selector"))
     {
       return errorMessage("argument.entity.selector.not_allowed");
     }
-    List<Completion> list = new ArrayList<>(tabCompleterEntity(sender, args[args.length - 1], true));
+    List<Completion> list = new ArrayList<>(tabCompleterEntity(sender, arg, true));
+    if (sender.hasPermission("minecraft.command.selector"))
+    {
+      if (arg.startsWith("@"))
+      {
+        list.add(Completion.completion("@A", Component.translatable("자신을 제외한 모든 플레이어")));
+        if (arg.toLowerCase().startsWith("@r"))
+        {
+          list.add(Completion.completion("@rr", Component.translatable("자신을 제외한 무작위 플레이어")));
+        }
+        if (arg.toLowerCase().startsWith("@p"))
+        {
+          list.add(Completion.completion("@P", Component.translatable("자신을 제외한 가장 가까운 플레이어")));
+        }
+      }
+      if (arg.startsWith("#"))
+      {
+        for (World world : Bukkit.getWorlds())
+        {
+          for (Chunk chunk : world.getLoadedChunks())
+          {
+            for (Entity entity : chunk.getEntities())
+            {
+              for (String tag : entity.getScoreboardTags())
+              {
+                list.add(Completion.completion("#" + tag, ComponentUtil.translate("%s 태그가 있는 개체", tag)));
+              }
+            }
+          }
+        }
+      }
+    }
     for (String nickName : Variable.nickNames)
     {
       if (!Method.isUUID(nickName) || Bukkit.getOfflinePlayer(UUID.fromString(nickName)).getName() == null)
@@ -309,12 +485,11 @@ public class TabCompleterUtil
         OfflinePlayer offlinePlayer = Method.getOfflinePlayer(sender, nickName, false);
         Component hover = offlinePlayer == null ? null :
                 offlinePlayer.getPlayer() != null ? SenderComponentUtil.senderComponent(offlinePlayer.getPlayer(), Constant.THE_COLOR, true) :
-                        Component.text(offlinePlayer.getUniqueId().toString())
-                ;
+                        Component.text(offlinePlayer.getUniqueId().toString());
         list.add(Completion.completion(nickName, hover));
       }
     }
-    return tabCompleterList(args, list, key, true);
+    return tabCompleterList(args, list, key, arg.startsWith("@") || arg.startsWith("#"));
   }
 
   @NotNull
@@ -327,10 +502,26 @@ public class TabCompleterUtil
   public static List<Completion> tabCompleterList(@NotNull String[] args, @NotNull List<?> list, @NotNull Object key, boolean ignoreEmpty)
   {
     String tabArg = args[args.length - 1];
+    Completion returnKey = null;
+    String suggestion;
+    if (key instanceof Completion completion)
+    {
+      suggestion = completion.suggestion();
+      if (completion.tooltip() == null)
+      {
+        returnKey = Completion.completion(completion.suggestion(), Component.translatable(suggestion.substring(1, suggestion.length() - 1)));
+      }
+    }
+    else
+    {
+      suggestion = key.toString();
+      returnKey = Completion.completion(suggestion, Component.translatable(suggestion.substring(1, suggestion.length() - 1)));
+    }
     if (!ignoreEmpty && tabArg.equals("") && list.isEmpty() || ignoreEmpty && list.isEmpty())
     {
-      return Collections.singletonList(key instanceof Completion completion ? completion : Completion.completion(key.toString()));
+      return Collections.singletonList(returnKey);
     }
+    list = new ArrayList<>(list);
     list.removeIf(e -> e == null || e.equals("") || (e instanceof Completion completion && completion.suggestion().equals("")));
     int length = tabArg.length();
     if (!tabArg.equals(""))
@@ -360,17 +551,41 @@ public class TabCompleterUtil
           returnValue.add(o instanceof Completion completion ? completion : Completion.completion(o.toString()));
         }
       }
+      if (returnValue.size() == 1)
+      {
+        String s = returnValue.get(0).suggestion();
+        if (s.contains(" ") && s.endsWith(tabArg))
+        {
+          return Collections.singletonList(returnKey);
+        }
+      }
       if (returnValue.isEmpty() && !(key instanceof Completion completion ? completion.suggestion() : key.toString()).equals("") && !ignoreEmpty)
       {
         String key2 = (key instanceof Completion completion ? completion.suggestion() :
                 key.toString()).replace("<", "").replace(">", "").replace("[", "").replace("]", "");
-        return errorMessage("'%s'은(는) 잘못되거나 알 수 없는 %s입니다", tabArg, key2);
+        String msg;
+        switch (key2)
+        {
+          case "아이템" -> msg = "argument.item.id.invalid";
+          case "블록" -> msg = "argument.block.id.invalid";
+          case "인수" -> msg = "명령어에 잘못된 인수가 있습니다. (%s)";
+          default -> msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
+        }
+        if (key2.contains("개체"))
+        {
+          msg = "개체를 찾을 수 없습니다 (%s)";
+        }
+        if (key2.contains("플레이어") || key2.contains("관전자"))
+        {
+          msg = "플레이어를 찾을 수 없습니다 (%s)";
+        }
+        return errorMessage(msg, tabArg, Component.translatable(key2));
       }
       returnValue = sort(returnValue);
       if ((ignoreEmpty && returnValue.isEmpty()) || (!(key instanceof Completion completion ? completion.suggestion() : key.toString())
               .equals("") && returnValue.size() == 1 && returnValue.get(0).suggestion().equalsIgnoreCase(tabArg)))
       {
-        return Collections.singletonList(key instanceof Completion completion ? completion : Completion.completion(key.toString()));
+        return Collections.singletonList(returnKey);
       }
       return returnValue;
     }
@@ -392,38 +607,70 @@ public class TabCompleterUtil
   public static List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Enum<?>[] array, @NotNull Object key, @Nullable Predicate<Enum<?>> exclude)
   {
     List<Object> list = new ArrayList<>();
-    for (Enum<?> e : array)
+    String arg = args[args.length - 1];
+    if (arg.equals(arg.toLowerCase()))
     {
-      if (exclude != null && exclude.test(e))
+      for (Enum<?> e : array)
+      {
+        if (exclude != null && exclude.test(e))
+        {
+          continue;
+        }
+        if (!(e instanceof EnumHideable enumHideable) || !enumHideable.isHiddenEnum())
+        {
+          Component hover = null;
+          if (e instanceof Material material)
+          {
+            hover = ItemNameUtil.itemName(material);
+          }
+          else if (e instanceof Statistic statistic)
+          {
+            hover = switch (statistic)
+                    {
+                      case ENTITY_KILLED_BY -> Component.translatable("개체에게 죽은 횟수");
+                      case KILL_ENTITY -> Component.translatable("개체를 죽인 횟수");
+                      default -> Component.translatable(TranslatableKeyParser.getKey(statistic));
+                    };
+          }
+          else if (e instanceof Translatable translatable)
+          {
+            hover = Component.translatable(translatable.translationKey());
+          }
+          list.add(Completion.completion(e.toString().toLowerCase(), hover));
+        }
+      }
+    }
+    return tabCompleterList(args, list, key);
+  }
+
+  @NotNull
+  public static List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Map<?, ?> map, @NotNull Object key)
+  {
+    return tabCompleterList(args, map, key, null);
+  }
+
+  @NotNull
+  public static List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Map<?, ?> map, @NotNull Object key, Predicate<Object> exclude)
+  {
+    List<Object> list = new ArrayList<>();
+    for (Object k : map.keySet())
+    {
+      if (exclude != null && exclude.test(k))
       {
         continue;
       }
-      if (!(e instanceof EnumHideable enumHideable) || !enumHideable.isHiddenEnum())
+      Object v = map.get(k);
+      if (v instanceof CustomEffectType customEffectType && customEffectType.isEnumHidden())
       {
-        Component hover = null;
-        if (e instanceof Material material)
-        {
-          hover = ItemNameUtil.itemName(material);
-        }
-        else if (e instanceof CustomEffectType customEffectType)
-        {
-          hover = ComponentUtil.create(customEffectType).hoverEvent(null).clickEvent(null);
-        }
-        else if (e instanceof Statistic statistic)
-        {
-          hover = switch (statistic)
-          {
-            case ENTITY_KILLED_BY -> Component.translatable("개체에게 죽은 횟수");
-            case KILL_ENTITY -> Component.translatable("개체를 죽인 횟수");
-            default -> Component.translatable(TranslatableKeyParser.getKey(statistic));
-          };
-        }
-        else if (e instanceof Translatable translatable)
-        {
-          hover = Component.translatable(translatable.translationKey());
-        }
-        list.add(Completion.completion(e.toString().toLowerCase(), hover));
+        continue;
       }
+      String s = k.toString();
+      Component hover = null;
+      if (v instanceof CustomEffectType customEffectType)
+      {
+        hover = Component.translatable(customEffectType.translationKey()).color(customEffectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
+      }
+      list.add(Completion.completion(s, hover));
     }
     return tabCompleterList(args, list, key);
   }
@@ -446,7 +693,10 @@ public class TabCompleterUtil
     {
       return Collections.singletonList(key instanceof Completion completion ? completion : Completion.completion(key.toString()));
     }
-    return TabCompleterUtil.tabCompleterList(args, key, false, "true", "false", Constant.TAB_COMPLETER_QUOTE_ESCAPE + key);
+    String hover = key instanceof Completion completion ? completion.suggestion() : key.toString();
+    // '[명령어 출력 숨김 여부]' 일 경우 앞뒤 끝의 '['와 ']' 제거
+    hover = hover.substring(1, hover.length() - 1);
+    return CommandTabUtil.tabCompleterList(args, key, false, Completion.completion("true", Component.translatable(hover)), Completion.completion("false", Component.translatable(hover)));
   }
 
   @NotNull
@@ -569,7 +819,7 @@ public class TabCompleterUtil
   {
     if (location == null)
     {
-      location = LocationUtil.senderLocation(sender);
+      location = CommandArgumentUtil.senderLocation(sender);
     }
     if (isInteger)
     {
@@ -602,9 +852,9 @@ public class TabCompleterUtil
         {
           h = LocationComponent.locationComponent(loc);
         }
-        String X = isInteger ? loc.getBlockX() + "" :  Constant.Sosu2rawFormat.format(loc.getX());
-        String Y = isInteger ? loc.getBlockY() + "" :  Constant.Sosu2rawFormat.format(loc.getY());
-        String Z = isInteger ? loc.getBlockZ() + "" :  Constant.Sosu2rawFormat.format(loc.getZ());
+        String X = isInteger ? loc.getBlockX() + "" : Constant.Sosu2rawFormat.format(loc.getX());
+        String Y = isInteger ? loc.getBlockY() + "" : Constant.Sosu2rawFormat.format(loc.getY());
+        String Z = isInteger ? loc.getBlockZ() + "" : Constant.Sosu2rawFormat.format(loc.getZ());
         list.add(Completion.completion(X + " " + Y + " " + Z, h));
       }
     }
@@ -801,7 +1051,7 @@ public class TabCompleterUtil
   {
     if (location == null)
     {
-      location = LocationUtil.senderLocation(sender);
+      location = CommandArgumentUtil.senderLocation(sender);
     }
     String yaw = Constant.Sosu2rawFormat.format(location.getYaw()), pitch = Constant.Sosu2rawFormat.format(location.getPitch());
     List<Completion> list = new ArrayList<>(Arrays.asList(
@@ -882,12 +1132,49 @@ public class TabCompleterUtil
       Component tooltip = tooltipString.equals(world.getName()) ? null : ComponentUtil.create(tooltipString);
       list.add(Completion.completion(world.getName(), tooltip));
     }
-    World currentWorld = LocationUtil.senderLocation(sender).getWorld();
+    World currentWorld = CommandArgumentUtil.senderLocation(sender).getWorld();
     String tooltipString = Method.getWorldDisplayName(currentWorld);
     Component tooltip = tooltipString.equals(currentWorld.getName()) ? ComponentUtil.translate("현재 월드 (%s)", currentWorld.getName())
             : ComponentUtil.translate("현재 월드 (%s, %s)", currentWorld.getName(), ComponentUtil.create(tooltipString));
     list.add(Completion.completion("~", tooltip));
     return tabCompleterList(args, list, key);
+  }
+
+  @NotNull
+  public static List<Completion> itemStackArgument(@NotNull CommandSender sender, @NotNull String[] args, @NotNull Object key)
+  {
+    List<Completion> list = new ArrayList<>(tabCompleterList(args, Material.values(), key, e -> e instanceof Material material && (material.isAir() || !material.isItem())));
+    String arg = args[args.length - 1];
+    boolean regex = arg.equals("") || (arg.matches("(.*[a-z0-9_-])") && !arg.contains("{"));
+    if (regex)
+    {
+      try
+      {
+        if (arg.toLowerCase().equals(arg))
+        {
+          Material material = Material.valueOf(arg.toUpperCase());
+          if (!(material.isAir() || !material.isItem()))
+          {
+            return List.of(Completion.completion(arg + "{"));
+          }
+        }
+      }
+      catch (Exception ignored)
+      {
+
+      }
+      return list;
+    }
+    try
+    {
+      Bukkit.getItemFactory().createItemStack(args[args.length - 1]);
+      return tabCompleterList(args, key, true);
+    }
+    catch (Exception e)
+    {
+      TranslatableComponent component = ItemStackUtil.getErrorCreateItemStack(e.getCause());
+      return completions(ComponentUtil.translate("%s", component, "error-text"));
+    }
   }
 
   @NotNull
@@ -988,6 +1275,7 @@ public class TabCompleterUtil
         }
       }
     }
-    return list;
+
+    return list.stream().distinct().collect(Collectors.toList());
   }
 }

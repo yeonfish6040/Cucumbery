@@ -1,22 +1,23 @@
 package com.jho5245.cucumbery.commands.debug;
 
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import org.bukkit.Location;
 import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandCheckPermission implements CommandExecutor, TabCompleter
+public class CommandCheckPermission implements CommandExecutor, TabCompleter, AsyncTabCompleter
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -75,6 +76,10 @@ public class CommandCheckPermission implements CommandExecutor, TabCompleter
 
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
+    if (sender instanceof Player)
+    {
+      return Collections.emptyList();
+    }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
     {
       return Collections.singletonList(args[0]);
@@ -94,5 +99,38 @@ public class CommandCheckPermission implements CommandExecutor, TabCompleter
       return Method.tabCompleterList(args, list, "<퍼미션 노드>", true);
     }
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  /**
+   * Requests a list of possible completions for a command argument.
+   *
+   * @param sender   Source of the command.  For players tab-completing a
+   *                 command inside a command block, this will be the player, not
+   *                 the command block.
+   * @param cmd      the command to be executed.
+   * @param label    Alias of the command which was used
+   * @param args     The arguments passed to the command, including final
+   *                 partial argument to be completed
+   * @param location The location of this command was executed.
+   * @return A List of possible completions for the final argument, or an empty list.
+   */
+  @Override
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {
+    int length = args.length;
+    if (length == 1)
+    {
+      return CommandTabUtil.tabCompleterEntity(sender, args, "<개체>");
+    }
+    else if (length == 2)
+    {
+      List<String> list = new ArrayList<>();
+      for (org.bukkit.permissions.Permission permission : Cucumbery.getPlugin().getPluginManager().getPermissions())
+      {
+        list.add(permission.getName());
+      }
+      return CommandTabUtil.tabCompleterList(args, list, "<퍼미션 노드>", true);
+    }
+    return Collections.singletonList(CommandTabUtil.ARGS_LONG);
   }
 }

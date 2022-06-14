@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 # 데스 메시지 기능 편집
 death-messages:
   enable: true # 사용 여부. true 또는 false
@@ -554,6 +554,16 @@ death-messages:
       - "%1$s이(가) 어딘가에서 날아온 %2$s에게 맞아 죽었습니다"
     shulker-bullet-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s에게 맞아 죽었습니다"
+    sonic-boom:
+      - "death.attack.sonic_boom" # %1$s은(는) 강한 음파의 비명에 말살됐습니다
+    sonic-boom-combat:
+      - "death.attack.sonic_boom.player" # %1$s이(가) %2$s에게서 도망치려다 강한 음파의 비명에 말살됐습니다
+    sonic-boom-combat-item:
+      - "death.attack.sonic_boom.item" # %1$s이(가) %3$s을(를) 든 %2$s에게서 도망치려다 강한 음파의 비명에 말살됐습니다
+    sonic-boom-combat-suicide:
+      - "%1$s이(가) 스스로의 강한 음파의 비명에 말살됐습니다"
+    sonic-boom-combat-suicide-item:
+      - ""
     stalagmite:
      # - "death.attack.stalagmite" # %1$s이(가) 석순에 찔렸습니다
       - "%1$s이(가) %2$s에 찔렸습니다"
