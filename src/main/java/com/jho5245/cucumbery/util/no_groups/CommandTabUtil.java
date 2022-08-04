@@ -234,6 +234,40 @@ public class CommandTabUtil
 
         }
       }
+/*      String wholeCommand = cmdLabel + " " + MessageUtil.listToString(args); // 실제로 채팅에 입력한 명령어 ig : /give @a diamond
+      int start;
+      if (wholeCommand.contains(" "))
+      {
+        start = wholeCommand.length() - wholeCommand.replace(" ", "").length();
+      }
+      else
+      {
+        start = 0;
+      }
+      @SuppressWarnings("unchecked")
+      ParseResults<?> parseResults = Brigadier.getCommandDispatcher().parse(cmdLabel, Brigadier.getBrigadierSourceFromCommandSender(sender));
+      List<Completion> errors = new ArrayList<>();
+      for (CommandSyntaxException exception : parseResults.getExceptions().values())
+      {
+        errors.add(Completion.completion(exception.getRawMessage().getString(), Component.translatable(exception.getRawMessage().getString())));
+      }
+      if (!errors.isEmpty())
+      {
+        return errors;
+      }
+      List<Suggestion> suggestionsList = new ArrayList<>();
+      Brigadier.getCommandDispatcher().getCompletionSuggestions(parseResults).thenApply((suggestionsObject) -> {
+        Suggestions suggestions = (Suggestions) suggestionsObject;
+        Suggestions s = new Suggestions(new StringRange(start, start + suggestions.getRange().getLength()), suggestions.getList());
+        suggestionsList.addAll(s.getList());
+        return s;
+      });
+      List<Completion> completions = new ArrayList<>();
+      suggestionsList.forEach(s -> completions.add(Completion.completion(s.getText(), Component.translatable(s.getText()))));
+      if (!completions.isEmpty())
+      {
+        return completions;
+      }*/
       return Collections.singletonList(Completion.completion("[<인수>]"));
     }
   }
@@ -563,14 +597,7 @@ public class CommandTabUtil
       {
         String key2 = (key instanceof Completion completion ? completion.suggestion() :
                 key.toString()).replace("<", "").replace(">", "").replace("[", "").replace("]", "");
-        String msg;
-        switch (key2)
-        {
-          case "아이템" -> msg = "argument.item.id.invalid";
-          case "블록" -> msg = "argument.block.id.invalid";
-          case "인수" -> msg = "명령어에 잘못된 인수가 있습니다. (%s)";
-          default -> msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
-        }
+        String msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
         if (key2.contains("개체"))
         {
           msg = "개체를 찾을 수 없습니다 (%s)";
@@ -578,6 +605,13 @@ public class CommandTabUtil
         if (key2.contains("플레이어") || key2.contains("관전자"))
         {
           msg = "플레이어를 찾을 수 없습니다 (%s)";
+        }
+        switch (key2)
+        {
+          case "아이템" -> msg = "argument.item.id.invalid";
+          case "블록" -> msg = "argument.block.id.invalid";
+          case "인수" -> msg = "명령어에 잘못된 인수가 있습니다: %s";
+          case "개체 유형" -> msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
         }
         return errorMessage(msg, tabArg, Component.translatable(key2));
       }
@@ -665,6 +699,14 @@ public class CommandTabUtil
         continue;
       }
       String s = k.toString();
+/*      if (k instanceof NamespacedKey && !args[args.length - 1].equals("") && !args[args.length - 1].contains(":"))
+      {
+        args[args.length - 1] = "cucumbery:" + args[args.length - 1];
+      }*/
+      if (k instanceof NamespacedKey)
+      {
+
+      }
       Component hover = null;
       if (v instanceof CustomEffectType customEffectType)
       {
@@ -827,10 +869,6 @@ public class CommandTabUtil
       location.setY(location.getBlockY());
       location.setZ(location.getBlockZ());
     }
-    String x = isInteger ? location.getBlockX() + "" : Constant.Sosu2rawFormat.format(location.getX());
-    String y = isInteger ? location.getBlockY() + "" : Constant.Sosu2rawFormat.format(location.getY());
-    String z = isInteger ? location.getBlockZ() + "" : Constant.Sosu2rawFormat.format(location.getZ());
-    Component hover = ComponentUtil.translate("현재 위치 (%s)", location);
     @Nullable Block targetBlock = null;
     if (sender instanceof Player player)
     {
@@ -839,9 +877,13 @@ public class CommandTabUtil
     List<Object> list = new ArrayList<>(Arrays.asList(
             Completion.completion("~ ~ ~"),
             Completion.completion("~ ~"),
-            Completion.completion("~"),
-            Completion.completion(x + " " + y + " " + z, hover)
+            Completion.completion("~")
     ));
+    Component hover = ComponentUtil.translate("현재 위치 (%s)", location);
+    String x = isInteger ? location.getBlockX() + "" : Constant.Sosu2rawFormat.format(location.getX());
+    String y = isInteger ? location.getBlockY() + "" : Constant.Sosu2rawFormat.format(location.getY());
+    String z = isInteger ? location.getBlockZ() + "" : Constant.Sosu2rawFormat.format(location.getZ());
+    list.add(Completion.completion(x + " " + y + " " + z, hover));
     if (extraSuggestions != null)
     {
       for (LocationTooltip tooltip : extraSuggestions)
@@ -863,185 +905,188 @@ public class CommandTabUtil
       hover = ComponentUtil.translate("바라보고 있는 블록 (%s)", targetBlock.getType());
       int x2 = targetBlock.getX(), y2 = targetBlock.getY(), z2 = targetBlock.getZ();
       list.add(Completion.completion(x2 + " " + y2 + " " + z2, hover));
+      list.add(Completion.completion("$target_block", hover));
     }
     String arg = args[args.length - 1];
-    if (!arg.equals(""))
+    if (targetBlock == null || !"$target_block".startsWith(arg))
     {
-      if (arg.equals("~ ~ ~") || arg.equals("^ ^ ^"))
+      if (!arg.equals(""))
       {
-        return Collections.singletonList(objectToCompletion(key));
-      }
-      if (arg.contains("~") && arg.contains("^") || (arg.contains("^") && !Method.allStartsWith("^", true, arg.split(" "))))
-      {
-        return errorMessage("argument.pos.mixed");
-      }
-      else if (arg.startsWith("^"))
-      {
-        list.removeIf(c -> c instanceof Completion completion && completion.suggestion().startsWith("~"));
-        list.addAll(Arrays.asList(
-                Completion.completion("^ ^ ^"),
-                Completion.completion("^ ^"),
-                Completion.completion("^")));
-      }
-      String[] split = arg.split(" ");
-      x = split[0];
-      y = split.length > 1 ? split[1] : y;
-      z = split.length > 2 ? split[2] : z;
-      if (isInteger)
-      {
-        if (!MessageUtil.isInteger(sender, x, false))
+        if (arg.equals("~ ~ ~") || arg.equals("^ ^ ^"))
         {
-          if (x.startsWith("~") || x.startsWith("^"))
-          {
-            if (!x.equals("~") && !x.equals("^"))
-            {
-              x = x.substring(1);
-              if (!MessageUtil.isInteger(sender, x, false))
-              {
-                return errorMessage("argument.pos.missing.int");
-              }
-            }
-          }
-          else
-          {
-            return errorMessage("argument.pos.missing.int");
-          }
+          return Collections.singletonList(objectToCompletion(key));
         }
-        if (!MessageUtil.isInteger(sender, y, false))
+        if (arg.contains("~") && arg.contains("^") || (arg.contains("^") && !Method.allStartsWith("^", true, arg.split(" "))))
         {
-          if (y.startsWith("~") || y.startsWith("^"))
-          {
-            if (!y.equals("~") && !y.equals("^"))
-            {
-              y = y.substring(1);
-              if (!MessageUtil.isInteger(sender, y, false))
-              {
-                return errorMessage("argument.pos.missing.int");
-              }
-            }
-          }
-          else
-          {
-            return errorMessage("argument.pos.missing.int");
-          }
+          return errorMessage("argument.pos.mixed");
         }
-        if (!MessageUtil.isInteger(sender, z, false))
+        else if (arg.startsWith("^"))
         {
-          if (z.startsWith("~") || z.startsWith("^"))
-          {
-            if (!z.equals("~") && !z.equals("^"))
-            {
-              z = z.substring(1);
-              if (!MessageUtil.isInteger(sender, z, false))
-              {
-                return errorMessage("argument.pos.missing.int");
-              }
-            }
-          }
-          else
-          {
-            return errorMessage("argument.pos.missing.int");
-          }
+          list.removeIf(c -> c instanceof Completion completion && completion.suggestion().startsWith("~"));
+          list.addAll(Arrays.asList(
+                  Completion.completion("^ ^ ^"),
+                  Completion.completion("^ ^"),
+                  Completion.completion("^")));
         }
-      }
-      else
-      {
-        if (!MessageUtil.isDouble(sender, x, false))
-        {
-          if (x.startsWith("~") || x.startsWith("^"))
-          {
-            if (!x.equals("~") && !x.equals("^"))
-            {
-              x = x.substring(1);
-              if (!MessageUtil.isDouble(sender, x, false))
-              {
-                return errorMessage("argument.pos.missing.double");
-              }
-            }
-          }
-          else
-          {
-            return errorMessage("argument.pos.missing.double");
-          }
-        }
-        if (!MessageUtil.isDouble(sender, y, false))
-        {
-          if (y.startsWith("~") || y.startsWith("^"))
-          {
-            if (!y.equals("~") && !y.equals("^"))
-            {
-              y = y.substring(1);
-              if (!MessageUtil.isDouble(sender, y, false))
-              {
-                return errorMessage("argument.pos.missing.double");
-              }
-            }
-          }
-          else
-          {
-            return errorMessage("argument.pos.missing.double");
-          }
-        }
-        if (!MessageUtil.isDouble(sender, z, false))
-        {
-          if (z.startsWith("~") || z.startsWith("^"))
-          {
-            if (!z.equals("~") && !z.equals("^"))
-            {
-              z = z.substring(1);
-              if (!MessageUtil.isDouble(sender, z, false))
-              {
-                return errorMessage("argument.pos.missing.double");
-              }
-            }
-          }
-          else
-          {
-            return errorMessage("argument.pos.missing.double");
-          }
-        }
-      }
-
-      if (split.length > 3)
-      {
-        return errorMessage("좌표값은 3개이어야 합니다");
-      }
-      split = arg.split(" ");
-      if (arg.startsWith("^"))
-      {
+        String[] split = arg.split(" ");
+        x = split[0];
         y = split.length > 1 ? split[1] : y;
         z = split.length > 2 ? split[2] : z;
-        if (y.startsWith("^"))
+        if (isInteger)
         {
-          if (z.startsWith("^"))
+          if (!MessageUtil.isInteger(sender, x, false))
           {
-            list.add(Completion.completion(split[0] + " " + y + " " + z));
+            if (x.startsWith("~") || x.startsWith("^"))
+            {
+              if (!x.equals("~") && !x.equals("^"))
+              {
+                x = x.substring(1);
+                if (!MessageUtil.isInteger(sender, x, false))
+                {
+                  return errorMessage("argument.pos.missing.int");
+                }
+              }
+            }
+            else
+            {
+              return errorMessage("argument.pos.missing.int");
+            }
           }
-          else
+          if (!MessageUtil.isInteger(sender, y, false))
           {
-            list.add(Completion.completion(split[0] + " " + y + " ^"));
+            if (y.startsWith("~") || y.startsWith("^"))
+            {
+              if (!y.equals("~") && !y.equals("^"))
+              {
+                y = y.substring(1);
+                if (!MessageUtil.isInteger(sender, y, false))
+                {
+                  return errorMessage("argument.pos.missing.int");
+                }
+              }
+            }
+            else
+            {
+              return errorMessage("argument.pos.missing.int");
+            }
           }
-          list.add(Completion.completion(split[0] + " " + y));
+          if (!MessageUtil.isInteger(sender, z, false))
+          {
+            if (z.startsWith("~") || z.startsWith("^"))
+            {
+              if (!z.equals("~") && !z.equals("^"))
+              {
+                z = z.substring(1);
+                if (!MessageUtil.isInteger(sender, z, false))
+                {
+                  return errorMessage("argument.pos.missing.int");
+                }
+              }
+            }
+            else
+            {
+              return errorMessage("argument.pos.missing.int");
+            }
+          }
         }
         else
         {
-          list.add(Completion.completion(split[0] + " ^ ^"));
-          list.add(Completion.completion(split[0] + " ^"));
+          if (!MessageUtil.isDouble(sender, x, false))
+          {
+            if (x.startsWith("~") || x.startsWith("^"))
+            {
+              if (!x.equals("~") && !x.equals("^"))
+              {
+                x = x.substring(1);
+                if (!MessageUtil.isDouble(sender, x, false))
+                {
+                  return errorMessage("argument.pos.missing.double");
+                }
+              }
+            }
+            else
+            {
+              return errorMessage("argument.pos.missing.double");
+            }
+          }
+          if (!MessageUtil.isDouble(sender, y, false))
+          {
+            if (y.startsWith("~") || y.startsWith("^"))
+            {
+              if (!y.equals("~") && !y.equals("^"))
+              {
+                y = y.substring(1);
+                if (!MessageUtil.isDouble(sender, y, false))
+                {
+                  return errorMessage("argument.pos.missing.double");
+                }
+              }
+            }
+            else
+            {
+              return errorMessage("argument.pos.missing.double");
+            }
+          }
+          if (!MessageUtil.isDouble(sender, z, false))
+          {
+            if (z.startsWith("~") || z.startsWith("^"))
+            {
+              if (!z.equals("~") && !z.equals("^"))
+              {
+                z = z.substring(1);
+                if (!MessageUtil.isDouble(sender, z, false))
+                {
+                  return errorMessage("argument.pos.missing.double");
+                }
+              }
+            }
+            else
+            {
+              return errorMessage("argument.pos.missing.double");
+            }
+          }
         }
+        if (split.length > 3)
+        {
+          return errorMessage("좌표값은 3개이어야 합니다");
+        }
+        split = arg.split(" ");
+        if (arg.startsWith("^"))
+        {
+          y = split.length > 1 ? split[1] : y;
+          z = split.length > 2 ? split[2] : z;
+          if (y.startsWith("^"))
+          {
+            if (z.startsWith("^"))
+            {
+              list.add(Completion.completion(split[0] + " " + y + " " + z));
+            }
+            else
+            {
+              list.add(Completion.completion(split[0] + " " + y + " ^"));
+            }
+            list.add(Completion.completion(split[0] + " " + y));
+          }
+          else
+          {
+            list.add(Completion.completion(split[0] + " ^ ^"));
+            list.add(Completion.completion(split[0] + " ^"));
+          }
+        }
+        else
+        {
+          list.add(Completion.completion(split[0] + " " + (split.length > 1 ? split[1] : y) + " " + (split.length > 2 ? split[2] : z)));
+          list.add(Completion.completion(split[0] + " " + (split.length > 1 ? split[1] : y)));
+          list.add(Completion.completion(split[0] + " ~ ~"));
+          list.add(Completion.completion(split[0] + " ~"));
+        }
+        list.add(Completion.completion(split[0]));
+        if (isErrorMessage(tabCompleterList(args, list, key)) && split.length < 3)
+        {
+          return errorMessage("argument.pos3d.incomplete");
+        }
+        list.removeIf(c -> c instanceof Completion completion && completion.suggestion().equals(arg));
       }
-      else
-      {
-        list.add(Completion.completion(split[0] + " " + (split.length > 1 ? split[1] : y) + " " + (split.length > 2 ? split[2] : z)));
-        list.add(Completion.completion(split[0] + " " + (split.length > 1 ? split[1] : y)));
-        list.add(Completion.completion(split[0] + " ~ ~"));
-        list.add(Completion.completion(split[0] + " ~"));
-      }
-      list.add(Completion.completion(split[0]));
-      if (isErrorMessage(tabCompleterList(args, list, key)) && split.length < 3)
-      {
-        return errorMessage("argument.pos3d.incomplete");
-      }
-      list.removeIf(c -> c instanceof Completion completion && completion.suggestion().equals(arg));
     }
     return tabCompleterList(args, list, key, true);
   }
@@ -1136,7 +1181,7 @@ public class CommandTabUtil
     String tooltipString = Method.getWorldDisplayName(currentWorld);
     Component tooltip = tooltipString.equals(currentWorld.getName()) ? ComponentUtil.translate("현재 월드 (%s)", currentWorld.getName())
             : ComponentUtil.translate("현재 월드 (%s, %s)", currentWorld.getName(), ComponentUtil.create(tooltipString));
-    list.add(Completion.completion("~", tooltip));
+    list.add(Completion.completion("$current_world", tooltip));
     return tabCompleterList(args, list, key);
   }
 
@@ -1168,6 +1213,22 @@ public class CommandTabUtil
     try
     {
       Bukkit.getItemFactory().createItemStack(args[args.length - 1]);
+      return tabCompleterList(args, key, true);
+    }
+    catch (Exception e)
+    {
+      TranslatableComponent component = ItemStackUtil.getErrorCreateItemStack(e.getCause());
+      return completions(ComponentUtil.translate("%s", component, "error-text"));
+    }
+  }
+
+  @NotNull
+  public static List<Completion> nbtArgument(@NotNull CommandSender sender, @NotNull String[] args, @NotNull Object key)
+  {
+    String nbt = "{" + args[args.length - 1] + "}";
+    try
+    {
+      Bukkit.getItemFactory().createItemStack("stone" + nbt);
       return tabCompleterList(args, key, true);
     }
     catch (Exception e)

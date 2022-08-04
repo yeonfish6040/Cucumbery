@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemStackCustomEffectImple extends CustomEffect implements ItemStackCustomEffect
 {
-  private ItemStack itemStack;
+  protected ItemStack itemStack;
 
   public ItemStackCustomEffectImple(CustomEffectType effectType, @NotNull ItemStack itemStack)
   {

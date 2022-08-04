@@ -1,0 +1,18 @@
+# 에 커스텀 아이템 추가하는 곳입닏다 아럐 예제를 보고 알아서 적절히 추가 및 수정합면됩니다
+test_item: # id. 중복되면 안됨. 필수값
+  type: DIAMOND # 아이템의 기본 표시 종류. 필수값
+  display-name: 'translate:&a테스트 다이아' # 아이템의 기본 표시 이름. 필수값
+  Rarity: RARE # 아이템의 기본 등급. 선택값
+  ItemGroup: 'itemGroup.misc' # 아이템의 기본 종류. 선택값
+  lore: # 아이템의 추가 설명. 선택값
+    - 'translate:&7위대한 다이아몬드!'
+  enchants: # 아이템에 기본으로 부여된 마법. (이름|level 형식, 커스텀 인챈트 지원) 선택값
+    - sharpness|3
+  restrictions: # 아이템의 바닐라 사용 제한 태그 추가 (설치/조합/제련/양조 등, 키|boolean 형식. boolean 이 true이면 아이템 설명에서 사용 제한 태그 숨김), /itag restriction 명령어 참고. 선택값
+    - NO_CRAFT|true
+test_skull:
+  type: PLAYER_HEAD
+  display-name: 'translate:&a테스트 머리'
+  skull: 'http://textures.minecraft.net/texture/316fc913e6ab9b6911003de60c797bad3fbeb80eb73d51afb6928de9c9eedac3' # Base64 encode 또는 url
+  restrictions:
+    - NO_PLACE|true

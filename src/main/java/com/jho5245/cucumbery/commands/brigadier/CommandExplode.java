@@ -100,7 +100,9 @@ public class CommandExplode extends CommandBase
   private Component explosionComponent(float power, boolean setFire, boolean breakBlocks, @Nullable Entity source)
   {
     Component explosionComponent = ComponentUtil.translate("폭발").color(Constant.THE_COLOR);
-    Component hover = ComponentUtil.translate("강도 : %s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(power));
+    Component hover = ComponentUtil.translate("폭발");
+    hover = hover.append(Component.text("\n"));
+    hover = hover.append(ComponentUtil.translate("강도 : %s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(power)));
     hover = hover.append(Component.text("\n"));
     hover = hover.append(ComponentUtil.translate("블록 파괴 여부 : %s", Constant.THE_COLOR_HEX + breakBlocks));
     hover = hover.append(Component.text("\n"));

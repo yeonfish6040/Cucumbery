@@ -134,6 +134,9 @@ public enum Permission
   CMD_SEND_BOSSBAR(C + "sendbossbar"),
   CMD_DELAY(C + "delay"),
   CMD_SET_NO_DAMAGE_TICKS(C + "setnodamageticks"),
+  CMD_SET_AGGRO(C + "setaggro"),
+  CMD_STASH(C + "stash"),
+  CMD_BLOCK_PLACE_DATA(C + "blockplacedata"),
 
   OTHER_EVAL("eval"),
   OTHER_PLACEHOLDER("placeholder"),

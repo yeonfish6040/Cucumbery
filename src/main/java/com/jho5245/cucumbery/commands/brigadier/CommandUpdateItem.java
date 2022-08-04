@@ -8,6 +8,7 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.BooleanArgument;
+import dev.jorel.commandapi.arguments.EntitySelector;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -21,13 +22,13 @@ public class CommandUpdateItem extends CommandBase
   private final List<Argument<?>> argument = new ArrayList<>();
 
   {
-    argument.add(new EntitySelectorArgument("아이템", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
+    argument.add(new EntitySelectorArgument("아이템", EntitySelector.MANY_ENTITIES));
   }
 
   private final List<Argument<?>> argument2 = new ArrayList<>();
 
   {
-    argument2.add(new EntitySelectorArgument("아이템", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
+    argument2.add(new EntitySelectorArgument("아이템", EntitySelector.MANY_ENTITIES));
     argument2.add(new BooleanArgument("명령어 출력 숨김 여부"));
   }
 

@@ -165,7 +165,7 @@ public class CommandSetUserData implements CommandExecutor, TabCompleter
         }
         switch (key)
         {
-          case USE_HELPFUL_LORE_FEATURE, DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE -> Method.updateInventory(online);
+          case USE_HELPFUL_LORE_FEATURE, DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE, EVENT_EXCEPTION_ACCESS, SHOW_ENCHANTMENT_TMI_DESCRIPTION -> Method.updateInventory(online);
           case ENTITY_AGGRO, SPECTATOR_MODE -> {
             if (!UserData.ENTITY_AGGRO.getBoolean(player) || UserData.SPECTATOR_MODE.getBoolean(player))
             {

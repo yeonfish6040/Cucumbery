@@ -12,6 +12,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -28,6 +29,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
 import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.TitlePart;
 import org.bukkit.*;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
@@ -36,6 +38,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BundleMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +55,6 @@ import java.util.regex.Pattern;
 public class MessageUtil
 {
   private static final Pattern PATTERN_N2S_RGB = Pattern.compile("(([RGBrgb]){1,3})(([0-9]){1,3})(,(([0-9]){1,3}))?(,(([0-9]){1,3}))?;");
-
 
   @NotNull
   public static String[] wrapWithQuote(@NotNull String[] args)
@@ -381,14 +383,15 @@ public class MessageUtil
       Material material = Material.valueOf(showItem.item().value().toUpperCase());
       ItemStack itemStack = new ItemStack(material, showItem.count());
       BinaryTagHolder binaryTagHolder = showItem.nbt();
+      NBTItem nbtItem = new NBTItem(itemStack, true);
       if (binaryTagHolder != null)
       {
-        NBTItem nbtItem = new NBTItem(itemStack, true);
         nbtItem.mergeCompound(new NBTContainer(binaryTagHolder.string()));
       }
       if (material == Material.BUNDLE && "test".equals(new NBTItem(itemStack).getString("test")))
       {
         itemStack = ((BundleMeta) itemStack.getItemMeta()).getItems().get(0);
+        nbtItem = new NBTItem(itemStack);
       }
       if (Method.usingLoreFeature(player))
       {
@@ -397,6 +400,47 @@ public class MessageUtil
       else
       {
         ItemLore.removeItemLore(itemStack);
+      }
+      if (player.hasPermission("asdf") && (!nbtItem.hasKey("VirtualItem") || nbtItem.getBoolean("VirtualItem") == null))
+      {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        List<Component> lore = itemMeta.lore();
+        if (lore == null)
+        {
+          lore = new ArrayList<>();
+        }
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7클릭하여 /give 명령어로 복사"));
+        if (UserData.SHOW_GIVE_COMMAND_NBT_ON_ITEM_ON_CHAT.getBoolean(player))
+        {
+          try
+          {
+            ItemStack clone = ItemLore.removeItemLore(itemStack.clone());
+            String nbt = new NBTItem(clone).getCompound().toString();
+            if (!nbt.equals("{}"))
+            {
+              int count = 0;
+              while (!nbt.isEmpty())
+              {
+                count++;
+                if (count > 20)
+                {
+                  lore.add(ComponentUtil.translate("&7&ocontainer.shulkerBox.more", nbt.length() / 50));
+                  break;
+                }
+                String cut = nbt.substring(0, Math.min(50, nbt.length()));
+                lore.add(Component.text(cut, NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, State.FALSE));
+                nbt = nbt.substring(cut.length());
+              }
+            }
+          }
+          catch (Exception ignored)
+          {
+
+          }
+        }
+        itemMeta.lore(lore);
+        itemStack.setItemMeta(itemMeta);
       }
       component = component.hoverEvent(ItemStackComponent.itemStackComponent(itemStack).hoverEvent());
     }
@@ -1065,7 +1109,7 @@ public class MessageUtil
 
   public static void noArg(@NotNull Object audience, @NotNull Prefix reason, @NotNull String arg)
   {
-    sendError(audience, "%s (%s)", reason, arg);
+    sendError(audience, "%s: %s", reason, arg);
   }
 
   public static void shortArg(@NotNull Object audience, int input, @NotNull String[] args)
@@ -1118,6 +1162,7 @@ public class MessageUtil
     if (player instanceof Audience audience)
     {
       audience.showTitle(t);
+      audience.sendTitlePart(TitlePart.TITLE, Component.empty());
     }
     if (player instanceof Collection<?> collection)
     {
@@ -1143,6 +1188,36 @@ public class MessageUtil
     if (player instanceof Audience audience)
     {
       audience.sendActionBar(ComponentUtil.stripEvent(ComponentUtil.create(objects)));
+    }
+  }
+
+  public static void sendActionBar(@NotNull Object player, @NotNull String key)
+  {
+    if (player instanceof Collection<?> collection)
+    {
+      for (Object o : collection)
+      {
+        sendActionBar(o, key);
+      }
+    }
+    if (player instanceof Audience audience)
+    {
+      audience.sendActionBar(ComponentUtil.stripEvent(ComponentUtil.translate(key)));
+    }
+  }
+
+  public static void sendActionBar(@NotNull Object player, @NotNull String key, @NotNull Object... params)
+  {
+    if (player instanceof Collection<?> collection)
+    {
+      for (Object o : collection)
+      {
+        sendActionBar(o, key, params);
+      }
+    }
+    if (player instanceof Audience audience)
+    {
+      audience.sendActionBar(ComponentUtil.stripEvent(ComponentUtil.translate(key, params)));
     }
   }
 

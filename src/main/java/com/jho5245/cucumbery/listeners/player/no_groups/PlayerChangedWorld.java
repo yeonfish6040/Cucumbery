@@ -4,6 +4,9 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
+import com.jho5245.cucumbery.util.storage.data.Permission;
+import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,12 +17,14 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PlayerChangedWorld implements Listener
 {
 	@EventHandler public void onPlayerChangedWorld(PlayerChangedWorldEvent event)
 	{
 		Player player = event.getPlayer();
+		UUID uuid = player.getUniqueId();
 		Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
 		if (Cucumbery.config.getBoolean("world-change.enabled"))
 		{
@@ -71,6 +76,10 @@ public class PlayerChangedWorld implements Listener
 					}
 				}
 			}
+		}
+		if (Permission.CMD_STASH.has(player) && Variable.itemStash.containsKey(uuid) && !Variable.itemStash.get(uuid).isEmpty())
+		{
+			MessageUtil.sendMessage(player, Prefix.INFO_STASH, "보관함에 아이템이 %s개 있습니다. %s 명령어로 확인하세요!", Variable.itemStash.get(uuid).size(), "&e/stash");
 		}
 	}
 

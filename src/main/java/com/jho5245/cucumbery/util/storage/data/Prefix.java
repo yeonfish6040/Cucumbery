@@ -88,6 +88,7 @@ public enum Prefix
   INFO_QUIT("&c퇴장", "&5"),
   INFO_CUSTOM_MERCHANT("&b상인", "&9"),
   INFO_CUSTOM_EFFECT("&b효과", "&9"),
+  INFO_STASH("&e스태시", "&9"),
   ;
 
   private final String text;

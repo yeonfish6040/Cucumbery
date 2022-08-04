@@ -164,6 +164,10 @@ public class PlayerCommandSend implements Listener
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_MODIFY_EXPLOSIVE, "modifyexplosive"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SEND_TOAST, "sendtoast"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SEND_BOSSBAR, "sendbossbar"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_SET_NO_DAMAGE_TICKS, "setnodamageticks"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_SET_AGGRO, "setaggro"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_STASH, "stash"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_BLOCK_PLACE_DATA, "blockplacedata"));
 
 		// 뭔데 왜 /cucumbery:nick 안사라지는데
 		if (!Method.hasPermission(player, Permission.CMD_NICK, false))

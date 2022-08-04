@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -335,7 +336,7 @@ public class DeathManager
             if (entity instanceof WaterMob)
             {
               key += "_water";
-              nearbyEntities.removeIf(e -> e instanceof WaterMob || e instanceof Axolotl || e instanceof Turtle);
+              nearbyEntities.removeIf(e -> e instanceof WaterMob || e instanceof Axolotl || e instanceof Turtle || CustomEffectManager.hasEffect(e, CustomEffectType.DAMAGE_INDICATOR));
             }
             else
             {
@@ -504,6 +505,10 @@ public class DeathManager
           key = stringCustomEffect.getString();
         }
       }
+      boolean assassinationEnchant = (damager instanceof Entity e && CustomEffectManager.hasEffect(e, CustomEffectType.ASSASSINATION)) || (weapon != null && weapon.hasItemMeta() && weapon.getItemMeta().hasEnchants() &&
+              ((weapon.getType() != Material.BOW && weapon.getType() != Material.CROSSBOW && weapon.getItemMeta().hasEnchant(CustomEnchant.ASSASSINATION)) || (
+                      weapon.getItemMeta().hasEnchant(CustomEnchant.ASSASSINATION_BOW)
+              )));
       if (damager != null)
       {
         if (damager instanceof ItemStack itemStack)
@@ -512,17 +517,25 @@ public class DeathManager
         }
         else if (damager instanceof Entity damagerEntity)
         {
-          args.add(SenderComponentUtil.senderComponent(damagerEntity));
-          double distance = -1;
-          try
+          if (assassinationEnchant)
           {
-            distance = damagerEntity.getLocation().distance(entity.getLocation());
+            args.add(ComponentUtil.translate("&7&o누군가"));
+            extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(0)).color(Constant.THE_COLOR));
           }
-          catch (Exception ignored)
+          else
           {
+            args.add(SenderComponentUtil.senderComponent(damagerEntity));
+            double distance = -1;
+            try
+            {
+              distance = damagerEntity.getLocation().distance(entity.getLocation());
+            }
+            catch (Exception ignored)
+            {
 
+            }
+            extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(distance)).color(Constant.THE_COLOR));
           }
-          extraArgs.add(ComponentUtil.create(Constant.Sosu2.format(distance)).color(Constant.THE_COLOR));
         }
         key += "_combat";
         if (entity.equals(damager))
@@ -530,7 +543,6 @@ public class DeathManager
           key += "_suicide";
         }
       }
-
       if (ItemStackUtil.itemExists(weapon))
       {
         args.add(ComponentUtil.create(weapon));
@@ -539,6 +551,10 @@ public class DeathManager
       else
       {
         Projectile projectile = getDamagerProjectile(event);
+        if (projectile != null && assassinationEnchant)
+        {
+          projectile.setShooter(null);
+        }
         if (projectile != null && projectile.getShooter() == null)
         {
           key += "_unknown";
@@ -558,7 +574,7 @@ public class DeathManager
           }
         }
       }
-      //MessageUtil.broadcastDebug(key);
+      MessageUtil.broadcastDebug(key);
       DeathMessage deathMessage;
       try
       {
@@ -772,11 +788,6 @@ public class DeathManager
   protected static Object getDamager(EntityDeathEvent event)
   {
     LivingEntity entity = event.getEntity();
-    Player player = entity.getKiller();
-    if (player != null)
-    {
-      return player;
-    }
     EntityDamageEvent entityDamageEvent = entity.getLastDamageCause();
     if (entityDamageEvent instanceof EntityDamageByEntityEvent damageEvent && damageEvent.getCause() != EntityDamageEvent.DamageCause.FALL)
     {
@@ -863,7 +874,7 @@ public class DeathManager
       }
       return itemStack;
     }
-    return null;
+    return entity.getKiller();
   }
 
   @Nullable

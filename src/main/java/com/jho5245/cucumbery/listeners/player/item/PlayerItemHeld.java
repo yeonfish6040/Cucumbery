@@ -1,19 +1,23 @@
 package com.jho5245.cucumbery.listeners.player.item;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LocationItemStackCustomEffect;
 import com.jho5245.cucumbery.listeners.inventory.InventoryClick;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
@@ -138,6 +142,16 @@ public class PlayerItemHeld implements Listener
           }
         }
       }
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE_PROGRESS))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE_PROGRESS);
+      if (customEffect instanceof LocationItemStackCustomEffect effect)
+      {
+        player.sendBlockDamage(effect.getLocation(), 0f);
+      }
+      CustomEffectManager.removeEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE_PROGRESS);
+      Variable.customMiningProgress.put(uuid, 0f);
     }
     this.removeActionbarCooldown(player);
     this.heldItemSound(event, player);

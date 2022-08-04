@@ -2,11 +2,13 @@ package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Furnace;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
@@ -37,26 +39,41 @@ public class FurnaceSmelt implements Listener
     {
       return;
     }
+    Player player = null;
     if (event.getBlock().getType() == Material.FURNACE)
     {
       Furnace furnace = (Furnace) event.getBlock().getState();
       FurnaceInventory inv = furnace.getInventory();
+      if (!inv.getViewers().isEmpty())
+      {
+        player = (Player) inv.getViewers().get(0);
+      }
       ItemStack smelting = inv.getSmelting(), fuel = inv.getFuel();
       if (ItemStackUtil.itemExists(fuel) && ItemStackUtil.itemExists(smelting))
       {
         if (fuel.getType() == Material.BUCKET && smelting.getType() == Material.WET_SPONGE)
         {
+          Player finalPlayer = player;
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
           {
             if (ItemStackUtil.itemExists(furnace.getInventory().getFuel()))
             {
-              ItemLore.setItemLore(furnace.getInventory().getFuel());
+              ItemLore.setItemLore(furnace.getInventory().getFuel(), finalPlayer != null ? ItemLoreView.of(finalPlayer) : null);
             }
           }, 0L);
         }
       }
+      if (player == null)
+      {
+        ItemStack invResult = inv.getResult();
+        if (ItemStackUtil.itemExists(invResult))
+        {
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          inv.setResult(ItemLore.setItemLore(invResult)), 0L);
+        }
+      }
     }
-    ItemLore.setItemLore(result);
+    ItemLore.setItemLore(result, player != null ? ItemLoreView.of(player) : null);
     // Block block = event.getBlock();
     // int x = block.getX();
     // int y = block.getY();

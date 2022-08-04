@@ -600,6 +600,16 @@ public enum DeathMessage
   FIRE_COMBAT_ITEM,
 
   /**
+   * %1$s이(가) 스스로와 싸우다가 바삭하게 구워졌습니다
+   */
+  FIRE_COMBAT_SUICIDE,
+
+  /**
+   * %1$s이(가) %3$s을(를) 사용한 스스로와 싸우다가 바삭하게 구워졌습니다
+   */
+  FIRE_COMBAT_SUICIDE_ITEM,
+
+  /**
    * %1$s이(가) 화염구에 맞았습니다
    */
   FIREBALL,
@@ -648,6 +658,11 @@ public enum DeathMessage
    * %1$s이(가) 어딘가에서 날아온 %2$s 때문에 굉음과 함께 폭사했습니다
    */
   FIREWORKS_COMBAT_UNKNOWN,
+
+  /**
+   * %1$s이(가) 어딘가에서 날아온 %2$s 때문에 굉음과 함께 폭사했습니다
+   */
+  FIREWORKS_UNKNOWN,
 
   /**
    * %1$s이(가) 굉음과 함께 폭사했습니다

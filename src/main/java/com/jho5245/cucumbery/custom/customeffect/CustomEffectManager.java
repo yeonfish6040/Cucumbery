@@ -32,6 +32,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -72,16 +73,22 @@ public class CustomEffectManager
 
   public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect, boolean force)
   {
-    return addEffect(entity, customEffect, ApplyReason.PLUGIN, force);
+    return addEffect(entity, customEffect, ApplyReason.PLUGIN, force, true);
   }
 
   public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect, @NotNull ApplyReason reason)
   {
-    return addEffect(entity, customEffect, reason, false);
+    return addEffect(entity, customEffect, reason, false, true);
   }
 
   @SuppressWarnings("all")
   public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect effect, @NotNull ApplyReason reason, boolean force)
+  {
+    return addEffect(entity, effect, reason, force, true);
+  }
+
+  @SuppressWarnings("all")
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect effect, @NotNull ApplyReason reason, boolean force, boolean callEvent)
   {
     if (!force && hasEffect(entity, effect.getType()))
     {
@@ -94,11 +101,14 @@ public class CustomEffectManager
       }
     }
     effect = effect.copy();
-    EntityCustomEffectPreApplyEvent preApplyEvent = new EntityCustomEffectPreApplyEvent(entity, effect, reason);
-    Cucumbery.getPlugin().getPluginManager().callEvent(preApplyEvent);
-    if (preApplyEvent.isCancelled() && !force)
+    if (callEvent)
     {
-      return false;
+      EntityCustomEffectPreApplyEvent preApplyEvent = new EntityCustomEffectPreApplyEvent(entity, effect, reason);
+      Cucumbery.getPlugin().getPluginManager().callEvent(preApplyEvent);
+      if (preApplyEvent.isCancelled() && !force)
+      {
+        return false;
+      }
     }
     List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
     @NotNull CustomEffect finalEffect = effect;
@@ -168,16 +178,22 @@ public class CustomEffectManager
     {
       effect = new RealDurationCustomEffectImple(effectType, initDura, initAmple, displayType, System.currentTimeMillis(), System.currentTimeMillis() + initDura * 50L);
     }
-    EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect, reason);
-    Cucumbery.getPlugin().getPluginManager().callEvent(applyEvent);
-    if (applyEvent.isCancelled())
+    if (callEvent)
     {
-      return true;
+      EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect, reason);
+      Cucumbery.getPlugin().getPluginManager().callEvent(applyEvent);
+      if (applyEvent.isCancelled())
+      {
+        return true;
+      }
     }
     customEffects.add(effect);
     effectMap.put(entity.getUniqueId(), customEffects);
-    EntityCustomEffectPostApplyEvent postApplyEvent = new EntityCustomEffectPostApplyEvent(entity, effect, reason);
-    Cucumbery.getPlugin().getPluginManager().callEvent(postApplyEvent);
+    if (callEvent)
+    {
+      EntityCustomEffectPostApplyEvent postApplyEvent = new EntityCustomEffectPostApplyEvent(entity, effect, reason);
+      Cucumbery.getPlugin().getPluginManager().callEvent(postApplyEvent);
+    }
     return true;
   }
 
@@ -349,6 +365,23 @@ public class CustomEffectManager
     throw new IllegalStateException();
   }
 
+  /**
+   * 개체의 효과를 가져옵니다.
+   *
+   * @param entity     효과를 가져올 개체
+   * @param effectType 효과의 종류
+   * @return 개체의 효과 또는 없을 경우 null
+   */
+  @Nullable
+  public static CustomEffect getEffectNullable(@NotNull Entity entity, @NotNull CustomEffectType effectType)
+  {
+    if (CustomEffectManager.hasEffect(entity, effectType))
+    {
+      return CustomEffectManager.getEffect(entity, effectType);
+    }
+    return null;
+  }
+
   public static void refreshAttributeEffects(@NotNull Entity entity)
   {
     if (entity instanceof Attributable attributable)
@@ -404,9 +437,10 @@ public class CustomEffectManager
       OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
       boolean isPlayer = offlinePlayer.hasPlayedBefore() || offlinePlayer.getStatistic(Statistic.PLAY_ONE_MINUTE) > 0;
       Entity entity = Bukkit.getEntity(uuid);
+      String entityType = entity != null ? entity.getType().toString().toLowerCase() : "unknown";
       if (customEffects.isEmpty() || (!isPlayer && entity == null))
       {
-        File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomEffects/" + (isPlayer ? "" : "non-players/") + uuid + ".yml");
+        File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomEffects/" + entityType + "/" + uuid + ".yml");
         if (file.exists())
         {
           if (!file.delete())
@@ -670,7 +704,7 @@ public class CustomEffectManager
   public static List<PotionEffect> removeDisplay(@NotNull Player player, @NotNull Collection<PotionEffect> potionEffects)
   {
     potionEffects = new ArrayList<>(potionEffects);
-    potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
+    potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
     potionEffects.removeIf(potionEffect ->
             (CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT) || CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED)) &&
                     potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
@@ -689,8 +723,12 @@ public class CustomEffectManager
     );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_BLINDNESS) &&
-                    potionEffect.getType().equals(PotionEffectType.BLINDNESS) && potionEffect.getDuration() < 23 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.BLINDNESS) && potionEffect.getDuration() < 22 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
+    potionEffects.removeIf(potionEffect ->
+          CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_NIGHT_VISION) &&
+                  potionEffect.getType().equals(PotionEffectType.NIGHT_VISION) && potionEffect.getDuration() < 5 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+  );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectType.MINECRAFT_POISON) &&
                     potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()

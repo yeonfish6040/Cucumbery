@@ -1,11 +1,12 @@
 package com.jho5245.cucumbery.listeners.player.item;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -82,7 +83,7 @@ public class PlayerItemDamage implements Listener
             event.getItem().setItemMeta(itemMeta);
             if (Method.usingLoreFeature(player))
             {
-              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemLore.setItemLore(event.getItem()), 0L);
+              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemLore.setItemLore(event.getItem(), new ItemLoreView(player)), 0L);
             }
             return;
           }
@@ -95,7 +96,7 @@ public class PlayerItemDamage implements Listener
             event.getItem().setItemMeta(itemMeta);
             if (Method.usingLoreFeature(player))
             {
-              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemLore.setItemLore(event.getItem()), 0L);
+              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemLore.setItemLore(event.getItem(), new ItemLoreView(player)), 0L);
             }
             return;
           }
@@ -114,7 +115,6 @@ public class PlayerItemDamage implements Listener
                       ComponentUtil.translate("&e인벤토리 아이템 중 %s이(가) 파괴되었습니다", item), 5, 100, 15);
             }
           }
-
           Method.playSound(player, Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS);
           Method.itemBreakParticle(player, item);
 
@@ -145,13 +145,13 @@ public class PlayerItemDamage implements Listener
           ItemMeta itemMeta = itemClone.getItemMeta();
           event.getItem().setItemMeta(itemMeta);
           Damageable duraMeta = (Damageable) itemMeta;
+          event.setDamage(0);
           if (curDura < maxDura)
           {
             duraMeta.setDamage(itemDurability - 1);
           }
           else
           {
-            event.setDamage(0);
             duraMeta.setDamage(0);
           }
           event.getItem().setItemMeta(duraMeta);
@@ -160,7 +160,7 @@ public class PlayerItemDamage implements Listener
     }
     if (Method.usingLoreFeature(player))
     {
-      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemLore.setItemLore(event.getItem()), 0L);
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemLore.setItemLore(event.getItem(), ItemLoreView.of(player)), 0L);
     }
   }
 }

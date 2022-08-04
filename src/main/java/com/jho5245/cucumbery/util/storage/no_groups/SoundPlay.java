@@ -3,11 +3,15 @@ package com.jho5245.cucumbery.util.storage.no_groups;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 public class SoundPlay
 {
@@ -103,6 +107,14 @@ public class SoundPlay
 
   public static void playWarnSound(@NotNull Object audience)
   {
+    if (audience instanceof UUID uuid)
+    {
+      Entity entity = Method2.getEntityAsync(uuid);
+      if (entity != null)
+      {
+        playWarnSound(entity);
+      }
+    }
     if (audience instanceof Player player)
     {
       if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ERROR_WARN_SOUND))
@@ -117,6 +129,14 @@ public class SoundPlay
 
   public static void playErrorSound(@NotNull Object audience)
   {
+    if (audience instanceof UUID uuid)
+    {
+      Entity entity = Method2.getEntityAsync(uuid);
+      if (entity != null)
+      {
+        playErrorSound(entity);
+      }
+    }
     if (audience instanceof Player player)
     {
       if (CustomEffectManager.hasEffect(player, CustomEffectType.COOLDOWN_ERROR_WARN_SOUND))

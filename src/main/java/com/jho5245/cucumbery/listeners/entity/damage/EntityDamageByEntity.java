@@ -21,6 +21,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
@@ -58,6 +59,17 @@ public class EntityDamageByEntity implements Listener
     }
     Entity victim = event.getEntity();
     Entity damager = event.getDamager();
+    if (victim instanceof ArmorStand || victim instanceof Hanging)
+    {
+      if (damager instanceof Player player && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE) && player.getGameMode() != GameMode.CREATIVE ||
+              damager instanceof Projectile projectile &&
+                      projectile.getShooter() instanceof Player player2 && CustomEffectManager.hasEffect(player2, CustomEffectType.CUSTOM_MINING_SPEED_MODE) && player2.getGameMode() != GameMode.CREATIVE)
+      {
+        event.setCancelled(true);
+        return;
+      }
+    }
+
     UUID victimUUID = victim.getUniqueId(), damagerUUID = damager.getUniqueId();
     if (DeathManager.deathMessageApplicable(victim))
     {
@@ -66,7 +78,8 @@ public class EntityDamageByEntity implements Listener
         DamageCause cause = event.getCause();
         switch (cause)
         {
-          case CUSTOM, ENTITY_ATTACK, ENTITY_SWEEP_ATTACK -> {
+          case CUSTOM, ENTITY_ATTACK, ENTITY_SWEEP_ATTACK ->
+          {
             Variable.victimAndDamager.put(victimUUID, damager);
             Variable.damagerAndCurrentTime.put(damagerUUID, System.currentTimeMillis());
           }
@@ -151,7 +164,7 @@ public class EntityDamageByEntity implements Listener
         {
           if (Variable.entityAndSourceLocation.containsKey(areaEffectCloud.getUniqueId()))
           {
-            ItemStack sourceAsItem =  Variable.blockAttackerAndBlock.get(Variable.entityAndSourceLocation.get(areaEffectCloud.getUniqueId()));
+            ItemStack sourceAsItem = Variable.blockAttackerAndBlock.get(Variable.entityAndSourceLocation.get(areaEffectCloud.getUniqueId()));
             Variable.victimAndBlockDamager.put(victimUUID, sourceAsItem);
             Variable.blockDamagerAndCurrentTime.put(ItemSerializer.serialize(sourceAsItem), System.currentTimeMillis());
           }

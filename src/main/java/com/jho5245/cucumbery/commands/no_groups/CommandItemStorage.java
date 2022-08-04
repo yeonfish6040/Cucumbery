@@ -363,7 +363,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
             item.setAmount(inputAmount);
             amount = inputAmount;
           }
-          AddItemUtil.addItemResult2(sender, player, item, amount).sendFeedback(false);
+          AddItemUtil.addItemResult2(sender, player, item, amount).stash().sendFeedback(false);
         }
         else
         {
@@ -452,7 +452,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
               hideOutput = true;
             }
           }
-          AddItemUtil.addItemResult2(sender, target, item, amount).sendFeedback(hideOutput);
+          AddItemUtil.addItemResult2(sender, target, item, amount).stash().sendFeedback(hideOutput);
         }
         else
         {

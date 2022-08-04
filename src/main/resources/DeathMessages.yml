@@ -1,4 +1,4 @@
-config-version: 5
+config-version: 7
 # 데스 메시지 기능 편집
 death-messages:
   enable: true # 사용 여부. true 또는 false
@@ -383,6 +383,9 @@ death-messages:
     fireworks-combat-item:
       - "%1$s이(가) %2$s이(가) 쏜 %3$s 때문에 굉음과 함께 폭사했습니다"
       - "%1$s이(가) %2$s이(가) 쏜 %3$s 때문에 터졌습니다"
+    fireworks-unknown:
+      - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 굉음과 함께 폭사했습니다"
+      - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 터졌습니다"
     fireworks-combat-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 굉음과 함께 폭사했습니다"
       - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 터졌습니다"
@@ -431,6 +434,10 @@ death-messages:
       - "%1$s이(가) %2$s와(과) 싸우다가 /kill %3$s 당했습니다"
     kill-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 /kill %4$s 당했습니다"
+    kill-combat-suicide:
+      - "%1$s이(가) 혼자 놀다가 /kill %3$s 당했습니다"
+    kill-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용하면서 혼자 놀다가 /kill %4$s 당했습니다"
     lava:
       - "death.attack.lava" # %1$s이(가) 용암에 빠졌습니다
       - "%1$s이(가) 용암 수영을 시도하였습니다"
@@ -467,6 +474,10 @@ death-messages:
       - "death.attack.magic.player" # %1$s이(가) %2$s에게서 도망치려다 마법으로 살해당했습니다
     magic-combat-item:
       - "%1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 마법으로 살해당했습니다"
+    magic-combat-suicide:
+      - "%1$s이(가) 스스로에게서 도망치려다 마법으로 살해당했습니다"
+    magic-combat-suicide-item:
+      - "%1$s이(가) %3$s을(를) 사용한 스스로에게서 도망치려다 마법으로 살해당했습니다"
     magic-combat-unknown:
       - "%1$s이(가) 어딘가에서 날아온 %2$s 때문에 마법으로 살해당했습니다"
     magma-block:
@@ -563,7 +574,7 @@ death-messages:
     sonic-boom-combat-suicide:
       - "%1$s이(가) 스스로의 강한 음파의 비명에 말살됐습니다"
     sonic-boom-combat-suicide-item:
-      - ""
+      - "%1$s이(가) %3$s을(를) 든 스스로의 강한 음파의 비명에 말살됐습니다"
     stalagmite:
      # - "death.attack.stalagmite" # %1$s이(가) 석순에 찔렸습니다
       - "%1$s이(가) %2$s에 찔렸습니다"

@@ -1,8 +1,8 @@
 package com.jho5245.cucumbery.commands.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.gui.GUI;
-import com.jho5245.cucumbery.util.gui.GUI.GUIType;
+import com.jho5245.cucumbery.util.gui.GUIManager;
+import com.jho5245.cucumbery.util.gui.GUIManager.GUIType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
@@ -40,7 +40,7 @@ public class CommandMenu implements CommandExecutor, TabCompleter
       }
 
       Method.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1.5F);
-      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> GUI.openGUI(player, GUIType.MAIN_MENU), 0L);
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> GUIManager.openGUI(player, GUIType.MAIN_MENU), 0L);
     }
 
     else if (args.length <= 2)
@@ -62,7 +62,7 @@ public class CommandMenu implements CommandExecutor, TabCompleter
         Method.playSound(target, Sound.BLOCK_NOTE_BLOCK_PLING, 1F, 1.5F);
         MessageUtil.sendMessage(sender, Prefix.INFO_MENU, "%s에게 메뉴를 열어줍니다", target);
       }
-      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> GUI.openGUI(target, GUIType.MAIN_MENU), 0L);
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> GUIManager.openGUI(target, GUIType.MAIN_MENU), 0L);
     }
     else
     {

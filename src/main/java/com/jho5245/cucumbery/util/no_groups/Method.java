@@ -4,6 +4,7 @@ import com.google.common.base.Predicates;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -19,6 +20,8 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.Note.Tone;
@@ -177,6 +180,16 @@ public class Method extends SoundPlay
    */
   public static void updateInventory(@NotNull Player player)
   {
+    updateInventory(player, false);
+  }
+
+  /**
+   * 플레이어의 인벤토리에 있는 모든 아이템의 설명을 새로고침합니다.
+   *
+   * @param player 인벤토리에 있는 모든 아이템의 설명을 업데이트할 플레이어
+   */
+  public static void updateInventory(@NotNull Player player, boolean callAPI)
+  {
     InventoryView openInventory = player.getOpenInventory();
     String title = openInventory.getTitle();
     if (!title.contains(Constant.SERVER_SETTINGS) && (title.contains(Constant.CANCEL_STRING) || title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI)))
@@ -194,7 +207,7 @@ public class Method extends SoundPlay
         {
           continue;
         }
-        ItemLore.setItemLore(item, player);
+        ItemLore.setItemLore(item, new ItemLoreView(player));
       }
       inventory = openInventory.getTopInventory();
       for (int i = 0; i < inventory.getSize(); i++)
@@ -204,9 +217,9 @@ public class Method extends SoundPlay
         {
           continue;
         }
-        ItemLore.setItemLore(item, player);
+        ItemLore.setItemLore(item, new ItemLoreView(player));
       }
-      player.setItemOnCursor(ItemLore.setItemLore(player.getItemOnCursor(), player));
+      player.setItemOnCursor(ItemLore.setItemLore(player.getItemOnCursor(), new ItemLoreView(player)));
     }
     else
     {
@@ -230,6 +243,7 @@ public class Method extends SoundPlay
       }
       player.setItemOnCursor(ItemLore.removeItemLore(player.getItemOnCursor()));
     }
+    if (callAPI)
     player.updateInventory();
   }
 
@@ -243,7 +257,7 @@ public class Method extends SoundPlay
   {
     if (usingLoreFeature(player))
     {
-      ItemLore.setItemLore(item);
+      ItemLore.setItemLore(item, new ItemLoreView(player));
     }
     else
     {
@@ -1553,7 +1567,8 @@ public class Method extends SoundPlay
     }
     if (notice)
     {
-      Bukkit.getServer().dispatchCommand(sender, "cucumberyunknowncommand");
+      sender.sendMessage(Component.translatable("command.unknown.command", NamedTextColor.RED));
+      sender.sendMessage(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       MessageUtil.consoleSendMessage(Prefix.INFO_WARN, sender, "translate:이(가) 권한이 부족하여 명령어 사용에 실패하였습니다");
     }
     return false;
@@ -1936,6 +1951,20 @@ public class Method extends SoundPlay
       {
         itemEntity.setCustomNameVisible(false);
       }
+    }
+    NBTItem nbtItem = new NBTItem(item);
+    String id = nbtItem.getString("id") + "";
+    try
+    {
+      CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
+      switch (customMaterial)
+      {
+        case CORE_GEMSTONE, CORE_GEMSTONE_EXPERIENCE, CORE_GEMSTONE_MIRROR, CORE_GEMSTONE_MITRA -> itemEntity.setCustomNameVisible(false);
+      }
+    }
+    catch (Exception ignored)
+    {
+
     }
   }
 

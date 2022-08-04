@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.no_groups;
 
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 public class NumberHangulConverter
@@ -96,26 +97,14 @@ public class NumberHangulConverter
   /**
    * 숫자의 큰 자리수(만, 억, 조 단위)만 한글로 변환합니다
    *
-   * @param input 변환될 숫자
-   * @return 한글로 변환된 숫자
-   */
-  @NotNull
-  public static String convert2(double input)
-  {
-    return convert2(input, false);
-  }
-
-  /**
-   * 숫자의 큰 자리수(만, 억, 조 단위)만 한글로 변환합니다
-   *
    * @param input     변환될 숫자
    * @param withColor 색상 대입 여부
    * @return 한글로 변환된 숫자
    */
   @NotNull
-  public static String convert2(double input, boolean withColor)
+  public static String convert2(double input, boolean withColor, TextColor color)
   {
-    String c = withColor ? Constant.THE_COLOR_HEX : "";
+    String c = withColor ? color.asHexString() + ";" : "";
     if (input < 10000d)
     {
       return c + Constant.Sosu2Floor.format(input);

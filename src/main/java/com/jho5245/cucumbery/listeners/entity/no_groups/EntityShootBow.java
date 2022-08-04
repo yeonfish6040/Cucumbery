@@ -11,6 +11,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import org.bukkit.Bukkit;
@@ -109,9 +110,18 @@ public class EntityShootBow implements Listener
         }
       }
     }
+    int level = 0;
     if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.IDIOT_SHOOTER))
     {
-      double modifier = (CustomEffectManager.getEffect(livingEntity, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1) / 10d;
+      level = (CustomEffectManager.getEffect(livingEntity, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1);
+    }
+    if (bow != null && bow.hasItemMeta() && bow.getItemMeta().hasEnchants())
+    {
+      level = Math.max(level, bow.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+    }
+    if (level > 0)
+    {
+      double modifier = level / 10d;
       Vector vector = livingEntity.getLocation().getDirection();
       projectile.setVelocity(vector.add(new Vector(Math.random() * modifier - (modifier / 2d), Math.random() * modifier - (modifier / 2d), Math.random() * modifier - (modifier / 2d))));
     }

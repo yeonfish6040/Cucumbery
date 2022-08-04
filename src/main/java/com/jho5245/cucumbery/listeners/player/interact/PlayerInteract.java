@@ -12,12 +12,10 @@ import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
-import com.jho5245.cucumbery.util.storage.data.Permission;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
@@ -35,20 +33,17 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.CompassMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionType;
 import org.bukkit.projectiles.ProjectileSource;
-import org.bukkit.util.Consumer;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,95 +77,6 @@ public class PlayerInteract implements Listener
       itemType = item.getType();
     }
     Action action = event.getAction();
-    if ((action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) && CustomEffectManager.hasEffect(player, CustomEffectType.STAR_CATCH_PROCESS))
-    {
-      event.setCancelled(true);
-      CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.STAR_CATCH_PROCESS);
-      int duration = customEffect.getDuration();
-      boolean ok = false;
-      Integer penalty = Variable.starCatchPenalty.get(player.getUniqueId());
-      if (penalty == null)
-      {
-        penalty = 0;
-      }
-      int level = Math.min(4, penalty / 20);
-      Outter:
-      for (int i = 1; i <= 10; i++)
-      {
-        switch (level)
-        {
-          case 0 -> {
-            if (duration >= i * 20 - 14 && duration <= i * 20 - 6)
-            {
-              ok = true;
-              break Outter;
-            }
-          }
-          case 1 -> {
-            if (duration >= i * 20 - 13 && duration <= i * 20 - 7)
-            {
-              ok = true;
-              break Outter;
-            }
-          }
-          case 2 -> {
-            if (duration >= i * 20 - 11 && duration <= i * 20 - 8)
-            {
-              ok = true;
-              break Outter;
-            }
-          }
-          case 3 -> {
-            if (duration >= i * 20 - 10 && duration <= i * 20 - 9)
-            {
-              ok = true;
-              break Outter;
-            }
-          }
-          default -> {
-            if (duration == i * 20 - 10)
-            {
-              ok = true;
-              break Outter;
-            }
-          }
-        }
-      }
-      if (ok)
-      {
-        CustomEffectManager.addEffect(player, CustomEffectType.STAR_CATCH_SUCCESS);
-        player.playSound(player.getLocation(), "star_catch_success", SoundCategory.PLAYERS, 2F, 1F);
-        player.playSound(player.getLocation(), "star_catch_success", SoundCategory.PLAYERS, 2F, 1F);
-        Consumer<Entity> consumer = e ->
-        {
-          ArmorStand armorStand = (ArmorStand) e;
-          armorStand.setMarker(true);
-          armorStand.setSmall(true);
-          armorStand.setBasePlate(false);
-          armorStand.setInvisible(true);
-          armorStand.customName(ComponentUtil.translate("&a+강화성공률"));
-          armorStand.setCustomNameVisible(true);
-          armorStand.addScoreboardTag("damage_indicator");
-          armorStand.addScoreboardTag("no_cucumbery_true_invisibility");
-          for (Player p : Bukkit.getOnlinePlayers())
-          {
-            if (player != p)
-            {
-              p.hideEntity(Cucumbery.getPlugin(), armorStand);
-            }
-          }
-        };
-        Location location = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(3));
-        Entity armorStand = location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND, SpawnReason.DEFAULT, consumer);
-        CustomEffectManager.addEffect(armorStand, CustomEffectType.DAMAGE_INDICATOR);
-      }
-      else
-      {
-        player.playSound(player.getLocation(), "star_catch_failure", SoundCategory.PLAYERS, 1F, 1F);
-      }
-      CustomEffectManager.removeEffect(player, CustomEffectType.STAR_CATCH_PROCESS);
-      return;
-    }
     Block block = event.getClickedBlock();
     Material clickedBlockType;
     if (block != null)
@@ -341,6 +247,15 @@ public class PlayerInteract implements Listener
           return;
         }
 
+        if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+        {
+          if (Tag.ITEMS_BOATS.isTagged(itemType))
+          {
+            event.setCancelled(true);
+            return;
+          }
+        }
+
         if ((player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE) && NBTAPI.isRestricted(player, item, RestrictionType.NO_EQUIP))
         {
           PlayerInventory inv = player.getInventory();
@@ -370,6 +285,20 @@ public class PlayerInteract implements Listener
         // 손에 아이템 있음 - 블록 우클릭
         if (rightBlock)
         {
+          if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+          {
+            switch (itemType)
+            {
+              case MINECART, CHEST_MINECART, COMMAND_BLOCK_MINECART, FURNACE_MINECART, HOPPER_MINECART -> {
+                if (Tag.RAILS.isTagged(clickedBlockType))
+                {
+                  event.setCancelled(true);
+                  return;
+                }
+              }
+            }
+          }
+
           boolean noStore = NBTAPI.isRestricted(player, item, RestrictionType.NO_STORE);
           boolean noTrade = NBTAPI.isRestricted(player, item, RestrictionType.NO_TRADE);
           boolean noLectern = NBTAPI.isRestricted(player, item, RestrictionType.NO_LECTERN);
@@ -496,9 +425,15 @@ public class PlayerInteract implements Listener
             }
           }
 
+          BlockFace blockFace = event.getBlockFace();
+          if (CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE) && player.getGameMode() != GameMode.CREATIVE && itemType == Material.ARMOR_STAND && blockFace != BlockFace.DOWN)
+          {
+            event.setCancelled(true);
+            return;
+          }
+
           if (NBTAPI.isRestricted(player, item, RestrictionType.NO_PLACE))
           {
-            BlockFace blockFace = event.getBlockFace();
             if (itemType == Material.ARMOR_STAND)
             {
               if (blockFace != BlockFace.DOWN)
@@ -531,12 +466,29 @@ public class PlayerInteract implements Listener
             }
           }
 
+          // 물병 들고 흙에 우클릭 (진흙 만들기)
+          if (itemType == Material.POTION && item.getItemMeta() instanceof PotionMeta potionMeta && potionMeta.getBasePotionData().getType() == PotionType.WATER && Tag.DIRT.isTagged(clickedBlockType))
+          {
+            // 커스텀 채광 모드에서는 불가능하게 막음
+            if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+            {
+              event.setCancelled(true);
+              return;
+            }
+          }
+
           // 손에 유리병/포션/양동이/물 양동이 들고 블록에 우클릭
           if (itemType == Material.GLASS_BOTTLE || itemType == Material.POTION || itemType == Material.BUCKET || itemType == Material.WATER_BUCKET ||
                   itemType == Material.LAVA_BUCKET || itemType == Material.POWDER_SNOW_BUCKET)
           {
-            if (clickedBlockType == Material.CAULDRON || clickedBlockType == Material.WATER_CAULDRON || clickedBlockType == Material.LAVA_CAULDRON || clickedBlockType == Material.POWDER_SNOW_CAULDRON)
+            if (clickedBlockType == Material.CAULDRON || clickedBlockType == Material.WATER_CAULDRON || clickedBlockType == Material.LAVA_CAULDRON || clickedBlockType == Material.POWDER_SNOW_CAULDRON || clickedBlockType == Material.DIRT)
             {
+              // 커스텀 채광 모드에서는 불가능하게 막음
+              if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+              {
+                event.setCancelled(true);
+                return;
+              }
               if (Method.usingLoreFeature(player))
               {
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
@@ -549,6 +501,12 @@ public class PlayerInteract implements Listener
           {
             if (clickedBlockType == Material.BEE_NEST || clickedBlockType == Material.BEEHIVE)
             {
+              // 커스텀 채광 모드에서는 불가능하게 막음
+              if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+              {
+                event.setCancelled(true);
+                return;
+              }
               if (Method.usingLoreFeature(player))
               {
                 Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
@@ -623,8 +581,30 @@ public class PlayerInteract implements Listener
             }
           }
 
+          // 뼛가루를 블록에 우클릭
+          if (itemType == Material.BONE_MEAL)
+          {
+            // 커스텀 채광 모드에서는 불가능하게 막음
+            if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+            {
+              event.setCancelled(true);
+              return;
+            }
+          }
+
+          // 비료를 퇴비통에 우클릭
+          if (ItemStackUtil.getCompostChance(itemType) > 0d && clickedBlockType == Material.COMPOSTER)
+          {
+            // 커스텀 채광 모드에서는 불가능하게 막음
+            if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+            {
+              event.setCancelled(true);
+              return;
+            }
+          }
+
           // 폭죽을 블록에 우클릭 혹은 비료를 퇴비통에 우클릭
-          if (itemType == Material.FIREWORK_ROCKET || (Constant.COMPOSTABLE_ITEMS.contains(itemType) && clickedBlockType == Material.COMPOSTER))
+          if (itemType == Material.FIREWORK_ROCKET || (ItemStackUtil.getCompostChance(itemType) > 0d && clickedBlockType == Material.COMPOSTER))
           {
             if (player.getGameMode() != GameMode.CREATIVE && NBTAPI.arrayContainsValue(NBTAPI.getStringList(NBTAPI.getMainCompound(item.clone()), CucumberyTag.EXTRA_TAGS_KEY),
                     Constant.ExtraTag.INFINITE.toString()))
@@ -639,10 +619,15 @@ public class PlayerInteract implements Listener
           // 라이터 혹은 화염구를 TNT에 우클릭
           if ((itemType == Material.FLINT_AND_STEEL || itemType == Material.FIRE_CHARGE) && clickedBlockType == Material.TNT)
           {
+            // 커스텀 채광 모드에서는 불가능하게 막음
+            if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+            {
+              event.setCancelled(true);
+              return;
+            }
             if (!player.isSneaking() && Cucumbery.config.getBoolean("use-static-tnt")
                     && !Method.configContainsLocation(block.getLocation(), Cucumbery.config.getStringList("no-use-static-tnt-location")))
             {
-              BlockFace blockFace = event.getBlockFace();
               int x = block.getX(), y = block.getY(), z = block.getZ();
               switch (blockFace)
               {
@@ -837,6 +822,58 @@ public class PlayerInteract implements Listener
             }
             break;
         }
+
+        NBTItem nbtItem = new NBTItem(item);
+        try
+        {
+          CustomMaterial customMaterial = CustomMaterial.valueOf(nbtItem.getString("id").toUpperCase());
+          switch (customMaterial)
+          {
+            case THE_MUSIC -> {
+              event.setCancelled(true);
+              CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectType.COOLDOWN_THE_MUSIC);
+              if (customEffect != null)
+              {
+                MessageUtil.sendWarn(player, "능력을 사용하려면 %s 더 기다려야합니다!", ComponentUtil.translate("&e%s초", Constant.Sosu2.format(customEffect.getDuration() / 20d)));
+                return;
+              }
+              CustomEffectManager.addEffect(player, CustomEffectType.COOLDOWN_THE_MUSIC);
+              boolean isOp = player.isOp();
+              if (!isOp)
+              {
+                player.setOp(true);
+              }
+              player.performCommand("csong play 'All Star - Smash Mouth--stop'");
+              if (!isOp)
+              {
+                player.setOp(false);
+              }
+              return;
+            }
+            case STONK -> {
+              event.setCancelled(true);
+              CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectType.MINING_BOOSTER_COOLDOWN);
+              if (customEffect != null)
+              {
+                MessageUtil.sendWarn(player, "능력을 사용하려면 %s 더 기다려야합니다!", ComponentUtil.translate("&e%s초", Constant.Sosu2.format(customEffect.getDuration() / 20d)));
+                return;
+              }
+              CustomEffectManager.addEffect(player, CustomEffectType.MINING_BOOSTER_COOLDOWN);
+              CustomEffectManager.addEffect(player, CustomEffectType.MINING_BOOSTER);
+              MessageUtil.info(player, "&a%s 능력을 사용했습니다!", ComponentUtil.translate("채광 부스터"));
+              return;
+            }
+            case PORTABLE_CRAFTING_TABLE -> {
+              event.setCancelled(true);
+              player.openWorkbench(null, true);
+              return;
+            }
+          }
+        }
+        catch (Exception ignored)
+        {
+
+        }
       }
     }
     // 손에 아이템 없음
@@ -881,10 +918,17 @@ public class PlayerInteract implements Listener
       // 블록 우클릭
       if (rightBlock)
       {
+        if (Tag.FLOWER_POTS.isTagged(clickedBlockType))
+        {
+          if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+          {
+            event.setCancelled(true);
+            return;
+          }
+        }
         switch (clickedBlockType)
         {
-          case CAMPFIRE:
-          case SOUL_CAMPFIRE:
+          case CAMPFIRE, SOUL_CAMPFIRE -> {
             if (NBTAPI.isRestricted(player, item, RestrictionType.NO_TRADE))
             {
               event.setCancelled(true);
@@ -897,8 +941,8 @@ public class PlayerInteract implements Listener
               }
               return;
             }
-            break;
-          case JUKEBOX:
+          }
+          case JUKEBOX -> {
             boolean noTrade = NBTAPI.isRestricted(player, item, RestrictionType.NO_TRADE), noJukeBox = NBTAPI.isRestricted(player, item, RestrictionType.NO_JUKEBOX);
             if ((noTrade || noJukeBox) && itemType.isRecord())
             {
@@ -912,8 +956,8 @@ public class PlayerInteract implements Listener
               }
               return;
             }
-            break;
-          case FLOWER_POT:
+          }
+          case FLOWER_POT -> {
             if (NBTAPI.isRestricted(player, item, RestrictionType.NO_FLOWER_POT))
             {
               event.setCancelled(true);
@@ -926,8 +970,8 @@ public class PlayerInteract implements Listener
               }
               return;
             }
-            break;
-          case RESPAWN_ANCHOR:
+          }
+          case RESPAWN_ANCHOR -> {
             if (NBTAPI.isRestricted(player, item, RestrictionType.NO_RESPAWN_ANCHOR))
             {
               if (Objects.requireNonNull(item).getType() == Material.GLOWSTONE)
@@ -943,26 +987,31 @@ public class PlayerInteract implements Listener
               }
               return;
             }
-            break;
-          case LODESTONE:
+          }
+          case LODESTONE -> {
             if (NBTAPI.isRestricted(player, item, RestrictionType.NO_LODESTONE))
             {
-              if (Objects.requireNonNull(item).getType() == Material.COMPASS)
+              if (itemType == Material.COMPASS)
               {
                 event.setCancelled(true);
                 if (!Permission.EVENT_ERROR_HIDE.has(player) && !Variable.playerInteractAlertCooldown.contains(uuid))
                 {
                   Variable.playerInteractAlertCooldown.add(uuid);
-                  MessageUtil.sendTitle(player, "&c사용 불가!", "&r자석석에 사용할 수 없는  아이템입니다", 5, 80, 15);
+                  MessageUtil.sendTitle(player, "&c사용 불가!", "자석석에 사용할 수 없는  아이템입니다", 5, 80, 15);
                   SoundPlay.playSound(player, Constant.ERROR_SOUND);
                   Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAlertCooldown.remove(uuid), 100L);
                 }
               }
               return;
             }
-            break;
-          default:
-            break;
+          }
+          case BLACK_BED, BLUE_BED, BROWN_BED, LIGHT_BLUE_BED, LIGHT_GRAY_BED, GRAY_BED, GREEN_BED,
+                  CYAN_BED, LIME_BED, MAGENTA_BED, ORANGE_BED, PINK_BED, PURPLE_BED, RED_BED-> {
+            if (player.getInventory().contains(Material.RECOVERY_COMPASS))
+            {
+
+            }
+          }
         }
       }
     }
@@ -1043,7 +1092,7 @@ public class PlayerInteract implements Listener
     String permission = NBTAPI.getString(usageClickTag, CucumberyTag.PERMISSION_KEY);
     if (permission != null && !player.hasPermission(permission))
     {
-      MessageUtil.sendWarn(player, ComponentUtil.create("아직 %s을(를) " + usageTypeString + " 사용할 권한이 없습니다.)", item));
+      MessageUtil.sendWarn(player, "%s을(를) " + usageTypeString + " 사용할 권한이 없습니다", item);
       event.setCancelled(true);
       return false;
     }
@@ -1059,7 +1108,7 @@ public class PlayerInteract implements Listener
         String remainTime = "&e" + Method.timeFormatMilli(nextAvailable - currentTime);
         if (currentTime < nextAvailable)
         {
-          MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) " + usageTypeString + " 사용할 수 없습니다 (남은 시간 : %s)", item, remainTime));
+          MessageUtil.sendWarn(player, "아직 %s을(를) " + usageTypeString + " 사용할 수 없습니다 (남은 시간 : %s)", item, remainTime);
           event.setCancelled(true);
           return false;
         }
@@ -1389,9 +1438,18 @@ public class PlayerInteract implements Listener
       SoundPlay.playSoundLocation(player.getLocation(), Sound.ENTITY_BLAZE_HURT, 1F, 2F);
       Location origin = reverse ? player.getLocation().add(0d, 0.6, 0d) : player.getEyeLocation();
       double random1 = Math.random(), random2 = Math.random();
+      int level = 0;
       if (CustomEffectManager.hasEffect(player, CustomEffectType.IDIOT_SHOOTER))
       {
-        double modifier = (CustomEffectManager.getEffect(player, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1) * 5d;
+        level = CustomEffectManager.getEffect(player, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1;
+      }
+      if (item.hasItemMeta() && item.getItemMeta().hasEnchants())
+      {
+        level = Math.max(level, item.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+      }
+      if (level > 0)
+      {
+        double modifier = level * 5d;
         double newYaw = origin.getYaw() + (random1 * modifier - (modifier / 2d));
         if (newYaw < 0)
         {
@@ -1446,9 +1504,18 @@ public class PlayerInteract implements Listener
         }
       }
       origin = player.getEyeLocation();
+      level = 0;
       if (CustomEffectManager.hasEffect(player, CustomEffectType.IDIOT_SHOOTER))
       {
-        double modifier = (CustomEffectManager.getEffect(player, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1) * 5d;
+        level = CustomEffectManager.getEffect(player, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1;
+      }
+      if (item.hasItemMeta() && item.getItemMeta().hasEnchants())
+      {
+        level = Math.max(level, item.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+      }
+      if (level > 0)
+      {
+        double modifier = level * 5d;
         double newYaw = origin.getYaw() + (random1 * modifier - (modifier / 2d));
         if (newYaw < 0)
         {

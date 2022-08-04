@@ -4,20 +4,25 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
 import de.tr7zw.changeme.nbtapi.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.CreativeCategory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,6 +54,36 @@ public class ItemLore
       return itemStack;
     }
     Material type = itemStack.getType();
+    NBTItem nbtItem = new NBTItem(itemStack, true);
+    String customType = nbtItem.getString("id") + "";
+    CustomMaterial customMaterial = null;
+    {
+      try
+      {
+        type = Material.valueOf(customType.toUpperCase());
+      }
+      catch (Exception ignored)
+      {
+
+      }
+      try
+      {
+        customMaterial = CustomMaterial.valueOf(customType.toUpperCase());
+      }
+      catch (Exception ignored)
+      {
+
+      }
+    }
+    if (customMaterial != null)
+    {
+      ItemLoreCustomItem.itemLore(itemStack, nbtItem, customMaterial);
+    }
+    if (!customType.equals(""))
+    {
+      ItemLoreCustomItem.itemLore(itemStack, nbtItem, customType);
+    }
+    boolean hasOnlyNbtTagLore = ItemLoreUtil.hasOnlyNbtTagLore(itemStack) || new NBTItem(itemStack).hasKey("NBTCopied") && new NBTItem(itemStack).getBoolean("NBTCopied");
     NBTCompoundList potionsTag = NBTAPI.getCompoundList(itemTagReadOnly, CucumberyTag.CUSTOM_EFFECTS);
     if (Cucumbery.config.getBoolean("use-no-effect-potions-weirdly") && itemStack.getItemMeta() instanceof PotionMeta potionMeta && potionsTag == null)
     {
@@ -63,7 +98,6 @@ public class ItemLore
               };
       if (customEffectType != null)
       {
-        NBTItem nbtItem = new NBTItem(itemStack, true);
         NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
         if (itemTag == null)
         {
@@ -101,16 +135,14 @@ public class ItemLore
         }
       }
     }
-    boolean hasOnlyNbtTagLore = ItemLoreUtil.hasOnlyNbtTagLore(itemStack);
+    if (hasOnlyNbtTagLore)
+    {
+      nbtItem.setBoolean("NBTCopied", true);
+    }
+
     // 아이템의 등급
     Rarity rarity = ItemCategory.getItemRarirty(type);
-    // 아이템의 등급(숫자)
-    long rarityValue = rarity.getRarityValue();
     ItemMeta itemMeta = itemStack.getItemMeta();
-    // 기본 설명 추가(공백, 종류, 등급)
-    // 아이템의 맨 첫번째 설명은 아이템의 등급 수치 추가
-    List<Component> defaultLore = new ArrayList<>(Collections.singletonList(Component.translatable("").args(Component.text(rarityValue))));
-    // 그 다음 2번째 설명에는 아이템의 종류를 추가
     TranslatableComponent itemGroup;
     CreativeCategory itemCategoryType = type.getCreativeCategory();
     if (itemCategoryType == null)
@@ -124,13 +156,43 @@ public class ItemLore
     }
     else
     {
-      switch (itemCategoryType)
+      itemGroup = Component.translatable(itemCategoryType.translationKey());
+    }
+    if (customMaterial != null)
+    {
+      itemGroup = Component.translatable(customMaterial.getCategory());
+      rarity = customMaterial.getRarity();
+    }
+    if (!customType.equals(""))
+    {
+      try
       {
-        case BUILDING_BLOCKS -> itemGroup = Component.translatable("itemGroup.buildingBlocks");
-        case REDSTONE, TRANSPORTATION, MISC, FOOD, COMBAT, BREWING, DECORATIONS, TOOLS -> itemGroup = Component.translatable("itemGroup." + itemCategoryType.toString().toLowerCase());
-        default -> itemGroup = Component.translatable("알 수 없음");
+        ConfigurationSection root = Variable.customItemsConfig.getConfigurationSection(customType);
+        if (root != null)
+        {
+          String r = root.getString("Rarity");
+          if (r != null)
+          {
+            rarity = Rarity.valueOf(r);
+          }
+          String g = root.getString("ItemGroup");
+          if (g != null)
+          {
+            itemGroup = ComponentUtil.translate(g, true);
+          }
+        }
+      }
+      catch (Exception ignored)
+      {
+
       }
     }
+    // 아이템의 등급(숫자)
+    long rarityValue = rarity.getRarityValue();
+    // 기본 설명 추가(공백, 종류, 등급)
+    // 아이템의 맨 첫번째 설명은 아이템의 등급 수치 추가
+    List<Component> defaultLore = new ArrayList<>(Collections.singletonList(Component.translatable(ItemLoreUtil.FIRST_LINE_EMPTY_LORE).args(Component.text(rarityValue))));
+    // 그 다음 2번째 설명에는 아이템의 종류를 추가
     Component itemGroupComponent = ComponentUtil.translate("&7아이템 종류 : [%s]", itemGroup);
     defaultLore.add(itemGroupComponent);
     // 그 다음 3번째 설명에는 아이템의 등급을 추가
@@ -150,53 +212,137 @@ public class ItemLore
     ItemLore4.setItemLore(itemStack);
     ItemLoreUtil.removeInventoryItemLore(itemStack);
     itemMeta = itemStack.getItemMeta();
-    if (defaultLore != null && defaultLore.size() > 48)
-    {
-      int remove = 0;
-      while (defaultLore.size() >= 48)
-      {
-        remove++;
-        defaultLore.remove(4);
-      }
-      defaultLore.add(4, ComponentUtil.translate("&7&o설명 %s개 중략...", remove));
-    }
-    // 그리고 만약 (+NBT) 설명만 추가되어 있는 아이템이였다면 최하단에 [NBT 태그 복사됨] 설명 추가
-    if (hasOnlyNbtTagLore)
-    {
-      if (defaultLore != null)
-      {
-        defaultLore.add(Component.empty());
-        defaultLore.add(ComponentUtil.translate("#52ee52;&o" + Constant.TMI_LORE_NBT_TAG_COPIED));
-      }
-    }
     if (defaultLore != null)
     {
+      // 그리고 만약 (+NBT) 설명만 추가되어 있는 아이템이였다면 최하단에 [NBT 태그 복사됨] 설명 추가
+      if (hasOnlyNbtTagLore)
+      {
+        defaultLore.add(Component.empty());
+        defaultLore.add(ComponentUtil.translate("#52ee52;" + Constant.TMI_LORE_NBT_TAG_COPIED));
+      }
       for (int i = 0; i < defaultLore.size(); i++)
       {
         defaultLore.set(i, ComponentUtil.stripEvent(defaultLore.get(i)));
       }
+      final int maxWidth = Cucumbery.config.getInt("max-item-lore-width");
+      if (maxWidth >= 20)
+      {
+        for (int i = 1; i < defaultLore.size(); i++)
+        {
+          if (defaultLore.size() > 100)
+          {
+            break;
+          }
+          String serial = MessageUtil.stripColor(ComponentUtil.serialize(defaultLore.get(i)));
+          if (serial.startsWith("YamlConfiguration[path") || serial.replace(" ", "").isEmpty())
+          {
+            continue;
+          }
+          while (serial.startsWith(" "))
+          {
+            serial = serial.substring(1);
+          }
+          List<String> list = new ArrayList<>();
+          int totalLength = serial.length();
+          for (char c : serial.toCharArray())
+          {
+            String s = c + "";
+            s += (c + "").repeat(3);
+            totalLength += 3;
+            if ((c + "").matches("[A-Za-z0-9\" _-]") && c != 'i')
+            {
+              s += (c + "").repeat(7);
+              totalLength += 7;
+            }
+            if ((c + "").matches("[ㄱ-ㅎㅏ-ㅣ가-힣]"))
+            {
+              s += (c + "").repeat(12);
+              totalLength += 12;
+            }
+            list.add(s);
+          }
+          int diff = totalLength - serial.length();
+          try
+          {
+            if (serial.length() + diff >= maxWidth)
+            {
+              double stack = 0d;
+              for (String s : list)
+              {
+                if (stack > serial.length() || stack > maxWidth / (1d * (diff + serial.length()) / serial.length()))
+                {
+                  break;
+                }
+                int l = s.length();
+                stack += l / 5d;
+              }
+              int size = (int) Math.round(stack);
+              Component component = ComponentUtil.create(serial.substring(0, Math.max(size, serial.length())));
+              if (component.color() == null)
+              {
+                component = component.color(defaultLore.get(i).color());
+              }
+              component = component.decorations(defaultLore.get(i).decorations());
+              defaultLore.set(i, component);
+              serial = serial.substring(size);
+              while (serial.startsWith(" "))
+              {
+                serial = serial.substring(1);
+              }
+              if (!serial.isEmpty())
+              {
+                component = ComponentUtil.create(serial);
+                if (component.color() == null)
+                {
+                  component = component.color(defaultLore.get(i).color());
+                }
+                component = component.decorations(defaultLore.get(i).decorations());
+                defaultLore.add(i + 1, component);
+              }
+            }
+          }
+          catch (IndexOutOfBoundsException e)
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+      if (defaultLore.size() > 48)
+      {
+        int remove = 0;
+        while (defaultLore.size() >= 47)
+        {
+          remove++;
+          defaultLore.remove(46);
+        }
+        defaultLore.add(46, ComponentUtil.translate("&7&o설명 %s개 중략...", remove));
+      }
       itemMeta.lore(defaultLore);
     }
-    @Nullable Component displayName;
+    itemStack.setItemMeta(itemMeta);
+    String displayId = nbtItem.getString("DisplayId");
     try
     {
-      displayName = itemMeta.displayName();
+      Material material = Material.valueOf(displayId.toUpperCase());
+      if (material.isItem() && !material.isAir())
+      {
+        itemStack.setType(material);
+      }
     }
-    catch (Exception e)
+    catch (Exception ignored)
     {
-      displayName = null;
+
     }
-    if (displayName != null)
-    {
-      itemMeta.displayName(ComponentUtil.stripEvent(ComponentUtil.create(displayName)));
-    }
-    itemStack.setItemMeta(itemMeta);
     return itemStack;
   }
-
-
   @NotNull
   public static ItemStack removeItemLore(@NotNull ItemStack itemStack)
+  {
+    return removeItemLore(itemStack, false);
+  }
+
+  @NotNull
+  public static ItemStack removeItemLore(@NotNull ItemStack itemStack, boolean removeUUID)
   {
     if (!ItemLoreUtil.isCucumberyTMIFood(itemStack))
     {
@@ -209,6 +355,22 @@ public class ItemLore
     NBTItem nbtItem = new NBTItem(itemStack);
     nbtItem.removeKey(CucumberyTag.KEY_TMI);
     itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
+    if (nbtItem.hasKey("id"))
+    {
+      itemMeta = itemStack.getItemMeta();
+      itemMeta.displayName(null);
+      itemStack.setItemMeta(itemMeta);
+      if (itemMeta instanceof SkullMeta skullMeta)
+      {
+        skullMeta.setOwningPlayer(null);
+        itemStack.setItemMeta(skullMeta);
+      }
+      if (removeUUID && nbtItem.hasKey("uuid"))
+      {
+        nbtItem = new NBTItem(itemStack, true);
+        nbtItem.removeKey("uuid");
+      }
+    }
     return itemStack;
   }
 }

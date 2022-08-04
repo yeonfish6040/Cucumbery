@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.listeners.block;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -53,7 +54,7 @@ public class BlockPlace implements Listener
       EquipmentSlot hand = event.getHand();
       ItemStack item = player.getInventory().getItem(hand);
       Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              ItemLore.setItemLore(item), 0L);
+              ItemLore.setItemLore(item, ItemLoreView.of(player)), 0L);
     }
 
     UUID uuid = player.getUniqueId();
@@ -115,6 +116,13 @@ public class BlockPlace implements Listener
       event.setCancelled(true);
       return;
     }
+
+    if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+    {
+      event.setCancelled(true);
+      return;
+    }
+
     NBTCompound itemTag = NBTAPI.getMainCompound(item);
     NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
     if (NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.BLOCK_PLACE_BECOME_WATER.toString()))
@@ -213,11 +221,11 @@ public class BlockPlace implements Listener
       item = item.clone();
       ItemLore.removeItemLore(item);
       NBTItem nbtItem = new NBTItem(item);
-      if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.PREVERSE_BLOCK_ENTITY_TAG))
+      if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.PRESERVE_BLOCK_ENTITY_TAG))
       {
         nbtItem.removeKey("BlockEntityTag");
       }
-      if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.PREVERSE_BLOCK_DATA_TAG))
+      if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.PRESERVE_BLOCK_DATA_TAG))
       {
         nbtItem.removeKey("BlockStateTag");
       }
@@ -229,7 +237,7 @@ public class BlockPlace implements Listener
       int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
       YamlConfiguration yamlConfiguration = Variable.blockPlaceData.get(worldName);
 
-      if (item.hasItemMeta() && (NBTAPI.arrayContainsValue(extraTag, Constant.ExtraTag.PREVERSE_BLOCK_NBT) || !Cucumbery.config.getBoolean("block-place-data-feature-with-specific-tag")))
+      if (item.hasItemMeta() && (NBTAPI.arrayContainsValue(extraTag, Constant.ExtraTag.PRESERVE_BLOCK_NBT) || !Cucumbery.config.getBoolean("block-place-data-feature-with-specific-tag")))
       {
         item.setAmount(1);
         if (yamlConfiguration == null)

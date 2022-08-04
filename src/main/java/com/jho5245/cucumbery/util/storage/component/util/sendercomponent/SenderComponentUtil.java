@@ -313,6 +313,10 @@ public class SenderComponentUtil
               };
       Component component = nameNull ? defaultName : name;
       Component hover = nameNull ? defaultName.color(null) : Component.empty().append(name.hoverEvent(null).clickEvent(null));
+      if (component.color() == null)
+      {
+        component = component.color(defaultName.color());
+      }
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("유형 : %s", defaultName));
       int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
@@ -358,5 +362,4 @@ public class SenderComponentUtil
     }
     return Component.empty();
   }
-
 }

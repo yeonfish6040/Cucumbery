@@ -4,18 +4,22 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
-import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.custom.recipe.RecipeManager;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
+import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -26,6 +30,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -83,7 +88,17 @@ public class PrepareItemCraft implements Listener
           return;
         }
       }
-      if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
+      Recipe recipe = event.getRecipe();
+      boolean except = false;
+      if (recipe instanceof Keyed keyed)
+      {
+        NamespacedKey namespacedKey = keyed.getKey();
+        if (RecipeManager.recipes.contains(namespacedKey))
+        {
+          except = true;
+        }
+      }
+      if (!except && !UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
       {
         ItemStack originalResult = event.getView().getItem(0);
         if (!ItemStackUtil.itemExists(originalResult)) // 제작 결과물 아이템이 존재하지 않으면 조합 불가 방벽을 보여주지 않음
@@ -269,6 +284,6 @@ public class PrepareItemCraft implements Listener
     {
       return;
     }
-    ItemLore.setItemLore(result, event);
+    ItemLore.setItemLore(result, new ItemLoreView(player));
   }
 }

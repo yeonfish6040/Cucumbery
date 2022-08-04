@@ -38,6 +38,7 @@ public class EntityCustomEffectRemoveEvent extends EntityCustomEffectEvent
   {
     /**
      * When the {@link CustomEffectType} is conflict with others.
+     * <p>It means that {@link CustomEffectType#getConflictEffects()} contains this.
      */
     CONFLICT,
     /**

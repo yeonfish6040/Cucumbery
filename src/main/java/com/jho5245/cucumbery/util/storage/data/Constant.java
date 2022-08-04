@@ -35,7 +35,7 @@ public class Constant
 
   public static final String AIR_PREFIX = "§산§소§량§b";
 
-  public static final String SEPARATOR = "&8&m                                                                ";
+  public static final String SEPARATOR = "&m                                                                        ";
 
   public static final String TAB_COMPLETER_QUOTE_ESCAPE = "tab_completer_quote_escape";
   public static final TextColor THE_COLOR = TextColor.color(255, 204, 0);
@@ -125,13 +125,14 @@ public class Constant
   public static final String VIRTUAL_CHEST_MENU_PREFIX = "§가§상§창§고" + GUI_SUFFIX;
   public static final String VIRTUAL_CHEST_ADMIN_MENU_PREFIX = "§가§상§창§고§관§리§자" + GUI_SUFFIX;
   public static final String ITEM_PORTABLE_SHULKER_BOX_GUI = "휴대용 셜커 상자";
-  public static final String REINFORCE_QUIT = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 quit" : "cucumbery-강화중지";
-  public static final String REINFORCE_USE_ANTI_DESTRUCTION = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 파괴방지사용" : "cucumbery-강화파방";
-  public static final String REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 파괴방지미사용" : "cucumbery-강화파방끔";
-  public static final String REINFORCE_USE_DISABLE_STAR_CATCH = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 스타캐치해제사용" : "cucumbery-강화스타캐치해제";
-  public static final String REINFORCE_DO_NOT_USE_DISABLE_STAR_CATCH = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 스타캐치해제미사용" : "cucumbery-강화스타캐치해제끔";
-  public static final String REINFORCE_START = Cucumbery.config.getBoolean("reinforce-mode-command") ? "/강화 realstart" : "cucumbery-강화";
-  public static final String DROP_UNTRADABLE_ITEM = "cucumbery-drop-untradable-item";
+  public static final String REINFORCE_QUIT = "/강화 quit";
+  public static final String REINFORCE_USE_ANTI_DESTRUCTION = "/강화 파괴방지사용";
+  public static final String REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION = "/강화 파괴방지미사용";
+  public static final String REINFORCE_USE_DISABLE_STAR_CATCH = "/강화 스타캐치해제사용";
+  public static final String REINFORCE_DO_NOT_USE_DISABLE_STAR_CATCH = "/강화 스타캐치해제미사용";
+  public static final String REINFORCE_START = "/강화 realstart";
+  public static final String REINFORCE_STAR_CATCH = "/강화 starcatch";
+  public static final String DROP_UNTRADABLE_ITEM = "/cucumbery-drop-untradable-item";
   public static final Set<Material> SWORDS = new HashSet<>(
           Arrays.asList(Material.DIAMOND_SWORD, Material.GOLDEN_SWORD, Material.IRON_SWORD, Material.STONE_SWORD, Material.WOODEN_SWORD, Material.NETHERITE_SWORD));
   public static final Set<Material> AXES = new HashSet<>(Arrays.asList(Material.DIAMOND_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.STONE_AXE, Material.WOODEN_AXE, Material.NETHERITE_AXE));
@@ -166,19 +167,6 @@ public class Constant
    * 6면이 완전히 꽉찬 블록
    */
   public static final Set<Material> PENETRATABLE_BLOCKS = new HashSet<>(Arrays.asList(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR, Material.WATER, Material.LAVA));
-  public static final Set<Material> COMPOSTABLE_ITEMS = new HashSet<>(Arrays
-          .asList(Material.BEETROOT_SEEDS, Material.DRIED_KELP, Material.GRASS, Material.KELP, Material.MELON_SEEDS, Material.NETHER_WART,
-                  Material.PUMPKIN_SEEDS, Material.SEAGRASS, Material.TALL_SEAGRASS, Material.SWEET_BERRIES, Material.WHEAT_SEEDS,
-                  Material.CACTUS, Material.DRIED_KELP_BLOCK, Material.MELON_SLICE, Material.SUGAR_CANE, Material.TALL_GRASS,
-                  Material.VINE, Material.WEEPING_VINES, Material.TWISTING_VINES, Material.NETHER_SPROUTS, Material.APPLE,
-                  Material.BEETROOT, Material.CARROT, Material.COCOA_BEANS, Material.FERN, Material.LARGE_FERN, Material.LILY_PAD,
-                  Material.MELON, Material.BROWN_MUSHROOM, Material.RED_MUSHROOM, Material.MUSHROOM_STEM, Material.POTATO,
-                  Material.PUMPKIN, Material.CARVED_PUMPKIN, Material.SEA_PICKLE, Material.SHROOMLIGHT, Material.WHEAT,
-                  Material.CRIMSON_FUNGUS, Material.WARPED_FUNGUS, Material.CRIMSON_ROOTS, Material.WARPED_ROOTS, Material.BAKED_POTATO,
-                  Material.BREAD, Material.COOKIE, Material.HAY_BLOCK, Material.BROWN_MUSHROOM_BLOCK, Material.RED_MUSHROOM_BLOCK,
-                  Material.NETHER_WART_BLOCK, Material.WARPED_WART_BLOCK, Material.CAKE, Material.PUMPKIN_PIE, Material.GLOW_BERRIES,
-                  Material.HANGING_ROOTS, Material.MOSS_CARPET, Material.SMALL_DRIPLEAF, Material.AZALEA_LEAVES, Material.FLOWERING_AZALEA_LEAVES,
-                  Material.GLOW_LICHEN, Material.AZALEA, Material.BIG_DRIPLEAF, Material.MOSS_BLOCK, Material.SPORE_BLOSSOM, Material.FLOWERING_AZALEA));
   public static final Set<Material> LEAVES = new HashSet<>(
           Arrays.asList(Material.ACACIA_LEAVES, Material.BIRCH_LEAVES, Material.JUNGLE_LEAVES, Material.OAK_LEAVES, Material.SPRUCE_LEAVES, Material.DARK_OAK_LEAVES));
   public static final Set<Material> SAPLINGS = new HashSet<>(
@@ -187,7 +175,7 @@ public class Constant
   public static final List<Material> WOOL = new ArrayList<>(), PLANKS = new ArrayList<>(), FLOWERS = new ArrayList<>(), SMALL_FLOWERS = new ArrayList<>(), TALL_FLOWERS = new ArrayList<>(),
           WITHER_IMMUNE = new ArrayList<>(), BEACON_BASE_BLOCKS = new ArrayList<>(), DYES = new ArrayList<>(), SHULKER_BOXES = new ArrayList<>();
   public static final Set<Material> OPTIFINE_DYNAMIC_LIGHT_ITEMS = new HashSet<>(Arrays.asList(Material.TORCH, Material.REDSTONE_TORCH, Material.LAVA_BUCKET, Material.NETHER_STAR, Material.BEACON,
-          Material.GLOWSTONE, Material.SEA_LANTERN));
+          Material.GLOWSTONE, Material.SEA_LANTERN, Material.OCHRE_FROGLIGHT, Material.PEARLESCENT_FROGLIGHT, Material.VERDANT_FROGLIGHT));
   private static final DecimalFormat privateSosu5Force = new DecimalFormat("00000,000.00000");
   private static final DecimalFormat privateSosu2Force = new DecimalFormat("00000,000.00");
   private static final DecimalFormat privateOnlySosu2Force = new DecimalFormat("#,##0.00");
@@ -228,9 +216,6 @@ public class Constant
 
   static
   {
-    COMPOSTABLE_ITEMS.addAll(LEAVES);
-    COMPOSTABLE_ITEMS.addAll(SAPLINGS);
-    COMPOSTABLE_ITEMS.addAll(FLOWERS);
     TOOLS.addAll(AXES);
     TOOLS.addAll(PICKAXES);
     TOOLS.addAll(SHOVELS);
@@ -293,41 +278,20 @@ public class Constant
     DEFAULT_MODIFIER_ITEMS.add(Material.TRIDENT);
     DEFAULT_MODIFIER_ITEMS.add(Material.TURTLE_HELMET);
 
-    INSTANTLY_BREAKABLE_BLOCKS = new HashSet<>(Arrays.asList(Material.ACACIA_SAPLING, Material.ALLIUM, Material.ATTACHED_MELON_STEM, Material.ATTACHED_PUMPKIN_STEM, Material.AZURE_BLUET,
-            Material.BEETROOTS, Material.BIRCH_SAPLING, Material.BLUE_ORCHID, Material.BRAIN_CORAL, Material.BRAIN_CORAL_FAN,
-            Material.BRAIN_CORAL_WALL_FAN, Material.BROWN_MUSHROOM, Material.BUBBLE_COLUMN, Material.BUBBLE_CORAL, Material.BUBBLE_CORAL_FAN,
-            Material.BUBBLE_CORAL_WALL_FAN, Material.CARROTS, Material.COMPARATOR, Material.DANDELION, Material.DARK_OAK_SAPLING,
-            Material.DEAD_BRAIN_CORAL, Material.DEAD_BRAIN_CORAL_FAN, Material.DEAD_BRAIN_CORAL_WALL_FAN, Material.DEAD_BUBBLE_CORAL,
-            Material.DEAD_BUBBLE_CORAL_FAN, Material.DEAD_BUBBLE_CORAL_WALL_FAN, Material.DEAD_BUSH, Material.DEAD_FIRE_CORAL,
-            Material.DEAD_FIRE_CORAL_FAN, Material.DEAD_FIRE_CORAL_WALL_FAN, Material.DEAD_HORN_CORAL, Material.DEAD_HORN_CORAL_FAN,
-            Material.DEAD_HORN_CORAL_WALL_FAN, Material.DEAD_TUBE_CORAL, Material.DEAD_TUBE_CORAL_FAN, Material.DEAD_TUBE_CORAL_WALL_FAN,
-            Material.END_ROD, Material.FERN, Material.FIRE, Material.FIRE_CORAL, Material.FIRE_CORAL_FAN, Material.FIRE_CORAL_WALL_FAN,
-            Material.FLOWER_POT, Material.GRASS, Material.HORN_CORAL, Material.HORN_CORAL_FAN, Material.HORN_CORAL_WALL_FAN,
-            Material.INFESTED_CHISELED_STONE_BRICKS, Material.INFESTED_COBBLESTONE, Material.INFESTED_CRACKED_STONE_BRICKS,
-            Material.INFESTED_MOSSY_STONE_BRICKS, Material.INFESTED_STONE, Material.INFESTED_STONE_BRICKS, Material.JUNGLE_SAPLING, Material.KELP,
-            Material.KELP_PLANT, Material.LILAC, Material.LARGE_FERN, Material.LILY_PAD, Material.MELON_STEM, Material.OAK_SAPLING,
-            Material.ORANGE_TULIP, Material.OXEYE_DAISY, Material.PEONY, Material.PINK_TULIP, Material.POPPY, Material.POTATOES,
-            Material.POTTED_ACACIA_SAPLING, Material.POTTED_ALLIUM, Material.POTTED_AZURE_BLUET, Material.POTTED_BIRCH_SAPLING,
-            Material.POTTED_BLUE_ORCHID, Material.POTTED_BROWN_MUSHROOM, Material.POTTED_CACTUS, Material.POTTED_DANDELION,
-            Material.POTTED_DARK_OAK_SAPLING, Material.POTTED_DEAD_BUSH, Material.POTTED_FERN, Material.POTTED_JUNGLE_SAPLING,
-            Material.POTTED_OAK_SAPLING, Material.POTTED_ORANGE_TULIP, Material.POTTED_OXEYE_DAISY, Material.POTTED_PINK_TULIP, Material.POTTED_POPPY,
-            Material.POTTED_RED_MUSHROOM, Material.POTTED_RED_TULIP, Material.POTTED_SPRUCE_SAPLING, Material.POTTED_WHITE_TULIP,
-            Material.RED_MUSHROOM, Material.RED_TULIP, Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH, Material.REDSTONE_WIRE,
-            Material.REPEATER, Material.ROSE_BUSH, Material.SEA_PICKLE, Material.SEAGRASS, Material.SLIME_BLOCK, Material.STRUCTURE_VOID,
-            Material.SUNFLOWER, Material.TALL_GRASS, Material.TALL_SEAGRASS, Material.TNT, Material.TORCH, Material.TRIPWIRE, Material.TRIPWIRE_HOOK,
-            Material.TUBE_CORAL, Material.TUBE_CORAL_FAN, Material.TUBE_CORAL_WALL_FAN, Material.WALL_TORCH, Material.WHEAT, Material.WHITE_TULIP,
-            Material.SCAFFOLDING, Material.CORNFLOWER, Material.LILY_OF_THE_VALLEY, Material.WITHER_ROSE, Material.POTTED_BAMBOO,
-            Material.POTTED_CORNFLOWER, Material.POTTED_LILY_OF_THE_VALLEY, Material.POTTED_WITHER_ROSE, Material.CRIMSON_FUNGUS,
-            Material.WARPED_FUNGUS, Material.CRIMSON_ROOTS, Material.WARPED_ROOTS, Material.NETHER_SPROUTS, Material.WEEPING_VINES,
-            Material.WEEPING_VINES_PLANT, Material.TWISTING_VINES, Material.TWISTING_VINES_PLANT, Material.POTTED_CRIMSON_FUNGUS,
-            Material.POTTED_CRIMSON_ROOTS, Material.POTTED_WARPED_FUNGUS, Material.POTTED_WARPED_ROOTS, Material.SOUL_TORCH,
-            Material.SOUL_WALL_TORCH));
+    INSTANTLY_BREAKABLE_BLOCKS = new HashSet<>();
+    Arrays.stream(Material.values()).forEach(material -> {
+      if (material.isBlock() && material.getHardness() == 0)
+      {
+        INSTANTLY_BREAKABLE_BLOCKS.add(material);
+      }
+    });
     TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS = new HashSet<>(Arrays
             .asList(Material.SHEARS, Material.TRIDENT, Material.WOODEN_AXE, Material.WOODEN_PICKAXE, Material.WOODEN_SHOVEL, Material.WOODEN_SWORD,
                     Material.STONE_AXE, Material.STONE_PICKAXE, Material.STONE_SHOVEL, Material.STONE_SWORD, Material.IRON_AXE,
                     Material.IRON_PICKAXE, Material.IRON_SHOVEL, Material.IRON_SWORD, Material.DIAMOND_AXE, Material.DIAMOND_PICKAXE,
                     Material.DIAMOND_SHOVEL, Material.DIAMOND_SWORD, Material.GOLDEN_AXE, Material.GOLDEN_PICKAXE, Material.GOLDEN_SHOVEL,
-                    Material.GOLDEN_SWORD, Material.NETHERITE_AXE, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_SWORD));
+                    Material.GOLDEN_SWORD, Material.NETHERITE_AXE, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_SWORD,
+                    Material.DIAMOND_HOE, Material.GOLDEN_HOE, Material.IRON_HOE, Material.STONE_HOE, Material.NETHERITE_HOE, Material.WOODEN_HOE));
   }
 
   public static String Sosu5Force(double input)
@@ -425,6 +389,7 @@ public class Constant
     NO_SHOT("발사 불가"),
     NO_SHOT_AMMO("발사 탄환으로 사용 불가"),
     NO_CROSSBOW_LOAD("장전 불가"),
+    NO_FUEL("땔감으로 사용 불가"),
 
     NO_BLOCK_BREAK("설치된 상태면 파괴 불가"),
     NO_BLOCK_PISTON_MOVE("피스톤으로 밀고 당기기 불가"),
@@ -532,6 +497,8 @@ public class Constant
     EXPIRE_DATE("유효 기간 숨김"),
     EXPIRE_DATE_RELATIVE("유효 기간(상대값) 숨김"),
     EXPIRE_DATE_ABSOLUTE("유효 기간(절대값) 숨김"),
+    CAN_PLACE_ON("마인크래프트 이 위에 설치 가능 숨김"),
+    CAN_DESTROY("마인크래프트 부술 수 있는 것 숨김"),
 
 
     COOLDOWN("대기 시간 숨김"),
@@ -616,9 +583,9 @@ public class Constant
     INFINITE_BEACON_ITEM("신호기에 사용 시 소비되지 않음"),
     INFINITE_FUEL("화로에서 땔감으로 사용 시 소비되지 않음"),
     NO_COOLDOWN_ENDER_PEARL("쿨타임 없는 엔더 진주"),
-    PREVERSE_BLOCK_NBT("설치 시 블록의 nbt 보존"),
-    PREVERSE_BLOCK_DATA_TAG("설치 시 블록의 nbt 블록 데이터 보존"),
-    PREVERSE_BLOCK_ENTITY_TAG("설치 시 블록의 블록 엔티티 데이터 보존"),
+    PRESERVE_BLOCK_NBT("설치 시 블록의 nbt 보존"),
+    PRESERVE_BLOCK_DATA_TAG("설치 시 블록의 nbt 블록 데이터 보존"),
+    PRESERVE_BLOCK_ENTITY_TAG("설치 시 블록의 블록 엔티티 데이터 보존"),
     FORCE_PRESERVE_BLOCK_NBT("채광 시 강제 블록 데이터 복원"),
     NAME_TAG("플레이어 이름 새겨짐"),
 

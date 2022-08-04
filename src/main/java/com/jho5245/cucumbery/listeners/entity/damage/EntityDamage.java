@@ -14,13 +14,17 @@ import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
 import com.jho5245.cucumbery.util.no_groups.NumberHangulConverter;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
@@ -100,6 +104,10 @@ public class EntityDamage implements Listener
       event.setCancelled(true);
       return;
     }
+    if (victim instanceof LivingEntity livingEntity && CustomEffectManager.hasEffect(victim, CustomEffectType.REMOVE_NO_DAMAGE_TICKS))
+    {
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> livingEntity.setNoDamageTicks(0), 0L);
+    }
     if (CustomEffectManager.hasEffect(victim, CustomEffectType.PARROTS_CHEER))
     {
       finalDamageMultiplier *= 0.55d;
@@ -123,6 +131,29 @@ public class EntityDamage implements Listener
       finalDamageMultiplier *= 0.5;
     }
     DamageCause damageCause = event.getCause();
+    switch (damageCause)
+    {
+      case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK, ENTITY_EXPLOSION, CUSTOM, PROJECTILE -> {
+        if (damageCause != DamageCause.PROJECTILE || event instanceof EntityDamageByEntityEvent ev && ev.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Entity)
+        {
+          if (victim instanceof LivingEntity livingEntity)
+          {
+            EntityEquipment equipment = livingEntity.getEquipment();
+            if (equipment != null)
+            {
+              ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
+              if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                      chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                      leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                      boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
+              {
+                damageMultiplier += 5d;
+              }
+            }
+          }
+        }
+      }
+    }
     switch (damageCause)
     {
       case HOT_FLOOR -> {
@@ -247,6 +278,21 @@ public class EntityDamage implements Listener
               damageMultiplier += 0.1;
             }
           }
+          if (damagerEntity instanceof LivingEntity livingEntity)
+          {
+            EntityEquipment equipment = livingEntity.getEquipment();
+            if (equipment != null)
+            {
+              ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
+              if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                      chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                      leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                      boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
+              {
+                damageMultiplier += 5d;
+              }
+            }
+          }
         }
       }
       case FALL -> {
@@ -368,6 +414,22 @@ public class EntityDamage implements Listener
                 }
               }
             }
+            if (projectileSource instanceof LivingEntity livingEntity)
+            {
+              EntityEquipment equipment = livingEntity.getEquipment();
+              if (equipment != null)
+              {
+                ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
+                if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                        chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                        leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                        boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
+                {
+                  damageMultiplier += 5d;
+                }
+              }
+            }
+
           }
         }
       }
@@ -466,7 +528,22 @@ public class EntityDamage implements Listener
     }
     Item itemEntity = (Item) event.getEntity();
     ItemStack item = itemEntity.getItemStack();
+    NBTItem nbtItem = new NBTItem(item);
     boolean affectedByPlugin = false;
+    try
+    {
+      CustomMaterial customMaterial = CustomMaterial.valueOf(nbtItem.getString("id").toUpperCase());
+      if (customMaterial == CustomMaterial.DOEHAERIM_BABO || customMaterial == CustomMaterial.BAMIL_PABO)
+      {
+        event.setCancelled(true);
+        affectedByPlugin = true;
+        itemEntity.setInvulnerable(true);
+      }
+    }
+    catch (Exception ignored)
+    {
+
+    }
     NBTList<String> extraTags = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
     if (extraTags != null && !extraTags.isEmpty())
     {
@@ -544,6 +621,62 @@ public class EntityDamage implements Listener
     {
       return;
     }
+    TextColor damageColor = null;
+    boolean isCrit = event instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.isCritical();
+    switch (event.getCause())
+    {
+      case CONTACT -> damageColor = NamedTextColor.GREEN;
+      case ENTITY_ATTACK -> {
+        if (isCrit)
+        {
+          damageColor = TextColor.color(255, 150, 150);
+        }
+        else
+        {
+          damageColor = TextColor.color(200, 200, 200);
+        }
+      }
+      case ENTITY_SWEEP_ATTACK -> {
+        if (isCrit)
+        {
+          damageColor = TextColor.color(150, 200, 150);
+        }
+        else
+        {
+          damageColor = TextColor.color(200, 255, 200);
+        }
+      }
+      case PROJECTILE -> {
+        if (isCrit)
+        {
+          damageColor = TextColor.color(150, 150, 255);
+        }
+        else
+        {
+          damageColor = TextColor.color(200, 200, 255);
+        }
+      }
+      case SUFFOCATION -> damageColor = TextColor.color(255, 230, 100);
+      case FALL -> damageColor = TextColor.color(100, 100, 100);
+      case FIRE, FIRE_TICK, HOT_FLOOR, DRYOUT -> damageColor = TextColor.color(255, 100, 100);
+      case MELTING -> damageColor = TextColor.color(255, 255, 0);
+      case LAVA -> damageColor = TextColor.color(255, 0, 0);
+      case DROWNING -> damageColor = TextColor.color(0, 180, 220);
+      case BLOCK_EXPLOSION, ENTITY_EXPLOSION -> damageColor = TextColor.color(255, 50, 100);
+      case VOID -> damageColor = TextColor.color(30, 30, 30);
+      case LIGHTNING -> damageColor = TextColor.color(200, 200, 30);
+      case SUICIDE -> damageColor = TextColor.color(0, 0, 0);
+      case STARVATION -> damageColor = TextColor.color(200, 100, 30);
+      case POISON -> damageColor = TextColor.color(0, 200, 30);
+      case MAGIC, SONIC_BOOM -> damageColor = TextColor.color(0, 255, 255);
+      case WITHER -> damageColor = TextColor.color(100, 50, 50);
+      case FALLING_BLOCK -> damageColor = TextColor.color(255, 200, 100);
+      case THORNS -> damageColor = TextColor.color(100, 200, 30);
+      case DRAGON_BREATH -> damageColor = TextColor.color(200, 50, 200);
+      case CUSTOM -> damageColor = Constant.THE_COLOR;
+      case FLY_INTO_WALL, CRAMMING -> damageColor = TextColor.color(200, 200, 200);
+      case FREEZE -> damageColor = TextColor.color(100, 200, 255);
+    }
     Damageable damageable = (Damageable) entity;
     boolean viewSelf = Cucumbery.config.getBoolean("use-damage-indicator.view-self"), maplelized = Cucumbery.config.getBoolean("use-damage-indicator.maplelized");
     double damage = event.getFinalDamage();
@@ -555,7 +688,11 @@ public class EntityDamage implements Listener
     }
     else
     {
-      display = maplelized ? ComponentUtil.create(NumberHangulConverter.convert2(damage, true)) : Component.text(Constant.Sosu2Floor.format(damage), Constant.THE_COLOR);
+      display = maplelized ? ComponentUtil.create(NumberHangulConverter.convert2(damage, true, damageColor)) : Component.text(Constant.Sosu2Floor.format(damage), damageColor);
+    }
+    if (isCrit)
+    {
+      display = MessageUtil.boldify(Component.text("✧").append(display.color(null))).color(damageColor);
     }
     UUID uuid = entity.getUniqueId();
     long current = System.currentTimeMillis(), before = Variable.lastDamageMillis.containsKey(uuid) ? Variable.lastDamageMillis.get(uuid) : 0, diff = before == 0 ? 0 : current - before;
@@ -590,7 +727,7 @@ public class EntityDamage implements Listener
 //    }
     Location location = event.getEntity().getLocation();
     BoundingBox boundingBox = entity.getBoundingBox();
-    offset += (entity.getFireTicks() > 0 ? ((boundingBox.getMaxY() - boundingBox.getCenterY()) * 1.7) : 0);
+    offset += (entity.getFireTicks() > 0 ? ((boundingBox.getMaxY() - boundingBox.getCenterY())) : 0);
     location.setX(boundingBox.getCenterX());
     location.setY(boundingBox.getMaxY() + offset);
     location.setZ(boundingBox.getCenterZ());

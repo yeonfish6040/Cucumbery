@@ -358,6 +358,8 @@ public class CustomConfig
     INVINCIBLE_TIME("무적-시간", -1),
     INVINCIBLE_TIME_JOIN("접속-무적-시간", -1),
     SHOW_WORLDEDIT_POSITION_PARTICLE("월드에딧-포지션-입자-표시", false),
+    SHOW_ENCHANTMENT_TMI_DESCRIPTION("부여된-마법-TMI-표시", true),
+    SHOW_GIVE_COMMAND_NBT_ON_ITEM_ON_CHAT("채팅창에-있는-아이템에-nbt-표시", false),
     ;
 
     private final String key;

@@ -1,8 +1,11 @@
 package com.jho5245.cucumbery.util.storage.component.util;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.custom.customeffect.*;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.VanillaEffectDescription;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -18,6 +21,7 @@ import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import io.papermc.paper.advancement.AdvancementDisplay.Frame;
@@ -51,13 +55,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("deprecation")
 public class ComponentUtil
 {
   private static final JSONParser JSON_PARSER = new JSONParser();
   /**
    * 컴포넌트 변환 URL
    */
-  private static final Pattern URL = Pattern.compile("^(?:(https?)://)?([-\\w_.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+  public static final Pattern URL = Pattern.compile("^(?:(https?)://)?([-\\w_.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
   private static final Pattern p = Pattern.compile("%s"), p2 = Pattern.compile("%[0-9]+\\$s");
   private static final Pattern yeet = Pattern.compile("(%s|%[0-9]+\\$s)([^가-힣ㄱ-ㅎA-Za-z0-9]+|)" +
           "(이\\(가\\)|\\(이\\)가|가\\(이\\)|\\(가\\)이|을\\(를\\)|\\(을\\)를|를\\(을\\)|\\(를\\)을|와\\(과\\)|\\(와\\)과|과\\(와\\)|\\(과\\)와|은\\(는\\)|\\(은\\)는|는\\(은\\)|\\(는\\)은|\\(으\\)로|으\\(로\\)|\\(이\\)라|이\\(라\\))");
@@ -127,6 +132,11 @@ public class ComponentUtil
       }
       else if (object instanceof Material material)
       {
+        if (!material.isItem() || material.isAir())
+        {
+          component = component.append(ItemNameUtil.itemName(material, Constant.THE_COLOR));
+          continue;
+        }
         ItemStack itemStack = ItemStackUtil.loredItemStack(material, player);
         Component concat = create(player, itemStack);
         component = component.append(concat);
@@ -217,7 +227,7 @@ public class ComponentUtil
         String id = effectKey.substring(17);
         Component concat = Component.translatable(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(effectKey);
-        hover = hover.append(VanillaEffectDescription.getDescription(potionEffectType));
+        hover = hover.append(VanillaEffectDescription.getDescription(potionEffectType, player));
         if (player == null || player.hasPermission("asdf"))
         {
           hover = hover.append(Component.text("\n"));
@@ -238,7 +248,7 @@ public class ComponentUtil
         Component concat = Component.translatable(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(effectKey);
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(VanillaEffectDescription.getDescription(potionEffect));
+        hover = hover.append(VanillaEffectDescription.getDescription(potionEffect, player));
         hover = hover.append(Component.text("\n"));
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
@@ -290,51 +300,39 @@ public class ComponentUtil
           String click = "/customeffect give @s " + effectType.toString().toLowerCase();
           concat = concat.clickEvent(ClickEvent.suggestCommand(click));
         }
-
-/*        ItemStack icon = effectType.getIcon();
+        ItemStack icon = effectType.getIcon();
         if (icon != null)
         {
+          new NBTItem(icon, true).setBoolean("VirtualItem", true);
           ItemMeta itemMeta = icon.getItemMeta();
-          itemMeta.displayName(concat);
-          List<Component> lore = new ArrayList<>();
-          if (!hover.equals(Component.empty()))
+          itemMeta.setCustomModelData(effectType.getId());
+          itemMeta.displayName(concat.decoration(TextDecoration.ITALIC, State.FALSE));
+          List<Component> lore = convertHoverToItemLore(hover);
+          lore.remove(0);
+          lore.remove(0);
+          lore.removeIf(c -> c instanceof TextComponent textComponent && textComponent.content().equals(""));
+          int size = lore.size();
+          for (int i = 0; i < size; i++)
           {
-            try
+            Component c = lore.get(i);
+            if (i + 1 < size && c instanceof TextComponent textComponent && textComponent.content().equals("\n"))
             {
-              List<Component> children = new ArrayList<>(Collections.singletonList(hover.children(Collections.emptyList())));
-              children.addAll(hover.children());
-              for (int i = 0; i < children.size(); i++)
+              lore.remove(i);
+              size--;
+              if (lore.get(i) instanceof TextComponent t && t.content().equals("\n"))
               {
-                Component child = children.get(i);
-                if (child.equals(Component.text("\n")) && i + 1 != children.size() && children.get(i + 1).equals(Component.text("\n")))
-                {
-                  lore.add(Component.empty());
-                }
-                if (!child.equals(Component.text("\n")))
-                {
-                  if (child.color() == null)
-                  {
-                    child = child.color(NamedTextColor.WHITE);
-                  }
-                  if (child.decoration(TextDecoration.ITALIC) == State.NOT_SET)
-                  {
-                    child = child.decoration(TextDecoration.ITALIC, State.FALSE);
-                  }
-                  lore.add(child);
-                }
+                lore.set(i, Component.empty());
               }
-            }
-            catch (Exception e)
-            {
-              e.printStackTrace();
             }
           }
           itemMeta.lore(lore);
           icon.setItemMeta(itemMeta);
-          concat = concat.hoverEvent(icon.asHoverEvent()).clickEvent(hover.clickEvent());
+          concat = concat.hoverEvent(icon.asHoverEvent()).clickEvent(concat.clickEvent());
         }
-        else*/
-        concat = concat.hoverEvent(hover);
+        else
+        {
+          concat = concat.hoverEvent(hover);
+        }
         component = component.append(concat);
       }
       else if (object instanceof CustomEffect customEffect)
@@ -345,7 +343,7 @@ public class ComponentUtil
         int amplifier = customEffect.getInitAmplifier();
         Component concat = Component.translatable(key, effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = Component.translatable(key);
-        Component description = customEffect.getDescription();
+        Component description = customEffect.getDescription(player);
         boolean isFinite = duration != -1, isAmplifiable = effectType.getMaxAmplifier() > 0;
         if (!description.equals(Component.empty()))
         {
@@ -380,7 +378,38 @@ public class ComponentUtil
           String click = "/customeffect give @s " + effectType.toString().toLowerCase() + " " + (duration != -1 ? duration / 20d : "infinite") + " " + amplifier + " " + displayType.toString().toLowerCase();
           concat = concat.clickEvent(ClickEvent.suggestCommand(click));
         }
-        concat = concat.hoverEvent(hover);
+        ItemStack icon = effectType.getIcon();
+        if (icon != null)
+        {
+          new NBTItem(icon, true).setBoolean("VirtualItem", true);
+          ItemMeta itemMeta = icon.getItemMeta();
+          itemMeta.setCustomModelData(effectType.getId());
+          itemMeta.displayName(concat.decoration(TextDecoration.ITALIC, State.FALSE));
+          List<Component> lore = convertHoverToItemLore(hover);
+          lore.remove(0);
+          lore.remove(0);
+          int size = lore.size();
+          for (int i = 0; i < size; i++)
+          {
+            Component c = lore.get(i);
+            if (i + 1 < size && c instanceof TextComponent textComponent && textComponent.content().equals("\n"))
+            {
+              lore.remove(i);
+              size--;
+              if (lore.get(i) instanceof TextComponent t && t.content().equals("\n"))
+              {
+                lore.set(i, Component.empty());
+              }
+            }
+          }
+          itemMeta.lore(lore);
+          icon.setItemMeta(itemMeta);
+          concat = concat.hoverEvent(icon.asHoverEvent()).clickEvent(concat.clickEvent());
+        }
+        else
+        {
+          concat = concat.hoverEvent(hover);
+        }
         component = component.append(concat);
       }
       else if (Cucumbery.using_NoteBlockAPI && object instanceof Song song)
@@ -1570,11 +1599,11 @@ public class ComponentUtil
     ms %= (1000L * 60);
     double sec = ms / 1000D;
     String displaySec = switch (formatType)
-    {
-      case FULL_NO_DECIMALS -> Constant.Jeongsu.format(Math.floor(sec));
-      case FULL_SINGLE_DECIMAL -> Constant.Sosu1Force.format(sec);
-      default -> Constant.Sosu2.format(sec);
-    };
+            {
+              case FULL_NO_DECIMALS -> Constant.Jeongsu.format(Math.floor(sec));
+              case FULL_SINGLE_DECIMAL -> Constant.Sosu1Force.format(sec);
+              default -> Constant.Sosu2.format(sec);
+            };
     Component component = Component.empty();
     component = component.append(Component.empty());
     if (year > 0)
@@ -1614,6 +1643,29 @@ public class ComponentUtil
       component = component.append(ComponentUtil.translate("%s초", displaySec));
     }
     return component;
+  }
+
+  @NotNull
+  public static List<Component> convertHoverToItemLore(@NotNull Component component)
+  {
+    List<Component> list = new ArrayList<>();
+    List<Component> children = component.children();
+    list.add(component.children(Collections.emptyList()));
+    children.forEach(c -> list.addAll(convertHoverToItemLore(c)));
+    for (int i = 0; i < list.size(); i++)
+    {
+      Component c = list.get(i);
+      if (c.decoration(TextDecoration.ITALIC) == State.NOT_SET)
+      {
+        c = c.decoration(TextDecoration.ITALIC, State.FALSE);
+      }
+      if (c.color() == null)
+      {
+        c = c.color(NamedTextColor.WHITE);
+      }
+      list.set(i, c);
+    }
+    return list;
   }
 
   public enum TimeFormatType

@@ -4,14 +4,14 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
+import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.data.Constant;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.BlastFurnace;
-import org.bukkit.block.Furnace;
-import org.bukkit.block.Smoker;
+import org.bukkit.block.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
@@ -21,11 +21,63 @@ import org.bukkit.inventory.ItemStack;
 
 public class FurnaceBurn implements Listener
 {
-  @EventHandler public void onFurnaceBurn(FurnaceBurnEvent event)
+  @EventHandler
+  public void onFurnaceBurn(FurnaceBurnEvent event)
   {
     if (event.isCancelled())
     {
       return;
+    }
+    ItemStack fuel = event.getFuel();
+    if (NBTAPI.isRestricted(fuel, RestrictionType.NO_FUEL))
+    {
+      event.setCancelled(true);
+      return;
+    }
+    Block block = event.getBlock();
+    BlockState blockState = block.getState();
+    if (blockState instanceof Furnace furnace)
+    {
+      FurnaceInventory furnaceInventory = furnace.getInventory();
+      ItemStack smelting = furnaceInventory.getSmelting();
+      if (NBTAPI.isRestricted(smelting, RestrictionType.NO_SMELT))
+      {
+        event.setCancelled(true);
+        return;
+      }
+      if (furnace instanceof Smoker && NBTAPI.isRestricted(smelting, RestrictionType.NO_SMOKER))
+      {
+        event.setCancelled(true);
+        return;
+      }
+      if (furnace instanceof BlastFurnace && NBTAPI.isRestricted(smelting, RestrictionType.NO_BLAST_FURNACE))
+      {
+        event.setCancelled(true);
+        return;
+      }
+    }
+    NBTItem fuelNBTItem = new NBTItem(fuel);
+    int burnTime = fuelNBTItem.hasKey("BurnTime") ? fuelNBTItem.getInteger("BurnTime") : -1;
+    if (burnTime > 0)
+    {
+      if (blockState instanceof BlastFurnace || blockState instanceof Smoker)
+      {
+        burnTime /= 2;
+      }
+      event.setBurnTime(burnTime);
+    }
+    if (blockState instanceof Furnace furnace)
+    {
+      Double cookSpeed = fuelNBTItem.getDouble("CookSpeed");
+      if (cookSpeed != null && cookSpeed > 0d)
+      {
+        furnace.setCookSpeedMultiplier(Math.min(cookSpeed, 200d));
+      }
+      else
+      {
+        furnace.setCookSpeedMultiplier(1d);
+      }
+      furnace.update();
     }
     if (!Cucumbery.config.getBoolean("use-helpful-lore-feature"))
     {
@@ -36,65 +88,48 @@ public class FurnaceBurn implements Listener
     {
       return;
     }
-    ItemStack fuel = event.getFuel();
-    if (NBTAPI.arrayContainsValue(NBTAPI.getStringList(NBTAPI.getMainCompound(fuel), CucumberyTag.EXTRA_TAGS_KEY), Constant.ExtraTag.INFINITE_FUEL.toString()))
+    if (NBTAPI.arrayContainsValue(NBTAPI.getStringList(NBTAPI.getMainCompound(fuel), CucumberyTag.EXTRA_TAGS_KEY), ExtraTag.INFINITE_FUEL.toString()))
     {
-      ItemStack finalItem = fuel.clone();
-      switch (event.getBlock().getType())
-      {
-        case FURNACE -> {
-          FurnaceInventory furnaceInventory = ((Furnace) event.getBlock().getState()).getInventory();
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> furnaceInventory.setFuel(finalItem), 0L);
-        }
-        case BLAST_FURNACE -> {
-          FurnaceInventory furnaceInventory = ((BlastFurnace) event.getBlock().getState()).getInventory();
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> furnaceInventory.setFuel(finalItem), 0L);
-        }
-        case SMOKER -> {
-          FurnaceInventory furnaceInventory = ((Smoker) event.getBlock().getState()).getInventory();
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> furnaceInventory.setFuel(finalItem), 0L);
-        }
-      }
+      event.setConsumeFuel(false);
+      return;
     }
     if (fuel.getType() == Material.LAVA_BUCKET)
     {
-      switch (event.getBlock().getType())
+      switch (block.getType())
       {
-        case FURNACE:
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> {
-            Furnace furnace = (Furnace) event.getBlock().getState();
-            Inventory inv = furnace.getInventory();
-            ItemStack bucket = inv.getItem(1);
-            if (ItemStackUtil.itemExists(bucket))
-            {
-              ItemLore.setItemLore(bucket);
-            }
-          }, 0L);
-          break;
-        case BLAST_FURNACE:
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> {
-            BlastFurnace blastFurnace = (BlastFurnace) event.getBlock().getState();
-            Inventory inv = blastFurnace.getInventory();
-            ItemStack bucket = inv.getItem(1);
-            if (ItemStackUtil.itemExists(bucket))
-            {
-              ItemLore.setItemLore(bucket);
-            }
-          }, 0L);
-          break;
-        case SMOKER:
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> {
-            Smoker smoker = (Smoker) event.getBlock().getState();
-            Inventory inv = smoker.getInventory();
-            ItemStack bucket = inv.getItem(1);
-            if (ItemStackUtil.itemExists(bucket))
-            {
-              ItemLore.setItemLore(bucket);
-            }
-          }, 0L);
-          break;
-        default:
-          break;
+        case FURNACE -> Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+        {
+          Furnace furnace = (Furnace) event.getBlock().getState();
+          Inventory inv = furnace.getInventory();
+          ItemStack bucket = inv.getItem(1);
+          if (ItemStackUtil.itemExists(bucket))
+          {
+            ItemLore.setItemLore(bucket);
+          }
+        }, 0L);
+        case BLAST_FURNACE -> Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+        {
+          BlastFurnace blastFurnace = (BlastFurnace) event.getBlock().getState();
+          Inventory inv = blastFurnace.getInventory();
+          ItemStack bucket = inv.getItem(1);
+          if (ItemStackUtil.itemExists(bucket))
+          {
+            ItemLore.setItemLore(bucket);
+          }
+        }, 0L);
+        case SMOKER -> Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+        {
+          Smoker smoker = (Smoker) event.getBlock().getState();
+          Inventory inv = smoker.getInventory();
+          ItemStack bucket = inv.getItem(1);
+          if (ItemStackUtil.itemExists(bucket))
+          {
+            ItemLore.setItemLore(bucket);
+          }
+        }, 0L);
+        default ->
+        {
+        }
       }
     }
   }

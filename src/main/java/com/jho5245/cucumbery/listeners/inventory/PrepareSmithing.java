@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
@@ -108,7 +109,7 @@ public class PrepareSmithing implements Listener
         ItemStack item = event.getResult();
         if (item != null)
         {
-          ItemLore.setItemLore(item);
+          ItemLore.setItemLore(item, new ItemLoreView(player));
         }
       }
     }

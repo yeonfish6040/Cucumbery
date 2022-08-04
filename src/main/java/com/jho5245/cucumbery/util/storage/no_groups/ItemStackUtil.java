@@ -1,8 +1,11 @@
 package com.jho5245.cucumbery.util.storage.no_groups;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -11,6 +14,7 @@ import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -317,7 +321,7 @@ public class ItemStackUtil
     ItemStack item = new ItemStack(type);
     if (player == null || Method.usingLoreFeature(player))
     {
-      ItemLore.setItemLore(item, player);
+      ItemLore.setItemLore(item, player != null ? ItemLoreView.of(player) : null);
     }
     return item;
   }
@@ -520,6 +524,19 @@ public class ItemStackUtil
   }
 
   /**
+   * 플레이어의 인벤토리에 해당 아이템이 (예외 처리 없이) 얼마나 들어갈 수 있는지 반환합니다. Method.itemEquals(item1, item2) 로 아이템이 같은지 확인합니다.
+   *
+   * @param player    비교할 플레이어
+   * @param itemStack 아이템
+   * @return 해당 아이템이 인벤토리에 얼마나 들어갈 수 있는지 개수를 반환합니다.
+   */
+  public static int countSpace(@NotNull Player player, @NotNull ItemStack itemStack)
+  {
+    itemStack = ItemLore.setItemLore(itemStack.clone(), ItemLoreView.of(player));
+    return countSpace(player.getInventory(), itemStack);
+  }
+
+  /**
    * 목록에 있는 아이템들 중 화로에서 제련할 수 있는 아이템이 있으면 제련된 형태로 바꿔서 반환합니다.
    *
    * @param player    제련하는 플레이어
@@ -527,7 +544,7 @@ public class ItemStackUtil
    * @param expOutput 각 아이템의 제련 경험치를 반환하기 위한 리스트
    * @return 아이템이 교체된 배열
    */
-  public static List<ItemStack> getSmeltedResult(Player player, Collection<ItemStack> input, List<Double> expOutput)
+  public static List<ItemStack> getSmeltedResult(@NotNull Player player, @NotNull Collection<ItemStack> input, @Nullable List<Double> expOutput)
   {
     List<ItemStack> dropsClone = new ArrayList<>();
     for (ItemStack drop : input)
@@ -540,13 +557,16 @@ public class ItemStackUtil
           if (recipeChoice.test(drop))
           {
             drop.setType(cookingRecipe.getResult().getType());
-            double exp = cookingRecipe.getExperience();
-            if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
+            if (expOutput != null)
             {
-              int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.EXPERIENCE_BOOST).getAmplifier();
-              exp = (1d * exp * (1 + (amplifier + 1) * 0.05));
+              double exp = cookingRecipe.getExperience();
+              if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
+              {
+                int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.EXPERIENCE_BOOST).getAmplifier();
+                exp = (1d * exp * (1 + (amplifier + 1) * 0.05));
+              }
+              expOutput.add(exp);
             }
-            expOutput.add(exp);
             break;
           }
         }
@@ -791,8 +811,14 @@ public class ItemStackUtil
   @NotNull
   public static List<Component> getItemInfoAsComponents(@NotNull ItemStack itemStack, @Nullable Component tag, boolean separator)
   {
+    return getItemInfoAsComponents(itemStack, null, tag, separator);
+  }
+
+  @NotNull
+  public static List<Component> getItemInfoAsComponents(@NotNull ItemStack itemStack, @Nullable Object param, @Nullable Component tag, boolean separator)
+  {
     itemStack = itemStack.clone();
-    ItemLore.setItemLore(itemStack);
+    ItemLore.setItemLore(itemStack, param);
     ItemMeta itemMeta = itemStack.getItemMeta();
     if (itemMeta instanceof FireworkMeta fireworkMeta)
     {
@@ -802,7 +828,7 @@ public class ItemStackUtil
     List<Component> components = new ArrayList<>();
     if (separator)
     {
-      components.add(ComponentUtil.create2(Constant.SEPARATOR));
+      components.add(ComponentUtil.create2("&8" + Constant.SEPARATOR));
     }
     if (tag != null)
     {
@@ -825,16 +851,9 @@ public class ItemStackUtil
         }
       }
     }
-    components.add(Component.text(itemStack.getType().getKey().toString()).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE));
-    NBTItem nbtItem = new NBTItem(itemStack);
-    int tags = nbtItem.getKeys().size();
-    if (tags > 0)
-    {
-      components.add(Component.translatable("item.nbt_tags").args(Component.text(tags)).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE));
-    }
     if (separator)
     {
-      components.add(ComponentUtil.create2(Constant.SEPARATOR));
+      components.add(ComponentUtil.create2("&8" + Constant.SEPARATOR));
     }
     return components;
   }
@@ -903,53 +922,93 @@ public class ItemStackUtil
     try
     {
       NBTContainer nbtContainer = new NBTContainer(predicate);
-      NBTCompound tmi = nbtContainer.getCompound(CucumberyTag.KEY_TMI);
-      NBTCompound vanillaTags = tmi.getCompound(CucumberyTag.TMI_VANILLA_TAGS);
-      boolean containerEmpty = vanillaTags.getBoolean("container_empty");
-      if (vanillaTags.getBoolean("planks"))
+      String id = nbtContainer.getString("id") + "";
+      if (!id.equals(""))
       {
-        display = ComponentUtil.translate("아무 종류의 나무 판자");
-        itemStack.setType(getAnimatedMaterial(Constant.PLANKS));
+        try
+        {
+          CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
+          itemStack = customMaterial.create();
+          display = customMaterial.getDisplayName();
+        }
+        catch (Exception e)
+        {
+          ItemStack i = new ItemStack(Material.STONE);
+          NBTItem nbtItem = new NBTItem(i, true);
+          nbtItem.setString("id", id);
+          ItemLore.setItemLore(i);
+          itemStack = i;
+          display = i.getItemMeta().displayName();
+        }
       }
-      else if (vanillaTags.getBoolean("wool"))
+      else
       {
-        display = ComponentUtil.translate("아무 종류의 양털");
-        itemStack.setType(getAnimatedMaterial(Constant.WOOL));
-      }
-      else if (vanillaTags.getBoolean("flowers"))
-      {
-        display = ComponentUtil.translate("아무 종류의 꽃");
-        itemStack.setType(getAnimatedMaterial(Constant.FLOWERS));
-      }
-      else if (vanillaTags.getBoolean("small_flowers"))
-      {
-        display = ComponentUtil.translate("아무 종류의 작은 크기의 꽃");
-        itemStack.setType(getAnimatedMaterial(Constant.SMALL_FLOWERS));
-      }
-      else if (vanillaTags.getBoolean("tall_flowers"))
-      {
-        display = ComponentUtil.translate("아무 종류의 큰 크기의 꽃");
-        itemStack.setType(getAnimatedMaterial(Constant.TALL_FLOWERS));
-      }
-      else if (vanillaTags.getBoolean("wither_immune"))
-      {
-        display = ComponentUtil.translate("위더가 부술 수 없는 아무 종류의 블록");
-        itemStack.setType(getAnimatedMaterial(Constant.WITHER_IMMUNE));
-      }
-      else if (vanillaTags.getBoolean("beacon_base_blocks"))
-      {
-        display = ComponentUtil.translate("신호기를 작동시킬 수 있는 아무 블록");
-        itemStack.setType(getAnimatedMaterial(Constant.BEACON_BASE_BLOCKS));
-      }
-      else if (vanillaTags.getBoolean("dyes"))
-      {
-        display = ComponentUtil.translate("아무 염료");
-        itemStack.setType(getAnimatedMaterial(Constant.DYES));
-      }
-      else if (vanillaTags.getBoolean("shulker_boxes"))
-      {
-        display = ComponentUtil.translate(containerEmpty ? "아이템이 들어있지 않은 아무 셜커 상자" : "아무 셜커 상자");
-        itemStack.setType(getAnimatedMaterial(Constant.SHULKER_BOXES));
+        NBTCompound tmi = nbtContainer.getCompound(CucumberyTag.KEY_TMI);
+        if (tmi != null)
+        {
+          NBTCompound vanillaTags = tmi.getCompound(CucumberyTag.TMI_VANILLA_TAGS), customTags = tmi.getCompound(CucumberyTag.TMI_CUSTOM_TAGS);
+          if (vanillaTags != null)
+          {
+            boolean containerEmpty = vanillaTags.getBoolean("container_empty");
+            if (vanillaTags.getBoolean("minecraft:planks"))
+            {
+              display = ComponentUtil.translate("아무 종류의 나무 판자");
+              itemStack.setType(getAnimatedMaterial(Constant.PLANKS));
+            }
+            else if (vanillaTags.getBoolean("minecraft:wool"))
+            {
+              display = ComponentUtil.translate("아무 종류의 양털");
+              itemStack.setType(getAnimatedMaterial(Constant.WOOL));
+            }
+            else if (vanillaTags.getBoolean("minecraft:flowers"))
+            {
+              display = ComponentUtil.translate("아무 종류의 꽃");
+              itemStack.setType(getAnimatedMaterial(Constant.FLOWERS));
+            }
+            else if (vanillaTags.getBoolean("minecraft:small_flowers"))
+            {
+              display = ComponentUtil.translate("아무 종류의 작은 크기의 꽃");
+              itemStack.setType(getAnimatedMaterial(Constant.SMALL_FLOWERS));
+            }
+            else if (vanillaTags.getBoolean("minecraft:tall_flowers"))
+            {
+              display = ComponentUtil.translate("아무 종류의 큰 크기의 꽃");
+              itemStack.setType(getAnimatedMaterial(Constant.TALL_FLOWERS));
+            }
+            else if (vanillaTags.getBoolean("minecraft:wither_immune"))
+            {
+              display = ComponentUtil.translate("위더가 부술 수 없는 블록");
+              itemStack.setType(getAnimatedMaterial(Constant.WITHER_IMMUNE));
+            }
+            else if (vanillaTags.getBoolean("minecraft:beacon_base_blocks"))
+            {
+              display = ComponentUtil.translate("신호기를 작동시킬 수 있는 블록");
+              itemStack.setType(getAnimatedMaterial(Constant.BEACON_BASE_BLOCKS));
+            }
+            else if (vanillaTags.getBoolean("minecraft:dyes"))
+            {
+              display = ComponentUtil.translate("아무 염료");
+              itemStack.setType(getAnimatedMaterial(Constant.DYES));
+            }
+            else if (vanillaTags.getBoolean("minecraft:shulker_boxes"))
+            {
+              display = ComponentUtil.translate(containerEmpty ? "아이템이 들어있지 않은 아무 셜커 상자" : "아무 셜커 상자");
+              itemStack.setType(getAnimatedMaterial(Constant.SHULKER_BOXES));
+            }
+          }
+          else if (customTags != null)
+          {
+            if (customTags.getBoolean("cucumbery_likes"))
+            {
+              display = ComponentUtil.translate("굳검버리가 좋아하는 것");
+              itemStack.setType(getAnimatedMaterial(Arrays.asList(Material.TNT, Material.TNT_MINECART, Material.COMMAND_BLOCK, Material.FLINT_AND_STEEL, Material.SCUTE)));
+            }
+          }
+          else {
+            throw new Exception();
+          }
+        }
+
       }
     }
     catch (Exception e)
@@ -1053,6 +1112,41 @@ public class ItemStackUtil
       return Component.translatable("argument.nbt.expected.value");
     }
     return Component.translatable("");
+  }
+
+  public static SkullMeta setTexture(@NotNull SkullMeta skullMeta, @NotNull String url)
+  {
+    if (url.startsWith("https://textures.minecraft.net/texture/"))
+    {
+      url = url.substring("https://textures.minecraft.net/texture/".length());
+    }
+    String decodedString;
+    try
+    {
+      decodedString = new String(Base64.getDecoder().decode(url));
+    }
+    catch (Exception e)
+    {
+      decodedString = "";
+    }
+    String base64Data;
+    if (decodedString.startsWith("{\"textures\":{\"SKIN\":{\"url\":\"http://textures.minecraft.net/texture/"))
+    {
+      base64Data = url;
+    }
+    else
+    {
+      if (!url.startsWith("http://textures.minecraft.net/texture/"))
+      {
+        url = "http://textures.minecraft.net/texture/" + url;
+      }
+      String JSONData = "{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}";
+      base64Data = Base64.getEncoder().encodeToString(JSONData.getBytes());
+    }
+    PlayerProfile playerProfile = Bukkit.createProfile(UUID.fromString("0-0-0-0-0"), null);
+    playerProfile.setProperty(new ProfileProperty("textures", base64Data));
+    skullMeta.setPlayerProfile(playerProfile);
+    return skullMeta;
   }
 }
 

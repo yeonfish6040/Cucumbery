@@ -47,11 +47,11 @@ public class ItemInfo
   {
     if (mainHand)
     {
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "------------ 주로 사용하는 손에 들고 있는 아이템 정보 ------------");
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "주로 사용하는 손에 들고 있는 아이템 정보");
     }
     else
     {
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "--------------- 다른 손에 들고 있는 아이템 정보 -----------------");
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "다른 손에 들고 있는 아이템 정보");
     }
     sendInfo(sender, item, shortend);
   }
@@ -68,7 +68,7 @@ public class ItemInfo
     {
       if (!ItemStackUtil.itemExists(item))
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : %s, 내구도 손상 : %s, 개수 : %s", "air", -1, 0);
+        MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : %s, 내구도 : %s, 개수 : %s", "air", -1, 0);
         return;
       }
       int durability = ((Damageable) item.getItemMeta()).getDamage();
@@ -77,21 +77,21 @@ public class ItemInfo
       ItemMeta clone3Meta = itemStackForTranslationName.getItemMeta();
       clone3Meta.displayName(null);
       itemStackForTranslationName.setItemMeta(clone3Meta);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : %s, 내구도 손상 : %s, 개수 : %s", type.toString().toLowerCase(), durability, item.getAmount());
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 코드 : %s, 내구도 : %s, 개수 : %s", type.toString().toLowerCase(), durability, item.getAmount());
       MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 번역 이름 : %s", ItemNameUtil.itemName(itemStackForTranslationName));
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "미리 보기 : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요").hoverEvent(item.asHoverEvent()));
+      Component itemComponent = ComponentUtil.create(sender instanceof Player player ? player : null, item);
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "미리 보기 : %s", ComponentUtil.create("§3[마우스를 올리세요]").hoverEvent(itemComponent.hoverEvent()).clickEvent(itemComponent.clickEvent()));
       ItemLore.removeItemLore(itemStackWithoutTMI);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "--------------------------------------------------------------");
-
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, Constant.SEPARATOR.substring(0, Constant.SEPARATOR.length() - 1));
       String serial = ItemSerializer.serialize(itemStackWithoutTMI);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT(Cucumbery 기본 아이템 설명 태그 제외) : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사)")
-              .hoverEvent(HoverEvent.showText(ComponentUtil.create2(serial.replace("\"", "&r\""))))
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT(NO TMI) : %s", ComponentUtil.create("§3[마우스를 올리세요(클릭하여 복사)]")
+              .hoverEvent(HoverEvent.showText(ComponentUtil.create2(serial.replace("\"", "§r\""), false)))
               .clickEvent(ClickEvent.copyToClipboard(serial)));
       serial = ItemSerializer.serialize(item);
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT : %s", ComponentUtil.create("§3이곳에 마우스를 올리세요(클릭하여 클립보드에 복사)")
-              .hoverEvent(HoverEvent.showText(ComponentUtil.create2(serial.replace("\"", "&r\""))))
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "NBT : %s", ComponentUtil.create("§3[마우스를 올리세요(클릭하여 복사)]")
+              .hoverEvent(HoverEvent.showText(ComponentUtil.create2(serial.replace("\"", "§r\""), false)))
               .clickEvent(ClickEvent.copyToClipboard(serial)));
-      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "--------------------------------------------------------------");
+      MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, Constant.SEPARATOR.substring(0, Constant.SEPARATOR.length() - 1));
       ItemMeta itemMeta = item.getItemMeta();
 
       if (itemMeta.hasLocalizedName())
@@ -104,7 +104,7 @@ public class ItemInfo
       }
       if (itemMeta.hasEnchants())
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "-------------------- 부여된 마법 목록 --------------------");
+        MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "----- 부여된 마법 목록 -----");
         Component message = Prefix.INFO_ITEMSTORAGE.get();
         Map<Enchantment, Integer> enchants = itemMeta.getEnchants();
         for (Enchantment enchantment : enchants.keySet())

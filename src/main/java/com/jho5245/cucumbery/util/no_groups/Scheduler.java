@@ -6,14 +6,17 @@ import com.jho5245.cucumbery.commands.reinforce.CommandReinforce;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectScheduler;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffectImple;
-import com.jho5245.cucumbery.custom.customeffect.scheduler.CustomEffectScheduler;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryRecipe;
+import com.jho5245.cucumbery.util.gui.GUIManager;
+import com.jho5245.cucumbery.util.gui.GUIManager.GUIType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -85,8 +88,6 @@ public class Scheduler
     }, 0L, 1L);
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
-      // 레시피 메뉴 업데이트
-      updateCustomRecipeGUI();
     }, 0L, 5L);
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
@@ -99,6 +100,10 @@ public class Scheduler
       spectateUpdater();
       // 인벤토리가 가득 찼을때 타이틀 알림
       inventoryFullNotify();
+      // 아이템 보관함 gui 업데이트
+      stashGUI();
+      // 레시피 메뉴 업데이트
+      updateCustomRecipeGUI();
     }, 20L, 20L);
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
@@ -117,6 +122,7 @@ public class Scheduler
       Initializer.saveUserData();
       Initializer.saveBlockPlaceData();
       Initializer.saveItemUsageData();
+      Initializer.saveItemStashData();
       CustomEffectManager.save();
     }, 1200L, 20L * 60L * 5L);
     reinforceChancetime();
@@ -139,7 +145,7 @@ public class Scheduler
     Variable.damageIndicatorStack.keySet().removeIf(uuid ->
     {
       int stack = Variable.damageIndicatorStack.get(uuid);
-      if (stack > 300)
+      if (stack > 450)
       {
         return true;
       }
@@ -191,6 +197,10 @@ public class Scheduler
       worldEditPositionParticle(player);
 
       CustomEffectScheduler.display(player);
+      CustomEffectScheduler.gaesans(player);
+      CustomEffectScheduler.customMining(player);
+      CustomEffectScheduler.masterOfFishing(player);
+      CustomEffectScheduler.dynamicLight(player);
       CustomEffectScheduler.gliding(player);
       CustomEffectScheduler.spreadAndVariation(player);
       CustomEffectScheduler.fancySpotlight(player);
@@ -229,10 +239,13 @@ public class Scheduler
     BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);
     LocalSession localSession = Cucumbery.worldEditPlugin.getSession(player);
     Region region;
-    try {
+    try
+    {
       localSession.getSelection();
       region = localSession.getSelection(bukkitPlayer.getWorld());
-    } catch (Throwable t) {
+    }
+    catch (Throwable t)
+    {
       return;
     }
     BlockVector3 max = region.getMaximumPoint();
@@ -264,40 +277,52 @@ public class Scheduler
     player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, miny, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, miny, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy + 1, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
-    for (int a = 0; !(maxx - minx == a); a++) {
+    for (int a = 0; !(maxx - minx == a); a++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location(world, minx + a + 1, miny, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int b = 0; !(maxy - miny == b); b++) {
+    for (int b = 0; !(maxy - miny == b); b++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location(world, minx, miny + b + 1, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int c = 0; !(maxz - minz == c); c++) {
+    for (int c = 0; !(maxz - minz == c); c++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location(world, minx, miny, minz + c + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int d = 0; !(maxx - d == minx); d++) {
+    for (int d = 0; !(maxx - d == minx); d++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location(world, maxx - d, maxy + 1, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int e = 0; !(maxz - e == minz); e++) {
+    for (int e = 0; !(maxz - e == minz); e++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy + 1, maxz - e), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int f = 0; !(maxy - f == miny); f++) {
+    for (int f = 0; !(maxy - f == miny); f++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy - f, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int g = 0; !(maxx - minx == g); g++) {
+    for (int g = 0; !(maxx - minx == g); g++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location(world, minx + g + 1, maxy + 1, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int h = 0; !(maxz - minz == h); h++) {
+    for (int h = 0; !(maxz - minz == h); h++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location(world, minx, maxy + 1, minz + h + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int i = 0; !(maxx - i == minx); i++) {
+    for (int i = 0; !(maxx - i == minx); i++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location(world, maxx - i, miny, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int j = 0; !(maxz - j == minz); j++) {
+    for (int j = 0; !(maxz - j == minz); j++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, miny, maxz - j), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int k = 0; !(maxy - k == miny); k++) {
+    for (int k = 0; !(maxy - k == miny); k++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location((world), maxx + 1, maxy - k, minz), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
-    for (int l = 0; !(maxy - l == miny); l++) {
+    for (int l = 0; !(maxy - l == miny); l++)
+    {
       player.spawnParticle(Particle.REDSTONE, new Location((world), minx, maxy - l, maxz + 1), 0, 0, 0, 0, new Particle.DustOptions(Color.fromRGB(102, 255, 196), 1));
     }
   }
@@ -731,6 +756,23 @@ public class Scheduler
       }
       MessageUtil.sendActionBar(player, actionbar);
       Variable.playerActionbarCooldownIsShowing.add(uuid);
+    }
+  }
+
+  private static void stashGUI()
+  {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      InventoryView openInventory = player.getOpenInventory();
+      Component title = openInventory.title();
+      if (GUIManager.isGUITitle(title))
+      {
+        String key = GUIManager.getGUIKey(title);
+        if (key.startsWith("stash-"))
+        {
+          GUIManager.openGUI(player, GUIType.ITEM_STASH, false);
+        }
+      }
     }
   }
 
@@ -1172,7 +1214,7 @@ public class Scheduler
           ItemStack item = player.getOpenInventory().getTopInventory().getItem(2);
           if (item != null)
           {
-            ItemLore.setItemLore(item);
+            ItemLore.setItemLore(item, new ItemLoreView(player));
           }
           // 지도 제작대에서 지도 결과물 아이템 실시간 반영
         }
@@ -1181,7 +1223,7 @@ public class Scheduler
           ItemStack item = player.getOpenInventory().getTopInventory().getItem(1);
           if (item != null)
           {
-            ItemLore.setItemLore(item);
+            ItemLore.setItemLore(item, new ItemLoreView(player));
           }
           // 석재 절단기에서 석재 결과물 아이템 실시간 반영
         }
@@ -1195,7 +1237,7 @@ public class Scheduler
             // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
             if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
             {
-              ItemLore.setItemLore(mainHand);
+              ItemLore.setItemLore(mainHand, new ItemLoreView(player));
             }
           }
         }
@@ -1208,7 +1250,7 @@ public class Scheduler
             // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
             if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
             {
-              ItemLore.setItemLore(offHand);
+              ItemLore.setItemLore(offHand, new ItemLoreView(player));
             }
           }
         }

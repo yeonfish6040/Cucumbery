@@ -62,5 +62,25 @@ public class ProtocolLibManager
         }
       }
     });
+//    protocolManager.addPacketListener(new PacketAdapter(Cucumbery.getPlugin(), ListenerPriority.NORMAL, PacketType.Play.Client.BLOCK_DIG)
+//    {
+//      @Override
+//      public void onPacketReceiving(PacketEvent event)
+//      {
+//        PacketContainer packet = event.getPacket();
+//        Player player = event.getPlayer();
+//        BlockPosition blockPosition = packet.getBlockPositionModifier().read(0);
+//        Location location = blockPosition.toLocation(player.getWorld());
+//        int i = packet.getIntegers().read(0);
+//        event.setCancelled(true);
+//        player.sendBlockDamage(location, (float) Math.random());
+//        if (i > 0)
+//        {
+//          packet.getIntegers().write(0, 0);
+//          CustomEffectManager.addEffect(player, new LocationCustomEffectImple(CustomEffectType.CUSTOM_MINING_SPEED_MODE_PROGRESS, location), ApplyReason.PLUGIN, false, false);
+//        }
+//        MessageUtil.broadcastDebug(packet.getByteArrays().size() + ", i : " + i);
+//      }
+//    });
   }
 }

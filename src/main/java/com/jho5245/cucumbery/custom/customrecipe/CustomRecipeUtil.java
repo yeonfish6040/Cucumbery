@@ -2,16 +2,18 @@ package com.jho5245.cucumbery.custom.customrecipe;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.debug.CommandWhatIs;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.*;
@@ -1523,13 +1525,13 @@ public class CustomRecipeUtil
                 recipeOrder++;
                 continue;
               }
-              String display = requireCategoryConfig.getString("recipes." + requireRecipe + ".extra.display");
+              String display = ComponentUtil.serialize(ComponentUtil.create(requireCategoryConfig.getString("recipes." + requireRecipe + ".extra.display")));
               if (display == null)
               {
                 display = requireRecipe;
               }
               display = MessageUtil.n2s(display);
-              String categoryDisplay = requireCategoryConfig.getString("extra.display");
+              String categoryDisplay = ComponentUtil.serialize(ComponentUtil.create(requireCategoryConfig.getString("extra.display")));
               if (categoryDisplay == null)
               {
                 categoryDisplay = requireCategory;
@@ -1947,6 +1949,7 @@ public class CustomRecipeUtil
       for (int i = 0; i < ingredients.size(); i++)
       {
         ItemStack ingredient = ingredients.get(i);
+        ItemLore.setItemLore(ingredient, ItemLoreView.of(player));
         int amount = ingredientAmounts.get(i);
         int maxStackSize = ingredient.getMaxStackSize();
         ingredient.setAmount(maxStackSize);
@@ -1969,6 +1972,7 @@ public class CustomRecipeUtil
     }
     if (ItemStackUtil.itemExists(result))
     {
+      ItemLore.setItemLore(result, ItemLoreView.of(player));
       gui.setItem(4, result);
     }
     else

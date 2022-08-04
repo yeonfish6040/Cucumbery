@@ -1,6 +1,5 @@
 package com.jho5245.cucumbery.util.storage.component;
 
-import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
@@ -54,10 +53,6 @@ public class ItemStackComponent
     bundleMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
     bundleMeta.displayName(ItemNameUtil.itemName(itemStack));
     List<Component> lore = itemStack.getItemMeta().lore();
-    if (lore == null)
-    {
-      lore = new ArrayList<>();
-    }
     bundleMeta.lore(lore);
     hover.setItemMeta(bundleMeta);
     NBTItem nbtItem = new NBTItem(hover, true);
@@ -81,7 +76,7 @@ public class ItemStackComponent
     {
       nbt = "";
     }
-    String giveCommand = Cucumbery.using_CommandAPI ? "/cgive" : "/give";
+    String giveCommand = "/give";
     ClickEvent clickEvent = ClickEvent.copyToClipboard(giveCommand + " @p minecraft:" + itemStack.getType().toString().toLowerCase() + nbt);
     if (!showAmount || (amount == 1 && itemStack.getType().getMaxStackSize() == 1))
     {

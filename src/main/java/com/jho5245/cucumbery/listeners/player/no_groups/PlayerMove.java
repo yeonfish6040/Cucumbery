@@ -48,6 +48,10 @@ public class PlayerMove implements Listener
     {
       return;
     }
+    if (Math.random() > 0.9999 && Permission.CMD_STASH.has(player) && Variable.itemStash.containsKey(uuid) && !Variable.itemStash.get(uuid).isEmpty())
+    {
+      MessageUtil.sendMessage(player, Prefix.INFO_STASH, "보관함에 아이템이 %s개 있습니다. %s 명령어로 확인하세요!", Variable.itemStash.get(uuid).size(), "&e/stash");
+    }
     this.entityLandOnGround(event);
     this.getLastTrampledBlock(event);
   }

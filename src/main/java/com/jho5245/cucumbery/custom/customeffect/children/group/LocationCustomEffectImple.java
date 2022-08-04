@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LocationCustomEffectImple extends CustomEffect implements LocationCustomEffect
 {
-  private Location location;
+  protected Location location;
 
   public LocationCustomEffectImple(CustomEffectType effectType, @NotNull Location location)
   {

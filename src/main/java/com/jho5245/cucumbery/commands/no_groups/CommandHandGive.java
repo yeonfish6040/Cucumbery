@@ -82,7 +82,7 @@ public class CommandHandGive implements CommandExecutor, AsyncTabCompleter
           hideOutput = true;
         }
       }
-      AddItemUtil.addItemResult2(sender, targets, item, amount).sendFeedback(hideOutput);
+      AddItemUtil.addItemResult2(sender, targets, item, amount).stash().sendFeedback(hideOutput);
     }
     else
     {

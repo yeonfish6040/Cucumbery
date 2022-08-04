@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.util.storage.component.util;
 
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.no_groups.PlayerHeadInfo;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.papermc.paper.inventory.ItemRarity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -65,6 +67,18 @@ public class ItemNameUtil
   @NotNull
   public static Component itemName(@NotNull ItemStack itemStack, @Nullable TextColor defaultColor)
   {
+    if (!itemStack.getType().isAir())
+    {
+      NBTItem nbtItem = new NBTItem(itemStack);
+      try
+      {
+        return CustomMaterial.valueOf(nbtItem.getString("id").toUpperCase()).getDisplayName();
+      }
+      catch (Exception ignored)
+      {
+
+      }
+    }
     Material material = itemStack.getType();
     ItemMeta itemMeta = itemStack.getItemMeta();
 

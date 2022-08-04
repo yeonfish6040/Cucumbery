@@ -636,49 +636,39 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
             return true;
           }
           switch (stats)
-          {
-            case ANIMALS_BRED, ARMOR_CLEANED, AVIATE_ONE_CM, BANNER_CLEANED, BEACON_INTERACTION, BELL_RING, BOAT_ONE_CM, BREWINGSTAND_INTERACTION,
-                    CAKE_SLICES_EATEN, CAULDRON_FILLED, CAULDRON_USED, CHEST_OPENED, CLEAN_SHULKER_BOX, CLIMB_ONE_CM, CRAFTING_TABLE_INTERACTION,
-                    CROUCH_ONE_CM, DAMAGE_ABSORBED, DAMAGE_BLOCKED_BY_SHIELD, DAMAGE_DEALT, DAMAGE_DEALT_ABSORBED, DAMAGE_DEALT_RESISTED, DAMAGE_RESISTED,
-                    DAMAGE_TAKEN, DEATHS, DISPENSER_INSPECTED, DROPPER_INSPECTED, DROP_COUNT, ENDERCHEST_OPENED, FALL_ONE_CM, FISH_CAUGHT, FLOWER_POTTED,
-                    FLY_ONE_CM, FURNACE_INTERACTION, HOPPER_INSPECTED, HORSE_ONE_CM, INTERACT_WITH_ANVIL, INTERACT_WITH_BLAST_FURNACE, INTERACT_WITH_CAMPFIRE,
-                    INTERACT_WITH_CARTOGRAPHY_TABLE, INTERACT_WITH_GRINDSTONE, INTERACT_WITH_LECTERN, INTERACT_WITH_LOOM, INTERACT_WITH_SMOKER, INTERACT_WITH_STONECUTTER,
-                    ITEM_ENCHANTED, JUMP, LEAVE_GAME, MINECART_ONE_CM, MOB_KILLS, NOTEBLOCK_PLAYED, NOTEBLOCK_TUNED, OPEN_BARREL, PIG_ONE_CM, PLAYER_KILLS,
-                    PLAY_ONE_MINUTE, RAID_TRIGGER, RAID_WIN, RECORD_PLAYED, SHULKER_BOX_OPENED, SLEEP_IN_BED, SNEAK_TIME, SPRINT_ONE_CM, SWIM_ONE_CM, TALKED_TO_VILLAGER,
-                    TIME_SINCE_DEATH, TIME_SINCE_REST, TRADED_WITH_VILLAGER, TRAPPED_CHEST_TRIGGERED, WALK_ONE_CM, WALK_ON_WATER_ONE_CM, WALK_UNDER_WATER_ONE_CM,
-                    INTERACT_WITH_SMITHING_TABLE, STRIDER_ONE_CM, TARGET_HIT, TOTAL_WORLD_TIME -> {
-              Component key = Component.translatable(TranslatableKeyParser.getKey(stats));
-              String statisticName = ComponentUtil.serialize(key);
-              double value = offlinePlayer.getStatistic(stats);
-              String valueString = Constant.THE_COLOR_HEX;
-              String suffix = "";
-              if (statisticName.endsWith("시간"))
-              {
-                valueString += Method.timeFormatMilli((long) (value * 50));
-              }
-              else
-              {
-                if (stats.toString().endsWith("CM"))
-                {
-                  value /= 100d;
-                  suffix = "m";
-                }
-                else if (statisticName.endsWith("개수"))
-                {
-                  suffix = "개";
-                }
-                else if (statisticName.endsWith("횟수"))
-                {
-                  suffix = "회";
-                }
-                valueString += Constant.Sosu2.format(value);
-              }
-
-              MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
-              MessageUtil.sendMessage(
-                      sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s의 %s은(는) %s입니다", offlinePlayer, key.color(Constant.THE_COLOR),
-                              ComponentUtil.translate("%s" + suffix, valueString)));
+          {            default -> {
+            Component key = Component.translatable(TranslatableKeyParser.getKey(stats));
+            String statisticName = ComponentUtil.serialize(key);
+            double value = offlinePlayer.getStatistic(stats);
+            String valueString = Constant.THE_COLOR_HEX;
+            String suffix = "";
+            if (statisticName.endsWith("시간"))
+            {
+              valueString += Method.timeFormatMilli((long) (value * 50));
             }
+            else
+            {
+              if (stats.toString().endsWith("CM"))
+              {
+                value /= 100d;
+                suffix = "m";
+              }
+              else if (statisticName.endsWith("개수"))
+              {
+                suffix = "개";
+              }
+              else if (statisticName.endsWith("횟수"))
+              {
+                suffix = "회";
+              }
+              valueString += Constant.Sosu2.format(value);
+            }
+
+            MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
+            MessageUtil.sendMessage(
+                    sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s의 %s은(는) %s입니다", offlinePlayer, key.color(Constant.THE_COLOR),
+                            ComponentUtil.translate("%s" + suffix, valueString)));
+          }
             case BREAK_ITEM, CRAFT_ITEM, DROP, MINE_BLOCK, PICKUP, USE_ITEM -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_material <통계> <아이템 이름>&r 명령어를 사용해주세요.");
             case ENTITY_KILLED_BY, KILL_ENTITY -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_entity <통계> <몹 이름>&r 명령어를 사용해주세요.");
           }
@@ -713,23 +703,14 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
           }
           switch (stats)
           {
-            case ANIMALS_BRED, ARMOR_CLEANED, AVIATE_ONE_CM, BANNER_CLEANED, BEACON_INTERACTION, BELL_RING, BOAT_ONE_CM, BREWINGSTAND_INTERACTION,
-                    CAKE_SLICES_EATEN, CAULDRON_FILLED, CAULDRON_USED, CHEST_OPENED, CLEAN_SHULKER_BOX, CLIMB_ONE_CM, CRAFTING_TABLE_INTERACTION,
-                    CROUCH_ONE_CM, DAMAGE_ABSORBED, DAMAGE_BLOCKED_BY_SHIELD, DAMAGE_DEALT, DAMAGE_DEALT_ABSORBED, DAMAGE_DEALT_RESISTED, DAMAGE_RESISTED,
-                    DAMAGE_TAKEN, DEATHS, DISPENSER_INSPECTED, DROPPER_INSPECTED, DROP_COUNT, ENDERCHEST_OPENED, FALL_ONE_CM, FISH_CAUGHT, FLOWER_POTTED,
-                    FLY_ONE_CM, FURNACE_INTERACTION, HOPPER_INSPECTED, HORSE_ONE_CM, INTERACT_WITH_ANVIL, INTERACT_WITH_BLAST_FURNACE, INTERACT_WITH_CAMPFIRE,
-                    INTERACT_WITH_CARTOGRAPHY_TABLE, INTERACT_WITH_GRINDSTONE, INTERACT_WITH_LECTERN, INTERACT_WITH_LOOM, INTERACT_WITH_SMOKER, INTERACT_WITH_STONECUTTER,
-                    ITEM_ENCHANTED, JUMP, LEAVE_GAME, MINECART_ONE_CM, MOB_KILLS, NOTEBLOCK_PLAYED, NOTEBLOCK_TUNED, OPEN_BARREL, PIG_ONE_CM, PLAYER_KILLS,
-                    PLAY_ONE_MINUTE, RAID_TRIGGER, RAID_WIN, RECORD_PLAYED, SHULKER_BOX_OPENED, SLEEP_IN_BED, SNEAK_TIME, SPRINT_ONE_CM, SWIM_ONE_CM, TALKED_TO_VILLAGER,
-                    TIME_SINCE_DEATH, TIME_SINCE_REST, TRADED_WITH_VILLAGER, TRAPPED_CHEST_TRIGGERED, WALK_ONE_CM, WALK_ON_WATER_ONE_CM, WALK_UNDER_WATER_ONE_CM,
-                    INTERACT_WITH_SMITHING_TABLE, STRIDER_ONE_CM, TARGET_HIT, TOTAL_WORLD_TIME -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
+            default -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
             case BREAK_ITEM, CRAFT_ITEM, DROP, MINE_BLOCK, PICKUP, USE_ITEM -> {
               Component key = Component.translatable(TranslatableKeyParser.getKey(stats));
               int value = offlinePlayer.getStatistic(stats, type);
               MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "-------------------------------------------------");
               MessageUtil.sendMessage(
-                      sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s의 %s %s은(는) %s입니다", offlinePlayer, type, key,
-                              ComponentUtil.translate("%s회", Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
+                      sender, Prefix.INFO_WHOIS, "%s의 %s %s은(는) %s입니다", offlinePlayer, type, key,
+                              ComponentUtil.translate("%s회", Constant.THE_COLOR_HEX + Constant.Sosu2.format(value)));
             }
             case ENTITY_KILLED_BY, KILL_ENTITY -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_entity <통계> <몹 이름>&r 명령어를 사용해주세요.");
           }
@@ -764,16 +745,7 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
           }
           switch (stats)
           {
-            case ANIMALS_BRED, ARMOR_CLEANED, AVIATE_ONE_CM, BANNER_CLEANED, BEACON_INTERACTION, BELL_RING, BOAT_ONE_CM, BREWINGSTAND_INTERACTION,
-                    CAKE_SLICES_EATEN, CAULDRON_FILLED, CAULDRON_USED, CHEST_OPENED, CLEAN_SHULKER_BOX, CLIMB_ONE_CM, CRAFTING_TABLE_INTERACTION,
-                    CROUCH_ONE_CM, DAMAGE_ABSORBED, DAMAGE_BLOCKED_BY_SHIELD, DAMAGE_DEALT, DAMAGE_DEALT_ABSORBED, DAMAGE_DEALT_RESISTED, DAMAGE_RESISTED,
-                    DAMAGE_TAKEN, DEATHS, DISPENSER_INSPECTED, DROPPER_INSPECTED, DROP_COUNT, ENDERCHEST_OPENED, FALL_ONE_CM, FISH_CAUGHT, FLOWER_POTTED,
-                    FLY_ONE_CM, FURNACE_INTERACTION, HOPPER_INSPECTED, HORSE_ONE_CM, INTERACT_WITH_ANVIL, INTERACT_WITH_BLAST_FURNACE, INTERACT_WITH_CAMPFIRE,
-                    INTERACT_WITH_CARTOGRAPHY_TABLE, INTERACT_WITH_GRINDSTONE, INTERACT_WITH_LECTERN, INTERACT_WITH_LOOM, INTERACT_WITH_SMOKER, INTERACT_WITH_STONECUTTER,
-                    ITEM_ENCHANTED, JUMP, LEAVE_GAME, MINECART_ONE_CM, MOB_KILLS, NOTEBLOCK_PLAYED, NOTEBLOCK_TUNED, OPEN_BARREL, PIG_ONE_CM, PLAYER_KILLS,
-                    PLAY_ONE_MINUTE, RAID_TRIGGER, RAID_WIN, RECORD_PLAYED, SHULKER_BOX_OPENED, SLEEP_IN_BED, SNEAK_TIME, SPRINT_ONE_CM, SWIM_ONE_CM, TALKED_TO_VILLAGER,
-                    TIME_SINCE_DEATH, TIME_SINCE_REST, TRADED_WITH_VILLAGER, TRAPPED_CHEST_TRIGGERED, WALK_ONE_CM, WALK_ON_WATER_ONE_CM, WALK_UNDER_WATER_ONE_CM,
-                    INTERACT_WITH_SMITHING_TABLE, STRIDER_ONE_CM, TARGET_HIT, TOTAL_WORLD_TIME -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
+            default -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
             case BREAK_ITEM, CRAFT_ITEM, DROP, MINE_BLOCK, PICKUP, USE_ITEM -> MessageUtil.sendError(sender, "해당 값은 &e/whois <플레이어 ID> stats_material <통계> <아이템 이름>&r 명령어를 사용해주세요.");
             case ENTITY_KILLED_BY, KILL_ENTITY -> {
               int value = offlinePlayer.getStatistic(stats, type);
@@ -781,9 +753,9 @@ public class CommandWhoIs implements CommandExecutor, AsyncTabCompleter
               if (stats == Statistic.KILL_ENTITY)
               {
                 MessageUtil.sendMessage(
-                        sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s은(는) %s", offlinePlayer,
+                        sender, Prefix.INFO_WHOIS, "%s은(는) %s", offlinePlayer,
                                 ComponentUtil.translate(TranslatableKeyParser.getKey(stats),
-                                        Constant.THE_COLOR_HEX + Constant.Sosu2.format(value), Component.translatable(type.translationKey()).color(Constant.THE_COLOR))));
+                                        Constant.THE_COLOR_HEX + Constant.Sosu2.format(value), Component.translatable(type.translationKey()).color(Constant.THE_COLOR)));
               }
               else
               {

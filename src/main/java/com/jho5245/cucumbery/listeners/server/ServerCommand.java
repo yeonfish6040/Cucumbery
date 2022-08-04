@@ -32,6 +32,18 @@ public class ServerCommand implements Listener
   public void onServerCommand(ServerCommandEvent event)
   {
     String command = event.getCommand();
+    // cucumberify
+    if (Cucumbery.using_CommandAPI && command.startsWith("give "))
+    {
+      command = "cgive " + command.substring(5);
+      event.setCommand(command);
+    }
+    // cucumberify
+    if (Cucumbery.using_CommandAPI && command.startsWith("/give "))
+    {
+      command = "/cgive " + command.substring(6);
+      event.setCommand(command);
+    }
     if (command.contains("--cucumbery"))
     {
       if (event.getSender() instanceof BlockCommandSender)

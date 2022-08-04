@@ -52,7 +52,7 @@ public class NBTAPI
     }
     NBTItem nbtItem = new NBTItem(item);
     NBTCompoundList restrictionTags = getCompoundList(nbtItem.getCompound(CucumberyTag.KEY_MAIN), CucumberyTag.ITEM_USAGE_RESTRICTIONS_KEY);
-    if (restrictionTags == null || restrictionTags.size() == 0)
+    if (restrictionTags == null || restrictionTags.isEmpty())
     {
       return false;
     }

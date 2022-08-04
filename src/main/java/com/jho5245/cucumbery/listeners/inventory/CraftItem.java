@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import org.bukkit.Bukkit;
@@ -42,7 +43,7 @@ public class CraftItem implements Listener
               if (i2 != null)
               {
                 ItemStack newItem = new ItemStack(i2.getType());
-                ItemLore.setItemLore(newItem);
+                ItemLore.setItemLore(newItem, new ItemLoreView(player));
                 event.getInventory().setItem(j, newItem);
               }
             }, 0L);

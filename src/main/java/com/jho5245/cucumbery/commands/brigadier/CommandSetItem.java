@@ -3,10 +3,7 @@ package com.jho5245.cucumbery.commands.brigadier;
 import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.Argument;
-import dev.jorel.commandapi.arguments.BooleanArgument;
-import dev.jorel.commandapi.arguments.EntitySelectorArgument;
-import dev.jorel.commandapi.arguments.MultiLiteralArgument;
+import dev.jorel.commandapi.arguments.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -22,14 +19,14 @@ import java.util.List;
 	private final List<Argument<?>> argument = new ArrayList<>();
 
 	{
-		argument.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
+		argument.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
 		argument.add( new MultiLiteralArgument("mainhand", "offhand", "helmet", "chestplate", "leggings", "boots"));
 	}
 
 	private final List<Argument<?>> argument2 = new ArrayList<>();
 
 	{
-		argument2.add( new EntitySelectorArgument("개체",EntitySelectorArgument.EntitySelector.MANY_ENTITIES));
+		argument2.add( new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
 		argument2.add( new MultiLiteralArgument("mainhand", "offhand", "helmet", "chestplate", "leggings", "boots"));
 		argument2.add(new BooleanArgument("강제로 변경"));
 	}

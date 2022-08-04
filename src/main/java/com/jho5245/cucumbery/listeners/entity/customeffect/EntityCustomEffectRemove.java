@@ -1,21 +1,27 @@
 package com.jho5245.cucumbery.listeners.entity.customeffect;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.reinforce.CommandReinforce;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectScheduler;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.LocationVelocityCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.scheduler.CustomEffectScheduler;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -28,6 +34,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
@@ -40,11 +47,66 @@ public class EntityCustomEffectRemove implements Listener
     UUID uuid = entity.getUniqueId();
     CustomEffect customEffect = event.getCustomEffect();
     CustomEffectType customEffectType = customEffect.getType();
+    int amplifier = customEffect.getAmplifier();
     RemoveReason removeReason = event.getReason();
     if (entity instanceof Player player && customEffect.getDisplayType() == DisplayType.PLAYER_LIST && CustomEffectManager.getEffects(entity, DisplayType.PLAYER_LIST).isEmpty())
     {
       player.sendPlayerListFooter(Component.empty());
     }
+
+    if (entity instanceof Player player && (
+            customEffectType == CustomEffectType.CUSTOM_MINING_SPEED_MODE ||
+                    customEffectType == CustomEffectType.CURSE_OF_CREATIVITY ||
+                    customEffectType == CustomEffectType.CURSE_OF_CREATIVITY_PLACE
+    ))
+    {
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 2L);
+    }
+
+    if (customEffectType == CustomEffectType.ALARM)
+    {
+      if (removeReason == RemoveReason.TIME_OUT)
+      {
+        for (int i = 0; i < 10; i++)
+        {
+          int finalI = i;
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          {
+            MessageUtil.info(entity, "시간 다 됐다 일어나 이 인간아!!!!");
+            SoundPlay.playSound(entity, Sound.ENTITY_ENDER_DRAGON_DEATH, 2F, 0.5F);
+            SoundPlay.playSound(entity, Sound.ENTITY_WITCH_DEATH, 2F, 0.5F);
+            SoundPlay.playSound(entity, Sound.ENTITY_PLAYER_LEVELUP, 2F, 0.5F);
+            SoundPlay.playSound(entity, Sound.ENTITY_GENERIC_EXPLODE, 2F, 0.5F);
+            SoundPlay.playSound(entity, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2F, 1F);
+            SoundPlay.playSound(entity, Sound.ITEM_GOAT_HORN_SOUND_0, 2F, 2F);
+            SoundPlay.playSound(entity, Sound.ITEM_GOAT_HORN_SOUND_1, 2F, 2F);
+            SoundPlay.playSound(entity, Sound.ITEM_GOAT_HORN_SOUND_2, 2F, 2F);
+            SoundPlay.playSound(entity, Sound.ITEM_GOAT_HORN_SOUND_3, 2F, 2F);
+            SoundPlay.playSound(entity, Sound.ITEM_GOAT_HORN_SOUND_4, 2F, 2F);
+            SoundPlay.playSound(entity, Sound.ITEM_GOAT_HORN_SOUND_5, 2F, 2F);
+            SoundPlay.playSound(entity, Sound.ITEM_GOAT_HORN_SOUND_6, 2F, 2F);
+            SoundPlay.playSound(entity, Sound.ITEM_GOAT_HORN_SOUND_7, 2F, 2F);
+            SoundPlay.playSound(entity, "reinforce_destroy");
+            if (amplifier >= 1)
+            {
+              if (entity instanceof Player player)
+              {
+                player.spawnParticle(Particle.MOB_APPEARANCE, player.getLocation(), 1);
+              }
+              if (amplifier >= 2)
+              {
+                entity.setVelocity(new Vector(Math.random() * finalI - 5, Math.random() * finalI - 3, Math.random() * finalI - 3));
+              }
+            }
+          }, i);
+        }
+      }
+      else if (removeReason == RemoveReason.GUI)
+      {
+        MessageUtil.info(entity, "알람 취소됨!");
+      }
+    }
+
     if (customEffectType == CustomEffectType.MUTE)
     {
       MessageUtil.sendMessage(entity, Prefix.INFO, "채팅 금지가 해제되었습니다");
@@ -196,12 +258,6 @@ public class EntityCustomEffectRemove implements Listener
     if (customEffectType == CustomEffectType.STAR_CATCH_PROCESS && entity instanceof Player player)
     {
       CustomEffectManager.addEffect(player, CustomEffectType.STAR_CATCH_FINISHED);
-      Integer i = Variable.starCatchPenalty.get(uuid);
-      if (i == null)
-      {
-        i = 0;
-      }
-      Variable.starCatchPenalty.put(uuid, i + 1);
       CommandReinforce.REINFORCE_OPERATING.remove(uuid);
       player.performCommand("강화 realstart");
     }

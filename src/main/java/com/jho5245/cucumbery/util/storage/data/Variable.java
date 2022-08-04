@@ -133,6 +133,8 @@ public class Variable
 
   public static YamlConfiguration lang = new YamlConfiguration();
 
+  public static YamlConfiguration customItemsConfig = new YamlConfiguration();
+
   /**
    * @String 파일 경로와 이름
    * @YamlConfiguration config 파일
@@ -240,4 +242,18 @@ public class Variable
   public static HashMap<UUID, HashMap<String, Integer>> potionEffectApplyMap = new HashMap<>();
 
   public static HashMap<UUID, Integer> starCatchPenalty = new HashMap<>();
+
+  /**
+   * {@link org.bukkit.entity.Player}가 {@link com.jho5245.cucumbery.custom.customeffect.CustomEffectType#CUSTOM_MINING_SPEED_MODE} 효과를 가지고 있을 때 사용할 블록 파괴 진행도를 저장할 맵
+   */
+  public static HashMap<UUID, Float> customMiningProgress = new HashMap<>();
+
+  public static HashMap<Location, Long> customMiningCooldown = new HashMap<>();
+
+  public static Set<UUID> customMiningTierAlertCooldown = new HashSet<>();
+
+  /**
+   * 인벤토리가 가득 찬 상태에서 아이템을 받았을 때 저장할 공간
+   */
+  public static HashMap<UUID, List<ItemStack>> itemStash = new HashMap<>();
 }

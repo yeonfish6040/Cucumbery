@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.listeners.player.interact;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -130,6 +132,11 @@ public class PlayerInteractEntity implements Listener
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerInteractAtEntityRestrictedItemAlertCooldown.remove(uuid), 100L);
         }
       }
+    }
+    if (ItemStackUtil.itemExists(item) && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE) && player.getGameMode() != GameMode.CREATIVE)
+    {
+      event.setCancelled(true);
+      return;
     }
     if ((entityType == EntityType.MUSHROOM_COW) && material == Material.BOWL)
     {

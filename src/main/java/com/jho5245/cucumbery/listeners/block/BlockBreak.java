@@ -32,11 +32,14 @@ import org.bukkit.block.*;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -57,6 +60,7 @@ public class BlockBreak implements Listener
     UUID uuid = player.getUniqueId();
     Block block = event.getBlock();
     Location location = block.getLocation();
+    Variable.customMiningCooldown.remove(location);
     Material blockType = block.getType();
     ItemStack item = player.getInventory().getItemInMainHand();
     ItemMeta itemMeta = null;
@@ -179,6 +183,12 @@ public class BlockBreak implements Listener
       return;
     }
 
+    if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+    {
+      event.setCancelled(true);
+      return;
+    }
+
     if (CustomEffectManager.hasEffect(player, CustomEffectType.DARKNESS_TERROR_ACTIVATED) && Math.random() < 0.15)
     {
       CustomEffectManager.addEffect(player, new StringCustomEffectImple(CustomEffectType.CUSTOM_DEATH_MESSAGE, 10, "custom_darkness_terror"));
@@ -203,6 +213,7 @@ public class BlockBreak implements Listener
       silk.setItemMeta(m);
       drops = block.getDrops(silk, player);
     }
+
     boolean vanilliaDrop = !drops.isEmpty() && player.getGameMode() != GameMode.CREATIVE && event.isDropItems() && value != null && value.equals(true);
     boolean isCoarseTouch = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.COARSE_TOUCH);
 
@@ -217,6 +228,7 @@ public class BlockBreak implements Listener
     {
       event.setExpToDrop(0);
     }
+
     if (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.VANISHING_TOUCH))
     {
       if (block.getState() instanceof Container container)
@@ -265,9 +277,15 @@ public class BlockBreak implements Listener
       }
     }
 
+    boolean hasFranticFortune = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.FRANTIC_FORTUNE);
+
     if (customDrops == null)
     {
       customDrops = new ArrayList<>(drops);
+      if (hasFranticFortune)
+      {
+        customDrops.addAll(drops);
+      }
     }
 
     if (vanilliaDrop && !isCoarseTouch && !isUnskilledTouch && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.DULL_TOUCH)))
@@ -376,7 +394,8 @@ public class BlockBreak implements Listener
                 }
                 if (guaranteeXp > 0)
                 {
-                  player.giveExp(guaranteeXp, true);
+                  int finalGuaranteeXp = guaranteeXp;
+                  player.getWorld().spawnEntity(block.getLocation(), EntityType.EXPERIENCE_ORB, SpawnReason.CUSTOM, e -> ((ExperienceOrb) e).setExperience(finalGuaranteeXp));
                 }
               }
             }
@@ -389,20 +408,6 @@ public class BlockBreak implements Listener
             }
             else
             {
-              if (event.getExpToDrop() > 0)
-              {
-                if (!noExpDropDueToForcePreverse)
-                {
-                  int experience = event.getExpToDrop();
-                  if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
-                  {
-                    int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.EXPERIENCE_BOOST).getAmplifier();
-                    experience = (int) (1d * experience * (1 + (amplifier + 1) * 0.05));
-                  }
-                  player.giveExp(experience, true);
-                }
-                event.setExpToDrop(0);
-              }
               boolean setItemLore = Method.usingLoreFeature(player);
               for (ItemStack dropClone : dropsClone)
               {
@@ -680,6 +685,17 @@ public class BlockBreak implements Listener
           player.getInventory().addItem(result);
         }
       }
+    }
+
+    if (hasFranticFortune && event.isDropItems())
+    {
+      drops.forEach(itemStack -> block.getLocation().getWorld().dropItemNaturally(block.getLocation(), itemStack));
+    }
+
+    if (blockPlaceData != null)
+    {
+      blockPlaceData.set(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), null);
+      Variable.blockPlaceData.put(location.getWorld().getName(), blockPlaceData);
     }
   }
 }

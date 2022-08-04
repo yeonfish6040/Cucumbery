@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.custom.customeffect;
 
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -162,6 +163,13 @@ public class TypeBuilder
   public TypeBuilder description(@NotNull Component description)
   {
     this.description = description;
+    return this;
+  }
+
+  @NotNull
+  public TypeBuilder description(@NotNull String description)
+  {
+    this.description = ComponentUtil.translate(description);
     return this;
   }
 

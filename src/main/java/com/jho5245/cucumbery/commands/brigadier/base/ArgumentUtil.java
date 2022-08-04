@@ -1,7 +1,6 @@
 package com.jho5245.cucumbery.commands.brigadier.base;
 
 import dev.jorel.commandapi.arguments.*;
-import dev.jorel.commandapi.arguments.EntitySelectorArgument.EntitySelector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

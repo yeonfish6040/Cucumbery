@@ -18,8 +18,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,8 +46,8 @@ public class PlayerDeath implements Listener
       event.setCancelled(true);
       return;
     }
-    boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY);
-    boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY);
+    boolean keepInv = UserData.SAVE_INVENTORY_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY) || CustomEffectManager.hasEffect(player, CustomEffectType.ADVANCED_KEEP_INVENTORY);
+    boolean keepExp = UserData.SAVE_EXPERIENCE_UPON_DEATH.getBoolean(player) || CustomEffectManager.hasEffect(player, CustomEffectType.KEEP_INVENTORY) || CustomEffectManager.hasEffect(player, CustomEffectType.ADVANCED_KEEP_INVENTORY);
     if (keepExp)
     {
       event.setKeepLevel(true);
@@ -68,10 +70,12 @@ public class PlayerDeath implements Listener
       }
     }
 
-    boolean hasBuffFreeze = CustomEffectManager.hasEffect(player, CustomEffectType.BUFF_FREEZE);
+    boolean hasBuffFreeze = CustomEffectManager.hasEffect(player, CustomEffectType.BUFF_FREEZE) || CustomEffectManager.hasEffect(player, CustomEffectType.BUFF_FREEZE_D);
     if (hasBuffFreeze)
     {
-      Variable.buffFreezerEffects.put(player.getUniqueId(), new ArrayList<>(player.getActivePotionEffects()));
+      Collection<PotionEffect> potionEffects = new ArrayList<>(player.getActivePotionEffects());
+      potionEffects.removeIf(e -> CustomEffectManager.isVanillaNegative(e.getType()));
+      Variable.buffFreezerEffects.put(player.getUniqueId(), potionEffects);
       CustomEffectManager.removeEffect(player, CustomEffectType.BUFF_FREEZE);
     }
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);

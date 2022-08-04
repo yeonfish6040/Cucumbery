@@ -924,7 +924,7 @@ public class PlaceHolderUtil
         }
         try
         {
-          Entity entity = Bukkit.getEntity(UUID.fromString(entityUUID));
+          Entity entity = Method2.getEntityAsync(UUID.fromString(entityUUID));
           if (entity != null)
           {
             cmd = placeholder(cmd, entity);

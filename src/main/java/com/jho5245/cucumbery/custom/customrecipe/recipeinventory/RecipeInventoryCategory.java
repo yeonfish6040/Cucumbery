@@ -2,17 +2,19 @@ package com.jho5245.cucumbery.custom.customrecipe.recipeinventory;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customrecipe.CustomRecipeUtil;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.nbt.CucumberyTag;
-import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
@@ -198,6 +200,90 @@ public class RecipeInventoryCategory
       {
         result = CreateItemStack.newItem(Material.BAKED_POTATO, 1, "&e알 수 없는 아이템", "&c&o손상된 레시피", true);
       }
+      List<Integer> ingredientAmounts = new ArrayList<>();
+      List<ItemStack> ingredients = new ArrayList<>();
+      for (int j = 1; j <= 27; j++)
+      {
+        String ingredientString = config.getString("recipes." + recipe + ".ingredients." + j + ".item");
+        if (ingredientString == null)
+        {
+          break;
+        }
+        ingredientAmounts.add(config.getInt("recipes." + recipe + ".ingredients." + j + ".amount"));
+        ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
+        if (!ItemStackUtil.itemExists(ingredient) && !ingredientString.startsWith("predicate:"))
+        {
+          result = CreateItemStack.newItem(Material.MUSIC_DISC_11, 1, "&e알 수 없는 아이템", "&c&o손상된 레시피", true);
+          break;
+        }
+        boolean isPredicate = ingredientString.startsWith("predicate:");
+        if (isPredicate)
+        {
+          ingredientString = ingredientString.substring(10);
+          ingredient = ItemStackUtil.getItemStackPredicate(ingredientString);
+        }
+        ingredients.add(ingredient);
+      }
+      NBTItem resultNBTItem = new NBTItem(result);
+      NBTCompound merge = resultNBTItem.getCompound("MergeNBT");
+      boolean isMerge = merge != null;
+      if (merge != null)
+      {
+        ItemStack ingredient = ingredients.get(0).clone();
+        String ingredientString = config.getString("recipes." + recipe + ".ingredients.1.item") + "";
+        boolean isPredicate = ingredientString.startsWith("predicate:");
+        if (isPredicate)
+        {
+          for (int j = 0; j < player.getInventory().getSize(); j++)
+          {
+            ItemStack invItem = player.getInventory().getItem(j);
+            if (invItem == null || invItem.getType().isAir())
+            {
+              continue;
+            }
+            if (ItemStackUtil.predicateItem(invItem, ingredientString.substring("predicate:".length())))
+            {
+              ingredient.setItemMeta(invItem.getItemMeta());
+              break;
+            }
+          }
+        }
+        NBTItem ingredientNBTItem = new NBTItem(ingredient, true);
+        ingredientNBTItem.mergeCompound(merge);
+        Long bonusDurability = resultNBTItem.getLong("BonusDurability");
+        if (bonusDurability != null)
+        {
+          NBTCompound itemTag = ingredientNBTItem.getCompound(CucumberyTag.KEY_MAIN);
+          if (itemTag != null)
+          {
+            NBTCompound duraTag = itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
+            if (duraTag != null && duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+            {
+              long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + bonusDurability;
+              if (cur <= duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY))
+              {
+                duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, cur);
+              }
+            }
+          }
+        }
+        String setType = resultNBTItem.getString("SetType") + "";
+        if (!setType.equals(""))
+        {
+          try
+          {
+            Material material = Material.valueOf(setType);
+            result.setType(material);
+          }
+          catch (Exception ignored)
+          {
+
+          }
+        }
+        result.setItemMeta(ingredient.getItemMeta());
+      }
+
+      ItemLore.setItemLore(result, ItemLoreView.of(player));
       NBTItem nbtItem = new NBTItem(result);
       nbtItem.setString("recipe", recipe);
       result = nbtItem.getItem();
@@ -227,41 +313,29 @@ public class RecipeInventoryCategory
       {
         displayComp = displayComp.color(TextColor.color(93, 244, 255)).decoration(TextDecoration.ITALIC, State.FALSE);
       }
-      resultLore.addAll(
-              Arrays.asList(ComponentUtil.create(Constant.SEPARATOR),
-                      ComponentUtil.translate("gb210,255;레시피 이름 : %s", displayComp),
-                      Component.empty()));
-
-      List<String> description = config.getStringList("recipes." + recipe + ".extra.descriptions.preview");
-      if (!description.isEmpty())
+      resultLore.add(ComponentUtil.create("&8" + Constant.SEPARATOR));
+      resultLore.add(ComponentUtil.translate("gb210,255;레시피 이름 : %s", displayComp));
+      if (player.hasPermission("asdf"))
       {
-        for (String str : description)
-        {
-          str = Method.parseCommandString(player, str);
-          resultLore.add(ComponentUtil.create(str));
-        }
+        resultLore.add(ComponentUtil.translate("gb210,255;카테고리 ID : %s", "rgb93,244,255;" + category));
+        resultLore.add(ComponentUtil.translate("gb210,255;레시피 ID : %s", "rgb93,244,255;" + recipe));
+      }
+      resultLore.add(Component.empty());
+      List<String> description = config.getStringList("recipes." + recipe + ".extra.descriptions.preview");
+      List<Component> descriptionComponent = new ArrayList<>();
+      description.forEach(s -> descriptionComponent.add(ComponentUtil.create(Method.parseCommandString(player, s))));
+      if (isMerge)
+      {
+        descriptionComponent.add(ComponentUtil.translate("&7아이템 제작 시 첫 번째 재료(%s)의", ingredients.get(0)));
+        descriptionComponent.add(ComponentUtil.translate("&7속성이 제작 결과물에 반영됩니다. (인챈트, 내구도 등)"));
+      }
+      if (!descriptionComponent.isEmpty())
+      {
+        resultLore.addAll(descriptionComponent);
         resultLore.add(Component.empty());
       }
 
-      resultLore.add(ComponentUtil.create("rgb238,172,17;[가지고 있는 재료 개수]"));
-      List<Integer> ingredientAmounts = new ArrayList<>();
-      List<ItemStack> ingredients = new ArrayList<>();
-      for (int j = 1; j <= 27; j++)
-      {
-        String ingredientString = config.getString("recipes." + recipe + ".ingredients." + j + ".item");
-        if (ingredientString == null)
-        {
-          break;
-        }
-        ingredientAmounts.add(config.getInt("recipes." + recipe + ".ingredients." + j + ".amount"));
-        ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
-        if (!ItemStackUtil.itemExists(ingredient) && !ingredientString.startsWith("predicate:"))
-        {
-          result = CreateItemStack.newItem(Material.MUSIC_DISC_11, 1, "&e알 수 없는 아이템", "&c&o손상된 레시피", true);
-          break;
-        }
-        ingredients.add(ingredient);
-      }
+      resultLore.add(ComponentUtil.translate("rgb238,172,17;[가지고 있는 재료 개수]"));
       boolean[] ingredientEnoughArray = new boolean[ingredients.size()];
       for (int j = 1; j <= 27; j++)
       {
@@ -273,6 +347,7 @@ public class RecipeInventoryCategory
         ingredientAmounts.add(config.getInt("recipes." + recipe + ".ingredients." + j + ".amount"));
         boolean isPredicate = ingredientString.startsWith("predicate:");
         ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
+        ItemLore.setItemLore(ingredient, ItemLoreView.of(player));
         int playerAmount = ItemStackUtil.countItem(player.getInventory(), ingredient);
         if (isPredicate)
         {
@@ -291,7 +366,7 @@ public class RecipeInventoryCategory
         NBTCompound itemTag = NBTAPI.getMainCompound(ingredient);
         NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
         boolean reusable = NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.CUSTOM_RECIPE_REUSABLE) || config.getBoolean("recipes." + recipe + ".ingredients." + j + "." + "reusable");
-        resultLore.add(ComponentUtil.create("&f", itemName, "&8 : " + playerAmountColor + playerAmount + " §7/rgb0,255,84; " + amount + (reusable ? " §8[∞]" : "")));
+        resultLore.add(ComponentUtil.translate("&7%s : %s / %s" + (reusable ? " %s" : ""), itemName, playerAmountColor + playerAmount, "rgb0,255,84;" + amount, "&8[∞]"));
       }
       if (ingredients.isEmpty())
       {
@@ -300,7 +375,7 @@ public class RecipeInventoryCategory
       if (!ingredients.isEmpty())
       {
         // 추가 조건 설명 추가
-        List<Component> requirementsLore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.create("rgb255,115,255;[추가 제작 조건]")));
+        List<Component> requirementsLore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate("rgb255,115,255;[추가 제작 조건]")));
         // 모든 요구 조건을 만족하여 아이템을 제적할 수 있는가?
         boolean[] requirements = new boolean[CustomRecipeUtil.REQUIREMENT_AMOUNT];
 
@@ -380,7 +455,7 @@ public class RecipeInventoryCategory
         {
           resultLore.remove(resultLore.size() - 1);
           resultLore.remove(resultLore.size() - 1);
-          resultLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.create("§c[재료 부족]")));
+          resultLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate("&c[재료 부족]")));
         }
 
         String permission = config.getString("recipes." + recipe + ".extra.permissions.base-permission");

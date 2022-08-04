@@ -67,9 +67,8 @@ public class CommandSong implements CommandExecutor, TabCompleter, AsyncTabCompl
           case "play" -> {
             if (length < 2)
             {
-              MessageUtil.shortArg(sender, 2, args);
-              MessageUtil.commandInfo(sender, label, "play <파일 이름>");
-              return !(sender instanceof BlockCommandSender);
+              Bukkit.dispatchCommand(sender, "csong play --random");
+              return true;
             }
             if (length > 2)
             {

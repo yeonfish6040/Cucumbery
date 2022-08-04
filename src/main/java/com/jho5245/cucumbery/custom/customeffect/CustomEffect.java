@@ -134,6 +134,12 @@ public class CustomEffect
   @NotNull
   public Component getDescription()
   {
+    return getDescription(null);
+  }
+
+  @NotNull
+  public Component getDescription(@Nullable Player viewer)
+  {
     Component description = switch ((this.effectType.getNamespacedKey().getNamespace().equals("minecraft") ? "MINECRAFT_" : "") + effectType.getIdString().toUpperCase())
             {
               case "CURSE_OF_MUSHROOM" -> ComponentUtil.translate("%s 확률로 5초마다 인벤토리에 버섯이 들어옵니다", "&e" + ((amplifier + 1) / 10d) + "%");
@@ -219,12 +225,16 @@ public class CustomEffect
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("경우 1의 피해를 입고 그 이상의 높이에서 낙하할 경우 받는 피해량이 50% 증가합니다"));
               case "ENDER_SLAYER" -> ComponentUtil.translate("%s, %s 또는 %s 공격 시 대미지가 %s 증가합니다", EntityType.ENDERMAN, EntityType.ENDERMITE, EntityType.ENDER_DRAGON, "&e" + ((amplifier + 1) * 10) + "%");
-              case "BOSS_SLAYER" -> ComponentUtil.translate("보스 몬스터 공격 시 대미지가 %s 증가합니다", "&e" + ((amplifier + 1) * 10) + "%");
+              case "BOSS_SLAYER" -> ComponentUtil.translate("보스 몬스터 공격 시 대미지가 %s 증가합니다", "&e" + (amplifier + 1) * 10 + "%");
               case "EXPERIENCE_BOOST" -> ComponentUtil.translate("경험치 획득량이 %s 증가합니다", "&e" + ((amplifier + 1) * 5) + "%");
+              case "MINING_FATIGUE" -> ComponentUtil.translate("채광 속도가 %s 감소합니다", "&e" + (amplifier + 1) + "%");
+              case "MINDAS_TOUCH" -> ComponentUtil.translate("채광 등급이 %s 증가합니다", "&e" + (amplifier + 1));
+              case "HASTE" -> ComponentUtil.translate("채광 속도가 %s 증가합니다", "&e" + (amplifier + 1) * 10 + "%");
+              case "MINING_FORTUNE" -> ComponentUtil.translate("채광 행운이 %s 증가합니다", "&e" + (amplifier + 1) * 5);
               case "MINECRAFT_SPEED" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SPEED, duration, amplifier));
               case "MINECRAFT_SLOWNESS" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SLOW, duration, amplifier));
-              case "MINECRAFT_HASTE" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, amplifier));
-              case "MINECRAFT_MINING_FATIGUE" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SLOW_DIGGING, duration, amplifier));
+              case "MINECRAFT_HASTE" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, amplifier), viewer);
+              case "MINECRAFT_MINING_FATIGUE" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.SLOW_DIGGING, duration, amplifier), viewer);
               case "MINECRAFT_STRENGTH" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, amplifier));
               case "MINECRAFT_WEAKNESS" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.WEAKNESS, duration, amplifier));
               case "MINECRAFT_INSTANT_DAMAGE" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.HARM, duration, amplifier));

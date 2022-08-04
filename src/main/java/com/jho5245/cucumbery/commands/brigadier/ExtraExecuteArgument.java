@@ -98,7 +98,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode hasPermission = Brigadier.fromLiteralArgument(new LiteralArgument("haspermission")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new EntitySelectorArgument("플레이어", EntitySelectorArgument.EntitySelector.ONE_PLAYER));
+    arguments.add(new EntitySelectorArgument("플레이어", EntitySelector.ONE_PLAYER));
     arguments.add(new StringArgument("퍼미션 노드"));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "플레이어");
@@ -119,7 +119,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode hasPermission = Brigadier.fromLiteralArgument(new LiteralArgument("haspermission")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new EntitySelectorArgument("플레이어", EntitySelectorArgument.EntitySelector.ONE_PLAYER));
+    arguments.add(new EntitySelectorArgument("플레이어", EntitySelector.ONE_PLAYER));
     arguments.add(new StringArgument("퍼미션 노드"));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "플레이어");
@@ -140,7 +140,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode isInWorld = Brigadier.fromLiteralArgument(new LiteralArgument("world")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.ONE_ENTITY));
+    arguments.add(new EntitySelectorArgument("개체", EntitySelector.ONE_ENTITY));
     arguments.add(new StringArgument("월드").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(worldNames)));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "개체");
@@ -181,7 +181,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode isInWorld = Brigadier.fromLiteralArgument(new LiteralArgument("world")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new EntitySelectorArgument("개체", EntitySelectorArgument.EntitySelector.ONE_ENTITY));
+    arguments.add(new EntitySelectorArgument("개체", EntitySelector.ONE_ENTITY));
     arguments.add(new StringArgument("월드").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(worldNames)));
 
     ArgumentBuilder builder1 = Brigadier.fromArgument(arguments, "개체");
@@ -399,7 +399,7 @@ public class ExtraExecuteArgument
   {
     LiteralCommandNode moneyRadius = Brigadier.fromLiteralArgument(new LiteralArgument("money")).build();
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new EntitySelectorArgument("플레이어", EntitySelectorArgument.EntitySelector.ONE_PLAYER));
+    arguments.add(new EntitySelectorArgument("플레이어", EntitySelector.ONE_PLAYER));
     arguments.add(new FloatRangeArgument("소지 금액"));
     ArgumentBuilder builder = Brigadier.fromArgument(arguments, "플레이어");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "소지 금액");
@@ -425,7 +425,7 @@ public class ExtraExecuteArgument
   {
     LiteralCommandNode moneyRadius = Brigadier.fromLiteralArgument(new LiteralArgument("money")).build();
     List<Argument> arguments = new ArrayList<>();
-    arguments.add(new EntitySelectorArgument("플레이어", EntitySelectorArgument.EntitySelector.ONE_PLAYER));
+    arguments.add(new EntitySelectorArgument("플레이어", EntitySelector.ONE_PLAYER));
     arguments.add(new FloatRangeArgument("소지 금액"));
     ArgumentBuilder builder = Brigadier.fromArgument(arguments, "플레이어");
     ArgumentBuilder builder2 = Brigadier.fromArgument(arguments, "소지 금액");

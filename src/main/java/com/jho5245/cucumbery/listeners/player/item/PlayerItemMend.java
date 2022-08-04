@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.player.item;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -33,6 +34,10 @@ public class PlayerItemMend implements Listener
       if (maxDura != 0)
       {
         curDura += event.getRepairAmount();
+        if (curDura > maxDura)
+        {
+          curDura = maxDura;
+        }
         duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, curDura);
         duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, maxDura);
         ItemStack itemClone = nbtItem.getItem();
@@ -40,6 +45,6 @@ public class PlayerItemMend implements Listener
         item.setItemMeta(itemMeta);
       }
     }
-    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemLore.setItemLore(item), 0L);
+    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemLore.setItemLore(item, ItemLoreView.of(event.getPlayer())), 0L);
   }
 }

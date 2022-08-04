@@ -1,15 +1,20 @@
 package com.jho5245.cucumbery.util.storage.data.custom_enchant;
 
-import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.touch.*;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate.CustomEnchantUltimate;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate.EnchantHighRiskHighReturn;
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.EntityCategory;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -20,22 +25,89 @@ import java.util.*;
 @SuppressWarnings("deprecation")
 public abstract class CustomEnchant extends EnchantmentWrapper
 {
+  /**
+   * A decorative enchant for glowing items.
+   */
   public static Enchantment GLOW;
 
+  /**
+   * If an {@link ItemStack} has this enchant, it never be dropped upon death.
+   */
   public static Enchantment KEEP_INVENTORY;
+
+  /**
+   * Blocks and mob drops go directly to {@link Player}'s inventory.
+   */
   public static Enchantment TELEKINESIS;
+  /**
+   * If keepInv is false, player kill drops go directly to {@link Player}'s inventory.
+   */
   public static Enchantment TELEKINESIS_PVP;
 
+  /**
+   * By predefined chance table, mining {@link Material#ICE} will drop certain ice block.
+   */
   public static Enchantment COLD_TOUCH;
+  /**
+   * Removes target's {@link LivingEntity#getNoDamageTicks()} (set to zero).
+   */
   public static Enchantment JUSTIFICATION;
+  /**
+   * Removes target's {@link LivingEntity#getNoDamageTicks()} (set to zero). Only applicable for {@link Material#BOW}
+   */
   public static Enchantment JUSTIFICATION_BOW;
+  /**
+   * Blocks and mob drops become its smelted form.
+   */
   public static Enchantment SMELTING_TOUCH;
+
+  /**
+   * By predefined chance table, mining {@link Material#CACTUS} will drop certain ice block.
+   */
   public static Enchantment WARM_TOUCH;
 
+  /**
+   * Blocks and mob drops will disappear.
+   */
   public static Enchantment COARSE_TOUCH;
+  /**
+   * Blocks drops will become {@link Material#FLINT} in chance.
+   */
   public static Enchantment DULL_TOUCH;
+  /**
+   * Blocks and mob drops will not grant any xp.
+   */
   public static Enchantment UNSKILLED_TOUCH;
+  /**
+   * Blocks that is {@link BlockInventoryHolder#getInventory()}'s item will be vanished.
+   */
   public static Enchantment VANISHING_TOUCH;
+
+  /**
+   * ANY Blocks drops will be doubled
+   */
+  public static Enchantment FRANTIC_FORTUNE;
+  /**
+   * Fishing root items will be DOUBLED
+   */
+  public static Enchantment FRANTIC_LUCK_OF_THE_SEA;
+
+  /**
+   * If kill an entity with any item with this Enchant, the killer on death message will be hidden.
+   */
+  public static Enchantment ASSASSINATION;
+
+  /**
+   * If kill an entity with any item with this Enchant, the killer on death message will be hidden. Only applicable for {@link Material#BOW}
+   */
+  public static Enchantment ASSASSINATION_BOW;
+
+  /**
+   * If a throwable weapon/projectile has this, It's accuracy will be dropped.
+   */
+  public static Enchantment IDIOT_SHOOTER;
+
+  public static Enchantment HIGH_RISK_HIGH_RETURN;
 
   private static final Map<NamespacedKey, Enchantment> byKey = new HashMap<>();
   private static final Map<String, Enchantment> byName = new HashMap<>();
@@ -58,6 +130,16 @@ public abstract class CustomEnchant extends EnchantmentWrapper
     DULL_TOUCH = registerEnchant(new EnchantDullTouch("dull_touch"));
     UNSKILLED_TOUCH = registerEnchant(new EnchantUnskilledTouch("unskilled_touch"));
     VANISHING_TOUCH = registerEnchant(new EnchantVanishingTouch("vanishing_touch"));
+
+    FRANTIC_FORTUNE = registerEnchant(new EnchantFranticFortune("frantic_fortune"));
+    FRANTIC_LUCK_OF_THE_SEA = registerEnchant(new EnchantFranticLuckOfTheSea("frantic_luck_of_the_sea"));
+
+    ASSASSINATION = registerEnchant(new EnchantAssassination("assassination"));
+    ASSASSINATION_BOW = registerEnchant(new EnchantAssassinationBow("assassination_bow"));
+
+    IDIOT_SHOOTER = registerEnchant(new EnchantIdiotShooter("idiot_shooter"));
+
+    HIGH_RISK_HIGH_RETURN = registerEnchant(new EnchantHighRiskHighReturn("high_risk_high_return"));
   }
 
   private static CustomEnchant registerEnchant(@NotNull CustomEnchant enchant)
@@ -166,12 +248,16 @@ public abstract class CustomEnchant extends EnchantmentWrapper
     return new HashSet<>(Arrays.asList(EquipmentSlot.values()));
   }
 
+  /**
+   * @return true if this custom enchant is ultimate enchant.
+   */
+  public boolean isUltimate()
+  {
+    return this instanceof CustomEnchantUltimate;
+  }
+
   public static void onEnable()
   {
-    if (!Cucumbery.config.getBoolean("use-custom-enchant-features"))
-    {
-      return;
-    }
     try
     {
       Field f = Enchantment.class.getDeclaredField("acceptingNew");

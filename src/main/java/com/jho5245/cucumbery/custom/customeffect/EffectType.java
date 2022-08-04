@@ -783,7 +783,7 @@ public enum EffectType implements Translatable, EnumHideable
                       .append(ComponentUtil.translate("동일하게 아이템을 얻을 수 있습니다"));
               case TELEKINESIS -> ComponentUtil.translate("블록을 캐거나 적을 처치했을 때 드롭하는")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("아이템과 경험치가 즉시 인벤토리에 들어옵니다"));
+                      .append(ComponentUtil.translate("아이템이 즉시 인벤토리에 들어옵니다"));
               case SMELTING_TOUCH -> ComponentUtil.translate("블록을 캐거나 적을 처치했을 때 드롭하는")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("아이템을 제련된 형태로 바꿔줍니다"));

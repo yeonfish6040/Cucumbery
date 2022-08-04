@@ -148,6 +148,10 @@ public class PlayerDropItem implements Listener
     {
       event.setCancelled(true);
     }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_VANISHING))
+    {
+      event.getItemDrop().remove();
+    }
     this.dropDelay(event, player);
     if (!event.isCancelled())
     {

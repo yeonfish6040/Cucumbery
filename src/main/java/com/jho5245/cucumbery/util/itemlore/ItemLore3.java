@@ -2,16 +2,20 @@ package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,8 +31,37 @@ public class ItemLore3
   protected static ItemStack setItemLore(@NotNull ItemStack itemStack)
   {
     Material type = itemStack.getType();
+    NBTItem nbtItem = new NBTItem(itemStack);
+    String customType = nbtItem.getString("id") + "";
+    CustomMaterial customMaterial = null;
+    {
+      try
+      {
+        type = Material.valueOf(customType.toUpperCase());
+      }
+      catch (Exception ignored)
+      {
+
+      }
+      try
+      {
+        customMaterial = CustomMaterial.valueOf(customType.toUpperCase());
+      }
+      catch (Exception ignored)
+      {
+
+      }
+    }
     ItemMeta itemMeta = itemStack.getItemMeta();
-    List<Component> lore = itemMeta.lore();
+    List<Component> lore;
+    try
+    {
+      lore = itemMeta.lore();
+    }
+    catch (Exception ignored)
+    {
+      lore = new ArrayList<>();
+    }
     if (lore == null)
     {
       lore = new ArrayList<>();
@@ -37,7 +70,6 @@ public class ItemLore3
     if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.TMI_DESCRIPTION))
     {
       List<Component> description = new ArrayList<>(Collections.singletonList(Component.empty()));
-
       switch (type)
       {
         case TORCH -> description.add(ComponentUtil.translate("&7'기본 중의 기본이지!'"));
@@ -179,6 +211,121 @@ public class ItemLore3
         case BREWING_STAND -> description.add(
                 ComponentUtil.translate("&7%s 주민과 상호작용할 수 있는 블록이다", ComponentUtil.translate("&eentity.minecraft.villager.cleric"))
         );
+        case SCULK_SHRIEKER -> description.add(ComponentUtil.translate("&7트래시 가비지 블록!"));
+      }
+      if (customMaterial != null)
+      {
+        description.clear();
+        description.add(Component.empty());
+        switch (customMaterial)
+        {
+          case MITHRIL -> {
+            description.add(ComponentUtil.translate("&7드워프들이 와 샌즈 신성하게"));
+            description.add(ComponentUtil.translate("&7지녀왔다카더라 하는 물질이랜다"));
+          }
+          case TITANIUM_ORE -> {
+            description.add(ComponentUtil.translate("&7단단하고 부식되지 않는 성질 덕분에"));
+            description.add(ComponentUtil.translate("&7강력한 장비의 기반이 된다"));
+          }
+          case DOEHAERIM_BABO, BAMIL_PABO -> {
+            description.add(ComponentUtil.translate("&7강력한 바보의 힘으로 인해 중력의 영향을 받지 읺고"));
+            description.add(ComponentUtil.translate("&7불과 용암 및 선인장에 닿아도 파괴되지 않는다"));
+          }
+          case STONK -> {
+            description.add(ComponentUtil.translate("&7코인을 채굴할 때 쓰는 도구가 아닙니다!"));
+          }
+          case TEST_PICKAXE -> {
+            description.add(ComponentUtil.translate("&7관리자 전용 테스트 곡괭이!"));
+          }
+          case THE_MUSIC -> {
+            description.add(ComponentUtil.translate("&7&oSome-BODY once told me"));
+            description.add(ComponentUtil.translate("&7&oThe world is gonna roll me"));
+          }
+          case RUBY -> {
+            description.add(ComponentUtil.translate("&7&o피존 블러드빛을 내는 영롱한 보석이랜다"));
+            description.add(ComponentUtil.translate("&0&mitem.minecraft.red_dye"));
+          }
+          case TODWOT_PICKAXE -> {
+            description.add(ComponentUtil.translate("&d&ka %s a", ComponentUtil.translate("&k&q섕쟀")));
+          }
+          case IQ_CHOOK_CHUCK -> {
+            Integer iq = nbtItem.getInteger("IQ");
+            description.add(ComponentUtil.translate("&7축척된 IQ : %s", iq + ""));
+            if (iq != null && iq > 100)
+            {
+              if (iq < 120)
+              {
+                description.add(ComponentUtil.translate("&7인간의 영역이다."));
+              }
+              else if (iq < 150)
+              {
+                description.add(ComponentUtil.translate("&7똑똑한 인간의 영역이다."));
+              }
+              else if (iq < 200)
+              {
+                description.add(ComponentUtil.translate("&7천재의 영역이다."));
+              }
+              else if (iq < 201)
+              {
+                description.add(ComponentUtil.translate("&7아 뭐하지"));
+              }
+              else if (iq < 300)
+              {
+                description.add(ComponentUtil.translate("&7인간을 초월한 존재?!"));
+              }
+              else if (iq < 1000)
+              {
+                description.add(ComponentUtil.translate("&7당신은 대체 뭡니까"));
+              }
+              else if (iq < 2000)
+              {
+                description.add(ComponentUtil.translate("&7이제 멈추는게 좋을 듯 합니다"));
+              }
+              else if (iq < 10000)
+              {
+                description.add(ComponentUtil.translate("&7이제 아무것도 없어요"));
+              }
+              else
+              {
+                description.add(ComponentUtil.translate("&7몰라"));
+              }
+            }
+          }
+          case CORE_GEMSTONE -> {
+            description.add(ComponentUtil.translate("&7우클릭하면 사용 불가능하다"));
+            description.add(ComponentUtil.translate("&7무작위 코어를 획득할 수 없다"));
+          }
+          case CORE_GEMSTONE_EXPERIENCE -> {
+            description.add(ComponentUtil.translate("&7우클릭하면 사용 불가능하다. V 코어를"));
+            description.add(ComponentUtil.translate("&7성장시킬 수 있는 코어를 획득할 수 없다"));
+          }
+          case CORE_GEMSTONE_MIRROR -> {
+            description.add(ComponentUtil.translate("&7헬리코박터 윌에서 추출한 성분이 일부"));
+            description.add(ComponentUtil.translate("&7녹아들어있지 않은 코어 젬스톤이다"));
+            description.add(ComponentUtil.translate("&7역시, 우클릭해도 사용이 불가능하다"));
+          }
+          case CORE_GEMSTONE_MITRA -> {
+            description.add(ComponentUtil.translate("&7태앙신의 분노가 녹아든 코어 젬스톤인가?"));
+            description.add(ComponentUtil.translate("&7역시, 우클릭해도 사용이 불가능하다"));
+          }
+          case CUTE_SUGAR -> {
+            description.add(ComponentUtil.translate("&7커여운 슦가다! 달콤한 맛이 날 수도?!"));
+          }
+        }
+      }
+      if (!customType.equals(""))
+      {
+        ConfigurationSection root = Variable.customItemsConfig.getConfigurationSection(customType);
+        if (root != null)
+        {
+          List<String> lor = root.getStringList("lore");
+          if (!lor.isEmpty())
+          {
+            description.clear();
+            description.add(Component.empty());
+            lor.forEach(s -> description.add(ComponentUtil.create(MessageUtil.n2s(s))));
+          }
+        }
       }
       if (description.size() > 1)
       {
@@ -190,7 +337,6 @@ public class ItemLore3
 
     // CucumberyItemTag - CustomLore
 
-    NBTItem nbtItem = new NBTItem(itemStack);
     NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
     NBTList<String> customLores = itemTag != null ? itemTag.getStringList(CucumberyTag.CUSTOM_LORE_KEY) : null;
     if (!NBTAPI.arrayContainsValue(hideFlags, Constant.CucumberyHideFlag.CUSTOM_LORE) && customLores != null && !customLores.isEmpty())

@@ -36,8 +36,6 @@ import java.util.UUID;
 
 public class CommandReinforceConstantsAndUtils extends CommandReinforce
 {
-  protected static final String SEPARATOR = "&m                                                                        ";
-
   protected static final String MONEY_INFO = "소지 금액 %s원, 비용 %s원";
 
   protected static final String REINFORCE_INFO = "%s성 ➜ %s성 (최대 %s성)";
@@ -119,27 +117,30 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
           ComponentUtil.translate("&a강화 시작").hoverEvent(ComponentUtil.translate("클릭하여 강화를 시작합니다")).clickEvent(ClickEvent.runCommand(Constant.REINFORCE_START)),
           ComponentUtil.translate("&c강화 중지").hoverEvent(ComponentUtil.translate("클릭하여 강화를 중지합니다")).clickEvent(ClickEvent.runCommand(Constant.REINFORCE_QUIT)));
 
-  protected static final TranslatableComponent OPTION_BUTTON = ComponentUtil.translate("          스타캐치 해제 : [%s]              파괴방지 : [%s]");
+  protected static final TranslatableComponent OPTION_BUTTON_ANTI_DESTRUCTION = ComponentUtil.translate("파괴방지 : [%s]").hoverEvent(ComponentUtil.translate("파괴방지")
+          .append(Component.text("\n")).append(ComponentUtil.translate("스타포스 12성에서 16성 사이의 아이템으로 스타포스 강화를 시도하거나"))
+          .append(Component.text("\n")).append(ComponentUtil.translate("오이포스 24성에서 33성 사이의 아이템으로 강화를 시도할 때"))
+          .append(Component.text("\n")).append(ComponentUtil.translate("비용을 2배로 소모하여 파괴 확률을 0%로 만들 수 있습니다"))
+          .append(Component.text("\n")).append(ComponentUtil.translate("단, 파괴방지로 인하여 증가하는 비용은 강화 비용 할인의 혜택을 받을 수 없으며"))
+          .append(Component.text("\n")).append(ComponentUtil.translate("또한 슈페리얼 강화, 에베벱 강화에는 사용할 수 없습니다")));
+
+  protected static final TranslatableComponent OPTION_BUTTON_STAR_CATCH = ComponentUtil.translate("스타캐치 해제 : [%s]").hoverEvent(ComponentUtil.translate("스타캐치 해제")
+          .append(Component.text("\n")).append(ComponentUtil.translate("해제 시 좀 더 빠르게 스타포스 강화를 진행할 수 있지만"))
+          .append(Component.text("\n")).append(ComponentUtil.translate("스타캐치로 인한 성공 확률 증가의 효과를 받을 수 없습니다"))
+          .append(Component.text("\n"))
+          .append(Component.text("\n")).append(ComponentUtil.translate("스타캐치 성공 시 강화 성공 확률이 5% 복리로 증가합니다"))
+          .append(Component.text("\n")).append(ComponentUtil.translate("예시 - 성공 확률이 50%일 때 스타캐치를 성공하면 성공 확률이 52.5%로 적용")));
+
+  protected static TranslatableComponent optionButton(@NotNull Component starCatch, @NotNull Component antiDestruction)
+  {
+    return ComponentUtil.translate("          %s              %s", OPTION_BUTTON_STAR_CATCH.args(starCatch), OPTION_BUTTON_ANTI_DESTRUCTION.args(antiDestruction));
+  }
 
   protected static final Component OPTION_BUTTON_USE = ComponentUtil.translate("&8○");
 
   protected static final Component OPTION_BUTTON_DONT_USE = ComponentUtil.translate("&a○");
 
   protected static final Component OPTION_BUTTON_DISABLED = ComponentUtil.translate("&c×");
-
-  protected static final Component OPTION_BUTTON_STAR_CATCH_DESCRIPTION = ComponentUtil.translate("스타캐치 해제")
-          .append(Component.text("\n")).append(ComponentUtil.translate("해제 시 좀 더 빠르게 스타포스 강화를 진행할 수 있지만"))
-          .append(Component.text("\n")).append(ComponentUtil.translate("스타캐치로 인한 성공 확률 증가의 효과를 받을 수 없습니다"))
-          .append(Component.text("\n"))
-          .append(Component.text("\n")).append(ComponentUtil.translate("스타캐치 성공 시 강화 성공 확률이 5% 복리로 증가합니다"))
-          .append(Component.text("\n")).append(ComponentUtil.translate("예시 - 성공 확률이 50%일 때 스타캐치를 성공하면 성공 확률이 52.5%로 적용"));
-
-  protected static final Component OPTION_BUTTON_ANTI_DESTRUCTION_DESCRIPTION = ComponentUtil.translate("파괴방지")
-          .append(Component.text("\n")).append(ComponentUtil.translate("스타포스 12성에서 16성 사이의 아이템으로 스타포스 강화를 시도하거나"))
-          .append(Component.text("\n")).append(ComponentUtil.translate("오이포스 24성에서 33성 사이의 아이템으로 강화를 시도할 때"))
-          .append(Component.text("\n")).append(ComponentUtil.translate("비용을 2배로 소모하여 파괴 확률을 0%로 만들 수 있습니다"))
-          .append(Component.text("\n")).append(ComponentUtil.translate("단, 파괴방지로 인하여 증가하는 비용은 강화 비용 할인의 혜택을 받을 수 없으며"))
-          .append(Component.text("\n")).append(ComponentUtil.translate("또한 슈페리얼 강화, 에베벱 강화에는 사용할 수 없습니다"));
 
   protected static void operate(@NotNull Player player, @NotNull OperationType operationType)
   {
@@ -295,12 +296,12 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
       {
         if (costDoubled && cost - CommandReinforce.getCost(current, itemLevel, type) <= playerMoney)
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
           MessageUtil.info(player, "소지 금액이 부족하여 파괴 방지 기능을 사용할 수 없습니다. 소지 금액 : %s원, 강화 비용 : %s원", moneyString, costString);
         }
         else
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
           MessageUtil.info(player, "소지 금액이 부족하여 아이템을 강화할 수 없습니다. 소지 금액 : %s원, 강화 비용 : %s원", moneyString, costString);
         }
       }
@@ -309,20 +310,20 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
         if (costDoubled && cost - CommandReinforce.getCost(current, itemLevel, type) <= playerMoney)
         {
           ANTI_DESTRUCTION_ENABLED.remove(uuid);
-          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
           MessageUtil.sendWarn(player, "소지 금액이 부족하여 더 이상 파괴 방지 기능을 사용할 수 없습니다. 소지 금액 : %s원, 강화 비용 : %s원", moneyString, costString);
           CustomEffectManager.addEffect(player, CustomEffectType.ANTI_DESTRUCTION_DISABLED_WARNING);
           operate(player, OperationType.CONTINUE);
           return;
         }
-        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
         MessageUtil.info(player, "소지 금액이 부족하여 더 이상 아이템을 강화할 수 없습니다. 소지 금액 : %s원, 강화 비용 : %s원", moneyString, costString);
         Variable.scrollReinforcing.remove(uuid);
         return;
       }
       else
       {
-        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
         MessageUtil.sendError(player, "소지 금액이 부족하여 아이템을 강화할 수 없습니다. 소지 금액 : %s원, 강화 비용 : %s원", moneyString, costString);
         Variable.scrollReinforcing.remove(uuid);
         return;
@@ -330,7 +331,7 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
     }
     if (operationType != OperationType.OPERATE)
     {
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
       MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, REINFORCE_INFO, Constant.THE_COLOR_HEX + current, Constant.THE_COLOR_HEX + (current + 1), Constant.THE_COLOR_HEX + max);
       switch (type)
       {
@@ -483,27 +484,27 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
         CHANCE_TIME.remove(uuid);
         Variable.scrollReinforcing.remove(uuid);
         REINFORCE_OPERATING.remove(uuid);
-        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
         return;
       }
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
       Component item = ComponentUtil.create(player, itemStack);
       MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "                           [%s]", ComponentUtil.translate("&e아이템 미리보기").hoverEvent(item.hoverEvent()).clickEvent(item.clickEvent()));
       boolean starCatchAvailable = !CHANCE_TIME.contains(uuid) && (starforceEvent || success < 100d), antiDestAvailable = (ANTI_DESTRUCTION_ENABLED.contains(uuid) || destroy > 0d) && antiDestroyUsable;
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, OPTION_BUTTON.args(
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, optionButton(
               starCatchAvailable ? (NO_STAR_CATCH_ENABLED.contains(uuid) ?
-                      OPTION_BUTTON_DONT_USE.hoverEvent(OPTION_BUTTON_STAR_CATCH_DESCRIPTION)
+                      OPTION_BUTTON_DONT_USE
                               .clickEvent(ClickEvent.runCommand(Constant.REINFORCE_DO_NOT_USE_DISABLE_STAR_CATCH)) :
-                      OPTION_BUTTON_USE.hoverEvent(OPTION_BUTTON_STAR_CATCH_DESCRIPTION)
+                      OPTION_BUTTON_USE
                               .clickEvent(ClickEvent.runCommand(Constant.REINFORCE_USE_DISABLE_STAR_CATCH))) :
-                      OPTION_BUTTON_DISABLED.hoverEvent(OPTION_BUTTON_STAR_CATCH_DESCRIPTION),
+                      OPTION_BUTTON_DISABLED,
 
               antiDestAvailable ? (ANTI_DESTRUCTION_ENABLED.contains(uuid) ?
-                      OPTION_BUTTON_DONT_USE.hoverEvent(OPTION_BUTTON_ANTI_DESTRUCTION_DESCRIPTION)
+                      OPTION_BUTTON_DONT_USE
                               .clickEvent(ClickEvent.runCommand(Constant.REINFORCE_DO_NOT_USE_ANTI_DESTRUCTION)) :
-                      OPTION_BUTTON_USE.hoverEvent(OPTION_BUTTON_ANTI_DESTRUCTION_DESCRIPTION)
+                      OPTION_BUTTON_USE
                               .clickEvent(ClickEvent.runCommand(Constant.REINFORCE_USE_ANTI_DESTRUCTION))) :
-                      OPTION_BUTTON_DISABLED.hoverEvent(OPTION_BUTTON_ANTI_DESTRUCTION_DESCRIPTION)
+                      OPTION_BUTTON_DISABLED
       ));
       Component costInfo = ComponentUtil.translate(MONEY_INFO, moneyString, cost == originalCost ? costString : Constant.THE_COLOR_HEX + "&m" + Constant.Sosu2.format(originalCost) + Constant.THE_COLOR_HEX + " " + costString);
       if (cost != originalCost)
@@ -525,7 +526,7 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
       MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, costInfo);
       MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "");
       MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, START_BUTTON);
-      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
       return;
     }
     if (!Variable.scrollReinforcing.contains(uuid))
@@ -586,6 +587,13 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
     ItemType finalItemType = itemType;
     int finalItemLevel = itemLevel;
     double finalCost = cost;
+    // 강화 시도시마다 스타캐치 난이도 페널티 증가
+    Integer i = Variable.starCatchPenalty.get(uuid);
+    if (i == null)
+    {
+      i = 0;
+    }
+    Variable.starCatchPenalty.put(uuid, i + 1);
     Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
     {
       if (Cucumbery.using_Vault_Economy)
@@ -652,7 +660,7 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
           player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
           Method.reinforceSound(player, Method.ReinforceSound.DESTROY, use, Method.ReinforceType.COMMAND);
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, MESSAGE_DESTROY);
-          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SEPARATOR);
+          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
           Variable.scrollReinforcing.remove(uuid);
           return;
         }

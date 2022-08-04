@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.custom.customrecipe.recipeinventory;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customrecipe.CustomRecipeUtil;
-import com.jho5245.cucumbery.util.no_groups.CreateGUI;
+import com.jho5245.cucumbery.util.gui.GUIManager;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -118,7 +118,7 @@ public class RecipeInventoryMainMenu
       }
       menu.setItem(40, CreateItemStack.newItem(Material.CLOCK, 1, "&e로딩중...", false));
       player.openInventory(menu);
-      InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+      InventoryView lastInventory = GUIManager.getLastInventory(player.getUniqueId());
       if (lastInventory != null)
       {
         menu.setItem(36, CreateItemStack.getPreviousButton(lastInventory.title()));
@@ -197,6 +197,10 @@ public class RecipeInventoryMainMenu
       }
       else
       {
+        if (player.hasPermission("asdf"))
+        {
+          categoryItemLore.add(ComponentUtil.translate("gb210,255;카테고리 ID : %s", "rgb93,244,255;" + category));
+        }
         int recipeAmount = recipeList.getKeys(false).size();
         int maxRecipesPerCategory = Cucumbery.config.getInt("customrecipe.max-recipes-per-category");
         int counter = 0;
@@ -210,7 +214,7 @@ public class RecipeInventoryMainMenu
         {
           categoryItemLore.addAll(categoryDescription);
         }
-        categoryItemLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.create("gb210,255;레시피 개수 : rgb93,244,255;" + recipeAmount + "개")));
+        categoryItemLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate("gb210,255;레시피 개수 : %s", ComponentUtil.translate("rgb93,244,255;%s개", recipeAmount))));
         for (String recipe : recipeList.getKeys(false))
         {
           if (counter >= maxRecipesPerCategory)
@@ -244,7 +248,7 @@ public class RecipeInventoryMainMenu
         }
       }
       // 접근 조건 설명 추가
-      List<Component> requirementsLore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.create("rgb255,115,255;[접근 조건]")));
+      List<Component> requirementsLore = new ArrayList<>(Arrays.asList(Component.empty(), ComponentUtil.translate("rgb255,115,255;[접근 조건]")));
       // 모든 요구 조건을 만족하여 레시피 목록에 접근할 수 있는가?
       boolean[] requirements = new boolean[5];
       Arrays.fill(requirements, true);
@@ -259,7 +263,7 @@ public class RecipeInventoryMainMenu
       boolean passed = Method.allIsTrue(requirements);
       if (!passed)
       {
-        categoryItemLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.create("§c[접근 조건 불충족]")));
+        categoryItemLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate("&c[접근 조건 불충족]")));
       }
       // 레시피 목록에 접근할 권한도 없고 비공개 레시피이고 비공개 레시피 우회 권한도 없을 때
       String permission = config.getString("extra.permissions.base-permission");
@@ -267,8 +271,8 @@ public class RecipeInventoryMainMenu
       boolean hideIfNoBase = config.getBoolean("extra.permissions.hide-if-no-base");
       if (permission != null && !player.hasPermission(permission) && hideIfNoBase && (bypassIfHidden == null || !player.hasPermission(bypassIfHidden)))
       {
-        categoryItemLore = new ArrayList<>(Collections.singletonList(ComponentUtil.create("§c해당 레시피 목록의 정보를 볼 권한이 없습니다")));
-        categoryItemMeta.displayName(ComponentUtil.create("§c[비공개 레시피 목록]"));
+        categoryItemLore = new ArrayList<>(Collections.singletonList(ComponentUtil.translate("&c해당 레시피 목록의 정보를 볼 권한이 없습니다")));
+        categoryItemMeta.displayName(ComponentUtil.translate("&c[비공개 레시피 목록]"));
         categoryItem.setType(Material.BARRIER);
       }
 

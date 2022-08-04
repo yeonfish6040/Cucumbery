@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -293,7 +294,7 @@ public class PrepareAnvil implements Listener
         Damageable duraMeta = (Damageable) resultItem.getItemMeta();
         duraMeta.setDamage(resultDamage);
         resultItem.setItemMeta(duraMeta);
-        ItemLore.setItemLore(resultItem);
+        ItemLore.setItemLore(resultItem, new ItemLoreView(player));
         event.setResult(resultItem);
       }
       else if (Method.usingLoreFeature(player))
@@ -301,7 +302,7 @@ public class PrepareAnvil implements Listener
         ItemStack item = event.getResult();
         if (ItemStackUtil.itemExists(item))
         {
-          ItemLore.setItemLore(item);
+          ItemLore.setItemLore(item, new ItemLoreView(player));
         }
       }
     }

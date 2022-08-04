@@ -1,9 +1,9 @@
 package com.jho5245.cucumbery.custom.customeffect;
 
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.util.gui.GUIManager;
 import com.jho5245.cucumbery.util.no_groups.ColorUtil;
 import com.jho5245.cucumbery.util.no_groups.ColorUtil.Type;
-import com.jho5245.cucumbery.util.no_groups.CreateGUI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil.TimeFormatType;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -35,7 +35,7 @@ public class CustomEffectGUI
 {
   public static void openGUI(@NotNull Player player, boolean firstOpen)
   {
-    Inventory menu = CreateGUI.create(6, ComponentUtil.translate("&8적용 중인 효과 목록"), Constant.POTION_EFFECTS);
+    Inventory menu = GUIManager.create(6, ComponentUtil.translate("&8적용 중인 효과 목록"), Constant.POTION_EFFECTS);
     if (firstOpen)
     {
       // deco template
@@ -115,7 +115,7 @@ public class CustomEffectGUI
         }
         itemStack.setAmount(Math.min(64, customEffect.getAmplifier() + 1));
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemStack.getType() == Material.POTION)
+        if (customEffect.getIcon() == null && itemStack.getType() == Material.POTION)
         {
           ColorUtil colorUtil = new ColorUtil(Type.HSL, "" + ((i * 30) % 255) + ",100,50;");
           PotionMeta potionMeta = (PotionMeta) itemMeta;
@@ -123,10 +123,10 @@ public class CustomEffectGUI
           itemStack.setItemMeta(potionMeta);
         }
         itemMeta = itemStack.getItemMeta();
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.values());
         itemMeta.displayName(ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key));
         itemMeta.lore(customEffectLore(player, customEffect));
-        itemMeta.setCustomModelData(5200 + effectType.getId());
+        itemMeta.setCustomModelData(effectType.getId());
         itemStack.setItemMeta(itemMeta);
         if (effectType.isRemoveable())
         {
@@ -171,7 +171,7 @@ public class CustomEffectGUI
     info.setItemMeta(skullMeta);
     menu.setItem(4, info);
     UUID uuid = player.getUniqueId();
-    InventoryView inventory = CreateGUI.getLastInventory(uuid);
+    InventoryView inventory = GUIManager.getLastInventory(uuid);
     if (inventory != null)
     {
       menu.setItem(45, CreateItemStack.getPreviousButton(inventory.title()));
@@ -186,7 +186,7 @@ public class CustomEffectGUI
     CustomEffectType effectType = customEffect.getType();
     int duration = customEffect.getDuration();
     int amplifier = customEffect.getAmplifier();
-    Component description = customEffect.getDescription();
+    Component description = customEffect.getDescription(player);
     boolean isFinite = duration != -1, isAmplifiable = effectType.getMaxAmplifier() > 0, isTimeHidden = effectType.isTimeHidden() || (effectType.isTimeHiddenWhenFull() && duration == customEffect.getInitDuration());
     if (!description.equals(Component.empty()))
     {
@@ -280,7 +280,7 @@ public class CustomEffectGUI
     PotionEffectType potionEffectType = potionEffect.getType();
     String effectKey = TranslatableKeyParser.getKey(potionEffectType);
     String id = effectKey.substring(17);
-    Component description = VanillaEffectDescription.getDescription(potionEffect);
+    Component description = VanillaEffectDescription.getDescription(potionEffect, player);
     if (!description.equals(Component.empty()))
     {
       try

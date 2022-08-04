@@ -1,8 +1,9 @@
 package com.jho5245.cucumbery.listeners.enchantment;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ public class EnchantItem implements Listener
 				ItemStack item = event.getView().getItem(0);
 				if (item != null)
 				{
-					ItemLore.setItemLore(item);
+					ItemLore.setItemLore(item, new ItemLoreView(player) );
 				}
 			}, 0L);
 		}

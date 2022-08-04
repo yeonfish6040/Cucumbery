@@ -9,12 +9,17 @@ import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventory
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryRecipe;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
-import com.jho5245.cucumbery.util.gui.GUI;
-import com.jho5245.cucumbery.util.gui.GUI.GUIType;
+import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
+import com.jho5245.cucumbery.util.gui.GUIManager;
+import com.jho5245.cucumbery.util.gui.GUIManager.GUIType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.*;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -26,6 +31,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.BlockDataInfo;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
@@ -58,8 +64,9 @@ public class InventoryClick implements Listener
 {
   public static List<Player> check = new ArrayList<>();
 
-  private static void removeItem(Player player, String category, FileConfiguration config, String recipe, List<String> ingredientsString, List<ItemStack> ingredients, List<Integer> ingredientAmounts)
+  public static List<ItemStack> removeItem(Player player, String category, FileConfiguration config, String recipe, List<String> ingredientsString, List<ItemStack> ingredients, List<Integer> ingredientAmounts, boolean checkOnly)
   {
+    List<ItemStack> itemStacks = new ArrayList<>();
     long requireTimeToCraft = config.getLong("recipes." + recipe + ".extra.crafting-time");
     if (requireTimeToCraft > 0)
     {
@@ -67,7 +74,7 @@ public class InventoryClick implements Listener
       long playerCraftingTime = playerCraftingTimeConfig == null ? 0 : playerCraftingTimeConfig.getLong("crafting-time." + category + "." + recipe);
       if (playerCraftingTime > 0)
       {
-        return;
+        return itemStacks;
       }
     }
     for (int i = 0; i < ingredients.size(); i++)
@@ -94,65 +101,86 @@ public class InventoryClick implements Listener
               itemStack.setAmount(amount);
             }
             amount -= itemStack.getAmount();
-            player.getInventory().removeItem(itemStack);
+            itemStacks.add(itemStack);
+            if (!checkOnly)
+            {
+              player.getInventory().removeItem(itemStack);
+            }
           }
-          else if (ItemStackUtil.itemEquals(ingredient, itemStack))
+          else if (ItemStackUtil.itemEquals(ItemLore.setItemLore(ingredient, ItemLoreView.of(player)), itemStack))
           {
+            ItemLore.setItemLore(ingredient, ItemLoreView.of(player));
             int maxStackSize = ingredient.getMaxStackSize();
             ingredient.setAmount(maxStackSize);
             int stack = amount / maxStackSize;
             for (int j = 0; j < stack; j++)
             {
-              player.getInventory().removeItem(ingredient);
+              itemStacks.add(ingredient);
+              itemStacks.add(itemStack);
+
+              if (!checkOnly)
+              {
+                player.getInventory().removeItem(ingredient);
+              }
               amount -= maxStackSize;
             }
             if (amount > 0)
             {
               ingredient.setAmount(amount);
-              player.getInventory().removeItem(ingredient);
+              itemStacks.add(ingredient);
+              itemStacks.add(itemStack);
+              if (!checkOnly)
+              {
+                player.getInventory().removeItem(ingredient);
+              }
               amount = 0;
             }
           }
         }
       }
     }
-    if (Cucumbery.using_Vault_Economy)
+
+    if (!checkOnly)
     {
-      double cost = config.getDouble("recipes." + recipe + ".extra.cost");
-      if (cost > 0)
+      if (Cucumbery.using_Vault_Economy)
       {
-        if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player))
+        double cost = config.getDouble("recipes." + recipe + ".extra.cost");
+        if (cost > 0)
         {
-          Cucumbery.eco.withdrawPlayer(player, cost);
+          if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player))
+          {
+            Cucumbery.eco.withdrawPlayer(player, cost);
+          }
         }
       }
+      int levelCost = config.getInt("recipes." + recipe + ".extra.levelcost");
+      if (levelCost > 0)
+      {
+        player.setLevel(Math.max(0, player.getLevel() - levelCost));
+      }
+      int foodLevelCost = config.getInt("recipes." + recipe + ".extra.foodlevelcost");
+      if (foodLevelCost > 0)
+      {
+        player.setFoodLevel(Math.max(0, player.getFoodLevel() - foodLevelCost));
+      }
+      double healthCost = config.getDouble("recipes." + recipe + ".extra.hpcost");
+      if (healthCost > 0)
+      {
+        player.setHealth(Math.max(0.01, player.getHealth() - healthCost));
+      }
+      double saturationCost = config.getDouble("recipes." + recipe + ".extra.saturationcost");
+      if (saturationCost > 0)
+      {
+        player.setSaturation((float) Math.max(0, player.getSaturation() - saturationCost));
+      }
+      double maxHealthCost = config.getDouble("recipes." + recipe + ".extra.mhpcost");
+      if (maxHealthCost > 0)
+      {
+        double playerMaxHealth = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue();
+        Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(Math.max(0.01, maxHealthCost - playerMaxHealth));
+      }
     }
-    int levelCost = config.getInt("recipes." + recipe + ".extra.levelcost");
-    if (levelCost > 0)
-    {
-      player.setLevel(Math.max(0, player.getLevel() - levelCost));
-    }
-    int foodLevelCost = config.getInt("recipes." + recipe + ".extra.foodlevelcost");
-    if (foodLevelCost > 0)
-    {
-      player.setFoodLevel(Math.max(0, player.getFoodLevel() - foodLevelCost));
-    }
-    double healthCost = config.getDouble("recipes." + recipe + ".extra.hpcost");
-    if (healthCost > 0)
-    {
-      player.setHealth(Math.max(0.01, player.getHealth() - healthCost));
-    }
-    double saturationCost = config.getDouble("recipes." + recipe + ".extra.saturationcost");
-    if (saturationCost > 0)
-    {
-      player.setSaturation((float) Math.max(0, player.getSaturation() - saturationCost));
-    }
-    double maxHealthCost = config.getDouble("recipes." + recipe + ".extra.mhpcost");
-    if (maxHealthCost > 0)
-    {
-      double playerMaxHealth = Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue();
-      Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(Math.max(0.01, maxHealthCost - playerMaxHealth));
-    }
+    return itemStacks;
   }
 
   private static void chanceGiveItem(Player player, String recipeListName, FileConfiguration recipeList, String recipe, ItemStack result)
@@ -325,7 +353,7 @@ public class InventoryClick implements Listener
     }
     else if (ItemStackUtil.itemExists(trueResult))
     {
-      playerInventory.addItem(trueResult);
+      playerInventory.addItem(ItemLore.setItemLore(trueResult, ItemLoreView.of(player)));
     }
     List<String> craftCommands = recipeList.getStringList("recipes." + recipe + ".extra.commands.craft");
     for (String craftCommand : craftCommands)
@@ -984,66 +1012,6 @@ public class InventoryClick implements Listener
               }
             }
           }
-          if (NBTAPI.isRestricted(player, item, RestrictionType.NO_SMELT))
-          {
-            if (clickedInventoryType == InventoryType.FURNACE)
-            {
-              if (event.getSlotType() == SlotType.CRAFTING || event.getSlotType() == SlotType.FUEL)
-              {
-                event.setCancelled(true);
-                return;
-              }
-            }
-            if (clickedInventoryType == InventoryType.BLAST_FURNACE)
-            {
-              if (event.getSlotType() == SlotType.CRAFTING || event.getSlotType() == SlotType.FUEL)
-              {
-                event.setCancelled(true);
-                return;
-              }
-            }
-            if (clickedInventoryType == InventoryType.SMOKER)
-            {
-              if (event.getSlotType() == SlotType.CRAFTING || event.getSlotType() == SlotType.FUEL)
-              {
-                event.setCancelled(true);
-                return;
-              }
-            }
-          }
-          if (NBTAPI.isRestricted(player, item, RestrictionType.NO_FURNACE))
-          {
-            if (clickedInventoryType == InventoryType.FURNACE)
-            {
-              if (event.getSlotType() == SlotType.CRAFTING || event.getSlotType() == SlotType.FUEL)
-              {
-                event.setCancelled(true);
-                return;
-              }
-            }
-          }
-          if (NBTAPI.isRestricted(player, item, RestrictionType.NO_BLAST_FURNACE))
-          {
-            if (clickedInventoryType == InventoryType.BLAST_FURNACE)
-            {
-              if (event.getSlotType() == SlotType.CRAFTING || event.getSlotType() == SlotType.FUEL)
-              {
-                event.setCancelled(true);
-                return;
-              }
-            }
-          }
-          if (NBTAPI.isRestricted(player, item, RestrictionType.NO_SMOKER))
-          {
-            if (clickedInventoryType == InventoryType.SMOKER)
-            {
-              if (event.getSlotType() == SlotType.CRAFTING || event.getSlotType() == SlotType.FUEL)
-              {
-                event.setCancelled(true);
-                return;
-              }
-            }
-          }
           if (NBTAPI.isRestricted(player, item, RestrictionType.NO_BREW))
           {
             if (clickedInventoryType == InventoryType.BREWING)
@@ -1136,38 +1104,6 @@ public class InventoryClick implements Listener
           if (NBTAPI.isRestricted(player, current, RestrictionType.NO_LOOT) || NBTAPI.isRestricted(player, placedBlockDataItemStack, RestrictionType.NO_BLOCK_LOOT))
           {
             if (openInventoryType != InventoryType.PLAYER && openInventoryType != InventoryType.CREATIVE && openInventoryType != InventoryType.CRAFTING)
-            {
-              event.setCancelled(true);
-              return;
-            }
-          }
-          if (NBTAPI.isRestricted(player, current, RestrictionType.NO_SMELT))
-          {
-            if (openInventoryType == InventoryType.FURNACE || openInventoryType == InventoryType.BLAST_FURNACE || openInventoryType == InventoryType.SMOKER)
-            {
-              event.setCancelled(true);
-              return;
-            }
-          }
-          if (NBTAPI.isRestricted(player, current, RestrictionType.NO_FURNACE))
-          {
-            if (openInventoryType == InventoryType.FURNACE)
-            {
-              event.setCancelled(true);
-              return;
-            }
-          }
-          if (NBTAPI.isRestricted(player, current, RestrictionType.NO_BLAST_FURNACE))
-          {
-            if (openInventoryType == InventoryType.BLAST_FURNACE)
-            {
-              event.setCancelled(true);
-              return;
-            }
-          }
-          if (NBTAPI.isRestricted(player, current, RestrictionType.NO_SMOKER))
-          {
-            if (openInventoryType == InventoryType.SMOKER)
             {
               event.setCancelled(true);
               return;
@@ -1355,7 +1291,7 @@ public class InventoryClick implements Listener
 
   private void itemLore(InventoryClickEvent event, Player player)
   {
-    boolean noteBlockLore = false; // 소리 블록 설명 업데이트 감지
+    // 소리 블록 설명 업데이트 감지
     if (player.getGameMode() == GameMode.CREATIVE) // 소리 블록을 픽블록 했을 때 해당 블록의 음높이와 악기를 아이템 설명에 복사하는 기능
     {
       UUID uuid = player.getUniqueId();
@@ -1400,7 +1336,7 @@ public class InventoryClick implements Listener
                   String value = split[1];
                   blockStateTag.setString(key, value);
                 }
-                if (blockStateTag.getKeys().size() > 0)
+                if (!blockStateTag.getKeys().isEmpty())
                 {
                   cursor = nbtItem.getItem();
                   event.setCursor(cursor);
@@ -1457,7 +1393,6 @@ public class InventoryClick implements Listener
             cursor = nbtItem.getItem();
             event.setCursor(cursor);
             Method.updateInventory(player);
-            noteBlockLore = true;
           }
           catch (Exception ignored)
           {
@@ -1542,7 +1477,7 @@ public class InventoryClick implements Listener
       {
         if (result != null)
         {
-          ItemLore.setItemLore(result);
+          ItemLore.setItemLore(result, new ItemLoreView(player));
         }
       }, 0L);
     }
@@ -1555,8 +1490,8 @@ public class InventoryClick implements Listener
       }
       ItemStack current = player.getInventory().getItemInMainHand();
       ItemStack cursor = Objects.requireNonNull(event.getCursor()).clone();
-      ItemLore.setItemLore(cursor);
-      ItemLore.setItemLore(event.getCursor());
+      ItemLore.setItemLore(cursor, new ItemLoreView(player));
+      ItemLore.setItemLore(event.getCursor(), new ItemLoreView(player));
       boolean barHasEmptySlot = false;
       ItemStack[] hotBars = new ItemStack[9];
       List<Material> types = new ArrayList<>();
@@ -1756,14 +1691,12 @@ public class InventoryClick implements Listener
       {
         categoryDisplay = category;
       }
-      categoryDisplay = categoryDisplay;
       String recipeDisplay = config.getString("recipes." + recipe + ".extra.display");
       if (recipeDisplay == null)
       {
         recipeDisplay = recipe;
       }
-      recipeDisplay = recipeDisplay;
-      MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 &e" + category + "&r(&e" + categoryDisplay + "&r)에서 &e" + recipe + "&r(&e" + recipeDisplay + "&r) 레시피를 제거하였습니다");
+      MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 %s(%s)에서 %s(%s) 레시피를 제거하였습니다", category, ComponentUtil.create("§e" + categoryDisplay), recipe, ComponentUtil.create("§e" + recipeDisplay));
       for (File logFile : CustomRecipeUtil.getPlayersCraftLog())
       {
         CustomRecipeUtil.removePlayerCraftLog(logFile.getName().substring(0, logFile.getName().length() - 4), category, removeCategory ? null : recipe);
@@ -1793,7 +1726,7 @@ public class InventoryClick implements Listener
       return;
     }
     Component title = event.getView().title();
-    if (event.getView().getTitle().startsWith(Constant.CANCEL_STRING) || CreateGUI.isGUITitle(title))
+    if (event.getView().getTitle().startsWith(Constant.CANCEL_STRING) || GUIManager.isGUITitle(title))
     {
       event.setCancelled(true);
     }
@@ -1825,7 +1758,6 @@ public class InventoryClick implements Listener
     {
       return;
     }
-
     int random = Method.random(1, 10000);
     boolean ohYes = random >= 9700;
     if (ohYes && Cucumbery.config.getBoolean("gui-easter-egg-sound"))
@@ -1833,13 +1765,11 @@ public class InventoryClick implements Listener
       Method.playSound(player, Sound.ENTITY_VILLAGER_AMBIENT);
     }
     Method.playSound(player, Sound.UI_BUTTON_CLICK);
-    InventoryView lastInventory = CreateGUI.getLastInventory(uuid);
-
-    int s = event.getSlot();
-
-    if (CreateGUI.isGUITitle(title))
+    InventoryView lastInventory = GUIManager.getLastInventory(uuid);
+    int slot = event.getSlot();
+    if (GUIManager.isGUITitle(title))
     {
-      String key = ((TextComponent) ((TranslatableComponent) title).args().get(1)).content();
+      String key = GUIManager.getGUIKey(title);
       if (Constant.POTION_EFFECTS.equals(key))
       {
         if (event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.LEFT)
@@ -1908,30 +1838,70 @@ public class InventoryClick implements Listener
           }
         }
       }
-      if (lastInventory != null && s == 45)
+      if (lastInventory != null && slot == 45)
       {
         player.openInventory(lastInventory);
+      }
+      if (key.startsWith("stash-") && key.replace("stash-", "").equals(uuid.toString()))
+      {
+        boolean slotValid = (slot == 49 && type != Material.BARRIER) || slot <= 44;
+        List<ItemStack> stash = Variable.itemStash.get(uuid);
+        if (slot == 49 && type != Material.BARRIER)
+        {
+          List<ItemStack> clone = new ArrayList<>(stash);
+          stash.clear();
+          AddItemUtil.addItem(player, clone);
+          SoundPlay.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.PLAYERS, 2);
+          MessageUtil.sendMessage(player, Prefix.INFO_STASH, "보관된 아이템 전부를 수령했습니다!");
+        }
+        if (slot <= 44)
+        {
+          ItemStack itemStack = stash.get(slot);
+          if (ItemStackUtil.countSpace(player, itemStack) >= itemStack.getAmount())
+          {
+            stash.remove(slot);
+            AddItemUtil.addItem(player, itemStack);
+            MessageUtil.sendMessage(player, Prefix.INFO_STASH, "%s을(를) 수령했습니다!", itemStack);
+            SoundPlay.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.PLAYERS, 2);
+          }
+          else
+          {
+            slotValid = false;
+          }
+        }
+        if (slotValid)
+        {
+          Variable.itemStash.put(uuid, stash);
+          boolean slotEmpty = Variable.itemStash.get(uuid).isEmpty();
+          if (!slotEmpty)
+          {
+            GUIManager.openGUI(player, GUIType.ITEM_STASH, false);
+          }
+          else
+          {
+            player.closeInventory();
+          }
+        }
       }
     }
-
     if (invName.equalsIgnoreCase(Constant.CANCEL_STRING + Constant.MAIN_MENU))
     {
-      if (lastInventory != null && s == 0)
+      if (lastInventory != null && slot == 0)
       {
         player.openInventory(lastInventory);
       }
 
-      if (s == 3)
+      if (slot == 3)
       {
-        GUI.openGUI(player, GUIType.SERVER_SETTINGS);
+        GUIManager.openGUI(player, GUIType.SERVER_SETTINGS);
       }
 
-//      else if (s == 5 && Cucumbery.config.getBoolean("rpg-enabled") && !Cucumbery.config.getStringList("no-rpg-enabled-worlds").contains(player.getLocation().getWorld().getName()))
+//      else if (slot == 5 && Cucumbery.config.getBoolean("rpg-enabled") && !Cucumbery.config.getStringList("no-rpg-enabled-worlds").contains(player.getLocation().getWorld().getName()))
 //      {
 //        StatGUI.getStatGUI().statGUI(player);
 //      }
 
-      else if (s == 5)
+      else if (slot == 5)
       {
         RecipeInventoryMainMenu.openRecipeInventory(player, 1, true);
       }
@@ -1939,7 +1909,7 @@ public class InventoryClick implements Listener
     else if (invName.equals(Constant.CANCEL_STRING + Constant.SERVER_SETTINGS))
     {
       boolean saveConfig = false;
-      switch (s)
+      switch (slot)
       {
         case 1:
           UserData.LISTEN_JOIN.setToggle(uuid);
@@ -2014,7 +1984,7 @@ public class InventoryClick implements Listener
         case 18:
           if (Permission.GUI_SERVER_SETTINGS_ADMIN.has(player))
           {
-            GUI.openGUI(player, GUI.GUIType.SERVER_SETTINGS_ADMIN);
+            GUIManager.openGUI(player, GUIManager.GUIType.SERVER_SETTINGS_ADMIN);
           }
           break;
         case 20:
@@ -2059,10 +2029,10 @@ public class InventoryClick implements Listener
           saveConfig = true;
           break;
         case 39:
-          GUI.openGUI(player, GUIType.ITEM_DROP_MODE_MENU);
+          GUIManager.openGUI(player, GUIType.ITEM_DROP_MODE_MENU);
           break;
         case 41:
-          GUI.openGUI(player, GUIType.ITEM_PICKUP_MODE_MENU);
+          GUIManager.openGUI(player, GUIType.ITEM_PICKUP_MODE_MENU);
           break;
 //        case 41:
 //          GUI.openGUI(player, GUIType.ITEM_USE_MODE_MENU);
@@ -2109,20 +2079,20 @@ public class InventoryClick implements Listener
           }
           break;
         case 53:
-          GUI.openGUI(player, GUIType.MAIN_MENU);
+          GUIManager.openGUI(player, GUIType.MAIN_MENU);
           break;
         default:
           break;
       }
       if (saveConfig)
       {
-        GUI.openGUI(player, GUIType.SERVER_SETTINGS);
+        GUIManager.openGUI(player, GUIType.SERVER_SETTINGS);
       }
     }
     else if (invName.equals(Constant.CANCEL_STRING + Constant.SERVER_SETTINGS_ADMIN))
     {
       boolean saveConfig = false;
-      switch (s)
+      switch (slot)
       {
         case 0:
           UserData.PLAY_JOIN.setToggle(uuid);
@@ -2174,20 +2144,20 @@ public class InventoryClick implements Listener
           }
           break;
         case 53:
-          GUI.openGUI(player, GUIType.MAIN_MENU);
+          GUIManager.openGUI(player, GUIType.MAIN_MENU);
           break;
         default:
           break;
       }
       if (saveConfig)
       {
-        GUI.openGUI(player, GUIType.SERVER_SETTINGS_ADMIN);
+        GUIManager.openGUI(player, GUIType.SERVER_SETTINGS_ADMIN);
       }
     }
     else if (invName.equals(Constant.CANCEL_STRING + Constant.ITEM_DROP_MODE_MENU))
     {
       boolean saveConfig = false;
-      switch (s)
+      switch (slot)
       {
         case 11:
           UserData.ITEM_DROP_MODE.set(uuid, "normal");
@@ -2208,20 +2178,20 @@ public class InventoryClick implements Listener
           }
           break;
         case 26:
-          GUI.openGUI(player, GUIType.MAIN_MENU);
+          GUIManager.openGUI(player, GUIType.MAIN_MENU);
           break;
         default:
           break;
       }
       if (saveConfig)
       {
-        GUI.openGUI(player, GUIType.ITEM_DROP_MODE_MENU);
+        GUIManager.openGUI(player, GUIType.ITEM_DROP_MODE_MENU);
       }
     }
     else if (invName.equals(Constant.CANCEL_STRING + Constant.ITEM_PICKUP_MODE_MENU))
     {
       boolean saveConfig = false;
-      switch (s)
+      switch (slot)
       {
         case 11:
           UserData.ITEM_PICKUP_MODE.set(uuid, "normal");
@@ -2242,45 +2212,45 @@ public class InventoryClick implements Listener
           }
           break;
         case 26:
-          GUI.openGUI(player, GUIType.MAIN_MENU);
+          GUIManager.openGUI(player, GUIType.MAIN_MENU);
           break;
         default:
           break;
       }
       if (saveConfig)
       {
-        GUI.openGUI(player, GUIType.ITEM_PICKUP_MODE_MENU);
+        GUIManager.openGUI(player, GUIType.ITEM_PICKUP_MODE_MENU);
       }
     }
 /*    else if (invName.equals(Constant.CANCEL_STRING + "§8스탯"))
     {
       long[] stat = StatManager.getStatManager().getStat(player);
-      if ((s == 53 || s == 45) && type == Material.BOOKSHELF)
+      if ((slot == 53 || slot == 45) && type == Material.BOOKSHELF)
       {
         Method.playSound(player, Sound.BLOCK_NOTE_BLOCK_HAT, 1F, 1.4F);
         GUI.openGUI(player, GUIType.MAIN_MENU);
       }
-      else if (s == 20)
+      else if (slot == 20)
       {
         StatManager.getStatManager().statUp(stat, player, 1, event.getClick());
         StatGUI.getStatGUI().statGUI(player);
       }
-      else if (s == 21)
+      else if (slot == 21)
       {
         StatManager.getStatManager().statUp(stat, player, 2, event.getClick());
         StatGUI.getStatGUI().statGUI(player);
       }
-      else if (s == 22)
+      else if (slot == 22)
       {
         StatManager.getStatManager().statUp(stat, player, 3, event.getClick());
         StatGUI.getStatGUI().statGUI(player);
       }
-      else if (s == 23)
+      else if (slot == 23)
       {
         StatManager.getStatManager().statUp(stat, player, 4, event.getClick());
         StatGUI.getStatGUI().statGUI(player);
       }
-      else if (s == 24)
+      else if (slot == 24)
       {
         StatManager.getStatManager().statUp(stat, player, 5, event.getClick());
         StatGUI.getStatGUI().statGUI(player);
@@ -2288,23 +2258,23 @@ public class InventoryClick implements Listener
     }*/
     else
     {
-      boolean isMenuItem = (s >= 10 && s <= 16) || (s >= 19 && s <= 25) || (s >= 28 && s <= 34);
+      boolean isMenuItem = (slot >= 10 && slot <= 16) || (slot >= 19 && slot <= 25) || (slot >= 28 && slot <= 34);
       if (invName.contains(Constant.CUSTOM_RECIPE_RECIPE_LIST_MENU))
       {
-        if (s == 36 && lastInventory != null)
+        if (slot == 36 && lastInventory != null)
         {
           player.openInventory(lastInventory);
         }
-        if (s == 44)
+        if (slot == 44)
         {
-          GUI.openGUI(player, GUIType.MAIN_MENU);
+          GUIManager.openGUI(player, GUIType.MAIN_MENU);
         }
         int page = Integer.parseInt(invName.split(Method.format("page:", "§"))[1].replace("§", ""));
-        if (s == 39 && type == Material.SPRUCE_BOAT)
+        if (slot == 39 && type == Material.SPRUCE_BOAT)
         {
           RecipeInventoryMainMenu.openRecipeInventory(player, --page, true);
         }
-        if (s == 41 && type == Material.SPRUCE_BOAT)
+        if (slot == 41 && type == Material.SPRUCE_BOAT)
         {
           RecipeInventoryMainMenu.openRecipeInventory(player, ++page, true);
         }
@@ -2330,24 +2300,24 @@ public class InventoryClick implements Listener
       }
       else if (invName.contains(Constant.CUSTOM_RECIPE_MENU))
       {
-        if (s == 36)
+        if (slot == 36)
         {
-          GUI.openGUI(player, GUIType.MAIN_MENU);
+          GUIManager.openGUI(player, GUIType.MAIN_MENU);
         }
         String categorySplitter = Method.format("category:", "§");
         String mainSplitter = Method.format("mainpage:", "§");
         int page = Integer.parseInt(invName.split(Method.format("page:", "§"))[1].split(Method.format("category:", "§"))[0].replace("§", ""));
         String category = invName.split(categorySplitter)[1].split(mainSplitter)[0].replace("§", "");
         int mainPage = Integer.parseInt(invName.split(mainSplitter)[1].replace("§", ""));
-        if (s == 44)
+        if (slot == 44)
         {
           RecipeInventoryMainMenu.openRecipeInventory(player, mainPage, true);
         }
-        if (s == 39 && type == Material.SPRUCE_BOAT)
+        if (slot == 39 && type == Material.SPRUCE_BOAT)
         {
           RecipeInventoryCategory.openRecipeInventory(player, mainPage, category, --page, true);
         }
-        if (s == 41 && type == Material.SPRUCE_BOAT)
+        if (slot == 41 && type == Material.SPRUCE_BOAT)
         {
           RecipeInventoryCategory.openRecipeInventory(player, mainPage, category, ++page, true);
         }
@@ -2426,7 +2396,47 @@ public class InventoryClick implements Listener
                   }
                   ingredients.add(ingredient);
                 }
-                InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts);
+                NBTItem resultNBTItem = new NBTItem(result);
+                NBTCompound merge = resultNBTItem.getCompound("MergeNBT");
+                if (merge != null)
+                {
+                  List<ItemStack> itemStacks = InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, true);
+                  ItemStack ingredient = itemStacks.isEmpty() ? ingredients.get(0).clone() : itemStacks.get(0).clone();
+                  NBTItem ingredientNBTItem = new NBTItem(ingredient, true);
+                  ingredientNBTItem.mergeCompound(merge);
+                  Long bonusDurability = resultNBTItem.getLong("BonusDurability");
+                  if (bonusDurability != null)
+                  {
+                    NBTCompound itemTag = ingredientNBTItem.getCompound(CucumberyTag.KEY_MAIN);
+                    if (itemTag != null)
+                    {
+                      NBTCompound duraTag = itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
+                      if (duraTag != null)
+                      {
+                        long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + bonusDurability;
+                        if (cur <= duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY))
+                        {
+                          duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, cur);
+                        }
+                      }
+                    }
+                  }
+                  String setType = resultNBTItem.getString("SetType") + "";
+                  if (!setType.equals(""))
+                  {
+                    try
+                    {
+                      Material material = Material.valueOf(setType);
+                      result.setType(material);
+                    }
+                    catch (Exception ignored)
+                    {
+
+                    }
+                  }
+                  result.setItemMeta(ingredient.getItemMeta());
+                }
+                InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, false);
                 InventoryClick.chanceGiveItem(player, category, config, recipe, result);
                 RecipeInventoryCategory.openRecipeInventory(player, mainPage, category, page, false);
               }
@@ -2440,9 +2450,9 @@ public class InventoryClick implements Listener
       }
       else if (invName.contains(Constant.CUSTOM_RECIPE_CRAFTING_MENU))
       {
-        if (s == 45)
+        if (slot == 45)
         {
-          GUI.openGUI(player, GUIType.MAIN_MENU);
+          GUIManager.openGUI(player, GUIType.MAIN_MENU);
         }
         String category = invName.split(Method.format("category:", "§"))[1].split(Constant.CUSTOM_RECIPE_CRAFTING_MENU)[0].replace("§", "");
         String mainSplitter = Method.format("mainpage:", "§");
@@ -2450,15 +2460,15 @@ public class InventoryClick implements Listener
         String recipe = invName.split(Method.format("recipe:", "§"))[1].split(mainSplitter)[0].replace("§", "");
         int mainPage = Integer.parseInt(invName.split(mainSplitter)[1].split(splitter)[0].replace("§", ""));
         int categoryPage = Integer.parseInt(invName.split(splitter)[1].replace("§", ""));
-        if (s == 53)
+        if (slot == 53)
         {
           RecipeInventoryMainMenu.openRecipeInventory(player, mainPage, true);
         }
-        if (s == 47 || s == 51)
+        if (slot == 47 || slot == 51)
         {
           RecipeInventoryCategory.openRecipeInventory(player, mainPage, category, categoryPage, true);
         }
-        if (s == 49 && item.getType() != Material.BARRIER && item.getType() != Material.CLOCK)
+        if (slot == 49 && item.getType() != Material.BARRIER && item.getType() != Material.CLOCK)
         {
           File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomRecipe/" + category + ".yml");
           if (!file.exists())
@@ -2525,7 +2535,47 @@ public class InventoryClick implements Listener
             }
             ingredients.add(ingredient);
           }
-          InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts);
+          NBTItem resultNBTItem = new NBTItem(result);
+          NBTCompound merge = resultNBTItem.getCompound("MergeNBT");
+          if (merge != null)
+          {
+            List<ItemStack> itemStacks = InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, true);
+            ItemStack ingredient = itemStacks.isEmpty() ? ingredients.get(0).clone() : itemStacks.get(0).clone();
+            NBTItem ingredientNBTItem = new NBTItem(ingredient, true);
+            ingredientNBTItem.mergeCompound(merge);
+            Long bonusDurability = resultNBTItem.getLong("BonusDurability");
+            if (bonusDurability != null)
+            {
+              NBTCompound itemTag = ingredientNBTItem.getCompound(CucumberyTag.KEY_MAIN);
+              if (itemTag != null)
+              {
+                NBTCompound duraTag = itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
+                if (duraTag != null && duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+                {
+                  long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + bonusDurability;
+                  if (cur <= duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY))
+                  {
+                    duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, cur);
+                  }
+                }
+              }
+            }
+            String setType = resultNBTItem.getString("SetType") + "";
+            if (!setType.equals(""))
+            {
+              try
+              {
+                Material material = Material.valueOf(setType);
+                result.setType(material);
+              }
+              catch (Exception ignored)
+              {
+
+              }
+            }
+            result.setItemMeta(ingredient.getItemMeta());
+          }
+          InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, false);
           InventoryClick.chanceGiveItem(player, category, config, recipe, result);
           RecipeInventoryRecipe.openRecipeInventory(player, mainPage, category, categoryPage, recipe, false);
         }

@@ -3,6 +3,7 @@ package com.jho5245.cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.custommerchant.MerchantData;
 import com.jho5245.cucumbery.deathmessages.CustomDeathMessage;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -13,7 +14,6 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
@@ -116,8 +116,8 @@ public class Initializer
     {
       Cucumbery.getPlugin().saveResource("lang.yml", false);
     }
-    CustomConfig deathMessagesConfig = CustomConfig.getCustomConfig("lang.yml");
-    ConfigurationSection root = deathMessagesConfig.getConfig().getConfigurationSection("");
+    CustomConfig langConfig = CustomConfig.getCustomConfig("lang.yml");
+    ConfigurationSection root = langConfig.getConfig().getConfigurationSection("");
     if (root != null)
     {
       for (String key : root.getKeys(true))
@@ -127,10 +127,28 @@ public class Initializer
     }
   }
 
+  public static void loadCustomItems()
+  {
+    File file = new File(Cucumbery.getPlugin().getDataFolder() + "/CustomItems.yml");
+    if (!file.exists())
+    {
+      Cucumbery.getPlugin().saveResource("CustomItems.yml", false);
+    }
+    CustomConfig customItemsConfig = CustomConfig.getCustomConfig("CustomItems.yml");
+    ConfigurationSection root = customItemsConfig.getConfig().getConfigurationSection("");
+    if (root != null)
+    {
+      for (String key : root.getKeys(true))
+      {
+        Variable.customItemsConfig.set(key, root.get(key));
+      }
+    }
+  }
+
   public static void loadCustomEffects()
   {
     CustomEffectManager.effectMap.clear();
-    File customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects/non-players");
+    File customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects");
     if (customEffectsFolder.exists())
     {
       File[] customEffectFiles = customEffectsFolder.listFiles();
@@ -138,42 +156,42 @@ public class Initializer
       {
         customEffectFiles = new File[]{};
       }
-      for (File file : customEffectFiles)
+      for (File folder : customEffectFiles)
       {
-        String fileName7 = file.getName();
-        if (fileName7.endsWith(".yml"))
+        if (folder.isDirectory())
         {
-          fileName7 = fileName7.substring(0, fileName7.length() - 4);
-          if (Method.isUUID(fileName7))
+          File[] files = folder.listFiles();
+          if (files != null)
           {
-            UUID uuid = UUID.fromString(fileName7);
-            CustomConfig customConfig = CustomConfig.getCustomConfig(file);
-            YamlConfiguration config = customConfig.getConfig();
-            CustomEffectManager.load(uuid, config);
+            for (File file : files)
+            {
+              String fileName7 = file.getName();
+              if (fileName7.endsWith(".yml"))
+              {
+                fileName7 = fileName7.substring(0, fileName7.length() - 4);
+                if (Method.isUUID(fileName7))
+                {
+                  UUID uuid = UUID.fromString(fileName7);
+                  CustomConfig customConfig = CustomConfig.getCustomConfig(file);
+                  YamlConfiguration config = customConfig.getConfig();
+                  CustomEffectManager.load(uuid, config);
+                }
+              }
+            }
           }
         }
-      }
-    }
-    customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects");
-    if (customEffectsFolder.exists())
-    {
-      File[] customEffectFiles = customEffectsFolder.listFiles();
-      if (customEffectFiles == null)
-      {
-        customEffectFiles = new File[]{};
-      }
-      for (File file : customEffectFiles)
-      {
-        String fileName7 = file.getName();
-        if (fileName7.endsWith(".yml"))
-        {
-          fileName7 = fileName7.substring(0, fileName7.length() - 4);
-          if (Method.isUUID(fileName7))
+        else {
+          String fileName7 = folder.getName();
+          if (fileName7.endsWith(".yml"))
           {
-            UUID uuid = UUID.fromString(fileName7);
-            CustomConfig customConfig = CustomConfig.getCustomConfig(file);
-            YamlConfiguration config = customConfig.getConfig();
-            CustomEffectManager.load(uuid, config);
+            fileName7 = fileName7.substring(0, fileName7.length() - 4);
+            if (Method.isUUID(fileName7))
+            {
+              UUID uuid = UUID.fromString(fileName7);
+              CustomConfig customConfig = CustomConfig.getCustomConfig(folder);
+              YamlConfiguration config = customConfig.getConfig();
+              CustomEffectManager.load(uuid, config);
+            }
           }
         }
       }
@@ -184,6 +202,7 @@ public class Initializer
   {
     loadDeathMessagesConfig();
     loadLang();
+    loadCustomItems();
     loadCustomEffects();
     Variable.customRecipes.clear();
     Variable.craftingTime.clear();
@@ -412,6 +431,41 @@ public class Initializer
         }
       }
     }
+
+    Variable.itemStash.clear();
+    File itemStashFolder = new File(getPlugin().getDataFolder() + "/data/ItemStash");
+    if (itemStashFolder.exists())
+    {
+      File[] dataFiles = itemStashFolder.listFiles();
+      if (dataFiles != null)
+      {
+        for (File file : dataFiles)
+        {
+          String fileName = file.getName();
+          if (fileName.endsWith(".yml"))
+          {
+            fileName = fileName.substring(0, fileName.length() - 4);
+            if (Method.isUUID(fileName))
+            {
+              UUID uuid = UUID.fromString(fileName);
+              CustomConfig customConfig = CustomConfig.getCustomConfig(file);
+              YamlConfiguration configuration = customConfig.getConfig();
+              List<String> list = configuration.getStringList("items");
+              List<ItemStack> itemStacks = new ArrayList<>();
+              list.forEach(s ->
+              {
+                ItemStack itemStack = ItemSerializer.deserialize(s);
+                if (!itemStack.getType().isAir())
+                {
+                  itemStacks.add(itemStack);
+                }
+              });
+              Variable.itemStash.put(uuid, itemStacks);
+            }
+          }
+        }
+      }
+    }
   }
 
   public static void loadBrigadierTabListConfig()
@@ -625,25 +679,34 @@ public class Initializer
             config.set(key, null);
           }
         }
-        for (String key : cacheSection.getKeys(true))
+        for
+        (String key : cacheSection.getKeys(true))
         {
-          try
+          config.set(key, cacheConfig.getString(key));
+/*          try
           {
             String[] split = key.split("_");
             int x = Integer.parseInt(split[0]);
             int y = Integer.parseInt(split[1]);
             int z = Integer.parseInt(split[2]);
-            ItemStack item = ItemSerializer.deserialize(cacheConfig.getString(key));
-            Location location = new Location(Bukkit.getWorld(worldName), x, y, z);
-            if (location.getBlock().getType() == item.getType())
+            String itemString = cacheConfig.getString(key);
+            if (itemString != null && itemString.length() - itemString.replace("%", "").length() >= 2)
             {
-              config.set(key, cacheSection.get(key));
+              itemString = PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), itemString, null);
+            }
+            ItemStack item = ItemSerializer.deserialize(itemString);
+            NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
+            boolean forcePreserve = NBTAPI.arrayContainsValue(extraTag, Constant.ExtraTag.FORCE_PRESERVE_BLOCK_NBT);
+            forcePreserve = forcePreserve || new NBTItem(item).getBoolean("ForcePreserveBlockNBT");
+            Location location = new Location(Bukkit.getWorld(worldName), x, y, z);
+            if (forcePreserve || location.getBlock().getType() == item.getType())
+            {
             }
           }
           catch (Exception e)
           {
             e.printStackTrace();
-          }
+          }*/
         }
         customConfig.saveConfig();
       }
@@ -675,6 +738,20 @@ public class Initializer
     for (UUID uuid : removal.keySet())
     {
       Variable.cooldownsItemUsage.remove(uuid);
+    }
+  }
+
+  public static void saveItemStashData()
+  {
+    for (UUID uuid : Variable.itemStash.keySet())
+    {
+      List<ItemStack> itemStacks = Variable.itemStash.get(uuid);
+      CustomConfig customConfig = CustomConfig.getCustomConfig("data/ItemStash/" + uuid + ".yml");
+      YamlConfiguration config = customConfig.getConfig();
+      List<String> list = new ArrayList<>();
+      itemStacks.forEach(itemStack -> list.add(ItemSerializer.serialize(ItemLore.removeItemLore(itemStack))));
+      config.set("items", list);
+      customConfig.saveConfig();
     }
   }
 }

@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 23
+config-version: 26
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -56,8 +56,6 @@ console-messages:
 
 # 플러그인 연동 기능 사용
 use-hook-plugins:
-  # 마인크래프트 기반 명령어(give2, summon2, ride, updateitem, kill2 등) 추가 및 execute if,unless에 추가 조건문(haspermission, random, weather, period 등) 등록
-  CommandAPI: true
   # Cucumbery에서 돈 관련 기능 사용
   Vault-Economy: true
   # Cucumbery에서 채팅 관련 기능 사용
@@ -108,7 +106,6 @@ use-hover-event-for-entities:
     hp: true
     # 개체의 현재 위치 표시 여부
     location: true
-
 
 # 소리 상수
 sound-const:
@@ -188,6 +185,11 @@ actionbar-when-merchant-update-their-recipe: "주민이 거래 재고를 준비�
 
 # 도움이 되는 설명 중 가장 밑에 있는 회색 설명(예시 : 도끼, 작물의 많은 TMI) 기능을 사용할 것인가?
 use-additional-tmi-feature: true
+
+# 아이템 설명 툴팁의 최대 너비 제한 기능 사용. 글자 수 String#length() 로 계산하여 처리함.
+# 단, 해당 기능 사용 시 한국어 외의 언어 환경에서 아이템 설명이 제대로 변역되지 않을 수 있음.
+# 최소 너비 20칸 이상. 20 미만으로 설정하여 비활성화
+max-item-lore-width: 0
 
 # 도움이 되는 설명 중 가장 밑에 있는 회색 설명을 사용하지 않을 아이템 종류 - List<String>
 #no-use-additional-tmi-feature-materials:
@@ -757,3 +759,55 @@ show-boss-bar-when-no-effects: true
 # 하지만 명령어로 하지 않으면 일부 채팅 기능을 다른 곳과 연동(디스코드 등)할 경우 해당 채팅창이 도배될 수 있다
 # 해당 기능은 적용하려면 /cucumbery reloadplugin 혹은 서버 재부팅이 필요하다
 reinforce-mode-command: false
+
+# 커스텀 채광 관련 설정
+custom-mining:
+  # 특정 태그를 가지고 있으면 자동으로 채광 모드가 활성화되게 할 것인가?
+  enable-by-tag: true
+  # 해당 태그를 가지고 있으면 채광 모드 활성화
+  tag: cucumbery_miner
+  # 기본 블록 재생성 주기 (틱)
+  default-ore-regen-in-ticks: 200
+  # 기본 도구 속도와 등급
+  # speed : 채광 속도 - 1초당 블록에 가할 수 있는 대미지
+  # tier : 채광 등급
+  # 채광 등급 기본값
+  # 0 : 맨손 혹은 곡괭이를 제외한 모든 아이템
+  # 1 : 나무 곡괭이, 금 곡괭이
+  # 2 : 돌 곡괭이
+  # 3 : 철 곡괭이
+  # 4 : 다이아몬드 곡괭이
+  # 5 : 네더라이트 곡괭이
+  default-tool-info:
+    WOODEN_PICKAXE:
+      speed: 100.0
+      tier: 1
+    STONE_PICKAXE:
+      speed: 200.0
+      tier: 2
+    IRON_PICKAXE:
+      speed: 300.0
+      tier: 3
+    DIAMOND_PICKAXE:
+      speed: 400.0
+      tier: 4
+    NETHERITE_PICKAXE:
+      speed: 450.0
+      tier: 5
+    GOLDEN_PICKAXE:
+      speed: 600.0
+      tier: 1
+    default: # 맨 손 또는 기타 아이템
+      speed: 50.0
+      tier: 0
+  # 블록의 체력(Hardness)와 등급
+  default-block-info:
+    # 해당 값이 블록의 체력에 곱해져서 결정됨
+    multiplier: 100.0
+    # 지정되지 않은 값은 API의 Block#getHardness() 를 사용
+    STONE:
+      hardness: 1.5
+      tier: 1
+    DIAMOND_ORE:
+      hardness: 3.0
+      tier: 3

@@ -1,10 +1,14 @@
 package com.jho5245.cucumbery.util.additemmanager;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -12,10 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Data
 {
@@ -32,6 +33,8 @@ public class Data
   private final int amount;
 
   private final Component amountComponent;
+
+  private boolean itemStash = false;
 
   public Data(@NotNull CommandSender sender, @NotNull Collection<UUID> targets, HashMap<UUID, Integer> lostAmounts,
               @NotNull List<UUID> failure, @NotNull ItemStack given, int amount)
@@ -77,6 +80,10 @@ public class Data
           continue;
         }
         MessageUtil.sendWarn(target, "인벤토리가 가득 차서 %s이(가) 보낸 %s %s개 중 %s개를 지급받지 못했습니다", sender, item, amountComponent, Component.text(lostAmount, Constant.THE_COLOR));
+        if (itemStash && Permission.CMD_STASH.has(Objects.requireNonNull(Method2.getEntityAsync(target))))
+        {
+          MessageUtil.sendMessage(target, Prefix.INFO_STASH, "보관함에 아이템이 %s개 있습니다. %s 명령어로 확인하세요!", Variable.itemStash.get(target).size(), "&e/stash");
+        }
       }
       if (sender instanceof Player player)
       {
@@ -98,6 +105,30 @@ public class Data
       }
       MessageUtil.sendMessage(target, Prefix.INFO_HANDGIVE, "%s(으)로부터 %s을(를) %s개 지급받았습니다", sender, item, amountComponent);
     }
+  }
+
+  public Data stash()
+  {
+    this.itemStash = true;
+    for (UUID uuid : failure)
+    {
+      int amount = lostAmounts.get(uuid);
+      ItemStack itemStack = ItemLore.removeItemLore(item.clone());
+      List<ItemStack> stash = Variable.itemStash.getOrDefault(uuid, new ArrayList<>());
+      while (amount > 0)
+      {
+        itemStack = itemStack.clone();
+        itemStack.setAmount(Math.min(itemStack.getMaxStackSize(), amount));
+        amount -= itemStack.getAmount();
+        stash.add(itemStack);
+      }
+      while (stash.size() > 45)
+      {
+        stash.remove(0);
+      }
+      Variable.itemStash.put(uuid, stash);
+    }
+    return this;
   }
 }
 

@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -14,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.FishHook;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,6 +52,13 @@ public class PlayerFish implements Listener
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerFishAlertCooldown.remove(uuid), 100L);
         }
         return;
+      }
+
+      if (state == State.CAUGHT_FISH && event.getCaught() instanceof Item caughtItem && item.getItemMeta().hasEnchant(CustomEnchant.FRANTIC_LUCK_OF_THE_SEA))
+      {
+        ItemStack i = caughtItem.getItemStack();
+        i.setAmount(i.getAmount() * 2);
+        caughtItem.setItemStack(i);
       }
     }
 

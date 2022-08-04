@@ -1,17 +1,22 @@
 package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate.CustomEnchantUltimate;
 import com.jho5245.cucumbery.util.storage.no_groups.ColorCode;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
@@ -19,6 +24,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +32,7 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +40,8 @@ import java.util.List;
 
 public class ItemLoreUtil
 {
+  protected static final String FIRST_LINE_EMPTY_LORE = "";
+
   /**
    * 아이템이 Cucumbery에 의해서 설명이 변경되는지에 대한 여부를 확인합니다.
    *
@@ -49,6 +58,10 @@ public class ItemLoreUtil
       if (type == Material.AIR || !type.isItem())
       {
         return false;
+      }
+      if (!itemStack.hasItemMeta())
+      {
+        return true;
       }
       // 아이템의 메타 데이터
       ItemMeta itemMeta = itemStack.getItemMeta();
@@ -71,17 +84,6 @@ public class ItemLoreUtil
         return true;
       }
 
-      Component lastLor = lore.get(lore.size() - 1);
-
-      // 마지막 설명이 [NBT 태그 복사됨] 이면 x
-      if (lastLor instanceof TranslatableComponent translatableComponent)
-      {
-        if (translatableComponent.key().equals(Constant.TMI_LORE_NBT_TAG_COPIED))
-        {
-          return false;
-        }
-      }
-
       // 아이템의 설명이 있고 설명의 개수가 1개 이상
       if (lore != null && lore.size() > 0)
       {
@@ -90,7 +92,7 @@ public class ItemLoreUtil
         if (firstLor instanceof TranslatableComponent translatableComponent)
         {
           String key = translatableComponent.key();
-          if (key.equals(""))
+          if (key.replace(" ", "").equals(""))
           {
             List<Component> args = translatableComponent.args();
             if (args.size() == 1 && args.get(0) instanceof TextComponent)
@@ -130,7 +132,7 @@ public class ItemLoreUtil
     {
       return;
     }
-    lore.set(0, Component.translatable("").args(Component.empty(), Component.empty()));
+    lore.set(0, Component.translatable(ItemLoreUtil.FIRST_LINE_EMPTY_LORE).args(Component.empty(), Component.empty()));
     itemMeta.lore(lore);
     itemStack.setItemMeta(itemMeta);
   }
@@ -219,7 +221,7 @@ public class ItemLoreUtil
   public static void setItemRarityValue(@NotNull List<Component> lore, long value, boolean change)
   {
     long before = (change ? getItemRarityValue(lore) : 0) + value;
-    lore.set(0, Component.translatable("", Component.text(before)));
+    lore.set(0, Component.translatable(ItemLoreUtil.FIRST_LINE_EMPTY_LORE, Component.text(before)));
   }
 
   /**
@@ -232,9 +234,9 @@ public class ItemLoreUtil
    * @return 설명
    */
   @NotNull
-  public static List<Component> enchantTMIDescription(
-          ItemMeta itemMeta, Material material, @NotNull Enchantment enchant, int enchantLevel)
+  public static List<Component> enchantTMIDescription(@Nullable Player player, @NotNull ItemMeta itemMeta, @NotNull Material material, @NotNull Enchantment enchant, int enchantLevel, boolean tmi)
   {
+    boolean customMiningMode = player != null && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE);
     List<Component> lore = new ArrayList<>();
     Component component;
     if (enchant.getMaxLevel() == 1 && enchantLevel == 1)
@@ -247,9 +249,13 @@ public class ItemLoreUtil
     }
     component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     component = component.color(enchant.isCursed() ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
+    if (enchant instanceof CustomEnchantUltimate)
+    {
+      component = component.color(NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.BOLD, State.TRUE);
+    }
     lore.add(component);
 
-    boolean useTMI = Cucumbery.config.getBoolean("use-tmi-enchantment-lore-feature");
+    boolean useTMI = tmi && Cucumbery.config.getBoolean("use-tmi-enchantment-lore-feature");
     if (useTMI)
     {
       boolean compat = material == Material.ENCHANTED_BOOK;
@@ -310,10 +316,14 @@ public class ItemLoreUtil
         String msg = "&7물 속에서 이동 속도 감소량 %s 감소";
         lore.add(ComponentUtil.translate(msg, "&a" + Constant.Sosu2.format(level * 100d / 3) + "%"));
       }
-      if ((compat || Constant.TOOLS.contains(material)) && enchant.equals(Enchantment.DIG_SPEED))
+      if ((compat || Constant.TOOLS.contains(material) || customMiningMode) && enchant.equals(Enchantment.DIG_SPEED))
       {
-        String msg = "&7블록을 캐는 속도 %s 증가";
-        lore.add(ComponentUtil.translate(msg, "&a" + Constant.Jeongsu.format((long) enchantLevel * enchantLevel + 1)));
+        String msg = customMiningMode ? "&7채광 속도 %s 증가" : "&7블록을 캐는 속도 %s 증가";
+        lore.add(ComponentUtil.translate(msg, "&a" + Constant.Jeongsu.format(
+                customMiningMode ?
+                        30L + (enchantLevel - 1) * 20L :
+                        (long) enchantLevel * enchantLevel + 1
+        )));
       }
       if ((compat || Constant.DURABLE_ITEMS.contains(material)) && enchant.equals(Enchantment.DURABILITY))
       {
@@ -358,10 +368,17 @@ public class ItemLoreUtil
       }
       if (enchant.equals(Enchantment.LOOT_BONUS_BLOCKS))
       {
-        String msg = "&7레드스톤 광석, 작물의 최대 드롭 개수 %s 증가 및";
-        lore.add(ComponentUtil.translate(msg, "&a" + Constant.Jeongsu.format(enchantLevel)));
-        lore.add(ComponentUtil.translate("&7다른 광석의 아이템 드롭율 %s 증가",
-                "&a" + Constant.Sosu2.format(((1d / (enchantLevel + 2) + (enchantLevel + 1) / 2d) - 1D) * 100D) + "%"));
+        if (customMiningMode)
+        {
+          lore.add(ComponentUtil.translate("&7채광 행운 %s 증가", "&a" + (enchantLevel * 15)));
+        }
+        else
+        {
+          String msg = "&7레드스톤 광석, 작물의 최대 드롭 개수 %s 증가 및";
+          lore.add(ComponentUtil.translate(msg, "&a" + Constant.Jeongsu.format(enchantLevel)));
+          lore.add(ComponentUtil.translate("&7다른 광석의 아이템 드롭율 %s 증가",
+                  "&a" + Constant.Sosu2.format(((1d / (enchantLevel + 2) + (enchantLevel + 1) / 2d) - 1D) * 100D) + "%"));
+        }
       }
       if (enchant.equals(Enchantment.LOOT_BONUS_MOBS))
       {
@@ -590,14 +607,14 @@ public class ItemLoreUtil
       {
         lore.addAll(Arrays.asList(
                 ComponentUtil.translate("&7블록을 캐거나 적을 잡았을 때"),
-                ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
+                ComponentUtil.translate("&7드롭하는 아이템이 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
         );
       }
       if (enchant.equals(CustomEnchant.TELEKINESIS_PVP))
       {
         lore.addAll(Arrays.asList(
                 ComponentUtil.translate("&7인벤세이브가 꺼져 있는 경우에 플레이어와 싸웠을 때"),
-                ComponentUtil.translate("&7드롭하는 아이템과 경험치가 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
+                ComponentUtil.translate("&7드롭하는 아이템이 ").append(ComponentUtil.translate("&a즉시 인벤토리에 들어옴")))
         );
       }
       if (enchant.equals(CustomEnchant.COLD_TOUCH))
@@ -626,6 +643,27 @@ public class ItemLoreUtil
                 ComponentUtil.translate("&7선인장을 캘 경우 등급에 따른 종류의 선인장이 나옴")
         );
       }
+      if (enchant.equals(CustomEnchant.FRANTIC_FORTUNE))
+      {
+        lore.addAll(Arrays.asList(
+                ComponentUtil.translate("&7블록을 캤을 때 드롭하는 아이템이"),
+                ComponentUtil.translate("&a'뭐든지' 2배가 됩니다. 말 그대로 2배요!"))
+        );
+      }
+      if (enchant.equals(CustomEnchant.FRANTIC_LUCK_OF_THE_SEA))
+      {
+        lore.addAll(Arrays.asList(
+                ComponentUtil.translate("&7낚시를 할 때 나오는 아이템이"),
+                ComponentUtil.translate("&a'뭐든지' 2배가 됩니다. 말 그대로 2배요!"))
+        );
+      }
+      if (enchant.equals(CustomEnchant.ASSASSINATION) || enchant.equals(CustomEnchant.ASSASSINATION_BOW))
+      {
+        lore.addAll(Arrays.asList(
+                ComponentUtil.translate("&7다른 플레이어나 동물을 잡아서 뜨는 데스 메시지에"),
+                ComponentUtil.translate("&7자신의 이름이 나타나지 않고 감춰짐"))
+        );
+      }
       // Cursed Enchant
       if (enchant.equals(CustomEnchant.COARSE_TOUCH))
       {
@@ -650,6 +688,14 @@ public class ItemLoreUtil
         lore.add(
                 ComponentUtil.translate("&7아이템이 들어있는 컨테이너를 캤을 때 ").append(ComponentUtil.translate("&c아이템을 드롭하지 않음"))
         );
+      }
+      if (enchant.equals(CustomEnchant.IDIOT_SHOOTER))
+      {
+        lore.add(CustomEffectType.IDIOT_SHOOTER.getDescription().color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, State.FALSE));
+      }
+      if (enchant.equals(CustomEnchant.HIGH_RISK_HIGH_RETURN))
+      {
+        lore.add(ComponentUtil.translate("&7대미지가 500% 증가하는 대신 받는 피해도 500% 증가합니다"));
       }
     }
     return lore;

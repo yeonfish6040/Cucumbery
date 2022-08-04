@@ -1,19 +1,21 @@
 package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.nbt.CucumberyTag;
-import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -176,13 +178,13 @@ public class InventoryClose implements Listener
               ItemStack returnLost = inventory.getItem(i);
               if (ItemStackUtil.itemExists(returnLost))
               {
-                player.getInventory().addItem(returnLost);
+                AddItemUtil.addItem(player, returnLost);
               }
             }
             ItemStack result = inventory.getItem(4);
             if (ItemStackUtil.itemExists(result))
             {
-              player.getInventory().addItem(result);
+              AddItemUtil.addItem(player, result);
             }
           }
           return;
@@ -198,7 +200,7 @@ public class InventoryClose implements Listener
               ItemStack returnLost = inventory.getItem(i);
               if (ItemStackUtil.itemExists(returnLost))
               {
-                player.getInventory().addItem(returnLost);
+                AddItemUtil.addItem(player, returnLost);
               }
             }
           }
@@ -211,6 +213,7 @@ public class InventoryClose implements Listener
           ItemStack ingredientCheck = inventory.getItem(i);
           if (ItemStackUtil.itemExists(ingredientCheck))
           {
+            ItemLore.removeItemLore(ingredientCheck);
             ingredientInventory.addItem(ingredientCheck);
           }
         }
@@ -219,7 +222,7 @@ public class InventoryClose implements Listener
           MessageUtil.sendError(player, "레시피의 재료로 되는 아이템을 하단 9×3 슬롯에 놔두고 다시 시도해주세요. 재료 아이템이 없어 레시피 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "에 실패하였습니다");
           if (!title.contains("§레§시§피§ §편§집§3편집"))
           {
-            player.getInventory().addItem(result);
+            AddItemUtil.addItem(player, result);
           }
           return;
         }
@@ -235,7 +238,7 @@ public class InventoryClose implements Listener
         {
           config.set("extra.display", category);
         }
-        String resultSerial = ItemSerializer.serialize(result);
+        String resultSerial = ItemSerializer.serialize(ItemLore.removeItemLore(result, true));
         boolean[] reusable = null;
         if (title.contains("§레§시§피§ §편§집§3편집"))
         { // 편집하는 레시피일 경우 재료 코드 삭제
@@ -302,10 +305,10 @@ public class InventoryClose implements Listener
         }
         customRecipeListConfig.saveConfig();
         Variable.customRecipes.put(category, config);
-        MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE + "커스텀 레시피 목록 &e" + category + "&r에 &e" + recipe + "&r" + MessageUtil
-                .getFinalConsonant(recipe, MessageUtil.ConsonantType.이라) + "는 이름의 레시피를 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "하였습니다");
+        MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 %s에 %s이(라)는 이름의 레시피를 " + (title.contains("§레§시§피§ §편§집§3편집") ? "편집" : "생성") + "하였습니다", "&e" + category, "&e" + recipe);
         // player.sendMessage(category.replace("§", "&") + ", " + recipe.replace("§", "&"));
         player.updateInventory();
+        return;
       }
       if (inventory.getLocation() != null)
       {
@@ -347,48 +350,48 @@ public class InventoryClose implements Listener
         {
           case ANVIL:
           case SMITHING:
-            SoundPlay.playSound(player, Sound.BLOCK_ANVIL_DESTROY, 1F, 2F);
+            SoundPlay.playSound(player, Sound.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1F, 2F);
             break;
           case BEACON:
-            SoundPlay.playSound(player, Sound.BLOCK_BEACON_DEACTIVATE, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case BREWING:
-            SoundPlay.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case DISPENSER:
           case DROPPER:
           case HOPPER:
-            SoundPlay.playSound(player, Sound.BLOCK_DISPENSER_DISPENSE, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.BLOCK_DISPENSER_DISPENSE, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case ENCHANTING:
-            SoundPlay.playSound(player, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case FURNACE:
-            SoundPlay.playSound(player, Sound.BLOCK_FURNACE_FIRE_CRACKLE, 1F, 1F);
+            SoundPlay.playSound(player, Sound.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.PLAYERS, 1F, 1F);
             break;
           case MERCHANT:
-            SoundPlay.playSound(player, Sound.ENTITY_VILLAGER_NO, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.ENTITY_VILLAGER_NO, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case WORKBENCH:
-            SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case BLAST_FURNACE:
-            SoundPlay.playSound(player, Sound.BLOCK_BLASTFURNACE_FIRE_CRACKLE, 1F, 1F);
+            SoundPlay.playSound(player, Sound.BLOCK_BLASTFURNACE_FIRE_CRACKLE, SoundCategory.PLAYERS, 1F, 1F);
             break;
           case CARTOGRAPHY:
-            SoundPlay.playSound(player, Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case GRINDSTONE:
-            SoundPlay.playSound(player, Sound.BLOCK_GRINDSTONE_USE, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.BLOCK_GRINDSTONE_USE, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case LOOM:
-            SoundPlay.playSound(player, Sound.UI_LOOM_SELECT_PATTERN, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.UI_LOOM_SELECT_PATTERN, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           case SMOKER:
-            SoundPlay.playSound(player, Sound.BLOCK_SMOKER_SMOKE, 1F, 1F);
+            SoundPlay.playSound(player, Sound.BLOCK_SMOKER_SMOKE, SoundCategory.PLAYERS, 1F, 1F);
             break;
           case STONECUTTER:
-            SoundPlay.playSound(player, Sound.UI_STONECUTTER_TAKE_RESULT, 1F, 1.5F);
+            SoundPlay.playSound(player, Sound.UI_STONECUTTER_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 1.5F);
             break;
           default:
             break;

@@ -12,9 +12,11 @@ import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveR
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attributable;
@@ -50,6 +52,19 @@ public class EntityCustomEffectPostApply implements Listener
       CustomEffectManager.removeEffect(entity, conflictEffect, RemoveReason.CONFLICT);
     }
 
+    if (customEffectType == CustomEffectType.ALARM)
+    {
+      MessageUtil.info(entity, "알람이 설정되었습니다! %s초 뒤에 시끄러운 소리가 남!", "&e" + Constant.Sosu2.format(duration / 20d));
+    }
+
+    if (entity instanceof Player player && (
+            customEffectType == CustomEffectType.CUSTOM_MINING_SPEED_MODE ||
+    customEffectType == CustomEffectType.CURSE_OF_CREATIVITY ||
+    customEffectType == CustomEffectType.CURSE_OF_CREATIVITY_PLACE
+    ))
+    {
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 2L);
+    }
 
     if (customEffectType == CustomEffectType.RESURRECTION)
     {
@@ -107,7 +122,8 @@ public class EntityCustomEffectPostApply implements Listener
       AttributeInstance attributeInstance = attributable.getAttribute(attribute);
       if (attributeInstance != null)
       {
-        attributeInstance.addModifier(new AttributeModifier(uuid, "cucumbery-" + customEffectType.translationKey(), (amplifier + 1) * attributeCustomEffect.getMultiplier(), attributeCustomEffect.getOperation()));
+        attributeInstance.addModifier(new AttributeModifier(uuid, "cucumbery-" + customEffectType.translationKey(),
+                (amplifier + 1) * attributeCustomEffect.getMultiplier(), attributeCustomEffect.getOperation()));
       }
     }
 
@@ -193,8 +209,11 @@ public class EntityCustomEffectPostApply implements Listener
       Integer penalty = Variable.starCatchPenalty.get(player.getUniqueId());
       MessageUtil.sendTitle(player, ComponentUtil.translate("&e스타캐치"), ComponentUtil.translate(
               penalty != null && penalty >= 20 ? "연속해서 강화를 시도하면 스타캐치 난이도가 증가합니다" :
-                      "별이 초록색일 때 점프하거나 화면을 좌클릭하면 강화 성공률 증가!"
+                      "별이 초록색일 때 스타캐치 클릭하면 강화 성공률 증가!"
       ), 0, 100, 0);
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "           %s               ", ComponentUtil.translate("&e[                스타캐치 클릭                ]").hoverEvent(ComponentUtil.translate("클릭하여 스타캐치를 합니다")).clickEvent(
+              ClickEvent.runCommand(Constant.REINFORCE_STAR_CATCH)));
+      MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);
     }
   }
 }

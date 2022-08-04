@@ -12,7 +12,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.PluginLoader;
 import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
@@ -59,6 +59,7 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
           Initializer.saveUserData();
           Initializer.saveBlockPlaceData();
           Initializer.saveItemUsageData();
+          Initializer.saveItemStashData();
           CustomEffectManager.save();
           Initializer.loadCustomConfigs();
           Initializer.loadPlayersConfig();
@@ -172,7 +173,7 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
                 if (Method.isUUID(fileName))
                 {
                   UUID uuid = UUID.fromString(fileName);
-                  if (CustomConfig.UserData.ID.getString(uuid) == null)
+                  if (UserData.ID.getString(uuid) == null)
                   {
                     if (file.delete())
                     {
@@ -203,6 +204,10 @@ public class CommandCucumbery implements CommandExecutor, TabCompleter
             MessageUtil.info(sender, "제거할 유저 데이터가 존재하지 않습니다");
           }
           break;
+        default:
+          MessageUtil.wrongArg(sender, 1, args);
+          MessageUtil.commandInfo(sender, label, Method.getUsage(cmd));
+          return true;
       }
     }
     else

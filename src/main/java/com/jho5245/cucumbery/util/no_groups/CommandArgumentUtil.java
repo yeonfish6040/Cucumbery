@@ -9,9 +9,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +25,19 @@ public class CommandArgumentUtil
   @Nullable
   public static Location location(@NotNull CommandSender sender, @NotNull String arg, boolean isInteger, boolean notice)
   {
+    if (arg.equals("$target_block") && sender instanceof Player player)
+    {
+      Block block = player.getTargetBlockExact(6);
+      if (block == null)
+      {
+        if (notice)
+        {
+          MessageUtil.sendError(sender, "블록을 바라보고 있지 않습니다");
+        }
+        return null;
+      }
+      return block.getLocation();
+    }
     String[] split = arg.split(" ");
     if (split.length < 3)
     {
@@ -48,9 +63,9 @@ public class CommandArgumentUtil
       }
       return null;
     }
+    Location location = senderLocation(sender);
     String xStr = split[0], yStr = split[1], zStr = split[2];
     double x, y, z;
-    Location location = senderLocation(sender);
     if (arg.startsWith("^"))
     {
       double a, b, c;
@@ -419,7 +434,7 @@ public class CommandArgumentUtil
   @Nullable
   public static World world(@NotNull CommandSender sender, @NotNull String arg, boolean notice)
   {
-    if (arg.equals("~"))
+    if (arg.equals("$current_world"))
     {
       return senderLocation(sender).getWorld();
     }

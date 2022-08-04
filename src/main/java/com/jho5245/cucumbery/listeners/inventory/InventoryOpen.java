@@ -1,24 +1,26 @@
 package com.jho5245.cucumbery.listeners.inventory;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
+import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,7 +72,34 @@ public class InventoryOpen implements Listener
       String title = event.getView().getTitle();
       Inventory inventory = event.getInventory();
       Location location = inventory.getLocation();
-
+      if (location == null)
+      {
+        Block targetBlock = player.getTargetBlockExact(6);
+        if (targetBlock != null)
+        {
+          location = targetBlock.getLocation();
+        }
+      }
+      if (inventory.getType() == InventoryType.BEACON && location != null)
+      {
+        YamlConfiguration blockPlaceData = Variable.blockPlaceData.get(location.getWorld().getName());
+        if (blockPlaceData != null)
+        {
+          ItemStack itemStack = ItemSerializer.deserialize(blockPlaceData.getString(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ()));
+          if (itemStack.getType() == Material.BEACON && NBTAPI.isRestricted(player, itemStack, RestrictionType.NO_BLOCK_BEACON))
+          {
+            event.setCancelled(true);
+            if (!Variable.inventoryOpenAlertCooldown.contains(uuid))
+            {
+              Variable.inventoryOpenAlertCooldown.add(uuid);
+              MessageUtil.sendTitle(player, "&c사용 불가!", "사용할 수 없는 신호기입니다", 5, 80, 15);
+              SoundPlay.playSound(player, Constant.ERROR_SOUND);
+              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.inventoryOpenAlertCooldown.remove(uuid), 100L);
+            }
+            return;
+          }
+        }
+      }
       if (inventory.getType() == InventoryType.BREWING)
       {
         Method.updateInventory(player);
@@ -96,8 +125,8 @@ public class InventoryOpen implements Listener
       {
         return;
       }
-      // Openinv로 인벤토리가 열린 경우가 아닐 때
-      if (location != null || inventory.getType() != InventoryType.CHEST)
+      // Openinv로 인벤토리가 열린 경우가 아니고 이미 다른 사람이 인벤토리를 연 상태가 아닐 때
+      if (inventory.getViewers().size() <= 1 && (location != null || inventory.getType() != InventoryType.CHEST) && !title.contains(Constant.CANCEL_STRING) && !title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI))
       {
         if (Method.usingLoreFeature(player))
         {
@@ -106,7 +135,7 @@ public class InventoryOpen implements Listener
             ItemStack itemStack = inventory.getItem(i);
             if (itemStack != null)
             {
-              ItemLore.setItemLore(itemStack);
+              ItemLore.setItemLore(itemStack, new ItemLoreView(player));
             }
           }
         }
@@ -151,16 +180,16 @@ public class InventoryOpen implements Listener
                   if (!ItemStackUtil.hasLore(ingre1))
                   {
                     recipeIsCorrect = false;
-                    ItemLore.setItemLore(ingre1);
+                    ItemLore.setItemLore(ingre1, new ItemLoreView(player));
                   }
                   else
                   {
                     ItemStack clone = ingre1.clone();
-                    ItemLore.setItemLore(clone);
+                    ItemLore.setItemLore(clone, new ItemLoreView(player));
                     if (!ingre1.isSimilar(clone))
                     {
                       recipeIsCorrect = false;
-                      ItemLore.setItemLore(ingre1);
+                      ItemLore.setItemLore(ingre1, new ItemLoreView(player));
                     }
                   }
                 }
@@ -169,32 +198,32 @@ public class InventoryOpen implements Listener
                   if (!ItemStackUtil.hasLore(ingre2))
                   {
                     recipeIsCorrect = false;
-                    ItemLore.setItemLore(ingre2);
+                    ItemLore.setItemLore(ingre2,new ItemLoreView(player));
                   }
                   else
                   {
                     ItemStack clone = ingre2.clone();
-                    ItemLore.setItemLore(clone);
+                    ItemLore.setItemLore(clone, new ItemLoreView(player));
                     if (!ingre2.isSimilar(clone))
                     {
                       recipeIsCorrect = false;
-                      ItemLore.setItemLore(ingre2);
+                      ItemLore.setItemLore(ingre2, new ItemLoreView(player));
                     }
                   }
                 }
                 if (!ItemStackUtil.hasLore(result))
                 {
                   recipeIsCorrect = false;
-                  ItemLore.setItemLore(result);
+                  ItemLore.setItemLore(result, new ItemLoreView(player));
                 }
                 else
                 {
                   ItemStack clone = result.clone();
-                  ItemLore.setItemLore(clone);
+                  ItemLore.setItemLore(clone, new ItemLoreView(player));
                   if (!result.isSimilar(clone))
                   {
                     recipeIsCorrect = false;
-                    ItemLore.setItemLore(result);
+                    ItemLore.setItemLore(result,new ItemLoreView(player) );
                   }
                 }
                 if (recipeIsCorrect)
@@ -294,54 +323,22 @@ public class InventoryOpen implements Listener
         InventoryType inventoryType = inventory.getType();
         switch (inventoryType)
         {
-          case ANVIL:
-          case SMITHING:
-            SoundPlay.playSound(player, Sound.BLOCK_ANVIL_USE, 1F, 2F);
-            break;
-          case BEACON:
-            SoundPlay.playSound(player, Sound.BLOCK_BEACON_ACTIVATE, 1F, 2F);
-            break;
-          case BREWING:
-            SoundPlay.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1F, 2F);
-            break;
-          case DISPENSER:
-          case DROPPER:
-          case HOPPER:
-            SoundPlay.playSound(player, Sound.BLOCK_DISPENSER_DISPENSE, 1F, 2F);
-            break;
-          case ENCHANTING:
-            SoundPlay.playSound(player, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1F, 2F);
-            break;
-          case FURNACE:
-            SoundPlay.playSound(player, Sound.BLOCK_FURNACE_FIRE_CRACKLE, 1F, 1F);
-            break;
-          case MERCHANT:
-            SoundPlay.playSound(player, Sound.ENTITY_VILLAGER_YES, 1F, 1.5F);
-            break;
-          case WORKBENCH:
-            SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, 1F, 2F);
-            break;
-          case BLAST_FURNACE:
-            SoundPlay.playSound(player, Sound.BLOCK_BLASTFURNACE_FIRE_CRACKLE, 1F, 1F);
-            break;
-          case CARTOGRAPHY:
-            SoundPlay.playSound(player, Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, 1F, 2F);
-            break;
-          case GRINDSTONE:
-            SoundPlay.playSound(player, Sound.BLOCK_GRINDSTONE_USE, 1F, 2F);
-            break;
-          case LOOM:
-            SoundPlay.playSound(player, Sound.UI_LOOM_SELECT_PATTERN, 1F, 2F);
-            break;
-          case SMOKER:
-            SoundPlay.playSound(player, Sound.BLOCK_SMOKER_SMOKE, 1F, 1F);
-            break;
-          case STONECUTTER:
-            SoundPlay.playSound(player, Sound.UI_STONECUTTER_TAKE_RESULT, 1F, 2F);
-            break;
-          default:
-            break;
-
+          case ANVIL, SMITHING -> SoundPlay.playSound(player, Sound.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1F, 2F);
+          case BEACON -> SoundPlay.playSound(player, Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.PLAYERS, 1F, 2F);
+          case BREWING -> SoundPlay.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, SoundCategory.PLAYERS, 1F, 2F);
+          case DISPENSER, DROPPER, HOPPER -> SoundPlay.playSound(player, Sound.BLOCK_DISPENSER_DISPENSE, SoundCategory.PLAYERS, 1F, 2F);
+          case ENCHANTING -> SoundPlay.playSound(player, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1F, 2F);
+          case FURNACE -> SoundPlay.playSound(player, Sound.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.PLAYERS, 1F, 1F);
+          case MERCHANT -> SoundPlay.playSound(player, Sound.ENTITY_VILLAGER_YES, SoundCategory.PLAYERS, 1F, 1.5F);
+          case WORKBENCH -> SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, SoundCategory.PLAYERS, 1F, 2F);
+          case BLAST_FURNACE -> SoundPlay.playSound(player, Sound.BLOCK_BLASTFURNACE_FIRE_CRACKLE, SoundCategory.PLAYERS, 1F, 1F);
+          case CARTOGRAPHY -> SoundPlay.playSound(player, Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 2F);
+          case GRINDSTONE -> SoundPlay.playSound(player, Sound.BLOCK_GRINDSTONE_USE, SoundCategory.PLAYERS, 1F, 2F);
+          case LOOM -> SoundPlay.playSound(player, Sound.UI_LOOM_SELECT_PATTERN, SoundCategory.PLAYERS, 1F, 2F);
+          case SMOKER -> SoundPlay.playSound(player, Sound.BLOCK_SMOKER_SMOKE, SoundCategory.PLAYERS, 1F, 1F);
+          case STONECUTTER -> SoundPlay.playSound(player, Sound.UI_STONECUTTER_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 2F);
+          default -> {
+          }
         }
       }
     }

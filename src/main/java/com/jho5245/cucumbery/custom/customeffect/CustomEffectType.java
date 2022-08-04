@@ -2,7 +2,9 @@ package com.jho5245.cucumbery.custom.customeffect;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.EnumHideable;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
@@ -20,6 +22,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +56,7 @@ public class CustomEffectType implements Translatable, EnumHideable
 
   /**/ MINECRAFT_SPEED = new CustomEffectType(NamespacedKey.minecraft("speed"), PotionEffectType.SPEED.translationKey(), builder().removeOnMilk().maxAmplifier(255)),
           MINECRAFT_SLOWNESS = new CustomEffectType(NamespacedKey.minecraft("slowness"), PotionEffectType.SLOW.translationKey(), builder().removeOnMilk().negative().maxAmplifier(255)),
-          MINECRAFT_HASTE = new CustomEffectType(NamespacedKey.minecraft("haste"), PotionEffectType.FAST_DIGGING.translationKey(), builder().removeOnMilk().negative().maxAmplifier(255)),
+          MINECRAFT_HASTE = new CustomEffectType(NamespacedKey.minecraft("haste"), PotionEffectType.FAST_DIGGING.translationKey(), builder().removeOnMilk().maxAmplifier(255)),
           MINECRAFT_MINING_FATIGUE = new CustomEffectType(NamespacedKey.minecraft("mining_fatigue"), PotionEffectType.SLOW_DIGGING.translationKey(), builder().removeOnMilk().negative().maxAmplifier(255)),
           MINECRAFT_STRENGTH = new CustomEffectType(NamespacedKey.minecraft("strength"), PotionEffectType.INCREASE_DAMAGE.translationKey(), builder().removeOnMilk().maxAmplifier(255)),
           MINECRAFT_INSTANT_HEALTH = new CustomEffectType(NamespacedKey.minecraft("instant_health"), PotionEffectType.HEAL.translationKey(), builder().removeOnMilk().maxAmplifier(255)),
@@ -100,33 +103,34 @@ public class CustomEffectType implements Translatable, EnumHideable
           CURSE_OF_INVENTORY = new CustomEffectType("curse_of_inventory", "인벤세이브 저주", builder().negative().keepOnDeath()),
           CURSE_OF_JUMPING = new CustomEffectType("curse_of_jumping", "점프 불가능", builder().negative().keepOnDeath()),
           CURSE_OF_MUSHROOM = new CustomEffectType("curse_of_mushroom", "버섯의 저주", builder().negative().keepOnDeath().maxAmplifier(999)),
+          CURSE_OF_VANISHING = new CustomEffectType("curse_of_vanishing", Enchantment.VANISHING_CURSE.translationKey(), builder().negative().keepOnDeath().description("아이템을 버리면 즉시 사라집니다")),
 
   /**/ DARKNESS_TERROR = new CustomEffectType("darkness_terror", "어두운거 싫어요", builder().negative()),
           DARKNESS_TERROR_ACTIVATED = new CustomEffectType("darkness_terror_activated", "어둠의 공포", builder().negative().enumHidden().timeHidden()),
-          DARKNESS_TERROR_RESISTANCE = new CustomEffectType("darkness_terror_resistance", "어둠의 공포 내성", builder().negative()),
+          DARKNESS_TERROR_RESISTANCE = new CustomEffectType("darkness_terror_resistance", "어둠의 공포 내성"),
 
   /**/ FANCY_SPOTLIGHT = new CustomEffectType("fancy_spotlight", "화려한 조명", builder().removeOnQuit()),
-          FANCY_SPOTLIGHT_ACTIVATED = new CustomEffectType("fancy_spotlight_activated", "화려한 조명 활성화", builder().removeOnQuit().enumHidden().timeHidden()),
+          FANCY_SPOTLIGHT_ACTIVATED = new CustomEffectType("fancy_spotlight_activated", "화려한 조명 활성화", builder().removeOnQuit().enumHidden().timeHidden().defaultDuration(20)),
 
-  /**/ HEROS_ECHO = new CustomEffectType("heros_echo", "영웅의 메아리", builder().removeOnQuit()),
-          HEROS_ECHO_OTHERS = new CustomEffectType("heros_echo_others", "영웅의 메아리", builder().removeOnQuit().enumHidden()),
+  /**/ HEROS_ECHO = new CustomEffectType("heros_echo", "영웅의 메아리", builder().removeOnQuit().defaultDuration(20 * 60 * 40)),
+          HEROS_ECHO_OTHERS = new CustomEffectType("heros_echo_others", "영웅의 메아리", builder().removeOnQuit().defaultDuration(20 * 60 * 40).enumHidden()),
 
   /**/ INVINCIBLE = new CustomEffectType("invincible", "무적"),
           INVINCIBLE_PLUGIN_RELOAD = new CustomEffectType("invincible_plugin_reload", "플러그인 리로드 무적", builder().defaultDuration(100).nonBuffFreezable().enumHidden()),
           INVINCIBLE_RESPAWN = new CustomEffectType("invincible_respawn", "리스폰 무적", builder().defaultDuration(100).nonBuffFreezable().enumHidden()),
 
   /**/ KINETIC_RESISTANCE = new CustomEffectType("kinetic_resistacne", "운동 에너지 저항", builder().maxAmplifier(9)),
-          KNOCKBACK_RESISTANCE = new CustomEffectType("knockback_resistance", "넉백 저항"),
-          KNOCKBACK_RESISTANCE_COMBAT = new CustomEffectType("knockback_resistance_combat", "넉백 저항(전투)"),
-          KNOCKBACK_RESISTANCE_NON_COMBAT = new CustomEffectType("knockback_resistance_non_combat", "넉백 저항(비전투)"),
+          KNOCKBACK_RESISTANCE = new CustomEffectType("knockback_resistance", "넉백 저항", HIDDEN),
+          KNOCKBACK_RESISTANCE_COMBAT = new CustomEffectType("knockback_resistance_combat", "넉백 저항(전투)", HIDDEN),
+          KNOCKBACK_RESISTANCE_NON_COMBAT = new CustomEffectType("knockback_resistance_non_combat", "넉백 저항(비전투)", HIDDEN),
           LEVITATION_RESISTANCE = new CustomEffectType("levitation_resistance", "공중 부양 저항", builder().maxAmplifier(9)),
 
   /**/ INSIDER = new CustomEffectType("insider", "인싸", builder().negative().maxAmplifier(9)),
           OUTSIDER = new CustomEffectType("outsider", "아싸", builder().negative().maxAmplifier(9)),
 
-  /**/ RESURRECTION = new CustomEffectType("resurrection", "리저렉션", builder().realDuration().defaultDuration(1800)),
-          RESURRECTION_COOLDOWN = new CustomEffectType("resurrection_cooldown", "리저렉션 저주", builder().enumHidden().defaultDuration(600).negative()),
-          RESURRECTION_INVINCIBLE = new CustomEffectType("resurrection_invincible", "리저렉션 무적", builder().enumHidden().defaultDuration(40)),
+  /**/ RESURRECTION = new CustomEffectType("resurrection", "리저렉션", builder().realDuration().defaultDuration(20 * 60 * 30)),
+          RESURRECTION_COOLDOWN = new CustomEffectType("resurrection_cooldown", "리저렉션 저주", builder().enumHidden().defaultDuration(20 * 60 * 10).negative()),
+          RESURRECTION_INVINCIBLE = new CustomEffectType("resurrection_invincible", "리저렉션 무적", builder().enumHidden().defaultDuration(20 * 2)),
 
   /**/ BLESS_OF_SANS = new CustomEffectType("bless_of_sans", "샌즈의 축복", builder().maxAmplifier(9)),
           WA_SANS = new CustomEffectType("wa_sans", "와 샌즈", builder().maxAmplifier(9)),
@@ -135,7 +139,7 @@ public class CustomEffectType implements Translatable, EnumHideable
           SMELTING_TOUCH = new CustomEffectType("smelting_touch", "제련의 손길"),
           TELEKINESIS = new CustomEffectType("telekinesis", "염력"),
 
-  /**/ TROLL_INVENTORY_PROPERTY = new CustomEffectType("troll_inventory_property", "인벤토리 트롤"),
+  /**/ TROLL_INVENTORY_PROPERTY = new CustomEffectType("troll_inventory_property", "인벤토리 트롤", HIDDEN),
           TROLL_INVENTORY_PROPERTY_MIN = new CustomEffectType("troll_inventory_property_min", "인벤토리 트롤", HIDDEN),
 
   /**/ SPREAD = new CustomEffectType("spread", "전이"),
@@ -180,10 +184,14 @@ public class CustomEffectType implements Translatable, EnumHideable
           STAR_CATCH_PREPARE = new CustomEffectType("star_catch_prepare", "스타 캐치 준비", builder().hidden().removeOnQuit().defaultDuration(40)),
           STAR_CATCH_FINISHED = new CustomEffectType("star_catch_finished", "스타 캐치 끝", builder().hidden().removeOnQuit().defaultDuration(20)),
 
+  /**/ KEEP_INVENTORY = new CustomEffectType("keep_inventory", "인벤토리 보존"),
+          ADVANCED_KEEP_INVENTORY = new CustomEffectType("advanced_keep_inventory", "인벤토리 보존 Ver.2", builder().keepOnDeath()),
+
   /**/ BUFF_FREEZE = new CustomEffectType("buff_freeze", "버프 프리저"),
+          BUFF_FREEZE_D = new CustomEffectType("buff_freeze_d", "버프 프리저", builder().keepOnDeath()),
           CUCUMBERY_UPDATER = new CustomEffectType("cucumbery_updater", "즉시 큐컴버리 업데이트", builder().instant().maxAmplifier(1)),
           CHEESE_EXPERIMENT = new CustomEffectType("cheese_experiment", "치즈 실험", builder().negative().removeOnMilk()),
-          CONFUSION = new CustomEffectType("confusion", "혼란", builder().negative().keepOnDeath()),
+          CONFUSION = new CustomEffectType("confusion", "혼란", builder().negative().keepOnDeath().hidden()),
           DEBUG_WATCHER = new CustomEffectType("debug_watcher", "디버그 염탐", builder().keepOnDeath()),
           DO_NOT_PICKUP_BUT_THROW_IT = new CustomEffectType("do_not_pickup_but_throw_it", "줍지 마, 던져!", builder().negative().maxAmplifier(9)),
           DODGE = new CustomEffectType("dodge", "회피", builder().maxAmplifier(99)),
@@ -192,20 +200,19 @@ public class CustomEffectType implements Translatable, EnumHideable
           FROST_WALKER = new CustomEffectType("frost_walker", Enchantment.FROST_WALKER.translationKey()),
           HEALTH_INCREASE = new CustomEffectType("health_increase", "HP 증가", builder().maxAmplifier(99)),
           IDIOT_SHOOTER = new CustomEffectType("idiot_shooter", "똥손", builder().negative().keepOnDeath().maxAmplifier(19)),
-          KEEP_INVENTORY = new CustomEffectType("keep_inventory", "인벤토리 보존"),
-          MUTE = new CustomEffectType("mute", "채팅 금지", NEGATIVE),
-          NEWBIE_SHIELD = new CustomEffectType("newbie_shield", "뉴비 보호막", builder().enumHidden().defaultDuration(2).timeHidden()),
+          MUTE = new CustomEffectType("mute", "채팅 금지", builder().negative().keepOnDeath()),
+          NEWBIE_SHIELD = new CustomEffectType("newbie_shield", "뉴비 보호막", builder().nonRemovable().enumHidden().defaultDuration(2).timeHidden()),
           NO_ENTITY_AGGRO = new CustomEffectType("no_entity_aggro", "개체 관심 없음"),
           PARROTS_CHEER = new CustomEffectType("parrots_cheer", "앵무새의 가호", builder().timeHiddenWhenFull().defaultDuration(100)),
-          SERVER_RADIO_LISTENING = new CustomEffectType("server_radio_listening", "서버 라디오 분위기", builder().enumHidden().nonRemovable().maxAmplifier(2).timeHidden().defaultDuration(2).removeOnQuit()),
+          SERVER_RADIO_LISTENING = new CustomEffectType("server_radio_listening", "서버 라디오 분위기", builder().enumHidden().nonRemovable().maxAmplifier(4).timeHidden().defaultDuration(-1).removeOnQuit()),
           STOP = new CustomEffectType("stop", "멈춰!", NEGATIVE),
           TRUE_INVISIBILITY = new CustomEffectType("true_invisibility", "찐 투명화"),
           BLESS_OF_VILLAGER = new CustomEffectType("bless_of_villager", "주민의 축복"),
-          TOWN_SHIELD = new CustomEffectType("town_shield", "마을 보호막", builder().timeHidden()),
+          TOWN_SHIELD = new CustomEffectType("town_shield", "마을 보호막", builder().timeHidden().nonRemovable()),
           EXPERIENCE_BOOST = new CustomEffectType("experience_boost", "EXP 부스트", builder().maxAmplifier(9999)),
           DISAPPEAR = new CustomEffectType("disappear", "", HIDDEN),
           NO_BUFF_REMOVE = new CustomEffectType("no_buff_remove", "효과 제거 불능", NEGATIVE),
-          NO_REGENERATION = new CustomEffectType("no_regeneration", "재생 불능", NEGATIVE),
+          NO_REGENERATION = new CustomEffectType("no_regeneration", "재생 불능", builder().negative().removeOnMilk()),
           DAMAGE_INDICATOR = new CustomEffectType("damage_indicator", "", builder().hidden().defaultDuration(20)),
           FREEZING = new CustomEffectType("freezing", "얼음!", builder().negative()),
           NO_CUCUMBERY_ITEM_USAGE_ATTACK = new CustomEffectType("no_cucumbery_item_usage_attack", "", HIDDEN),
@@ -213,6 +220,26 @@ public class CustomEffectType implements Translatable, EnumHideable
           NOTIFY_NO_TRADE_ITEM_DROP = new CustomEffectType("notify_no_trade_item_drop", "아이템", HIDDEN),
           CUSTOM_DEATH_MESSAGE = new CustomEffectType("custom_death_message", "커스텀 데스 메시지", HIDDEN),
           COOLDOWN_ERROR_WARN_SOUND = new CustomEffectType("cooldown_error_warn_sound", "", builder().hidden().defaultDuration(4)),
+          DYNAMIC_LIGHT = new CustomEffectType("dynamic_light", "동적 조명", builder().keepOnDeath().description(ComponentUtil.translate("손에 빛이 나는 아이템을 들고 있으면 %s 효과가 적용됩니다", PotionEffectType.NIGHT_VISION))),
+          REMOVE_NO_DAMAGE_TICKS = new CustomEffectType("remove_no_damage_ticks", "피격 시 무적 시간 미적용"),
+          MASTER_OF_FISHING = new CustomEffectType("master_of_fishing", "낚시의 대가", builder().description("캐스팅 즉시 입질됩니다!")),
+          MASTER_OF_FISHING_D = new CustomEffectType("master_of_fishing_d", "낚시의 대가", builder().keepOnDeath().description("캐스팅 즉시 입질됩니다!")),
+          ASSASSINATION = new CustomEffectType("assassination", "암살", builder().description(ComponentUtil.translate("다른 플레이어나 동물을 잡아서 뜨는 데스 메시지에").append(Component.text("\n")).append(ComponentUtil.translate("자신의 이름이 나타나지 않고 감춰집니다")))),
+          CUSTOM_MINING_SPEED_MODE = new CustomEffectType("custom_mining_speed_mode", "채광 모드", builder().hidden().defaultDuration(-1).keepOnDeath()),
+          CUSTOM_MINING_SPEED_MODE_PROGRESS = new CustomEffectType("custom_mining_speed_mode_progress", "채광 모드 진행", builder().hidden().defaultDuration(-1).removeOnQuit()),
+          CUSTOM_MINING_SPEED_MODE_HASTE = new CustomEffectType("custom_mining_speed_mode_haste", "채광 모드 보정", builder().hidden().defaultDuration(2).removeOnQuit()),
+          CUSTOM_MINING_SPEED_MODE_HASTE_2 = new CustomEffectType("custom_mining_speed_mode_haste_2", "채광 모드 보정 2", builder().hidden().defaultDuration(2).removeOnQuit()),
+          MINING_FATIGUE = new CustomEffectType("mining_fatigue", "느린 채광", builder().negative().keepOnDeath().maxAmplifier(99).description("채광 속도가 감소합니다")),
+          MINDAS_TOUCH = new CustomEffectType("mindas_touch", "마인더스의 손길", builder().maxAmplifier(99).description("곡괭이의 채광 등급이 증가합니다")),
+          HASTE = new CustomEffectType("haste", "개급함", builder().maxAmplifier(999).description("채광 속도가 증가합니다")),
+          MINING_BOOSTER = new CustomEffectType("mining_booster", "채광 부스터", builder().removeOnQuit().nonRemovable().nonBuffFreezable().description("잠시 동안 채광 속도가 3배가 됩니다").defaultDuration(200)),
+          MINING_BOOSTER_COOLDOWN = new CustomEffectType("mining_booster_cooldown", "채광 부스터 쿨타임", builder().negative().keepOnDeath().enumHidden().description("채광 부스터를 사용할 수 없는 상태입니다").defaultDuration(20 * 120)),
+          ALARM = new CustomEffectType("alarm", "알람", builder().enumHidden().keepOnDeath().removeOnQuit().maxAmplifier(2).description("알람이다! 소리 꺼라")),
+          COOLDOWN_THE_MUSIC = new CustomEffectType("cooldown_the_music", MessageUtil.stripColor(ComponentUtil.serialize(CustomMaterial.THE_MUSIC.getDisplayName())), builder().hidden().defaultDuration(20 * 10).keepOnDeath()),
+          MINING_FORTUNE = new CustomEffectType("mining_fortune", "채광 행운", builder().maxAmplifier(999).description("채광 행운이 증가합니다")),
+          GAESANS = new CustomEffectType("gaesans", "개샌즈", builder().description(ComponentUtil.translate("웅크리면 %s 효과가 적용됩니다", PotionEffectType.INVISIBILITY))),
+          MOLE_CLAW = new CustomEffectType("mole_claw", "몰 클로", builder().description("채광 속도가 1 증가합니다\n채광 속도 % 증가의 영향을 받지 않습니다")),
+          PICKLED = new CustomEffectType("pickled", "절여짐", builder().description("당신은 절여졌습니다!")),
 
   /**/ NOTHING = new CustomEffectType("nothing", "아무것도 아님"),
 
@@ -226,6 +253,8 @@ public class CustomEffectType implements Translatable, EnumHideable
             BANE_OF_ARTHROPODS, SHARPNESS, SMITE,
             COOLDOWN_CHAT, COOLDOWN_ITEM_MEGAPHONE,
 
+            COOLDOWN_THE_MUSIC, MINING_FORTUNE, MOLE_CLAW, PICKLED,
+
             MINECRAFT_SPEED, MINECRAFT_SLOWNESS, MINECRAFT_HASTE, MINECRAFT_MINING_FATIGUE, MINECRAFT_STRENGTH, MINECRAFT_INSTANT_HEALTH, MINECRAFT_INSTANT_DAMAGE, MINECRAFT_JUMP_BOOST, MINECRAFT_NAUSEA, MINECRAFT_REGENERATION,
             MINECRAFT_RESISTANCE, MINECRAFT_FIRE_RESISTANCE, MINECRAFT_WATER_BREATHING, MINECRAFT_INVISIBILITY, MINECRAFT_BLINDNESS, MINECRAFT_NIGHT_VISION, MINECRAFT_HUNGER, MINECRAFT_WEAKNESS, MINECRAFT_POISON, MINECRAFT_WITHER,
             MINECRAFT_HEALTH_BOOST, MINECRAFT_ABSORPTION, MINECRAFT_SATURATION, MINECRAFT_GLOWING, MINECRAFT_LEVITATION, MINECRAFT_LUCK, MINECRAFT_UNLUCK, MINECRAFT_SLOW_FALLING, MINECRAFT_CONDUIT_POWER, MINECRAFT_DOLPHINS_GRACE,
@@ -234,7 +263,7 @@ public class CustomEffectType implements Translatable, EnumHideable
             MINECRAFT_POISON_M,
 
             CONTINUAL_SPECTATING, CONTINUAL_SPECTATING_EXEMPT,
-            CURSE_OF_BEANS, CURSE_OF_CONSUMPTION, CURSE_OF_CREATIVITY, CURSE_OF_CREATIVITY_BREAK, CURSE_OF_CREATIVITY_PLACE, CURSE_OF_DROP, CURSE_OF_PICKUP,
+            CURSE_OF_BEANS, CURSE_OF_CONSUMPTION, CURSE_OF_CREATIVITY, CURSE_OF_CREATIVITY_BREAK, CURSE_OF_CREATIVITY_PLACE, CURSE_OF_DROP, CURSE_OF_PICKUP, CURSE_OF_VANISHING,
             CURSE_OF_INVENTORY, CURSE_OF_JUMPING, CURSE_OF_MUSHROOM,
             DARKNESS_TERROR, DARKNESS_TERROR_ACTIVATED, DARKNESS_TERROR_RESISTANCE,
             FANCY_SPOTLIGHT, FANCY_SPOTLIGHT_ACTIVATED,
@@ -269,15 +298,22 @@ public class CustomEffectType implements Translatable, EnumHideable
 
             STARFORCE_30_SALE, STARFORCE_5_10_15, REINFORCE_OP_MODE, STARFORCE_ANTI_DESTRUCTION, STAR_CATCH_PREPARE, STAR_CATCH_PROCESS, STAR_CATCH_SUCCESS, STAR_CATCH_FINISHED,
 
-            BUFF_FREEZE, CUCUMBERY_UPDATER, CHEESE_EXPERIMENT,
+            KEEP_INVENTORY, ADVANCED_KEEP_INVENTORY,
+
+            BUFF_FREEZE, BUFF_FREEZE_D, CUCUMBERY_UPDATER, CHEESE_EXPERIMENT,
             CONFUSION, DEBUG_WATCHER, DO_NOT_PICKUP_BUT_THROW_IT,
             DODGE, ELYTRA_BOOSTER, FEATHER_FALLING, FROST_WALKER,
-            HEALTH_INCREASE, IDIOT_SHOOTER, KEEP_INVENTORY, MUTE,
+            HEALTH_INCREASE, IDIOT_SHOOTER, MUTE,
             NEWBIE_SHIELD, NO_ENTITY_AGGRO, PARROTS_CHEER,
             SERVER_RADIO_LISTENING, STOP, TRUE_INVISIBILITY, BLESS_OF_VILLAGER,
             TOWN_SHIELD, EXPERIENCE_BOOST, DISAPPEAR, NO_BUFF_REMOVE, NO_REGENERATION,
-            DAMAGE_INDICATOR, FREEZING, NO_CUCUMBERY_ITEM_USAGE_ATTACK, GLIDING, NOTIFY_NO_TRADE_ITEM_DROP,
+            DAMAGE_INDICATOR, FREEZING, NO_CUCUMBERY_ITEM_USAGE_ATTACK, GLIDING, NOTIFY_NO_TRADE_ITEM_DROP, DYNAMIC_LIGHT,
             CUSTOM_DEATH_MESSAGE, COOLDOWN_ERROR_WARN_SOUND,
+            REMOVE_NO_DAMAGE_TICKS, MASTER_OF_FISHING, MASTER_OF_FISHING_D, ASSASSINATION,
+            CUSTOM_MINING_SPEED_MODE, CUSTOM_MINING_SPEED_MODE_PROGRESS, CUSTOM_MINING_SPEED_MODE_HASTE, CUSTOM_MINING_SPEED_MODE_HASTE_2,
+            MINING_FATIGUE,
+            MINDAS_TOUCH, HASTE, MINING_BOOSTER, MINING_BOOSTER_COOLDOWN, ALARM,
+            GAESANS,
             NOTHING,
             TEST);
   }
@@ -447,6 +483,12 @@ public class CustomEffectType implements Translatable, EnumHideable
   @NotNull
   public Component getDescription()
   {
+    return getDescription(null);
+  }
+
+  @NotNull
+  public Component getDescription(@Nullable Player viewer)
+  {
     if (!this.description.equals(Component.empty()))
     {
       return description;
@@ -478,7 +520,7 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "STOP" -> ComponentUtil.translate("모든 행동을 할 수 없는 상태입니다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("좌우이동, 웅크리기를 할 때마다 지속 시간이 6초씩 감소합니다"));
-              case "KEEP_INVENTORY" -> ComponentUtil.translate("죽어도 아이템을 떨어뜨리지 않습니다");
+              case "KEEP_INVENTORY", "ADVANCED_KEEP_INVENTORY" -> ComponentUtil.translate("죽어도 아이템을 떨어뜨리지 않습니다");
               case "DO_NOT_PICKUP_BUT_THROW_IT" -> ComponentUtil.translate("아이템을 줍는 대신 던집니다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("농도 레벨이 높을 수록 더 멀리 던집니다"));
@@ -496,7 +538,7 @@ public class CustomEffectType implements Translatable, EnumHideable
                       .append(ComponentUtil.translate("동일하게 아이템을 얻을 수 있습니다"));
               case "TELEKINESIS" -> ComponentUtil.translate("블록을 캐거나 적을 처치했을 때 드롭하는")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("아이템과 경험치가 즉시 인벤토리에 들어옵니다"));
+                      .append(ComponentUtil.translate("아이템이 즉시 인벤토리에 들어옵니다"));
               case "SMELTING_TOUCH" -> ComponentUtil.translate("블록을 캐거나 적을 처치했을 때 드롭하는")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("아이템을 제련된 형태로 바꿔줍니다"));
@@ -536,7 +578,7 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "COOLDOWN_CHAT" -> ComponentUtil.translate("쿨타임 동안 채팅을 할 수 없습니다");
               case "COOLDOWN_ITEM_MEGAPHONE" -> ComponentUtil.translate("쿨타임 동안 아이템 확성기를 사용할 수 없습니다");
               case "SERVER_RADIO_LISTENING" -> ComponentUtil.translate("서버 노래를 들어서 기분이 들떠 대미지가 증가합니다");
-              case "DARKNESS_TERROR" -> ComponentUtil.translate("어두운거.. 무섭다..")
+              case "DARKNESS_TERROR" -> ComponentUtil.translate("어두운거... 무섭다...")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("%s 효과나 손에 빛을 내는 아이템 없이 어두운 곳에 가면 %s 효과가 걸립니다",
                               Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.NIGHT_VISION), NamedTextColor.GREEN), DARKNESS_TERROR_ACTIVATED));
@@ -646,8 +688,8 @@ public class CustomEffectType implements Translatable, EnumHideable
                       .append(ComponentUtil.translate("&e또한, 스택이 중첩될 수록 최대 지속 시간이 감소합니다"));
               case "MINECRAFT_SPEED" -> VanillaEffectDescription.getDescription(PotionEffectType.SPEED);
               case "MINECRAFT_SLOWNESS" -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW);
-              case "MINECRAFT_HASTE" -> VanillaEffectDescription.getDescription(PotionEffectType.FAST_DIGGING);
-              case "MINECRAFT_MINING_FATIGUE" -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW_DIGGING);
+              case "MINECRAFT_HASTE" -> VanillaEffectDescription.getDescription(PotionEffectType.FAST_DIGGING, viewer);
+              case "MINECRAFT_MINING_FATIGUE" -> VanillaEffectDescription.getDescription(PotionEffectType.SLOW_DIGGING, viewer);
               case "MINECRAFT_STRENGTH" -> VanillaEffectDescription.getDescription(PotionEffectType.INCREASE_DAMAGE);
               case "MINECRAFT_WEAKNESS" -> VanillaEffectDescription.getDescription(PotionEffectType.WEAKNESS);
               case "MINECRAFT_INSTANT_DAMAGE" -> VanillaEffectDescription.getDescription(PotionEffectType.HARM);
@@ -687,6 +729,18 @@ public class CustomEffectType implements Translatable, EnumHideable
   @Nullable
   public ItemStack getIcon()
   {
+    if (this.namespacedKey.namespace().equals("minecraft"))
+    {
+      ItemStack itemStack = new ItemStack(Material.POTION);
+      PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
+      PotionEffectType effectType = PotionEffectType.getByKey(namespacedKey);
+      if (effectType != null)
+      {
+        potionMeta.setColor(effectType.getColor());
+      }
+      itemStack.setItemMeta(potionMeta);
+      return itemStack;
+    }
     ItemStack itemStack = new ItemStack(Material.STONE);
     ItemMeta itemMeta = itemStack.getItemMeta();
     switch (this.getIdString().toUpperCase())
@@ -717,6 +771,7 @@ public class CustomEffectType implements Translatable, EnumHideable
       case "DEBUG_WATCHER" -> itemStack = new ItemStack(Material.COMMAND_BLOCK);
       case "DO_NOT_PICKUP_BUT_THROW_IT" -> itemStack = new ItemStack(Material.POPPED_CHORUS_FRUIT);
       case "DODGE" -> itemStack = new ItemStack(Material.PHANTOM_MEMBRANE);
+      case "DYNAMIC_LIGHT" -> itemStack = new ItemStack(Material.TORCH);
       case "ELYTRA_BOOSTER" -> itemStack = new ItemStack(Material.FIREWORK_ROCKET);
       case "EXPERIENCE_BOOST" -> itemStack = new ItemStack(Material.EXPERIENCE_BOTTLE);
       case "FANCY_SPOTLIGHT", "FANCY_SPOTLIGHT_ACTIVATED" -> itemStack = new ItemStack(Material.SEA_LANTERN);
@@ -726,11 +781,12 @@ public class CustomEffectType implements Translatable, EnumHideable
         itemStack = new ItemStack(Material.DIAMOND_BOOTS);
         itemMeta.addEnchant(CustomEnchant.GLOW, 1, true);
       }
+      case "GAESANS" -> itemStack = new ItemStack(Material.POTION);
       case "HEALTH_INCREASE" -> itemStack = new ItemStack(Material.RED_DYE);
       case "HEROS_ECHO", "HEROS_ECHO_OTHERS" -> itemStack = new ItemStack(Material.BEACON);
       case "INSIDER" -> itemStack = new ItemStack(Material.CAKE);
-      case "INVINCIBLE", "INVINCIBLE_PLUGIN_RELOAD", "INVINCIBLE_RESPAWN", "RESURRECTION", "RESURRECTION_INVINCIBLE" -> itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
-      case "KEEP_INVENTORY" -> itemStack = new ItemStack(Material.BARREL);
+      case "INVINCIBLE", "INVINCIBLE_PLUGIN_RELOAD", "INVINCIBLE_RESPAWN", "RESURRECTION", "RESURRECTION_COOLDOWN", "RESURRECTION_INVINCIBLE" -> itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
+      case "KEEP_INVENTORY", "ADVANCED_KEEP_INVENTORY" -> itemStack = new ItemStack(Material.BARREL);
       case "KINETIC_RESISTANCE" -> itemStack = new ItemStack(Material.SPONGE);
       case "KNOCKBACK_RESISTANCE", "KNOCKBACK_RESISTANCE_COMBAT", "KNOCKBACK_RESISTANCE_NON_COMBAT", "LEVITATION_RESISTANCE" -> itemStack = new ItemStack(Material.SHIELD);
       case "MUNDANE" -> itemStack = new ItemStack(Material.STONE);
@@ -741,10 +797,6 @@ public class CustomEffectType implements Translatable, EnumHideable
       case "NO_REGENERATION" -> itemStack = new ItemStack(Material.REDSTONE);
       case "OUTSIDER" -> itemStack = new ItemStack(Material.DEAD_TUBE_CORAL_FAN);
       case "PARROTS_CHEER" -> itemStack = new ItemStack(Material.PARROT_SPAWN_EGG);
-      case "RESURRECTION_COOLDOWN" -> {
-        itemStack = new ItemStack(Material.TOTEM_OF_UNDYING);
-        itemMeta.addEnchant(CustomEnchant.GLOW, 1, true);
-      }
       case "SERVER_RADIO_LISTENING" -> itemStack = new ItemStack(Material.JUKEBOX);
       case "SILK_TOUCH" -> itemStack = new ItemStack(Material.SHEARS);
       case "SMELTING_TOUCH" -> itemStack = new ItemStack(Material.LAVA_BUCKET);
@@ -774,19 +826,18 @@ public class CustomEffectType implements Translatable, EnumHideable
   /**
    * @return 아이콘에 부여할 CustomModelData magic value입니다
    */
-  @SuppressWarnings("deprecation")
-  int getId()
+  public int getId()
   {
     if (this.namespacedKey.getNamespace().equals("minecraft"))
     {
       PotionEffectType effectType = PotionEffectType.getByKey(namespacedKey);
       if (effectType != null)
       {
-        return 10000 + effectType.getId();
+        return 15200 + effectType.getId();
       }
     }
-    // 가장 높은 버프 숫자 : 89 = PVP_MODE_COOLDOWN
-    return switch (this.id)
+    // 가장 높은 버프 숫자 : 90 = GAESANS
+    return 5200 + switch (this.id)
             {
               case "awkward" -> 1;
               case "bane_of_arthropods" -> 2;
@@ -796,7 +847,7 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "bread_kimochi" -> 78;
               case "buff_freeze" -> 3;
               case "cheese_experiment" -> 4;
-              case "combat_booster" -> 86;  ///////////////////////////////// <--[here]
+              case "combat_booster" -> 86;
               case "combat_mode_melee" -> 72;
               case "combat_mode_melee_cooldown" -> 73;
               case "combat_mode_ranged" -> 74;
@@ -830,6 +881,7 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "feather_falling" -> 28;
               case "freezing" -> 85;
               case "frost_walker" -> 29;
+              case "gaesans" -> 90;  ///////////////////////////////// <--[here]
               case "health_increase" -> 30;
               case "heros_echo" -> 31;
               case "heros_echo_others" -> 32;
@@ -900,6 +952,8 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "heros_echo_others" -> Collections.singletonList(HEROS_ECHO);
               case "combat_mode_melee" -> Collections.singletonList(COMBAT_MODE_RANGED);
               case "combat_mode_ranged" -> Collections.singletonList(COMBAT_MODE_MELEE);
+              case "buff_freeze" -> Collections.singletonList(BUFF_FREEZE_D);
+              case "buff_freeze_d" -> Collections.singletonList(BUFF_FREEZE);
               default -> Collections.emptyList();
             };
   }

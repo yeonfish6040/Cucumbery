@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.listeners.player.bucket;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
@@ -31,9 +33,15 @@ public class PlayerBucketFill implements Listener
       return;
     }
     Player player = event.getPlayer();
+    // 커스텀 채광 모드에서는 불가능하게 막음
+    if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectType.CUSTOM_MINING_SPEED_MODE))
+    {
+      event.setCancelled(true);
+      return;
+    }
     UUID uuid = player.getUniqueId();
     ItemStack item = player.getInventory().getItem(event.getHand());
-    int amount = item != null ? item.getAmount() : 0;
+    int amount = item.getAmount();
     if (ItemStackUtil.itemExists(item))
     {
       if (NBTAPI.isRestricted(player, item, RestrictionType.NO_BUCKET))

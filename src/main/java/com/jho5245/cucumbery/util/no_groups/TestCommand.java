@@ -2,7 +2,10 @@ package com.jho5245.cucumbery.util.no_groups;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -10,6 +13,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -18,7 +24,7 @@ import java.util.List;
 @SuppressWarnings("all")
 public class TestCommand implements CommandExecutor, AsyncTabCompleter
 {
-  private static final NamespacedKey test = NamespacedKey.fromString("test");
+  private static final NamespacedKey test = new NamespacedKey("cucumbery", "test_recipe");
 
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -31,8 +37,47 @@ public class TestCommand implements CommandExecutor, AsyncTabCompleter
     {
       if (sender instanceof Player player)
       {
-
-
+        player.sendMessage(ComponentUtil.serialize(Component.empty()));
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta instanceof SkullMeta skullMeta)
+        {
+          itemStack.setItemMeta(ItemStackUtil.setTexture(skullMeta, args[0]));
+          player.getInventory().setItemInMainHand(itemStack);
+        }
+//        try
+//        {
+//          Location location = CommandArgumentUtil.location(sender, args[0], true, true);
+//          if (location != null)
+//          {
+//            MessageUtil.info(player, MiningManager.getMiningInfo(player, location));
+//          }
+//        }
+//        catch (Exception ignored) {}
+//        switch (args[0])
+//        {
+//          case "add" ->
+//                  {
+//                    ItemStack result = new ItemStack(Material.TNT);
+//                    ShapedRecipe shapedRecipe = new ShapedRecipe(test, result);
+//                    shapedRecipe = shapedRecipe.shape("aaa", "aba", "aaa").setIngredient('a', new ItemStack(Material.DIAMOND, 1, (short) 1));
+//                    MessageUtil.sendMessage(player, Bukkit.addRecipe(shapedRecipe) ? "레시피 등록 완료" : "등록 실패");
+//                  }
+//                  case "remove" ->
+//                          {
+//                            MessageUtil.sendMessage(player, Bukkit.removeRecipe(test) ? "레시피 등록 해제 완료" : "등록 해제 실패");
+//                          }
+//        }
+//        List<Entity> entities = player.getNearbyEntities(10, 10, 10);
+//        for (Entity e : entities)
+//        {
+//          if (e instanceof Frog frog)
+//          {
+//            Entity target = SelectorUtil.getEntity(sender, args[0]);
+//            frog.setTongueTarget(target);
+//            MessageUtil.broadcastPlayer("개구리 : %s, 대상 : %s", frog, target);
+//          }
+//        }
         // title part test
 /*        {
           String input = MessageUtil.listToString(args);

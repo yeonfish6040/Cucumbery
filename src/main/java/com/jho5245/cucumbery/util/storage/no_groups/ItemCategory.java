@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.storage.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemCategory
@@ -236,7 +237,9 @@ public class ItemCategory
                       PUFFERFISH_BUCKET,
                       TROPICAL_FISH_BUCKET,
                       AXOLOTL_BUCKET,
-                      SPYGLASS
+                      SPYGLASS,
+                      SCULK_SENSOR,
+                      SCULK_CATALYST
                       -> Rarity.RARE;
               case PURPUR_SLAB,
                       PURPUR_BLOCK,
@@ -438,7 +441,12 @@ public class ItemCategory
                       TOTEM_OF_UNDYING,
                       BARRIER,
                       SPAWNER,
-                      BUDDING_AMETHYST
+                      BUDDING_AMETHYST,
+                      REINFORCED_DEEPSLATE,
+                      OCHRE_FROGLIGHT,
+                      PEARLESCENT_FROGLIGHT,
+                      VERDANT_FROGLIGHT,
+                      RECOVERY_COMPASS
                       -> Rarity.UNIQUE;
               case DRAGON_HEAD,
                       ELYTRA,
@@ -453,15 +461,27 @@ public class ItemCategory
                       STRUCTURE_VOID,
                       JIGSAW,
                       LIGHT-> Rarity.EXCELLENT;
+              case SCULK_SHRIEKER
+                      -> Rarity.JUNK;
               default -> Rarity.NORMAL;
             };
   }
 
+  /**
+   * Represents rarity of an {@link ItemStack}.
+   * <p>Can vary depending on item's meta (Enchants, Durability, etc.)
+   */
   public enum Rarity
   {
+    /**
+     * Lowest rarity, i.g. normal items with cursed enchant/low durability
+     */
     JUNK(-1
             , Cucumbery.config.getLong("item-rarity-value.junk.value")
             , Cucumbery.config.getString("item-rarity-value.junk.name")),
+    /**
+     * The default rarity to most items.
+     */
     NORMAL(0
             , Cucumbery.config.getLong("item-rarity-value.normal.value")
             , Cucumbery.config.getString("item-rarity-value.normal.name")),
@@ -502,11 +522,17 @@ public class ItemCategory
       this.display = display;
     }
 
+    /**
+     * @return Tier of Rarity
+     */
     public int getRarityNumber()
     {
       return rarityNumber;
     }
 
+    /**
+     * @return Value(Score) of item's rarity
+     */
     public long getRarityValue()
     {
       return rarityValue;
@@ -555,6 +581,22 @@ public class ItemCategory
       {
         return Rarity.ARTIFACT;
       }
+    }
+
+    public String colorString()
+    {
+      return switch (this)
+              {
+                case JUNK -> "rgb128,111,92;";
+                case NORMAL -> "rgb230,230,230;";
+                case RARE -> "rgb123,224,27;";
+                case EPIC -> "rgb81,144,245;";
+                case ELITE -> "rgb74,224,214;";
+                case UNIQUE -> "rgb255,209,30;";
+                case EXCELLENT -> "rgb157,81,245;";
+                case LEGENDARY -> "rg225,255;";
+                case ARTIFACT -> "rgb244,73,120;";
+              };
     }
   }
 }

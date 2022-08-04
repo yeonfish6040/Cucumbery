@@ -4,7 +4,7 @@ api-version: 1.18
 main: com.jho5245.cucumbery.Cucumbery
 author: jho5245
 description: 굳검버리 플러그인
-softdepend: [CommandAPI, Vault, NoteBlockAPI, QuickShop, PlaceHolderAPI, ItemEdit, mcMMO, MythicMobs, ProtocolLib, WorldEdit]
+softdepend: [Vault, NoteBlockAPI, QuickShop, PlaceHolderAPI, ItemEdit, mcMMO, MythicMobs, ProtocolLib, WorldEdit]
 website: https://cucumbery.com/
 
 commands:
@@ -363,6 +363,18 @@ commands:
     description: 개체의 무적 시간을 변경합니다.
     usage: /<command> <개체> <무적 시간(틱)>
     aliases: [sndt, csndt, csetnodamageticks]
+  setaggro:
+    description: 개체의 개체 표적을 지정합니다
+    usage: /<command> <표적을 지정할 개체> <표적으로 지정할 개체> [명령어 출력 숨김 여부]
+    aliases: [csetaggro]
+  stash:
+    description: 인벤토리가 가득 차서 소실된 아이템이 보관된 창고를 엽니다
+    usage: /<command>
+    aliases: [cstash]
+  blockplacedata:
+    description: 설치된 블록의 커스텀 nbt를 관리합니다
+    usage: /<command> <위치> <info|modify|remove> ...
+    aliases: [bpd, cbpd, cblockplacedata]
 
 permissions:
   cucumbery.error.hide:

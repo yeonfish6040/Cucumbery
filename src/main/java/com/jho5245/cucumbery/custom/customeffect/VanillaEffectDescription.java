@@ -5,15 +5,24 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class VanillaEffectDescription
 {
   @NotNull
   public static Component getDescription(@NotNull PotionEffectType type)
   {
+    return getDescription(type, null);
+  }
+
+  @NotNull
+  public static Component getDescription(@NotNull PotionEffectType type, @Nullable Player viewer)
+  {
+    boolean hasCustomMining = viewer != null && CustomEffectManager.hasEffect(viewer, CustomEffectType.CUSTOM_MINING_SPEED_MODE);
     if (type.equals(PotionEffectType.SPEED))
     {
       return ComponentUtil.translate("이동 속도가 증가합니다. %s와(과) 곱적용됩니다", "&c" + TranslatableKeyParser.getKey(PotionEffectType.SLOW));
@@ -24,11 +33,15 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.FAST_DIGGING))
     {
-      return ComponentUtil.translate("채광 속도와 공격 속도가 증가합니다. %s와(과) 곱적용됩니다", "&c" + TranslatableKeyParser.getKey(PotionEffectType.SLOW_DIGGING));
+      return ComponentUtil.translate(hasCustomMining ? "채광 속도가 증가합니다" : "채광 속도와 공격 속도가 증가합니다. %s와(과) 곱적용됩니다", "translate:&c" + TranslatableKeyParser.getKey(PotionEffectType.SLOW_DIGGING));
     }
     if (type.equals(PotionEffectType.SLOW_DIGGING))
     {
-      return ComponentUtil.translate("채광 속도와 공격 속도가 감소합니다. %s와(과) 곱적용됩니다", "&a" + TranslatableKeyParser.getKey(PotionEffectType.FAST_DIGGING));
+      if (hasCustomMining)
+      {
+        return Component.empty();
+      }
+      return ComponentUtil.translate("채광 속도와 공격 속도가 감소합니다. %s와(과) 곱적용됩니다", "translate:&a" + TranslatableKeyParser.getKey(PotionEffectType.FAST_DIGGING));
     }
     if (type.equals(PotionEffectType.INCREASE_DAMAGE))
     {
@@ -167,6 +180,13 @@ public class VanillaEffectDescription
   @NotNull
   public static Component getDescription(@NotNull PotionEffect potionEffect)
   {
+    return getDescription(potionEffect, null);
+  }
+
+  @NotNull
+  public static Component getDescription(@NotNull PotionEffect potionEffect, @Nullable Player viewer)
+  {
+    boolean hasCustomMining = viewer != null && CustomEffectManager.hasEffect(viewer, CustomEffectType.CUSTOM_MINING_SPEED_MODE);
     PotionEffectType type = potionEffect.getType();
     int amplifier = potionEffect.getAmplifier();
     if (type.equals(PotionEffectType.SPEED))
@@ -179,10 +199,18 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.FAST_DIGGING))
     {
-      return ComponentUtil.translate("채광 속도가 %s 증가하고 공격 속도가 %s 증가합니다. %s와(과) 곱적용됩니다", "&e" + (amplifier + 1) * 20 + "%", "&e" + (amplifier + 1) * 10 + "%", PotionEffectType.SLOW_DIGGING);
+      return ComponentUtil.translate(hasCustomMining ? "채광 속도가 %s 증가합니다" : "채광 속도가 %s 증가하고 공격 속도가 %s 증가합니다. %s와(과) 곱적용됩니다",
+              "&e" + (hasCustomMining ?
+                      (amplifier + 1) * 50 :
+                      (amplifier + 1) * 20 + "%"),
+              "&e" + (amplifier + 1) * 10 + "%", PotionEffectType.SLOW_DIGGING);
     }
     if (type.equals(PotionEffectType.SLOW_DIGGING))
     {
+      if (hasCustomMining)
+      {
+        return Component.empty();
+      }
       return ComponentUtil.translate("채광 속도가 %s 감소하고 공격 속도가 %s 감소합니다. %s와(과) 곱적용됩니다",
               "&e" + Constant.Sosu2Floor.format((1 - Math.pow(0.3, amplifier + 1)) * 100) + "%", "&e" + Math.min(100, (amplifier + 1) * 10) + "%", PotionEffectType.FAST_DIGGING);
     }

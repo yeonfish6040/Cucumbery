@@ -1,44 +1,44 @@
 package com.jho5245.cucumbery.util.gui;
 
-import com.jho5245.cucumbery.util.no_groups.CreateGUI;
-import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.commands.no_groups.CommandStash;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
+import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
-public class GUI
+@SuppressWarnings("deprecation")
+public class GUIManager
 {
-  public static void openGUI(Player player, GUIType gui)
+  public static void openGUI(@NotNull Player player, @NotNull GUIType gui)
+  {
+    openGUI(player, gui, true);
+  }
+  public static void openGUI(@NotNull Player player, @NotNull GUIType gui, boolean firstOpen)
   {
     switch (gui)
     {
-      case MAIN_MENU:
-        mainMenu(player);
-        break;
-      case SERVER_SETTINGS:
-        serverMenu(player);
-        break;
-      case SERVER_SETTINGS_ADMIN:
-        serverAdminMenu(player);
-        break;
-      case ITEM_DROP_MODE_MENU:
-        itemDropModeMenu(player);
-        break;
-      case ITEM_PICKUP_MODE_MENU:
-        itemPickupModeMenu(player);
-        break;
-      default:
-        break;
-
+      case MAIN_MENU -> mainMenu(player);
+      case SERVER_SETTINGS -> serverMenu(player);
+      case SERVER_SETTINGS_ADMIN -> serverAdminMenu(player);
+      case ITEM_DROP_MODE_MENU -> itemDropModeMenu(player);
+      case ITEM_PICKUP_MODE_MENU -> itemPickupModeMenu(player);
+      case ITEM_STASH -> CommandStash.openStash(player, firstOpen);
     }
   }
 
@@ -50,7 +50,7 @@ public class GUI
 
     player.openInventory(inv);
 
-    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    InventoryView lastInventory = getLastInventory(player.getUniqueId());
     if (lastInventory != null)
     {
       inv.setItem(0, CreateItemStack.getPreviousButton(lastInventory.title()));
@@ -167,7 +167,7 @@ public class GUI
     inv.setItem(53, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
-    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    InventoryView lastInventory = getLastInventory(player.getUniqueId());
     if (lastInventory != null)
     {
       inv.setItem(45, CreateItemStack.getPreviousButton(lastInventory.title()));
@@ -236,7 +236,7 @@ public class GUI
 
     inv.setItem(53, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
     player.openInventory(inv);
-    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    InventoryView lastInventory = getLastInventory(player.getUniqueId());
     if (lastInventory != null)
     {
       inv.setItem(45, CreateItemStack.getPreviousButton(lastInventory.title()));
@@ -263,7 +263,7 @@ public class GUI
     inv.setItem(26, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
-    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    InventoryView lastInventory = getLastInventory(player.getUniqueId());
     if (lastInventory != null)
     {
       inv.setItem(18, CreateItemStack.getPreviousButton(lastInventory.title()));
@@ -291,11 +291,44 @@ public class GUI
     inv.setItem(26, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
-    InventoryView lastInventory = CreateGUI.getLastInventory(player.getUniqueId());
+    InventoryView lastInventory = getLastInventory(player.getUniqueId());
     if (lastInventory != null)
     {
       inv.setItem(18, CreateItemStack.getPreviousButton(lastInventory.title()));
     }
+  }
+
+  @NotNull
+  public static Inventory create(int row, @NotNull Component title, @NotNull String key)
+  {
+    TranslatableComponent guiTitle = Constant.GUI_PREFIX.args(Arrays.asList(title, Component.text(key), Constant.GUI_PREFIX.args().get(2)));
+    return Bukkit.createInventory(null, row * 9, guiTitle);
+  }
+
+  public static boolean isGUITitle(@NotNull Component title)
+  {
+    return title instanceof TranslatableComponent translatableComponent && translatableComponent.key().equals("%1$s") && translatableComponent.args().size() == 3 && translatableComponent.args().get(2).equals(Component.text(Constant.CANCEL_STRING));
+  }
+
+  @NotNull
+  public static String getGUIKey(@NotNull Component title)
+  {
+    return ((TextComponent) ((TranslatableComponent) title).args().get(1)).content();
+  }
+
+  @Nullable
+  public static InventoryView getLastInventory(@NotNull UUID uuid)
+  {
+    if (!Variable.lastInventory.containsKey(uuid))
+    {
+      return null;
+    }
+    List<InventoryView> views = Variable.lastInventory.get(uuid);
+    if (views.size() >= 2)
+    {
+      return views.get(views.size() - 2);
+    }
+    return null;
   }
 
   public enum GUIType
@@ -306,5 +339,6 @@ public class GUI
     SERVER_SETTINGS_ADMIN,
     ITEM_DROP_MODE_MENU,
     ITEM_PICKUP_MODE_MENU,
+    ITEM_STASH,
   }
 }

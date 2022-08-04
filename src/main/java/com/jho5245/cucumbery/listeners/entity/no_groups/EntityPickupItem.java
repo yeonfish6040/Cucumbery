@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -13,13 +14,13 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -31,7 +32,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public class EntityPickupItem implements Listener
@@ -142,6 +142,7 @@ public class EntityPickupItem implements Listener
         return;
       }
 
+/*
       Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
       {
         List<Entity> entities = entity.getNearbyEntities(3, 3, 3);
@@ -153,10 +154,11 @@ public class EntityPickupItem implements Listener
           }
         }
       }, 0L);
+*/
 
       if (Method.usingLoreFeature(player))
       {
-        ItemLore.setItemLore(itemStack, event);
+        ItemLore.setItemLore(itemStack, new ItemLoreView(player));
       }
       else
       {
@@ -172,9 +174,18 @@ public class EntityPickupItem implements Listener
         item.teleport(entity.getEyeLocation());
         double amplifier = 0.4 * Math.pow(8, 0.1 * CustomEffectManager.getEffect(entity, CustomEffectType.DO_NOT_PICKUP_BUT_THROW_IT).getAmplifier());
         Vector vector = entity.getLocation().getDirection().multiply(amplifier);
+        int level = 0;
         if (CustomEffectManager.hasEffect(entity, CustomEffectType.IDIOT_SHOOTER))
         {
-          double modifier = (CustomEffectManager.getEffect(entity, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1) / 10d;
+          level = CustomEffectManager.getEffect(entity, CustomEffectType.IDIOT_SHOOTER).getAmplifier() + 1;
+        }
+        if (item.getItemStack().hasItemMeta() && item.getItemStack().getItemMeta().hasEnchants())
+        {
+          level = Math.max(level, item.getItemStack().getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+        }
+        if (level > 0)
+        {
+          double modifier = level/ 10d;
           item.setVelocity(vector.add(new Vector(Math.random() * modifier - (modifier / 2d), Math.random() * modifier - (modifier / 2d), Math.random() * modifier - (modifier / 2d))));
         }
         else
