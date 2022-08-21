@@ -174,6 +174,13 @@ public class TypeBuilder
   }
 
   @NotNull
+  public TypeBuilder description(@NotNull String description, @NotNull Object... args)
+  {
+    this.description = ComponentUtil.translate(description, args);
+    return this;
+  }
+
+  @NotNull
   public TypeBuilder icon(@NotNull ItemStack icon)
   {
     this.icon = icon;

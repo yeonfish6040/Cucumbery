@@ -777,6 +777,11 @@ public class CustomEffectScheduler
       CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectTypeMinecraft.MINECRAFT_NIGHT_VISION);
       livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 4, customEffect.getAmplifier(), false, false, false));
     }
+    if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.NIGHT_VISION_SPECTATOR) && livingEntity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() != null)
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.NIGHT_VISION_SPECTATOR);
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 4, customEffect.getAmplifier(), false, false, false));
+    }
     if (CustomEffectManager.hasEffect(livingEntity, CustomEffectTypeMinecraft.MINECRAFT_HUNGER))
     {
       CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectTypeMinecraft.MINECRAFT_HUNGER);

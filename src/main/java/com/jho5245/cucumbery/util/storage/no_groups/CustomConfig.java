@@ -348,6 +348,7 @@ public class CustomConfig
     SHOW_COMMAND_BLOCK_EXECUTION_LOCATION("명령-블록-실행-위치-출력", false),
 
     SHOW_DAMAGE_INDICATOR("대미지-숫자-표시", true),
+    SHOW_DAMAGE_INDICATOR_SPECTATING_ENTITY("관전-중인-개체의-대미지-숫자-표시", true),
     SHOW_DROPPED_ITEM_CUSTOM_NAME("바닥에-떨어진-아이템-이름-표시", true),
     SHOW_ENCHANTMENT_TMI_DESCRIPTION("부여된-마법-TMI-표시", true),
     SHOW_GIVE_COMMAND_NBT_ON_ITEM_ON_CHAT("채팅창에-있는-아이템에-nbt-표시", false),

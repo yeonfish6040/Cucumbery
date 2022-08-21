@@ -14,6 +14,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -52,6 +53,10 @@ public class DamageIndicatorProtocolLib
         continue;
       }
       if (!UserData.SHOW_DAMAGE_INDICATOR.getBoolean(player))
+      {
+        continue;
+      }
+      if (player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() == entity && !UserData.SHOW_DAMAGE_INDICATOR_SPECTATING_ENTITY.getBoolean(player))
       {
         continue;
       }

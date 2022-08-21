@@ -180,8 +180,11 @@ public class CustomEffectType implements Translatable, EnumHideable
           ASSASSINATION = new CustomEffectType("assassination", "암살", builder().description(ComponentUtil.translate("다른 플레이어나 동물을 잡아서 뜨는 데스 메시지에").append(Component.text("\n")).append(ComponentUtil.translate("자신의 이름이 나타나지 않고 감춰집니다")))),
           ALARM = new CustomEffectType("alarm", "알람", builder().enumHidden().keepOnDeath().removeOnQuit().maxAmplifier(2).description("알람이다! 소리 꺼라")),
           COOLDOWN_THE_MUSIC = new CustomEffectType("cooldown_the_music", MessageUtil.stripColor(ComponentUtil.serialize(CustomMaterial.THE_MUSIC.getDisplayName())), builder().hidden().defaultDuration(20 * 10).keepOnDeath()),
-          GAESANS = new CustomEffectType("gaesans", "개샌즈", builder().description(ComponentUtil.translate("웅크리면 %s 효과가 적용됩니다", PotionEffectType.INVISIBILITY))),
+          GAESANS = new CustomEffectType("gaesans", "개샌즈", builder().description("웅크리면 %s 효과가 적용됩니다", PotionEffectType.INVISIBILITY)),
           PICKLED = new CustomEffectType("pickled", "절여짐", builder().description("당신은 절여졌습니다!")),
+
+          NIGHT_VISION_SPECTATOR = new CustomEffectType("night_vision_spectator", "관전 모드 야간 투시", builder().keepOnDeath().defaultDuration(-1)
+                  .description("관전 모드에서 다른 개체 관전 시 %s 효과가 적용됩니다", PotionEffectType.NIGHT_VISION)),
 
 
   /**/ NOTHING = new CustomEffectType("nothing", "아무것도 아님"),
@@ -195,7 +198,7 @@ public class CustomEffectType implements Translatable, EnumHideable
     register(AWKWARD, THICK, MUNDANE, UNCRAFTABLE,
             BANE_OF_ARTHROPODS, SHARPNESS, SMITE,
 
-            COOLDOWN_THE_MUSIC, PICKLED,
+            COOLDOWN_THE_MUSIC, PICKLED, NIGHT_VISION_SPECTATOR,
 
             CONTINUAL_SPECTATING, CONTINUAL_SPECTATING_EXEMPT,
 

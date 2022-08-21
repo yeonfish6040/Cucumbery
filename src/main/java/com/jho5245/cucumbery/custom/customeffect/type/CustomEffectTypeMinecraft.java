@@ -6,7 +6,7 @@ import org.bukkit.potion.PotionEffectType;
 public class CustomEffectTypeMinecraft extends CustomEffectType
 {
   public static final CustomEffectType
-          /**/ MINECRAFT_SPEED = new CustomEffectType(NamespacedKey.minecraft("speed"), PotionEffectType.SPEED.translationKey(), builder().removeOnMilk().maxAmplifier(255)),
+          MINECRAFT_SPEED = new CustomEffectType(NamespacedKey.minecraft("speed"), PotionEffectType.SPEED.translationKey(), builder().removeOnMilk().maxAmplifier(255)),
           MINECRAFT_SLOWNESS = new CustomEffectType(NamespacedKey.minecraft("slowness"), PotionEffectType.SLOW.translationKey(), builder().removeOnMilk().negative().maxAmplifier(255)),
           MINECRAFT_HASTE = new CustomEffectType(NamespacedKey.minecraft("haste"), PotionEffectType.FAST_DIGGING.translationKey(), builder().removeOnMilk().maxAmplifier(255)),
           MINECRAFT_MINING_FATIGUE = new CustomEffectType(NamespacedKey.minecraft("mining_fatigue"), PotionEffectType.SLOW_DIGGING.translationKey(), builder().removeOnMilk().negative().maxAmplifier(255)),
@@ -39,7 +39,7 @@ public class CustomEffectTypeMinecraft extends CustomEffectType
           MINECRAFT_BAD_OMEN = new CustomEffectType(NamespacedKey.minecraft("bad_omen"), PotionEffectType.BAD_OMEN.translationKey(), builder().removeOnMilk().negative().maxAmplifier(255)),
           MINECRAFT_HERO_OF_THE_VILLAGE = new CustomEffectType(NamespacedKey.minecraft("hero_of_the_village"), PotionEffectType.HERO_OF_THE_VILLAGE.translationKey(), builder().removeOnMilk().maxAmplifier(255)),
           MINECRAFT_DARKNESS = new CustomEffectType(NamespacedKey.minecraft("darkness"), PotionEffectType.DARKNESS.translationKey(), builder().removeOnMilk().negative().maxAmplifier(255)),
-  /**/ MINECRAFT_POISON_M = new CustomEffectType(NamespacedKey.minecraft("poison_m"), PotionEffectType.POISON.translationKey(), builder().negative().enumHidden().maxAmplifier(255));
+          MINECRAFT_POISON_M = new CustomEffectType(NamespacedKey.minecraft("poison_m"), PotionEffectType.POISON.translationKey(), builder().negative().enumHidden().maxAmplifier(255));
 
   protected static void registerEffect()
   {
