@@ -2017,6 +2017,10 @@ public class InventoryClick implements Listener
           UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME.setToggle(uuid);
           saveConfig = true;
           break;
+        case 33:
+          UserData.SHOW_DAMAGE_INDICATOR.setToggle(uuid);
+          saveConfig = true;
+          break;
         case 39:
           GUIManager.openGUI(player, GUIType.ITEM_DROP_MODE_MENU);
           break;

@@ -146,6 +146,8 @@ public class GUIManager
             Arrays.asList("&7아이템의 남은 재사용 대기 시간 혹은 ", "&7남은 재발동 대기 시간을 액션바에 띄웁니다", "&e특정 상황에서는 해당 기능을 사용해도", "&e액션바가 뜨지 않을 수 있습니다"), trueLore, falseLore));
     inv.setItem(32, CreateItemStack.toggleItem(getBool(player, UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME), "&b바닥에 떨어진 아이템 이름 표시",
             List.of("&7바닥에 떨어져 있는 아이템의 이름을 표시합니다", "&e특정 아이템은 해당 기능에 관계없이", "&e이름이 표시되지 않거나 항상 표시될 수 있습니다"), trueLore, falseLore));
+    inv.setItem(33, CreateItemStack.toggleItem(getBool(player, UserData.SHOW_DAMAGE_INDICATOR), "&b대미지 숫자 표시",
+            List.of("&7몬스터 혹은 다른 플레이어가 대미지를 입을 때", "&7해당 개체의 상단에 대미지 숫자를 표시합니다"), trueLore, falseLore));
     String itemDropMode = switch (UserData.ITEM_DROP_MODE.getString(player.getUniqueId()))
             {
               case "normal" -> "기본";
