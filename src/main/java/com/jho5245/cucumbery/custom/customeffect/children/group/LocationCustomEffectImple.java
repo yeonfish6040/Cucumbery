@@ -12,25 +12,25 @@ public class LocationCustomEffectImple extends CustomEffect implements LocationC
   public LocationCustomEffectImple(CustomEffectType effectType, @NotNull Location location)
   {
     super(effectType);
-    this.location = location;
+    this.location = location.clone();
   }
 
   public LocationCustomEffectImple(CustomEffectType effectType, int duration, @NotNull Location location)
   {
     super(effectType, duration);
-    this.location = location;
+    this.location = location.clone();
   }
 
   public LocationCustomEffectImple(CustomEffectType effectType, int duration, int amplifier, @NotNull Location location)
   {
     super(effectType, duration, amplifier);
-    this.location = location;
+    this.location = location.clone();
   }
 
   public LocationCustomEffectImple(CustomEffectType effectType, int duration, int amplifier, @NotNull DisplayType displayType, @NotNull Location location)
   {
     super(effectType, duration, amplifier, displayType);
-    this.location = location;
+    this.location = location.clone();
   }
 
   @Override

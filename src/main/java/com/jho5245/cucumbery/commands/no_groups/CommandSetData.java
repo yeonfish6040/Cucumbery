@@ -81,7 +81,7 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
             }
             clone.setAmount(amount);
             player.getInventory().setItemInMainHand(clone);
-            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 개수를 %s개로 설정하였습니다", amount).hoverEvent(item.asHoverEvent()));
+            Component txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 개수를 %s개로 설정했습니다", amount).hoverEvent(item.asHoverEvent()));
             player.sendMessage(txt);
             return true;
           case "durability":
@@ -100,7 +100,7 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
             clone.setItemMeta(duraMeta);
             player.getInventory().setItemInMainHand(clone);
             Method.updateInventory(player);
-            txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 내구도를 %s(으)로 설정하였습니다", durability).hoverEvent(item.asHoverEvent()));
+            txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 내구도를 %s(으)로 설정했습니다", durability).hoverEvent(item.asHoverEvent()));
             player.sendMessage(txt);
             return true;
           case "material":
@@ -145,11 +145,11 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
             }
             if (ItemStackUtil.itemExists(item))
             {
-              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정하였습니다", type).hoverEvent(item.asHoverEvent()));
+              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정했습니다", type).hoverEvent(item.asHoverEvent()));
             }
             else
             {
-              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정하였습니다", type).hoverEvent(new ItemStack(type).asHoverEvent()));
+              txt = ComponentUtil.create(Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 종류를 %s(으)로 설정했습니다", type).hoverEvent(new ItemStack(type).asHoverEvent()));
             }
             player.sendMessage(txt);
             return true;
@@ -194,12 +194,12 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
           target.getInventory().setItemInMainHand(clone);
           if (!hideMessage)
           {
-            Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, sender, "이 당신의 주로 사용하는 손에 들고 있는 아이템의 개수를 rg255,204;" + amount + "개&r로 설정하였습니다"), clone);
+            Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, sender, "이 당신의 주로 사용하는 손에 들고 있는 아이템의 개수를 rg255,204;" + amount + "개&r로 설정했습니다"), clone);
             if (!target.equals(sender))
             {
               target.sendMessage(txt);
             }
-            txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, target, "의 주로 사용하는 손에 들고 있는 아이템의 개수를 rg255,204;" + amount + "개&r로 설정하였습니다"), clone);
+            txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, target, "의 주로 사용하는 손에 들고 있는 아이템의 개수를 rg255,204;" + amount + "개&r로 설정했습니다"), clone);
             sender.sendMessage(txt);
           }
         }
@@ -225,12 +225,12 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
           target.getInventory().setItemInMainHand(clone);
           if (!hideMessage)
           {
-            Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, sender, "이 당신의 주로 사용하는 손에 들고 있는 아이템의 내구도를 rg255,204;" + durability + "&r으로 설정하였습니다"), clone);
+            Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, sender, "이 당신의 주로 사용하는 손에 들고 있는 아이템의 내구도를 rg255,204;" + durability + "&r으로 설정했습니다"), clone);
             if (!target.equals(sender))
             {
               target.sendMessage(txt);
             }
-            txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, target, "의 주로 사용하는 손에 들고 있는 아이템의 내구도를 rg255,204;" + durability + "&r으로 설정하였습니다"), clone);
+            txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, target, "의 주로 사용하는 손에 들고 있는 아이템의 내구도를 rg255,204;" + durability + "&r으로 설정했습니다"), clone);
             sender.sendMessage(txt);
           }
         }
@@ -257,12 +257,12 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
           if (!hideMessage)
           {
             Component txt = ComponentUtil.create(MessageUtil.as(
-                    Prefix.INFO_SETDATA, sender, "이 당신의 주로 사용하는 손에 들고 있는 아이템의 종류를 ", clone, "(으)로 설정하였습니다"), clone);
+                    Prefix.INFO_SETDATA, sender, "이 당신의 주로 사용하는 손에 들고 있는 아이템의 종류를 ", clone, "(으)로 설정했습니다"), clone);
             if (!target.equals(sender))
             {
               target.sendMessage(txt);
             }
-            txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, target + "의 주로 사용하는 손에 들고 있는 아이템의 종류를 ", clone, "(으)로 설정하였습니다"), clone);
+            txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_SETDATA, target + "의 주로 사용하는 손에 들고 있는 아이템의 종류를 ", clone, "(으)로 설정했습니다"), clone);
             sender.sendMessage(txt);
           }
         }

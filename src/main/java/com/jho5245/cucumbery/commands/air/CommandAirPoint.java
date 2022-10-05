@@ -61,15 +61,15 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
             if (!hideMessage)
             {
               MessageUtil.sendWarn(sender,"설정한 산소량이 %s의 최대 산소량보다 많습니다 (손해 본 값 : %s)", target, Constant.THE_COLOR_HEX + (value - maxAir));
-              MessageUtil.sendMessage(target, Prefix.INFO_AIR, sender, "이 당신의 산소량을 rg255,204;" + maxAir + "&r으로 설정하였습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
-              MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "의 산소량을 rg255,204;" + maxAir + "&r으로 설정하였습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
+              MessageUtil.sendMessage(target, Prefix.INFO_AIR, sender, "이 당신의 산소량을 rg255,204;" + maxAir + "&r으로 설정했습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
+              MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "의 산소량을 rg255,204;" + maxAir + "&r으로 설정했습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
             }
             return true;
           }
           target.setRemainingAir(value);
           if (!hideMessage)
           {
-            MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "의 산소량을 rg255,204;" + value + "&r으로 설정하였습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
+            MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "의 산소량을 rg255,204;" + value + "&r으로 설정했습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
           }
         }
         case "give" -> {
@@ -92,8 +92,8 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
             if (!hideMessage)
             {
               MessageUtil.sendMessage(target,
-                      Prefix.INFO_AIR, sender, "이 당신에게 산소를 rg255,204;" + (maxAir - air) + "&r만큼 지급하였습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
-              MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "&r에게 산소를 rg255,204;" + (maxAir - air) + "&r만큼 지급하였습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
+                      Prefix.INFO_AIR, sender, "이 당신에게 산소를 rg255,204;" + (maxAir - air) + "&r만큼 지급했습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
+              MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "&r에게 산소를 rg255,204;" + (maxAir - air) + "&r만큼 지급했습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
             }
           }
           else
@@ -101,8 +101,8 @@ public class CommandAirPoint implements CommandExecutor, TabCompleter
             target.setRemainingAir(air + value);
             if (!hideMessage)
             {
-              MessageUtil.sendMessage(target, Prefix.INFO_AIR, SenderComponentUtil.senderComponent(sender) + "이 당신에게 산소를 rg255,204;" + value + "&r만큼 지급하였습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
-              MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "&r에게 산소를 rg255,204;" + value + "&r만큼 지급하였습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
+              MessageUtil.sendMessage(target, Prefix.INFO_AIR, SenderComponentUtil.senderComponent(sender) + "이 당신에게 산소를 rg255,204;" + value + "&r만큼 지급했습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
+              MessageUtil.sendMessage(sender, Prefix.INFO_AIR, target, "&r에게 산소를 rg255,204;" + value + "&r만큼 지급했습니다 (rg255,204;산소량&r : rg255,204;" + target.getRemainingAir() + "&r / rg255,204;" + maxAir + "&r)");
             }
           }
         }

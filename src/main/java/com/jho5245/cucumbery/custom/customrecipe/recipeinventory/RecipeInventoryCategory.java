@@ -126,7 +126,7 @@ public class RecipeInventoryCategory
     {
       // deco template
 
-      ItemStack deco1 = CreateItemStack.newItem(Material.WHITE_STAINED_GLASS_PANE, 1, "§와", false);
+      ItemStack deco1 = CreateItemStack.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§와", false);
 
       menu.setItem(0, deco1);
       menu.setItem(1, deco1);
@@ -153,7 +153,7 @@ public class RecipeInventoryCategory
       menu.setItem(43, deco1);
       // buttons
 
-      menu.setItem(36, CreateItemStack.newItem(Material.BIRCH_BOAT, 1, "§b메인 메뉴로", false));
+      menu.setItem(36, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b메인 메뉴로", false));
 
       if (maxPage == 1)
       {
@@ -162,13 +162,13 @@ public class RecipeInventoryCategory
       }
       else
       {
-        menu.setItem(39, CreateItemStack.newItem(Material.SPRUCE_BOAT, Math.max(1, page == 1 ? maxPage : page - 1), page == 1 ? "§e마지막 페이지로" : "§e이전 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
+        menu.setItem(39, CreateItemStack.create(Material.SPRUCE_BOAT, Math.max(1, page == 1 ? maxPage : page - 1), page == 1 ? "§e마지막 페이지로" : "§e이전 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
         menu.setItem(
-                41, CreateItemStack.newItem(Material.SPRUCE_BOAT, Math.min(maxPage, page == maxPage ? 1 : page + 1), page == maxPage ? "§b처음 페이지로" : "§b다음 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
+                41, CreateItemStack.create(Material.SPRUCE_BOAT, Math.min(maxPage, page == maxPage ? 1 : page + 1), page == maxPage ? "§b처음 페이지로" : "§b다음 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
       }
 
-      menu.setItem(44, CreateItemStack.newItem(Material.BIRCH_BOAT, 1, "§b레시피 목록 메뉴로", false));
-      menu.setItem(40, CreateItemStack.newItem(Material.CLOCK, 1, "rg255,204;로딩중...", false));
+      menu.setItem(44, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b레시피 목록 메뉴로", false));
+      menu.setItem(40, CreateItemStack.create(Material.CLOCK, 1, "rg255,204;로딩중...", false));
       player.openInventory(menu);
     }
     else
@@ -198,7 +198,7 @@ public class RecipeInventoryCategory
       ItemStack result = ItemSerializer.deserialize(config.getString("recipes." + recipe + ".result"));
       if (!ItemStackUtil.itemExists(result))
       {
-        result = CreateItemStack.newItem(Material.BAKED_POTATO, 1, "rg255,204;알 수 없는 아이템", "&c&o손상된 레시피", true);
+        result = CreateItemStack.create(Material.BAKED_POTATO, 1, "rg255,204;알 수 없는 아이템", "&c&o손상된 레시피", true);
       }
       List<Integer> ingredientAmounts = new ArrayList<>();
       List<ItemStack> ingredients = new ArrayList<>();
@@ -213,7 +213,7 @@ public class RecipeInventoryCategory
         ItemStack ingredient = ItemSerializer.deserialize(ingredientString);
         if (!ItemStackUtil.itemExists(ingredient) && !ingredientString.startsWith("predicate:"))
         {
-          result = CreateItemStack.newItem(Material.MUSIC_DISC_11, 1, "rg255,204;알 수 없는 아이템", "&c&o손상된 레시피", true);
+          result = CreateItemStack.create(Material.MUSIC_DISC_11, 1, "rg255,204;알 수 없는 아이템", "&c&o손상된 레시피", true);
           break;
         }
         boolean isPredicate = ingredientString.startsWith("predicate:");
@@ -370,7 +370,7 @@ public class RecipeInventoryCategory
       }
       if (ingredients.isEmpty())
       {
-        result = CreateItemStack.newItem(Material.MUSIC_DISC_11, 1, "rg255,204;알 수 없는 아이템", "&c&o손상된 레시피", true);
+        result = CreateItemStack.create(Material.MUSIC_DISC_11, 1, "rg255,204;알 수 없는 아이템", "&c&o손상된 레시피", true);
       }
       if (!ingredients.isEmpty())
       {
@@ -477,7 +477,7 @@ public class RecipeInventoryCategory
             40, INFO_ITEM);
   }
 
-  private final static ItemStack INFO_ITEM = CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?", Arrays
+  private final static ItemStack INFO_ITEM = CreateItemStack.create(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?", Arrays
           .asList("&7제작을 원하는 아이템에 마우스를 올리면", "&7해당 아이템을 제작하는데 필요한 아이템들을 나열해줍니다", "rg255,204;클릭&7을 하면 해당 재료에 대한 자세한 정보를 알려줍니다", "&7제작 조건을 전부 충족시켰다면 rg255,204;시프트 클릭", "&7으로도 빠르게 아이템을 제작할 수 있습니다",
                   "&b제작하고 싶은 아이템을 선택해서 제작해보세요!"), false);
 }

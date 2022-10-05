@@ -579,6 +579,19 @@ public class DeathManager
         }
         if (projectile != null && projectile.getShooter() == null)
         {
+          if (damager == null)
+          {
+            if (projectile instanceof Firework firework)
+            {
+              ItemStack itemStack = new ItemStack(Material.FIREWORK_ROCKET);
+              itemStack.setItemMeta(firework.getFireworkMeta());
+              extraArgs.add(ComponentUtil.create(itemStack));
+            }
+            else
+            {
+              extraArgs.add(ComponentUtil.create(projectile));
+            }
+          }
           key += "_unknown";
         }
       }

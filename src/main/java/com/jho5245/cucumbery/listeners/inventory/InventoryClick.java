@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.listeners.inventory;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCooldown;
 import com.jho5245.cucumbery.custom.customrecipe.CustomRecipeUtil;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
@@ -1704,7 +1705,7 @@ public class InventoryClick implements Listener
       {
         recipeDisplay = recipe;
       }
-      MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 %s(%s)에서 %s(%s) 레시피를 제거하였습니다", category, ComponentUtil.create("§e" + categoryDisplay), recipe, ComponentUtil.create("§e" + recipeDisplay));
+      MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_RECIPE, "커스텀 레시피 목록 %s(%s)에서 %s(%s) 레시피를 제거했습니다", category, ComponentUtil.create("§e" + categoryDisplay), recipe, ComponentUtil.create("§e" + recipeDisplay));
       for (File logFile : CustomRecipeUtil.getPlayersCraftLog())
       {
         CustomRecipeUtil.removePlayerCraftLog(logFile.getName().substring(0, logFile.getName().length() - 4), category, removeCategory ? null : recipe);
@@ -1916,6 +1917,11 @@ public class InventoryClick implements Listener
     }
     else if (invName.equals(Constant.CANCEL_STRING + Constant.SERVER_SETTINGS))
     {
+      if (CustomEffectManager.hasEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON))
+      {
+        MessageUtil.sendWarn(player, "좀 천천히 누르삼!");
+        return;
+      }
       boolean saveConfig = false;
       switch (slot)
       {
@@ -2079,6 +2085,7 @@ public class InventoryClick implements Listener
       }
       if (saveConfig)
       {
+        CustomEffectManager.addEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON);
         GUIManager.openGUI(player, GUIType.SERVER_SETTINGS);
       }
     }

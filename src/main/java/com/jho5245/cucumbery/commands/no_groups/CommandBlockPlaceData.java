@@ -100,7 +100,7 @@ public class CommandBlockPlaceData implements CucumberyCommandExecutor
             return failure;
           }
           blockPlaceData.set(key, null);
-          MessageUtil.info(sender, "%s 위치에 있는 블록 데이터를 제거하였습니다. (%s) %s", location, itemStack,
+          MessageUtil.info(sender, "%s 위치에 있는 블록 데이터를 제거했습니다. (%s) %s", location, itemStack,
                   ComponentUtil.translate("rg255,204;[복사]")
                           .clickEvent(ClickEvent.copyToClipboard("'" + serialItem.replace("'", "''") + "'"))
                           .hoverEvent(Component.translatable("클릭하여 이스케이프된 nbt 복사").append(Component.text("\n" + serialItem))));
@@ -152,7 +152,7 @@ public class CommandBlockPlaceData implements CucumberyCommandExecutor
               }
               blockPlaceData.set(key, ItemSerializer.serialize(hand));
               Variable.blockPlaceData.put(world.getName(), blockPlaceData);
-              MessageUtil.info(player, "%s에 아이템 %s을(를) 저장하였습니다", location, hand);
+              MessageUtil.info(player, "%s에 아이템 %s을(를) 저장했습니다", location, hand);
               return true;
             }
           }
@@ -220,7 +220,7 @@ public class CommandBlockPlaceData implements CucumberyCommandExecutor
                   }
                   blockPlaceData.set(key, ItemSerializer.serialize(stack));
                   Variable.blockPlaceData.put(world.getName(), blockPlaceData);
-                  MessageUtil.info(sender, "%s에 아이템 %s을(를) 저장하였습니다", location, stack.getType().isAir() && ignoreInvalid ? args[3] : stack);
+                  MessageUtil.info(sender, "%s에 아이템 %s을(를) 저장했습니다", location, stack.getType().isAir() && ignoreInvalid ? args[3] : stack);
                   return true;
                 }
               }

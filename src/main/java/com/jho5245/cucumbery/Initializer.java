@@ -145,6 +145,7 @@ public class Initializer
 
   public static void loadCustomEffects()
   {
+    CustomEffectType.unregister();
     CustomEffectType.register();
     CustomEffectManager.effectMap.clear();
     File customEffectsFolder = new File(getPlugin().getDataFolder() + "/data/CustomEffects");

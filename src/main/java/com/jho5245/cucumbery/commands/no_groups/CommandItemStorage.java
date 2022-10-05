@@ -257,7 +257,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
             Variable.itemStorage.remove(args[1]);
             if (!hideOutput)
             {
-              MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 목록 rg255,204;" + args[1] + "&r에 있는 모든 아이템을 제거하였습니다");
+              MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 목록 rg255,204;" + args[1] + "&r에 있는 모든 아이템을 제거했습니다");
             }
             return true;
           }
@@ -286,7 +286,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
           }
           if (!hideOutput)
           {
-            MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 목록 rg255,204;" + args[1] + "&r에서 rg255,204;" + args[2] + "&r 아이템을 제거하였습니다");
+            MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "아이템 목록 rg255,204;" + args[1] + "&r에서 rg255,204;" + args[2] + "&r 아이템을 제거했습니다");
           }
         }
         else
@@ -627,12 +627,12 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
             }
             String itemName = args[3];
             String finalConsonant = MessageUtil.getFinalConsonant(itemName, ConsonantType.을를);
-            Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_ITEMSTORAGE, sender, "이 당신의 rg255,204;" + args[2] + "&r 슬롯에 rg255,204;" + itemName + "&r" + finalConsonant + "rg255,204; " + amount + "개&r 지급하였습니다"), item);
+            Component txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_ITEMSTORAGE, sender, "이 당신의 rg255,204;" + args[2] + "&r 슬롯에 rg255,204;" + itemName + "&r" + finalConsonant + "rg255,204; " + amount + "개&r 지급했습니다"), item);
             if (!target.equals(sender))
             {
               MessageUtil.sendMessage(target, txt);
             }
-            txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_ITEMSTORAGE, target, "의 rg255,204;" + args[2] + "&r 슬롯에 rg255,204;" + itemName + "&r" + finalConsonant + "rg255,204; " + amount + "개&r 지급하였습니다"), item);
+            txt = ComponentUtil.create(MessageUtil.as(Prefix.INFO_ITEMSTORAGE, target, "의 rg255,204;" + args[2] + "&r 슬롯에 rg255,204;" + itemName + "&r" + finalConsonant + "rg255,204; " + amount + "개&r 지급했습니다"), item);
             MessageUtil.sendMessage(sender, txt);
           }
         }

@@ -1,10 +1,10 @@
 name: Cucumbery
 version: 1.1.1-dev
-api-version: 1.18
+api-version: 1.19
 main: com.jho5245.cucumbery.Cucumbery
 author: jho5245
 description: 굳검버리 플러그인
-softdepend: [Vault, NoteBlockAPI, QuickShop, PlaceHolderAPI, mcMMO, MythicMobs, ProtocolLib, WorldEdit, WorldGuard]
+softdepend: [Vault, NoteBlockAPI, QuickShop, PlaceHolderAPI, mcMMO, MythicMobs, ProtocolLib, WorldEdit, WorldGuard, GSit]
 website: https://cucumbery.com/
 
 commands:
@@ -375,6 +375,14 @@ commands:
     description: 던져진 물약을 즉시 깨트립니다
     usage: /<command> <물약> [명령어 출력 숨김 여부]
     aliases: [csplash]
+  swingarm:
+    description: 팔을 흔듭니다
+    usage: /<command> <main_hand|off_hand> [개체] [명령어 출력 숨김 여부]
+    aliases: [cswingarm, swinghand, cswinghand]
+  shakevillagerhead:
+    description: 주민이 머리를 흔들게 합니다
+    usage: /<command> <주민> [명령어 출력 숨김 여부]
+    aliases: [cshakevillagerhead]
 
 permissions:
   cucumbery.error.hide:

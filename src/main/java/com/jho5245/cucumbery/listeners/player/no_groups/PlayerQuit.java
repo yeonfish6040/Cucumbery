@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.listeners.player.no_groups;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -113,7 +114,7 @@ public class PlayerQuit implements Listener
         }
       }
     }
-
+    MiningManager.quitCustomMining(player);
     List<CustomEffect> customEffects = CustomEffectManager.getEffects(player);
     for (CustomEffect customEffect : customEffects)
     {

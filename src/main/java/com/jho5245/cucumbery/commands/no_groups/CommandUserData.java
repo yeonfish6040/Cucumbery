@@ -10,6 +10,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -83,7 +84,7 @@ public class CommandUserData implements CucumberyCommandExecutor
       for (OfflinePlayer offlinePlayer : offlinePlayers)
       {
         UUID uuid = offlinePlayer.getUniqueId();
-        if (!key.get(uuid).toString().equals(value))
+        if (!key.get(uuid).toString().equalsIgnoreCase(value))
         {
           successPlayers.add(offlinePlayer);
         }
@@ -140,6 +141,15 @@ public class CommandUserData implements CucumberyCommandExecutor
             }
             config.getConfig().set(key.getKey(), intVal);
           }
+          case CUSTOM_MINING_COOLDOWN_DISPLAY_BLOCK -> {
+            Material material = Method2.valueOf(value.toUpperCase(), Material.class);
+            if (material == null || !material.isBlock())
+            {
+              MessageUtil.sendError(sender, "argument.block.id.invalid", value);
+              return true;
+            }
+            config.getConfig().set(key.getKey(), material.toString());
+          }
           default ->
           {
             if (!value.equals("true") && !value.equals("false"))
@@ -167,12 +177,12 @@ public class CommandUserData implements CucumberyCommandExecutor
         if (!failurePlayers.isEmpty())
         {
           MessageUtil.sendWarnOrError(successPlayersEmpty, sender,
-                  ComponentUtil.translate("변동사항이 없습니다. 이미 %s의 %s 값이 %s입니다", failurePlayers, key, Constant.THE_COLOR_HEX + value));
+                  ComponentUtil.translate("변경 사항이 없습니다. 이미 %s의 %s 값이 %s입니다", failurePlayers, key, Constant.THE_COLOR_HEX + value));
         }
         if (!successPlayersEmpty)
         {
-          MessageUtil.info(sender, "%s의 %s 값을 %s(으)로 설정하였습니다", successPlayers, key, Constant.THE_COLOR_HEX + value);
-          MessageUtil.sendAdminMessage(sender, "%s의 %s 값을 %s(으)로 설정하였습니다", successPlayers, key, Constant.THE_COLOR_HEX + value);
+          MessageUtil.info(sender, "%s의 %s 값을 %s(으)로 설정했습니다", successPlayers, key, Constant.THE_COLOR_HEX + value);
+          MessageUtil.sendAdminMessage(sender, "%s의 %s 값을 %s(으)로 설정했습니다", successPlayers, key, Constant.THE_COLOR_HEX + value);
           List<Audience> infoTarget = new ArrayList<>();
           successPlayers.forEach(offlinePlayer ->
           {
@@ -182,7 +192,7 @@ public class CommandUserData implements CucumberyCommandExecutor
             }
           });
           infoTarget.remove(sender);
-          MessageUtil.sendMessage(infoTarget, Prefix.INFO_SETDATA, "%s이(가) 당신의 %s 값을 %s(으)로 설정하였습니다", sender, key, Constant.THE_COLOR_HEX + value);
+          MessageUtil.sendMessage(infoTarget, Prefix.INFO_SETDATA, "%s이(가) 당신의 %s 값을 %s(으)로 설정했습니다", sender, key, Constant.THE_COLOR_HEX + value);
         }
       }
       return !successPlayersEmpty || failure;
@@ -230,6 +240,7 @@ public class CommandUserData implements CucumberyCommandExecutor
                 case ID, UUID -> CommandTabUtil.errorMessage(args[1] + "(" + key.getKey().replace("-", " ") + ")" + " 키의 값은 변경할 수 없습니다");
                 case ITEM_USE_DELAY, ITEM_DROP_DELAY -> CommandTabUtil.tabCompleterIntegerRadius(args, 0, 200, "<틱>");
                 case INVINCIBLE_TIME, INVINCIBLE_TIME_JOIN -> CommandTabUtil.tabCompleterIntegerRadius(args, -1, 2000, "<틱>");
+                case CUSTOM_MINING_COOLDOWN_DISPLAY_BLOCK -> CommandTabUtil.tabCompleterList(args, Material.values(), "<블록 유형>", material -> !material.isBlock());
                 default -> CommandTabUtil.tabCompleterBoolean(args, "<값>");
               };
     }

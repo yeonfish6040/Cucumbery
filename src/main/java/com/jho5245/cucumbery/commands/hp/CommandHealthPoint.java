@@ -109,9 +109,9 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
           if (!hideOutput)
           {
             MessageUtil.sendWarn(sender, "설정한 HP의 값이 ", targetName, playerSuffix + "의 최대 HP의 값보다 많습니다 (rg255,204;손해 본 값&r : rg255,204;" + Constant.Sosu2.format(value - maxHealth) + "&r)");
-            MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이 당신의 HP를 rg255,204;" + mhpStr + "&r으로 설정하였습니다 (rg255,204;HP&r : rg255,204;"
+            MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이 당신의 HP를 rg255,204;" + mhpStr + "&r으로 설정했습니다 (rg255,204;HP&r : rg255,204;"
                     + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
-            MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, targetName, playerSuffix + "의 HP를 rg255,204;" + mhpStr + "&r으로 설정하였습니다 (rg255,204;HP&r : rg255,204;"
+            MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, targetName, playerSuffix + "의 HP를 rg255,204;" + mhpStr + "&r으로 설정했습니다 (rg255,204;HP&r : rg255,204;"
                     + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
           }
           return true;
@@ -136,8 +136,8 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
         if (!hideOutput)
         {
           MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이 당신의 HP를 rg255,204;" + Constant.Sosu15.format(value)
-                  + "&r으로 설정하였습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
-          MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, playerSuffix + "의 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r으로 설정하였습니다 (rg255,204;HP&r : rg255,204;"
+                  + "&r으로 설정했습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
+          MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, playerSuffix + "의 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r으로 설정했습니다 (rg255,204;HP&r : rg255,204;"
                   + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
         }
       }
@@ -162,9 +162,9 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
           if (!hideOutput)
           {
             MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이 당신에게 HP를 rg255,204;" + Constant.Sosu15.format(maxHealth - hp)
-                    + "&r만큼 지급하였습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
+                    + "&r만큼 지급했습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
             MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, targetName, playerSuffix + "에게 HP를 rg255,204;" + Constant.Sosu15.format(maxHealth - hp)
-                    + "&r만큼 지급하였습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
+                    + "&r만큼 지급했습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
           }
         }
         else
@@ -189,8 +189,8 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
           if (!hideOutput)
           {
             MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이 당신에게 HP를 rg255,204;" + Constant.Sosu15.format(value)
-                    + "&r만큼 지급하였습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
-            MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, Constant.THE_COLOR_HEX + targetName + "&r" + playerSuffix + "에게 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r만큼 지급하였습니다 (rg255,204;HP&r : rg255,204;"
+                    + "&r만큼 지급했습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
+            MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, Constant.THE_COLOR_HEX + targetName + "&r" + playerSuffix + "에게 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r만큼 지급했습니다 (rg255,204;HP&r : rg255,204;"
                     + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
           }
         }
@@ -215,8 +215,8 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
           if (!hideOutput)
           {
             MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이 당신의 HP를 rg255,204;" + Constant.Sosu15.format(hp - 1D)
-                    + "&r만큼 차감하였습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
-            MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, playerSuffix + "의 HP를 rg255,204;" + Constant.Sosu15.format(hp - 1D) + "&r만큼 차감하였습니다 (rg255,204;HP&r : rg255,204;"
+                    + "&r만큼 차감했습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
+            MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, playerSuffix + "의 HP를 rg255,204;" + Constant.Sosu15.format(hp - 1D) + "&r만큼 차감했습니다 (rg255,204;HP&r : rg255,204;"
                     + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
           }
         }
@@ -246,8 +246,8 @@ public class CommandHealthPoint implements CommandExecutor, TabCompleter
               value = hp;
             }
             MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이 당신의 HP를 rg255,204;" + Constant.Sosu15.format(value)
-                    + "&r만큼 차감하였습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
-            MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, playerSuffix + "의 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r만큼 차감하였습니다 (rg255,204;HP&r : rg255,204;"
+                    + "&r만큼 차감했습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
+            MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, playerSuffix + "의 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r만큼 차감했습니다 (rg255,204;HP&r : rg255,204;"
                     + Constant.Sosu2.format(target.getHealth()) + "&r / rg255,204;" + mhpStr + "&r, HP바 : rg255,204;" + shpStr + "&r)");
           }
         }

@@ -250,7 +250,8 @@ public class SenderComponentUtil
         {
           return senderComponent(player, entities.get(0), defaultColor);
         }
-        if (entities.size() <= 5)
+        int displaySize = Math.max(1, Cucumbery.config.getInt("max-entity-display-size"));
+        if (entities.size() <= displaySize)
         {
           StringBuilder key = new StringBuilder("&7");
           List<Component> args = new ArrayList<>();

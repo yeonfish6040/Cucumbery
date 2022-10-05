@@ -38,10 +38,6 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.SLOW_DIGGING))
     {
-      if (hasCustomMining)
-      {
-        return Component.empty();
-      }
       return ComponentUtil.translate("채광 속도와 공격 속도가 감소합니다. %s와(과) 곱적용됩니다", "translate:&a" + TranslatableKeyParser.getKey(PotionEffectType.FAST_DIGGING));
     }
     if (type.equals(PotionEffectType.INCREASE_DAMAGE))
@@ -208,10 +204,6 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.SLOW_DIGGING))
     {
-      if (hasCustomMining)
-      {
-        return Component.empty();
-      }
       return ComponentUtil.translate("채광 속도가 %s 감소하고 공격 속도가 %s 감소합니다. %s와(과) 곱적용됩니다",
               Constant.THE_COLOR_HEX + Constant.Sosu2Floor.format((1 - Math.pow(0.3, amplifier + 1)) * 100) + "%", Constant.THE_COLOR_HEX + Math.min(100, (amplifier + 1) * 10) + "%", PotionEffectType.FAST_DIGGING);
     }

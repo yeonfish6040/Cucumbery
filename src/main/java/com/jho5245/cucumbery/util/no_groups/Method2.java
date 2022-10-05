@@ -8,8 +8,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class Method2 extends Method
 {
@@ -44,6 +46,28 @@ public class Method2 extends Method
     return item;
   }
 
+  public static boolean removePlacedBlockData(@NotNull Location location)
+  {
+    return removePlacedBlockData(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+  }
+
+  public static boolean removePlacedBlockData(@NotNull String worldName, int x, int y, int z)
+  {
+    YamlConfiguration yamlConfiguration = Variable.blockPlaceData.get(worldName);
+    if (yamlConfiguration == null)
+    {
+      return false;
+    }
+    String itemString = yamlConfiguration.getString(x + "_" + y + "_" + z);
+    if (itemString == null)
+    {
+      return false;
+    }
+    yamlConfiguration.set(x + "_" + y + "_" + z, null);
+    Variable.blockPlaceData.put(worldName, yamlConfiguration);
+    return true;
+  }
+
   /**
    * 해당 좌표에 설치되어 있는 커스텀 블록 데이터의 아이템 형태를 가져옵니다. 만약 아이템이 인벤토리에 소지할 수 없는 블록이거나 해당 좌표에 저장된 블록이 없을 경우, null을 반환합니다.
    *
@@ -65,6 +89,7 @@ public class Method2 extends Method
     String worldName = world.getName();
     return Method2.getPlacedBlockDataAsItemStack(worldName, location.getBlockX(), location.getBlockY(), location.getBlockZ());
   }
+
 
   public static boolean isInvalidFileName(@NotNull String fileName)
   {
@@ -211,6 +236,36 @@ public class Method2 extends Method
     {
       return null;
     }
+  }
+
+  @NotNull
+  public static List<Entity> getNearbyEntitiesAsync(@NotNull Entity entity, double distance)
+  {
+    return getNearbyEntitiesAsync(entity.getLocation(), distance, null);
+  }
+
+  @NotNull
+  public static List<Entity> getNearbyEntitiesAsync(@NotNull Location location, double distance)
+  {
+    return getNearbyEntitiesAsync(location, distance, null);
+  }
+
+  @NotNull
+  public static List<Entity> getNearbyEntitiesAsync(@NotNull Location location, double distance, @Nullable Predicate<Entity> exclude)
+  {
+    List<Entity> entities = new ArrayList<>();
+    World world = location.getWorld();
+    for (Chunk chunk : world.getLoadedChunks())
+    {
+      for (Entity entity : chunk.getEntities())
+      {
+        if (location.distance(entity.getLocation()) <= distance && (exclude == null || !exclude.test(entity)))
+        {
+          entities.add(entity);
+        }
+      }
+    }
+    return entities;
   }
 }
 

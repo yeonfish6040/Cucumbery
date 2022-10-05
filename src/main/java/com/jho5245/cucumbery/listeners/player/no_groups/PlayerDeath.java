@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.listeners.player.no_groups;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -87,10 +88,10 @@ public class PlayerDeath implements Listener
         CustomEffectManager.removeEffect(player, customEffect.getType(), RemoveReason.DEATH);
       }
     }
-
     if (UserData.IMMEDIATE_RESPAWN.getBoolean(player))
     {
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.spigot().respawn(), 0L);
     }
+    MiningManager.quitCustomMining(player);
   }
 }

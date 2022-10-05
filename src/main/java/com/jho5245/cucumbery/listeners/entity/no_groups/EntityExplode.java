@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,7 +15,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -38,6 +41,14 @@ public class EntityExplode implements Listener
     this.fireballRegionProjection(event);
     this.witherSkullRegionProjection(event);
     this.blockPlaceData(event);
+    if (!event.isCancelled())
+    {
+      Entity entity = event.getEntity();
+      if (entity instanceof TNTPrimed && entity.getScoreboardTags().contains("custom_material_tnt_i_wont_let_you_go"))
+      {
+        SoundPlay.playSoundLocation(entity.getLocation(), "custom_i_wont_let_you_go", 4F, 1F);
+      }
+    }
   }
 
   public void blockPlaceData(EntityExplodeEvent event)
@@ -48,6 +59,10 @@ public class EntityExplode implements Listener
     {
       for (Block block : event.blockList())
       {
+        if (block.getType() == Material.TNT)
+        {
+          continue;
+        }
         Location location = block.getLocation();
         String itemData = yamlConfiguration.getString(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ());
         if (itemData != null)

@@ -1,6 +1,10 @@
 package com.jho5245.cucumbery.listeners.entity.damage;
 
+import com.google.common.base.Functions;
+import com.google.common.collect.ImmutableMap;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.CombatInfo;
+import com.jho5245.cucumbery.custom.DamageManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
@@ -29,6 +33,8 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -36,18 +42,19 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Consumer;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("deprecation")
 public class EntityDamage implements Listener
 {
   @EventHandler
@@ -78,6 +85,16 @@ public class EntityDamage implements Listener
     }
     if (!event.isCancelled())
     {
+      CombatInfo combatInfo = DamageManager.getCombatInfo(event);
+      if (combatInfo != null)
+      {
+        double damage = combatInfo.damage(), bonusDamage = combatInfo.bonusDamage(), damageMultiplier = combatInfo.damageMultiplier(), finalDamageMultiplier = combatInfo.finalDamageMultiplier();
+        damage = damage * damageMultiplier * finalDamageMultiplier + bonusDamage;
+        if (!Double.isNaN(damage) && !Double.isInfinite(damage) && damage <= Math.pow(2, 127))
+        {
+          event.setDamage(damage);
+        }
+      }
       if (entity instanceof LivingEntity livingEntity && (livingEntity.getScoreboardTags().contains("remove_no_damage_ticks") || MythicMobManager.hasTag(entity, "remove_no_damage_ticks")))
       {
         Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
@@ -89,10 +106,6 @@ public class EntityDamage implements Listener
 
   private void customEffect(EntityDamageEvent event)
   {
-    double damage = event.getDamage();
-    // 대미지 % 증가에 영향을 받지 않는 고정 수치
-    double fixedDamage = 0d;
-    double damageMultiplier = 1d, finalDamageMultiplier = 1d;
     DamageCause damageCause = event.getCause();
     Entity victim = event.getEntity();
     if (damageCause == DamageCause.FALL && !(event instanceof EntityDamageByEntityEvent) && CustomEffectManager.hasEffect(victim, CustomEffectTypeRune.RUNE_EARTHQUAKE))
@@ -114,7 +127,18 @@ public class EntityDamage implements Listener
             continue;
           }
           count++;
-          livingEntity.damage(livingEntity.getHealth(), victim);
+          AttributeInstance attributeInstance = livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+          double damage = attributeInstance != null ? attributeInstance.getValue() : livingEntity.getHealth();
+          CombatInfo combatInfo = DamageManager.getCombatInfo(new EntityDamageByEntityEvent(victim, livingEntity, DamageCause.CUSTOM,
+                  new EnumMap<>(ImmutableMap.of(DamageModifier.BASE, damage)),
+                  new EnumMap<>(ImmutableMap.of(DamageModifier.BASE, Functions.constant(0d))), false));
+          if (combatInfo != null)
+          {
+            damage -= combatInfo.bonusDamage();
+            damage /= combatInfo.damageMultiplier();
+            damage /= combatInfo.finalDamageMultiplier();
+          }
+          livingEntity.damage(damage, victim);
           if (livingEntity.getHealth() > 0)
           {
             livingEntity.setHealth(0);
@@ -141,58 +165,12 @@ public class EntityDamage implements Listener
     {
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> livingEntity.setNoDamageTicks(0), 0L);
     }
-    if (CustomEffectManager.hasEffect(victim, CustomEffectType.PARROTS_CHEER))
-    {
-      finalDamageMultiplier *= 0.55d;
-    }
-    if (CustomEffectManager.hasEffect(victim, CustomEffectType.DARKNESS_TERROR_ACTIVATED))
-    {
-      finalDamageMultiplier *= 1.3d;
-    }
-    if (CustomEffectManager.hasEffect(victim, CustomEffectType.NEWBIE_SHIELD))
-    {
-      int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
-      switch (amplifier)
-      {
-        case 1 -> finalDamageMultiplier *= 0.9;
-        case 2 -> finalDamageMultiplier *= 0.8;
-        default -> finalDamageMultiplier *= 0.6;
-      }
-    }
-    if (CustomEffectManager.hasEffect(victim, CustomEffectType.TOWN_SHIELD))
-    {
-      finalDamageMultiplier *= 0.5;
-    }
-    switch (damageCause)
-    {
-      case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK, ENTITY_EXPLOSION, CUSTOM, PROJECTILE -> {
-        if (damageCause != DamageCause.PROJECTILE || event instanceof EntityDamageByEntityEvent ev && ev.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Entity)
-        {
-          if (victim instanceof LivingEntity livingEntity)
-          {
-            EntityEquipment equipment = livingEntity.getEquipment();
-            if (equipment != null)
-            {
-              ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
-              if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                      chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                      leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                      boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
-              {
-                damageMultiplier += 5d;
-              }
-            }
-          }
-        }
-      }
-    }
     switch (damageCause)
     {
       case HOT_FLOOR -> {
         if (CustomEffectManager.hasEffect(victim, CustomEffectType.FROST_WALKER))
         {
           event.setCancelled(true);
-          return;
         }
       }
       case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK, CUSTOM -> {
@@ -213,7 +191,6 @@ public class EntityDamage implements Listener
                   event.setCancelled(true);
                   MessageUtil.sendActionBar(victim, "공격을 회피했습니다!");
                   MessageUtil.sendActionBar(thrower, "상대방이 공격을 회피했습니다!");
-                  return;
                 }
               }
             }
@@ -229,126 +206,8 @@ public class EntityDamage implements Listener
                 event.setCancelled(true);
                 MessageUtil.sendActionBar(victim, "공격을 회피했습니다!");
                 MessageUtil.sendActionBar(damagerEntity, "상대방이 공격을 회피했습니다!");
-                return;
               }
             }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.SHARPNESS))
-            {
-              CustomEffect customEffectSharpness = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SHARPNESS);
-              int amplifier = customEffectSharpness.getAmplifier();
-              damage += amplifier + 1.5;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.SMITE) && (victim instanceof Zombie || victim instanceof ZombieHorse || victim instanceof AbstractSkeleton || victim instanceof Wither))
-            {
-              CustomEffect customEffectSmite = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SMITE);
-              int amplifier = customEffectSmite.getAmplifier();
-              damage += (amplifier + 1) * 2.5;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.BANE_OF_ARTHROPODS) && (victim instanceof Spider || victim instanceof Silverfish || victim instanceof Endermite))
-            {
-              CustomEffect customEffectBaneOfArthropods = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BANE_OF_ARTHROPODS);
-              int amplifier = customEffectBaneOfArthropods.getAmplifier();
-              damage += (amplifier + 1) * 2.5;
-              ((Monster) victim).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (20 + Math.random() * (amplifier + 1) * 5), 3));
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.BLESS_OF_SANS))
-            {
-              CustomEffect customEffectBlessOfSans = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BLESS_OF_SANS);
-              int amplifier = customEffectBlessOfSans.getAmplifier();
-              damageMultiplier += (amplifier + 1) * 0.1;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.PARROTS_CHEER))
-            {
-              damageMultiplier += 0.1d;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.SERVER_RADIO_LISTENING))
-            {
-              CustomEffect customEffect = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.SERVER_RADIO_LISTENING);
-              int amplifier = customEffect.getAmplifier();
-              damageMultiplier += (amplifier + 2) * 0.05;
-            }
-            if (CustomEffectManager.hasEffect(victim, CustomEffectType.NEWBIE_SHIELD))
-            {
-              int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
-              switch (amplifier)
-              {
-                case 1 -> damageMultiplier += 0.05;
-                case 2 -> damageMultiplier += 0.15;
-                default -> damageMultiplier += 0.25;
-              }
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.HEROS_ECHO) || CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.HEROS_ECHO_OTHERS))
-            {
-              finalDamageMultiplier *= 1.05;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.WA_SANS) && victim instanceof AbstractSkeleton)
-            {
-              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.NEWBIE_SHIELD).getAmplifier();
-              damageMultiplier += (amplifier + 1) * 0.1;
-            }
-            if (CustomEffectManager.hasEffect(victim, CustomEffectType.WA_SANS) && damagerEntity instanceof AbstractSkeleton)
-            {
-              int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.NEWBIE_SHIELD).getAmplifier();
-              finalDamageMultiplier *= 1 - 0.03 * (amplifier + 1);
-            }
-            if (CustomEffectManager.hasEffect(victim, CustomEffectType.COMBAT_MODE_RANGED) || CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.COMBAT_MODE_MELEE))
-            {
-              damageMultiplier += 1d;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.ENDER_SLAYER) && (victim instanceof Enderman || victim instanceof EnderDragon || victim instanceof Endermite))
-            {
-              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.ENDER_SLAYER).getAmplifier();
-              damageMultiplier += (amplifier + 1) * 0.1;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.BOSS_SLAYER) && (victim instanceof Boss || victim.getScoreboardTags().contains("boss") || MythicMobManager.hasTag(victim, "boss")))
-            {
-              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.BOSS_SLAYER).getAmplifier();
-              damageMultiplier += (amplifier + 1) * 0.1;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.BLESS_OF_VILLAGER))
-            {
-              damageMultiplier += 0.1;
-            }
-            if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectTypeRune.RUNE_DESTRUCTION))
-            {
-              damageMultiplier += 1d;
-            }
-          }
-          if (damagerEntity instanceof LivingEntity livingEntity)
-          {
-            EntityEquipment equipment = livingEntity.getEquipment();
-            if (equipment != null)
-            {
-              ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
-              if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                      chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                      leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                      boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
-              {
-                damageMultiplier += 5d;
-              }
-            }
-          }
-        }
-      }
-      case FALL -> {
-        if (!(event instanceof EntityDamageByEntityEvent damageByEntityEvent) || !(damageByEntityEvent.getDamager() instanceof EnderPearl))
-        {
-          if (CustomEffectManager.hasEffect(victim, CustomEffectType.FEATHER_FALLING))
-          {
-            CustomEffect customEffectFeatherFalling = CustomEffectManager.getEffect(victim, CustomEffectType.FEATHER_FALLING);
-            double fallDistance = victim.getFallDistance();
-            int amplifier = customEffectFeatherFalling.getAmplifier();
-            if (fallDistance < (amplifier + 1) * 5 + 3.5d)
-            {
-              event.setCancelled(true);
-              return;
-            }
-            damageMultiplier -= (amplifier + 1) * 0.08;
-          }
-          if (CustomEffectManager.hasEffect(victim, CustomEffectType.VAR_PODAGRA))
-          {
-            damageMultiplier += 0.5;
           }
         }
       }
@@ -372,62 +231,6 @@ public class EntityDamage implements Listener
                   MessageUtil.sendActionBar(projectileDamager, "상대방이 공격을 회피했습니다!");
                   return;
                 }
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.PARROTS_CHEER))
-              {
-                damageMultiplier += 0.1d;
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.SERVER_RADIO_LISTENING))
-              {
-                CustomEffect customEffect = CustomEffectManager.getEffect(projectileDamager, CustomEffectType.SERVER_RADIO_LISTENING);
-                int amplifier = customEffect.getAmplifier();
-                damageMultiplier += (amplifier + 2) * 0.05;
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.NEWBIE_SHIELD))
-              {
-                int amplifier = CustomEffectManager.getEffect(projectileDamager, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
-                switch (amplifier)
-                {
-                  case 1 -> damageMultiplier += 0.05;
-                  case 2 -> damageMultiplier += 0.15;
-                  default -> damageMultiplier += 0.25;
-                }
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.HEROS_ECHO) || CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.HEROS_ECHO_OTHERS))
-              {
-                finalDamageMultiplier *= 1.05;
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.WA_SANS) && victim instanceof AbstractSkeleton)
-              {
-                int amplifier = CustomEffectManager.getEffect(projectileDamager, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
-                damageMultiplier += (amplifier + 1) * 0.1;
-              }
-              if (CustomEffectManager.hasEffect(victim, CustomEffectType.WA_SANS) && projectileDamager instanceof AbstractSkeleton)
-              {
-                int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.NEWBIE_SHIELD).getAmplifier() + 1;
-                finalDamageMultiplier *= 1 - 0.03 * amplifier;
-              }
-              if (CustomEffectManager.hasEffect(victim, CustomEffectType.COMBAT_MODE_MELEE) || CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.COMBAT_MODE_RANGED))
-              {
-                damageMultiplier += 1d;
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.ENDER_SLAYER) && (victim instanceof Enderman || victim instanceof EnderDragon || victim instanceof Endermite))
-              {
-                int amplifier = CustomEffectManager.getEffect(projectileDamager, CustomEffectType.ENDER_SLAYER).getAmplifier();
-                damageMultiplier += (amplifier + 1) * 0.1;
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.BOSS_SLAYER) && (victim instanceof Boss || victim.getScoreboardTags().contains("boss") || MythicMobManager.hasTag(victim, "boss")))
-              {
-                int amplifier = CustomEffectManager.getEffect(projectileDamager, CustomEffectType.BOSS_SLAYER).getAmplifier();
-                damageMultiplier += (amplifier + 1) * 0.1;
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectType.BLESS_OF_VILLAGER))
-              {
-                damageMultiplier += 0.1;
-              }
-              if (CustomEffectManager.hasEffect(projectileDamager, CustomEffectTypeRune.RUNE_DESTRUCTION))
-              {
-                damageMultiplier += 1d;
               }
             }
             if (projectile instanceof AbstractArrow arrow)
@@ -454,45 +257,8 @@ public class EntityDamage implements Listener
                 }
               }
             }
-            if (projectileSource instanceof LivingEntity livingEntity)
-            {
-              EntityEquipment equipment = livingEntity.getEquipment();
-              if (equipment != null)
-              {
-                ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
-                if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                        chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                        leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                        boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
-                {
-                  damageMultiplier += 5d;
-                }
-              }
-            }
-
           }
         }
-      }
-      case FLY_INTO_WALL -> {
-        if (CustomEffectManager.hasEffect(victim, CustomEffectType.KINETIC_RESISTANCE))
-        {
-          CustomEffect customEffect = CustomEffectManager.getEffect(victim, CustomEffectType.KINETIC_RESISTANCE);
-          int amplifier = customEffect.getAmplifier();
-          damageMultiplier -= (amplifier + 1) * 0.1;
-        }
-      }
-    }
-    if (damageMultiplier < 0d)
-    {
-      damageMultiplier = 0d;
-    }
-    finalDamageMultiplier *= damageMultiplier;
-    if (finalDamageMultiplier != 1d || damage != event.getDamage())
-    {
-      double d = Math.max(0d, damage * finalDamageMultiplier + fixedDamage);
-      if (!Double.isNaN(d) && !Double.isInfinite(d) && d <= Math.pow(2, 127))
-      {
-        event.setDamage(d);
       }
     }
   }
@@ -732,7 +498,7 @@ public class EntityDamage implements Listener
     }
     else
     {
-      display = maplelized ? ComponentUtil.create(NumberHangulConverter.convert2(damage, true, damageColor)) : Component.text(Constant.Sosu2Floor.format(damage), damageColor);
+      display = maplelized ? ComponentUtil.create(NumberHangulConverter.convert2(damage, true, damageColor)) : Component.text(Constant.Sosu2.format(damage), damageColor);
     }
     if (isCrit)
     {
@@ -756,19 +522,6 @@ public class EntityDamage implements Listener
       Variable.damageIndicatorStack.put(uuid, (int) (stack + 30 + diff / 20d));
     }
     double offset = Math.max(0, Variable.damageIndicatorStack.get(uuid) / 100d) - 0.5d;
-//    boolean nearby = false;
-//    for (Entity nearbyEntitiy : entity.getNearbyEntities(0.1, 0.3, 0.1))
-//    {
-//      if (nearbyEntitiy instanceof ArmorStand && nearbyEntitiy.getScoreboardTags().contains("damage_indicator"))
-//      {
-//        nearby = true;
-//        break;
-//      }
-//    }
-//    if (!nearby)
-//    {
-//      offset = 0d;
-//    }
     Location location = event.getEntity().getLocation();
     BoundingBox boundingBox = entity.getBoundingBox();
     offset += (entity.getFireTicks() > 0 ? ((boundingBox.getMaxY() - boundingBox.getCenterY())) : 0);
@@ -782,6 +535,7 @@ public class EntityDamage implements Listener
     }
     else
     {
+      @SuppressWarnings("all")
       Consumer<Entity> consumer = e ->
       {
         ArmorStand armorStand = (ArmorStand) e;

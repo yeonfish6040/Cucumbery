@@ -103,7 +103,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                     SenderComponentUtil.senderComponent(sender),
                     "이 당신의 HP바를 rg255,204;" +
                     Constant.Sosu15.format(value) +
-                    "&r으로 설정하였습니다 (rg255,204;HP&r : rg255,204;" +
+                    "&r으로 설정했습니다 (rg255,204;HP&r : rg255,204;" +
                     hpStr +
                     "&r / rg255,204;" +
                     mhpStr +
@@ -116,7 +116,7 @@ public class CommandHealthScale implements CommandExecutor, TabCompleter
                   targetName +
                   "&r의 HP바를 rg255,204;" +
                   Constant.Sosu15.format(value) +
-                  "&r으로 설정하였습니다 (rg255,204;HP&r : rg255,204;" +
+                  "&r으로 설정했습니다 (rg255,204;HP&r : rg255,204;" +
                   hpStr +
                   "&r / rg255,204;" +
                   mhpStr +

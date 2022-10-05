@@ -72,7 +72,7 @@ public class CommandReplaceEntity extends CommandBase
       }
       if (successEntities.size() > 0)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다", successEntities, resultEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경했습니다", successEntities, resultEntities));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
@@ -118,7 +118,7 @@ public class CommandReplaceEntity extends CommandBase
       }
       if (!hideOutput && successEntities.size() > 0)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다", successEntities, resultEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경했습니다", successEntities, resultEntities));
       }
       else if (!(sender.getCallee() instanceof Player))
       {
@@ -176,7 +176,7 @@ public class CommandReplaceEntity extends CommandBase
       }
       if (!hideOutput && successEntities.size() > 0)
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경하였습니다", successEntities, resultEntities));
+        MessageUtil.info(sender, ComponentUtil.translate("%s의 개체 유형을 %s(으)로 변경했습니다", successEntities, resultEntities));
       }
       else if (!(sender.getCallee() instanceof Player))
       {

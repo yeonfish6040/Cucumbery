@@ -32,12 +32,17 @@ public class EntityPotionEffect implements Listener
     Entity entity = event.getEntity();
     UUID uuid = entity.getUniqueId();
     Action action = event.getAction();
+    Cause cause = event.getCause();
     PotionEffect potionEffect = event.getNewEffect();
-
     if (potionEffect != null && (action == Action.ADDED || action == Action.CHANGED))
     {
       int duration = potionEffect.getDuration();
       PotionEffectType effectType = potionEffect.getType();
+      if (cause == Cause.POTION_DRINK && effectType.equals(PotionEffectType.GLOWING) && duration == 0)
+      {
+        event.setCancelled(true);
+        return;
+      }
       HashMap<String, Integer> hashMap;
       if (Variable.potionEffectApplyMap.containsKey(uuid))
       {
@@ -50,8 +55,6 @@ public class EntityPotionEffect implements Listener
       hashMap.put(effectType.translationKey(), duration);
       Variable.potionEffectApplyMap.put(uuid, hashMap);
     }
-
-    Cause cause = event.getCause();
     PotionEffectType effectType = event.getModifiedType();
 
     if (CustomEffectManager.hasEffect(entity, CustomEffectType.LEVITATION_RESISTANCE) && effectType.equals(PotionEffectType.LEVITATION) && cause == Cause.ATTACK)

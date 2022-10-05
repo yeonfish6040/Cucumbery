@@ -85,7 +85,7 @@ public class CommandRide extends CommandBase
 
       if (entity.getVehicle() == vehicle)
       {
-        MessageUtil.sendError(entity, ComponentUtil.translate("변동 사항이 없습니다. 이미 %s을(를) 탑승하고 있는 상태입니다", vehicle));
+        MessageUtil.sendError(entity, ComponentUtil.translate("변경 사항이 없습니다. 이미 %s을(를) 탑승하고 있는 상태입니다", vehicle));
         return;
       }
 
@@ -127,7 +127,7 @@ public class CommandRide extends CommandBase
         return;
       }
       entity.teleport(entity);
-      MessageUtil.info(vehicle, ComponentUtil.translate("%s이(가) 당신의 탑승을 중지하였습니다", entity));
+      MessageUtil.info(vehicle, ComponentUtil.translate("%s이(가) 당신의 탑승을 중지했습니다", entity));
       MessageUtil.info(entity, ComponentUtil.translate("더 이상 %s을(를) 탑승하지 않습니다", vehicle));
       MessageUtil.sendAdminMessage(sender, Collections.singletonList(vehicle), "더 이상 %s을(를) 탑승하지 않습니다", vehicle);
     });

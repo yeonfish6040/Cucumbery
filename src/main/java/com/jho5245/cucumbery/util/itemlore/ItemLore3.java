@@ -298,6 +298,12 @@ public class ItemLore3
           case CUTE_SUGAR -> {
             description.add(ComponentUtil.translate("&7커여운 슦가다! 달콤한 맛이 날 수도?!"));
           }
+          case BEACON_DECORATIVE -> {
+            description.add(ComponentUtil.translate("&7100% 순수 장식용 신호기!"));
+          }
+          case BEACON_HAT -> {
+            description.add(ComponentUtil.translate("&7우주 탐험에 필요할지도 모른다!"));
+          }
         }
       }
       if (!customType.equals(""))

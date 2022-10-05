@@ -83,7 +83,7 @@ public class CommandAllPlayer implements CucumberyCommandExecutor
       config.set(key.getKey(), bool);
       customConfig.saveConfig();
       Variable.allPlayerConfig = customConfig.getConfig();
-      MessageUtil.sendMessage(sender, Prefix.INFO_ALLPLAYER, "모든 플레이어가 %s을(를) 할 수 %s 하였습니다", Constant.THE_COLOR_HEX + keyString, bool ? "&c없도록" : "&a있도록");
+      MessageUtil.sendMessage(sender, Prefix.INFO_ALLPLAYER, "모든 플레이어가 %s을(를) 할 수 %s 했습니다", Constant.THE_COLOR_HEX + keyString, bool ? "&c없도록" : "&a있도록");
       for (Player player : Bukkit.getServer().getOnlinePlayers())
       {
         if (!player.equals(sender))

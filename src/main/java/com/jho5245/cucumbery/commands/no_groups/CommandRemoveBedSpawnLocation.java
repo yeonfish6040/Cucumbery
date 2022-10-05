@@ -65,7 +65,7 @@ public class CommandRemoveBedSpawnLocation implements CucumberyCommandExecutor
           player.setBedSpawnLocation(null);
           if (!sender.equals(player) && !hideOutput)
           {
-            MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신의 스폰 포인트를 제거하였습니다", sender));
+            MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신의 스폰 포인트를 제거했습니다", sender));
           }
           successPlayers.add(player);
         }
@@ -78,8 +78,8 @@ public class CommandRemoveBedSpawnLocation implements CucumberyCommandExecutor
         }
         if (!successPlayers.isEmpty())
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 스폰 포인트를 제거하였습니다", successPlayers));
-          MessageUtil.sendAdminMessage(sender, "%s의 스폰 포인트를 제거하였습니다", successPlayers);
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 스폰 포인트를 제거했습니다", successPlayers));
+          MessageUtil.sendAdminMessage(sender, "%s의 스폰 포인트를 제거했습니다", successPlayers);
           return true;
         }
       }

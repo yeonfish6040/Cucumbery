@@ -86,10 +86,10 @@ public class CommandEconomy implements CucumberyCommandExecutor
             String balanceDisplay = Constant.Sosu2.format(Cucumbery.eco.getBalance(offlinePlayer));
             if (player != null && !player.equals(sender))
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신에게 rg255,204;" + inputDisplay + "원&r을 지급하였습니다");
+              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신에게 rg255,204;" + inputDisplay + "원&r을 지급했습니다");
               MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, "현재 소지 금액 : rg255,204;" + balanceDisplay + "원");
             }
-            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "에게 rg255,204;" + inputDisplay + "원&r을 지급하였습니다");
+            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "에게 rg255,204;" + inputDisplay + "원&r을 지급했습니다");
             MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "의 소지 금액 : rg255,204;" + balanceDisplay + "원");
           }
         }
@@ -101,10 +101,10 @@ public class CommandEconomy implements CucumberyCommandExecutor
             String balanceDisplay = Constant.Sosu2.format(Cucumbery.eco.getBalance(offlinePlayer));
             if (player != null && !player.equals(sender))
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신에게서 rg255,204;" + inputDisplay + "원&r을 차감하였습니다");
+              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신에게서 rg255,204;" + inputDisplay + "원&r을 차감했습니다");
               MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, "현재 소지 금액 : rg255,204;" + balanceDisplay + "원");
             }
-            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "에게서 rg255,204;" + inputDisplay + "원&r을 차감하였습니다");
+            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "에게서 rg255,204;" + inputDisplay + "원&r을 차감했습니다");
             MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "의 소지 금액 : rg255,204;" + balanceDisplay + "원");
           }
         }
@@ -116,9 +116,9 @@ public class CommandEconomy implements CucumberyCommandExecutor
           {
             if (player != null && !player.equals(sender))
             {
-              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신의 소지 금액을 rg255,204;" + inputDisplay + "원&r으로 설정하였습니다");
+              MessageUtil.sendMessage(player, Prefix.INFO_ECONOMY, sender, "이 당신의 소지 금액을 rg255,204;" + inputDisplay + "원&r으로 설정했습니다");
             }
-            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "의 소지 금액을 rg255,204;" + inputDisplay + "원&r으로 설정하였습니다");
+            MessageUtil.sendMessage(sender, Prefix.INFO_ECONOMY, player != null ? player : offlinePlayer, "의 소지 금액을 rg255,204;" + inputDisplay + "원&r으로 설정했습니다");
           }
         }
         default ->

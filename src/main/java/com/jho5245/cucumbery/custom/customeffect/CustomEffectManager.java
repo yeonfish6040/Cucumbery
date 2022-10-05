@@ -68,6 +68,11 @@ public class CustomEffectManager
     return addEffect(entity, new CustomEffect(effectType));
   }
 
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType, int duration)
+  {
+    return addEffect(entity, new CustomEffect(effectType, duration));
+  }
+
   public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect)
   {
     return addEffect(entity, customEffect, false);
@@ -151,28 +156,35 @@ public class CustomEffectManager
     DisplayType displayType = effect.getDisplayType();
     switch (effectType.getIdString().toUpperCase())
     {
-      case "HEALTH_INCREASE" -> {
+      case "HEALTH_INCREASE" ->
+      {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MAX_HEALTH, Operation.ADD_SCALAR, 0.1);
       }
-      case "NEWBIE_SHIELD" -> {
+      case "NEWBIE_SHIELD" ->
+      {
         if (entity instanceof OfflinePlayer offlinePlayer)
         {
           effect = new OfflinePlayerCustomEffectImple(effectType, initDura, initAmple, displayType, offlinePlayer);
         }
       }
-      case "BREAD_KIMOCHI" -> {
+      case "BREAD_KIMOCHI" ->
+      {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MOVEMENT_SPEED, Operation.ADD_SCALAR, 0.1);
       }
-      case "TOWN_SHIELD" -> {
+      case "TOWN_SHIELD" ->
+      {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_MOVEMENT_SPEED, Operation.ADD_SCALAR, 0.3);
       }
-      case "COMBAT_BOOSTER" -> {
+      case "COMBAT_BOOSTER" ->
+      {
         effect = new AttributeCustomEffectImple(effectType, initDura, initAmple, displayType, UUID.randomUUID(), Attribute.GENERIC_ATTACK_SPEED, Operation.ADD_SCALAR, 0.25);
       }
-      case "POSITION_MEMORIZE" -> {
+      case "POSITION_MEMORIZE" ->
+      {
         effect = new LocationCustomEffectImple(effectType, initDura, initAmple, displayType, entity.getLocation());
       }
-      case "DORMAMMU" -> {
+      case "DORMAMMU" ->
+      {
         effect = new LocationVelocityCustomEffectImple(effectType, initDura, initAmple, displayType, entity.getLocation(), entity.getVelocity());
       }
     }
@@ -197,6 +209,16 @@ public class CustomEffectManager
       Cucumbery.getPlugin().getPluginManager().callEvent(postApplyEvent);
     }
     return true;
+  }
+
+  public static boolean addEffects(@NotNull Entity entity, @NotNull List<CustomEffect> effects, @NotNull ApplyReason reason, boolean force, boolean callEvent)
+  {
+    boolean success = false;
+    for (CustomEffect customEffect : effects)
+    {
+      success = addEffect(entity, customEffect, reason, force, callEvent) || success;
+    }
+    return success;
   }
 
   public static boolean removeEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType)
@@ -280,21 +302,32 @@ public class CustomEffectManager
 
   public static boolean clearEffects(@NotNull Entity entity)
   {
+    return clearEffects(entity, true);
+  }
+
+  public static boolean clearEffects(@NotNull Entity entity, boolean callEvent)
+  {
     if (!hasEffects(entity))
     {
       return false;
     }
     List<CustomEffect> customEffects = new ArrayList<>(getEffects(entity));
-    for (CustomEffect effect : customEffects)
+    if (callEvent)
     {
-      EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect);
-      Cucumbery.getPlugin().getPluginManager().callEvent(event);
+      for (CustomEffect effect : customEffects)
+      {
+        EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect);
+        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+      }
     }
     effectMap.put(entity.getUniqueId(), Collections.emptyList());
-    for (CustomEffect effect : customEffects)
+    if (callEvent)
     {
-      EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect);
-      Cucumbery.getPlugin().getPluginManager().callEvent(event);
+      for (CustomEffect effect : customEffects)
+      {
+        EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect);
+        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+      }
     }
     return true;
   }
@@ -434,112 +467,7 @@ public class CustomEffectManager
     //MessageUtil.broadcastDebug("keysize" + effectMap.size());
     for (UUID uuid : effectMap.keySet())
     {
-      List<CustomEffect> customEffects = effectMap.get(uuid);
-      //MessageUtil.broadcastDebug("trying to save:" + uuid + ", effect size:" + customEffects.size());
-      OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-      boolean isPlayer = offlinePlayer.hasPlayedBefore() || offlinePlayer.getStatistic(Statistic.PLAY_ONE_MINUTE) > 0;
-      Entity entity = Bukkit.getEntity(uuid);
-      String entityType = entity != null ? entity.getType().toString().toLowerCase() : "unknown";
-      if (customEffects.isEmpty() || (!isPlayer && entity == null))
-      {
-        File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomEffects/" + entityType + "/" + uuid + ".yml");
-        if (file.exists())
-        {
-          if (!file.delete())
-          {
-            MessageUtil.sendError(Bukkit.getConsoleSender(), "could not delete wjat");
-          }
-          // MessageUtil.broadcastDebug("&cdelete:" + uuid);
-        }
-        continue;
-      }
-      CustomConfig customConfig = CustomConfig.getCustomConfig("data/CustomEffects/" + (isPlayer ? "" : "non-players/") + uuid + ".yml");
-      // MessageUtil.broadcastDebug("&asave:" + uuid + ", " + customEffects.size());
-      YamlConfiguration config = customConfig.getConfig();
-      if (entity != null)
-      {
-        config.set("info.type", entity.getType().toString());
-        config.set("info.player-name", offlinePlayer.getName());
-        if (!(entity instanceof Player))
-        {
-          Component component = entity.customName();
-          config.set("info.entity-custom-name.name", component != null ? ComponentUtil.serialize(component) : null);
-          config.set("info.entity-custom-name.json", component != null ? ComponentUtil.serializeAsJson(component) : null);
-
-        }
-        Location location = entity.getLocation();
-        config.set("info.location.world", location.getWorld().getName());
-        config.set("info.location.x", location.getX());
-        config.set("info.location.y", location.getY());
-        config.set("info.location.z", location.getZ());
-        config.set("info.location.yaw", location.getYaw());
-        config.set("info.location.pitch", location.getPitch());
-      }
-      config.set("effects", null);
-      for (int i = 0; i < customEffects.size(); i++)
-      {
-        CustomEffect customEffect = customEffects.get(i);
-        CustomEffectType effectType = customEffect.getType();
-        int duration = customEffect.getDuration();
-        int amplifier = customEffect.getAmplifier();
-        int initDuration = customEffect.getInitDuration();
-        int initAmplifier = customEffect.getInitAmplifier();
-        config.set("effects." + i + ".type", effectType.getNamespacedKey().toString());
-        config.set("effects." + i + ".init-duration", initDuration);
-        config.set("effects." + i + ".init-amplifier", initAmplifier);
-        config.set("effects." + i + ".duration", duration);
-        config.set("effects." + i + ".amplifier", amplifier);
-        config.set("effects." + i + ".display-type", customEffect.getDisplayType().toString());
-        if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
-        {
-          config.set("effects." + i + ".player", playerCustomEffect.getPlayer().getUniqueId().toString());
-        }
-        if (customEffect instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)
-        {
-          config.set("effects." + i + ".offline-player", offlinePlayerCustomEffect.getOfflinePlayer().getUniqueId().toString());
-        }
-        if (customEffect instanceof UUIDCustomEffect uuidCustomEffect)
-        {
-          config.set("effects." + i + ".uuid", uuidCustomEffect.getUniqueId().toString());
-          if (uuidCustomEffect instanceof AttributeCustomEffect attributeCustomEffect)
-          {
-            config.set("effects." + i + ".attribute", attributeCustomEffect.getAttribute().toString());
-            config.set("effects." + i + ".operation", attributeCustomEffect.getOperation().toString());
-            config.set("effects." + i + ".multiplier", attributeCustomEffect.getMultiplier());
-          }
-        }
-        if (customEffect instanceof RealDurationCustomEffect realDurationCustomEffect)
-        {
-          config.set("effects." + i + ".start-time", realDurationCustomEffect.getStartTimeInMillis());
-          config.set("effects." + i + ".end-time", realDurationCustomEffect.getEndTimeInMillis());
-        }
-        if (customEffect instanceof ItemStackCustomEffect itemStackCustomEffect)
-        {
-          config.set("effects." + i + ".item", ItemSerializer.serialize(itemStackCustomEffect.getItemStack()));
-        }
-        if (customEffect instanceof LocationCustomEffect locationCustomEffect)
-        {
-          Location location = locationCustomEffect.getLocation();
-          config.set("effects." + i + ".location.world", location.getWorld().getName());
-          config.set("effects." + i + ".location.x", location.getX());
-          config.set("effects." + i + ".location.y", location.getY());
-          config.set("effects." + i + ".location.z", location.getZ());
-          config.set("effects." + i + ".location.yaw", location.getYaw());
-          config.set("effects." + i + ".location.pitch", location.getPitch());
-        }
-        if (customEffect instanceof VelocityCustomEffect velocityCustomEffect)
-        {
-          Vector vector = velocityCustomEffect.getVelocity();
-          config.set("effects." + i + ".velocity.x", vector.getX());
-          config.set("effects." + i + ".velocity.y", vector.getY());
-          config.set("effects." + i + ".velocity.z", vector.getZ());
-        }
-        if (customEffect instanceof StringCustomEffect stringCustomEffect)
-        {
-          config.set("effects." + i + ".string", stringCustomEffect.getString());
-        }
-      }
-      customConfig.saveConfig();
+      save(uuid);
     }
     effectMap.keySet().removeIf(uuid ->
     {
@@ -548,6 +476,116 @@ public class CustomEffectManager
       boolean isPlayer = offlinePlayer.hasPlayedBefore() || offlinePlayer.getStatistic(Statistic.PLAY_ONE_MINUTE) > 0;
       return effectMap.get(uuid).isEmpty() || (!isPlayer && entity == null);
     });
+  }
+
+  public static void save(@NotNull UUID uuid)
+  {
+    List<CustomEffect> customEffects = effectMap.get(uuid);
+    //MessageUtil.broadcastDebug("trying to save:" + uuid + ", effect size:" + customEffects.size());
+    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+    boolean isPlayer = offlinePlayer.hasPlayedBefore() || offlinePlayer.getStatistic(Statistic.PLAY_ONE_MINUTE) > 0;
+    Entity entity = Bukkit.getEntity(uuid);
+    String entityType = entity != null ? entity.getType().toString().toLowerCase() : "unknown";
+    if (customEffects.isEmpty() || (!isPlayer && entity == null))
+    {
+      File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/CustomEffects/" + entityType + "/" + uuid + ".yml");
+      if (file.exists())
+      {
+        if (!file.delete())
+        {
+          MessageUtil.sendError(Bukkit.getConsoleSender(), "could not delete wjat");
+        }
+        // MessageUtil.broadcastDebug("&cdelete:" + uuid);
+      }
+      return;
+    }
+    CustomConfig customConfig = CustomConfig.getCustomConfig("data/CustomEffects/" + (isPlayer ? "" : "non-players/") + uuid + ".yml");
+    // MessageUtil.broadcastDebug("&asave:" + uuid + ", " + customEffects.size());
+    YamlConfiguration config = customConfig.getConfig();
+    if (entity != null)
+    {
+      config.set("info.type", entity.getType().toString());
+      config.set("info.player-name", offlinePlayer.getName());
+      if (!(entity instanceof Player))
+      {
+        Component component = entity.customName();
+        config.set("info.entity-custom-name.name", component != null ? ComponentUtil.serialize(component) : null);
+        config.set("info.entity-custom-name.json", component != null ? ComponentUtil.serializeAsJson(component) : null);
+
+      }
+      Location location = entity.getLocation();
+      config.set("info.location.world", location.getWorld().getName());
+      config.set("info.location.x", location.getX());
+      config.set("info.location.y", location.getY());
+      config.set("info.location.z", location.getZ());
+      config.set("info.location.yaw", location.getYaw());
+      config.set("info.location.pitch", location.getPitch());
+    }
+    config.set("effects", null);
+    for (int i = 0; i < customEffects.size(); i++)
+    {
+      CustomEffect customEffect = customEffects.get(i);
+      CustomEffectType effectType = customEffect.getType();
+      int duration = customEffect.getDuration();
+      int amplifier = customEffect.getAmplifier();
+      int initDuration = customEffect.getInitDuration();
+      int initAmplifier = customEffect.getInitAmplifier();
+      config.set("effects." + i + ".type", effectType.getNamespacedKey().toString());
+      config.set("effects." + i + ".init-duration", initDuration);
+      config.set("effects." + i + ".init-amplifier", initAmplifier);
+      config.set("effects." + i + ".duration", duration);
+      config.set("effects." + i + ".amplifier", amplifier);
+      config.set("effects." + i + ".display-type", customEffect.getDisplayType().toString());
+      if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
+      {
+        config.set("effects." + i + ".player", playerCustomEffect.getPlayer().getUniqueId().toString());
+      }
+      if (customEffect instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)
+      {
+        config.set("effects." + i + ".offline-player", offlinePlayerCustomEffect.getOfflinePlayer().getUniqueId().toString());
+      }
+      if (customEffect instanceof UUIDCustomEffect uuidCustomEffect)
+      {
+        config.set("effects." + i + ".uuid", uuidCustomEffect.getUniqueId().toString());
+        if (uuidCustomEffect instanceof AttributeCustomEffect attributeCustomEffect)
+        {
+          config.set("effects." + i + ".attribute", attributeCustomEffect.getAttribute().toString());
+          config.set("effects." + i + ".operation", attributeCustomEffect.getOperation().toString());
+          config.set("effects." + i + ".multiplier", attributeCustomEffect.getMultiplier());
+        }
+      }
+      if (customEffect instanceof RealDurationCustomEffect realDurationCustomEffect)
+      {
+        config.set("effects." + i + ".start-time", realDurationCustomEffect.getStartTimeInMillis());
+        config.set("effects." + i + ".end-time", realDurationCustomEffect.getEndTimeInMillis());
+      }
+      if (customEffect instanceof ItemStackCustomEffect itemStackCustomEffect)
+      {
+        config.set("effects." + i + ".item", ItemSerializer.serialize(itemStackCustomEffect.getItemStack()));
+      }
+      if (customEffect instanceof LocationCustomEffect locationCustomEffect)
+      {
+        Location location = locationCustomEffect.getLocation();
+        config.set("effects." + i + ".location.world", location.getWorld().getName());
+        config.set("effects." + i + ".location.x", location.getX());
+        config.set("effects." + i + ".location.y", location.getY());
+        config.set("effects." + i + ".location.z", location.getZ());
+        config.set("effects." + i + ".location.yaw", location.getYaw());
+        config.set("effects." + i + ".location.pitch", location.getPitch());
+      }
+      if (customEffect instanceof VelocityCustomEffect velocityCustomEffect)
+      {
+        Vector vector = velocityCustomEffect.getVelocity();
+        config.set("effects." + i + ".velocity.x", vector.getX());
+        config.set("effects." + i + ".velocity.y", vector.getY());
+        config.set("effects." + i + ".velocity.z", vector.getZ());
+      }
+      if (customEffect instanceof StringCustomEffect stringCustomEffect)
+      {
+        config.set("effects." + i + ".string", stringCustomEffect.getString());
+      }
+    }
+    customConfig.saveConfig();
   }
 
   public static void load(@NotNull UUID uuid, @NotNull YamlConfiguration config)
@@ -698,7 +736,8 @@ public class CustomEffectManager
 
   /**
    * 포션 효과가 표기되는것 일부 숨김(Wrapper 효과 등)
-   * @param player 해당 플레이어
+   *
+   * @param player        해당 플레이어
    * @param potionEffects 해당 플레이어의 효과 목록
    * @return 숨겨진 효과를 제외한 효과들
    */
@@ -728,9 +767,9 @@ public class CustomEffectManager
                     potionEffect.getType().equals(PotionEffectType.BLINDNESS) && potionEffect.getDuration() < 22 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-          CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_NIGHT_VISION) &&
-                  potionEffect.getType().equals(PotionEffectType.NIGHT_VISION) && potionEffect.getDuration() < 5 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-  );
+            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_NIGHT_VISION) &&
+                    potionEffect.getType().equals(PotionEffectType.NIGHT_VISION) && potionEffect.getDuration() < 5 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+    );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_POISON) &&
                     potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()

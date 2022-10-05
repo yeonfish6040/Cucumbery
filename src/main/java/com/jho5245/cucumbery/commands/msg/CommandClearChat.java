@@ -31,10 +31,10 @@ public class CommandClearChat implements CucumberyCommandExecutor
     int random = Method.random(1, 20);
     String easterEgg = switch (random)
             {
-              case 1 -> "청소창을 채팅하였습니다...?";
-              case 2 -> "청소창을 채팅하였습니다..";
-              case 3 -> "청소창을 채팅.. 아니 채팅창을 청소하였습니다";
-              default -> "채팅창을 청소하였습니다";
+              case 1 -> "청소창을 채팅했습니다...?";
+              case 2 -> "청소창을 채팅했습니다..";
+              case 3 -> "청소창을 채팅.. 아니 채팅창을 청소했습니다";
+              default -> "채팅창을 청소했습니다";
             };
     if (args.length == 0)
     {
@@ -45,7 +45,7 @@ public class CommandClearChat implements CucumberyCommandExecutor
       MessageUtil.broadcastPlayer(Prefix.INFO_CLEARCHAT, ComponentUtil.translate("%s이(가) " + easterEgg, sender));
       if (!(sender instanceof Player))
       {
-        MessageUtil.sendMessage(sender, Prefix.INFO_CLEARCHAT, "채팅창을 청소하였습니다");
+        MessageUtil.sendMessage(sender, Prefix.INFO_CLEARCHAT, "채팅창을 청소했습니다");
       }
     }
     else if (args.length <= 2)

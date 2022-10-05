@@ -157,7 +157,7 @@ public class PlayerCommandPreprocess implements Listener
             return;
           }
           player.getInventory().removeItem(itemStack);
-          MessageUtil.info(player, "%s을(를) 인벤토리에서 제거하였습니다", itemComponent);
+          MessageUtil.info(player, "%s을(를) 인벤토리에서 제거했습니다", itemComponent);
           Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                   CustomEffectManager.removeEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP), 0L);
         }

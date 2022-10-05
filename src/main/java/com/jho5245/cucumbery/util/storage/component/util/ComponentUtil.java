@@ -4,8 +4,8 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.VanillaEffectDescription;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -313,7 +313,7 @@ public class ComponentUtil
             itemMeta.setCustomModelData(effectType.getId());
           }
           itemMeta.displayName(concat.decoration(TextDecoration.ITALIC, State.FALSE));
-          List<Component> lore = convertHoverToItemLore(hover);
+          List<Component> lore = convertHoverToItemLore(hover, false);
           lore.remove(0);
           lore.remove(0);
           lore.removeIf(c -> c instanceof TextComponent textComponent && textComponent.content().equals(""));
@@ -394,7 +394,7 @@ public class ComponentUtil
             itemMeta.setCustomModelData(effectType.getId());
           }
           itemMeta.displayName(concat.decoration(TextDecoration.ITALIC, State.FALSE));
-          List<Component> lore = convertHoverToItemLore(hover);
+          List<Component> lore = convertHoverToItemLore(hover, false);
           lore.remove(0);
           lore.remove(0);
           int size = lore.size();
@@ -423,7 +423,7 @@ public class ComponentUtil
       }
       else if (Cucumbery.using_NoteBlockAPI && object instanceof Song song)
       {
-        String display = song.getPath().getName();
+        String display = song.getPath().getName().replace("＃", "#").replace("？", "?").replace("：", ":");
         display = display.substring(0, display.length() - 4);
         Component concat = Component.text(display).color(Constant.THE_COLOR);
         Component hover = Component.translatable(display);
@@ -459,13 +459,12 @@ public class ComponentUtil
         hover = hover.append(ComponentUtil.translate("속도 : %sTPS", Constant.THE_COLOR_HEX + song.getSpeed()));
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("길이 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli((long) ((song.getLength() / song.getSpeed()) * 1000L), true, 1)));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.translate("딜레이 : %s", Constant.THE_COLOR_HEX + song.getDelay()));
         if (player != null && player.hasPermission("cucumbery.command.song"))
         {
           hover = hover.append(Component.text("\n"));
           hover = hover.append(Component.text("\n"));
           hover = hover.append(ComponentUtil.translate("&7클릭하여 노래 재생"));
+          display = song.getPath().getName();
           if (display.contains(" "))
           {
             display = "'" + display.replace("'", "''") + "'";
@@ -561,17 +560,18 @@ public class ComponentUtil
         }
         else if (string.startsWith("player:"))
         {
+          Component concat = Component.empty();
           Player player2 = SelectorUtil.getPlayer(player, string.substring("player:".length()), false);
           if (player2 != null)
           {
-            Component concat = create(player2);
-            component = component.append(concat);
+            concat = create(player, player2);
           }
+          component = component.append(concat);
         }
         else if (string.startsWith("players:"))
         {
           Component concat = Component.empty();
-          List<Player> players = SelectorUtil.getPlayers(player, string.substring(8), false);
+          List<Player> players = SelectorUtil.getPlayers(player, string.substring("players:".length()), false);
           if (players != null)
           {
             concat = create(players);
@@ -581,7 +581,7 @@ public class ComponentUtil
         else if (string.startsWith("entity:"))
         {
           Component concat = Component.empty();
-          Entity entity = SelectorUtil.getEntity(player, string.substring(7), false);
+          Entity entity = SelectorUtil.getEntity(player, string.substring("entity:".length()), false);
           if (entity != null)
           {
             concat = create(entity);
@@ -591,7 +591,7 @@ public class ComponentUtil
         else if (string.startsWith("entities:"))
         {
           Component concat = Component.empty();
-          List<Entity> entities = SelectorUtil.getEntities(player, string.substring(9), false);
+          List<Entity> entities = SelectorUtil.getEntities(player, string.substring("entities:".length()), false);
           if (entities != null)
           {
             concat = create(entities);
@@ -610,7 +610,7 @@ public class ComponentUtil
         }
         else if (string.startsWith("item:"))
         {
-          ItemStack itemStack = ItemSerializer.deserialize(string.substring(5));
+          ItemStack itemStack = ItemSerializer.deserialize(string.substring("item:".length()));
           if (!ItemStackUtil.itemExists(itemStack))
           {
             itemStack = new ItemStack(Material.STONE);
@@ -626,7 +626,7 @@ public class ComponentUtil
         }
         else if (string.startsWith("items:"))
         {
-          ItemStack itemStack = ItemSerializer.deserialize(string.substring(5));
+          ItemStack itemStack = ItemSerializer.deserialize(string.substring("items:".length()));
           if (!ItemStackUtil.itemExists(itemStack))
           {
             itemStack = new ItemStack(Material.STONE);
@@ -638,11 +638,11 @@ public class ComponentUtil
           {
             ItemLore.setItemLore(itemStack, player);
           }
-          component = component.append(ItemStackComponent.itemStackComponent(itemStack));
+          component = component.append(ItemStackComponent.itemStackComponent(itemStack, Constant.THE_COLOR));
         }
         else if (string.startsWith("world:"))
         {
-          World world = Bukkit.getWorld(string.substring(6));
+          World world = Bukkit.getWorld(string.substring("world:".length()));
           if (world != null)
           {
             component = component.append(create(world));
@@ -650,6 +650,40 @@ public class ComponentUtil
           else
           {
             component = component.append(translate("&c알 수 없는 월드입니다 (%s)", string.substring(6)));
+          }
+        }
+        else if (string.startsWith("location:"))
+        {
+          string = string.substring("location:".length());
+          String[] split = string.split(",");
+          boolean invalid = false;
+          try
+          {
+            World world = Bukkit.getWorld(split[0]);
+            double x = Double.parseDouble(split[1]);
+            double y = Double.parseDouble(split[2]);
+            double z = Double.parseDouble(split[3]);
+            Location location = new Location(world, x, y, z);
+            if (split.length == 6)
+            {
+              double yaw = Double.parseDouble(split[4]);
+              double pitch = Double.parseDouble(split[5]);
+              location = new Location(world, x, y, z, (float) yaw, (float) pitch);
+            }
+            else if (split.length != 4)
+            {
+              invalid = true;
+            }
+            if (invalid || world == null)
+            {
+              component = component.append(translate("&c잘못된 좌표입니다 (%s)", string));
+              continue;
+            }
+            component = component.append(LocationComponent.locationComponent(location));
+          }
+          catch (Exception ignored)
+          {
+
           }
         }
         else
@@ -1680,10 +1714,32 @@ public class ComponentUtil
   @NotNull
   public static List<Component> convertHoverToItemLore(@NotNull Component component)
   {
+    return convertHoverToItemLore(component, NamedTextColor.WHITE, true);
+  }
+
+  @NotNull
+  public static List<Component> convertHoverToItemLore(@NotNull Component component, @NotNull TextColor defaultColor)
+  {
+    return convertHoverToItemLore(component, defaultColor, true);
+  }
+
+  @NotNull
+  public static List<Component> convertHoverToItemLore(@NotNull Component component, boolean removeLineLore)
+  {
+    return convertHoverToItemLore(component, NamedTextColor.WHITE, removeLineLore);
+  }
+
+  @NotNull
+  public static List<Component> convertHoverToItemLore(@NotNull Component component, @NotNull TextColor defaultColor, boolean removeLineLore)
+  {
     List<Component> list = new ArrayList<>();
     List<Component> children = component.children();
     list.add(component.children(Collections.emptyList()));
-    children.forEach(c -> list.addAll(convertHoverToItemLore(c)));
+    children.forEach(c -> list.addAll(convertHoverToItemLore(c, defaultColor, removeLineLore)));
+    if (removeLineLore)
+    {
+      list.removeIf(c -> c.equals(Component.text("\n")));
+    }
     for (int i = 0; i < list.size(); i++)
     {
       Component c = list.get(i);
@@ -1693,7 +1749,7 @@ public class ComponentUtil
       }
       if (c.color() == null)
       {
-        c = c.color(NamedTextColor.WHITE);
+        c = c.color(defaultColor);
       }
       list.set(i, c);
     }

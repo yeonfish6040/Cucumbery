@@ -155,7 +155,7 @@ public class CommandVirtualChest implements CommandExecutor, TabCompleter
           config.set("items." + i, ItemSerializer.serialize(contents[i - 1]));
         }
         customConfig.saveConfig();
-        MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "%s 가상창고에 %s을(를) 추가하였습니다", Constant.THE_COLOR_HEX + chestName, handItem);
+        MessageUtil.sendMessage(player, Prefix.INFO_VIRTUAL_CHEST, "%s 가상창고에 %s을(를) 추가했습니다", Constant.THE_COLOR_HEX + chestName, handItem);
       }
       case "virtualchestadmin" -> {
         args = MessageUtil.wrapWithQuote(args);

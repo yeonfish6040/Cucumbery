@@ -1,13 +1,17 @@
 package com.jho5245.cucumbery.custom.customeffect.custom_mining;
 
+import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record MiningResult(boolean canMine, float toolSpeed, float miningSpeed, float blockHardness, float miningFortune, float exp, int miningTier, int blockTier, int regenCooldown, List<ItemStack> drops)
+public record MiningResult(boolean canMine, float toolSpeed, float miningSpeed, float blockHardness, float miningFortune, float exp, int miningTier, int blockTier, int regenCooldown, List<ItemStack> drops, @Nullable
+                           Sound breakSound, @Nullable String breakCustomSound, float breakSoundVolume, float breakSoundPitch)
 {
-  public MiningResult(boolean canMine, float toolSpeed, float miningSpeed, float blockHardness, float miningFortune, float exp, int miningTier, int blockTier, int regenCooldown, @NotNull List<ItemStack> drops)
+  public MiningResult(boolean canMine, float toolSpeed, float miningSpeed, float blockHardness, float miningFortune, float exp, int miningTier, int blockTier, int regenCooldown, @NotNull List<ItemStack> drops, @Nullable
+  Sound breakSound, @Nullable String breakCustomSound, float breakSoundVolume, float breakSoundPitch)
   {
     this.canMine = canMine;
     this.toolSpeed = toolSpeed;
@@ -19,5 +23,9 @@ public record MiningResult(boolean canMine, float toolSpeed, float miningSpeed, 
     this.blockTier = blockTier;
     this.regenCooldown = regenCooldown;
     this.drops = drops;
+    this.breakSound = breakSound;
+    this.breakCustomSound = breakCustomSound;
+    this.breakSoundVolume = breakSoundVolume;
+    this.breakSoundPitch = breakSoundPitch;
   }
 }

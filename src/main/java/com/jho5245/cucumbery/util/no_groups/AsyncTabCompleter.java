@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util.no_groups;
 
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent;
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Tab Completer for {@link com.destroystokyo.paper.event.server.AsyncTabCompleteEvent}
+ * Tab Completer for {@link AsyncTabCompleteEvent}
  */
 public interface AsyncTabCompleter
 {

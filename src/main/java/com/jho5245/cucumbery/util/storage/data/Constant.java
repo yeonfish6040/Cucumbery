@@ -510,8 +510,6 @@ public class Constant
     STORAGE_CONTENTS("컨테이너 내용물 숨김"),
     BOOK_TAG("책 태그 숨김"),
     EXPIRE_DATE("유효 기간 숨김"),
-    EXPIRE_DATE_RELATIVE("유효 기간(상대값) 숨김"),
-    EXPIRE_DATE_ABSOLUTE("유효 기간(절대값) 숨김"),
     CAN_PLACE_ON("마인크래프트 이 위에 설치 가능 숨김"),
     CAN_DESTROY("마인크래프트 부술 수 있는 것 숨김"),
 
@@ -570,6 +568,10 @@ public class Constant
     LODESTONE_LOCATION("자석석 좌표 태그 숨김"),
     CUSTOM_LORE("커스텀 설명 숨김"),
     ABOVE_CUSTOM_LORE("상단 커스텀 설명 숨김"),
+
+    ORIGINAL_DISPLAY_NAME("원래 이름 표시 설명 숨김"),
+
+    CUSTOM_MININGS("채굴 관련 설명 숨김"),
     ;
 
     private final String display;

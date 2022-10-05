@@ -69,7 +69,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
             playerInventory.setItemInMainHand(item);
             Method.updateInventory(player);
             MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 이름을 rg255,204;" + name + "&r" + MessageUtil.getFinalConsonant(name,
-                    MessageUtil.ConsonantType.으로) + " 설정하였습니다");
+                    MessageUtil.ConsonantType.으로) + " 설정했습니다");
           }
           case "command" -> {
             String command = MessageUtil.listToString(" ", 1, args.length, args);
@@ -81,7 +81,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
             playerInventory.setItemInMainHand(item);
             Method.updateInventory(player);
             MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 명령어를 rg255,204;" + command + "&r" + MessageUtil.getFinalConsonant(command,
-                    MessageUtil.ConsonantType.으로) + " 설정하였습니다");
+                    MessageUtil.ConsonantType.으로) + " 설정했습니다");
           }
           case "auto" -> {
             if (args.length > 2)
@@ -102,7 +102,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
             blockEntityTag.setBoolean("auto", input);
             playerInventory.setItemInMainHand(nbtItem.getItem());
             Method.updateInventory(player);
-            MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 항상 활성화 태그를 rg255,204;" + input + "&r(으)로 설정하였습니다");
+            MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 항상 활성화 태그를 rg255,204;" + input + "&r(으)로 설정했습니다");
           }
           case "conditional" -> {
             if (args.length > 2)
@@ -123,7 +123,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
             blockStateTag.setString("conditional", input + "");
             playerInventory.setItemInMainHand(nbtItem.getItem());
             Method.updateInventory(player);
-            MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 조건적 태그를 rg255,204;" + input + "&r(으)로 설정하였습니다");
+            MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 조건적 태그를 rg255,204;" + input + "&r(으)로 설정했습니다");
           }
           default -> {
             MessageUtil.wrongArg(sender, 1, args);

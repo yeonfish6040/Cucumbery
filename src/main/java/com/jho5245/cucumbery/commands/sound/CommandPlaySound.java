@@ -115,13 +115,13 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter
             {
               String s = Constant.THE_COLOR_HEX + ((isCustomSound) ? customSound : sound.toString().toLowerCase());
               MessageUtil.broadcastPlayer(
-                      Prefix.INFO_SOUND, "%s이(가) 모두에게 %s을(를) 재생하였습니다", sender, s);
-              MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "모든 플레이어에게 %s을(를) 재생하였습니다", s);
+                      Prefix.INFO_SOUND, "%s이(가) 모두에게 %s을(를) 재생했습니다", sender, s);
+              MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "모든 플레이어에게 %s을(를) 재생했습니다", s);
             }
           }
           catch (Exception e)
           {
-            MessageUtil.sendError(sender, "소리 재생에 실패하였습니다");
+            MessageUtil.sendError(sender, "소리 재생에 실패했습니다");
             MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "소리 이름의 정규식은 rg255,204;[a-z0-9/._-]&r입니다");
             return true;
           }
@@ -226,12 +226,12 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter
                 {
                   MessageUtil.sendMessage(player,
                           Prefix.INFO_SOUND, SenderComponentUtil.senderComponent(sender), "이 당신에게 rg255,204;" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-                                  + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다");
+                                  + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생했습니다");
                 }
               }
               catch (Exception e)
               {
-                MessageUtil.sendError(sender, "소리 재생에 실패하였습니다");
+                MessageUtil.sendError(sender, "소리 재생에 실패했습니다");
                 MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "소리 이름의 정규식은 rg255,204;[a-z0-9/._-]&r입니다");
                 return true;
               }
@@ -240,7 +240,7 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter
           if (!hideOutput)
           {
             MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "서버 라디오 들음을 활성화한 모든 플레이어에게 rg255,204;" + ((isCustomSound) ? customSound : sound.toString())
-                    + "&r" + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다");
+                    + "&r" + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생했습니다");
           }
         }
         else
@@ -334,7 +334,7 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter
             }
             catch (Exception e)
             {
-              MessageUtil.sendError(sender, "소리 재생에 실패하였습니다");
+              MessageUtil.sendError(sender, "소리 재생에 실패했습니다");
               MessageUtil.sendMessage(sender, Prefix.INFO_SOUND, "소리 이름의 정규식은 rg255,204;[a-z0-9/._-]&r입니다");
               e.printStackTrace();
               return true;
@@ -348,10 +348,10 @@ public class CommandPlaySound implements CommandExecutor, TabCompleter
           {
             MessageUtil.sendMessage(target,
                     Prefix.INFO_SOUND, SenderComponentUtil.senderComponent(sender), "이 당신에게 rg255,204;" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-                            + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다");
+                            + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생했습니다");
             MessageUtil.sendMessage(sender,
                     Prefix.INFO_SOUND, SenderComponentUtil.senderComponent(target), "&r에게 rg255,204;" + ((isCustomSound) ? customSound : sound.toString()) + "&r"
-                            + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생하였습니다");
+                            + MessageUtil.getFinalConsonant(((isCustomSound) ? customSound : sound.toString()), ConsonantType.을를) + " 재생했습니다");
           }
         }
         else

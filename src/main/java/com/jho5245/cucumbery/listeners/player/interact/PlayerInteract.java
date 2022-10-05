@@ -127,7 +127,7 @@ public class PlayerInteract implements Listener
             CustomEffectManager.removeEffect(item, CustomEffectTypeRune.RUNE_OCCUPIED);
             CustomEffectManager.removeEffect(player, CustomEffectTypeRune.RUNE_USING);
             CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectTypeRune.RUNE_COOLDOWN, 20 * 5));
-            MessageUtil.sendTitle(player, "", "g255;마우스를 제대로 클릭하지 않아 룬 해방에 실패하였습니다.", 0, 0, 150);
+            MessageUtil.sendTitle(player, "", "g255;마우스를 제대로 클릭하지 않아 룬 해방에 실패했습니다.", 0, 0, 150);
           }
           if (s.isEmpty())
           {
@@ -267,6 +267,20 @@ public class PlayerInteract implements Listener
         return;
       }
 
+      if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player))
+      {
+        String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
+        if (expireDate != null)
+        {
+          if (Method.isTimeUp(item, expireDate))
+          {
+            MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", item));
+            item.setAmount(0);
+            return;
+          }
+        }
+      }
+
       // 손에 아이템 있음, 좌클릭
       if (leftClick)
       {
@@ -306,7 +320,7 @@ public class PlayerInteract implements Listener
           return;
         }
 
-        boolean itemUsageRightClick = Method.useItem(player, item, hand);
+        boolean itemUsageRightClick = Method.useItem(player, item, hand, action);
 
         if (itemUsageRightClick)
         {
@@ -826,7 +840,7 @@ public class PlayerInteract implements Listener
         }
 
         if (itemType == Material.ENDER_PEARL && NBTAPI.arrayContainsValue(NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY),
-                Constant.ExtraTag.NO_COOLDOWN_ENDER_PEARL.toString()))
+                Constant.ExtraTag.NO_COOLDOWN_ENDER_PEARL.toString()) && !player.hasCooldown(Material.ENDER_PEARL))
         {
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                   player.setCooldown(Material.ENDER_PEARL, 0), 0L);
@@ -963,6 +977,23 @@ public class PlayerInteract implements Listener
               event.setCancelled(true);
               player.openWorkbench(null, true);
               return;
+            }
+            case SPYGLASS_TELEPORT ->
+            {
+              if (rightAir)
+              {
+                CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectType.SPYGLASS_TELEPORT_COOLDOWN);
+                if (customEffect != null)
+                {
+                  event.setCancelled(true);
+                  MessageUtil.sendWarn(player, "능력을 사용하려면 %s 더 기다려야합니다!", ComponentUtil.translate("rg255,204;%s초", Constant.Sosu2.format(customEffect.getDuration() / 20d)));
+                  return;
+                }
+                CustomEffectManager.addEffect(player, CustomEffectType.SPYGLASS_TELEPORT);
+                MessageUtil.info(player, "&a%s 능력을 사용했습니다!", ComponentUtil.translate("보아라, 닿아라"));
+                MessageUtil.info(player, "&e우클릭을 멈추거나 움직이면 순간 이동이 취소됩니다");
+                return;
+              }
             }
           }
         }
@@ -1130,14 +1161,21 @@ public class PlayerInteract implements Listener
       }
     }
 
-    // 경작지
-    if (action == Action.PHYSICAL)
+    if (action == Action.PHYSICAL && block != null)
     {
-      if ((Cucumbery.config.getBoolean("block-player-trample-soil") && !Method.configContainsLocation(Objects.requireNonNull(block).getLocation(),
-              Cucumbery.config.getStringList("no-block-player-trample-soil-worlds"))) ||
-              UserData.TRAMPLE_SOIL_FORCE.getBoolean(uuid))
+      // 경작지
+      if (block.getType() == Material.FARMLAND)
       {
-        if (Objects.requireNonNull(block).getType() == Material.FARMLAND)
+        if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE) &&
+                !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
+        {
+          event.setUseInteractedBlock(Event.Result.DENY);
+          event.setCancelled(true);
+          return;
+        }
+        if ((Cucumbery.config.getBoolean("block-player-trample-soil") && !Method.configContainsLocation(block.getLocation(),
+                Cucumbery.config.getStringList("no-block-player-trample-soil-worlds"))) ||
+                UserData.TRAMPLE_SOIL_FORCE.getBoolean(uuid))
         {
           if (UserData.TRAMPLE_SOIL.getBoolean(uuid) || UserData.TRAMPLE_SOIL_FORCE.getBoolean(uuid))
           {
@@ -1584,6 +1622,18 @@ public class PlayerInteract implements Listener
       {
         step = origin.getDirection().multiply(1D / density * (reverse ? -1d : 1d));
       }
+      Particle particle = Particle.FIREWORKS_SPARK;
+      if (customItemTagCompound.hasKey(CucumberyTag.CUSTOM_ITEM_RAILGUN_PARTICLE_TYPE))
+      {
+        try
+        {
+          particle = Particle.valueOf(customItemTagCompound.getString("ParticleType"));
+        }
+        catch (Exception ignored)
+        {
+
+        }
+      }
       for (int i = 0; i < range * density; i++)
       {
         origin.add(step);
@@ -1593,11 +1643,11 @@ public class PlayerInteract implements Listener
           if (sortParticle)
           {
             Location roundOrigin = new Location(origin.getWorld(), origin.getBlockX() + .5, origin.getBlockY() + .5, origin.getBlockZ() + .5);
-            player.getLocation().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, roundOrigin, 1, 0, 0, 0, 0);
+            player.getLocation().getWorld().spawnParticle(particle, roundOrigin, 1, 0, 0, 0, 0);
           }
           else
           {
-            player.getLocation().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, origin, 1, 0, 0, 0, 0);
+            player.getLocation().getWorld().spawnParticle(particle, origin, 1, 0, 0, 0, 0);
           }
         }
         if (!Constant.PENETRATABLE_BLOCKS.contains(player.getLocation().getWorld().getBlockAt(origin).getType()) && !penetration)

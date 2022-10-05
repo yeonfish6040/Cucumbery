@@ -45,7 +45,7 @@ public class EnchantSmeltingTouch extends CustomEnchant
       CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
       return switch (customMaterial)
               {
-                case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566 -> true;
+                case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566, MINDAS_DRILL -> true;
                 default -> false;
               };
     }

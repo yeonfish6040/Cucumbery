@@ -32,6 +32,8 @@ import java.util.*;
 
 public class InventoryOpen implements Listener
 {
+  public static HashMap<Location, UUID> mcMMOBrewingStandMap = new HashMap<>();
+
   @EventHandler
   public void onInventoryOpen(InventoryOpenEvent event)
   {
@@ -124,6 +126,10 @@ public class InventoryOpen implements Listener
       {
         return;
       }
+      if (Cucumbery.using_mcMMO && viewType == InventoryType.BREWING && inventory.getLocation() != null)
+      {
+        mcMMOBrewingStandMap.put(inventory.getLocation(), uuid);
+      }
       // Openinv로 인벤토리가 열린 경우가 아니고 이미 다른 사람이 인벤토리를 연 상태가 아닐 때
       if (inventory.getViewers().size() <= 1 && (location != null || inventory.getType() != InventoryType.CHEST) && !title.contains(Constant.CANCEL_STRING) && !title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI))
       {
@@ -197,7 +203,7 @@ public class InventoryOpen implements Listener
                   if (!ItemStackUtil.hasLore(ingre2))
                   {
                     recipeIsCorrect = false;
-                    ItemLore.setItemLore(ingre2,new ItemLoreView(player));
+                    ItemLore.setItemLore(ingre2, new ItemLoreView(player));
                   }
                   else
                   {
@@ -222,7 +228,7 @@ public class InventoryOpen implements Listener
                   if (!result.isSimilar(clone))
                   {
                     recipeIsCorrect = false;
-                    ItemLore.setItemLore(result,new ItemLoreView(player) );
+                    ItemLore.setItemLore(result, new ItemLoreView(player));
                   }
                 }
                 if (recipeIsCorrect)
@@ -344,7 +350,8 @@ public class InventoryOpen implements Listener
           case LOOM -> SoundPlay.playSound(player, Sound.UI_LOOM_SELECT_PATTERN, SoundCategory.PLAYERS, 1F, 2F);
           case SMOKER -> SoundPlay.playSound(player, Sound.BLOCK_SMOKER_SMOKE, SoundCategory.PLAYERS, 1F, 1F);
           case STONECUTTER -> SoundPlay.playSound(player, Sound.UI_STONECUTTER_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 2F);
-          default -> {
+          default ->
+          {
           }
         }
       }

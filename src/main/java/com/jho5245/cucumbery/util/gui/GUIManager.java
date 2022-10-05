@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.gui;
 
 import com.jho5245.cucumbery.commands.no_groups.CommandStash;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -18,6 +19,7 @@ import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +31,7 @@ public class GUIManager
   {
     openGUI(player, gui, true);
   }
+
   public static void openGUI(@NotNull Player player, @NotNull GUIType gui, boolean firstOpen)
   {
     switch (gui)
@@ -45,8 +48,8 @@ public class GUIManager
   private static void mainMenu(Player player)
   {
     Inventory inv = Bukkit.createInventory(null, 9, Constant.CANCEL_STRING + Constant.MAIN_MENU);
-    inv.setItem(3, CreateItemStack.newItem(Material.TRIPWIRE_HOOK, 1, "&b개인 설정", "&7서버에서 제공하는 몇몇 기능들을 설정합니다", true));
-    inv.setItem(5, CreateItemStack.newItem(Material.CRAFTING_TABLE, 1, "&e아이템 제작", Arrays.asList("&7아이템 제작 메뉴를 엽니다", "&eEpicCraftingsPlus&7 플러그인이 일을 안해서 내가 직접 만들었다"), true));
+    inv.setItem(3, CreateItemStack.create(Material.TRIPWIRE_HOOK, 1, "&b개인 설정", "&7서버에서 제공하는 몇몇 기능들을 설정합니다", true));
+    inv.setItem(5, CreateItemStack.create(Material.CRAFTING_TABLE, 1, "&e아이템 제작", Arrays.asList("&7아이템 제작 메뉴를 엽니다", "&eEpicCraftingsPlus&7 플러그인이 일을 안해서 내가 직접 만들었다"), true));
 
     player.openInventory(inv);
 
@@ -90,8 +93,10 @@ public class GUIManager
             .asList("&7PvP를 할 때 액션바로 HP를 봅니다", "&7공격할 때 액션바 띄움 기능을 사용하지 않으면", "&7이 기능을 사용해도 액션바를 띄우지 않습니다", "&e해당 기능을 사용해도 일부 유저(관리자 등)의", "&eHP는 보이지 않을 수 있습니다", "", "&6현재 설정 : &c액션바를 띄우지 않습니다", "",
                     "&a클릭하면 액션바를 띄웁니다")));
     inv.setItem(13, CreateItemStack.toggleItem(UserData.FIREWORK_LAUNCH_ON_AIR.getBoolean(player.getUniqueId()), "&b폭죽 즉시 발사",
-            Arrays.asList("&7폭죽을 발사할 때 블록을 바라보지 않고", "&7아이템 사용으로 즉시 발사할 수 있습니다", "", "&6현재 설정 : &a즉시 발사 기능을 사용합니다", "", "&c클릭하면 기능을 사용하지 않습니다"), "&b폭죽 즉시 발사",
-            Arrays.asList("&7폭죽을 발사할 때 블록을 바라보지 않고", "&7아이템 사용으로 즉시 발사할 수 있습니다", "", "&6현재 설정 : &c즉시 발사 기능을 사용하지 않습니다", "", "&a클릭하면 기능을 사용합니다")));
+            Arrays.asList("&7폭죽을 발사할 때 블록을 바라보지 않고", ComponentUtil.translate("&7%s 키로 즉시 발사할 수 있습니다", Component.keybind("key.use")), "&a웅크린 상태에서 발사하면 바라보는 방향으로 발사합니다", "", "&6현재 설정 : &a즉시 발사 기능을 사용합니다", "", "&c클릭하면 기능을 사용하지 않습니다"), "&b폭죽 즉시 발사",
+            Arrays.asList("&7폭죽을 발사할 때 블록을 바라보지 않고", ComponentUtil.translate("&7%s 키로 즉시 발사할 수 있습니다", Component.keybind("key.use")), "&a웅크린 상태에서 발사하면 바라보는 방향으로 발사합니다", "", "&6현재 설정 : &c즉시 발사 기능을 사용하지 않습니다", "", "&a클릭하면 기능을 사용합니다")));
+
+
     inv.setItem(14, CreateItemStack.toggleItem(UserData.TRAMPLE_SOIL.getBoolean(player.getUniqueId()), "&b경작지 파괴 방지 기능 사용", Arrays
             .asList("&7경작지에서 점프를 했을때 경작지가 흙으로 바뀌지 않게 해줍니다", "&7플레이어가 아닌 개체는 여전히 경작지를 파괴할 수 있습니다", "&e특정한 상황에서는 해당 기능을 사용해도", "&e경작지가 흙으로 바뀔 수 있습니다", "", "&6현재 설정 : &a점프해도 경작지가 파괴되지 않습니다", "",
                     "&c클릭하면 파괴 방지 기능을 사용하지 않습니다"), "&b경작지 파괴 방지 기능 사용", Arrays
@@ -99,7 +104,7 @@ public class GUIManager
                     "&a클릭하면 파괴 방지 기능을 사용합니다")));
     if (Permission.GUI_SERVER_SETTINGS_ADMIN.has(player))
     {
-      inv.setItem(18, CreateItemStack.newItem(Material.COMMAND_BLOCK, 1, "&b관리자 전용 설정", Arrays.asList("&7관리자 전용 개인 설정 메뉴를 엽니다", "&7아직 귀찮아서 미완성인게 많습니다 ㅁㄴㅇㄹ"), true));
+      inv.setItem(18, CreateItemStack.create(Material.COMMAND_BLOCK, 1, "&b관리자 전용 설정", Arrays.asList("&7관리자 전용 개인 설정 메뉴를 엽니다", "&7아직 귀찮아서 미완성인게 많습니다 ㅁㄴㅇㄹ"), true));
     }
 
     inv.setItem(15, CreateItemStack.toggleItem(UserData.TRAMPLE_SOIL_ALERT.getBoolean(player.getUniqueId()), "&b경작지 파괴 방지 기능 타이틀 띄움",
@@ -144,8 +149,19 @@ public class GUIManager
             Arrays.asList("&7인벤토리가 가득 찼을때 타이틀과", "&7채팅창에 경고 메시지를 띄워줍니다", "&e특정 상황에서는 해당 기능을 사용해도", "&e경고 메시지가 뜨지 않을 수 있습니다"), trueLore, falseLore));
     inv.setItem(31, CreateItemStack.toggleItem(getBool(player, UserData.SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN), "&b아이템 재사용/재발동 대기시간 액션바",
             Arrays.asList("&7아이템의 남은 재사용 대기 시간 혹은 ", "&7남은 재발동 대기 시간을 액션바에 띄웁니다", "&e특정 상황에서는 해당 기능을 사용해도", "&e액션바가 뜨지 않을 수 있습니다"), trueLore, falseLore));
+
+    List<String> list = new ArrayList<>(Arrays.asList(
+            "&7바닥에 떨어져 있는 아이템의 이름을 표시합니다", "&e특정 상황에서 또는 특정 아이템은 해당 기능에 관계없이", "&e이름이 표시되지 않거나 항상 표시될 수 있습니다"
+    ));
+
+    if (UserData.FORCE_HIDE_DROPPED_ITEM_CUSTOM_NAME.getBoolean(player))
+    {
+      list.add("");
+      list.add("&c현재 바닥에 떨어진 아이템 이름을 볼 수 없는 상태입니다");
+    }
+
     inv.setItem(32, CreateItemStack.toggleItem(getBool(player, UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME), "&b바닥에 떨어진 아이템 이름 표시",
-            List.of("&7바닥에 떨어져 있는 아이템의 이름을 표시합니다", "&e특정 아이템은 해당 기능에 관계없이", "&e이름이 표시되지 않거나 항상 표시될 수 있습니다"), trueLore, falseLore));
+            list, trueLore, falseLore));
     inv.setItem(33, CreateItemStack.toggleItem(getBool(player, UserData.SHOW_DAMAGE_INDICATOR), "&b대미지 숫자 표시",
             List.of("&7몬스터 혹은 다른 플레이어가 대미지를 입을 때", "&7해당 개체의 상단에 대미지 숫자를 표시합니다"), trueLore, falseLore));
     String itemDropMode = switch (UserData.ITEM_DROP_MODE.getString(player.getUniqueId()))
@@ -163,12 +179,12 @@ public class GUIManager
               default -> "알 수 없음";
             };
     inv.setItem(39, CreateItemStack
-            .newItem(Material.EGG, 1, "&6아이템 버리기 모드 설정", Arrays.asList("&7아이템 버리기 모드를 설정합니다", "&7아이템 버리기 모드는 3가지가 있으며", "&e기본&7, &e웅크리기&7, &e비활성화&7가 있습니다", "", "&6현재 설정 : &e" + itemDropMode),
+            .create(Material.EGG, 1, "&6아이템 버리기 모드 설정", Arrays.asList("&7아이템 버리기 모드를 설정합니다", "&7아이템 버리기 모드는 3가지가 있으며", "&e기본&7, &e웅크리기&7, &e비활성화&7가 있습니다", "", "&6현재 설정 : &e" + itemDropMode),
                     true));
     inv.setItem(41, CreateItemStack
-            .newItem(Material.SPONGE, 1, "&6아이템 줍기 모드 설정", Arrays.asList("&7아이템 줍기 모드를 설정합니다", "&7아이템 줍기 모드는 3가지가 있으며", "&e기본&7, &e웅크리기&7, &e비활성화&7가 있습니다", "", "&6현재 설정 : &e" + itemPickupMode),
+            .create(Material.SPONGE, 1, "&6아이템 줍기 모드 설정", Arrays.asList("&7아이템 줍기 모드를 설정합니다", "&7아이템 줍기 모드는 3가지가 있으며", "&e기본&7, &e웅크리기&7, &e비활성화&7가 있습니다", "", "&6현재 설정 : &e" + itemPickupMode),
                     true));
-    inv.setItem(53, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
+    inv.setItem(53, CreateItemStack.create(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
     InventoryView lastInventory = getLastInventory(player.getUniqueId());
@@ -238,7 +254,7 @@ public class GUIManager
             Arrays.asList("&e내부 아이디 : LISTEN_JOIN_FORCE", "", "&7다른 플레이어가 서버에 입장할 때", "&7config와 플레이어들의 설정에 관계 없이", "&7반드시 입장 효과음을 듣습니다", "", "&6현재 설정 : &a켜짐", "", "&c클릭하면 해당 기능을 끕니다"), "&b입장 소리 무조건 들음",
             Arrays.asList("&e내부 아이디 : LISTEN_JOIN_FORCE", "", "&7다른 플레이어가 서버에 입장할 때", "&7config와 플레이어들의 설정에 관계 없이", "&7반드시 입장 효과음을 듣습니다", "", "&6현재 설정 : &c꺼짐", "", "&a클릭하면 해당 기능을 켭니다")));
 
-    inv.setItem(53, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
+    inv.setItem(53, CreateItemStack.create(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
     player.openInventory(inv);
     InventoryView lastInventory = getLastInventory(player.getUniqueId());
     if (lastInventory != null)
@@ -258,13 +274,13 @@ public class GUIManager
               default -> "알 수 없음";
             };
     inv.setItem(11,
-            CreateItemStack.newItem(Material.IRON_SHOVEL, 1, "&6기본", Arrays.asList("&7아이템을 기존의 마인크래프트 방식대로 버립니다", "", "&6현재 설정 : &e" + itemDropMode, "", "&e클릭하면 아이템 버리기 모드를 &6기본&e으로 설정합니다"), true));
-    inv.setItem(13, CreateItemStack.newItem(Material.SHIELD, 1, "&6시프트 드롭",
+            CreateItemStack.create(Material.IRON_SHOVEL, 1, "&6기본", Arrays.asList("&7아이템을 기존의 마인크래프트 방식대로 버립니다", "", "&6현재 설정 : &e" + itemDropMode, "", "&e클릭하면 아이템 버리기 모드를 &6기본&e으로 설정합니다"), true));
+    inv.setItem(13, CreateItemStack.create(Material.SHIELD, 1, "&6시프트 드롭",
             Arrays.asList("&7아이템을 웅크린 상태에서만 버릴 수 있으며,", "&7인벤토리를 연 상태에서는 아이템을 버릴 수 없습니다", "", "&6현재 설정 : &e" + itemDropMode, "", "&e클릭하면 아이템 버리기 모드를 &6웅크리기&e로 설정합니다"), true));
     inv.setItem(15,
-            CreateItemStack.newItem(Material.BARRIER, 1, "&6비활성화", Arrays.asList("&7아이템을 어떤 상황에서도 버릴 수 없습니다", "", "&6현재 설정 : &e" + itemDropMode, "", "&e클릭하면 아이템 버리기 모드를 &6비활성화&e로 설정합니다"), true));
+            CreateItemStack.create(Material.BARRIER, 1, "&6비활성화", Arrays.asList("&7아이템을 어떤 상황에서도 버릴 수 없습니다", "", "&6현재 설정 : &e" + itemDropMode, "", "&e클릭하면 아이템 버리기 모드를 &6비활성화&e로 설정합니다"), true));
 
-    inv.setItem(26, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
+    inv.setItem(26, CreateItemStack.create(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
     InventoryView lastInventory = getLastInventory(player.getUniqueId());
@@ -285,14 +301,14 @@ public class GUIManager
               default -> "알 수 없음";
             };
     inv.setItem(11,
-            CreateItemStack.newItem(Material.IRON_SHOVEL, 1, "&6기본", Arrays.asList("&7아이템을 기존의 마인크래프트 방식대로 줍습니다", "", "&6현재 설정 : &e" + itemPickupMode, "", "&e클릭하면 아이템 줍기 모드를 &6기본&e으로 설정합니다"), true));
+            CreateItemStack.create(Material.IRON_SHOVEL, 1, "&6기본", Arrays.asList("&7아이템을 기존의 마인크래프트 방식대로 줍습니다", "", "&6현재 설정 : &e" + itemPickupMode, "", "&e클릭하면 아이템 줍기 모드를 &6기본&e으로 설정합니다"), true));
     inv.setItem(13,
-            CreateItemStack.newItem(Material.SHIELD, 1, "&6웅크리기", Arrays.asList("&7아이템을 웅크린 상태에서만 주울 수 있습니다", "", "&6현재 설정 : &e" + itemPickupMode, "", "&e클릭하면 아이템 줍기 모드를 &6웅크리기&e로 설정합니다"),
+            CreateItemStack.create(Material.SHIELD, 1, "&6웅크리기", Arrays.asList("&7아이템을 웅크린 상태에서만 주울 수 있습니다", "", "&6현재 설정 : &e" + itemPickupMode, "", "&e클릭하면 아이템 줍기 모드를 &6웅크리기&e로 설정합니다"),
                     true));
     inv.setItem(15,
-            CreateItemStack.newItem(Material.BARRIER, 1, "&6비활성화", Arrays.asList("&7아이템을 어떤 상황에서도 주울 수 없습니다", "", "&6현재 설정 : &e" + itemPickupMode, "", "&e클릭하면 아이템 줍기 모드를 &6비활성화&e로 설정합니다"), true));
+            CreateItemStack.create(Material.BARRIER, 1, "&6비활성화", Arrays.asList("&7아이템을 어떤 상황에서도 주울 수 없습니다", "", "&6현재 설정 : &e" + itemPickupMode, "", "&e클릭하면 아이템 줍기 모드를 &6비활성화&e로 설정합니다"), true));
 
-    inv.setItem(26, CreateItemStack.newItem(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
+    inv.setItem(26, CreateItemStack.create(Material.BOOKSHELF, 1, "&b메인 메뉴로", true));
 
     player.openInventory(inv);
     InventoryView lastInventory = getLastInventory(player.getUniqueId());

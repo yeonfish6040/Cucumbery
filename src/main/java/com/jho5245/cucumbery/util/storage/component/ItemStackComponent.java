@@ -46,7 +46,7 @@ public class ItemStackComponent
     final ItemStack giveItem = ItemLore.removeItemLore(itemStack.clone());
     itemStack = itemStack.clone();
     itemStack.setAmount(Math.max(1, Math.min(64, itemStack.getAmount())));
-    Component itemName = ItemNameUtil.itemName(itemStack, showAmount ? defaultColor : null);
+    Component itemName = ItemNameUtil.itemName(itemStack, showAmount ? defaultColor : null, true);
     ItemStack hover = new ItemStack(Material.BUNDLE);
     BundleMeta bundleMeta = (BundleMeta) hover.getItemMeta();
     bundleMeta.addItem(itemStack);
@@ -60,11 +60,7 @@ public class ItemStackComponent
     if (itemName instanceof TextComponent textComponent && textComponent.content().equals(""))
     {
       List<Component> children = new ArrayList<>(itemName.children());
-      for (int i = 0; i < children.size(); i++)
-      {
-        Component child = children.get(i).hoverEvent(hover.asHoverEvent());
-        children.set(i, child);
-      }
+      children.replaceAll(component -> component.hoverEvent(hover.asHoverEvent()));
       itemName = itemName.children(children);
     }
     else

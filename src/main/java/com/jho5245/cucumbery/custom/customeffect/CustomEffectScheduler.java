@@ -4,27 +4,18 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.*;
-import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
-import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningResult;
 import com.jho5245.cucumbery.custom.customeffect.type.*;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
-import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
 import com.jho5245.cucumbery.util.gui.GUIManager;
-import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
-import com.jho5245.cucumbery.util.nbt.CucumberyTag;
-import com.jho5245.cucumbery.util.no_groups.*;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
-import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.bossbar.BossBar.Color;
 import net.kyori.adventure.bossbar.BossBar.Overlay;
@@ -33,23 +24,13 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.entity.FishHook.HookState;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.InventoryView.Property;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -299,6 +280,19 @@ public class CustomEffectScheduler
     }
   }
 
+  public static void superiorLevitation(@NotNull Entity entity)
+  {
+    CustomEffect customEffect = CustomEffectManager.getEffectNullable(entity, CustomEffectType.SUPERIOR_LEVITATION);
+    if (customEffect != null)
+    {
+      int amplifier = customEffect.getAmplifier();
+      Location location = entity.getLocation();
+      Vector vector = entity.getVelocity();
+      entity.teleportAsync(new Location(location.getWorld(), location.getX(), location.getY() + (amplifier + 1) * 0.9 / 20, location.getZ(), location.getYaw(), location.getPitch()));
+      entity.setVelocity(new Vector(vector.getX(), 0.08, vector.getZ()));
+    }
+  }
+
   public static void rune(@NotNull Player player)
   {
     CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectTypeRune.RUNE_USING);
@@ -314,356 +308,6 @@ public class CustomEffectScheduler
     if (CustomEffectManager.hasEffect(player, CustomEffectType.GAESANS) && player.isSneaking() && ((Entity) player).isOnGround())
     {
       player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2, 0, false, false, false));
-    }
-  }
-
-  public static void customMining(@NotNull Player player)
-  {
-    if (Cucumbery.config.getBoolean("custom-mining.enable-by-tag"))
-    {
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag", "cucumbery_miner")) && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
-      {
-        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE);
-      }
-      if (!player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag", "cucumbery_miner")) && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
-      {
-        CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE);
-      }
-
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag-2", "cucumbery_miner_2")))
-      {
-        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2);
-      }
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag-3", "cucumbery_miner_3")))
-      {
-        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
-      }
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.predefined-ores-tag.dwarven-gold", "cucumbery_miner_dwarven_gold")))
-      {
-        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PREDEFINED_CUSTOM_ORE_DWARVEN_GOLDS);
-      }
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.predefined-ores-tag.mithril", "cucumbery_miner_mithril")))
-      {
-        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PREDEFINED_CUSTOM_ORE_MITHRILS);
-      }
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.predefined-ores-tag.titanium", "cucumbery_miner_titanium")))
-      {
-        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PREDEFINED_CUSTOM_ORE_TITANIUMS);
-      }
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.predefined-ores-tag.gemstone", "cucumbery_miner_gemstone")))
-      {
-        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PREDEFINED_CUSTOM_ORE_GEMSTONES);
-      }
-    }
-    HashMap<Location, Long> map = Variable.customMiningCooldown;
-    map.keySet().removeIf(location ->
-    {
-      if (map.get(location) <= 0 && !Variable.customMiningExtraBlocks.containsKey(location))
-      {
-        location.getBlock().getState().update();
-        return true;
-      }
-      return false;
-    });
-    for (Location location : map.keySet())
-    {
-      map.put(location, map.get(location) - 1);
-      Bukkit.getOnlinePlayers().forEach(p ->
-              {
-                Block block = location.getBlock();
-                BlockData blockData = Bukkit.createBlockData(block.getType().isCollidable() ? Material.BEDROCK : Material.AIR);
-                if (Variable.customMiningExtraBlocks.containsKey(location))
-                {
-                  blockData = Variable.customMiningExtraBlocks.get(location);
-                }
-                p.sendBlockChange(location, blockData);
-              }
-      );
-    }
-    if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
-    {
-      player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 8, 0, false, false, false));
-      player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 8, 8, false, false, false));
-      CustomEffectManager.addEffect(player, new AttributeCustomEffectImple(CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_ADJUST_VANILLA_SPEED, UUID.randomUUID(), Attribute.GENERIC_ATTACK_SPEED, Operation.MULTIPLY_SCALAR_1, 90d / 11d));
-    }
-    if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS))
-    {
-      CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
-      if (customEffect instanceof LocationCustomEffect effect)
-      {
-        Location location = effect.getLocation();
-        UUID uuid = player.getUniqueId();
-        Block block = location.getBlock();
-        ItemStack itemStack = player.getInventory().getItemInMainHand().clone();
-        if (ItemStackUtil.itemExists(itemStack))
-        {
-          NBTItem nbtItem = new NBTItem(itemStack);
-          CustomMaterial customMaterial = Method2.valueOf(nbtItem.getString("id") + "", CustomMaterial.class);
-          if (customMaterial != null)
-          {
-            switch (customMaterial)
-            {
-              case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566 ->
-              {
-                NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
-                NBTCompound duraTag = itemTag != null ? itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY) : null;
-                if (duraTag != null)
-                {
-                  long maxDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY), curDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
-                  if (curDura <= 1)
-                  {
-                    MessageUtil.sendWarn(player, "%s의 연료가 다 떨어져서 사용할 수 없습니다!", itemStack);
-                    player.sendBlockDamage(new Location(Bukkit.getWorlds().get(0), 0, 0, 0), 0f);
-                    CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
-                    return;
-                  }
-                  double ratio = curDura * 1d / maxDura;
-                  if (ratio == 0.5)
-                  {
-                    MessageUtil.info(player, "%s의 연료가 50%% 남았습니다!", itemStack);
-                    SoundPlay.playSound(player, Sound.UI_BUTTON_CLICK);
-                  }
-                  else if (ratio == 0.2)
-                  {
-                    MessageUtil.info(player, "%s의 연료가 20%% 남았습니다!", itemStack);
-                    SoundPlay.playSound(player, Sound.UI_BUTTON_CLICK);
-                  }
-                  else if (ratio == 0.1)
-                  {
-                    MessageUtil.info(player, "%s의 연료가 10%% 남았습니다!", itemStack);
-                    SoundPlay.playSound(player, Sound.UI_BUTTON_CLICK);
-                  }
-                  else if (ratio == 0.05)
-                  {
-                    MessageUtil.info(player, "%s의 연료가 5%% 남았습니다!", itemStack);
-                    SoundPlay.playSound(player, Sound.UI_BUTTON_CLICK);
-                  }
-                  else if (ratio == 0.01)
-                  {
-                    MessageUtil.info(player, "%s의 연료가 1%% 남았습니다!", itemStack);
-                    SoundPlay.playSound(player, Sound.UI_BUTTON_CLICK);
-                  }
-                }
-              }
-            }
-          }
-        }
-        MiningResult miningResult = MiningManager.getMiningInfo(player, location);
-        if (miningResult == null)
-        {
-          player.sendBlockDamage(new Location(Bukkit.getWorlds().get(0), 0, 0, 0), 0f);
-          CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
-          return;
-        }
-        if (!miningResult.canMine() || miningResult.blockHardness() == -1)
-        {
-          player.sendBlockDamage(new Location(Bukkit.getWorlds().get(0), 0, 0, 0), 0f);
-          return;
-        }
-        int blockTier = miningResult.blockTier(), miningTier = miningResult.miningTier();
-        List<ItemStack> drops = miningResult.drops();
-        if (blockTier > miningTier)
-        {
-          // 채광 등급이 0이면 경고조차 하지 않음
-          if (miningTier > 0 && !Variable.customMiningTierAlertCooldown.contains(uuid))
-          {
-            MessageUtil.sendWarn(player, "%s을(를) 캐기 위해 더 높은 등급의 도구가 필요합니다!", drops.isEmpty() ? block.getType() : drops.get(0));
-            Variable.customMiningTierAlertCooldown.add(uuid);
-            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.customMiningTierAlertCooldown.remove(uuid), 40L);
-          }
-          player.sendBlockDamage(new Location(Bukkit.getWorlds().get(0), 0, 0, 0), 0f);
-          return;
-        }
-        float origin = Variable.customMiningProgress.getOrDefault(uuid, 0f);
-        float damage = miningResult.miningSpeed() / 20f / miningResult.blockHardness();
-        Variable.customMiningProgress.put(uuid, origin + damage);
-        float progress = Variable.customMiningProgress.getOrDefault(uuid, 0f);
-        progress = Math.max(0f, Math.min(1f, progress));
-        if (progress >= 1 || miningResult.blockHardness() == Float.MIN_VALUE) // insta break
-        {
-          if (!block.getType().isAir())
-          {
-            SoundGroup soundGroup = block.getBlockSoundGroup();
-            if (Variable.customMiningExtraBlocks.containsKey(location))
-            {
-              soundGroup = Bukkit.createBlockData(Material.POLISHED_DIORITE).getSoundGroup();
-            }
-            player.playSound(player.getLocation(), soundGroup.getBreakSound(), SoundCategory.BLOCKS, 1f, soundGroup.getPitch() * 0.8f);
-          }
-          if (itemStack.getEnchantmentLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
-          {
-            AddItemUtil.addItem(player, drops);
-          }
-          else
-          {
-            drops.forEach(itemStack1 -> player.getWorld().dropItemNaturally(location, itemStack1));
-          }
-          float exp = miningResult.exp();
-          int intSide = (int) exp;
-          float floatSide = exp - intSide;
-          if (Math.random() < floatSide)
-          {
-            intSide++;
-          }
-          int finalIntSide = intSide;
-          if ((!drops.isEmpty() || Arrays.asList(Material.SPAWNER, Material.SCULK, Material.SCULK_CATALYST, Material.SCULK_SENSOR, Material.SCULK_SHRIEKER).contains(block.getType())) && finalIntSide > 0)
-          {
-            player.getWorld().spawnEntity(location, EntityType.EXPERIENCE_ORB, SpawnReason.CUSTOM, (entity -> ((ExperienceOrb) entity).setExperience(finalIntSide)));
-          }
-          Variable.customMiningProgress.put(uuid, 0f);
-          boolean noRestoreMode = CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
-          if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2) || noRestoreMode)
-          {
-            if (noRestoreMode)
-            {
-              block.setType(Material.AIR);
-              YamlConfiguration configuration = Variable.blockPlaceData.get(location.getWorld().getName());
-              if (configuration != null)
-              {
-                configuration.set(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), null);
-                Variable.blockPlaceData.put(location.getWorld().getName(), configuration);
-              }
-            }
-            else
-            {
-              final BlockData originData = block.getBlockData().clone();
-              final Location locationClone = location.clone();
-              Variable.customMiningMode2BlockData.put(locationClone, originData);
-              boolean isWater = originData instanceof Waterlogged waterlogged && waterlogged.isWaterlogged();
-              block.setBlockData(Bukkit.createBlockData(isWater ? Material.WATER : Material.AIR), false);
-              Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              {
-                if (isWater && block.getType() == Material.WATER || !isWater && block.getType().isAir())
-                {
-                  block.setBlockData(originData, false);
-                }
-                Variable.customMiningMode2BlockData.remove(locationClone);
-                // 채광 모드 2에서는 재생 속도가 느려짐
-              }, (long) (miningResult.regenCooldown() * Cucumbery.config.getDouble("custom-mining.mining-mode-2-regen-multiplier")));
-            }
-          }
-          else
-          {
-            Location locationClone = location.clone();
-            boolean extraBlockIgnoreCooldown = false;
-            if (Variable.customMiningExtraBlocks.containsKey(locationClone))
-            {
-              extraBlockIgnoreCooldown = true;
-              Variable.customMiningExtraBlocks.remove(locationClone);
-            }
-            else if (!drops.isEmpty() && !drops.get(0).getType().isAir())
-            {
-              ItemStack drop = drops.get(0);
-              String id = new NBTItem(drop).getString("id") + "";
-              CustomMaterial customMaterial = Method2.valueOf(id, CustomMaterial.class);
-              if (customMaterial != null)
-              {
-                switch (customMaterial)
-                {
-                  case MITHRIL_INGOT, MITHRIL_ORE ->
-                  {
-                    double chance = 0.05;
-                    CustomEffect titaniumFinder = CustomEffectManager.getEffectNullable(player, CustomEffectTypeCustomMining.TITANIUM_FINDER);
-                    if (titaniumFinder != null)
-                    {
-                      chance += (titaniumFinder.getAmplifier() + 1) * 0.001;
-                    }
-                    if (Math.random() < chance)
-                    {
-                      Variable.customMiningExtraBlocks.put(locationClone, Bukkit.createBlockData(Material.POLISHED_DIORITE));
-                    }
-                  }
-                }
-              }
-              else
-              {
-                switch (block.getType())
-                {
-                  case STONE -> Variable.customMiningExtraBlocks.put(locationClone, Bukkit.createBlockData(Material.COBBLESTONE));
-                  case DEEPSLATE -> Variable.customMiningExtraBlocks.put(locationClone, Bukkit.createBlockData(Material.COBBLED_DEEPSLATE));
-                }
-              }
-            }
-            if (!extraBlockIgnoreCooldown)
-            {
-              Variable.customMiningCooldown.put(locationClone, (long) miningResult.regenCooldown());
-            }
-          }
-          CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
-          if (ItemStackUtil.itemExists(itemStack) && itemStack.hasItemMeta() && !itemStack.getItemMeta().isUnbreakable())
-          {
-            NBTItem nbtItem = new NBTItem(itemStack, true);
-            NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
-            NBTCompound duraTag = itemTag != null ? itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY) : null;
-            boolean duraTagExists = duraTag != null;
-            long currentDurability = itemStack.getType().getMaxDurability() - ((org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta()).getDamage();
-            long maxDurability = itemStack.getType().getMaxDurability();
-            double chanceNotLoseDura = 0d;
-            if (duraTagExists)
-            {
-              try
-              {
-                currentDurability = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
-                maxDurability = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
-                if (duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY))
-                {
-                  chanceNotLoseDura = duraTag.getDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY);
-                }
-              }
-              catch (Exception ignored)
-              {
-
-              }
-            }
-            if (maxDurability > 0)
-            {
-              int unbreakingLevel = itemStack.getEnchantmentLevel(Enchantment.DURABILITY);
-              if (Math.random() >= 1d * unbreakingLevel / (unbreakingLevel + 1) && Math.random() > chanceNotLoseDura / 100d)
-              {
-                currentDurability--;
-              }
-              if (currentDurability <= 0)
-              {
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 1F, 1F);
-                player.spawnParticle(Particle.ITEM_CRACK, player.getEyeLocation().add(0, -0.5, 0), 30, 0, 0, 0, 0.1, itemStack);
-                PlayerItemBreakEvent playerItemBreakEvent = new PlayerItemBreakEvent(player, itemStack);
-                Bukkit.getPluginManager().callEvent(playerItemBreakEvent);
-                itemStack.setAmount(itemStack.getAmount() - 1);
-              }
-              else
-              {
-                if (duraTagExists)
-                {
-                  duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, currentDurability);
-                }
-                else
-                {
-                  ItemMeta itemMeta = itemStack.getItemMeta();
-                  org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemMeta;
-                  damageable.setDamage((int) (maxDurability - currentDurability));
-                  itemStack.setItemMeta(itemMeta);
-                }
-              }
-              player.getInventory().setItemInMainHand(ItemLore.setItemLore(itemStack, ItemLoreView.of(player)));
-            }
-          }
-          return;
-        }
-        if (progress > 0)
-        {
-          if (progress > 0.01)
-          {
-            player.sendBlockDamage(location, progress);
-            float finalProgress = progress;
-            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.sendBlockDamage(location, finalProgress), 0L);
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () -> player.sendBlockDamage(location, finalProgress), 0L);
-          }
-          if (UserData.SHOW_PLUGIN_DEV_DEBUG_MESSAGE.getBoolean(uuid))
-          {
-            MessageUtil.sendTitle(player, "", Constant.Sosu2Force.format(progress * 100d) + "%", 0, 3, 0);
-          }
-        }
-      }
     }
   }
 
@@ -775,12 +419,12 @@ public class CustomEffectScheduler
     if (CustomEffectManager.hasEffect(livingEntity, CustomEffectTypeMinecraft.MINECRAFT_NIGHT_VISION))
     {
       CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectTypeMinecraft.MINECRAFT_NIGHT_VISION);
-      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 4, customEffect.getAmplifier(), false, false, false));
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Cucumbery.using_ProtocolLib ? 2 : 4, customEffect.getAmplifier(), false, false, false));
     }
     if (CustomEffectManager.hasEffect(livingEntity, CustomEffectType.NIGHT_VISION_SPECTATOR) && livingEntity instanceof Player player && player.getGameMode() == GameMode.SPECTATOR && player.getSpectatorTarget() != null)
     {
       CustomEffect customEffect = CustomEffectManager.getEffect(livingEntity, CustomEffectType.NIGHT_VISION_SPECTATOR);
-      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 4, customEffect.getAmplifier(), false, false, false));
+      livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Cucumbery.using_ProtocolLib ? 2 : 4, customEffect.getAmplifier(), false, false, false));
     }
     if (CustomEffectManager.hasEffect(livingEntity, CustomEffectTypeMinecraft.MINECRAFT_HUNGER))
     {

@@ -69,7 +69,7 @@ public class CommandForceChat implements CucumberyCommandExecutor
         {
           player.setOp(true);
         }
-        player.chat(newMsg);
+        player.chat(newMsg.replace("§", "&"));
         if (!isOp)
         {
           player.setOp(false);
@@ -77,7 +77,7 @@ public class CommandForceChat implements CucumberyCommandExecutor
       }
       else
       {
-        player.chat(msg);
+        player.chat(msg.replace("§", "&"));
       }
 
       if (isCommand && playChatSound)

@@ -221,7 +221,7 @@ public class CommandWarp implements CommandExecutor, TabCompleter
                             "\n&rPitch : rg255,204;" +
                             Constant.Sosu2.format(config.getDouble("warp.pitch")), ClickEvent.Action.SUGGEST_COMMAND,
                     "/cwarp " + args[0]);
-            Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.으로) + " 이동하였습니다");
+            Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(name), ConsonantType.으로) + " 이동했습니다");
             if (sender.equals(player))
             {
               MessageUtil.sendMessage(player, a, b, c);
@@ -352,7 +352,7 @@ public class CommandWarp implements CommandExecutor, TabCompleter
                             "\n&rPitch : rg255,204;" +
                             Constant.Sosu2.format(config.getDouble("warp.pitch")), ClickEvent.Action.SUGGEST_COMMAND,
                     "/cwarp " + args[0]);
-            Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(MessageUtil.n2s(warpDisplayname)), MessageUtil.ConsonantType.이라) + "는 워프를 설정하였습니다");
+            Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(MessageUtil.stripColor(MessageUtil.n2s(warpDisplayname)), MessageUtil.ConsonantType.이라) + "는 워프를 설정했습니다");
             MessageUtil.sendMessage(player, a, b, c);
           }
           warpConfig.saveConfig();
@@ -416,12 +416,12 @@ public class CommandWarp implements CommandExecutor, TabCompleter
                               Constant.Sosu2.format(config.getDouble("warp.yaw")) +
                               "\n&rPitch : rg255,204;" +
                               Constant.Sosu2.format(config.getDouble("warp.pitch")));
-              Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을를) + " 제거하였습니다");
+              Component c = ComponentUtil.create("&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을를) + " 제거했습니다");
               MessageUtil.sendMessage(player, a, b, c);
             }
             else
             {
-              MessageUtil.sendMessage(sender, Prefix.INFO_WARP, "워프 rg255,204;" + args[0] + "&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을를) + " 제거하였습니다");
+              MessageUtil.sendMessage(sender, Prefix.INFO_WARP, "워프 rg255,204;" + args[0] + "&r" + MessageUtil.getFinalConsonant(args[0], MessageUtil.ConsonantType.을를) + " 제거했습니다");
             }
           }
           if (file.exists())

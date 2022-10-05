@@ -7,6 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 @SuppressWarnings("unused")
 public class TypeBuilder
 {
@@ -88,6 +90,9 @@ public class TypeBuilder
   public TypeBuilder instant()
   {
     this.isInstant = true;
+    this.defaultDuration = -1;
+    this.isKeepOnMilk = false;
+    this.defaultDisplayType = DisplayType.NONE;
     return this;
   }
 
@@ -107,6 +112,18 @@ public class TypeBuilder
   {
     this.isHidden = true;
     this.isEnumHidden = true;
+    return this;
+  }
+
+  /**
+   * 명령어 탭 목록에서도 보이지 않고 효과 리스트에도 보이지 않음
+   * @return this
+   */
+  @NotNull
+  public TypeBuilder hidden(boolean b)
+  {
+    this.isHidden = b;
+    this.isEnumHidden = b;
     return this;
   }
 
@@ -181,9 +198,16 @@ public class TypeBuilder
   }
 
   @NotNull
-  public TypeBuilder icon(@NotNull ItemStack icon)
+  public TypeBuilder icon(@Nullable ItemStack icon)
   {
     this.icon = icon;
+    return this;
+  }
+
+  @NotNull
+  public TypeBuilder icon(@NotNull Supplier<ItemStack> supplier)
+  {
+    this.icon = supplier.get();
     return this;
   }
 

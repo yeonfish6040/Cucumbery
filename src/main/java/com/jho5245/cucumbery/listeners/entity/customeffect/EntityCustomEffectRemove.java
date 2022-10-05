@@ -22,14 +22,12 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
@@ -37,6 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.UUID;
@@ -66,6 +65,43 @@ public class EntityCustomEffectRemove implements Listener
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 2L);
     }
 
+    if (entity instanceof Player player && customEffectType == CustomEffectType.SPYGLASS_TELEPORT && removeReason == RemoveReason.TIME_OUT)
+    {
+      RayTraceResult rayTraceResult = player.rayTraceBlocks(100d);
+      if (rayTraceResult == null)
+      {
+        MessageUtil.sendWarn(player, "100블록 이내에 바라보고 있는 블록이 없습니다");
+        CustomEffectManager.addEffect(player, CustomEffectType.SPYGLASS_TELEPORT_COOLDOWN, 100);
+        return;
+      }
+      Block block = rayTraceResult.getHitBlock();
+      if (block == null)
+      {
+        MessageUtil.sendWarn(player, "100블록 이내에 바라보고 있는 블록이 없습니다");
+        CustomEffectManager.addEffect(player, CustomEffectType.SPYGLASS_TELEPORT_COOLDOWN, 100);
+        return;
+      }
+      Location location = block.getLocation().add(0.5, 1, 0.5);
+      if (location.getBlock().getType().isOccluding() || location.clone().add(0, 1, 0).getBlock().getType().isOccluding())
+      {
+        MessageUtil.sendWarn(player, "바라보고 있는 블록 위가 막혀 있어 순간 이동할 수 없습니다");
+        CustomEffectManager.addEffect(player, CustomEffectType.SPYGLASS_TELEPORT_COOLDOWN, 100);
+        return;
+      }
+      location.setYaw(player.getLocation().getYaw());
+      location.setPitch(player.getLocation().getPitch());
+      if (player.teleport(location))
+      {
+        MessageUtil.info(player, "%s 위치로 순간 이동했습니다!", location);
+        CustomEffectManager.addEffect(player, CustomEffectType.SPYGLASS_TELEPORT_COOLDOWN);
+      }
+      else
+      {
+        MessageUtil.sendWarn(player, "알 수 없는 이유로 순간 이동에 실패했습니다! 혹시 다른 플레이어가 자신을 탑승하고 있나요?");
+        CustomEffectManager.addEffect(player, CustomEffectType.SPYGLASS_TELEPORT_COOLDOWN, 100);
+      }
+    }
+
 /*    if (entity instanceof Player player && customEffectType == CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS)
     {
       player.sendExperienceChange(player.getExp(), player.getLevel());
@@ -73,7 +109,7 @@ public class EntityCustomEffectRemove implements Listener
 
     if (entity instanceof Player player && customEffectType == CustomEffectTypeRune.RUNE_USING && removeReason == RemoveReason.TIME_OUT)
     {
-      MessageUtil.sendTitle(player, "", "g255;시간이 초과되어 룬 해방에 실패하였습니다.", 0, 0, 150);
+      MessageUtil.sendTitle(player, "", "g255;시간이 초과되어 룬 해방에 실패했습니다.", 0, 0, 150);
       CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectTypeRune.RUNE_COOLDOWN, 20 * 5));
     }
 

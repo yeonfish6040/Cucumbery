@@ -1,10 +1,12 @@
 package com.jho5245.cucumbery.listeners.vehicle;
 
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
@@ -16,6 +18,12 @@ public class VehicleDestroy implements Listener
   {
     if (event.isCancelled())
     {
+      return;
+    }
+    Vehicle vehicle = event.getVehicle();
+    if (vehicle.getScoreboardTags().contains("invincible") || CustomEffectManager.hasEffect(vehicle, CustomEffectType.INVINCIBLE))
+    {
+      event.setCancelled(true);
       return;
     }
     Entity attacker = event.getAttacker();

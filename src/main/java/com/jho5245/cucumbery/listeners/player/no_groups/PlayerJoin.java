@@ -5,10 +5,14 @@ import com.jho5245.cucumbery.Initializer;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -29,7 +33,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerJoin implements Listener
@@ -218,8 +221,8 @@ public class PlayerJoin implements Listener
       boolean showTitle = cfg.getBoolean("show-title-on-join") && !Method.configContainsLocation(location, titleWorld);
       if (showTitle)
       {
-        String title = MessageUtil.n2s(Objects.requireNonNull(cfg.getString("title-on-join.title")).replace("%player%", displayNameString));
-        String subtitle = MessageUtil.n2s(Objects.requireNonNull(cfg.getString("title-on-join.subtitle")).replace("%player%", displayNameString));
+        Component title = ComponentUtil.translate(cfg.getString("title-on-join.title", "환영합니다"), player);
+        Component subtitle = ComponentUtil.translate(cfg.getString("title-on-join.subtitle", "%s님, 즐거운 시간 보내세요"), player);
         int delay = cfg.getInt("title-delay-in-tick");
         int fadeIn = cfg.getInt("title-on-join.fade-in");
         int stay = cfg.getInt("title-on-join.stay");
@@ -249,6 +252,18 @@ public class PlayerJoin implements Listener
     if (Permission.CMD_STASH.has(player) && Variable.itemStash.containsKey(uuid) && !Variable.itemStash.get(uuid).isEmpty())
     {
       MessageUtil.sendMessage(player, Prefix.INFO_STASH, "보관함에 아이템이 %s개 있습니다. %s 명령어로 확인하세요!", Variable.itemStash.get(uuid).size(), "rg255,204;/stash");
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+    {
+      MiningManager.quitCustomMining(player);
+      for (int i = 0; i < 10; i++)
+      {
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+        {
+          Scheduler.fakeBlocksAsync(player, true);
+          MiningScheduler.customMining(player, true);
+        }, i * 20);
+      }
     }
   }
 }

@@ -122,7 +122,7 @@ public class CommandHealthPoint
 
       if (successCount > 0)
       {
-        MessageUtil.info(commandSender, Constant.THE_COLOR_HEX + successCount + "개&r의 개체의 HP를 조정하였습니다");
+        MessageUtil.info(commandSender, Constant.THE_COLOR_HEX + successCount + "개&r의 개체의 HP를 조정했습니다");
       }
       else
       {
@@ -263,7 +263,7 @@ public class CommandHealthPoint
 
       if (successCount > 0)
       {
-        MessageUtil.info(commandSender, Constant.THE_COLOR_HEX + successCount + "개&r의 개체의 HP를 조정하였습니다");
+        MessageUtil.info(commandSender, Constant.THE_COLOR_HEX + successCount + "개&r의 개체의 HP를 조정했습니다");
       }
       else
       {
@@ -407,7 +407,7 @@ public class CommandHealthPoint
       {
         if (!hideOutput)
         {
-          MessageUtil.info(commandSender, Constant.THE_COLOR_HEX + successCount + "개&r의 개체의 HP를 조정하였습니다");
+          MessageUtil.info(commandSender, Constant.THE_COLOR_HEX + successCount + "개&r의 개체의 HP를 조정했습니다");
         }
       }
       else

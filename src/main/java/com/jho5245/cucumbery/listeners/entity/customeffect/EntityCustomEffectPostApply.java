@@ -6,10 +6,8 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffectImple;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeReinforce;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeRune;
+import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffectImple;
+import com.jho5245.cucumbery.custom.customeffect.type.*;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectPostApplyEvent;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -20,9 +18,11 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
+import dev.geco.gsit.api.GSitAPI;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -59,6 +59,54 @@ public class EntityCustomEffectPostApply implements Listener
       CustomEffectManager.removeEffect(entity, conflictEffect, RemoveReason.CONFLICT);
     }
 
+    if (Cucumbery.using_GSit)
+    {
+      Location location = entity.getLocation();
+      if (customEffectType == CustomEffectTypeGSit.GSIT_SIT && entity instanceof LivingEntity livingEntity)
+      {
+        if (GSitAPI.isSitting(livingEntity))
+        {
+          livingEntity.teleport(location.clone().add(0, 0.55, 0));
+        }
+        GSitAPI.createSeat(location.getBlock(), livingEntity, true, 0, 0, 0, location.getYaw(), false);
+      }
+      if (customEffectType == CustomEffectTypeGSit.GSIT_SPIN)
+      {
+        if (entity instanceof Player player)
+        {
+          if (GSitAPI.isPosing(player))
+          {
+            player.teleport(location.clone().add(0, 0.55, 0));
+          }
+          GSitAPI.createPose(location.getBlock(), player, Pose.SPIN_ATTACK, 0, 0, 0, location.getYaw(), false);
+        }
+      }
+      if (customEffectType == CustomEffectTypeGSit.GSIT_LAY)
+      {
+        if (entity instanceof Player player)
+        {
+          if (GSitAPI.isPosing(player))
+          {
+            player.teleport(location.clone().add(0, 0.55, 0));
+          }
+          GSitAPI.createPose(location.getBlock(), player, Pose.SLEEPING, 0, 0, 0, location.getYaw(), false);
+        }
+      }
+    }
+
+    if (customEffectType == CustomEffectType.ENTITY_REMOVER)
+    {
+      if (entity instanceof LivingEntity livingEntity)
+      {
+        CustomEffectManager.addEffect(livingEntity, new StringCustomEffectImple(CustomEffectType.CUSTOM_DEATH_MESSAGE, 10, 0, "custom_effect_entity_remover"));
+        livingEntity.setHealth(0);
+      }
+      else
+      {
+        entity.remove();
+      }
+    }
+
     if (customEffectType == CustomEffectType.ALARM)
     {
       MessageUtil.info(entity, "알람이 설정되었습니다! %s초 뒤에 시끄러운 소리가 남!", Constant.THE_COLOR_HEX + Constant.Sosu2.format(duration / 20d));
@@ -67,8 +115,8 @@ public class EntityCustomEffectPostApply implements Listener
     if (entity instanceof Player player && (
             customEffectType == CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE ||
                     customEffectType == CustomEffectTypeCustomMining.MINDAS_TOUCH ||
-    customEffectType == CustomEffectType.CURSE_OF_CREATIVITY ||
-    customEffectType == CustomEffectType.CURSE_OF_CREATIVITY_PLACE
+                    customEffectType == CustomEffectType.CURSE_OF_CREATIVITY ||
+                    customEffectType == CustomEffectType.CURSE_OF_CREATIVITY_PLACE
     ))
     {
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 2L);
@@ -76,7 +124,7 @@ public class EntityCustomEffectPostApply implements Listener
 
     if (entity instanceof Player player && customEffectType == CustomEffectTypeRune.RUNE_DESTRUCTION)
     {
-      MessageUtil.sendTitle(player, "","g255;파멸의 룬 : 공격력이 강해지며 해방된 룬의 힘을 얻습니다.", 0, 0, 150);
+      MessageUtil.sendTitle(player, "", "g255;파멸의 룬 : 공격력이 강해지며 해방된 룬의 힘을 얻습니다.", 0, 0, 150);
       int count = 0;
       for (Entity nearEntity : player.getNearbyEntities(10, 5, 10))
       {
@@ -100,7 +148,8 @@ public class EntityCustomEffectPostApply implements Listener
           }
         }
       }
-      Consumer<Entity> consumer = e -> {
+      Consumer<Entity> consumer = e ->
+      {
         AreaEffectCloud areaEffectCloud = (AreaEffectCloud) e;
         areaEffectCloud.setRadius(10f);
         areaEffectCloud.setParticle(Particle.SPELL_WITCH);
@@ -115,7 +164,7 @@ public class EntityCustomEffectPostApply implements Listener
 
     if (customEffectType == CustomEffectTypeRune.RUNE_EARTHQUAKE)
     {
-      MessageUtil.sendTitle(entity, "","g255;지진의 룬 : 착지 시 적에게 피해를 주며 해방된 룬의 힘을 얻습니다.", 0, 0, 150);
+      MessageUtil.sendTitle(entity, "", "g255;지진의 룬 : 착지 시 적에게 피해를 주며 해방된 룬의 힘을 얻습니다.", 0, 0, 150);
     }
 
     if (customEffectType == CustomEffectType.RESURRECTION)

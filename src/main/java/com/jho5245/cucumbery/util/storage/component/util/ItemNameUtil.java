@@ -66,11 +66,23 @@ public class ItemNameUtil
   @NotNull
   public static Component itemName(@NotNull ItemStack itemStack, @Nullable TextColor defaultColor)
   {
+    return itemName(itemStack, defaultColor, false);
+  }
+
+  /**
+   * 아이템의 이름을 컴포넌트 형태로 반환합니다.
+   *
+   * @param itemStack             아이템
+   * @param defaultColor          색상이 없을 경우 적용할 기본 값
+   * @param respectCustomMaterial {@link CustomMaterial#getDisplayName()} 을 보전할 것인가?
+   * @return 컴포넌트 형태의 아이템 이름
+   */
+  @NotNull
+  public static Component itemName(@NotNull ItemStack itemStack, @Nullable TextColor defaultColor, boolean respectCustomMaterial)
+  {
     Material material = itemStack.getType();
     ItemMeta itemMeta = itemStack.getItemMeta();
-
     Component component;
-
     // 아이템의 이름이 있을 경우 이름을 가져온다
     if (itemMeta != null && itemMeta.hasDisplayName())
     {
@@ -122,14 +134,16 @@ public class ItemNameUtil
       switch (material)
       {
         case WHEAT -> component = Component.translatable("item.minecraft.wheat");
-        case PLAYER_HEAD, PLAYER_WALL_HEAD -> {
+        case PLAYER_HEAD, PLAYER_WALL_HEAD ->
+        {
           String playerName = PlayerHeadInfo.getPlayerHeadInfo(itemStack, PlayerHeadInfo.PlayerHeadInfoType.NAME);
           if (playerName != null)
           {
             component = Component.translatable("block.minecraft.player_head.named").args(Component.text(playerName));
           }
         }
-        case POTION, SPLASH_POTION, LINGERING_POTION, TIPPED_ARROW -> {
+        case POTION, SPLASH_POTION, LINGERING_POTION, TIPPED_ARROW ->
+        {
           PotionMeta potionMeta = (PotionMeta) itemMeta;
           if (potionMeta != null)
           {
@@ -146,7 +160,8 @@ public class ItemNameUtil
             }
           }
         }
-        case WRITTEN_BOOK -> {
+        case WRITTEN_BOOK ->
+        {
           BookMeta bookMeta = (BookMeta) itemMeta;
           if (bookMeta != null && bookMeta.hasTitle())
           {
@@ -157,14 +172,16 @@ public class ItemNameUtil
             }
           }
         }
-        case COMPASS -> {
+        case COMPASS ->
+        {
           CompassMeta compassMeta = (CompassMeta) itemMeta;
           if (compassMeta != null && compassMeta.hasLodestone())
           {
             component = Component.translatable("item.minecraft.lodestone_compass");
           }
         }
-        case SHIELD -> {
+        case SHIELD ->
+        {
           BlockStateMeta blockStateMeta = (BlockStateMeta) itemMeta;
           if (blockStateMeta != null && blockStateMeta.hasBlockState())
           {
@@ -180,10 +197,13 @@ public class ItemNameUtil
     }
 
     // 커스텀 아이템의 경우 커스텀 아이템을 가져온다
-    CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
-    if (customMaterial != null)
+    if (respectCustomMaterial || itemMeta == null || !itemMeta.hasDisplayName())
     {
-      component = customMaterial.getDisplayName();
+      CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+      if (customMaterial != null)
+      {
+        component = customMaterial.getDisplayName();
+      }
     }
 
     @Nullable TextColor textColor = component.color();

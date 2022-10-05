@@ -2,15 +2,16 @@ package com.jho5245.cucumbery.listeners.entity.no_groups;
 
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.*;
+import org.bukkit.entity.AbstractSkeleton;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -106,10 +107,10 @@ public class EntityTarget implements Listener
     {
       PlayerInventory playerInventory = player.getInventory();
       ItemStack helmet = playerInventory.getHelmet(), chestplate = playerInventory.getChestplate(), leggings = playerInventory.getLeggings(), boots = playerInventory.getBoots();
-      if (ItemStackUtil.itemExists(helmet) && CustomMaterial.SANS_HELMET.toString().toLowerCase().equals(new NBTItem(helmet).getString("id")) &&
-              ItemStackUtil.itemExists(chestplate) && CustomMaterial.SANS_CHESTPLATE.toString().toLowerCase().equals(new NBTItem(chestplate).getString("id")) &&
-              ItemStackUtil.itemExists(leggings) && CustomMaterial.SANS_LEGGINGS.toString().toLowerCase().equals(new NBTItem(leggings).getString("id")) &&
-              ItemStackUtil.itemExists(boots) && CustomMaterial.SANS_BOOTS.toString().toLowerCase().equals(new NBTItem(boots).getString("id")))
+      if (CustomMaterial.itemStackOf(helmet) == CustomMaterial.SANS_HELMET &&
+              CustomMaterial.itemStackOf(chestplate) == CustomMaterial.SANS_CHESTPLATE &&
+              CustomMaterial.itemStackOf(leggings) == CustomMaterial.SANS_LEGGINGS &&
+              CustomMaterial.itemStackOf(boots) == CustomMaterial.SANS_BOOTS)
       {
         event.setCancelled(true);
       }

@@ -101,7 +101,12 @@ public class SoundPlay
     }
     if (audience instanceof Player player)
     {
-      player.playSound(location, sound, category, (float) volume, (float) pitch);
+      double distance = Method2.distance(player.getLocation(), location);
+      if (distance <= volume * 30)
+      {
+        volume *= Math.pow(0.5, distance / 30);
+        player.playSound(location, sound, category, (float) volume, (float) pitch);
+      }
     }
   }
 

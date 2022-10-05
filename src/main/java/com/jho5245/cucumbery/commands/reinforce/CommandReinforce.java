@@ -1799,7 +1799,7 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
             }
           }
           Variable.scrollReinforcing.remove(uuid);
-          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화를 중지하였습니다");
+          MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화를 중지했습니다");
           return true;
         }
         case "시작" -> {

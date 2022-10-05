@@ -7,9 +7,11 @@ import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectScheduler;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffectImple;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryRecipe;
@@ -20,11 +22,8 @@ import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
-import com.jho5245.cucumbery.util.storage.data.Permission;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
@@ -86,6 +85,10 @@ public class Scheduler
       // 플러그인 실행 시간
       Cucumbery.runTime++;
     }, 0L, 1L);
+    Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
+    {
+      tickSchedulesAsync();
+    }, 0L, 1L);
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
     }, 0L, 5L);
@@ -126,6 +129,11 @@ public class Scheduler
       CustomEffectManager.save();
     }, 1200L, 20L * 60L * 5L);
     reinforceChancetime();
+    Bukkit.getScheduler().runTaskTimer(cucumbery, () ->
+    {
+      fakeBlocksAsync(null, true);
+      MiningScheduler.customMining(null, true);
+    }, 0L, 1200L);
   }
 
   private static void tickSchedules()
@@ -133,6 +141,43 @@ public class Scheduler
     entityTick();
     playerTick();
     damageIndicator();
+    MiningScheduler.customMiningTicks();
+  }
+
+  private static void tickSchedulesAsync()
+  {
+  }
+
+  public static void fakeBlocksAsync()
+  {
+    fakeBlocksAsync(null, false);
+  }
+
+  public static void fakeBlocksAsync(@Nullable Player target, boolean distanceLimit)
+  {
+    for (Location location : Variable.fakeBlocks.keySet())
+    {
+      if (Variable.customMiningCooldown.containsKey(location))
+      {
+        continue;
+      }
+      if (Variable.customMiningExtraBlocks.containsKey(location))
+      {
+        continue;
+      }
+      if (Variable.customMiningMode2BlockData.containsKey(location))
+      {
+        continue;
+      }
+      Collection<? extends Player> players = target == null ? Bukkit.getOnlinePlayers() : Collections.singletonList(target);
+      for (Player player : players)
+      {
+        if (player.getWorld().getName().equals(location.getWorld().getName()) && (!distanceLimit || location.distance(player.getLocation()) <= Cucumbery.config.getDouble("custom-mining.maximum-block-packet-distance")))
+        {
+          player.sendBlockChange(location, Variable.fakeBlocks.get(location));
+        }
+      }
+    }
   }
 
   private static void damageIndicator()
@@ -163,6 +208,7 @@ public class Scheduler
         // 커스텀 인챈트
         customEnchant(entity);
         CustomEffectScheduler.tick(entity);
+        CustomEffectScheduler.superiorLevitation(entity);
         CustomEffectScheduler.trueInvisibility(entity);
         CustomEffectScheduler.axolotlsGrace(entity);
         CustomEffectScheduler.stop(entity);
@@ -199,7 +245,7 @@ public class Scheduler
       CustomEffectScheduler.display(player);
       CustomEffectScheduler.rune(player);
       CustomEffectScheduler.gaesans(player);
-      CustomEffectScheduler.customMining(player);
+      MiningScheduler.customMining(player);
       CustomEffectScheduler.masterOfFishing(player);
       CustomEffectScheduler.dynamicLight(player);
       CustomEffectScheduler.gliding(player);
@@ -211,6 +257,42 @@ public class Scheduler
       CustomEffectScheduler.trollInventoryProperty(player);
       CustomEffectScheduler.townShield(player);
       CustomEffectScheduler.starCatch(player);
+      customArmor(player);
+    }
+  }
+
+  private static void customArmor(@NotNull Player player)
+  {
+    PlayerInventory playerInventory = player.getInventory();
+    CustomMaterial helmet = CustomMaterial.itemStackOf(playerInventory.getHelmet());
+    CustomMaterial chestplate = CustomMaterial.itemStackOf(playerInventory.getChestplate());
+    CustomMaterial leggings = CustomMaterial.itemStackOf(playerInventory.getLeggings());
+    CustomMaterial boots = CustomMaterial.itemStackOf(playerInventory.getBoots());
+    if (helmet == CustomMaterial.FROG_HELMET &&
+            chestplate == CustomMaterial.FROG_CHESTPLATE &&
+            leggings == CustomMaterial.FROG_LEGGINGS &&
+            boots == CustomMaterial.FROG_BOOTS)
+    {
+      player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 2, 3, false, false, false));
+    }
+    if (helmet == CustomMaterial.MINER_HELMET || helmet == CustomMaterial.MINDAS_HELMET)
+    {
+      player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Cucumbery.using_ProtocolLib ? 2 : 4, 0, false, false, false));
+    }
+    if (helmet == CustomMaterial.MINER_HELMET &&
+            chestplate == CustomMaterial.MINER_CHESTPLATE &&
+            leggings == CustomMaterial.MINER_LEGGINGS &&
+            boots == CustomMaterial.MINER_BOOTS)
+    {
+      if (!CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.MINER_ARMOR_SET_EFFECT))
+      {
+        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.MINER_ARMOR_SET_EFFECT);
+      }
+      player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Cucumbery.using_ProtocolLib ? 4 : 11, 0, false, false, false));
+    }
+    else if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.MINER_ARMOR_SET_EFFECT))
+    {
+      CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.MINER_ARMOR_SET_EFFECT);
     }
   }
 
@@ -362,7 +444,7 @@ public class Scheduler
       }
       serverRadio.color(colors[ordinal]);
     }
-    String songName = song.getPath().getName();
+    String songName = song.getPath().getName().replace("＃", "#").replace("？", "?").replace("：", ":");
     songName = songName.substring(0, songName.length() - 4);
     final String originalName = songName;
     int var = SONG_TITLE_MAX_LENGTH + Math.max(0, Math.min(8, 8 - originalName.replaceAll("[ㄱ-ㅎㅏ-ㅣ가-힣A-Za-z0-9_ |+~#^*&()\\[\\]<>{};:？：/.,`'\"!?\\-]", "").length()));
@@ -957,7 +1039,8 @@ public class Scheduler
     switch (item.getType())
     {
       case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK, NETHERITE_SWORD, DIAMOND_SWORD, GOLDEN_SWORD,
-              IRON_SWORD, STONE_SWORD, WOODEN_SWORD, COMPASS, DEBUG_STICK, REDSTONE_BLOCK, WOODEN_AXE, IRON_BLOCK, BARRIER, COMMAND_BLOCK_MINECART, TRIDENT -> {
+              IRON_SWORD, STONE_SWORD, WOODEN_SWORD, COMPASS, DEBUG_STICK, REDSTONE_BLOCK, WOODEN_AXE, IRON_BLOCK, BARRIER, COMMAND_BLOCK_MINECART, TRIDENT ->
+      {
         Set<Material> transparent = new HashSet<>();
         for (Material material : Material.values())
         {
@@ -969,7 +1052,8 @@ public class Scheduler
         Block block = player.getTargetBlock(transparent, 10);
         switch (block.getType())
         {
-          case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK -> {
+          case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK ->
+          {
             CommandBlock commandBlock = (CommandBlock) block.getState();
             String command = commandBlock.getCommand();
             if (command.isEmpty())

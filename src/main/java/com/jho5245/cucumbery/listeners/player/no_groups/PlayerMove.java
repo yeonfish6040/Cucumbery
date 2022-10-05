@@ -3,16 +3,23 @@ package com.jho5245.cucumbery.listeners.player.no_groups;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeRune;
 import com.jho5245.cucumbery.deathmessages.LastTrampledBlockManager;
 import com.jho5245.cucumbery.events.entity.EntityLandOnGroundEvent;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method2;
+import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -86,12 +93,30 @@ public class PlayerMove implements Listener
     {
       event.setCancelled(true);
     }
+    if (event.hasChangedBlock() && CustomEffectManager.hasEffect(player, CustomEffectType.SPYGLASS_TELEPORT))
+    {
+      CustomEffectManager.removeEffect(player, CustomEffectType.SPYGLASS_TELEPORT);
+      MessageUtil.sendWarn(player, "움직여서 순간 이동이 취소되었습니다");
+      CustomEffectManager.addEffect(player, CustomEffectType.SPYGLASS_TELEPORT_COOLDOWN, 100);
+    }
     if (CustomEffectManager.hasEffect(player, CustomEffectType.CONFUSION))
     {
       Location from = event.getFrom(), to = event.getTo();
       float yaw = Math.min(360f, Math.max(-360f, 2 * from.getYaw() - to.getYaw()));
       float pitch = Math.min(90f, Math.max(-90f, 2 * from.getPitch() - to.getPitch()));
       event.setTo(new Location(to.getWorld(), to.getX(), to.getY(), to.getZ(), yaw, pitch));
+    }
+    if (event.hasChangedPosition() && CustomEffectManager.hasEffect(player, CustomEffectType.SHIVA_NO_ONE_CAN_BLOCK_ME))
+    {
+      Method2.getNearbyEntitiesAsync(player.getLocation(), 1.5d).forEach(entity -> {
+        if (entity instanceof LivingEntity livingEntity && entity != player)
+        {
+          if (!(livingEntity instanceof Player p && UserData.GOD_MODE.getBoolean(p)))
+          {
+            livingEntity.setHealth(0);
+          }
+        }
+      });
     }
     if (event.hasExplicitlyChangedPosition() && CustomEffectManager.hasEffect(player, CustomEffectType.VAR_PODAGRA) && !player.isSneaking())
     {
@@ -110,6 +135,26 @@ public class PlayerMove implements Listener
 
       }
     }
+    if (event.hasChangedBlock() && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+    {
+      Location playerLocation = player.getLocation();
+      CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectTypeCustomMining.MOVEMENT_CHECK);
+      if (customEffect instanceof LocationCustomEffect locationCustomEffect)
+      {
+        Location location = locationCustomEffect.getLocation();
+        if (!playerLocation.getWorld().getName().equals(location.getWorld().getName()) || playerLocation.distance(location) > Cucumbery.config.getDouble("custom-mining.maximum-block-packet-distance") / 2d)
+        {
+          Scheduler.fakeBlocksAsync(player, true);
+          MiningScheduler.customMining(player, true);
+          CustomEffectManager.addEffect(player, new LocationCustomEffectImple(CustomEffectTypeCustomMining.MOVEMENT_CHECK, playerLocation));
+        }
+      }
+      else
+      {
+        CustomEffectManager.addEffect(player, new LocationCustomEffectImple(CustomEffectTypeCustomMining.MOVEMENT_CHECK, playerLocation));
+      }
+    }
+
   }
 
   private void getLastTrampledBlock(PlayerMoveEvent event)

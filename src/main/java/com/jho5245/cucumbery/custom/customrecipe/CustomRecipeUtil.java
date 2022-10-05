@@ -1906,10 +1906,10 @@ public class CustomRecipeUtil
                     "§3 - " +
                     MessageUtil.n2s(recipe + Method.format("category:" + category + "recipe:" + recipe, "§")));
 
-    ItemStack deco1 = CreateItemStack.newItem(Material.ORANGE_STAINED_GLASS_PANE, 1, "§와", true);
-    ItemStack deco2 = CreateItemStack.newItem(Material.GREEN_STAINED_GLASS_PANE, 1, "§와", true);
+    ItemStack deco1 = CreateItemStack.create(Material.ORANGE_STAINED_GLASS_PANE, 1, "§와", true);
+    ItemStack deco2 = CreateItemStack.create(Material.GREEN_STAINED_GLASS_PANE, 1, "§와", true);
 
-    gui.setItem(0, CreateItemStack.newItem(Material.BARRIER, 1, "§c[레시피 삭제]", Arrays.asList("§e시프트 좌클릭§7하여 해당 레시피를 삭제합니다", "§c이 작업은 되돌릴 수 없습니다"), true));
+    gui.setItem(0, CreateItemStack.create(Material.BARRIER, 1, "§c[레시피 삭제]", Arrays.asList("§e시프트 좌클릭§7하여 해당 레시피를 삭제합니다", "§c이 작업은 되돌릴 수 없습니다"), true));
     gui.setItem(1, deco1);
     gui.setItem(2, deco1);
 
@@ -1930,7 +1930,7 @@ public class CustomRecipeUtil
     gui.setItem(20, deco1);
     gui.setItem(21, deco1);
 
-    gui.setItem(13, CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "§와§d[제작 방법]", Arrays.asList("§7상단에 결과물 아이템을 넣고", "§7하단 27칸에 레시피의 재료가 되는", "§7아이템을 넣고 바로 아래의 제작대를 클릭하면 됩니다"), true));
+    gui.setItem(13, CreateItemStack.create(Material.ACACIA_SIGN, 1, "§와§d[제작 방법]", Arrays.asList("§7상단에 결과물 아이템을 넣고", "§7하단 27칸에 레시피의 재료가 되는", "§7아이템을 넣고 바로 아래의 제작대를 클릭하면 됩니다"), true));
 
     gui.setItem(23, deco1);
     gui.setItem(24, deco1);
@@ -1941,11 +1941,11 @@ public class CustomRecipeUtil
     gui.setItem(5, deco2);
     gui.setItem(12, deco2);
     gui.setItem(14, deco2);
-    gui.setItem(4, CreateItemStack.newItem(Material.BARRIER, 1, "§e로딩중...", true));
+    gui.setItem(4, CreateItemStack.create(Material.BARRIER, 1, "§e로딩중...", true));
     if (ingredients != null && !ingredients.isEmpty() && ingredientAmounts != null && !ingredientAmounts.isEmpty())
     {
-      gui.setItem(13, CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "§와§d[편집 방법]", Arrays.asList("§7상단에 결과물 아이템을 넣고", "§7하단 27칸에 레시피의 재료가 되는", "§7아이템을 넣고 바로 아래의 지도 제작대를 클릭하면 됩니다"), true));
-      gui.setItem(22, CreateItemStack.newItem(Material.CARTOGRAPHY_TABLE, 1, "§a레시피 편집", "§7클릭하여 레시피를 편집합니다", true));
+      gui.setItem(13, CreateItemStack.create(Material.ACACIA_SIGN, 1, "§와§d[편집 방법]", Arrays.asList("§7상단에 결과물 아이템을 넣고", "§7하단 27칸에 레시피의 재료가 되는", "§7아이템을 넣고 바로 아래의 지도 제작대를 클릭하면 됩니다"), true));
+      gui.setItem(22, CreateItemStack.create(Material.CARTOGRAPHY_TABLE, 1, "§a레시피 편집", "§7클릭하여 레시피를 편집합니다", true));
       for (int i = 0; i < ingredients.size(); i++)
       {
         ItemStack ingredient = ingredients.get(i);
@@ -1968,7 +1968,7 @@ public class CustomRecipeUtil
     }
     else
     {
-      gui.setItem(22, CreateItemStack.newItem(Material.CRAFTING_TABLE, 1, "§a레시피 생성", "§7클릭하여 레시피를 생성합니다", true));
+      gui.setItem(22, CreateItemStack.create(Material.CRAFTING_TABLE, 1, "§a레시피 생성", "§7클릭하여 레시피를 생성합니다", true));
     }
     if (ItemStackUtil.itemExists(result))
     {

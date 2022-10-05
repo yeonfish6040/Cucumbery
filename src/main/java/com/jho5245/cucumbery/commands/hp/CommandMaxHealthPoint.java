@@ -107,9 +107,9 @@ public class CommandMaxHealthPoint implements CommandExecutor, TabCompleter
         }
         if (!hideOutput)
         {
-          MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 순수 최대 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r으로 설정하였습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2
+          MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 순수 최대 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r으로 설정했습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2
                   .format(target.getHealth()) + "&r / rg255,204;" + Constant.Sosu2.format(maxHealthInstance != null ? maxHealthInstance.getValue() : 0) + "&r, HP바 : rg255,204;" + shpStr + "&r)");
-          MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "의 순수 최대 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r으로 설정하였습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2
+          MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "의 순수 최대 HP를 rg255,204;" + Constant.Sosu15.format(value) + "&r으로 설정했습니다 (rg255,204;HP&r : rg255,204;" + Constant.Sosu2
                   .format(target.getHealth()) + "&r / rg255,204;" + Method.attributeString(attributable, Attribute.GENERIC_MAX_HEALTH) + "&r, HP바 : rg255,204;" + shpStr + "&r)");
         }
       }

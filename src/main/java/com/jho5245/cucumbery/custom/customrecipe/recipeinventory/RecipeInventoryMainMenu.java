@@ -74,7 +74,7 @@ public class RecipeInventoryMainMenu
     if (firstOpen)
     {
       // deco template
-      ItemStack deco1 = CreateItemStack.newItem(Material.WHITE_STAINED_GLASS_PANE, 1, "§와", false);
+      ItemStack deco1 = CreateItemStack.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§와", false);
       menu.setItem(0, deco1);
       menu.setItem(1, deco1);
       menu.setItem(2, deco1);
@@ -103,7 +103,7 @@ public class RecipeInventoryMainMenu
 
       // buttons
 
-      menu.setItem(44, CreateItemStack.newItem(Material.BIRCH_BOAT, 1, "§b메인 메뉴로", false));
+      menu.setItem(44, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b메인 메뉴로", false));
 
       if (maxPage == 1)
       {
@@ -112,11 +112,11 @@ public class RecipeInventoryMainMenu
       }
       else
       {
-        menu.setItem(39, CreateItemStack.newItem(Material.SPRUCE_BOAT, Math.max(1, page == 1 ? maxPage : page - 1), page == 1 ? "§e마지막 페이지로" : "§e이전 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
+        menu.setItem(39, CreateItemStack.create(Material.SPRUCE_BOAT, Math.max(1, page == 1 ? maxPage : page - 1), page == 1 ? "§e마지막 페이지로" : "§e이전 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
         menu.setItem(
-                41, CreateItemStack.newItem(Material.SPRUCE_BOAT, Math.min(maxPage, page == maxPage ? 1 : page + 1), page == maxPage ? "§b처음 페이지로" : "§b다음 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
+                41, CreateItemStack.create(Material.SPRUCE_BOAT, Math.min(maxPage, page == maxPage ? 1 : page + 1), page == maxPage ? "§b처음 페이지로" : "§b다음 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
       }
-      menu.setItem(40, CreateItemStack.newItem(Material.CLOCK, 1, "rg255,204;로딩중...", false));
+      menu.setItem(40, CreateItemStack.create(Material.CLOCK, 1, "rg255,204;로딩중...", false));
       player.openInventory(menu);
       InventoryView lastInventory = GUIManager.getLastInventory(player.getUniqueId());
       if (lastInventory != null)
@@ -281,7 +281,7 @@ public class RecipeInventoryMainMenu
       menu.addItem(categoryItem);
     }
     menu.setItem(
-            40, CreateItemStack.newItem(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?",
+            40, CreateItemStack.create(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?",
                     Arrays.asList("&73×3 제작대처럼 복잡하게 재료의", "&7위치를 외울 필요 없이 재료만 들고 있으면", "&7클릭 한 번으로 아이템을 제작할 수 있는 곳입니다", "&b제작하고 싶은 아이템의 종류를 목록 위에서 골라보세요!"), false));
   }
 }

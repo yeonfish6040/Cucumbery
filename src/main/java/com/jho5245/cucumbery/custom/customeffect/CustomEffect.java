@@ -124,11 +124,24 @@ public class CustomEffect
   @NotNull
   public Component getDescription()
   {
-    return getDescription(null);
+    return getDescription(null, false);
+  }
+
+
+  @NotNull
+  public Component getDescription(boolean excludeProperty)
+  {
+    return getDescription(null, excludeProperty);
   }
 
   @NotNull
   public Component getDescription(@Nullable Player viewer)
+  {
+    return getDescription(viewer, false);
+  }
+
+  @NotNull
+  public Component getDescription(@Nullable Player viewer, boolean excludeProperty)
   {
     Component description = switch ((this.effectType.getNamespacedKey().getNamespace().equals("minecraft") ? "MINECRAFT_" : "") + effectType.getIdString().toUpperCase())
             {
@@ -167,7 +180,7 @@ public class CustomEffect
               case "DODGE" -> ComponentUtil.translate("%s 확률로 공격을 회피합니다", Constant.THE_COLOR_HEX + (amplifier + 1) + "%");
               case "NEWBIE_SHIELD" -> ComponentUtil.translate("플레이 시간이 1시간 미만인 당신!")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("받는 피해량이 %s 감소하고 대미지가 %s 증가합니다", Constant.THE_COLOR_HEX + (switch (amplifier + 1)
+                      .append(ComponentUtil.translate("받는 피해량이 %s 감소하고, 대미지가 %s 증가합니다", Constant.THE_COLOR_HEX + (switch (amplifier + 1)
                               {
                                 case 1 -> "10%";
                                 case 2 -> "20%";
@@ -200,13 +213,14 @@ public class CustomEffect
               case "VAR_PNEUMONIA" -> ComponentUtil.translate("물 속에서 산소 소모 속도가 %s 증가하고", Constant.THE_COLOR_HEX + (amplifier + 1) * 10 + "%")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("물 밖으로 나와도 산소가 회복되지 않습니다"));
-              case "VAR_DETOXICATE" -> ComponentUtil.translate("%s, %s, %s, %s 상태 효과를 가지고 있을 경우", PotionEffectType.POISON, PotionEffectType.CONFUSION, PotionEffectType.BLINDNESS, PotionEffectType.UNLUCK)
-                      .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("해당 상태 효과의 농도 레벨을 1단계 낮추거나 제거합니다"))
-                      .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("%s 확률로 농도 레벨이 2단계가 낮아지거나 %s 확률로 3단계가 낮아질", Constant.THE_COLOR_HEX + (amplifier + 1) + "%", Constant.THE_COLOR_HEX + Constant.Sosu1.format((amplifier + 1) * 0.1) + "%"))
-                      .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("수 있으며, %s 확률로 표시된 모든 디버프 4개가 제거될 수 있습니다", Constant.THE_COLOR_HEX + Constant.Sosu4.format((amplifier + 1) * (amplifier + 1) * 0.001) + "%"));
+              case "VAR_DETOXICATE" ->
+                      ComponentUtil.translate("%s, %s, %s, %s 상태 효과를 가지고 있을 경우", PotionEffectType.POISON, PotionEffectType.CONFUSION, PotionEffectType.BLINDNESS, PotionEffectType.UNLUCK)
+                              .append(Component.text("\n"))
+                              .append(ComponentUtil.translate("해당 상태 효과의 농도 레벨을 1단계 낮추거나 제거합니다"))
+                              .append(Component.text("\n"))
+                              .append(ComponentUtil.translate("%s 확률로 농도 레벨이 2단계가 낮아지거나 %s 확률로 3단계가 낮아질", Constant.THE_COLOR_HEX + (amplifier + 1) + "%", Constant.THE_COLOR_HEX + Constant.Sosu1.format((amplifier + 1) * 0.1) + "%"))
+                              .append(Component.text("\n"))
+                              .append(ComponentUtil.translate("수 있으며, %s 확률로 표시된 모든 디버프 4개가 제거될 수 있습니다", Constant.THE_COLOR_HEX + Constant.Sosu4.format((amplifier + 1) * (amplifier + 1) * 0.001) + "%"));
               case "VAR_PODAGRA" -> ComponentUtil.translate("이동하거나 점프할 때 웅크리지 않은 상태라면")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("행동을 시작할 때 1의 피해를 입고 행동을 지속할 시"))
@@ -214,7 +228,8 @@ public class CustomEffect
                       .append(ComponentUtil.translate("3초마다 %s의 피해를 입습니다. 추가로 3.5블록 미만의 높이에서 낙하할", Constant.Sosu1.format(0.2 + (amplifier * 0.1))))
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("경우 1의 피해를 입고 그 이상의 높이에서 낙하할 경우 받는 피해량이 50% 증가합니다"));
-              case "ENDER_SLAYER" -> ComponentUtil.translate("%s, %s 또는 %s 공격 시 대미지가 %s 증가합니다", EntityType.ENDERMAN, EntityType.ENDERMITE, EntityType.ENDER_DRAGON, Constant.THE_COLOR_HEX + ((amplifier + 1) * 10) + "%");
+              case "ENDER_SLAYER" ->
+                      ComponentUtil.translate("%s, %s 또는 %s 공격 시 대미지가 %s 증가합니다", EntityType.ENDERMAN, EntityType.ENDERMITE, EntityType.ENDER_DRAGON, Constant.THE_COLOR_HEX + ((amplifier + 1) * 10) + "%");
               case "BOSS_SLAYER" -> ComponentUtil.translate("보스 몬스터 공격 시 대미지가 %s 증가합니다", Constant.THE_COLOR_HEX + (amplifier + 1) * 10 + "%");
               case "EXPERIENCE_BOOST" -> ComponentUtil.translate("경험치 획득량이 %s 증가합니다", Constant.THE_COLOR_HEX + ((amplifier + 1) * 5) + "%");
               case "MINING_FATIGUE" -> ComponentUtil.translate("채광 속도가 %s 감소합니다", Constant.THE_COLOR_HEX + (amplifier + 1) + "%");
@@ -261,6 +276,12 @@ public class CustomEffect
       description = ComponentUtil.translate("%s 채굴 시 %s 등장 확률이 %s 증가합니다 (기본 %s)",
               CustomMaterial.TITANIUM_ORE, CustomMaterial.TITANIUM_ORE, Constant.THE_COLOR_HEX + Constant.Sosu2.format((amplifier + 1) * 0.1) + "%", Constant.THE_COLOR_HEX + "5%");
     }
+    if (effectType == CustomEffectType.SUPERIOR_LEVITATION)
+    {
+      description = ComponentUtil.translate("노빠꾸로 공중으로 떠오릅니다");
+      description = description.append(Component.text("\n"));
+      description = description.append(ComponentUtil.translate("말 그대로 빠꾸 없이 초당 약 %s 블록만큼 떠오릅니다", Constant.Sosu2.format((amplifier + 1) * 0.9)));
+    }
     if (this instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)
     {
       OfflinePlayer player = offlinePlayerCustomEffect.getOfflinePlayer();
@@ -291,7 +312,10 @@ public class CustomEffect
         description = description.append(ComponentUtil.translate("&7저장된 위치 : %s", location));
       }
     }
-    description = ComponentUtil.create(description, effectType.getPropertyDescription());
+    if (!excludeProperty)
+    {
+      description = ComponentUtil.create(description, effectType.getPropertyDescription());
+    }
     return description;
   }
 

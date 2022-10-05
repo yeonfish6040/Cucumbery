@@ -31,7 +31,7 @@ public class BlockDamage implements Listener
     Block block = event.getBlock();
     if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
     {
-      if (block.getType() != Material.FIRE && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
+      if (!(block.getType() == Material.FIRE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE)))
       {
         event.setCancelled(true);
       }

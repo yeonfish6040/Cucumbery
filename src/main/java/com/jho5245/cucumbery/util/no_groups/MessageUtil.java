@@ -400,7 +400,7 @@ public class MessageUtil
       {
         ItemLore.removeItemLore(itemStack);
       }
-      if (player.hasPermission("asdf") && (!nbtItem.hasKey("VirtualItem") || nbtItem.getBoolean("VirtualItem") == null))
+      if (player.hasPermission("asdf") && (!nbtItem.hasKey("VirtualItem") || nbtItem.getBoolean("VirtualItem") == null) || !nbtItem.getBoolean("VirtualItem"))
       {
         ItemMeta itemMeta = itemStack.getItemMeta();
         List<Component> lore = itemMeta.lore();
@@ -628,18 +628,22 @@ public class MessageUtil
 
   public static void sendToast(@NotNull Object audience, @NotNull Component title, @NotNull ItemStack itemStack, @NotNull Frame frame)
   {
+    NamespacedKey namespacedKey = NamespacedKey.minecraft("z-cucumbery-toast-" + System.currentTimeMillis());
     if (audience instanceof Player player)
     {
-      NamespacedKey namespacedKey = NamespacedKey.minecraft("z-cucumbery-toast-" + System.currentTimeMillis() + "-" + player.getUniqueId());
       itemStack = itemStack.clone();
       ItemLore.setItemLore(itemStack, ItemLoreView.of(player));
       new ToastMessage(namespacedKey, title, itemStack, frame).showTo(player);
     }
-    else if (audience instanceof Iterable<?> collection)
+    else if (audience instanceof Collection<?> collection)
     {
+      int stack = 1;
       for (Object o : collection)
       {
-        sendToast(o, title, itemStack, frame);
+        @NotNull ItemStack finalItemStack = itemStack;
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+        sendToast(o, title, finalItemStack, frame), stack);
+        stack++;
       }
     }
   }

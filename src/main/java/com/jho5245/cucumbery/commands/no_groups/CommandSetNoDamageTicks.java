@@ -78,7 +78,7 @@ public class CommandSetNoDamageTicks implements CucumberyCommandExecutor
         }
         if (!successEntitiesIsEmpty)
         {
-          MessageUtil.info(sender, ComponentUtil.translate("%s의 무적 시간을 %s(으)로 변경하였습니다", successEntities, Constant.THE_COLOR_HEX + tick));
+          MessageUtil.info(sender, ComponentUtil.translate("%s의 무적 시간을 %s(으)로 변경했습니다", successEntities, Constant.THE_COLOR_HEX + tick));
           MessageUtil.sendAdminMessage(sender,
                   "%s에게 %s만큼의 피해를 주었습니다", successEntities, Constant.THE_COLOR_HEX + tick);
         }

@@ -34,8 +34,8 @@ public class CommandVanillaTeleport extends CommandBase
       sender.setFallDistance(fallDistance);
       if (!hideOutput && Boolean.TRUE.equals(sender.getWorld().getGameRuleValue(GameRule.SEND_COMMAND_FEEDBACK)))
       {
-        MessageUtil.info(sender, ComponentUtil.translate("%s(으)로 순간이동하였습니다", location));
-        MessageUtil.sendAdminMessage(sender, "%s(으)로 순간이동하였습니다", location);
+        MessageUtil.info(sender, ComponentUtil.translate("%s(으)로 순간이동했습니다", location));
+        MessageUtil.sendAdminMessage(sender, "%s(으)로 순간이동했습니다", location);
       }
     }
     else

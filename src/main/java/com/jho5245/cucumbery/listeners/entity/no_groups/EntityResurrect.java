@@ -78,7 +78,7 @@ public class EntityResurrect implements Listener
             String remainTime = Method.timeFormatMilli(nextAvailable - currentTime);
             if (currentTime < nextAvailable)
             {
-              MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) 사용할 수 없어 사망하였습니다 (남은 시간 : %s)", totem, Constant.THE_COLOR_HEX + remainTime));
+              MessageUtil.sendWarn(player, ComponentUtil.translate("아직 %s을(를) 사용할 수 없어 사망했습니다 (남은 시간 : %s)", totem, Constant.THE_COLOR_HEX + remainTime));
               event.setCancelled(true);
               return;
             }

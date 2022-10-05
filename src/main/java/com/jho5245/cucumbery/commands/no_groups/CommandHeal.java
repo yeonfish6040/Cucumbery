@@ -217,9 +217,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                   {
                     if (!target.equals(sender))
                     {
-                      MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트와 포화도를 rg255,204;" + Constant.Sosu2.format(allInput) + "&r으로 설정하였습니다");
+                      MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트와 포화도를 rg255,204;" + Constant.Sosu2.format(allInput) + "&r으로 설정했습니다");
                     }
-                    MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "의 음식 포인트와 포화도를 rg255,204;" + Constant.Sosu2.format(allInput) + "&r으로 설정하였습니다");
+                    MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "의 음식 포인트와 포화도를 rg255,204;" + Constant.Sosu2.format(allInput) + "&r으로 설정했습니다");
                   }
                 }
                 case "foodlevel" -> {
@@ -237,9 +237,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                   {
                     if (!target.equals(sender))
                     {
-                      MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + Constant.Jeongsu.format(foodInput) + "&r으로 설정하였습니다");
+                      MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + Constant.Jeongsu.format(foodInput) + "&r으로 설정했습니다");
                     }
-                    MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "의 음식 포인트를 rg255,204;" + Constant.Jeongsu.format(foodInput) + "&r으로 설정하였습니다");
+                    MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "의 음식 포인트를 rg255,204;" + Constant.Jeongsu.format(foodInput) + "&r으로 설정했습니다");
                   }
                 }
                 case "saturation" -> {
@@ -257,9 +257,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                   {
                     if (!target.equals(sender))
                     {
-                      MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Jeongsu.format(saturationInput) + "&r으로 설정하였습니다");
+                      MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Jeongsu.format(saturationInput) + "&r으로 설정했습니다");
                     }
-                    MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "의 포화도를 rg255,204;" + Constant.Jeongsu.format(saturationInput) + "&r으로 설정하였습니다");
+                    MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "의 포화도를 rg255,204;" + Constant.Jeongsu.format(saturationInput) + "&r으로 설정했습니다");
                   }
                 }
                 default -> {
@@ -300,9 +300,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                       MessageUtil.sendWarn(sender, target, "이(가) 지급받은 음식 포인트가 지급한 음식 포인트보다 적습니다. rg255,204;(&r손해 본 값 : rg255,204;" + (20 - (int) allInput) + "rg255,204;)");
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 음식 포인트를 rg255,204;" + (20 - foodLevel) + "&r만큼 지급하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 음식 포인트를 rg255,204;" + (20 - foodLevel) + "&r만큼 지급했습니다");
                       }
-                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "에게 음식 포인트를 rg255,204;" + (20 - foodLevel) + "&r만큼 지급하였습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
+                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "에게 음식 포인트를 rg255,204;" + (20 - foodLevel) + "&r만큼 지급했습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
                     }
                   }
                   else
@@ -312,9 +312,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                     {
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 음식 포인트를 rg255,204;" + ((int) allInput) + "&r만큼 지급하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 음식 포인트를 rg255,204;" + ((int) allInput) + "&r만큼 지급했습니다");
                       }
-                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "에게 음식 포인트를 rg255,204;" + ((int) allInput) + "&r만큼 지급하였습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
+                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "에게 음식 포인트를 rg255,204;" + ((int) allInput) + "&r만큼 지급했습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
                     }
                   }
                   if (saturation + allInput > 20D)
@@ -325,13 +325,13 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                       MessageUtil.sendWarn(sender, target, "이(가) 지급받은 포화도가 지급한 포화도보다 적습니다. rg255,204;(&r손해 본 값 : rg255,204;" + Constant.Sosu2.format(20D - allInput) + "rg255,204;)");
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 포화도를 rg255,204;" + Constant.Sosu2.format(20D - saturation) + "&r만큼 지급하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 포화도를 rg255,204;" + Constant.Sosu2.format(20D - saturation) + "&r만큼 지급했습니다");
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "에게 포화도를 rg255,204;" +
                                       Constant.Sosu2.format(20D - saturation) +
-                                      "&r만큼 지급하였습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
+                                      "&r만큼 지급했습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
                                       Constant.Sosu2.format(target.getSaturation()) +
                                       "rg255,204;)");
                     }
@@ -343,13 +343,13 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                     {
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 포화도를 rg255,204;" + Constant.Sosu2.format(allInput) + "&r만큼 지급하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 포화도를 rg255,204;" + Constant.Sosu2.format(allInput) + "&r만큼 지급했습니다");
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "에게 포화도를 rg255,204;" +
                                       Constant.Sosu2.format(allInput) +
-                                      "&r만큼 지급하였습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
+                                      "&r만큼 지급했습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
                                       Constant.Sosu2.format(target.getSaturation()) +
                                       "rg255,204;)");
                     }
@@ -378,9 +378,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                       MessageUtil.sendWarn(sender, target, "이(가) 지급받은 음식 포인트가 지급한 음식 포인트보다 적습니다. rg255,204;(&r손해 본 값 : rg255,204;" + (20 - foodInput) + "rg255,204;)");
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 음식 포인트를 rg255,204;" + (20 - foodLevel) + "&r만큼 지급하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 음식 포인트를 rg255,204;" + (20 - foodLevel) + "&r만큼 지급했습니다");
                       }
-                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "에게 음식 포인트를 rg255,204;" + (20 - foodLevel) + "&r만큼 지급하였습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
+                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "에게 음식 포인트를 rg255,204;" + (20 - foodLevel) + "&r만큼 지급했습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
                     }
                   }
                   else
@@ -390,9 +390,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                     {
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 음식 포인트를 rg255,204;" + foodInput + "&r만큼 지급하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 음식 포인트를 rg255,204;" + foodInput + "&r만큼 지급했습니다");
                       }
-                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "에게 음식 포인트를 rg255,204;" + foodInput + "&r만큼 지급하였습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
+                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "에게 음식 포인트를 rg255,204;" + foodInput + "&r만큼 지급했습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
                     }
                   }
                 }
@@ -419,13 +419,13 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                       MessageUtil.sendWarn(sender, target, "이(가) 지급받은 포화도가 지급한 포화도보다 적습니다. rg255,204;(&r손해 본 값 : rg255,204;" + Constant.Sosu2.format(20D - saturationInput) + "rg255,204;)");
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 포화도를 rg255,204;" + Constant.Sosu2.format(20D - saturation) + "&r만큼 지급하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 포화도를 rg255,204;" + Constant.Sosu2.format(20D - saturation) + "&r만큼 지급했습니다");
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "에게 포화도를 rg255,204;" +
                                       Constant.Sosu2.format(20D - saturation) +
-                                      "&r만큼 지급하였습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
+                                      "&r만큼 지급했습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
                                       Constant.Sosu2.format(target.getSaturation()) +
                                       "rg255,204;)");
                     }
@@ -437,13 +437,13 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                     {
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 포화도를 rg255,204;" + Constant.Sosu2.format(saturationInput) + "&r만큼 지급하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신에게 포화도를 rg255,204;" + Constant.Sosu2.format(saturationInput) + "&r만큼 지급했습니다");
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "에게 포화도를 rg255,204;" +
                                       Constant.Sosu2.format(saturationInput) +
-                                      "&r만큼 지급하였습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
+                                      "&r만큼 지급했습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
                                       Constant.Sosu2.format(target.getSaturation()) +
                                       "rg255,204;)");
                     }
@@ -487,9 +487,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                       MessageUtil.sendWarn(sender, target, "이(가) 차감당한 음식 포인트가 차감시킨 음식 포인트보다 적습니다. rg255,204;(&r손해 본 값 : rg255,204;" + ((int) allInput - foodLevel) + "rg255,204;)");
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + foodLevel + "&r만큼 차감하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + foodLevel + "&r만큼 차감했습니다");
                       }
-                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "(으)로부터 음식 포인트를 rg255,204;" + foodLevel + "&r만큼 차감하였습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
+                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "(으)로부터 음식 포인트를 rg255,204;" + foodLevel + "&r만큼 차감했습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
                     }
                   }
                   else
@@ -499,9 +499,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                     {
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + ((int) allInput) + "&r만큼 차감하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + ((int) allInput) + "&r만큼 차감했습니다");
                       }
-                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "(으)로부터 음식 포인트를 rg255,204;" + ((int) allInput) + "&r만큼 차감하였습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
+                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "(으)로부터 음식 포인트를 rg255,204;" + ((int) allInput) + "&r만큼 차감했습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
                     }
                   }
                   if (saturation - allInput < 0D)
@@ -512,13 +512,13 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                       MessageUtil.sendWarn(sender, target, "이(가) 차감당한 포화도가 차감시킨 포화도보다 적습니다. rg255,204;(&r손해 본 값 : rg255,204;" + Constant.Sosu2.format(allInput - saturation) + "rg255,204;)");
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Sosu2.format(saturation) + "&r만큼 차감하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Sosu2.format(saturation) + "&r만큼 차감했습니다");
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "(으)로부터 포화도를 rg255,204;" +
                                       Constant.Sosu2.format(saturation) +
-                                      "&r만큼 차감하였습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
+                                      "&r만큼 차감했습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
                                       Constant.Sosu2.format(target.getSaturation()) +
                                       "rg255,204;)");
                     }
@@ -530,13 +530,13 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                     {
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Sosu2.format(allInput) + "&r만큼 차감하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Sosu2.format(allInput) + "&r만큼 차감했습니다");
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "(으)로부터 포화도를 rg255,204;" +
                                       Constant.Sosu2.format(allInput) +
-                                      "&r만큼 차감하였습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
+                                      "&r만큼 차감했습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
                                       Constant.Sosu2.format(target.getSaturation()) +
                                       "rg255,204;)");
                     }
@@ -565,9 +565,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                       MessageUtil.sendWarn(sender, target, "이(가) 차감당한 음식 포인트가 차감시킨 음식 포인트보다 적습니다. rg255,204;(&r손해 본 값 : rg255,204;" + (foodInput - foodLevel) + "rg255,204;)");
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + foodLevel + "&r만큼 차감하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + foodLevel + "&r만큼 차감했습니다");
                       }
-                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "(으)로부터 음식 포인트를 rg255,204;" + foodLevel + "&r만큼 차감하였습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
+                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "(으)로부터 음식 포인트를 rg255,204;" + foodLevel + "&r만큼 차감했습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
                     }
                   }
                   else
@@ -577,9 +577,9 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                     {
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + foodInput + "&r만큼 차감하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 음식 포인트를 rg255,204;" + foodInput + "&r만큼 차감했습니다");
                       }
-                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "(으)로부터 음식 포인트를 rg255,204;" + foodInput + "&r만큼 차감하였습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
+                      MessageUtil.sendMessage(sender, Prefix.INFO_HEAL, target, "(으)로부터 음식 포인트를 rg255,204;" + foodInput + "&r만큼 차감했습니다. rg255,204;(&r현재 음식 포인트 : rg255,204;" + target.getFoodLevel() + "rg255,204;)");
                     }
                   }
                 }
@@ -606,13 +606,13 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                       MessageUtil.sendWarn(sender, target, "이(가) 차감당한 포화도가 차감시킨 포화도보다 적습니다. rg255,204;(&r손해 본 값 : rg255,204;" + Constant.Sosu2.format(saturationInput - saturation) + "rg255,204;)");
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Sosu2.format(saturation) + "&r만큼 차감하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Sosu2.format(saturation) + "&r만큼 차감했습니다");
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "(으)로부터 포화도를 rg255,204;" +
                                       Constant.Sosu2.format(saturation) +
-                                      "&r만큼 차감하였습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
+                                      "&r만큼 차감했습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
                                       Constant.Sosu2.format(target.getSaturation()) +
                                       "rg255,204;)");
                     }
@@ -624,13 +624,13 @@ public class CommandHeal implements CommandExecutor, TabCompleter
                     {
                       if (!target.equals(sender))
                       {
-                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Sosu2.format(saturationInput) + "&r만큼 차감하였습니다");
+                        MessageUtil.sendMessage(target, Prefix.INFO_HEAL, sender, "이(가) 당신의 포화도를 rg255,204;" + Constant.Sosu2.format(saturationInput) + "&r만큼 차감했습니다");
                       }
                       MessageUtil.sendMessage(sender, Prefix.INFO_HEAL,
                               target,
                               "(으)로부터 포화도를 rg255,204;" +
                                       Constant.Sosu2.format(saturationInput) +
-                                      "&r만큼 차감하였습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
+                                      "&r만큼 차감했습니다. rg255,204;(&r현재 포화도 : rg255,204;" +
                                       Constant.Sosu2.format(target.getSaturation()) +
                                       "rg255,204;)");
                     }

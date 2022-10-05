@@ -17,7 +17,11 @@ public class PlayerChatPreview implements Listener
   public void onplayerChatPreview(AsyncPlayerChatPreviewEvent event)
   {
     Player player = event.getPlayer();
-    String message = "§f" + event.getMessage();
+    String message = event.getMessage();
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.BACKWARDS_CHAT))
+    {
+      message = new StringBuffer(message).reverse().toString();
+    }
     if (Permission.OTHER_PLACEHOLDER.has(player))
     {
       if (message.contains("--noph"))

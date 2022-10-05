@@ -22,15 +22,41 @@ public enum CustomMaterial
   AMETHYST(Material.PLAYER_HEAD, "&i자수정 원석", Rarity.UNIQUE),
   BAD_APPLE(Material.APPLE, "&i나쁜 사과"),
   BAMIL_PABO(Material.PLAYER_HEAD, "&i머밀의 바리", Rarity.ARTIFACT),
+  BEACON_DECORATIVE(Material.BEACON, "&i장식용 신호기", Rarity.EPIC, CreativeCategory.DECORATIONS.translationKey()),
+  BEACON_HAT(Material.BEACON, "&i신호기 모자", Rarity.EPIC, CreativeCategory.DECORATIONS.translationKey()),
   BOO(Material.SCUTE, "&b부우"),
   BOO_HUNGRY(Material.SCUTE, "&b배고프부우.."),
-  COLOSSAL_EXPERIENCE_BOTTLE(Material.EXPERIENCE_BOTTLE, "&R엄청한 경험치 병", Rarity.EXCELLENT),
+  COBALT_AXE(Material.DIAMOND_AXE, "&i코발트 도끼", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
+  COBALT_BOOTS(Material.LEATHER_BOOTS, "&i코발트 부츠", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  COBALT_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i코발트 흉갑", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  COBALT_HELMET(Material.LEATHER_HELMET, "&i코발트 투구", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  COBALT_HOE(Material.DIAMOND_HOE, "&i코발트 괭이", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
+  COBALT_INGOT(Material.LAPIS_LAZULI, "&i코발트 주괴", Rarity.UNIQUE),
+  COBALT_LEGGINGS(Material.LEATHER_LEGGINGS, "&i코발트 레깅스", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  COBALT_ORE(Material.BLUE_DYE, "&i코발트 원석", Rarity.UNIQUE),
+  COBALT_PICKAXE(Material.DIAMOND_PICKAXE, "&i코발트 곡괭이", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
+  COBALT_SHOVEL(Material.DIAMOND_SHOVEL, "&i코발트 삽", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
+
+  COBALT_SWORD(Material.DIAMOND_SWORD, "&i코발트 검", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  COPPER_AXE(Material.STONE_AXE, "&i구리 도끼", CreativeCategory.TOOLS.translationKey()),
+  COPPER_BOOTS(Material.LEATHER_BOOTS, "&i구리 부츠", CreativeCategory.COMBAT.translationKey()),
+  COPPER_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i구리 흉갑", CreativeCategory.COMBAT.translationKey()),
+  COPPER_HELMET(Material.LEATHER_HELMET, "&i구리 투구", CreativeCategory.COMBAT.translationKey()),
+  COPPER_HOE(Material.STONE_HOE, "&i구리 괭이", CreativeCategory.TOOLS.translationKey()),
+  COPPER_LEGGINGS(Material.LEATHER_LEGGINGS, "&i구리 레깅스", CreativeCategory.COMBAT.translationKey()),
+  COPPER_PICKAXE(Material.STONE_PICKAXE, "&i구리 곡괭이", CreativeCategory.TOOLS.translationKey()),
+  COPPER_SHOVEL(Material.STONE_SHOVEL, "&i구리 삽", CreativeCategory.TOOLS.translationKey()),
+  COPPER_SWORD(Material.STONE_SWORD, "&i구리 검", CreativeCategory.COMBAT.translationKey()),
   CORE_GEMSTONE(Material.PRISMARINE_CRYSTALS, "&b코어 젬스톤", Rarity.EPIC),
   CORE_GEMSTONE_EXPERIENCE(Material.PRISMARINE_CRYSTALS, "&a경험의 코어 젬스톤", Rarity.EPIC),
   CORE_GEMSTONE_MIRROR(Material.PRISMARINE_CRYSTALS, "&c거울세계의 코어 젬스톤", Rarity.EPIC),
   CORE_GEMSTONE_MITRA(Material.PRISMARINE_CRYSTALS, "&6미트라의 코어 젬스톤", Rarity.EPIC),
+  CUCUMBERITE_INGOT(Material.EMERALD, "&i오이스터늄 주괴"),
+  CUCUMBERITE_ORE(Material.SCUTE, "&i오이스터늄 원석"),
   CUTE_SUGAR(Material.SUGAR, "&a커여운 슦가", Rarity.EPIC, "슈가"),
   CUTE_SUGAR_HUNGRY(Material.SUGAR, "&a배고푼 커여운 슦가", Rarity.EPIC, "슈가"),
+  DIAMOND_BLOCK_DECORATIVE(Material.DIAMOND_BLOCK, "&i장식용 다이아몬드 블록", Rarity.NORMAL, CreativeCategory.BUILDING_BLOCKS.translationKey()),
+  DIAMOND_CHESTPLATE_WITH_ELYTRA(Material.ELYTRA, "&i다이아몬드 겉날개", Rarity.EXCELLENT),
   DOEHAERIM_BABO(Material.PLAYER_HEAD, "&i바보의 머리", Rarity.ARTIFACT),
   DRILL_FUEL(Material.COAL, "&i소형 드릴 연료", Rarity.RARE, "드릴 연료"),
   ENCHANTED_ACACIA_LOG(Material.ACACIA_LOG, "&i마법이 부여된 아카시아나무 원목", Rarity.RARE),
@@ -106,7 +132,7 @@ public enum CustomMaterial
   ENCHANTED_MANGROVE_LOG(Material.MANGROVE_LOG, "&i마법이 부여된 맹그로브나무 원목", Rarity.RARE),
   ENCHANTED_MELON(Material.MELON, "&i마법이 부여된 수박", Rarity.EPIC),
   ENCHANTED_MELON_SLICE(Material.MELON_SLICE, "&i마법이 부여된 수박 조각", Rarity.RARE),
-  ENCHANTED_MITHRIL_INGOT(Material.IRON_INGOT, "&i마법이 부여된 미스릴 주괴", Rarity.ELITE),
+  ENCHANTED_MITHRIL_INGOT(Material.IRON_INGOT, "&i마법이 부여된 미스릴 주괴", Rarity.EXCELLENT),
   ENCHANTED_MUTTON(Material.MUTTON, "&i마법이 부여된 익히지 않은 양고기", Rarity.RARE),
   ENCHANTED_NETHERITE_BLOCK(Material.NETHERITE_BLOCK, "&i마법이 부여된 네더라이트 블록", Rarity.LEGENDARY),
   ENCHANTED_NETHERITE_INGOT(Material.NETHERITE_INGOT, "&i마법이 부여된 네더라이트 주괴", Rarity.EXCELLENT),
@@ -145,54 +171,117 @@ public enum CustomMaterial
   ENCHANTED_SUGAR(Material.SUGAR, "&i마법이 부여된 설탕", Rarity.EPIC),
   ENCHANTED_SUGAR_CANE(Material.SUGAR_CANE, "&i마법이 부여된 사탕수수", Rarity.RARE),
   ENCHANTED_SWEET_BERRIES(Material.SWEET_BERRIES, "&i마법이 부여된 달콤한 열매", Rarity.RARE),
-  ENCHANTED_TITANIUM(Material.PLAYER_HEAD, "&i마법이 부여된 티타늄", Rarity.UNIQUE),
+  ENCHANTED_TITANIUM(Material.PLAYER_HEAD, "&i마법이 부여된 티타늄", Rarity.EXCELLENT),
   ENCHANTED_TROPICAL_FISH(Material.TROPICAL_FISH, "&i마법이 부여된 열대어", Rarity.RARE),
   ENCHANTED_TURTLE_EGG(Material.TURTLE_EGG, "&i마법이 부여된 거북 알", Rarity.EPIC),
   ENCHANTED_VERDANT_FROGLIGHT(Material.VERDANT_FROGLIGHT, "&i마법이 부여된 잔딧빛 개구리불", Rarity.EXCELLENT),
   ENCHANTED_WARPED_FUNGUS(Material.WARPED_FUNGUS, "&i마법이 부여된 뒤틀린 균", Rarity.RARE),
   ENCHANTED_WARPED_STEM(Material.WARPED_STEM, "&i마법이 부여된 뒤틀린 자루", Rarity.RARE),
   ENCHANTED_WHEAT(Material.WHEAT, "&i마법이 부여된 밀", Rarity.RARE),
+  EXPERIENCE_BOTTLE_COLOSSAL(Material.EXPERIENCE_BOTTLE, "&R위대한 경험치 병", Rarity.EXCELLENT),
+  EXPERIENCE_BOTTLE_GRAND(Material.EXPERIENCE_BOTTLE, "&R대단한 경험치 병", Rarity.ELITE),
+  EXPERIENCE_BOTTLE_TITANIC(Material.EXPERIENCE_BOTTLE, "&R엄청난 경험치 병", Rarity.UNIQUE),
+  FIREWORK_ROCKET_CHAIN(Material.FIREWORK_ROCKET, "&i연쇄형 폭죽", Rarity.EPIC),
+  FIREWORK_ROCKET_EXPLOSIVE(Material.FIREWORK_ROCKET, "&i폭발성 폭죽", Rarity.EPIC),
+  FIREWORK_ROCKET_REPEATING(Material.FIREWORK_ROCKET, "&i반복형 폭죽", Rarity.EPIC),
   FLINT_SHOVEL(Material.IRON_SHOVEL, "&i부싯돌 삽", Rarity.RARE, CreativeCategory.TOOLS.translationKey()),
-  GRAND_EXPERIENCE_BOTTLE(Material.EXPERIENCE_BOTTLE, "&R위대한 경험치 병", Rarity.ELITE),
+  FROG_BOOTS(Material.LEATHER_BOOTS, "&2개구리 신발", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
+  FROG_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&2개구리 옷", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
+  FROG_HELMET(Material.PLAYER_HEAD, "&2개구리 모자", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
+  FROG_LEGGINGS(Material.LEATHER_LEGGINGS, "&2개구리 바지", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   IQ_CHOOK_CHUCK(Material.REDSTONE_BLOCK, "&iIQ 축척기", Rarity.RARE),
   JADE(Material.PLAYER_HEAD, "&i옥 원석", Rarity.UNIQUE),
   JASPER(Material.PLAYER_HEAD, "&i벽옥 원석", Rarity.UNIQUE),
-  MITHRIL_INGOT(Material.IRON_INGOT, "&i미스릴 주괴", Rarity.EPIC),
-  MITHRIL_ORE(Material.PRISMARINE_CRYSTALS, "&i미스릴 광석", Rarity.EPIC),
-  MITHRIL_PICKAXE(Material.IRON_PICKAXE, "&i미스릴 곡괭이", Rarity.ELITE),
+  MINDAS_BOOTS(Material.GOLDEN_BOOTS, "&R마인더스의 신발", Rarity.LEGENDARY, "갑옷"),
+  MINDAS_CHESTPLATE(Material.GOLDEN_CHESTPLATE, "&R마인더스의 상의", Rarity.LEGENDARY, "갑옷"),
+  MINDAS_DRILL(Material.PRISMARINE_SHARD, "&i마인더스의 드릴", Rarity.LEGENDARY, CreativeCategory.TOOLS.translationKey()),
+  MINDAS_HELMET(Material.PLAYER_HEAD, "&R마인더스의 헬멧", Rarity.LEGENDARY, "갑옷"),
+
+
+  MINDAS_LEGGINGS(Material.GOLDEN_LEGGINGS, "&R마인더스의 하의", Rarity.LEGENDARY, "갑옷"),
+  MINER_BOOTS(Material.LEATHER_BOOTS, "&i광부 신발", Rarity.RARE, "갑옷"),
+  MINER_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i광부 상의", Rarity.RARE, "갑옷"),
+  MINER_HELMET(Material.LEATHER_HELMET, "&i광부 헬멧", Rarity.RARE, "갑옷"),
+
+
+  MINER_LEGGINGS(Material.LEATHER_LEGGINGS, "&i광부 하의", Rarity.RARE, "갑옷"),
+  MITHRIL_AXE(Material.DIAMOND_AXE, "&i미스릴 도끼", Rarity.UNIQUE),
+  MITHRIL_BOOTS(Material.LEATHER_BOOTS, "&i미스릴 부츠", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  MITHRIL_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i미스릴 흉갑", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  MITHRIL_HELMET(Material.LEATHER_HELMET, "&i미스릴 투구", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  MITHRIL_HOE(Material.DIAMOND_HOE, "&i미스릴 괭이", Rarity.UNIQUE),
+  MITHRIL_INGOT(Material.IRON_INGOT, "&i미스릴 주괴", Rarity.UNIQUE),
+  MITHRIL_LEGGINGS(Material.LEATHER_LEGGINGS, "&i미스릴 레깅스", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  MITHRIL_ORE(Material.PRISMARINE_CRYSTALS, "&i미스릴 원석", Rarity.UNIQUE),
+  MITHRIL_PICKAXE(Material.DIAMOND_PICKAXE, "&i미스릴 곡괭이", Rarity.UNIQUE),
+  MITHRIL_PICKAXE_REFINED(Material.DIAMOND_PICKAXE, "&i정제된 미스릴 곡괭이", Rarity.UNIQUE),
+  MITHRIL_REFINED(Material.PLAYER_HEAD, "&i정제된 미스릴", Rarity.LEGENDARY),
+  MITHRIL_SHOVEL(Material.DIAMOND_SHOVEL, "&i미스릴 삽", Rarity.UNIQUE),
+  MITHRIL_SWORD(Material.DIAMOND_SWORD, "&i미스릴 검", Rarity.UNIQUE),
+
+  MUSHROOM_STEW_PICKAXE(Material.MUSHROOM_STEW, "&i스튜 곡괭이?", Rarity.ARTIFACT, CreativeCategory.TOOLS.translationKey()),
+  NETHERITE_CHESTPLATE_WITH_ELYTRA(Material.ELYTRA, "&i네더라이트 겉날개", Rarity.EXCELLENT),
+
   PORTABLE_CRAFTING_TABLE(Material.PLAYER_HEAD, "&i휴대용 작업대", Rarity.RARE),
-  REFINED_MITHRIL(Material.PLAYER_HEAD, "&i정제된 미스릴", Rarity.UNIQUE),
-  REFINED_MITHRIL_PICKAXE(Material.IRON_PICKAXE, "&i정제된 미스릴 곡괭이", Rarity.ELITE),
-  REFINED_TITANIUM(Material.PLAYER_HEAD, "&i정제된 티타늄", Rarity.EXCELLENT),
-  REFINED_TITANIUM_PICKAXE(Material.IRON_PICKAXE, "&i정제된 티타늄 곡괭이", Rarity.ELITE),
+
   RUBY(Material.PLAYER_HEAD, "&i루비 원석", Rarity.UNIQUE),
+
   RUNE_DESTRUCTION(Material.TNT_MINECART, "&i파멸의 룬"),
   RUNE_EARTHQUAKE(Material.TNT_MINECART, "&i지진의 룬"),
+
   SANS_BOOTS(Material.LEATHER_BOOTS, "&7샌즈 부츠", Rarity.RARE),
   SANS_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&7샌즈 흉갑", Rarity.RARE),
   SANS_HELMET(Material.LEATHER_HELMET, "&7샌즈 투구", Rarity.RARE),
   SANS_LEGGINGS(Material.LEATHER_LEGGINGS, "&7샌즈 각반", Rarity.RARE),
   SAPPHIRE(Material.PLAYER_HEAD, "&i사파이어", Rarity.UNIQUE),
+  SHROOMITE_INGOT(Material.BRICK, "&i쉬루마이트 주괴"),
+  SHROOMITE_ORE(Material.RED_DYE, "&i쉬루마이트 원석"),
   SMALL_MINING_SACK(Material.PLAYER_HEAD, "&i소형 광물 가방", Rarity.RARE, "가방"),
+  SPYGLASS_TELEPORT(Material.SPYGLASS, "&i텔레포트 망원경", Rarity.ELITE, CreativeCategory.TOOLS.translationKey()),
   STONK(Material.GOLDEN_PICKAXE, "&i채굴기", Rarity.EPIC, CreativeCategory.TOOLS.translationKey()),
   TEST_PICKAXE(Material.IRON_PICKAXE, "&i테스트 곡괭이", Rarity.ARTIFACT, CreativeCategory.TOOLS.translationKey()),
   THE_MUSIC(Material.MUSIC_DISC_5, "&i'그' 노래", Rarity.EPIC),
-  TITANIC_EXPERIENCE_BOTTLE(Material.EXPERIENCE_BOTTLE, "&R거대한 경험치 병", Rarity.UNIQUE),
-  TITANIUM_DRILL_R266(Material.PRISMARINE_SHARD, "&i티타늄 드릴 R266", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
-  TITANIUM_DRILL_R366(Material.PRISMARINE_SHARD, "&i티타늄 드릴 R366", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
-  TITANIUM_DRILL_R466(Material.PRISMARINE_SHARD, "&i티타늄 드릴 R466", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
-  TITANIUM_DRILL_R566(Material.PRISMARINE_SHARD, "&i티타늄 드릴 R566", Rarity.EXCELLENT, CreativeCategory.TOOLS.translationKey()),
-  TITANIUM_INGOT(Material.IRON_INGOT, "&i티타늄 주괴", Rarity.ELITE),
+  TITANIUM_AXE(Material.IRON_AXE, "&i티타늄 도끼", Rarity.UNIQUE),
+  TITANIUM_BOOTS(Material.LEATHER_BOOTS, "&i티타늄 부츠", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  TITANIUM_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i티타늄 흉갑", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  TITANIUM_DRILL_R266(Material.PRISMARINE_SHARD, "&i티타늄 드릴 R266", Rarity.EXCELLENT, CreativeCategory.TOOLS.translationKey()),
+  TITANIUM_DRILL_R366(Material.PRISMARINE_SHARD, "&i티타늄 드릴 R366", Rarity.EXCELLENT, CreativeCategory.TOOLS.translationKey()),
+  TITANIUM_DRILL_R466(Material.PRISMARINE_SHARD, "&i티타늄 드릴 R466", Rarity.EXCELLENT, CreativeCategory.TOOLS.translationKey()),
+  TITANIUM_DRILL_R566(Material.PRISMARINE_SHARD, "&i티타늄 드릴 R566", Rarity.LEGENDARY, CreativeCategory.TOOLS.translationKey()),
+  TITANIUM_HELMET(Material.LEATHER_HELMET, "&i티타늄 투구", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  TITANIUM_HOE(Material.IRON_HOE, "&i티타늄 괭이", Rarity.UNIQUE),
+  TITANIUM_INGOT(Material.IRON_INGOT, "&i티타늄 주괴", Rarity.UNIQUE),
+  TITANIUM_LEGGINGS(Material.LEATHER_LEGGINGS, "&i티타늄 레깅스", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
 
-  TITANIUM_ORE(Material.QUARTZ, "&i티타늄 광석", Rarity.ELITE),
-  TITANIUM_PICKAXE(Material.IRON_PICKAXE, "&i티타늄 곡괭이", Rarity.ELITE),
-
+  TITANIUM_ORE(Material.QUARTZ, "&i티타늄 원석", Rarity.UNIQUE),
+  TITANIUM_PICKAXE(Material.IRON_PICKAXE, "&i티타늄 곡괭이", Rarity.UNIQUE),
+  TITANIUM_PICKAXE_REFINED(Material.IRON_PICKAXE, "&i정제된 티타늄 곡괭이", Rarity.UNIQUE),
+  TITANIUM_REFINED(Material.PLAYER_HEAD, "&i정제된 티타늄", Rarity.LEGENDARY),
+  TITANIUM_SHOVEL(Material.IRON_SHOVEL, "&i티타늄 삽", Rarity.UNIQUE),
+  TITANIUM_SWORD(Material.IRON_SWORD, "&i티타늄 검", Rarity.UNIQUE),
+  TNT_I_WONT_LET_YOU_GO(Material.TNT, "&i워어 아워 래 유 TNT", Rarity.RARE, CreativeCategory.REDSTONE.translationKey()),
   TODWOT_PICKAXE(Material.WOODEN_PICKAXE, "&i섕쟀 곡괭이", Rarity.ARTIFACT, CreativeCategory.TOOLS.translationKey()),
-
+  TOMATO(Material.APPLE, "&i토마토", CreativeCategory.FOOD.translationKey()),
   TOPAZ(Material.PLAYER_HEAD, "&i황옥 원석", Rarity.UNIQUE),
+  TUNGSTEN_AXE(Material.IRON_AXE, "&i텅스텐 도끼", Rarity.RARE, CreativeCategory.TOOLS.translationKey()),
+  TUNGSTEN_BOOTS(Material.LEATHER_BOOTS, "&i텅스텐 부츠", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
+  TUNGSTEN_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i텅스텐 흉갑", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
 
-  DIAMOND_CHESTPLATE_WITH_ELYTRA(Material.ELYTRA, "&i다이아몬드 겉날개", Rarity.EXCELLENT),
-  NETHERITE_CHESTPLATE_WITH_ELYTRA(Material.ELYTRA, "&i네더라이트 겉날개", Rarity.EXCELLENT),
+  TUNGSTEN_HELMET(Material.LEATHER_HELMET, "&i텅스텐 투구", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
+
+  TUNGSTEN_HOE(Material.IRON_HOE, "&i텅스텐 괭이", Rarity.RARE, CreativeCategory.TOOLS.translationKey()),
+
+  TUNGSTEN_INGOT(Material.SLIME_BALL, "&i텅스텐 주괴", Rarity.RARE),
+
+  TUNGSTEN_LEGGINGS(Material.LEATHER_LEGGINGS, "&i텅스텐 레깅스", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
+
+  TUNGSTEN_ORE(Material.LIME_DYE, "&i텅스텐 원석", Rarity.RARE),
+
+  TUNGSTEN_PICKAXE(Material.IRON_PICKAXE, "&i텅스텐 곡괭이", Rarity.RARE, CreativeCategory.TOOLS.translationKey()),
+
+  TUNGSTEN_SHOVEL(Material.IRON_SHOVEL, "&i텅스텐 삽", Rarity.RARE, CreativeCategory.TOOLS.translationKey()),
+
+  TUNGSTEN_SWORD(Material.IRON_SWORD, "&i텅스텐 검", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   ;
 
   private final Material displayMaterial;
@@ -250,6 +339,60 @@ public enum CustomMaterial
     this.category = category;
   }
 
+
+  /**
+   * @return true if this item should be glow even wihtout any {@link org.bukkit.enchantments.Enchantment} it has otherwise false.
+   */
+  public boolean isGlow()
+  {
+    return this.toString().startsWith("ENCHANTED") || switch (this)
+            {
+              case TODWOT_PICKAXE, IQ_CHOOK_CHUCK -> true;
+              default -> false;
+            };
+  }
+
+  @Nullable
+  public CustomMaterial getSmeltedItem()
+  {
+    return switch (this)
+            {
+              case TUNGSTEN_ORE -> TUNGSTEN_INGOT;
+              case COBALT_ORE -> COBALT_INGOT;
+              case MITHRIL_ORE -> MITHRIL_INGOT;
+              case TITANIUM_ORE -> TITANIUM_INGOT;
+              case SHROOMITE_ORE -> SHROOMITE_INGOT;
+              case CUCUMBERITE_ORE -> CUCUMBERITE_INGOT;
+              default -> null;
+            };
+  }
+
+  public boolean isSack()
+  {
+    return switch (this)
+            {
+              case SMALL_MINING_SACK -> true;
+              default -> false;
+            };
+  }
+
+  @Nullable
+  public static CustomMaterial itemStackOf(@Nullable ItemStack itemStack)
+  {
+    if (!ItemStackUtil.itemExists(itemStack))
+    {
+      return null;
+    }
+    try
+    {
+      return CustomMaterial.valueOf(new NBTItem(itemStack).getString("id").toUpperCase());
+    }
+    catch (Exception e)
+    {
+      return null;
+    }
+  }
+
   /**
    * @return A vanilla {@link Material} of this item.
    */
@@ -288,6 +431,8 @@ public enum CustomMaterial
 
   /**
    * Creates an {@link ItemStack} of this {@link CustomMaterial}.
+   * @see CustomMaterial#create(int, boolean)
+   *
    * @return Created {@link ItemStack}.
    */
   @NotNull
@@ -298,6 +443,8 @@ public enum CustomMaterial
 
   /**
    * Creates an {@link ItemStack} of this {@link CustomMaterial}.
+   * @see CustomMaterial#create(int, boolean)
+   *
    * @param amount Amount of this item.
    * @return Created {@link ItemStack}.
    */
@@ -309,6 +456,8 @@ public enum CustomMaterial
 
   /**
    * Creates an {@link ItemStack} of this {@link CustomMaterial}.
+   * @see CustomMaterial#create(int, boolean)
+   *
    * @param removeLore If true, will be removed lore item
    * @return Created {@link ItemStack}.
    */
@@ -320,7 +469,8 @@ public enum CustomMaterial
 
   /**
    * Creates an {@link ItemStack} of this {@link CustomMaterial}.
-   * @param amount Amount of this item.
+   *
+   * @param amount     Amount of this item.
    * @param removeLore If true, will be removed lore item
    * @return Created {@link ItemStack}.
    */
@@ -336,54 +486,5 @@ public enum CustomMaterial
       return ItemLore.removeItemLore(itemStack, true);
     }
     return itemStack;
-  }
-
-  /**
-   * @return true if this item should be glow even wihtout any {@link org.bukkit.enchantments.Enchantment} it has otherwise false.
-   */
-  public boolean isGlow()
-  {
-    return this.toString().startsWith("ENCHANTED") || switch (this)
-            {
-              case TODWOT_PICKAXE, IQ_CHOOK_CHUCK -> true;
-              default -> false;
-            };
-  }
-
-  @Nullable
-  public CustomMaterial getSmeltedItem()
-  {
-    return switch (this)
-            {
-              case MITHRIL_ORE -> MITHRIL_INGOT;
-              case TITANIUM_ORE -> TITANIUM_INGOT;
-              default -> null;
-            };
-  }
-
-  public boolean isSack()
-  {
-    return switch (this)
-            {
-              case SMALL_MINING_SACK -> true;
-              default -> false;
-            };
-  }
-
-  @Nullable
-  public static CustomMaterial itemStackOf(@Nullable ItemStack itemStack)
-  {
-    if (!ItemStackUtil.itemExists(itemStack))
-    {
-      return null;
-    }
-    try
-    {
-      return CustomMaterial.valueOf(new NBTItem(itemStack).getString("id").toUpperCase());
-    }
-    catch (Exception e)
-    {
-      return null;
-    }
   }
 }

@@ -1,9 +1,11 @@
 package com.jho5245.cucumbery.listeners.entity.no_groups;
 
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Method2;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -29,10 +31,6 @@ public class EntitySpawn implements Listener
       {
         throwableProjectile.setItem(ItemLore.setItemLore(throwableProjectile.getItem()));
       }
-      else if (projectile instanceof ThrownPotion thrownPotion)
-      {
-        thrownPotion.setItem(ItemLore.setItemLore(thrownPotion.getItem()));
-      }
     }
 
     if (entity instanceof Projectile projectile)
@@ -57,23 +55,6 @@ public class EntitySpawn implements Listener
         else
         {
           Variable.projectile.put(projectileUUID, item.clone());
-        }
-      }
-      else if (projectile instanceof ThrownPotion thrownPotion)
-      {
-        ItemStack item = thrownPotion.getItem();
-        if (projectileSource instanceof LivingEntity livingEntity)
-        {
-          Variable.attackerAndWeapon.put(livingEntity.getUniqueId(), item.clone());
-        }
-        else if (projectileSource instanceof BlockProjectileSource blockProjectileSource)
-        {
-          Variable.projectile.put(projectileUUID, Variable.blockAttackerAndWeapon.get(blockProjectileSource.getBlock().getLocation().toString()));
-        }
-        else
-        {
-
-          Variable.projectile.put(thrownPotion.getUniqueId(), item.clone());
         }
       }
       else if (projectile instanceof Firework firework)
@@ -111,6 +92,14 @@ public class EntitySpawn implements Listener
           String key = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).toString();
           Variable.entityAndSourceLocation.put(projectileUUID, key);
         }
+      }
+    }
+    if (entity instanceof TNTPrimed)
+    {
+      ItemStack itemStack = Method2.getPlacedBlockDataAsItemStack(entity.getLocation());
+      if (CustomMaterial.itemStackOf(itemStack) == CustomMaterial.TNT_I_WONT_LET_YOU_GO)
+      {
+        entity.getScoreboardTags().add("custom_material_tnt_i_wont_let_you_go");
       }
     }
     /*

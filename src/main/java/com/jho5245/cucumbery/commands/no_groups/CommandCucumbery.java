@@ -111,24 +111,24 @@ public class CommandCucumbery implements CucumberyCommandExecutor
           Constant.WARNING_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.warning-sound.volume");
           Constant.ERROR_SOUND_PITCH = Cucumbery.config.getDouble("sound-const.error-sound.pitch");
           Constant.ERROR_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.error-sound.volume");
-          MessageUtil.info(sender, "모든 콘픽 파일을 리로드하였습니다");
+          MessageUtil.info(sender, "모든 콘픽 파일을 리로드했습니다");
           break;
         case "reloaddata":
           MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloaddata 명령어 사용", sender));
           Bukkit.reloadData();
-          MessageUtil.info(sender, "서버 데이터 파일을 리로드하였습니다");
+          MessageUtil.info(sender, "서버 데이터 파일을 리로드했습니다");
           break;
         case "reloadplugin":
           MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin 명령어 사용", sender));
           PluginLoader.unload();
           PluginLoader.load(Cucumbery.file);
-          MessageUtil.info(sender, "플러그인을 리로드하였습니다");
+          MessageUtil.info(sender, "플러그인을 리로드했습니다");
           break;
         case "reloadplugin2":
           MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin2 명령어 사용", sender));
           Bukkit.getServer().getPluginManager().disablePlugin(Cucumbery.getPlugin());
           Bukkit.getServer().getPluginManager().enablePlugin(Cucumbery.getPlugin());
-          MessageUtil.info(sender, "플러그인을 리로드하였습니다. 2");
+          MessageUtil.info(sender, "플러그인을 리로드했습니다. 2");
           break;
         case "version":
           MessageUtil.info(sender, "플러그인 버전 : rg255,204;" + Cucumbery.getPlugin().getDescription().getVersion());
@@ -152,11 +152,11 @@ public class CommandCucumbery implements CucumberyCommandExecutor
             return true;
           }
           int size = QuickShopSupport.updateQuickShopItems();
-          MessageUtil.info(sender, "rg255,204;QuickShop&r의 모든 상점 아이템을 업데이트 하였습니다 (총 " + size + "개)");
+          MessageUtil.info(sender, "rg255,204;QuickShop&r의 모든 상점 아이템을 업데이트 했습니다 (총 " + size + "개)");
           break;
         case "update-customrecipe-item":
           size = CustomRecipeSupport.updateCustomRecipe();
-          MessageUtil.info(sender, "rg255,204;특수 조합법&r의 모든 결과물 아이템과 재료 아이템을 업데이트 하였습니다.(총 " + size + "개)");
+          MessageUtil.info(sender, "rg255,204;특수 조합법&r의 모든 결과물 아이템과 재료 아이템을 업데이트 했습니다.(총 " + size + "개)");
           break;
         case "purge-user-data-files":
           File userDataFolder = new File(Cucumbery.getPlugin().getDataFolder() + "/data/UserData");
@@ -198,7 +198,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
               Initializer.saveUserData();
               Initializer.loadNicknamesConfig();
               Initializer.loadPlayersConfig();
-              MessageUtil.info(sender, Constant.THE_COLOR_HEX + removeSize + "개&r의 유저 데이터를 제거하고 유저 데이터를 리로드 하였습니다");
+              MessageUtil.info(sender, Constant.THE_COLOR_HEX + removeSize + "개&r의 유저 데이터를 제거하고 유저 데이터를 리로드 했습니다");
             }
             else
             {

@@ -6,7 +6,9 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Constant.CucumberyHideFlag;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -15,6 +17,8 @@ import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
 import de.tr7zw.changeme.nbtapi.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.CreativeCategory;
@@ -55,20 +59,13 @@ public class ItemLore
     }
     Material type = itemStack.getType();
     NBTItem nbtItem = new NBTItem(itemStack, true);
+    nbtItem.removeKey("CustomMiningUpdater");
     String customType = nbtItem.getString("id") + "";
-    CustomMaterial customMaterial = null;
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
     {
       try
       {
         type = Material.valueOf(customType.toUpperCase());
-      }
-      catch (Exception ignored)
-      {
-
-      }
-      try
-      {
-        customMaterial = CustomMaterial.valueOf(customType.toUpperCase());
       }
       catch (Exception ignored)
       {
@@ -121,13 +118,13 @@ public class ItemLore
         nbtContainer.setString(CucumberyTag.CUSTOM_EFFECTS_ID, customEffectType.toString());
         nbtContainer.setString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE, customEffectType.getDefaultDisplayType().toString());
         potionsTag.addCompound(nbtContainer);
-        if (type == Material.SPLASH_POTION || type == Material.LINGERING_POTION)
+        if (type == Material.POTION || type == Material.SPLASH_POTION || type == Material.LINGERING_POTION)
         {
           NBTCompoundList vanillaPotions = nbtItem.getCompoundList("CustomPotionEffects");
           if (vanillaPotions.isEmpty())
           {
             NBTContainer vanillaPotion = new NBTContainer();
-            vanillaPotion.setByte("Id", (byte) (potionType == PotionType.UNCRAFTABLE ? 10 : 16));
+            vanillaPotion.setByte("Id", (byte) (24));
             vanillaPotion.setInteger("Duration", 0);
             vanillaPotions.addCompound(vanillaPotion);
           }
@@ -217,6 +214,27 @@ public class ItemLore
     {
       defaultLore.add(Component.empty());
       defaultLore.add(ComponentUtil.translate("#52ee52;" + Constant.TMI_LORE_NBT_TAG_COPIED));
+    }
+    if (!NBTAPI.arrayContainsValue(NBTAPI.getStringList(NBTAPI.getMainCompound(itemStack), CucumberyTag.HIDE_FLAGS_KEY), CucumberyHideFlag.ORIGINAL_DISPLAY_NAME))
+    {
+      if (customMaterial != null)
+      {
+        Component displayName = itemMeta.displayName();
+        if (displayName != null && displayName.color() == null && displayName.decoration(TextDecoration.ITALIC) == State.NOT_SET)
+        {
+          defaultLore.add(Component.empty());
+          defaultLore.add(ComponentUtil.translate("&7원래 아이템 이름 : %s", customMaterial.getDisplayName()));
+        }
+      }
+      else if (itemMeta.hasDisplayName())
+      {
+        ItemStack clone = itemStack.clone();
+        ItemMeta cloneMeta = clone.getItemMeta();
+        cloneMeta.displayName(null);
+        clone.setItemMeta(cloneMeta);
+        defaultLore.add(Component.empty());
+        defaultLore.add(ComponentUtil.translate("&7원래 아이템 이름 : %s", ItemNameUtil.itemName(clone)));
+      }
     }
     defaultLore.replaceAll(ComponentUtil::stripEvent);
     final int maxWidth = Cucumbery.config.getInt("max-item-lore-width");
@@ -329,6 +347,7 @@ public class ItemLore
     }
     return itemStack;
   }
+
   @NotNull
   public static ItemStack removeItemLore(@NotNull ItemStack itemStack)
   {

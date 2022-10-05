@@ -1,6 +1,8 @@
 package com.jho5245.cucumbery.commands.addon;
 
+import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.no_groups.CucumberyCommandExecutor;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemInfo;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
+public class CommandQuickShopAddon implements CucumberyCommandExecutor
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -36,6 +38,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
+      System.out.println("오이");
       return !(sender instanceof BlockCommandSender);
     }
     if (!Cucumbery.using_QuickShop)
@@ -122,7 +125,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           {
             if (!hideOutput)
             {
-              MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) +
+              MessageUtil.sendError(sender, "변경 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) +
                       "&r)의 거래 가격이 rg255,204;" + Constant.Sosu15.format(price) + "원&r입니다");
             }
             return true;
@@ -131,7 +134,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           if (!hideOutput)
           {
             MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 가격을 rg255,204;"
-                    + Constant.Sosu15.format(price) + "원&r으로 설정하였습니다");
+                    + Constant.Sosu15.format(price) + "원&r으로 설정했습니다");
           }
         }
         case "amount" -> {
@@ -154,7 +157,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           {
             if (!hideOutput)
             {
-              MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 개수가 rg255,204;" + amount +
+              MessageUtil.sendError(sender, "변경 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 개수가 rg255,204;" + amount +
                       "개&r입니다");
             }
             return true;
@@ -164,7 +167,7 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           shop.setItem(item);
           if (!hideOutput)
           {
-            MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 개수를 rg255,204;" + Constant.Sosu15.format(amount) + "개&r로 설정하였습니다");
+            MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)의 거래 개수를 rg255,204;" + Constant.Sosu15.format(amount) + "개&r로 설정했습니다");
           }
         }
         case "type" -> {
@@ -188,14 +191,14 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
           {
             if (!hideOutput)
             {
-              MessageUtil.sendError(sender, "변동 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)이 " + typeString + "입니다");
+              MessageUtil.sendError(sender, "변경 사항이 없습니다. 이미 " + world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)이 " + typeString + "입니다");
             }
             return true;
           }
           shop.setShopType(shopType);
           if (!hideOutput)
           {
-            MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)을 " + typeString + "으로 설정하였습니다");
+            MessageUtil.info(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점(rg255,204;" + ItemNameUtil.itemName(shop.getItem()) + "&r)을 " + typeString + "으로 설정했습니다");
           }
         }
         case "get" -> {
@@ -420,5 +423,11 @@ public class CommandQuickShopAddon implements CommandExecutor, TabCompleter
     }
 
     return Collections.singletonList(Prefix.ARGS_LONG.toString());
+  }
+
+  @Override
+  public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
+  {
+    return null;
   }
 }

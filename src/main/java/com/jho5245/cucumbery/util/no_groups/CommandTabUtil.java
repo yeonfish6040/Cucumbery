@@ -67,7 +67,7 @@ public class CommandTabUtil
         if (length == 3)
         {
           return Method.tabCompleterList(args, "<태그>", "range", "sortparticle", "ignoreinvincible", "density", "damage", "blockpenetrate", "fireworkrocketrequired", "cooldown", "cooldowntag", "piercing",
-                  "laserwidth", "fireworktype", "reverse", "suicide");
+                  "laserwidth", "fireworktype", "reverse", "suicide", "particle-type");
         }
         else if (length == 4)
         {
@@ -101,6 +101,8 @@ public class CommandTabUtil
               return Method.tabCompleterDoubleRadius(args, 0, Double.MAX_VALUE, "<대미지>");
             case "laserwidth":
               return Method.tabCompleterDoubleRadius(args, 0, 100, "<레이저 두께>");
+            case "particle-type":
+              return Method.tabCompleterList(args, Particle.values(), "<입자 유형>");
           }
         }
         break;

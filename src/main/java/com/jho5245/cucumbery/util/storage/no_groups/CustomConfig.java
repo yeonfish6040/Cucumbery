@@ -2,9 +2,6 @@ package com.jho5245.cucumbery.util.storage.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCooldown;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.data.Constant.AllPlayer;
@@ -14,6 +11,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -271,6 +269,7 @@ public class CustomConfig
 
   public enum UserData
   {
+    GSIT_EXEMPT("GSit-예외-모드", false),
     ANNOUNCE_ADVANCEMENTS("발전-과제-달성-메시지-띄움", true),
     COPY_BLOCK_DATA("픽블록으로-블록-데이터-복사", false),
     COPY_BLOCK_DATA_FACING("픽블록으로-블록-데이터-facing-복사", false),
@@ -279,6 +278,7 @@ public class CustomConfig
     COPY_NOTE_BLOCK_INSTRUMENT("픽블록으로-소리-블록-악기-복사", false),
     COPY_NOTE_BLOCK_PITCH("픽블록으로-소리-블록-음높이-복사", false),
     COPY_NOTE_BLOCK_VALUE_WHEN_SNEAKING("웅크리기-상태에서만-소리-블록-값-복사", true),
+    CUSTOM_MINING_COOLDOWN_DISPLAY_BLOCK("커스텀-채광-쿨타임-표시-블록", Material.BEDROCK),
     DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING("웅크린-상태에서-명령-블록-파괴-방지", false),
     DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE("크리에이티브-모드에서-아이템-설명-기능-비활성화", false),
     DISABLE_ITEM_COOLDOWN("아이템-재사용-대기-시간-무시(바닐라-아이템-전용)", false),
@@ -289,6 +289,7 @@ public class CustomConfig
     EVENT_EXCEPTION_ACCESS("이벤트-예외-액세스", false),
     FIREWORK_LAUNCH_ON_AIR("공중에서-폭죽-발사", false),
     FORCE_HIDE_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN("재사용-대기시간-엑션바-무조건-숨김", false),
+    FORCE_HIDE_DROPPED_ITEM_CUSTOM_NAME("바닥에-떨어진-아이템-이름-강제-숨김", false),
     FORCE_PLAY_SERVER_RADIO("서버-라디오-강제-재생", false),
     GOD_MODE("무적-모드", false),
     HEALTH_BAR("HP바", 20D),
@@ -303,9 +304,9 @@ public class CustomConfig
     ITEM_DROP_DELAY_ALERT("아이템-버리기-딜레이-금지-타이틀-띄움", false),
     ITEM_DROP_MODE("아이템-버리기-모드", "normal"),
     ITEM_PICKUP_MODE("아이템-줍기-모드", "normal"),
+
     ITEM_USE_DELAY("아이템-사용-딜레이", 2),
     LISTEN_CHAT("채팅-소리-들음", true),
-
     LISTEN_CHAT_FORCE("채팅-소리-무조건-들음", false),
     LISTEN_COMMAND("명령어-입력-소리-들음", true),
     LISTEN_CONTAINER("컨테이너-열고-닫는-소리-들음", true),
@@ -345,8 +346,8 @@ public class CustomConfig
     SHOW_ACTIONBAR_ON_ITEM_PICKUP("아이템-주울때-액션바-띄움", true),
     SHOW_ACTIONBAR_ON_ITEM_PICKUP_FORCE("아이템-주울때-액션바-무조건-띄움", false),
     SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN("재사용-대기시간-액션바-띄움", true),
+    SHOW_BLOCK_BREAK_PARTICLE_ON_CUSTOM_MINING("커스텀-채광-모드-블록-파괴-입자-표시", true),
     SHOW_COMMAND_BLOCK_EXECUTION_LOCATION("명령-블록-실행-위치-출력", false),
-
     SHOW_DAMAGE_INDICATOR("대미지-숫자-표시", true),
     SHOW_DAMAGE_INDICATOR_SPECTATING_ENTITY("관전-중인-개체의-대미지-숫자-표시", true),
     SHOW_DROPPED_ITEM_CUSTOM_NAME("바닥에-떨어진-아이템-이름-표시", true),
@@ -363,8 +364,8 @@ public class CustomConfig
     SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR("관전-중인-개체-정보-액션바에-표시", true),
     SHOW_SPECTATOR_TARGET_INFO_IN_ACTIONBAR_TMI_MODE("관전-중인-개체-정보-액션바에-표시(TMI 모드)", false),
     SHOW_WORLDEDIT_POSITION_PARTICLE("월드에딧-포지션-입자-표시", false),
-    SPECTATOR_MODE("관전-모드", false),
 
+    SPECTATOR_MODE("관전-모드", false),
     SPECTATOR_MODE_ON_JOIN("접속-시-자동-관전-모드-전환", false),
     TRAMPLE_SOIL("경작지-파괴-금지", true),
     TRAMPLE_SOIL_ALERT("경작지-파괴-금지-타이틀-띄움", true),
@@ -508,18 +509,26 @@ public class CustomConfig
       return this.getDouble(player.getUniqueId());
     }
 
+    @Nullable
+    public Material getMaterial(@NotNull UUID uuid)
+    {
+      YamlConfiguration config = Variable.userData.get(uuid);
+      if (config == null)
+      {
+        config = CustomConfig.getPlayerConfig(uuid).getConfig();
+      }
+      return Method2.valueOf(config.getString(this.getKey(), "null"), Material.class);
+    }
+
+    @Nullable
+    public Material getMaterial(@NotNull OfflinePlayer player)
+    {
+      return this.getMaterial(player.getUniqueId());
+    }
+
     public void set(UUID uuid, Object value)
     {
       Player player = Method2.getEntityAsync(uuid) instanceof Player p ? p : null;
-      if (player != null)
-      {
-        if (CustomEffectManager.hasEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON))
-        {
-          MessageUtil.sendWarn(player, "좀 천천히 누르삼!");
-          return;
-        }
-        CustomEffectManager.addEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON);
-      }
       YamlConfiguration config = Variable.userData.get(uuid);
       boolean offline = config == null;
       if (offline)
@@ -607,7 +616,7 @@ public class CustomConfig
               }
             }
           }
-          case SHOW_DROPPED_ITEM_CUSTOM_NAME -> Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
+          case SHOW_DROPPED_ITEM_CUSTOM_NAME, FORCE_HIDE_DROPPED_ITEM_CUSTOM_NAME -> Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
           {
             Location location = player.getLocation();
             for (Chunk chunk : location.getWorld().getLoadedChunks())

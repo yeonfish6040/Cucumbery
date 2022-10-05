@@ -174,7 +174,7 @@ public class BlockPlace implements Listener
         {
           special = true;
           player.getLocation().getWorld().getBlockAt(event.getBlock().getLocation()).setType(Material.AIR);
-          TNTPrimed tnt = player.getLocation().getWorld().spawn(event.getBlock().getLocation().add(0.5D, 0.5D, 0.5D), TNTPrimed.class);
+          TNTPrimed tnt = player.getLocation().getWorld().spawn(event.getBlock().getLocation().add(0.5D, 0D, 0.5D), TNTPrimed.class);
           if (Cucumbery.config.getBoolean("use-static-tnt") && !Method.configContainsLocation(block.getLocation(), Cucumbery.config.getStringList("no-use-static-tnt-location")))
           {
             tnt.setVelocity(new Vector(Cucumbery.config.getDouble("static-tnt-velocity.x"), Cucumbery.config.getDouble("static-tnt-velocity.y"), Cucumbery.config.getDouble("static-tnt-velocity.z")));

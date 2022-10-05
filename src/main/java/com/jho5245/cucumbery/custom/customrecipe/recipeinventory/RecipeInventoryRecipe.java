@@ -141,8 +141,8 @@ public class RecipeInventoryRecipe
             Method.format("categorypage:" + categoryPage, "§"));
     if (firstOpen)
     {
-      ItemStack deco1 = CreateItemStack.newItem(Material.WHITE_STAINED_GLASS_PANE, 1, "§와", false);
-      ItemStack deco2 = CreateItemStack.newItem(Material.BROWN_STAINED_GLASS_PANE, 1, "§와", false);
+      ItemStack deco1 = CreateItemStack.create(Material.WHITE_STAINED_GLASS_PANE, 1, "§와", false);
+      ItemStack deco2 = CreateItemStack.create(Material.BROWN_STAINED_GLASS_PANE, 1, "§와", false);
       menu.setItem(0, deco1);
       menu.setItem(1, deco1);
       menu.setItem(2, deco1);
@@ -171,14 +171,14 @@ public class RecipeInventoryRecipe
 
       // button
 
-      menu.setItem(45, CreateItemStack.newItem(Material.BIRCH_BOAT, 1, "&b메인 메뉴로", false));
+      menu.setItem(45, CreateItemStack.create(Material.BIRCH_BOAT, 1, "&b메인 메뉴로", false));
 
-      menu.setItem(53, CreateItemStack.newItem(Material.BIRCH_BOAT, 1, "§b레시피 목록 메뉴로", false));
+      menu.setItem(53, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b레시피 목록 메뉴로", false));
 
-      menu.setItem(51, CreateItemStack.newItem(Material.SPRUCE_BOAT, 1, "§b레시피 메뉴로", false));
+      menu.setItem(51, CreateItemStack.create(Material.SPRUCE_BOAT, 1, "§b레시피 메뉴로", false));
 
-      menu.setItem(47, CreateItemStack.newItem(Material.SPRUCE_BOAT, 1, "§b레시피 메뉴로", false));
-      menu.setItem(49, CreateItemStack.newItem(Material.CLOCK, 1, "rg255,204;로딩중...", false));
+      menu.setItem(47, CreateItemStack.create(Material.SPRUCE_BOAT, 1, "§b레시피 메뉴로", false));
+      menu.setItem(49, CreateItemStack.create(Material.CLOCK, 1, "rg255,204;로딩중...", false));
       player.openInventory(menu);
     }
     else
@@ -262,7 +262,7 @@ public class RecipeInventoryRecipe
     ItemLore.setItemLore(result, ItemLoreView.of(player));
     menu.setItem(4, result);
 
-    ItemStack createButton = CreateItemStack.newItem(Material.BARRIER, 1, "§c[재료 부족]", false);
+    ItemStack createButton = CreateItemStack.create(Material.BARRIER, 1, "§c[재료 부족]", false);
     ItemMeta createButtonMeta = createButton.getItemMeta();
     List<Component> createButtonLore = new ArrayList<>(Arrays.asList(ComponentUtil.create("§e가지고 있는 재료가 부족하여 아이템을 제작할 수 없습니다"), Component.empty()));
     List<String> description = config.getStringList("recipes." + recipe + ".extra.descriptions.crafting");
@@ -387,7 +387,7 @@ public class RecipeInventoryRecipe
         if (currentTime <= playerCraftingTime)
         {
           createButtonLore.set(0, ComponentUtil.create("§7아이템을 제작하는 중입니다"));
-          menu.setItem(49, CreateItemStack.newItem2(Material.CLOCK, 1, "§e[제작중]", createButtonLore, false));
+          menu.setItem(49, CreateItemStack.create(Material.CLOCK, 1, "§e[제작중]", createButtonLore, false));
           if (Cucumbery.using_Vault_Economy)
           {
             double skipCost = config.getDouble("recipes." + recipe + ".extra.crafting-time-skip.cost");
@@ -401,7 +401,7 @@ public class RecipeInventoryRecipe
               {
                 createButtonLore.addAll(Arrays.asList(Component.empty(),
                         ComponentUtil.create("§b클릭하면 §e" + Constant.Jeongsu.format(finalCost) + "원§b을 지불하여 아이템 제작 시간을 스킵할 수 있습니다")));
-                menu.setItem(49, CreateItemStack.newItem2(Material.ENDER_PEARL, 1, "§e[제작중]", createButtonLore, false));
+                menu.setItem(49, CreateItemStack.create(Material.ENDER_PEARL, 1, "§e[제작중]", createButtonLore, false));
               }
             }
           }
@@ -409,7 +409,7 @@ public class RecipeInventoryRecipe
         else
         {
           createButtonLore.set(0, ComponentUtil.create("§7클릭하여 아이템울 수령합니다"));
-          menu.setItem(49, CreateItemStack.newItem2(Material.HOPPER, 1, "§a[수령하기]", createButtonLore, false));
+          menu.setItem(49, CreateItemStack.create(Material.HOPPER, 1, "§a[수령하기]", createButtonLore, false));
         }
       }
     }
@@ -418,12 +418,12 @@ public class RecipeInventoryRecipe
     if (!timeCraftingIgnoreOthers && Method.allIsTrue(requirements))
     {
       createButtonLore.set(0, ComponentUtil.create("§7클릭하여 아이템을 제작합니다"));
-      menu.setItem(49, CreateItemStack.newItem2(Material.CRAFTING_TABLE, 1, "§a[제작하기]", createButtonLore, false));
+      menu.setItem(49, CreateItemStack.create(Material.CRAFTING_TABLE, 1, "§a[제작하기]", createButtonLore, false));
     }
     else if (!timeCraftingIgnoreOthers)
     {
       createButtonLore.set(0, ComponentUtil.create("§e추가 제작 조건을 만족하지 않아 아이템을 제작할 수 없습니다"));
-      menu.setItem(49, CreateItemStack.newItem2(Material.BARRIER, 1, "§c[제작 불가]", createButtonLore, false));
+      menu.setItem(49, CreateItemStack.create(Material.BARRIER, 1, "§c[제작 불가]", createButtonLore, false));
     }
 
     // 인벤토리 부족 또는 재료 부족
@@ -438,7 +438,7 @@ public class RecipeInventoryRecipe
       String playerSpaceColor = CustomRecipeUtil.getPercentColor(countSpace * 1d / resultAmount);
       List<String> notEnoughInvLore = new ArrayList<>(
               Arrays.asList("§e인벤토리 공간이 부족하여 아이템을 " + (timeCraftingIgnoreOthers ? "수령" : "제작") + "할 수 없습니다", MessageUtil.n2s("rg255,204;필요 인벤토리 공간 : " + playerSpaceColor + countSpace + " &7/rgb0,255,84; " + resultAmount)));
-      menu.setItem(49, CreateItemStack.newItem(Material.BARRIER, 1, "§c[인벤토리 공간 부족]", notEnoughInvLore, false));
+      menu.setItem(49, CreateItemStack.create(Material.BARRIER, 1, "§c[인벤토리 공간 부족]", notEnoughInvLore, false));
     }
     else if (!ingredientEnough && !timeCraftingIgnoreOthers)
     {

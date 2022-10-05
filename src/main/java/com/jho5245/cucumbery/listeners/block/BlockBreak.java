@@ -58,7 +58,6 @@ public class BlockBreak implements Listener
     UUID uuid = player.getUniqueId();
     Block block = event.getBlock();
     Location location = block.getLocation();
-    Variable.customMiningCooldown.remove(location);
     Material blockType = block.getType();
     ItemStack itemStack = player.getInventory().getItemInMainHand();
     ItemMeta itemMeta = null;
@@ -132,7 +131,6 @@ public class BlockBreak implements Listener
         }
       }
     }
-
     if (NBTAPI.isRestricted(player, itemStack, Constant.RestrictionType.NO_BREAK))
     {
       event.setCancelled(true);
@@ -145,7 +143,6 @@ public class BlockBreak implements Listener
       }
       return;
     }
-
     ItemStack placedBlockDataItem = Method2.getPlacedBlockDataAsItemStack(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
     if (NBTAPI.isRestricted(player, placedBlockDataItem, Constant.RestrictionType.NO_BLOCK_BREAK))
     {
@@ -186,6 +183,15 @@ public class BlockBreak implements Listener
     {
       event.setCancelled(true);
       return;
+    }
+
+    Variable.customMiningCooldown.remove(location);
+    Variable.fakeBlocks.remove(location);
+    Variable.customMiningExtraBlocks.remove(location);
+    Variable.customMiningMode2BlockData.remove(location);
+    if (Variable.customMiningMode2BlockDataTask.containsKey(location))
+    {
+      Variable.customMiningMode2BlockDataTask.remove(location).cancel();
     }
 
     if (CustomEffectManager.hasEffect(player, CustomEffectType.DARKNESS_TERROR_ACTIVATED) && Math.random() < 0.15)

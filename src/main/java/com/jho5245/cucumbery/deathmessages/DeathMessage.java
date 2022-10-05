@@ -365,27 +365,27 @@ public enum DeathMessage
   ELYTRA_COMBAT_SUICIDE_ITEM,
 
   /**
-   * %1$s이(가) %2$s을(를) 잘못 사용하였습니다
+   * %1$s이(가) %2$s을(를) 잘못 사용했습니다
    */
   ENDER_PEARL,
 
   /**
-   * %1$s이(가) %2$s에게서 도망치려다 %3$s을(를) 잘못 사용하였습니다
+   * %1$s이(가) %2$s에게서 도망치려다 %3$s을(를) 잘못 사용했습니다
    */
   ENDER_PEARL_COMBAT,
 
   /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s을(를) 잘못 사용하였습니다
+   * %1$s이(가) %3$s을(를) 사용한 %2$s에게서 도망치려다 %4$s을(를) 잘못 사용했습니다
    */
   ENDER_PEARL_COMBAT_ITEM,
 
   /**
-   - "%1$s이(가) %3$s을(를) 사용하여 자살하였습니다"
+   - "%1$s이(가) %3$s을(를) 사용하여 자살했습니다"
    */
   ENDER_PEARL_COMBAT_SUICIDE,
 
   /**
-   - "%1$s이(가) %4$s와(과) %3$s을(를) 사용하여 자살하였습니다"
+   - "%1$s이(가) %4$s와(과) %3$s을(를) 사용하여 자살했습니다"
    */
   ENDER_PEARL_COMBAT_SUICIDE_ITEM,
 
@@ -430,12 +430,12 @@ public enum DeathMessage
   EXPLOSION_COMBAT_ITEM,
 
   /**
-   - "%1%s이(가) 자폭하였습니다"
+   - "%1%s이(가) 자폭했습니다"
    */
   EXPLOSION_COMBAT_SUICIDE,
 
   /**
-   - "%1%s이(가) %3$s을(를) 사용하여 자폭하였습니다"
+   - "%1%s이(가) %3$s을(를) 사용하여 자폭했습니다"
    */
   EXPLOSION_COMBAT_SUICIDE_ITEM,
 
@@ -1065,12 +1065,12 @@ public enum DeathMessage
   POISON_COMBAT_ITEM,
 
   /**
-   *%1$s이(가) 스스로를 독살하였습니다
+   *%1$s이(가) 스스로를 독살했습니다
    */
   POISON_COMBAT_SUICIDE,
 
   /**
-   *%1$s이(가) %3$s을(를) 사용하여 스스로를 독살하였습니다
+   *%1$s이(가) %3$s을(를) 사용하여 스스로를 독살했습니다
    */
   POISON_COMBAT_SUICIDE_ITEM,
 
@@ -1549,56 +1549,21 @@ public enum DeathMessage
    *%1$s이(가) %3$s을(를) 사용하여 %4$s 밖으로 스스로의 몸을 던져 질식사했습니다
    */
   WORLD_BORDER_COMBAT_SUICIDE_ITEM,
-
-  /**
-   * %1$s이(가) 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
-   */
   CUSTOM_DARKNESS_TERROR("%1$s이(가) 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
-
-  /**
-   * %1$s이(가) %2$s와(과) 싸우면서 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
-   */
   CUSTOM_DARKNESS_TERROR_COMBAT("%1$s이(가) %2$s와(과) 싸우면서 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
-
-  /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우면서 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
-   */
   CUSTOM_DARKNESS_TERROR_COMBAT_ITEM("%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우면서 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
-
-  /**
-   * %1$s이(가) 스스로와의 단련을 하며 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
-   */
   CUSTOM_DARKNESS_TERROR_COMBAT_SUICIDE("%1$s이(가) 스스로와의 단련을 하며 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
-
-  /**
-   * %1$s이(가) %3$s을(를) 사용한 스스로와의 단련을 하며 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다
-   */
   CUSTOM_DARKNESS_TERROR_COMBAT_SUICIDE_ITEM("%1$s이(가) %3$s을(를) 사용한 스스로와의 단련을 하며 너무 어두운 곳에서 채광을 하다 파편에 찔려 죽었습니다"),
-
-  /**
-   * %1$s이(가) 경험을 소화하려다 탈이 나 죽었습니다
-   */
   CUSTOM_STOMACHACHE("%1$s이(가) 경험을 소화하려다 탈이 나 죽었습니다"),
-
-  /**
-   * %1$s이(가) %2$s와(과) 싸우면서 경험을 소화하려다 탈이 나 죽었습니다
-   */
   CUSTOM_STOMACHACHE_COMBAT("%1$s이(가) %2$s와(과) 싸우면서 경험을 소화하려다 탈이 나 죽었습니다"),
-
-  /**
-   * %1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우면서 경험을 소화하려다 탈이 나 죽었습니다
-   */
   CUSTOM_STOMACHACHE_COMBAT_ITEM("%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우면서 경험을 소화하려다 탈이 나 죽었습니다"),
-
-  /**
-   * %1$s이(가) 나 자신과의 싸움을 하면서 경험을 소화하려다 탈이 나 죽었습니다
-   */
   CUSTOM_STOMACHACHE_COMBAT_SUICIDE("%1$s이(가) 나 자신과의 싸움을 하면서 경험을 소화하려다 탈이 나 죽었습니다"),
-
-  /**
-   * %1$s이(가) %3$s을(를) 사용한 나 자신과의 싸움을 하면서 경험을 소화하려다 탈이 나 죽었습니다
-   */
   CUSTOM_STOMACHACHE_COMBAT_SUICIDE_ITEM("%1$s이(가) %3$s을(를) 사용한 나 자신과의 싸움을 하면서 경험을 소화하려다 탈이 나 죽었습니다"),
+  CUSTOM_EFFECT_ENTITY_REMOVER("%1$s이(가) 제거되었습니다"),
+  CUSTOM_EFFECT_ENTITY_REMOVER_COMBAT("%1$s이(가) %2$s와(과) 싸우다가 제거되었습니다"),
+  CUSTOM_EFFECT_ENTITY_REMOVER_COMBAT_ITEM("%1$s이(가) %3$s을(를) 사용한 %2$s와(과) 싸우다가 제거되었습니다"),
+  CUSTOM_EFFECT_ENTITY_REMOVER_COMBAT_SUICIDE("%1$s이(가) 제거되었습니다"),
+  CUSTOM_EFFECT_ENTITY_REMOVER_COMBAT_SUICIDE_ITEM("%1$s이(가) %3$s을(를) 사용하다가 제거되었습니다"),
   ;
   
   private final String defaultString;

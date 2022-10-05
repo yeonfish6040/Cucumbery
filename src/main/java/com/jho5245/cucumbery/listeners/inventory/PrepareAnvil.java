@@ -61,7 +61,7 @@ public class PrepareAnvil implements Listener
       {
         resultItemName = ComponentUtil.serialize(resultItem.displayName());
       }
-      ItemStack restrictedItem = CreateItemStack.newItem(Material.BARRIER, 1, Constant.NO_ANVIL_ITEM_DISPLAYNAME, true);
+      ItemStack restrictedItem = CreateItemStack.create(Material.BARRIER, 1, Constant.NO_ANVIL_ITEM_DISPLAYNAME, true);
       boolean restricted = false;
       ItemMeta itemMeta = restrictedItem.getItemMeta();
       List<String> lores = new ArrayList<>();
@@ -261,7 +261,7 @@ public class PrepareAnvil implements Listener
         {
           switch (firstCustomMaterial)
           {
-            case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566 -> {
+            case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566, MINDAS_DRILL -> {
               if (secondCustomMaterial == CustomMaterial.DRILL_FUEL)
               {
                 ItemStack result = firstItem.clone();

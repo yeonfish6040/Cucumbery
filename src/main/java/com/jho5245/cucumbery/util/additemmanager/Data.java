@@ -2,13 +2,17 @@ package com.jho5245.cucumbery.util.additemmanager;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
@@ -118,6 +122,14 @@ public class Data
       while (amount > 0)
       {
         itemStack = itemStack.clone();
+        if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(uuid))
+        {
+          String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(itemStack), CucumberyTag.EXPIRE_DATE_KEY);
+          if (expireDate != null)
+          {
+            Method.isTimeUp(itemStack, expireDate);
+          }
+        }
         itemStack.setAmount(Math.min(itemStack.getMaxStackSize(), amount));
         amount -= itemStack.getAmount();
         stash.add(itemStack);

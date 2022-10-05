@@ -12,12 +12,14 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.util.*;
 
 public class Variable
 {
+  public static final HashMap<UUID, BukkitTask> itemUpdateScheduler = new HashMap<>();
   public static Set<UUID> viewDamage = new HashSet<>();
 
   public static Set<UUID> blockBreakAlertCooldown = new HashSet<>();
@@ -250,10 +252,6 @@ public class Variable
    */
   public static HashMap<UUID, Float> customMiningProgress = new HashMap<>();
 
-  public static HashMap<Location, Long> customMiningCooldown = new HashMap<>();
-
-  public static HashMap<Location, BlockData> customMiningExtraBlocks = new HashMap<>();
-
   public static Set<UUID> customMiningTierAlertCooldown = new HashSet<>();
 
   /**
@@ -261,5 +259,15 @@ public class Variable
    */
   public static HashMap<UUID, List<ItemStack>> itemStash = new HashMap<>();
 
+  public static HashMap<Location, Long> customMiningCooldown = new HashMap<>();
+
+  public static HashMap<Location, BlockData> customMiningExtraBlocks = new HashMap<>();
+
+  public static HashMap<Location, BukkitTask> customMiningExtraBlocksTask = new HashMap<>();
+
+  public static HashMap<Location, BlockData> fakeBlocks = new HashMap<>();
+
   public static HashMap<Location, BlockData> customMiningMode2BlockData = new HashMap<>();
+
+  public static HashMap<Location, BukkitTask> customMiningMode2BlockDataTask = new HashMap<>();
 }

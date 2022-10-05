@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.listeners.player.item;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -15,6 +16,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -84,7 +86,8 @@ public class PlayerAttemptPickupItem implements Listener
       CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
       switch (customMaterial)
       {
-        case RUNE_DESTRUCTION, RUNE_EARTHQUAKE -> {
+        case RUNE_DESTRUCTION, RUNE_EARTHQUAKE ->
+        {
           return;
         }
       }
@@ -96,6 +99,8 @@ public class PlayerAttemptPickupItem implements Listener
     int amount = itemStack.getAmount() - event.getRemaining();
     if (amount > 0)
     {
+      Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
+              Method.updateItem(item), 0L);
       if (UserData.SHOW_ACTIONBAR_ON_ITEM_PICKUP.getBoolean(player.getUniqueId()))
       {
         Component itemStackComponent = ItemNameUtil.itemName(itemStack, TextColor.fromHexString("#00ff3c"));

@@ -3,7 +3,9 @@ package com.jho5245.cucumbery.listeners.block;
 import com.destroystokyo.paper.event.block.TNTPrimeEvent;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -20,18 +22,23 @@ public class TNTPrime implements Listener
   public void onTNTPrime(TNTPrimeEvent event)
   {
     if (event.isCancelled())
+    {
       return;
+    }
     this.staticTnt(event);
+    Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+            Method2.removePlacedBlockData(event.getBlock().getLocation()), 0L);
   }
 
   private void staticTnt(TNTPrimeEvent event)
   {
-
     if (Cucumbery.config.getBoolean("use-static-tnt"))
     {
       Block block = event.getBlock();
       if (Method.configContainsLocation(block.getLocation(), Cucumbery.config.getStringList("no-use-static-tnt-location")))
+      {
         return;
+      }
       TNTPrimeEvent.PrimeReason primeReason = event.getReason();
       event.setCancelled(true);
       Entity entity = event.getPrimerEntity();

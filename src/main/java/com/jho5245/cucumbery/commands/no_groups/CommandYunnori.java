@@ -63,7 +63,7 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
         SoundPlay.playSound(online, Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
         {
-          MessageUtil.sendTitle(online, "rg255,204;2", "", 2, 16, 2);
+          MessageUtil.sendTitle(online, "&e2", "", 2, 16, 2);
           SoundPlay.playSound(online, Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
         }, 10L);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
@@ -189,7 +189,7 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
       {
         continue;
       }
-      MessageUtil.sendTitle(player, "&r걸이요!", "&r앞으로 세 칸!", 2, 40, 2);
+      MessageUtil.sendTitle(player, "걸이요!", "앞으로 세 칸!", 2, 40, 2);
       SoundPlay.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, Constant.separatorSubString(2));
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
@@ -227,14 +227,14 @@ public class CommandYunnori implements CommandExecutor, TabCompleter
         continue;
       }
       MessageUtil.sendTitle(player, ComponentUtil.translate("&b모!!!"),
-              ComponentUtil.translate("앞으로 다섯 칸!").append(ComponentUtil.translate(" &a&l한 번 더!")),
+              ComponentUtil.translate("&c앞으로 다섯 칸!").append(ComponentUtil.translate(" &a&l한 번 더!")),
               2, 40, 2);
       SoundPlay.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1F, 1F);
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, Constant.separatorSubString(2));
       MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI,
               ComponentUtil.translate("%s님 %s %s",
                       SenderComponentUtil.senderComponent(sender), ComponentUtil.translate("&b모!!!"), ComponentUtil.translate("&c앞으로 다섯 칸!")));
-      MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, ComponentUtil.translate("&r&a&l한 번 더!"));
+      MessageUtil.sendMessage(player, Prefix.INFO_YUNNORI, ComponentUtil.translate("&a&l한 번 더!"));
     }
   }
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)

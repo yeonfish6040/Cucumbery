@@ -59,7 +59,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
             meta.addItemFlags(ItemFlag.values());
             item.setItemMeta(meta);
             player.getInventory().setItemInMainHand(item);
-            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 모든 플래그를 추가하였습니다");
+            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 모든 플래그를 추가했습니다");
             return true;
           }
           case "HIDE_ATTRIBUTES" -> meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -76,7 +76,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
             return true;
           }
         }
-        MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + args[1] + "&r 플래그를 추가하였습니다");
+        MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + args[1] + "&r 플래그를 추가했습니다");
         item.setItemMeta(meta);
         player.getInventory().setItemInMainHand(item);
         if (Cucumbery.config.getBoolean("use-helpful-lore-feature"))
@@ -96,7 +96,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
             meta.removeItemFlags(ItemFlag.values());
             item.setItemMeta(meta);
             player.getInventory().setItemInMainHand(item);
-            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 모든 플래그를 제거하였습니다");
+            MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 모든 플래그를 제거했습니다");
             return true;
           }
           case "HIDE_ATTRIBUTES" -> meta.removeItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -113,7 +113,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
             return true;
           }
         }
-        MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + args[1] + "&r 플래그를 제거하였습니다");
+        MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + args[1] + "&r 플래그를 제거했습니다");
         item.setItemMeta(meta);
         player.getInventory().setItemInMainHand(item);
         if (Cucumbery.config.getBoolean("use-helpful-lore-feature"))

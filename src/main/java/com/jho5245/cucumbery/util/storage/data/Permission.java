@@ -139,6 +139,10 @@ public enum Permission
 
   CMD_SPLASH(C + "splash"),
 
+  CMD_SWING_ARM(C + "swingarm"),
+
+  CMD_SHAKE_VILLAGER_HEAD(C + "shakevillagerhead"),
+
   OTHER_EVAL("eval"),
   OTHER_PLACEHOLDER("placeholder"),
   ;

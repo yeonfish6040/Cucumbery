@@ -106,11 +106,11 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
 
   protected static final Component WILL_DESTROY = ComponentUtil.translate("&c실패 시 아이템이 %s됩니다", ComponentUtil.translate("&8파괴"));
 
-  protected static final Component MESSAGE_SUCCESS = ComponentUtil.translate("강화에 %s하였습니다", ComponentUtil.translate("&a성공"));
+  protected static final Component MESSAGE_SUCCESS = ComponentUtil.translate("강화에 %s했습니다", ComponentUtil.translate("&a성공"));
 
-  protected static final Component MESSAGE_FAILURE = ComponentUtil.translate("강화에 %s하였습니다", ComponentUtil.translate("r255;실패"));
+  protected static final Component MESSAGE_FAILURE = ComponentUtil.translate("강화에 %s했습니다", ComponentUtil.translate("r255;실패"));
 
-  protected static final Component MESSAGE_FAILURE_DROP = ComponentUtil.translate("강화에 %s하여 강화 단계가 %s하였습니다", ComponentUtil.translate("r255;실패"), ComponentUtil.translate("r255;하락"));
+  protected static final Component MESSAGE_FAILURE_DROP = ComponentUtil.translate("강화에 %s하여 강화 단계가 %s했습니다", ComponentUtil.translate("r255;실패"), ComponentUtil.translate("r255;하락"));
 
   protected static final Component MESSAGE_DESTROY = ComponentUtil.translate("강화에 %s하여 아이템이 %s되었습니다", ComponentUtil.translate("&8실패"), ComponentUtil.translate("&8파괴"));
   protected static final Component START_BUTTON = ComponentUtil.translate("             [%s]                     [%s]",

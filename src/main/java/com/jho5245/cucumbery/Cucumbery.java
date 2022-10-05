@@ -26,11 +26,9 @@ import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.recipe.RecipeManager;
 import com.jho5245.cucumbery.listeners.AsyncTabComplete;
 import com.jho5245.cucumbery.listeners.UnknownCommand;
+import com.jho5245.cucumbery.listeners.addon.gsit.PreEntitySit;
 import com.jho5245.cucumbery.listeners.addon.noteblockapi.SongEnd;
-import com.jho5245.cucumbery.listeners.addon.quickshop.ShopDelete;
-import com.jho5245.cucumbery.listeners.addon.quickshop.ShopItemChange;
-import com.jho5245.cucumbery.listeners.addon.quickshop.ShopPreCreate;
-import com.jho5245.cucumbery.listeners.addon.quickshop.ShopPriceChange;
+import com.jho5245.cucumbery.listeners.addon.quickshop.*;
 import com.jho5245.cucumbery.listeners.addon.worldguard.DisallowedPVP;
 import com.jho5245.cucumbery.listeners.block.*;
 import com.jho5245.cucumbery.listeners.block.piston.BlockPistonExtend;
@@ -64,6 +62,7 @@ import com.jho5245.cucumbery.listeners.world.EntitiesLoad;
 import com.jho5245.cucumbery.util.addons.ProtocolLibManager;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.gui.GUIManager;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -79,6 +78,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.xxmicloxx.NoteBlockAPI.NoteBlockAPI;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
+import dev.geco.gsit.GSitMain;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import dev.jorel.commandapi.Converter;
@@ -92,8 +92,10 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -110,7 +112,7 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 29, DEATH_MESSAGES_CONFIG_VERSION = 8, LANG_CONFIG_VERSION = 4;
+  public static final int CONFIG_VERSION = 33, DEATH_MESSAGES_CONFIG_VERSION = 9, LANG_CONFIG_VERSION = 4;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   /**
@@ -127,6 +129,8 @@ public class Cucumbery extends JavaPlugin
   public static boolean using_ProtocolLib;
   public static boolean using_WorldEdit;
   public static boolean using_WorldGuard;
+
+  public static boolean using_GSit;
   /**
    * MythicMobs API
    */
@@ -173,7 +177,7 @@ public class Cucumbery extends JavaPlugin
     }
     catch (Exception e)
     {
-      MessageUtil.consoleSendMessage("&c플러그인을 활성화하는 도중 오류가 발생하였습니다");
+      MessageUtil.consoleSendMessage("&c플러그인을 활성화하는 도중 오류가 발생했습니다");
       e.printStackTrace();
     }
     if (Cucumbery.config.getBoolean("console-messages.plugin"))
@@ -199,7 +203,7 @@ public class Cucumbery extends JavaPlugin
     }
     catch (Exception e)
     {
-      MessageUtil.consoleSendMessage("&c플러그인을 비활성화하는 도중 오류가 발생하였습니다");
+      MessageUtil.consoleSendMessage("&c플러그인을 비활성화하는 도중 오류가 발생했습니다");
       e.printStackTrace();
     }
     if (Cucumbery.config.getBoolean("console-messages.plugin"))
@@ -266,6 +270,12 @@ public class Cucumbery extends JavaPlugin
         if (entity.getScoreboardTags().contains("damage_indicator"))
         {
           entity.remove();
+          continue;
+        }
+        if (entity instanceof ItemFrame itemFrame)
+        {
+          ItemStack itemStack = itemFrame.getItem();
+          itemFrame.setItem(ItemLore.setItemLore(itemStack));
         }
       }
     }
@@ -360,6 +370,10 @@ public class Cucumbery extends JavaPlugin
     {
       location.getBlock().getState().update();
     }
+    for (Location location : Variable.fakeBlocks.keySet())
+    {
+      location.getBlock().getState().update();
+    }
     RecipeManager.unload();
   }
 
@@ -415,6 +429,8 @@ public class Cucumbery extends JavaPlugin
         new CommandClear2().registerCommand("clear2", "cucumbery.command.clear2", "cclear");
         new CommandSearchChestItem().registerCommand("search-container-item", "cucumbey.command.search_container_item", "search-container-item");
         new CommandBreak().registerCommand("cbreak", "cucumbery.command.break", "cbreak");
+        new CommandFakeBlock().registerCommand("fakeblock", "cucumbery.command.fakeblock", "cfakeblock");
+        new CommandTag().registerCommand("tag", "minecraft.command.tag", "tag");
         brigadierService.submit(this::registerBrigadierCommands);
       }
       catch (Throwable e)
@@ -460,6 +476,7 @@ public class Cucumbery extends JavaPlugin
     Cucumbery.using_ProtocolLib = Cucumbery.config.getBoolean("use-hook-plugins.ProtocolLib") && this.pluginManager.getPlugin("ProtocolLib") instanceof ProtocolLib;
     Cucumbery.using_WorldEdit = Cucumbery.config.getBoolean("use-hook-plugins.WorldEdit") && this.pluginManager.getPlugin("WorldEdit") instanceof WorldEditPlugin;
     Cucumbery.using_WorldGuard = Cucumbery.config.getBoolean("use-hook-plugins.WorldGuard") && this.pluginManager.getPlugin("WorldGuard") instanceof WorldGuardPlugin;
+    Cucumbery.using_GSit = Cucumbery.config.getBoolean("use-hook-plugins.GSit") && this.pluginManager.getPlugin("GSit") instanceof GSitMain;
     if (using_WorldEdit)
     {
       Plugin plugin = this.pluginManager.getPlugin("WorldEdit");
@@ -476,43 +493,47 @@ public class Cucumbery extends JavaPlugin
     {
       if (using_Vault_Economy)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "Vault-Economy 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "Vault-Economy 플러그인을 연동했습니다");
       }
       if (using_Vault_Chat)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "Vault-Chat 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "Vault-Chat 플러그인을 연동했습니다");
       }
       if (using_NoteBlockAPI)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "NoteBlockAPI 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "NoteBlockAPI 플러그인을 연동했습니다");
       }
       if (using_QuickShop)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "QuickShop 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "QuickShop 플러그인을 연동했습니다");
       }
       if (using_PlaceHolderAPI)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "PlaceHolderAPI 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "PlaceHolderAPI 플러그인을 연동했습니다");
       }
       if (using_mcMMO)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "mcMMO 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "mcMMO 플러그인을 연동했습니다");
       }
       if (using_MythicMobs)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "MythicMobs 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "MythicMobs 플러그인을 연동했습니다");
       }
       if (using_ProtocolLib)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "ProtocolLib 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "ProtocolLib 플러그인을 연동했습니다");
       }
       if (using_WorldEdit)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "WorldEdit 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "WorldEdit 플러그인을 연동했습니다");
       }
       if (using_WorldGuard)
       {
-        MessageUtil.consoleSendMessage(Prefix.INFO, "WorldGuard 플러그인을 연동하였습니다");
+        MessageUtil.consoleSendMessage(Prefix.INFO, "WorldGuard 플러그인을 연동했습니다");
+      }
+      if (using_GSit)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "GSit 플러그인을 연동했습니다");
       }
     }
     if (using_QuickShop)
@@ -676,6 +697,8 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("stash", new CommandStash());
     Initializer.registerCommand("blockplacedata", new CommandBlockPlaceData());
     Initializer.registerCommand("splash", new CommandSplash());
+    Initializer.registerCommand("swingarm", new CommandSwingArm());
+    Initializer.registerCommand("shakevillagerhead", new CommandShakeVillagerHead());
   }
 
   private void registerEvents()
@@ -734,6 +757,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new ExpBottle());
     Initializer.registerEvent(new ExperienceOrbMerge());
     Initializer.registerEvent(new ExplosionPrime());
+    Initializer.registerEvent(new FireworkExplode());
     Initializer.registerEvent(new LingeringPotionSplash());
     Initializer.registerEvent(new PotionSplash());
     Initializer.registerEvent(new ProjectileLaunch());
@@ -826,6 +850,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new PlayerItemDamage());
     Initializer.registerEvent(new PlayerItemHeld());
     Initializer.registerEvent(new PlayerItemMend());
+    Initializer.registerEvent(new PlayerStopUsingItem());
     Initializer.registerEvent(new PlayerSwapHandItems());
     // listener.server
     Initializer.registerEvent(new ServerCommand());
@@ -838,10 +863,12 @@ public class Cucumbery extends JavaPlugin
     // listener.addon.quickshop
     if (using_QuickShop)
     {
+      Initializer.registerEvent(new ShopClick());
       Initializer.registerEvent(new ShopDelete());
       Initializer.registerEvent(new ShopItemChange());
       Initializer.registerEvent(new ShopPreCreate());
       Initializer.registerEvent(new ShopPriceChange());
+      Initializer.registerEvent(new ShopSuccessPurchase());
     }
     // listener.addon.noteblockapi
     if (using_NoteBlockAPI)
@@ -852,6 +879,11 @@ public class Cucumbery extends JavaPlugin
     if (using_WorldGuard)
     {
       Initializer.registerEvent(new DisallowedPVP());
+    }
+    // listener.addon.gsit
+    if (using_GSit)
+    {
+      Initializer.registerEvent(new PreEntitySit());
     }
   }
 

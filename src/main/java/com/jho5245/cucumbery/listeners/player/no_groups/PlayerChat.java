@@ -192,6 +192,21 @@ public class PlayerChat implements Listener
     Component senderComponent = SenderComponentUtil.senderComponent(player);
     player.displayName(player.displayName().hoverEvent(senderComponent.hoverEvent()));
     String message = ComponentUtil.serialize(event.message());
+    boolean parse = message.startsWith("parse:") && player.hasPermission("asdf");
+    boolean hasParseEffect = CustomEffectManager.hasEffect(player, CustomEffectType.AUTO_CHAT_PARSER);
+    if (parse)
+    {
+      message = message.substring("parse:".length());
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.GD_TO_HI) && message.equalsIgnoreCase("gd"))
+    {
+      message = "ㅎㅇ";
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.BACKWARDS_CHAT))
+    {
+      message = ComponentUtil.serialize(event.message());
+      message = new StringBuffer(message).reverse().toString();
+    }
     /* 채팅을 칠때 해당 권한이 있으면 컬러 채팅으로 변환 */
     if (Permission.OTHER_PLACEHOLDER.has(player))
     {
@@ -234,7 +249,14 @@ public class PlayerChat implements Listener
         message = MessageUtil.stripColor(message);
       }
     }
-    event.message(ComponentUtil.create2(message, false));
+    if (parse || hasParseEffect)
+    {
+      event.message(ComponentUtil.create(false, message));
+    }
+    else
+    {
+      event.message(ComponentUtil.create2(message, false));
+    }
     if (CustomEffectManager.hasEffect(player, CustomEffectType.THICK))
     {
       event.message(MessageUtil.boldify(event.message()));

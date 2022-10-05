@@ -35,7 +35,6 @@ import org.bukkit.Note.Tone;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.block.Block;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.command.BlockCommandSender;
@@ -44,6 +43,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.help.HelpTopic;
 import org.bukkit.inventory.EquipmentSlot;
@@ -301,962 +302,974 @@ public class Method extends SoundPlay
       playSound(player, Sound.BLOCK_NOTE_BLOCK_HAT, 0.5F, Method.random(130, 170) / 100.0F);
       return;
     }
-    switch (item.getType())
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(item);
+    if (customMaterial != null)
     {
-      case WOODEN_SWORD:
-      case STONE_SWORD:
-      case IRON_SWORD:
-      case DIAMOND_SWORD:
-      case GOLDEN_SWORD:
-      case NETHERITE_SWORD:
-        int random = Method.random(1, 6);
-        switch (random)
-        {
-          case 1 ->
-          {
-            playSound(player, Sound.ENTITY_PLAYER_ATTACK_CRIT, 0.5F, Method.random(80, 102) / 100.0F);
-            return;
-          }
-          case 2 ->
-          {
-            playSound(player, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 0.5F, Method.random(80, 102) / 100.0F);
-            return;
-          }
-          case 3 ->
-          {
-            playSound(player, Sound.ENTITY_PLAYER_ATTACK_NODAMAGE, 0.5F, Method.random(80, 102) / 100.0F);
-            return;
-          }
-          case 4 ->
-          {
-            playSound(player, Sound.ENTITY_PLAYER_ATTACK_STRONG, 0.5F, Method.random(80, 102) / 100.0F);
-            return;
-          }
-          case 5 ->
-          {
-            playSound(player, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 0.5F, Method.random(80, 102) / 100.0F);
-            return;
-          }
-          case 6 ->
-          {
-            playSound(player, Sound.ENTITY_PLAYER_ATTACK_WEAK, 0.5F, Method.random(80, 102) / 100.0F);
-            return;
-          }
-        }
-        return;
-      case WOODEN_PICKAXE:
-      case STONE_PICKAXE:
-      case IRON_PICKAXE:
-      case DIAMOND_PICKAXE:
-      case GOLDEN_PICKAXE:
-      case NETHERITE_PICKAXE:
-        playSound(player, Sound.BLOCK_STONE_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case WOODEN_AXE:
-      case STONE_AXE:
-      case IRON_AXE:
-      case DIAMOND_AXE:
-      case GOLDEN_AXE:
-      case NETHERITE_AXE:
-        playSound(player, Sound.BLOCK_WOOD_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case WOODEN_SHOVEL:
-      case STONE_SHOVEL:
-      case IRON_SHOVEL:
-      case DIAMOND_SHOVEL:
-      case GOLDEN_SHOVEL:
-      case NETHERITE_SHOVEL:
-        random = Method.random(1, 3);
-        switch (random)
-        {
-          case 1 ->
-          {
-            playSound(player, Sound.BLOCK_GRAVEL_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
-            return;
-          }
-          case 2 ->
-          {
-            playSound(player, Sound.BLOCK_GRASS_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
-            return;
-          }
-          case 3 -> playSound(player, Sound.BLOCK_SAND_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
-        }
-        return;
-      case WOODEN_HOE:
-      case STONE_HOE:
-      case IRON_HOE:
-      case DIAMOND_HOE:
-      case GOLDEN_HOE:
-      case NETHERITE_HOE:
-        playSound(player, Sound.ITEM_HOE_TILL, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case SHEARS:
-        playSound(player, Sound.ENTITY_SHEEP_SHEAR, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case BOW:
-        playSound(player, Sound.ENTITY_ARROW_SHOOT, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case SHIELD:
-        playSound(player, Sound.ENTITY_HORSE_ARMOR, 0.5F, Method.random(120, 200) / 100.0F);
-        return;
-      case NAME_TAG:
-        playSound(player, Sound.ENTITY_HORSE_SADDLE, 0.5F, Method.random(120, 200) / 100.0F);
-        return;
-      case OAK_DOOR:
-      case SPRUCE_DOOR:
-      case BIRCH_DOOR:
-      case JUNGLE_DOOR:
-      case ACACIA_DOOR:
-      case DARK_OAK_DOOR:
-      case CRIMSON_DOOR:
-      case WARPED_DOOR:
-        random = Method.random(1, 2);
-        switch (random)
-        {
-          case 1 ->
-          {
-            playSound(player, Sound.BLOCK_WOODEN_DOOR_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-          case 2 ->
-          {
-            playSound(player, Sound.BLOCK_WOODEN_DOOR_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-        }
-        return;
-      case OAK_FENCE_GATE:
-      case SPRUCE_FENCE_GATE:
-      case BIRCH_FENCE_GATE:
-      case JUNGLE_FENCE_GATE:
-      case ACACIA_FENCE_GATE:
-      case DARK_OAK_FENCE_GATE:
-      case CRIMSON_FENCE_GATE:
-      case WARPED_FENCE_GATE:
-        random = Method.random(1, 2);
-        switch (random)
-        {
-          case 1 ->
-          {
-            playSound(player, Sound.BLOCK_FENCE_GATE_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-          case 2 ->
-          {
-            playSound(player, Sound.BLOCK_FENCE_GATE_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-        }
-        return;
-      case IRON_DOOR:
-        random = Method.random(1, 2);
-        switch (random)
-        {
-          case 1 ->
-          {
-            playSound(player, Sound.BLOCK_IRON_DOOR_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-          case 2 ->
-          {
-            playSound(player, Sound.BLOCK_IRON_DOOR_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-        }
-        return;
-      case INFESTED_CHISELED_STONE_BRICKS:
-      case INFESTED_COBBLESTONE:
-      case INFESTED_CRACKED_STONE_BRICKS:
-      case INFESTED_MOSSY_STONE_BRICKS:
-      case INFESTED_STONE:
-      case INFESTED_STONE_BRICKS:
-        playSound(player, Sound.ENTITY_SILVERFISH_AMBIENT, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case BREWING_STAND:
-        playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1.0F, Method.random(150, 200) / 100.0F);
-        return;
-      case TNT:
-      case TNT_MINECART:
-        playSound(player, Sound.ENTITY_TNT_PRIMED, 0.5F, Method.random(150, 200) / 100.0F);
-        return;
-      case FISHING_ROD:
-      case LEAD:
-        playSound(player, Sound.ENTITY_WITCH_THROW, 0.5F, Method.random(80, 150) / 100.0F);
-        return;
-      case CLOCK:
-      case COMPASS:
-      case STONE_BUTTON:
-      case OAK_BUTTON:
-      case SPRUCE_BUTTON:
-      case BIRCH_BUTTON:
-      case JUNGLE_BUTTON:
-      case ACACIA_BUTTON:
-      case DARK_OAK_BUTTON:
-      case LEVER:
-      case REPEATER:
-      case COMPARATOR:
-      case HOPPER:
-      case DROPPER:
-      case DISPENSER:
-      case OBSERVER:
-      case LIGHT_WEIGHTED_PRESSURE_PLATE:
-      case HEAVY_WEIGHTED_PRESSURE_PLATE:
-      case STONE_PRESSURE_PLATE:
-      case OAK_PRESSURE_PLATE:
-      case SPRUCE_PRESSURE_PLATE:
-      case BIRCH_PRESSURE_PLATE:
-      case JUNGLE_PRESSURE_PLATE:
-      case ACACIA_PRESSURE_PLATE:
-      case DARK_OAK_PRESSURE_PLATE:
-      case DAYLIGHT_DETECTOR:
-        playSound(player, Sound.BLOCK_LEVER_CLICK, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case POTION:
-      case SPLASH_POTION:
-      case LINGERING_POTION:
-      case EXPERIENCE_BOTTLE:
-      case DRAGON_BREATH:
-      case ENCHANTED_BOOK:
-      case ENCHANTING_TABLE:
-      case ENCHANTED_GOLDEN_APPLE:
-      case BEACON:
-        playSound(player, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 0.5F, Method.random(180, 200) / 100.0F);
-        return;
-      case ENDER_CHEST:
-      case ENDER_PEARL:
-      case ENDER_EYE:
-      case END_PORTAL_FRAME:
-        playSound(player, Sound.ENTITY_ENDERMAN_AMBIENT, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case LEATHER_HELMET:
-      case LEATHER_CHESTPLATE:
-      case LEATHER_LEGGINGS:
-      case LEATHER_BOOTS:
-        playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case IRON_HELMET:
-      case IRON_CHESTPLATE:
-      case IRON_LEGGINGS:
-      case IRON_BOOTS:
-        playSound(player, Sound.ITEM_ARMOR_EQUIP_IRON, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case GOLDEN_HELMET:
-      case GOLDEN_CHESTPLATE:
-      case GOLDEN_LEGGINGS:
-      case GOLDEN_BOOTS:
-        playSound(player, Sound.ITEM_ARMOR_EQUIP_GOLD, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case DIAMOND_HELMET:
-      case DIAMOND_CHESTPLATE:
-      case DIAMOND_LEGGINGS:
-      case DIAMOND_BOOTS:
-        playSound(player, Sound.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case CHAINMAIL_HELMET:
-      case CHAINMAIL_CHESTPLATE:
-      case CHAINMAIL_LEGGINGS:
-      case CHAINMAIL_BOOTS:
-        playSound(player, Sound.ITEM_ARMOR_EQUIP_CHAIN, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case ELYTRA:
-        playSound(player, Sound.ITEM_ARMOR_EQUIP_ELYTRA, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case WATER_BUCKET:
-        playSound(player, Sound.ITEM_BUCKET_FILL, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case PUFFERFISH_BUCKET:
-      case COD_BUCKET:
-      case SALMON_BUCKET:
-        playSound(player, Sound.ITEM_BUCKET_FILL_FISH, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case LAVA_BUCKET:
-        playSound(player, Sound.ITEM_BUCKET_FILL_LAVA, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case BUCKET:
-        playSound(player, Sound.ITEM_BUCKET_EMPTY, 0.5F, Method.random(180, 200) / 100.0F);
-        return;
-      case BLACK_WOOL:
-      case BLUE_WOOL:
-      case BROWN_WOOL:
-      case CYAN_WOOL:
-      case GRAY_WOOL:
-      case GREEN_WOOL:
-      case LIGHT_BLUE_WOOL:
-      case LIGHT_GRAY_WOOL:
-      case LIME_WOOL:
-      case MAGENTA_WOOL:
-      case ORANGE_WOOL:
-      case PINK_WOOL:
-      case PURPLE_WOOL:
-      case RED_WOOL:
-      case WHITE_WOOL:
-      case YELLOW_WOOL:
-      case BLACK_CARPET:
-      case BLUE_CARPET:
-      case BROWN_CARPET:
-      case CYAN_CARPET:
-      case GRAY_CARPET:
-      case GREEN_CARPET:
-      case LIGHT_BLUE_CARPET:
-      case LIGHT_GRAY_CARPET:
-      case LIME_CARPET:
-      case MAGENTA_CARPET:
-      case ORANGE_CARPET:
-      case PINK_CARPET:
-      case PURPLE_CARPET:
-      case RED_CARPET:
-      case WHITE_CARPET:
-      case YELLOW_CARPET:
-      case BLACK_BANNER:
-      case BLUE_BANNER:
-      case BROWN_BANNER:
-      case CYAN_BANNER:
-      case GRAY_BANNER:
-      case GREEN_BANNER:
-      case LIGHT_BLUE_BANNER:
-      case LIGHT_GRAY_BANNER:
-      case LIME_BANNER:
-      case MAGENTA_BANNER:
-      case ORANGE_BANNER:
-      case PINK_BANNER:
-      case PURPLE_BANNER:
-      case RED_BANNER:
-      case WHITE_BANNER:
-      case YELLOW_BANNER:
-        playSound(player, Sound.BLOCK_WOOL_BREAK, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case GLASS:
-      case GLASS_BOTTLE:
-      case GLASS_PANE:
-      case BLACK_STAINED_GLASS:
-      case BLUE_STAINED_GLASS:
-      case BROWN_STAINED_GLASS:
-      case CYAN_STAINED_GLASS:
-      case GRAY_STAINED_GLASS:
-      case GREEN_STAINED_GLASS:
-      case LIGHT_BLUE_STAINED_GLASS:
-      case LIGHT_GRAY_STAINED_GLASS:
-      case LIME_STAINED_GLASS:
-      case MAGENTA_STAINED_GLASS:
-      case ORANGE_STAINED_GLASS:
-      case PINK_STAINED_GLASS:
-      case PURPLE_STAINED_GLASS:
-      case RED_STAINED_GLASS:
-      case WHITE_STAINED_GLASS:
-      case YELLOW_STAINED_GLASS:
-      case BLACK_STAINED_GLASS_PANE:
-      case BLUE_STAINED_GLASS_PANE:
-      case BROWN_STAINED_GLASS_PANE:
-      case CYAN_STAINED_GLASS_PANE:
-      case GRAY_STAINED_GLASS_PANE:
-      case GREEN_STAINED_GLASS_PANE:
-      case LIGHT_BLUE_STAINED_GLASS_PANE:
-      case LIGHT_GRAY_STAINED_GLASS_PANE:
-      case LIME_STAINED_GLASS_PANE:
-      case MAGENTA_STAINED_GLASS_PANE:
-      case ORANGE_STAINED_GLASS_PANE:
-      case PINK_STAINED_GLASS_PANE:
-      case PURPLE_STAINED_GLASS_PANE:
-      case RED_STAINED_GLASS_PANE:
-      case WHITE_STAINED_GLASS_PANE:
-      case YELLOW_STAINED_GLASS_PANE:
-        playSound(player, Sound.BLOCK_GLASS_BREAK, 0.5F, Method.random(180, 200) / 100.0F);
-        return;
-      case REDSTONE:
-      case GLOWSTONE_DUST:
-      case BLAZE_POWDER:
-      case GUNPOWDER:
-      case CLAY_BALL:
-        playSound(player, Sound.BLOCK_SAND_HIT, 0.5F, Method.random(180, 200) / 100.0F);
-        return;
-      case FLINT_AND_STEEL:
-        playSound(player, Sound.ITEM_FLINTANDSTEEL_USE, 0.5F, Method.random(80, 100) / 100.0F);
-        return;
-      case OAK_TRAPDOOR:
-      case SPRUCE_TRAPDOOR:
-      case BIRCH_TRAPDOOR:
-      case JUNGLE_TRAPDOOR:
-      case ACACIA_TRAPDOOR:
-      case DARK_OAK_TRAPDOOR:
-      case CRIMSON_TRAPDOOR:
-      case WARPED_TRAPDOOR:
-        random = Method.random(1, 2);
-        switch (random)
-        {
-          case 1 ->
-          {
-            playSound(player, Sound.BLOCK_WOODEN_TRAPDOOR_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-          case 2 ->
-          {
-            playSound(player, Sound.BLOCK_WOODEN_TRAPDOOR_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-        }
-        return;
-      case IRON_TRAPDOOR:
-        random = Method.random(1, 2);
-        switch (random)
-        {
-          case 1 ->
-          {
-            playSound(player, Sound.BLOCK_IRON_TRAPDOOR_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-          case 2 ->
-          {
-            playSound(player, Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
-            return;
-          }
-        }
-        return;
-      case CHEST:
-        playSound(player, Sound.BLOCK_CHEST_OPEN, 0.5F, Method.random(100, 150) / 100.0F);
-        return;
-      case TRAPPED_CHEST:
-        playSound(player, Sound.BLOCK_CHEST_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
-        playSound(player, Sound.BLOCK_CHEST_OPEN, 0.5F, Method.random(50, 80) / 100.0F);
-        return;
-      case FIREWORK_ROCKET:
-        playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case SLIME_BALL:
-      case SLIME_BLOCK:
-        playSound(player, Sound.BLOCK_SLIME_BLOCK_BREAK, 0.5F, Method.random(180, 200) / 100.0F);
-        return;
-      case PAINTING:
-        playSound(player, Sound.ENTITY_PAINTING_PLACE, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case ITEM_FRAME:
-        playSound(player, Sound.ENTITY_ITEM_FRAME_PLACE, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case OAK_LEAVES:
-      case SPRUCE_LEAVES:
-      case BIRCH_LEAVES:
-      case JUNGLE_LEAVES:
-      case ACACIA_LEAVES:
-      case DARK_OAK_LEAVES:
-      case OAK_SAPLING:
-      case SPRUCE_SAPLING:
-      case BIRCH_SAPLING:
-      case JUNGLE_SAPLING:
-      case ACACIA_SAPLING:
-      case DARK_OAK_SAPLING:
-      case GRASS:
-      case GRASS_BLOCK:
-      case FERN:
-      case DEAD_BUSH:
-      case SEAGRASS:
-      case DANDELION:
-      case POPPY:
-      case BLUE_ORCHID:
-      case ALLIUM:
-      case AZURE_BLUET:
-      case RED_TULIP:
-      case ORANGE_TULIP:
-      case PINK_TULIP:
-      case WHITE_TULIP:
-      case VINE:
-      case SUNFLOWER:
-      case LILAC:
-      case ROSE_BUSH:
-      case PEONY:
-      case TALL_GRASS:
-      case TALL_SEAGRASS:
-      case LARGE_FERN:
-      case BROWN_MUSHROOM:
-      case RED_MUSHROOM:
-      case BEETROOT_SEEDS:
-      case MELON_SEEDS:
-      case PUMPKIN_SEEDS:
-      case WHEAT_SEEDS:
-      case SUGAR_CANE:
-      case WHEAT:
-      case OXEYE_DAISY:
-      case CORNFLOWER:
-      case LILY_OF_THE_VALLEY:
-      case WITHER_ROSE:
-        playSound(player, Sound.BLOCK_GRASS_HIT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case CONDUIT:
-        playSound(player, Sound.BLOCK_CONDUIT_ACTIVATE, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case NETHER_STAR:
-        playSound(player, Sound.BLOCK_BEACON_ACTIVATE, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case LILY_PAD:
-        playSound(player, Sound.BLOCK_GRASS_HIT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case BAT_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_BAT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case BLAZE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_BLAZE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SPIDER_SPAWN_EGG:
-      case CAVE_SPIDER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SPIDER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case CHICKEN_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_CHICKEN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case COD_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_COD_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case COW_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_COW_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case CREEPER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_CREEPER_HURT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case DOLPHIN_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_DOLPHIN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case DONKEY_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_DONKEY_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case DROWNED_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_DROWNED_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ELDER_GUARDIAN_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_ELDER_GUARDIAN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ENDERMAN_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_ENDERMAN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ENDERMITE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_ENDERMITE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case EVOKER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_EVOKER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case GHAST_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_GHAST_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case GUARDIAN_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_GUARDIAN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case HUSK_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_HUSK_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case LLAMA_SPAWN_EGG:
-      case TRADER_LLAMA_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_LLAMA_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case HORSE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_HORSE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case MOOSHROOM_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_COW_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case MAGMA_CUBE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_MAGMA_CUBE_HURT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case MULE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_MULE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case OCELOT_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_CAT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case PARROT_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_PARROT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case PHANTOM_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_PHANTOM_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case PIG_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_PIG_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case POLAR_BEAR_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_POLAR_BEAR_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case PUFFERFISH_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_PUFFER_FISH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case RABBIT_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_RABBIT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SALMON_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SALMON_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SHEEP_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SHEEP_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SHULKER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SHULKER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SKELETON_HORSE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SKELETON_HORSE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SKELETON_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SKELETON_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SILVERFISH_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SILVERFISH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SLIME_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SLIME_HURT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SQUID_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_SQUID_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case STRAY_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_STRAY_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case TROPICAL_FISH_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_TROPICAL_FISH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case TURTLE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_TURTLE_AMBIENT_LAND, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case VEX_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_VEX_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case VILLAGER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_VILLAGER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case WITCH_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_WITCH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case VINDICATOR_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_VINDICATOR_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case WITHER_SKELETON_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_WITHER_SKELETON_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case WOLF_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_WOLF_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ZOMBIE_HORSE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_ZOMBIE_HORSE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ZOMBIFIED_PIGLIN_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_ZOMBIFIED_PIGLIN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ZOMBIE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_ZOMBIE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ZOMBIE_VILLAGER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_ZOMBIE_VILLAGER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case CAT_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_CAT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case FOX_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_FOX_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case PANDA_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_PANDA_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case PILLAGER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_PILLAGER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case RAVAGER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_RAVAGER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case WANDERING_TRADER_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_WANDERING_TRADER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case BEE_SPAWN_EGG:
-        playSound(player, Sound.ENTITY_BEE_LOOP, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SPAWNER:
-        playSound(player, Sound.ENTITY_SILVERFISH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case STONE:
-      case STONE_BRICK_SLAB:
-      case STONE_BRICK_STAIRS:
-      case STONE_BRICKS:
-      case STONE_SLAB:
-      case CHISELED_STONE_BRICKS:
-      case CHISELED_QUARTZ_BLOCK:
-      case CHISELED_RED_SANDSTONE:
-      case CHISELED_SANDSTONE:
-      case COBBLESTONE:
-      case COBBLESTONE_SLAB:
-      case COBBLESTONE_STAIRS:
-      case COBBLESTONE_WALL:
-      case MOSSY_COBBLESTONE:
-      case MOSSY_COBBLESTONE_WALL:
-      case SANDSTONE:
-      case SANDSTONE_SLAB:
-      case SANDSTONE_STAIRS:
-      case CUT_RED_SANDSTONE:
-      case CUT_SANDSTONE:
-      case RED_SANDSTONE:
-      case RED_SANDSTONE_SLAB:
-      case RED_SANDSTONE_STAIRS:
-      case SMOOTH_RED_SANDSTONE:
-      case SMOOTH_SANDSTONE:
-      case COAL_BLOCK:
-      case LAPIS_BLOCK:
-      case COAL_ORE:
-      case DIAMOND_ORE:
-      case EMERALD_ORE:
-      case GOLD_ORE:
-      case IRON_ORE:
-      case LAPIS_ORE:
-      case REDSTONE_ORE:
-      case NETHER_QUARTZ_ORE:
-      case CRACKED_STONE_BRICKS:
-      case END_STONE:
-      case END_STONE_BRICKS:
-      case GLOWSTONE:
-      case MOSSY_STONE_BRICKS:
-      case POLISHED_ANDESITE:
-      case POLISHED_DIORITE:
-      case POLISHED_GRANITE:
-      case ANDESITE:
-      case GRANITE:
-      case DIORITE:
-        playSound(player, Sound.BLOCK_STONE_PLACE, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case NOTE_BLOCK:
-      case JUKEBOX:
-        try
-        {
-          NBTCompound blockStateTag = new NBTItem(item).getCompound(CucumberyTag.MINECRAFT_BLOCK_STATE_TAG_KEY);
-          String pitchString = blockStateTag.getString("note");
-          String instrument = blockStateTag.getString("instrument");
-          float pitch = switch (pitchString)
-                  {
-                    case "0" -> 0.5F;
-                    case "1" -> 0.529732F;
-                    case "2" -> 0.561231F;
-                    case "3" -> 0.594604F;
-                    case "4" -> 0.629961F;
-                    case "5" -> 0.667420F;
-                    case "6" -> 0.707107F;
-                    case "7" -> 0.749154F;
-                    case "8" -> 0.793701F;
-                    case "9" -> 0.840896F;
-                    case "10" -> 0.890899F;
-                    case "11" -> 0.943874F;
-                    case "12" -> 1F;
-                    case "13" -> 1.059463F;
-                    case "14" -> 1.122462F;
-                    case "15" -> 1.189207F;
-                    case "16" -> 1.259921F;
-                    case "17" -> 1.334840F;
-                    case "18" -> 1.414214F;
-                    case "19" -> 1.498307F;
-                    case "20" -> 1.587401F;
-                    case "21" -> 1.681793F;
-                    case "22" -> 1.781797F;
-                    case "23" -> 1.887749F;
-                    case "24" -> 2F;
-                    default -> 0F;
-                  };
-          Sound sound = switch (instrument)
-                  {
-                    case "banjo" -> Sound.BLOCK_NOTE_BLOCK_BANJO;
-                    case "bassdrum" -> Sound.BLOCK_NOTE_BLOCK_BASEDRUM;
-                    case "bass" -> Sound.BLOCK_NOTE_BLOCK_GUITAR;
-                    case "bell" -> Sound.BLOCK_NOTE_BLOCK_BELL;
-                    case "bit" -> Sound.BLOCK_NOTE_BLOCK_BIT;
-                    case "chime" -> Sound.BLOCK_NOTE_BLOCK_CHIME;
-                    case "cow_bell" -> Sound.BLOCK_NOTE_BLOCK_COW_BELL;
-                    case "dingeridoo" -> Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO;
-                    case "flute" -> Sound.BLOCK_NOTE_BLOCK_FLUTE;
-                    case "iron_xylophone" -> Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE;
-                    case "pling" -> Sound.BLOCK_NOTE_BLOCK_PLING;
-                    case "snare" -> Sound.BLOCK_NOTE_BLOCK_SNARE;
-                    case "hat" -> Sound.BLOCK_NOTE_BLOCK_HAT;
-                    case "xylophone" -> Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
-                    default -> Sound.BLOCK_NOTE_BLOCK_HARP;
-                  };
-          playSound(player, sound, 1F, pitch);
-        }
-        catch (Exception e)
-        {
-          random = Method.random(1, 16);
+      switch (customMaterial)
+      {
+        case TUNGSTEN_INGOT, COBALT_INGOT, CUCUMBERITE_INGOT, MITHRIL_INGOT, SHROOMITE_INGOT, TITANIUM_INGOT, COBALT_ORE, CUCUMBERITE_ORE, MITHRIL_ORE, SHROOMITE_ORE, TITANIUM_ORE, TUNGSTEN_ORE ->
+                heldItemSound(player, new ItemStack(Material.IRON_INGOT));
+      }
+    }
+    else
+    {
+      switch (item.getType())
+      {
+        case WOODEN_SWORD:
+        case STONE_SWORD:
+        case IRON_SWORD:
+        case DIAMOND_SWORD:
+        case GOLDEN_SWORD:
+        case NETHERITE_SWORD:
+          int random = Method.random(1, 6);
           switch (random)
           {
             case 1 ->
             {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 0.5F, Method.random(50, 200) / 100.0F);
+              playSound(player, Sound.ENTITY_PLAYER_ATTACK_CRIT, 0.5F, Method.random(80, 102) / 100.0F);
               return;
             }
             case 2 ->
             {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 0.5F, Method.random(50, 200) / 100.0F);
+              playSound(player, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 0.5F, Method.random(80, 102) / 100.0F);
               return;
             }
             case 3 ->
             {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 0.5F, Method.random(50, 200) / 100.0F);
+              playSound(player, Sound.ENTITY_PLAYER_ATTACK_NODAMAGE, 0.5F, Method.random(80, 102) / 100.0F);
               return;
             }
             case 4 ->
             {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_HAT, 0.5F, Method.random(50, 200) / 100.0F);
+              playSound(player, Sound.ENTITY_PLAYER_ATTACK_STRONG, 0.5F, Method.random(80, 102) / 100.0F);
               return;
             }
             case 5 ->
             {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F, Method.random(50, 200) / 100.0F);
+              playSound(player, Sound.ENTITY_PLAYER_ATTACK_SWEEP, 0.5F, Method.random(80, 102) / 100.0F);
               return;
             }
             case 6 ->
             {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_SNARE, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 7 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 8 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 9 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_FLUTE, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 10 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_GUITAR, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 11 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 12 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_BANJO, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 13 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_BIT, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 14 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_COW_BELL, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 15 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 0.5F, Method.random(50, 200) / 100.0F);
-              return;
-            }
-            case 16 ->
-            {
-              playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 0.5F, Method.random(50, 200) / 100.0F);
+              playSound(player, Sound.ENTITY_PLAYER_ATTACK_WEAK, 0.5F, Method.random(80, 102) / 100.0F);
               return;
             }
           }
-        }
-        return;
-      case SAND:
-      case RED_SAND:
-        playSound(player, Sound.BLOCK_SAND_HIT, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ACACIA_BOAT:
-      case BIRCH_BOAT:
-      case DARK_OAK_BOAT:
-      case JUNGLE_BOAT:
-      case OAK_BOAT:
-      case SPRUCE_BOAT:
-        playSound(player, Sound.ENTITY_BOAT_PADDLE_LAND, 2F, Method.random(100, 120) / 100.0F);
-        return;
-      case RAIL:
-      case ACTIVATOR_RAIL:
-      case DETECTOR_RAIL:
-      case POWERED_RAIL:
-      case IRON_BLOCK:
-      case GOLD_BLOCK:
-      case DIAMOND_BLOCK:
-      case EMERALD_BLOCK:
-      case REDSTONE_BLOCK:
-        playSound(player, Sound.BLOCK_METAL_PLACE, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SNOW:
-      case SNOW_BLOCK:
-      case SNOWBALL:
-        playSound(player, Sound.BLOCK_SNOW_PLACE, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case SCUTE:
-      case TURTLE_HELMET:
-        playSound(player, Sound.ITEM_ARMOR_EQUIP_TURTLE, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case TURTLE_EGG:
-        playSound(player, Sound.ENTITY_TURTLE_EGG_CRACK, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case ACACIA_FENCE:
-      case ACACIA_LOG:
-      case ACACIA_SLAB:
-      case STRIPPED_ACACIA_LOG:
-      case ACACIA_STAIRS:
-      case ACACIA_WOOD:
-      case STRIPPED_ACACIA_WOOD:
-      case BIRCH_FENCE:
-      case BIRCH_LOG:
-      case BIRCH_SLAB:
-      case STRIPPED_BIRCH_LOG:
-      case BIRCH_STAIRS:
-      case BIRCH_WOOD:
-      case STRIPPED_BIRCH_WOOD:
-      case SPRUCE_FENCE:
-      case SPRUCE_LOG:
-      case SPRUCE_SLAB:
-      case STRIPPED_SPRUCE_LOG:
-      case SPRUCE_STAIRS:
-      case SPRUCE_WOOD:
-      case STRIPPED_SPRUCE_WOOD:
-      case JUNGLE_FENCE:
-      case JUNGLE_LOG:
-      case JUNGLE_SLAB:
-      case STRIPPED_JUNGLE_LOG:
-      case JUNGLE_STAIRS:
-      case JUNGLE_WOOD:
-      case STRIPPED_JUNGLE_WOOD:
-      case OAK_FENCE:
-      case OAK_LOG:
-      case OAK_SLAB:
-      case STRIPPED_OAK_LOG:
-      case OAK_STAIRS:
-      case OAK_WOOD:
-      case STRIPPED_OAK_WOOD:
-      case DARK_OAK_FENCE:
-      case DARK_OAK_LOG:
-      case DARK_OAK_SLAB:
-      case STRIPPED_DARK_OAK_LOG:
-      case DARK_OAK_STAIRS:
-      case DARK_OAK_WOOD:
-      case STRIPPED_DARK_OAK_WOOD:
-      case PUMPKIN:
-      case CARVED_PUMPKIN:
-      case JACK_O_LANTERN:
-        playSound(player, Sound.BLOCK_WOOD_PLACE, 0.5F, Method.random(100, 120) / 100.0F);
-        return;
-      case BEE_NEST:
-      case BEEHIVE:
-        playSound(player, Sound.ENTITY_BEE_POLLINATE, 0.5F, 1F);
-        return;
-      case HONEY_BLOCK:
-      case HONEYCOMB_BLOCK:
-        playSound(player, Sound.ENTITY_BEE_POLLINATE, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case HONEY_BOTTLE:
-        playSound(player, Sound.ITEM_HONEY_BOTTLE_DRINK, 0.5F, Method.random(80, 120) / 100.0F);
-        return;
-      case HONEYCOMB:
-        playSound(player, Sound.BLOCK_HONEY_BLOCK_SLIDE, 0.8F, 1.3F);
-        return;
-      case CROSSBOW:
-        playSound(player, Sound.ITEM_CROSSBOW_LOADING_END, 0.8F, Method.random(80, 120) / 100.0F);
-        return;
-      default:
-        playSound(player, Sound.ENTITY_ITEM_FRAME_ROTATE_ITEM, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case WOODEN_PICKAXE:
+        case STONE_PICKAXE:
+        case IRON_PICKAXE:
+        case DIAMOND_PICKAXE:
+        case GOLDEN_PICKAXE:
+        case NETHERITE_PICKAXE:
+          playSound(player, Sound.BLOCK_STONE_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case WOODEN_AXE:
+        case STONE_AXE:
+        case IRON_AXE:
+        case DIAMOND_AXE:
+        case GOLDEN_AXE:
+        case NETHERITE_AXE:
+          playSound(player, Sound.BLOCK_WOOD_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case WOODEN_SHOVEL:
+        case STONE_SHOVEL:
+        case IRON_SHOVEL:
+        case DIAMOND_SHOVEL:
+        case GOLDEN_SHOVEL:
+        case NETHERITE_SHOVEL:
+          random = Method.random(1, 3);
+          switch (random)
+          {
+            case 1 ->
+            {
+              playSound(player, Sound.BLOCK_GRAVEL_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
+              return;
+            }
+            case 2 ->
+            {
+              playSound(player, Sound.BLOCK_GRASS_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
+              return;
+            }
+            case 3 -> playSound(player, Sound.BLOCK_SAND_BREAK, 0.5F, Method.random(80, 120) / 100.0F);
+          }
+          return;
+        case WOODEN_HOE:
+        case STONE_HOE:
+        case IRON_HOE:
+        case DIAMOND_HOE:
+        case GOLDEN_HOE:
+        case NETHERITE_HOE:
+          playSound(player, Sound.ITEM_HOE_TILL, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case SHEARS:
+          playSound(player, Sound.ENTITY_SHEEP_SHEAR, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case BOW:
+          playSound(player, Sound.ENTITY_ARROW_SHOOT, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case SHIELD:
+          playSound(player, Sound.ENTITY_HORSE_ARMOR, 0.5F, Method.random(120, 200) / 100.0F);
+          return;
+        case NAME_TAG:
+          playSound(player, Sound.ENTITY_HORSE_SADDLE, 0.5F, Method.random(120, 200) / 100.0F);
+          return;
+        case OAK_DOOR:
+        case SPRUCE_DOOR:
+        case BIRCH_DOOR:
+        case JUNGLE_DOOR:
+        case ACACIA_DOOR:
+        case DARK_OAK_DOOR:
+        case CRIMSON_DOOR:
+        case WARPED_DOOR:
+          random = Method.random(1, 2);
+          switch (random)
+          {
+            case 1 ->
+            {
+              playSound(player, Sound.BLOCK_WOODEN_DOOR_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+            case 2 ->
+            {
+              playSound(player, Sound.BLOCK_WOODEN_DOOR_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+          }
+          return;
+        case OAK_FENCE_GATE:
+        case SPRUCE_FENCE_GATE:
+        case BIRCH_FENCE_GATE:
+        case JUNGLE_FENCE_GATE:
+        case ACACIA_FENCE_GATE:
+        case DARK_OAK_FENCE_GATE:
+        case CRIMSON_FENCE_GATE:
+        case WARPED_FENCE_GATE:
+          random = Method.random(1, 2);
+          switch (random)
+          {
+            case 1 ->
+            {
+              playSound(player, Sound.BLOCK_FENCE_GATE_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+            case 2 ->
+            {
+              playSound(player, Sound.BLOCK_FENCE_GATE_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+          }
+          return;
+        case IRON_DOOR:
+          random = Method.random(1, 2);
+          switch (random)
+          {
+            case 1 ->
+            {
+              playSound(player, Sound.BLOCK_IRON_DOOR_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+            case 2 ->
+            {
+              playSound(player, Sound.BLOCK_IRON_DOOR_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+          }
+          return;
+        case INFESTED_CHISELED_STONE_BRICKS:
+        case INFESTED_COBBLESTONE:
+        case INFESTED_CRACKED_STONE_BRICKS:
+        case INFESTED_MOSSY_STONE_BRICKS:
+        case INFESTED_STONE:
+        case INFESTED_STONE_BRICKS:
+          playSound(player, Sound.ENTITY_SILVERFISH_AMBIENT, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case BREWING_STAND:
+          playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1.0F, Method.random(150, 200) / 100.0F);
+          return;
+        case TNT:
+        case TNT_MINECART:
+          playSound(player, Sound.ENTITY_TNT_PRIMED, 0.5F, Method.random(150, 200) / 100.0F);
+          return;
+        case FISHING_ROD:
+        case LEAD:
+          playSound(player, Sound.ENTITY_WITCH_THROW, 0.5F, Method.random(80, 150) / 100.0F);
+          return;
+        case CLOCK:
+        case COMPASS:
+        case STONE_BUTTON:
+        case OAK_BUTTON:
+        case SPRUCE_BUTTON:
+        case BIRCH_BUTTON:
+        case JUNGLE_BUTTON:
+        case ACACIA_BUTTON:
+        case DARK_OAK_BUTTON:
+        case LEVER:
+        case REPEATER:
+        case COMPARATOR:
+        case HOPPER:
+        case DROPPER:
+        case DISPENSER:
+        case OBSERVER:
+        case LIGHT_WEIGHTED_PRESSURE_PLATE:
+        case HEAVY_WEIGHTED_PRESSURE_PLATE:
+        case STONE_PRESSURE_PLATE:
+        case OAK_PRESSURE_PLATE:
+        case SPRUCE_PRESSURE_PLATE:
+        case BIRCH_PRESSURE_PLATE:
+        case JUNGLE_PRESSURE_PLATE:
+        case ACACIA_PRESSURE_PLATE:
+        case DARK_OAK_PRESSURE_PLATE:
+        case DAYLIGHT_DETECTOR:
+          playSound(player, Sound.BLOCK_LEVER_CLICK, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case POTION:
+        case SPLASH_POTION:
+        case LINGERING_POTION:
+        case EXPERIENCE_BOTTLE:
+        case DRAGON_BREATH:
+        case ENCHANTED_BOOK:
+        case ENCHANTING_TABLE:
+        case ENCHANTED_GOLDEN_APPLE:
+        case BEACON:
+          playSound(player, Sound.BLOCK_ENCHANTMENT_TABLE_USE, 0.5F, Method.random(180, 200) / 100.0F);
+          return;
+        case ENDER_CHEST:
+        case ENDER_PEARL:
+        case ENDER_EYE:
+        case END_PORTAL_FRAME:
+          playSound(player, Sound.ENTITY_ENDERMAN_AMBIENT, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case LEATHER_HELMET:
+        case LEATHER_CHESTPLATE:
+        case LEATHER_LEGGINGS:
+        case LEATHER_BOOTS:
+          playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case IRON_HELMET:
+        case IRON_CHESTPLATE:
+        case IRON_LEGGINGS:
+        case IRON_BOOTS:
+          playSound(player, Sound.ITEM_ARMOR_EQUIP_IRON, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case GOLDEN_HELMET:
+        case GOLDEN_CHESTPLATE:
+        case GOLDEN_LEGGINGS:
+        case GOLDEN_BOOTS:
+          playSound(player, Sound.ITEM_ARMOR_EQUIP_GOLD, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case DIAMOND_HELMET:
+        case DIAMOND_CHESTPLATE:
+        case DIAMOND_LEGGINGS:
+        case DIAMOND_BOOTS:
+          playSound(player, Sound.ITEM_ARMOR_EQUIP_DIAMOND, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case CHAINMAIL_HELMET:
+        case CHAINMAIL_CHESTPLATE:
+        case CHAINMAIL_LEGGINGS:
+        case CHAINMAIL_BOOTS:
+          playSound(player, Sound.ITEM_ARMOR_EQUIP_CHAIN, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case ELYTRA:
+          playSound(player, Sound.ITEM_ARMOR_EQUIP_ELYTRA, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case WATER_BUCKET:
+          playSound(player, Sound.ITEM_BUCKET_FILL, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case PUFFERFISH_BUCKET:
+        case COD_BUCKET:
+        case SALMON_BUCKET:
+          playSound(player, Sound.ITEM_BUCKET_FILL_FISH, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case LAVA_BUCKET:
+          playSound(player, Sound.ITEM_BUCKET_FILL_LAVA, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case BUCKET:
+          playSound(player, Sound.ITEM_BUCKET_EMPTY, 0.5F, Method.random(180, 200) / 100.0F);
+          return;
+        case BLACK_WOOL:
+        case BLUE_WOOL:
+        case BROWN_WOOL:
+        case CYAN_WOOL:
+        case GRAY_WOOL:
+        case GREEN_WOOL:
+        case LIGHT_BLUE_WOOL:
+        case LIGHT_GRAY_WOOL:
+        case LIME_WOOL:
+        case MAGENTA_WOOL:
+        case ORANGE_WOOL:
+        case PINK_WOOL:
+        case PURPLE_WOOL:
+        case RED_WOOL:
+        case WHITE_WOOL:
+        case YELLOW_WOOL:
+        case BLACK_CARPET:
+        case BLUE_CARPET:
+        case BROWN_CARPET:
+        case CYAN_CARPET:
+        case GRAY_CARPET:
+        case GREEN_CARPET:
+        case LIGHT_BLUE_CARPET:
+        case LIGHT_GRAY_CARPET:
+        case LIME_CARPET:
+        case MAGENTA_CARPET:
+        case ORANGE_CARPET:
+        case PINK_CARPET:
+        case PURPLE_CARPET:
+        case RED_CARPET:
+        case WHITE_CARPET:
+        case YELLOW_CARPET:
+        case BLACK_BANNER:
+        case BLUE_BANNER:
+        case BROWN_BANNER:
+        case CYAN_BANNER:
+        case GRAY_BANNER:
+        case GREEN_BANNER:
+        case LIGHT_BLUE_BANNER:
+        case LIGHT_GRAY_BANNER:
+        case LIME_BANNER:
+        case MAGENTA_BANNER:
+        case ORANGE_BANNER:
+        case PINK_BANNER:
+        case PURPLE_BANNER:
+        case RED_BANNER:
+        case WHITE_BANNER:
+        case YELLOW_BANNER:
+          playSound(player, Sound.BLOCK_WOOL_BREAK, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case GLASS:
+        case GLASS_BOTTLE:
+        case GLASS_PANE:
+        case BLACK_STAINED_GLASS:
+        case BLUE_STAINED_GLASS:
+        case BROWN_STAINED_GLASS:
+        case CYAN_STAINED_GLASS:
+        case GRAY_STAINED_GLASS:
+        case GREEN_STAINED_GLASS:
+        case LIGHT_BLUE_STAINED_GLASS:
+        case LIGHT_GRAY_STAINED_GLASS:
+        case LIME_STAINED_GLASS:
+        case MAGENTA_STAINED_GLASS:
+        case ORANGE_STAINED_GLASS:
+        case PINK_STAINED_GLASS:
+        case PURPLE_STAINED_GLASS:
+        case RED_STAINED_GLASS:
+        case WHITE_STAINED_GLASS:
+        case YELLOW_STAINED_GLASS:
+        case BLACK_STAINED_GLASS_PANE:
+        case BLUE_STAINED_GLASS_PANE:
+        case BROWN_STAINED_GLASS_PANE:
+        case CYAN_STAINED_GLASS_PANE:
+        case GRAY_STAINED_GLASS_PANE:
+        case GREEN_STAINED_GLASS_PANE:
+        case LIGHT_BLUE_STAINED_GLASS_PANE:
+        case LIGHT_GRAY_STAINED_GLASS_PANE:
+        case LIME_STAINED_GLASS_PANE:
+        case MAGENTA_STAINED_GLASS_PANE:
+        case ORANGE_STAINED_GLASS_PANE:
+        case PINK_STAINED_GLASS_PANE:
+        case PURPLE_STAINED_GLASS_PANE:
+        case RED_STAINED_GLASS_PANE:
+        case WHITE_STAINED_GLASS_PANE:
+        case YELLOW_STAINED_GLASS_PANE:
+          playSound(player, Sound.BLOCK_GLASS_BREAK, 0.5F, Method.random(180, 200) / 100.0F);
+          return;
+        case REDSTONE:
+        case GLOWSTONE_DUST:
+        case BLAZE_POWDER:
+        case GUNPOWDER:
+        case CLAY_BALL:
+          playSound(player, Sound.BLOCK_SAND_HIT, 0.5F, Method.random(180, 200) / 100.0F);
+          return;
+        case FLINT_AND_STEEL:
+          playSound(player, Sound.ITEM_FLINTANDSTEEL_USE, 0.5F, Method.random(80, 100) / 100.0F);
+          return;
+        case OAK_TRAPDOOR:
+        case SPRUCE_TRAPDOOR:
+        case BIRCH_TRAPDOOR:
+        case JUNGLE_TRAPDOOR:
+        case ACACIA_TRAPDOOR:
+        case DARK_OAK_TRAPDOOR:
+        case CRIMSON_TRAPDOOR:
+        case WARPED_TRAPDOOR:
+          random = Method.random(1, 2);
+          switch (random)
+          {
+            case 1 ->
+            {
+              playSound(player, Sound.BLOCK_WOODEN_TRAPDOOR_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+            case 2 ->
+            {
+              playSound(player, Sound.BLOCK_WOODEN_TRAPDOOR_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+          }
+          return;
+        case IRON_TRAPDOOR:
+          random = Method.random(1, 2);
+          switch (random)
+          {
+            case 1 ->
+            {
+              playSound(player, Sound.BLOCK_IRON_TRAPDOOR_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+            case 2 ->
+            {
+              playSound(player, Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 0.5F, Method.random(80, 100) / 100.0F);
+              return;
+            }
+          }
+          return;
+        case CHEST:
+          playSound(player, Sound.BLOCK_CHEST_OPEN, 0.5F, Method.random(100, 150) / 100.0F);
+          return;
+        case TRAPPED_CHEST:
+          playSound(player, Sound.BLOCK_CHEST_OPEN, 0.5F, Method.random(80, 100) / 100.0F);
+          playSound(player, Sound.BLOCK_CHEST_OPEN, 0.5F, Method.random(50, 80) / 100.0F);
+          return;
+        case FIREWORK_ROCKET:
+          playSound(player, Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case SLIME_BALL:
+        case SLIME_BLOCK:
+          playSound(player, Sound.BLOCK_SLIME_BLOCK_BREAK, 0.5F, Method.random(180, 200) / 100.0F);
+          return;
+        case PAINTING:
+          playSound(player, Sound.ENTITY_PAINTING_PLACE, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case ITEM_FRAME:
+          playSound(player, Sound.ENTITY_ITEM_FRAME_PLACE, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case OAK_LEAVES:
+        case SPRUCE_LEAVES:
+        case BIRCH_LEAVES:
+        case JUNGLE_LEAVES:
+        case ACACIA_LEAVES:
+        case DARK_OAK_LEAVES:
+        case OAK_SAPLING:
+        case SPRUCE_SAPLING:
+        case BIRCH_SAPLING:
+        case JUNGLE_SAPLING:
+        case ACACIA_SAPLING:
+        case DARK_OAK_SAPLING:
+        case GRASS:
+        case GRASS_BLOCK:
+        case FERN:
+        case DEAD_BUSH:
+        case SEAGRASS:
+        case DANDELION:
+        case POPPY:
+        case BLUE_ORCHID:
+        case ALLIUM:
+        case AZURE_BLUET:
+        case RED_TULIP:
+        case ORANGE_TULIP:
+        case PINK_TULIP:
+        case WHITE_TULIP:
+        case VINE:
+        case SUNFLOWER:
+        case LILAC:
+        case ROSE_BUSH:
+        case PEONY:
+        case TALL_GRASS:
+        case TALL_SEAGRASS:
+        case LARGE_FERN:
+        case BROWN_MUSHROOM:
+        case RED_MUSHROOM:
+        case BEETROOT_SEEDS:
+        case MELON_SEEDS:
+        case PUMPKIN_SEEDS:
+        case WHEAT_SEEDS:
+        case SUGAR_CANE:
+        case WHEAT:
+        case OXEYE_DAISY:
+        case CORNFLOWER:
+        case LILY_OF_THE_VALLEY:
+        case WITHER_ROSE:
+          playSound(player, Sound.BLOCK_GRASS_HIT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case CONDUIT:
+          playSound(player, Sound.BLOCK_CONDUIT_ACTIVATE, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case NETHER_STAR:
+          playSound(player, Sound.BLOCK_BEACON_ACTIVATE, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case LILY_PAD:
+          playSound(player, Sound.BLOCK_GRASS_HIT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case BAT_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_BAT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case BLAZE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_BLAZE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SPIDER_SPAWN_EGG:
+        case CAVE_SPIDER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SPIDER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case CHICKEN_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_CHICKEN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case COD_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_COD_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case COW_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_COW_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case CREEPER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_CREEPER_HURT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case DOLPHIN_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_DOLPHIN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case DONKEY_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_DONKEY_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case DROWNED_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_DROWNED_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ELDER_GUARDIAN_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_ELDER_GUARDIAN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ENDERMAN_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_ENDERMAN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ENDERMITE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_ENDERMITE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case EVOKER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_EVOKER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case GHAST_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_GHAST_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case GUARDIAN_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_GUARDIAN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case HUSK_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_HUSK_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case LLAMA_SPAWN_EGG:
+        case TRADER_LLAMA_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_LLAMA_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case HORSE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_HORSE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case MOOSHROOM_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_COW_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case MAGMA_CUBE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_MAGMA_CUBE_HURT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case MULE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_MULE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case OCELOT_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_CAT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case PARROT_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_PARROT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case PHANTOM_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_PHANTOM_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case PIG_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_PIG_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case POLAR_BEAR_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_POLAR_BEAR_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case PUFFERFISH_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_PUFFER_FISH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case RABBIT_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_RABBIT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SALMON_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SALMON_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SHEEP_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SHEEP_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SHULKER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SHULKER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SKELETON_HORSE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SKELETON_HORSE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SKELETON_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SKELETON_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SILVERFISH_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SILVERFISH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SLIME_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SLIME_HURT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SQUID_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_SQUID_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case STRAY_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_STRAY_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case TROPICAL_FISH_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_TROPICAL_FISH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case TURTLE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_TURTLE_AMBIENT_LAND, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case VEX_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_VEX_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case VILLAGER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_VILLAGER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case WITCH_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_WITCH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case VINDICATOR_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_VINDICATOR_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case WITHER_SKELETON_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_WITHER_SKELETON_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case WOLF_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_WOLF_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ZOMBIE_HORSE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_ZOMBIE_HORSE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ZOMBIFIED_PIGLIN_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_ZOMBIFIED_PIGLIN_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ZOMBIE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_ZOMBIE_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ZOMBIE_VILLAGER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_ZOMBIE_VILLAGER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case CAT_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_CAT_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case FOX_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_FOX_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case PANDA_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_PANDA_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case PILLAGER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_PILLAGER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case RAVAGER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_RAVAGER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case WANDERING_TRADER_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_WANDERING_TRADER_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case BEE_SPAWN_EGG:
+          playSound(player, Sound.ENTITY_BEE_LOOP, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SPAWNER:
+          playSound(player, Sound.ENTITY_SILVERFISH_AMBIENT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case STONE:
+        case STONE_BRICK_SLAB:
+        case STONE_BRICK_STAIRS:
+        case STONE_BRICKS:
+        case STONE_SLAB:
+        case CHISELED_STONE_BRICKS:
+        case CHISELED_QUARTZ_BLOCK:
+        case CHISELED_RED_SANDSTONE:
+        case CHISELED_SANDSTONE:
+        case COBBLESTONE:
+        case COBBLESTONE_SLAB:
+        case COBBLESTONE_STAIRS:
+        case COBBLESTONE_WALL:
+        case MOSSY_COBBLESTONE:
+        case MOSSY_COBBLESTONE_WALL:
+        case SANDSTONE:
+        case SANDSTONE_SLAB:
+        case SANDSTONE_STAIRS:
+        case CUT_RED_SANDSTONE:
+        case CUT_SANDSTONE:
+        case RED_SANDSTONE:
+        case RED_SANDSTONE_SLAB:
+        case RED_SANDSTONE_STAIRS:
+        case SMOOTH_RED_SANDSTONE:
+        case SMOOTH_SANDSTONE:
+        case COAL_BLOCK:
+        case LAPIS_BLOCK:
+        case COAL_ORE:
+        case DIAMOND_ORE:
+        case EMERALD_ORE:
+        case GOLD_ORE:
+        case IRON_ORE:
+        case LAPIS_ORE:
+        case REDSTONE_ORE:
+        case NETHER_QUARTZ_ORE:
+        case CRACKED_STONE_BRICKS:
+        case END_STONE:
+        case END_STONE_BRICKS:
+        case GLOWSTONE:
+        case MOSSY_STONE_BRICKS:
+        case POLISHED_ANDESITE:
+        case POLISHED_DIORITE:
+        case POLISHED_GRANITE:
+        case ANDESITE:
+        case GRANITE:
+        case DIORITE:
+          playSound(player, Sound.BLOCK_STONE_PLACE, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case NOTE_BLOCK:
+        case JUKEBOX:
+          try
+          {
+            NBTCompound blockStateTag = new NBTItem(item).getCompound(CucumberyTag.MINECRAFT_BLOCK_STATE_TAG_KEY);
+            String pitchString = blockStateTag.getString("note");
+            String instrument = blockStateTag.getString("instrument");
+            float pitch = switch (pitchString)
+                    {
+                      case "0" -> 0.5F;
+                      case "1" -> 0.529732F;
+                      case "2" -> 0.561231F;
+                      case "3" -> 0.594604F;
+                      case "4" -> 0.629961F;
+                      case "5" -> 0.667420F;
+                      case "6" -> 0.707107F;
+                      case "7" -> 0.749154F;
+                      case "8" -> 0.793701F;
+                      case "9" -> 0.840896F;
+                      case "10" -> 0.890899F;
+                      case "11" -> 0.943874F;
+                      case "12" -> 1F;
+                      case "13" -> 1.059463F;
+                      case "14" -> 1.122462F;
+                      case "15" -> 1.189207F;
+                      case "16" -> 1.259921F;
+                      case "17" -> 1.334840F;
+                      case "18" -> 1.414214F;
+                      case "19" -> 1.498307F;
+                      case "20" -> 1.587401F;
+                      case "21" -> 1.681793F;
+                      case "22" -> 1.781797F;
+                      case "23" -> 1.887749F;
+                      case "24" -> 2F;
+                      default -> 0F;
+                    };
+            Sound sound = switch (instrument)
+                    {
+                      case "banjo" -> Sound.BLOCK_NOTE_BLOCK_BANJO;
+                      case "bassdrum" -> Sound.BLOCK_NOTE_BLOCK_BASEDRUM;
+                      case "bass" -> Sound.BLOCK_NOTE_BLOCK_GUITAR;
+                      case "bell" -> Sound.BLOCK_NOTE_BLOCK_BELL;
+                      case "bit" -> Sound.BLOCK_NOTE_BLOCK_BIT;
+                      case "chime" -> Sound.BLOCK_NOTE_BLOCK_CHIME;
+                      case "cow_bell" -> Sound.BLOCK_NOTE_BLOCK_COW_BELL;
+                      case "dingeridoo" -> Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO;
+                      case "flute" -> Sound.BLOCK_NOTE_BLOCK_FLUTE;
+                      case "iron_xylophone" -> Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE;
+                      case "pling" -> Sound.BLOCK_NOTE_BLOCK_PLING;
+                      case "snare" -> Sound.BLOCK_NOTE_BLOCK_SNARE;
+                      case "hat" -> Sound.BLOCK_NOTE_BLOCK_HAT;
+                      case "xylophone" -> Sound.BLOCK_NOTE_BLOCK_XYLOPHONE;
+                      default -> Sound.BLOCK_NOTE_BLOCK_HARP;
+                    };
+            playSound(player, sound, 1F, pitch);
+          }
+          catch (Exception e)
+          {
+            random = Method.random(1, 16);
+            switch (random)
+            {
+              case 1 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_BASEDRUM, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 2 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 3 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_HARP, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 4 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_HAT, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 5 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 6 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_SNARE, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 7 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 8 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 9 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_FLUTE, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 10 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_GUITAR, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 11 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 12 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_BANJO, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 13 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_BIT, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 14 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_COW_BELL, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 15 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+              case 16 ->
+              {
+                playSound(player, Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, 0.5F, Method.random(50, 200) / 100.0F);
+                return;
+              }
+            }
+          }
+          return;
+        case SAND:
+        case RED_SAND:
+          playSound(player, Sound.BLOCK_SAND_HIT, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ACACIA_BOAT:
+        case BIRCH_BOAT:
+        case DARK_OAK_BOAT:
+        case JUNGLE_BOAT:
+        case OAK_BOAT:
+        case SPRUCE_BOAT:
+          playSound(player, Sound.ENTITY_BOAT_PADDLE_LAND, 2F, Method.random(100, 120) / 100.0F);
+          return;
+        case RAIL:
+        case ACTIVATOR_RAIL:
+        case DETECTOR_RAIL:
+        case POWERED_RAIL:
+        case IRON_BLOCK:
+        case GOLD_BLOCK:
+        case DIAMOND_BLOCK:
+        case EMERALD_BLOCK:
+        case REDSTONE_BLOCK:
+          playSound(player, Sound.BLOCK_METAL_PLACE, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SNOW:
+        case SNOW_BLOCK:
+        case SNOWBALL:
+          playSound(player, Sound.BLOCK_SNOW_PLACE, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case SCUTE:
+        case TURTLE_HELMET:
+          playSound(player, Sound.ITEM_ARMOR_EQUIP_TURTLE, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case TURTLE_EGG:
+          playSound(player, Sound.ENTITY_TURTLE_EGG_CRACK, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case ACACIA_FENCE:
+        case ACACIA_LOG:
+        case ACACIA_SLAB:
+        case STRIPPED_ACACIA_LOG:
+        case ACACIA_STAIRS:
+        case ACACIA_WOOD:
+        case STRIPPED_ACACIA_WOOD:
+        case BIRCH_FENCE:
+        case BIRCH_LOG:
+        case BIRCH_SLAB:
+        case STRIPPED_BIRCH_LOG:
+        case BIRCH_STAIRS:
+        case BIRCH_WOOD:
+        case STRIPPED_BIRCH_WOOD:
+        case SPRUCE_FENCE:
+        case SPRUCE_LOG:
+        case SPRUCE_SLAB:
+        case STRIPPED_SPRUCE_LOG:
+        case SPRUCE_STAIRS:
+        case SPRUCE_WOOD:
+        case STRIPPED_SPRUCE_WOOD:
+        case JUNGLE_FENCE:
+        case JUNGLE_LOG:
+        case JUNGLE_SLAB:
+        case STRIPPED_JUNGLE_LOG:
+        case JUNGLE_STAIRS:
+        case JUNGLE_WOOD:
+        case STRIPPED_JUNGLE_WOOD:
+        case OAK_FENCE:
+        case OAK_LOG:
+        case OAK_SLAB:
+        case STRIPPED_OAK_LOG:
+        case OAK_STAIRS:
+        case OAK_WOOD:
+        case STRIPPED_OAK_WOOD:
+        case DARK_OAK_FENCE:
+        case DARK_OAK_LOG:
+        case DARK_OAK_SLAB:
+        case STRIPPED_DARK_OAK_LOG:
+        case DARK_OAK_STAIRS:
+        case DARK_OAK_WOOD:
+        case STRIPPED_DARK_OAK_WOOD:
+        case PUMPKIN:
+        case CARVED_PUMPKIN:
+        case JACK_O_LANTERN:
+          playSound(player, Sound.BLOCK_WOOD_PLACE, 0.5F, Method.random(100, 120) / 100.0F);
+          return;
+        case BEE_NEST:
+        case BEEHIVE:
+          playSound(player, Sound.ENTITY_BEE_POLLINATE, 0.5F, 1F);
+          return;
+        case HONEY_BLOCK:
+        case HONEYCOMB_BLOCK:
+          playSound(player, Sound.ENTITY_BEE_POLLINATE, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case HONEY_BOTTLE:
+          playSound(player, Sound.ITEM_HONEY_BOTTLE_DRINK, 0.5F, Method.random(80, 120) / 100.0F);
+          return;
+        case HONEYCOMB:
+          playSound(player, Sound.BLOCK_HONEY_BLOCK_SLIDE, 0.8F, 1.3F);
+          return;
+        case CROSSBOW:
+          playSound(player, Sound.ITEM_CROSSBOW_LOADING_END, 0.8F, Method.random(80, 120) / 100.0F);
+          return;
+        default:
+          playSound(player, Sound.ENTITY_ITEM_FRAME_ROTATE_ITEM, 0.5F, Method.random(80, 100) / 100.0F);
+      }
     }
   }
 
@@ -1612,7 +1625,7 @@ public class Method extends SoundPlay
     {
       sender.sendMessage(Component.translatable("command.unknown.command", NamedTextColor.RED));
       sender.sendMessage(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
-      MessageUtil.consoleSendMessage(Prefix.INFO_WARN, sender, "translate:이(가) 권한이 부족하여 명령어 사용에 실패하였습니다");
+      MessageUtil.consoleSendMessage(Prefix.INFO_WARN, sender, "translate:이(가) 권한이 부족하여 명령어 사용에 실패했습니다");
     }
     return false;
   }
@@ -2007,6 +2020,10 @@ public class Method extends SoundPlay
           for (Player player : Bukkit.getOnlinePlayers())
           {
             boolean showDrop = UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME.getBoolean(player);
+            if (UserData.FORCE_HIDE_DROPPED_ITEM_CUSTOM_NAME.getBoolean(player))
+            {
+              showDrop = false;
+            }
             PacketContainer updateComponent = protocolManager.createPacket(Play.Server.ENTITY_METADATA);
             List<WrappedWatchableObject> list = new ArrayList<>();
             list.add(new WrappedWatchableObject(new WrappedDataWatcherObject(3, WrappedDataWatcher.Registry.get(Boolean.class)), showDrop)); // customnamevisible = true
@@ -3320,6 +3337,7 @@ public class Method extends SoundPlay
   @SuppressWarnings("all")
   public static boolean isTimeUp(ItemStack item, String deadLine)
   {
+    int hourDiff = Cucumbery.config.getInt("adjust-time-difference-value");
     if (deadLine.startsWith("~"))
     {
       try
@@ -3357,7 +3375,7 @@ public class Method extends SoundPlay
           endCal.add(Calendar.YEAR, year);
           endCal.add(Calendar.MONTH, month);
           endCal.add(Calendar.DATE, date);
-          endCal.add(Calendar.HOUR_OF_DAY, hour);
+          endCal.add(Calendar.HOUR_OF_DAY, hour + hourDiff);
           endCal.add(Calendar.MINUTE, minute);
           endCal.add(Calendar.SECOND, second);
           String expireDate = Method.getCurrentTime(endCal, true, false);
@@ -3383,6 +3401,7 @@ public class Method extends SoundPlay
     }
     Calendar curCal = Calendar.getInstance(), endCal = Calendar.getInstance();
     curCal.set(curCal.get(Calendar.YEAR), curCal.get(Calendar.MONTH) + 1, curCal.get(Calendar.DATE), curCal.get(Calendar.HOUR_OF_DAY), curCal.get(Calendar.MINUTE), curCal.get(Calendar.SECOND));
+    curCal.add(Calendar.HOUR_OF_DAY, hourDiff);
     endCal.set(end[0], end[1], end[2], end[3], end[4], end[5]);
     return curCal.after(endCal) || curCal.equals(endCal);
   }
@@ -3406,7 +3425,7 @@ public class Method extends SoundPlay
     }
   }
 
-  public static boolean useItem(Player player, ItemStack item, EquipmentSlot slot)
+  public static boolean useItem(Player player, ItemStack item, EquipmentSlot slot, Action action)
   {
     if (!ItemStackUtil.itemExists(item))
     {
@@ -3470,6 +3489,15 @@ public class Method extends SoundPlay
           success = true;
         }
       }
+      // 팔 휘두름 처리
+      if (slot == EquipmentSlot.HAND)
+      {
+        player.swingMainHand();
+      }
+      else
+      {
+        player.swingOffHand();
+      }
     }
 
     // 폭죽 공중에서 발사
@@ -3480,14 +3508,31 @@ public class Method extends SoundPlay
       {
         radius++;
       }
-      Block block = player.getTargetBlock(null, (int) (radius + 1));
-      if (block.getType().isAir())
+      if (action == Action.RIGHT_CLICK_AIR)
       {
         if (UserData.FIREWORK_LAUNCH_ON_AIR.getBoolean(player.getUniqueId()))
         {
-          FireworkMeta fireworkMeta = (FireworkMeta) itemMeta;
-          Firework fw = (Firework) player.getWorld().spawnEntity(player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(radius)), EntityType.FIREWORK);
-          fw.setFireworkMeta(fireworkMeta);
+          player.getWorld().spawnEntity(player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(radius)), EntityType.FIREWORK, SpawnReason.CUSTOM, entity -> {
+            Firework firework = (Firework) entity;
+            firework.setFireworkMeta(((FireworkMeta) itemMeta));
+            if (player.isSneaking())
+            {
+              firework.setShotAtAngle(true);
+              firework.setVelocity(player.getLocation().getDirection());
+            }
+            firework.setShooter(player);
+          });
+          // 통계 처리
+          player.incrementStatistic(Statistic.USE_ITEM, Material.FIREWORK_ROCKET);
+          // 팔 휘두름 처리
+          if (slot == EquipmentSlot.HAND)
+          {
+            player.swingMainHand();
+          }
+          else
+          {
+            player.swingOffHand();
+          }
           if (player.getGameMode() != GameMode.CREATIVE)
           {
             item.setAmount(item.getAmount() - 1);
@@ -3515,6 +3560,15 @@ public class Method extends SoundPlay
       if (!cmd.isEmpty())
       {
         Bukkit.getServer().dispatchCommand(player, (cmd.startsWith("/") ? cmd.substring(1) : cmd));
+        // 팔 휘두름 처리
+        if (slot == EquipmentSlot.HAND)
+        {
+          player.swingMainHand();
+        }
+        else
+        {
+          player.swingOffHand();
+        }
         return true;
       }
     }
@@ -3537,6 +3591,15 @@ public class Method extends SoundPlay
           playSound(player, Sound.BLOCK_SHULKER_BOX_OPEN, SoundCategory.BLOCKS);
           player.openInventory(inv);
           success = true;
+          // 팔 휘두름 처리
+          if (slot == EquipmentSlot.HAND)
+          {
+            player.swingMainHand();
+          }
+          else
+          {
+            player.swingOffHand();
+          }
         }
       }
       catch (Exception ignored)
@@ -3567,6 +3630,15 @@ public class Method extends SoundPlay
           }
         }
         success = true;
+        // 팔 휘두름 처리
+        if (slot == EquipmentSlot.HAND)
+        {
+          player.swingMainHand();
+        }
+        else
+        {
+          player.swingOffHand();
+        }
       }
     }
 
@@ -3591,6 +3663,15 @@ public class Method extends SoundPlay
           {
             player.getInventory().setItemInOffHand(null);
           }
+          // 팔 휘두름 처리
+          if (slot == EquipmentSlot.HAND)
+          {
+            player.swingMainHand();
+          }
+          else
+          {
+            player.swingOffHand();
+          }
           return true;
         }
         case "CHESTPLATE" ->
@@ -3608,6 +3689,15 @@ public class Method extends SoundPlay
           else
           {
             player.getInventory().setItemInOffHand(null);
+          }
+          // 팔 휘두름 처리
+          if (slot == EquipmentSlot.HAND)
+          {
+            player.swingMainHand();
+          }
+          else
+          {
+            player.swingOffHand();
           }
           return true;
         }
@@ -3627,6 +3717,15 @@ public class Method extends SoundPlay
           {
             player.getInventory().setItemInOffHand(null);
           }
+          // 팔 휘두름 처리
+          if (slot == EquipmentSlot.HAND)
+          {
+            player.swingMainHand();
+          }
+          else
+          {
+            player.swingOffHand();
+          }
           return true;
         }
         case "BOOTS" ->
@@ -3644,6 +3743,15 @@ public class Method extends SoundPlay
           else
           {
             player.getInventory().setItemInOffHand(null);
+          }
+          // 팔 휘두름 처리
+          if (slot == EquipmentSlot.HAND)
+          {
+            player.swingMainHand();
+          }
+          else
+          {
+            player.swingOffHand();
           }
           return true;
         }

@@ -4,9 +4,13 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.gui.GUIManager;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -42,6 +46,14 @@ public class AddItemUtil
       {
         if (entity instanceof Player player)
         {
+          if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player))
+          {
+            String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(itemStack), CucumberyTag.EXPIRE_DATE_KEY);
+            if (expireDate != null)
+            {
+              Method.isTimeUp(itemStack, expireDate);
+            }
+          }
           ItemLore.setItemLore(itemStack, ItemLoreView.of(player));
         }
         UUID uuid = entity.getUniqueId();
@@ -55,7 +67,7 @@ public class AddItemUtil
         }
       }
     }
-    return new Data(sender, uuids, hashMap, failure, itemStack, amount);
+    return new Data(sender, uuids, hashMap, failure, original, amount);
   }
 
   /**

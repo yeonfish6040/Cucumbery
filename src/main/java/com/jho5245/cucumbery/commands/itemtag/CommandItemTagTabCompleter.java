@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.commands.itemtag;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -55,17 +56,13 @@ public class CommandItemTagTabCompleter implements TabCompleter
     {
       case 1:
       {
-        List<String> list = Method.tabCompleterList(args, "<태그>", "restriction", "customlore", "extratag", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "customdurability" + (!Constant.DURABLE_ITEMS.contains(material) ? "(내구도가 있는 아이템 전용)" : ""),
+        List<String> list = Method.tabCompleterList(args, "<태그>", "restriction", "customlore", "extratag", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "customdurability",
                 "customitemtype", "hideflag", "customrarity", "usage", "expiredate", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "tnt" + (material != Material.TNT ? "(TNT 전용)" : ""), "abovecustomlore",
                 "customitem", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "food" + (ItemStackUtil.isEdible(material) ? "" : "(먹을 수 있는 아이템 전용)"), "id", "nbt", "customtag", Constant.TAB_COMPLETER_QUOTE_ESCAPE + "potion" +
                         (isPotionType ? "" : "(음식 또는 포션 유형의 아이템 전용)"), "customdisplayname");
         if (args[0].equals("tnt") && material != Material.TNT)
         {
           return Collections.singletonList("해당 태그는 TNT에만 사용할 수 있습니다");
-        }
-        if (args[0].equals("customdurability") && !Constant.DURABLE_ITEMS.contains(material))
-        {
-          return Collections.singletonList("해당 태그는 내구도가 있는 아이템에만 사용할 수 있습니다");
         }
         if (args[0].equals("food") && !ItemStackUtil.isEdible(material))
         {
@@ -86,10 +83,6 @@ public class CommandItemTagTabCompleter implements TabCompleter
           case "abovecustomlore":
             return Method.tabCompleterList(args, "<인수>", "add", "remove", "set", "insert", "list");
           case "customdurability":
-            if (!Constant.DURABLE_ITEMS.contains(material))
-            {
-              return Collections.singletonList("해당 태그는 내구도가 있는 아이템에만 사용할 수 있습니다");
-            }
             return Method.tabCompleterList(args, "<인수>", "durability", "chance");
           case "hideflag":
           case "extratag":
@@ -236,10 +229,6 @@ public class CommandItemTagTabCompleter implements TabCompleter
             }
             break;
           case "customdurability":
-            if (!Constant.DURABLE_ITEMS.contains(material))
-            {
-              return Collections.singletonList("해당 태그는 내구도가 있는 아이템에만 사용할 수 있습니다");
-            }
             switch (args[1])
             {
               case "chance":
@@ -392,10 +381,6 @@ public class CommandItemTagTabCompleter implements TabCompleter
             }
             break;
           case "customdurability":
-            if (!Constant.DURABLE_ITEMS.contains(material))
-            {
-              return Collections.singletonList("해당 태그는 내구도가 있는 아이템에만 사용할 수 있습니다");
-            }
             if ("durability".equals(args[1]))
             {
               return Method.tabCompleterLongRadius(args, 1, Long.MAX_VALUE, "[최대 내구도]");
@@ -1171,6 +1156,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
         if (args.length == 2)
         {
           Calendar calendar = Calendar.getInstance();
+          calendar.add(Calendar.HOUR_OF_DAY, Cucumbery.config.getInt("adjust-time-difference-value"));
           List<String> list = new ArrayList<>();
           list.add("--remove");
           list.addAll(Arrays.asList("~1분", "~10분", "~1시간", "~1일", "~7일", "~14일", "~21일", "~30일", "~1년"));

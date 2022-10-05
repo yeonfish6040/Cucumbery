@@ -1,9 +1,5 @@
 package com.jho5245.cucumbery.util.no_groups;
 
-import com.comphenix.protocol.PacketType.Play.Server;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -13,13 +9,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @SuppressWarnings("all")
 public class TestCommand implements CommandExecutor, AsyncTabCompleter
@@ -37,23 +31,6 @@ public class TestCommand implements CommandExecutor, AsyncTabCompleter
     {
       if (sender instanceof Player player)
       {
-        Location location = CommandArgumentUtil.location(sender, args[0], false, false);
-        int entityId = Method.random(1, Integer.MAX_VALUE);
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        PacketContainer packet = protocolManager.createPacket(Server.SPAWN_ENTITY);
-        packet.getIntegers().write(0, entityId);
-        packet.getEntityTypeModifier().write(0, EntityType.FALLING_BLOCK);
-        // Set optional velocity (/8000)
-        packet.getIntegers().write(1, 0);
-        packet.getIntegers().write(2, 0);
-        packet.getIntegers().write(3, 0);
-        // Set location
-        packet.getDoubles().write(0, location.getX());
-        packet.getDoubles().write(1, location.getY());
-        packet.getDoubles().write(2, location.getZ());
-        // Set UUID
-        packet.getUUIDs().write(0, UUID.randomUUID());
-        protocolManager.sendServerPacket(player, packet);
 //        try
 //        {
 //          Location location = CommandArgumentUtil.location(sender, args[0], true, true);

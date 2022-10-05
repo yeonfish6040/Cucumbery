@@ -47,6 +47,8 @@ public class CustomEffectType implements Translatable, EnumHideable
   public static final CustomEffectType
           AWKWARD = new CustomEffectType("awkward", "어색함", "어색", builder().removeOnMilk()),
           THICK = new CustomEffectType("thick", "진함", builder().removeOnMilk()),
+
+          BACKWARDS_CHAT = new CustomEffectType("backwards_chat", "팅채 로꾸거", builder().removeOnMilk().description("다니됩력입 로꾸거 이팅채")),
           MUNDANE = new CustomEffectType("mundane", "평범함", "평범", builder().removeOnMilk()),
           UNCRAFTABLE = new CustomEffectType("uncraftable", "제작 불가능함", builder().negative().maxAmplifier(2)),
 
@@ -182,10 +184,22 @@ public class CustomEffectType implements Translatable, EnumHideable
           COOLDOWN_THE_MUSIC = new CustomEffectType("cooldown_the_music", MessageUtil.stripColor(ComponentUtil.serialize(CustomMaterial.THE_MUSIC.getDisplayName())), builder().hidden().defaultDuration(20 * 10).keepOnDeath()),
           GAESANS = new CustomEffectType("gaesans", "개샌즈", builder().description("웅크리면 %s 효과가 적용됩니다", PotionEffectType.INVISIBILITY)),
           PICKLED = new CustomEffectType("pickled", "절여짐", builder().description("당신은 절여졌습니다!")),
-
           NIGHT_VISION_SPECTATOR = new CustomEffectType("night_vision_spectator", "관전 모드 야간 투시", builder().keepOnDeath().defaultDuration(-1)
                   .description("관전 모드에서 다른 개체 관전 시 %s 효과가 적용됩니다", PotionEffectType.NIGHT_VISION)),
 
+          SUPERIOR_LEVITATION = new CustomEffectType("superior_levitation", "강력한 공중 부양", builder().negative().maxAmplifier(127).icon(new ItemStack(Material.FEATHER)).description("노빠꾸로 공중으로 떠오릅니다")),
+
+          SPYGLASS_TELEPORT = new CustomEffectType("spyglass_teleport", "망원경 텔레포트", builder().enumHidden().defaultDuration(60)),
+
+          SPYGLASS_TELEPORT_COOLDOWN = new CustomEffectType("spyglass_teleport_cooldown", "망원경 텔레포트 쿨타임", builder().negative().enumHidden().defaultDuration(1200).keepOnDeath()),
+
+          ENTITY_REMOVER = new CustomEffectType("entity_remover", "개체 삭제", builder().instant().description("개체를 삭제하거나 죽입니다")),
+
+          SHIVA_NO_ONE_CAN_BLOCK_ME = new CustomEffectType("shiva_no_one_can_block_me", "씨바 아무도 날 막을 순 없으셈 ㅋㅋ", builder().description("다 죽어부러!")),
+
+          GD_TO_HI = new CustomEffectType("gd_to_hi", "gd를 ㅎㅇ로 바꿔주는 마법의 효과", builder().keepOnDeath()),
+
+          AUTO_CHAT_PARSER = new CustomEffectType("auto_chat_parser", "채팅을 자동으로 파싱해주는 마법의 효과", builder().keepOnDeath()),
 
   /**/ NOTHING = new CustomEffectType("nothing", "아무것도 아님"),
 
@@ -195,8 +209,12 @@ public class CustomEffectType implements Translatable, EnumHideable
 
   public static void register()
   {
-    register(AWKWARD, THICK, MUNDANE, UNCRAFTABLE,
+    register(AWKWARD, THICK, BACKWARDS_CHAT, MUNDANE, UNCRAFTABLE,
             BANE_OF_ARTHROPODS, SHARPNESS, SMITE,
+
+            ENTITY_REMOVER, SHIVA_NO_ONE_CAN_BLOCK_ME, GD_TO_HI, AUTO_CHAT_PARSER,
+
+            SPYGLASS_TELEPORT, SPYGLASS_TELEPORT_COOLDOWN,
 
             COOLDOWN_THE_MUSIC, PICKLED, NIGHT_VISION_SPECTATOR,
 
@@ -251,15 +269,24 @@ public class CustomEffectType implements Translatable, EnumHideable
             TOWN_SHIELD, EXPERIENCE_BOOST, DISAPPEAR, NO_BUFF_REMOVE, NO_REGENERATION,
             DAMAGE_INDICATOR, FREEZING, NO_CUCUMBERY_ITEM_USAGE_ATTACK, GLIDING, NOTIFY_NO_TRADE_ITEM_DROP, DYNAMIC_LIGHT,
             CUSTOM_DEATH_MESSAGE,
-            REMOVE_NO_DAMAGE_TICKS, MASTER_OF_FISHING, MASTER_OF_FISHING_D, ASSASSINATION, ALARM, GAESANS,
+            REMOVE_NO_DAMAGE_TICKS, MASTER_OF_FISHING, MASTER_OF_FISHING_D, ASSASSINATION, ALARM, GAESANS, SUPERIOR_LEVITATION,
 
             NOTHING,
             TEST);
     CustomEffectTypeCooldown.registerEffect();
     CustomEffectTypeCustomMining.registerEffect();
+    if (Cucumbery.using_GSit)
+    {
+      CustomEffectTypeGSit.registerEffect();
+    }
     CustomEffectTypeMinecraft.registerEffect();
     CustomEffectTypeReinforce.registerEffect();
     CustomEffectTypeRune.registerEffect();
+  }
+
+  public static void unregister()
+  {
+    effects.clear();
   }
 
   private final NamespacedKey namespacedKey;
@@ -452,7 +479,7 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "BLESS_OF_SANS", "SHARPNESS" -> ComponentUtil.translate("근거리 대미지가 증가합니다");
               case "PARROTS_CHEER" -> ComponentUtil.translate("HP가 5 이하일 때 15 블록 이내에 자신이 길들인 앵무새가")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("있으면 받는 피해량이 45% 감소하고 대미지가 10% 증가합니다"));
+                      .append(ComponentUtil.translate("있으면 받는 피해량이 45% 감소하고, 대미지가 10% 증가합니다"));
               case "SMITE" -> ComponentUtil.translate("언데드 개체 공격 시 근거리 대미지가 증가합니다");
               case "BANE_OF_ARTHROPODS" -> ComponentUtil.translate("절지동물류 개체 공격 시 근거리 대미지가 증가하고,")
                       .append(Component.text("\n"))
@@ -529,7 +556,7 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "DODGE" -> ComponentUtil.translate("일정 확률로 공격을 회피합니다");
               case "NEWBIE_SHIELD" -> ComponentUtil.translate("플레이 시간이 1시간 미만인 당신!")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("받는 피해량이 감소하고 대미지가 증가합니다"))
+                      .append(ComponentUtil.translate("받는 피해량이 감소하고, 대미지가 증가합니다"))
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("플레이 시간이 증가할 수록 효과가 감소하고 1시간이 지나면 효과가 사라집니다"));
               case "INVINCIBLE_PLUGIN_RELOAD" -> ComponentUtil.translate("플러그인을 리도드하는 중입니다");
@@ -543,7 +570,7 @@ public class CustomEffectType implements Translatable, EnumHideable
                       Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN));
               case "WA_SANS" -> ComponentUtil.translate("스켈레톤 유형의 개체에게 받는")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("피해량이 감소하고 대미지가 증가합니다"));
+                      .append(ComponentUtil.translate("피해량이 감소하고, 대미지가 증가합니다"));
               case "HEALTH_INCREASE" -> ComponentUtil.translate("최대 HP가 증가합니다");
               case "CONTINUAL_SPECTATING" -> ComponentUtil.translate("플레이어를 지속적으로 관전합니다")
                       .append(Component.text("\n"))
@@ -1097,24 +1124,24 @@ public class CustomEffectType implements Translatable, EnumHideable
     }
     if (keepOnDeath)
     {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("rg255,204;사망해도 효과가 사라지지 않습니다"));
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&e사망해도 효과가 사라지지 않습니다"));
     }
     if (!keepOnQuit)
     {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("rg255,204;접속을 종료하면 효과가 사라집니다"));
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&e접속을 종료하거나 서버를 이동하면 효과가 사라집니다"));
     }
     if (keepOnMilk)
     {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("rg255,204;우유를 마셔도 효과가 사라지지 않습니다"));
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&e우유를 마셔도 효과가 사라지지 않습니다"));
     }
     if (!buffFreezable)
     {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("rg255,204;%s의 영향을 받지 않습니다", Component.translatable(CustomEffectType.BUFF_FREEZE.translationKey())));
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&e%s의 영향을 받지 않습니다", Component.translatable(CustomEffectType.BUFF_FREEZE.translationKey())));
     }
     if (isRealDuration)
     {
       description = description.append(Component.text("\n")).append(
-              ComponentUtil.translate("rg255,204;접속을 종료해도 시간이 흐르는 효과입니다"));
+              ComponentUtil.translate("&e접속을 종료해도 시간이 흐르는 효과입니다"));
     }
     if (isToggle())
     {

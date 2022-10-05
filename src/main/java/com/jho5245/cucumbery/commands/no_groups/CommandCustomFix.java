@@ -68,7 +68,7 @@ public class CommandCustomFix implements CucumberyCommandExecutor
     }
     double cost = Cucumbery.config.getDouble("fix-command-cost");
     boolean useCost = Cucumbery.using_Vault_Economy && cost > 0;
-    String fixMessage = "주로 사용하는 손에 들고 있는 아이템을 수리하였습니다";
+    String fixMessage = "주로 사용하는 손에 들고 있는 아이템을 수리했습니다";
     if (player.getGameMode() != GameMode.CREATIVE && useCost)
     {
       double playerMoney = Cucumbery.eco.getBalance(player);
@@ -97,7 +97,7 @@ public class CommandCustomFix implements CucumberyCommandExecutor
     Method.updateInventory(player);
     if (!(args.length == 1 && args[0].equals("true")))
     {
-      MessageUtil.info(player, Prefix.INFO_CUSTOM_FIX, fixMessage);
+      MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_FIX, fixMessage);
     }
     return true;
   }

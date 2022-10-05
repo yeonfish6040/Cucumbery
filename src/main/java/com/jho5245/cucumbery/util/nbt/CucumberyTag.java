@@ -106,6 +106,8 @@ public class CucumberyTag
   public static final String CUSTOM_ITEM_RAILGUN_REVERSE = "Reverse";
   public static final String CUSTOM_ITEM_RAILGUN_SUICIDE = "Suicide";
 
+  public static final String CUSTOM_ITEM_RAILGUN_PARTICLE_TYPE = "ParticleType";
+
   public static final String CUSTOM_EFFECTS = "CustomEffects";
   public static final String CUSTOM_EFFECTS_ID = "id";
   public static final String CUSTOM_EFFECTS_DURATION = "Duration";

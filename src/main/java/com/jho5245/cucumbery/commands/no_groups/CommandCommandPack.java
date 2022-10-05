@@ -62,7 +62,7 @@ public class CommandCommandPack implements CucumberyCommandExecutor
             System.err.println("[Cucumbery] could not delete " + fileName + ".yml file!");
           }
           Variable.commandPacks.remove(fileName);
-          MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 명령어 팩 파일을 제거하였습니다");
+          MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 명령어 팩 파일을 제거했습니다");
         }
         case "execute" ->
         {
@@ -156,7 +156,7 @@ public class CommandCommandPack implements CucumberyCommandExecutor
               configuration.set(packName, commands);
               commandPackFile.saveConfig();
               Variable.commandPacks.put(fileName, configuration);
-              MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 파일의 rg255,204;" + packName + "&r 명령어 팩의 rg255,204;" + commands.size() + "번째&r 줄에 rg255,204;" + command + "&r 명령어를 추가하였습니다");
+              MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 파일의 rg255,204;" + packName + "&r 명령어 팩의 rg255,204;" + commands.size() + "번째&r 줄에 rg255,204;" + command + "&r 명령어를 추가했습니다");
             }
             case "remove" ->
             {
@@ -215,11 +215,11 @@ public class CommandCommandPack implements CucumberyCommandExecutor
                 configuration.set(packName, commands);
                 commandPackFile.saveConfig();
                 Variable.commandPacks.put(fileName, configuration);
-                MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 파일의 rg255,204;" + packName + "&r 명령어 팩의 rg255,204;" + (line + 1) + "번째&r 명령어를 제거하였습니다");
+                MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 파일의 rg255,204;" + packName + "&r 명령어 팩의 rg255,204;" + (line + 1) + "번째&r 명령어를 제거했습니다");
               }
               else
               {
-                MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 파일의 rg255,204;" + packName + "&r 명령어 팩의 모든 명령어를 제거하였습니다");
+                MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 파일의 rg255,204;" + packName + "&r 명령어 팩의 모든 명령어를 제거했습니다");
                 configuration.set(packName, null);
                 if (configuration.getKeys(false).isEmpty())
                 {
@@ -273,7 +273,7 @@ public class CommandCommandPack implements CucumberyCommandExecutor
               configuration.set(packName, commands);
               commandPackFile.saveConfig();
               Variable.commandPacks.put(fileName, configuration);
-              MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 파일의 rg255,204;" + packName + "&r 명령어 팩의 rg255,204;" + line + "번째&r 줄의 명령어를 rg255,204;" + command + "&r으로 설정하였습니다");
+              MessageUtil.info(sender, Constant.THE_COLOR_HEX + fileName + ".yml&r 파일의 rg255,204;" + packName + "&r 명령어 팩의 rg255,204;" + line + "번째&r 줄의 명령어를 rg255,204;" + command + "&r으로 설정했습니다");
             }
             case "insert" ->
             {

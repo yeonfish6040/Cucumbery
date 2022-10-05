@@ -157,11 +157,11 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         }
         if (off)
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 초기화 하였습니다", type + " 닉네임");
+          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 초기화 했습니다", type + " 닉네임");
         }
         else
         {
-          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 %s(으)로 변경하였습니다", type + " 닉네임", finalNickname);
+          MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 %s(으)로 변경했습니다", type + " 닉네임", finalNickname);
         }
         Variable.nickNames.remove(originDisplay);
         Variable.nickNames.remove(originList);
@@ -302,20 +302,20 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         {
           if (off)
           {
-            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 초기화 하였습니다", sender, type + " 닉네임");
+            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 초기화 했습니다", sender, type + " 닉네임");
           }
           else
           {
-            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 %s(으)로 변경하였습니다", sender, type + " 닉네임", finalNickname);
+            MessageUtil.sendMessage(target, Prefix.INFO_NICK, "%s이(가) 당신의 %s을 %s(으)로 변경했습니다", sender, type + " 닉네임", finalNickname);
           }
         }
         if (off)
         {
-          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 초기화 하였습니다", offlinePlayer, type + " 닉네임");
+          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 초기화 했습니다", offlinePlayer, type + " 닉네임");
         }
         else
         {
-          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 %s(으)로 변경하였습니다", offlinePlayer, type + " 닉네임", finalNickname);
+          MessageUtil.sendMessage(sender, Prefix.INFO_NICK, "%s의 %s을 %s(으)로 변경했습니다", offlinePlayer, type + " 닉네임", finalNickname);
         }
       }
       File nickNamesFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/Nicknames.yml");
