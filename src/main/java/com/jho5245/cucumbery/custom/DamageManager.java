@@ -13,8 +13,8 @@ import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -356,7 +356,7 @@ public class DamageManager
               NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(itemStack), CucumberyTag.CUSTOM_EFFECTS);
               if (potionsTag != null && !potionsTag.isEmpty())
               {
-                for (NBTCompound potionTag : potionsTag)
+                for (ReadWriteNBT potionTag : potionsTag)
                 {
                   try
                   {

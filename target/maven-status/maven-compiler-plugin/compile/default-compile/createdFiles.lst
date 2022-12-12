@@ -34,6 +34,7 @@ com\jho5245\cucumbery\util\josautil\HanjaMap$CJK_Ideographs_Ext_A.class
 com\jho5245\cucumbery\listeners\entity\item\ItemMerge.class
 com\jho5245\cucumbery\commands\reinforce\CommandReinforce$ItemType.class
 com\jho5245\cucumbery\util\plugin_support\QuickShopSupport.class
+com\jho5245\cucumbery\commands\teleport\CommandLookAt.class
 com\jho5245\cucumbery\util\storage\component\util\ComponentUtil$1.class
 com\jho5245\cucumbery\util\storage\data\Prefix.class
 com\jho5245\cucumbery\commands\no_groups\CommandCall.class
@@ -42,7 +43,6 @@ com\jho5245\cucumbery\listeners\addon\quickshop\ShopPreCreate.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerPreLogin.class
 com\jho5245\cucumbery\commands\no_groups\CommandUpdateInventory.class
 com\jho5245\cucumbery\listeners\entity\no_groups\PotionSplash.class
-com\jho5245\cucumbery\listeners\player\no_groups\PlayerPickupArrow$1.class
 com\jho5245\cucumbery\commands\brigadier\CommandExplode.class
 com\jho5245\cucumbery\listeners\entity\damage\DamageIndicatorProtocolLib.class
 com\jho5245\cucumbery\custom\customrecipe\recipeinventory\RecipeInventoryRecipe.class
@@ -59,6 +59,7 @@ com\jho5245\cucumbery\util\storage\component\ItemStackComponent.class
 com\jho5245\cucumbery\commands\debug\CommandWhoIs.class
 com\jho5245\cucumbery\commands\no_groups\CommandHeal.class
 com\jho5245\cucumbery\commands\debug\CommandWhatIs.class
+com\jho5245\cucumbery\util\itemlore\ItemLore4$1.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerAdvancementDone$1.class
 com\jho5245\cucumbery\listeners\inventory\InventoryClose.class
 com\jho5245\cucumbery\listeners\player\bucket\PlayerBucketEntity.class
@@ -153,6 +154,7 @@ com\jho5245\cucumbery\commands\no_groups\CommandNickName.class
 com\jho5245\cucumbery\util\no_groups\MessageUtil.class
 com\jho5245\cucumbery\deathmessages\ConditionType.class
 com\jho5245\cucumbery\util\storage\no_groups\BlockDataInfo.class
+com\jho5245\cucumbery\commands\teleport\CommandSetRotation.class
 com\jho5245\cucumbery\custom\CombatInfo.class
 com\jho5245\cucumbery\util\josautil\JosaFormatter$HangulJongSungDetector.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerEditBook.class
@@ -197,6 +199,7 @@ com\jho5245\cucumbery\custom\customeffect\children\group\RealDurationCustomEffec
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerCommandSend.class
 com\jho5245\cucumbery\custom\customeffect\type\CustomEffectTypeMinecraft.class
 com\jho5245\cucumbery\util\no_groups\CommandTabUtil$1.class
+com\jho5245\cucumbery\listeners\entity\no_groups\EntityShootBow$1.class
 com\jho5245\cucumbery\util\no_groups\Method.class
 com\jho5245\cucumbery\listeners\entity\no_groups\EntityMove.class
 com\jho5245\cucumbery\util\no_groups\CucumberyCommandExecutor.class
@@ -241,7 +244,10 @@ com\jho5245\cucumbery\listeners\player\item\PlayerItemMend.class
 com\jho5245\cucumbery\util\storage\data\Constant$ItemUsageType.class
 com\jho5245\cucumbery\util\josautil\HanjaMap$CJK_Ideographs1.class
 com\jho5245\cucumbery\listeners\entity\customeffect\EntityCustomEffectApply.class
+com\jho5245\cucumbery\listeners\entity\no_groups\EntityDismount.class
+com\jho5245\cucumbery\listeners\addon\ultimatetimber\TreeFell.class
 com\jho5245\cucumbery\listeners\inventory\FurnaceBurn$1.class
+com\jho5245\cucumbery\custom\customeffect\children\group\EntityCustomEffect.class
 com\jho5245\cucumbery\listeners\player\interact\PlayerInteractEntity.class
 com\jho5245\cucumbery\commands\no_groups\CommandEditCommandBlock.class
 com\jho5245\cucumbery\commands\reinforce\CommandReinforce.class
@@ -337,6 +343,7 @@ com\jho5245\cucumbery\commands\no_groups\CommandCommandPack.class
 com\jho5245\cucumbery\util\no_groups\MessageUtil$1.class
 com\jho5245\cucumbery\util\josautil\JosaFormatter$HanjaJongSungDetector.class
 com\jho5245\cucumbery\custom\customeffect\custom_mining\MiningManager$1.class
+com\jho5245\cucumbery\listeners\entity\no_groups\EntitySpawn$1.class
 com\jho5245\cucumbery\commands\brigadier\base\ArgumentUtil.class
 com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantSmeltingTouch$1.class
 com\jho5245\cucumbery\util\storage\data\TranslatableKeyParser.class
@@ -407,6 +414,7 @@ com\jho5245\cucumbery\events\entity\EntityCustomEffectAbstractApplyEvent.class
 com\jho5245\cucumbery\util\storage\data\Constant$RestrictionType.class
 com\jho5245\cucumbery\commands\no_groups\CommandWorkbench.class
 com\jho5245\cucumbery\listeners\player\item\PlayerStopUsingItem.class
+com\jho5245\cucumbery\custom\customeffect\children\group\EntityCustomEffectImple.class
 com\jho5245\cucumbery\util\storage\component\util\sendercomponent\MerchantComponentUtil.class
 com\jho5245\cucumbery\commands\brigadier\CommandRide.class
 com\jho5245\cucumbery\commands\no_groups\CommandAllPlayer.class
@@ -484,6 +492,7 @@ com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantSmeltingTouc
 com\jho5245\cucumbery\listeners\inventory\PrepareAnvil$1.class
 com\jho5245\cucumbery\util\addons\ProtocolLibManager$4.class
 com\jho5245\cucumbery\util\no_groups\ColorUtil$ColorPattern.class
+com\jho5245\cucumbery\listeners\entity\no_groups\ProjectileHit.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerChat.class
 com\jho5245\cucumbery\util\itemlore\ItemLorePotionDescription$1.class
 com\jho5245\cucumbery\util\storage\no_groups\CustomConfig.class
@@ -501,6 +510,7 @@ com\jho5245\cucumbery\listeners\entity\no_groups\EntitySpawn.class
 com\jho5245\cucumbery\util\no_groups\Scheduler$1.class
 com\jho5245\cucumbery\listeners\block\BlockDispense.class
 com\jho5245\cucumbery\util\storage\no_groups\RecipeChecker$1.class
+com\jho5245\cucumbery\listeners\vehicle\VehicleExit.class
 com\jho5245\cucumbery\commands\customrecipe\CommandCustomRecipe$1.class
 com\jho5245\cucumbery\util\storage\no_groups\PluginLoader.class
 com\jho5245\cucumbery\deathmessages\LastTrampledBlockManager.class

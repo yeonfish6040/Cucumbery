@@ -7,8 +7,8 @@ import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.ThrownPotion;
@@ -58,7 +58,7 @@ public class PotionSplash implements Listener
         }
       }
       entities.removeIf(e -> e.getLocation().distance(thrownPotion.getLocation()) > 5d);
-      for (NBTCompound potionTag : potionsTag)
+      for (ReadWriteNBT potionTag : potionsTag)
       {
         try
         {

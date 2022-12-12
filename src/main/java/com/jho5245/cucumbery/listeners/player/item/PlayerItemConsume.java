@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -24,6 +25,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -196,7 +198,7 @@ public class PlayerItemConsume implements Listener
     NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(itemStack), CucumberyTag.CUSTOM_EFFECTS);
     if (potionsTag != null)
     {
-      for (NBTCompound potionTag : potionsTag)
+      for (ReadWriteNBT potionTag : potionsTag)
       {
         try
         {
@@ -228,12 +230,12 @@ public class PlayerItemConsume implements Listener
         if (itemStack.getType() == Material.GOLDEN_CARROT)
         {
           CustomEffectManager.removeEffect(player, CustomEffectType.AWKWARD);
-          player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, duration == -1 ? Integer.MAX_VALUE : duration, amplifier));
+          CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectTypeMinecraft.NIGHT_VISION, duration, amplifier));
         }
         if (itemStack.getType() == Material.PUFFERFISH)
         {
           CustomEffectManager.removeEffect(player, CustomEffectType.AWKWARD);
-          player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, duration == -1 ? Integer.MAX_VALUE : duration, amplifier));
+          CustomEffectManager.addEffect(player, new CustomEffect(CustomEffectTypeMinecraft.WATER_BREATHING, duration, amplifier));
         }
       }
     }

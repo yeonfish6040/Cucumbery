@@ -148,7 +148,7 @@ public class PlayerItemHeld implements Listener
       CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
       if (customEffect instanceof LocationItemStackCustomEffect effect)
       {
-        player.sendBlockDamage(effect.getLocation(), 0f, MiningScheduler.blockBreakKey.get(uuid));
+        player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(effect.getLocation(), 0f, MiningScheduler.blockBreakKey.get(uuid)));
       }
       CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
       Variable.customMiningProgress.put(uuid, 0f);

@@ -7,8 +7,8 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.NamespacedKey;
@@ -260,13 +260,27 @@ public class ItemLorePotionDescription
     {
       key += "%s (%s)";
     }
-    else if (level > 1 && duration == 0)
+    else if (level > 1)
     {
-      key += "%s %s단계";
+      if (duration == -1)
+      {
+        key += "%s %s단계 (무제한)";
+      }
+      else
+      {
+        key += "%s %s단계";
+      }
     }
     else
     {
-      key += "%s";
+      if (duration == -1)
+      {
+        key += "%s (무제한)";
+      }
+      else
+      {
+        key += "%s";
+      }
     }
     return ComponentUtil.translate(key, args);
   }
@@ -1268,7 +1282,7 @@ public class ItemLorePotionDescription
     NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(item), CucumberyTag.CUSTOM_EFFECTS);
     if (potionsTag != null)
     {
-      for (NBTCompound potionTag : potionsTag)
+      for (ReadWriteNBT potionTag : potionsTag)
       {
         try
         {

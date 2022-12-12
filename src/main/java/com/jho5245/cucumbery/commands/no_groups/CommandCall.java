@@ -66,8 +66,8 @@ public class CommandCall implements CucumberyCommandExecutor
         sound = Sound.ENTITY_CHICKEN_HURT;
       }
       SoundPlay.playSound(target, sound, (float) cfg.getDouble("sound-const.call-sound.volume"), (float) cfg.getDouble("sound-const.call-sound.pitch"));
-      MessageUtil.info(player, target, "을(를) 호출합니다");
-      MessageUtil.info(target, player, "이(가) 당신을 호출합니다");
+      MessageUtil.info(player, "%s을(를) 호출합니다", target);
+      MessageUtil.info(target, "%s이(가) 당신을 호출합니다", player);
     }
     else
     {

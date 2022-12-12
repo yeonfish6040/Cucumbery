@@ -38,6 +38,14 @@ public class FireworkExplode implements Listener
           location.getWorld().createExplosion(location, 4, false, false, firework);
           firework.remove();
         }
+        case FIREWORK_ROCKET_EXPLOSIVE_DESTRUCTION -> {
+          location.getWorld().createExplosion(location, 4, false, true, firework);
+          firework.remove();
+        }
+        case FIREWORK_ROCKET_EXPLOSIVE_FLAME -> {
+          location.getWorld().createExplosion(location, 4, true, false, firework);
+          firework.remove();
+        }
         case FIREWORK_ROCKET_CHAIN -> {
           if (firework.getScoreboardTags().contains("custom_material_firework_rocket_chain_clone"))
           {

@@ -23,6 +23,7 @@ import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -54,8 +55,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -64,7 +67,8 @@ public class InventoryClick implements Listener
 {
   public static List<Player> check = new ArrayList<>();
 
-  public static List<ItemStack> removeItem(Player player, String category, FileConfiguration config, String recipe, List<String> ingredientsString, List<ItemStack> ingredients, List<Integer> ingredientAmounts, boolean checkOnly)
+  @Nullable
+  public static List<ItemStack> removeItem(final Player player, String category, FileConfiguration config, String recipe, List<String> ingredientsString, List<ItemStack> ingredients, List<Integer> ingredientAmounts, boolean checkOnly)
   {
     List<ItemStack> itemStacks = new ArrayList<>();
     long requireTimeToCraft = config.getLong("recipes." + recipe + ".extra.crafting-time");
@@ -74,7 +78,7 @@ public class InventoryClick implements Listener
       long playerCraftingTime = playerCraftingTimeConfig == null ? 0 : playerCraftingTimeConfig.getLong("crafting-time." + category + "." + recipe);
       if (playerCraftingTime > 0)
       {
-        return itemStacks;
+        return null;
       }
     }
     for (int i = 0; i < ingredients.size(); i++)
@@ -83,7 +87,7 @@ public class InventoryClick implements Listener
       NBTCompound itemTag = NBTAPI.getMainCompound(ingredient);
       NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
       // 재사용 가능 재료는 사라지지 않게 함
-      if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.CUSTOM_RECIPE_REUSABLE.toString()) && !config.getBoolean("recipes." + recipe + ".ingredients." + (i + 1) + ".reusable"))
+      boolean reusable = NBTAPI.arrayContainsValue(extraTags, ExtraTag.CUSTOM_RECIPE_REUSABLE.toString()) || config.getBoolean("recipes." + recipe + ".ingredients." + (i + 1) + ".reusable");
       {
         int amount = ingredientAmounts.get(i);
         String ingredientString = ingredientsString.get(i);
@@ -101,11 +105,15 @@ public class InventoryClick implements Listener
               itemStack.setAmount(amount);
             }
             amount -= itemStack.getAmount();
-            itemStacks.add(itemStack);
             if (!checkOnly)
             {
-              player.getInventory().removeItem(itemStack);
+              if (!reusable && !player.getInventory().removeItem(itemStack).isEmpty())
+              {
+                return null;
+              }
             }
+            itemStacks.add(itemStack);
+
           }
           else if (ItemStackUtil.itemEquals(ItemLore.setItemLore(ingredient, ItemLoreView.of(player)), itemStack))
           {
@@ -115,24 +123,30 @@ public class InventoryClick implements Listener
             int stack = amount / maxStackSize;
             for (int j = 0; j < stack; j++)
             {
-              itemStacks.add(ingredient);
-              itemStacks.add(itemStack);
-
               if (!checkOnly)
               {
-                player.getInventory().removeItem(ingredient);
+              if (!reusable && !player.getInventory().removeItem(ingredient).isEmpty())
+                {
+                  itemStacks.clear();
+                  return null;
+                }
               }
+              itemStacks.add(ingredient);
               amount -= maxStackSize;
             }
             if (amount > 0)
             {
               ingredient.setAmount(amount);
-              itemStacks.add(ingredient);
-              itemStacks.add(itemStack);
               if (!checkOnly)
               {
-                player.getInventory().removeItem(ingredient);
+                HashMap<Integer, ItemStack> result = reusable ? new HashMap<>() : player.getInventory().removeItem(ingredient.clone());
+                if (!result.isEmpty())
+                {
+                  itemStacks.clear();
+                  return null;
+                }
               }
+              itemStacks.add(ingredient);
               amount = 0;
             }
           }
@@ -239,7 +253,6 @@ public class InventoryClick implements Listener
       }
     }
     ItemStack trueResult = null;
-    PlayerInventory playerInventory = player.getInventory();
     List<String> randomResult = recipeList.getStringList("recipes." + recipe + ".extra.random-result");
     if (!randomResult.isEmpty())
     {
@@ -286,7 +299,7 @@ public class InventoryClick implements Listener
       {
         if (ItemStackUtil.itemExists(trueResult))
         {
-          playerInventory.addItem(trueResult);
+          AddItemUtil.addItem(player, trueResult);
         }
         String message = Cucumbery.config.getString("customrecipe.chance-items.success.message");
         if (message != null && !message.equals("none"))
@@ -353,7 +366,7 @@ public class InventoryClick implements Listener
     }
     else if (ItemStackUtil.itemExists(trueResult))
     {
-      playerInventory.addItem(ItemLore.setItemLore(trueResult, ItemLoreView.of(player)));
+      AddItemUtil.addItem(player, trueResult);
     }
     List<String> craftCommands = recipeList.getStringList("recipes." + recipe + ".extra.commands.craft");
     for (String craftCommand : craftCommands)
@@ -459,13 +472,13 @@ public class InventoryClick implements Listener
     Location inventoryLocation = inventory.getLocation();
     ItemStack placedBlockDataItemStack = Method2.getPlacedBlockDataAsItemStack(inventoryLocation);
     Inventory clickedIvnentory = event.getClickedInventory();
+    String key = GUIManager.isGUITitle(title) ? GUIManager.getGUIKey(title) : "";
     InventoryType clickedInventoryType = null;
     if (clickedIvnentory != null)
     {
       clickedInventoryType = clickedIvnentory.getType();
     }
     int hotbarButton = event.getHotbarButton();
-
     if (ItemStackUtil.hasDisplayName(current))
     {
       assert current != null;
@@ -887,7 +900,8 @@ public class InventoryClick implements Listener
         }
       }
     }
-    if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
+    // stash 메뉴에서는 사용 제한 태그로 인해 event가 cancel 되는것 우회
+    if (!key.startsWith("stash-") && !UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
     {
       if (slotNumber == -999)
       {
@@ -1727,6 +1741,10 @@ public class InventoryClick implements Listener
     {
       return;
     }
+    if (event.getInventory().getLocation() != null)
+    {
+      return;
+    }
     Player player = (Player) event.getWhoClicked();
     UUID uuid = player.getUniqueId();
     if (Variable.scrollReinforcing.contains(uuid))
@@ -1734,6 +1752,7 @@ public class InventoryClick implements Listener
       event.setCancelled(true);
       return;
     }
+    ClickType clickType = event.getClick();
     Component title = event.getView().title();
     if (event.getView().getTitle().startsWith(Constant.CANCEL_STRING) || GUIManager.isGUITitle(title))
     {
@@ -1772,6 +1791,11 @@ public class InventoryClick implements Listener
     if (ohYes && Cucumbery.config.getBoolean("gui-easter-egg-sound"))
     {
       Method.playSound(player, Sound.ENTITY_VILLAGER_AMBIENT);
+    }
+    if ((GUIManager.isGUITitle(title) || invName.contains(Constant.CANCEL_STRING)) && clickType == ClickType.DOUBLE_CLICK)
+    {
+      event.setCancelled(true);
+      return;
     }
     Method.playSound(player, Sound.UI_BUTTON_CLICK);
     InventoryView lastInventory = GUIManager.getLastInventory(uuid);
@@ -1824,6 +1848,14 @@ public class InventoryClick implements Listener
                   {
                     player.closeInventory();
                   }
+                  if (effectType == CustomEffectType.CONTINUAL_RIDING && player.getVehicle() != null)
+                  {
+                    player.leaveVehicle();
+                  }
+                  if (effectType == CustomEffectType.CONTINUAL_RIDING_EXEMPT)
+                  {
+                    player.closeInventory();
+                  }
                 }
                 else
                 {
@@ -1832,6 +1864,12 @@ public class InventoryClick implements Listener
                     CustomEffectManager.addEffect(player, CustomEffectType.CONTINUAL_SPECTATING_EXEMPT);
                     player.closeInventory();
                     player.setSpectatorTarget(null);
+                  }
+                  if (effectType == CustomEffectType.CONTINUAL_RIDING && player.getVehicle() != null)
+                  {
+                    CustomEffectManager.addEffect(player, CustomEffectType.CONTINUAL_RIDING_EXEMPT);
+                    player.closeInventory();
+                    player.leaveVehicle();
                   }
                   if (effectType == CustomEffectType.POSITION_MEMORIZE)
                   {
@@ -2261,6 +2299,11 @@ public class InventoryClick implements Listener
       boolean isMenuItem = (slot >= 10 && slot <= 16) || (slot >= 19 && slot <= 25) || (slot >= 28 && slot <= 34);
       if (invName.contains(Constant.CUSTOM_RECIPE_RECIPE_LIST_MENU))
       {
+        if (CustomEffectManager.hasEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON))
+        {
+          MessageUtil.sendWarn(player, "좀 천천히 누르삼!");
+          return;
+        }
         if (slot == 36 && lastInventory != null)
         {
           player.openInventory(lastInventory);
@@ -2323,7 +2366,14 @@ public class InventoryClick implements Listener
         }
         if (isMenuItem)
         {
-          List<String> itemLore = item.getItemMeta().getLore();
+          if (CustomEffectManager.hasEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON))
+          {
+            MessageUtil.sendWarn(player, "좀 천천히 누르삼!");
+            return;
+          }
+          CustomEffectManager.addEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON, 2);
+          ItemMeta itemMeta = item.getItemMeta();
+          List<String> itemLore = itemMeta.getLore();
           if (itemLore == null || itemLore.isEmpty())
           {
             return;
@@ -2344,7 +2394,7 @@ public class InventoryClick implements Listener
                   if (skipCost > 0)
                   {
                     long requireTimeToCraft = config.getLong("recipes." + recipe + ".extra.crafting-time");
-                    CustomConfig playerCraftingTimeConfigFile = CustomConfig.getCustomConfig("data/CustomRecipe/CraftingTime/" + player.getUniqueId().toString() + ".yml");
+                    CustomConfig playerCraftingTimeConfigFile = CustomConfig.getCustomConfig("data/CustomRecipe/CraftingTime/" + player.getUniqueId() + ".yml");
                     YamlConfiguration playerCraftingTimeConfig = Variable.craftingTime.get(player.getUniqueId());
                     long playerCraftingTime = playerCraftingTimeConfig.getLong("crafting-time." + category + "." + recipe);
                     long currentTime = System.currentTimeMillis();
@@ -2358,7 +2408,6 @@ public class InventoryClick implements Listener
                     return;
                   }
                 }
-
                 ConfigurationSection configurationSection = config.getConfigurationSection("recipes");
                 if (configurationSection == null || !configurationSection.contains(recipe))
                 {
@@ -2401,9 +2450,11 @@ public class InventoryClick implements Listener
                 if (merge != null)
                 {
                   List<ItemStack> itemStacks = InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, true);
-                  ItemStack ingredient = itemStacks.isEmpty() ? ingredients.get(0).clone() : itemStacks.get(0).clone();
+                  ItemStack ingredient = itemStacks == null || itemStacks.isEmpty() ? ingredients.get(0).clone() : itemStacks.get(0).clone();
                   NBTItem ingredientNBTItem = new NBTItem(ingredient, true);
                   ingredientNBTItem.mergeCompound(merge);
+                  ItemLore.setItemLore(ingredient, ItemLoreView.of(player));
+                  ingredientNBTItem = new NBTItem(ingredient, true);
                   Long bonusDurability = resultNBTItem.getLong("BonusDurability");
                   if (bonusDurability != null)
                   {
@@ -2414,10 +2465,7 @@ public class InventoryClick implements Listener
                       if (duraTag != null)
                       {
                         long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + bonusDurability;
-                        if (cur <= duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY))
-                        {
-                          duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, cur);
-                        }
+                        duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, Math.min(cur, duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY)));
                       }
                     }
                   }
@@ -2436,8 +2484,11 @@ public class InventoryClick implements Listener
                   }
                   result.setItemMeta(ingredient.getItemMeta());
                 }
-                InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, false);
-                InventoryClick.chanceGiveItem(player, category, config, recipe, result);
+                List<ItemStack> itemStacks = InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, false);
+                if (itemStacks != null && itemStacks.size() == ingredients.size())
+                {
+                  InventoryClick.chanceGiveItem(player, category, config, recipe, result);
+                }
                 RecipeInventoryCategory.openRecipeInventory(player, mainPage, category, page, false);
               }
             }
@@ -2450,6 +2501,11 @@ public class InventoryClick implements Listener
       }
       else if (invName.contains(Constant.CUSTOM_RECIPE_CRAFTING_MENU))
       {
+        if (CustomEffectManager.hasEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON))
+        {
+          MessageUtil.sendWarn(player, "좀 천천히 누르삼!");
+          return;
+        }
         if (slot == 45)
         {
           GUIManager.openGUI(player, GUIType.MAIN_MENU);
@@ -2477,6 +2533,12 @@ public class InventoryClick implements Listener
             MessageUtil.sendWarn(player, "관리자에 의하여 레시피가 변형/삭제되었습니다");
             return;
           }
+          if (CustomEffectManager.hasEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON))
+          {
+            MessageUtil.sendWarn(player, "좀 천천히 누르삼!");
+            return;
+          }
+          CustomEffectManager.addEffect(player, CustomEffectTypeCooldown.COOLDOWN_GUI_BUTTON, 2);
           YamlConfiguration config = Variable.customRecipes.get(category);
           if (item.getType() == Material.ENDER_PEARL)
           {
@@ -2540,9 +2602,11 @@ public class InventoryClick implements Listener
           if (merge != null)
           {
             List<ItemStack> itemStacks = InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, true);
-            ItemStack ingredient = itemStacks.isEmpty() ? ingredients.get(0).clone() : itemStacks.get(0).clone();
+            ItemStack ingredient = itemStacks == null || itemStacks.isEmpty() ? ingredients.get(0).clone() : itemStacks.get(0).clone();
             NBTItem ingredientNBTItem = new NBTItem(ingredient, true);
             ingredientNBTItem.mergeCompound(merge);
+            ItemLore.setItemLore(ingredient, ItemLoreView.of(player));
+            ingredientNBTItem = new NBTItem(ingredient, true);
             Long bonusDurability = resultNBTItem.getLong("BonusDurability");
             if (bonusDurability != null)
             {
@@ -2553,10 +2617,7 @@ public class InventoryClick implements Listener
                 if (duraTag != null && duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
                 {
                   long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + bonusDurability;
-                  if (cur <= duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY))
-                  {
-                    duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, cur);
-                  }
+                  duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, Math.min(cur, duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY)));
                 }
               }
             }
@@ -2575,8 +2636,11 @@ public class InventoryClick implements Listener
             }
             result.setItemMeta(ingredient.getItemMeta());
           }
-          InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, false);
-          InventoryClick.chanceGiveItem(player, category, config, recipe, result);
+          List<ItemStack> itemStacks = InventoryClick.removeItem(player, category, config, recipe, ingredientsString, ingredients, ingredientAmounts, false);
+          if (itemStacks != null && itemStacks.size() == ingredients.size())
+          {
+            InventoryClick.chanceGiveItem(player, category, config, recipe, result);
+          }
           RecipeInventoryRecipe.openRecipeInventory(player, mainPage, category, categoryPage, recipe, false);
         }
       }

@@ -43,6 +43,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.parser.JSONParser;
@@ -527,6 +528,14 @@ public class ComponentUtil
         }
         component = component.append(concat);
       }
+      else if (object instanceof Team team)
+      {
+        Component displayName = team.displayName(), prefix = team.prefix(), suffix = team.suffix();
+        TextColor textColor = team.hasColor() ? team.color() : null;
+        int size = team.getSize();
+        String name = team.getName();
+        component = component.append(Component.empty().append(prefix).append(displayName).append(suffix).hoverEvent(Component.text(name).append(Component.text("\n").append(ComponentUtil.translate("구성원 %s명", size)))));
+      }
       else if (object instanceof Translatable translatable)
       {
         component = component.append(Component.translatable(translatable.translationKey()));
@@ -685,6 +694,25 @@ public class ComponentUtil
           {
 
           }
+        }
+        else if (string.startsWith("team:"))
+        {
+          Component concat = Component.empty();
+          string = string.substring("team:".length());
+          Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(string);
+          if (team == null)
+          {
+            team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(string);
+          }
+          if (team == null)
+          {
+            concat = ComponentUtil.translate("&cteam.notFound", string);
+          }
+          else
+          {
+            concat = create(player, team);
+          }
+          component = component.append(concat);
         }
         else
         {

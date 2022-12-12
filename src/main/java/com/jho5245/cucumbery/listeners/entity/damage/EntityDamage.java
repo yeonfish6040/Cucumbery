@@ -23,10 +23,10 @@ import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -65,14 +65,19 @@ public class EntityDamage implements Listener
       return;
     }
     Entity entity = event.getEntity();
-    if (entity instanceof Player player)
+    // 관전 모드 상태인 플레이어는 피해를 입지 않음
+    if (entity instanceof Player player && UserData.SPECTATOR_MODE.getBoolean(player))
     {
-      if (UserData.SPECTATOR_MODE.getBoolean(player))
-      {
-        event.setCancelled(true);
-        return;
-      }
+      event.setCancelled(true);
+      return;
     }
+    // 탈수 TNT로 인한 피해는 무시함
+    if (event instanceof EntityDamageByEntityEvent damageByEntityEvent && damageByEntityEvent.getDamager() instanceof TNTPrimed tntPrimed && tntPrimed.getScoreboardTags().contains("custom_material_tnt_drain"))
+    {
+      event.setCancelled(true);
+      return;
+    }
+    // config에서 설정된 갑옷 거치대 폭발 피해 무시
     this.cancelEntityDamage(event);
     if (!event.isCancelled())
     {
@@ -167,13 +172,15 @@ public class EntityDamage implements Listener
     }
     switch (damageCause)
     {
-      case HOT_FLOOR -> {
+      case HOT_FLOOR ->
+      {
         if (CustomEffectManager.hasEffect(victim, CustomEffectType.FROST_WALKER))
         {
           event.setCancelled(true);
         }
       }
-      case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK, CUSTOM -> {
+      case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK, CUSTOM ->
+      {
         if (event instanceof EntityDamageByEntityEvent damageByEntityEvent)
         {
           Entity damagerEntity = damageByEntityEvent.getDamager();
@@ -211,7 +218,8 @@ public class EntityDamage implements Listener
           }
         }
       }
-      case PROJECTILE -> {
+      case PROJECTILE ->
+      {
         if (event instanceof EntityDamageByEntityEvent damageByEntityEvent)
         {
           Entity damagerEntity = damageByEntityEvent.getDamager();
@@ -239,7 +247,7 @@ public class EntityDamage implements Listener
               NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(itemStack), CucumberyTag.CUSTOM_EFFECTS);
               if (potionsTag != null && !potionsTag.isEmpty())
               {
-                for (NBTCompound potionTag : potionsTag)
+                for (ReadWriteNBT potionTag : potionsTag)
                 {
                   try
                   {
@@ -436,7 +444,8 @@ public class EntityDamage implements Listener
     switch (event.getCause())
     {
       case CONTACT -> damageColor = NamedTextColor.GREEN;
-      case ENTITY_ATTACK -> {
+      case ENTITY_ATTACK ->
+      {
         if (isCrit)
         {
           damageColor = TextColor.color(255, 150, 150);
@@ -446,7 +455,8 @@ public class EntityDamage implements Listener
           damageColor = TextColor.color(200, 200, 200);
         }
       }
-      case ENTITY_SWEEP_ATTACK -> {
+      case ENTITY_SWEEP_ATTACK ->
+      {
         if (isCrit)
         {
           damageColor = TextColor.color(150, 200, 150);
@@ -456,7 +466,8 @@ public class EntityDamage implements Listener
           damageColor = TextColor.color(200, 255, 200);
         }
       }
-      case PROJECTILE -> {
+      case PROJECTILE ->
+      {
         if (isCrit)
         {
           damageColor = TextColor.color(150, 150, 255);
@@ -494,7 +505,12 @@ public class EntityDamage implements Listener
     double health = damageable.getHealth();
     if (health - damage >= health - 0.01 || damage <= 0.0001 || health - damage >= health)
     {
-      display = ComponentUtil.translate("rg255,204;&lMISS!");
+      String type = "&e&lMISS!";
+      if (entity instanceof Player player && player.isBlocking())
+      {
+        type = "&b&lGUARD!";
+      }
+      display = ComponentUtil.translate(type);
     }
     else
     {

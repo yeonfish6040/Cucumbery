@@ -1,10 +1,5 @@
 package com.jho5245.cucumbery.custom.customeffect.custom_mining;
 
-import com.comphenix.protocol.PacketType.Play;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.reflect.StructureModifier;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffectImple;
@@ -12,13 +7,11 @@ import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEf
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
-import com.jho5245.cucumbery.util.addons.ProtocolLibManager;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method2;
-import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -32,11 +25,15 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.type.Fence;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.data.type.Stairs;
+import org.bukkit.block.data.type.Wall;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -55,7 +52,6 @@ import org.bukkit.util.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class MiningScheduler
@@ -65,6 +61,74 @@ public class MiningScheduler
   public static void customMining()
   {
     customMining(null, false);
+  }
+
+  public static void resetCooldowns(@NotNull World world)
+  {
+    HashMap<Location, Long> map = Variable.customMiningCooldown;
+    map.keySet().removeIf(location -> {
+      if (location.getWorld().getName().equals(world.getName()))
+      {
+        Variable.customMiningExtraBlocks.remove(location);
+        if (Variable.customMiningExtraBlocksTask.containsKey(location))
+        {
+          Variable.customMiningExtraBlocksTask.get(location).cancel();
+        }
+        if (!Variable.fakeBlocks.containsKey(location))
+        {
+          location.getBlock().getState().update();
+        }
+        else
+        {
+          Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+          for (Player player : players)
+          {
+            if (player.getWorld().getName().equals(location.getWorld().getName()) && location.distance(player.getLocation()) <= Cucumbery.config.getDouble("custom-mining.maximum-block-packet-distance"))
+            {
+              player.sendBlockChange(location, Variable.fakeBlocks.get(location));
+            }
+          }
+        }
+        return true;
+      }
+      return false;
+    });
+  }
+  public static void resetCooldowns(@NotNull Location from, Location to)
+  {
+    HashMap<Location, Long> map = Variable.customMiningCooldown;
+    map.keySet().removeIf(location -> {
+      int fromX = from.getBlockX(), fromY = from.getBlockY(), fromZ = from.getBlockZ();
+      int toX = to.getBlockX(), toY = to.getBlockY(), toZ = to.getBlockZ();
+      int minX = Math.min(fromX, toX), minY = Math.min(fromY, toY), minZ = Math.min(fromZ, toZ);
+      int maxX = Math.max(fromX, toX), maxY = Math.max(fromY, toY), maxZ = Math.max(fromZ, toZ);
+      int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
+      if (x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ)
+      {
+        Variable.customMiningExtraBlocks.remove(location);
+        if (Variable.customMiningExtraBlocksTask.containsKey(location))
+        {
+          Variable.customMiningExtraBlocksTask.get(location).cancel();
+        }
+        if (!Variable.fakeBlocks.containsKey(location))
+        {
+          location.getBlock().getState().update();
+        }
+        else
+        {
+          Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+          for (Player player : players)
+          {
+            if (player.getWorld().getName().equals(location.getWorld().getName()) && location.distance(player.getLocation()) <= Cucumbery.config.getDouble("custom-mining.maximum-block-packet-distance"))
+            {
+              player.sendBlockChange(location, Variable.fakeBlocks.get(location));
+            }
+          }
+        }
+        return true;
+      }
+      return false;
+    });
   }
 
   public static void customMiningTicks()
@@ -150,6 +214,41 @@ public class MiningScheduler
                           slab.setType(((Slab) finalBlockData).getType());
                         });
                       }
+                      if (Tag.WALLS.isTagged(blockType) && blockType != Material.BLACKSTONE_WALL)
+                      {
+                        final BlockData finalBlockData = block.getBlockData();
+                        blockData = Bukkit.createBlockData(Material.BLACKSTONE_WALL, data ->
+                        {
+                          Wall wall = (Wall) data;
+                          wall.setUp(((Wall) finalBlockData).isUp());
+                          for (BlockFace blockFace : BlockFace.values())
+                          {
+                            try
+                            {
+                              wall.setHeight(blockFace, ((Wall) finalBlockData).getHeight(blockFace));
+                            }
+                            catch (Exception ignored)
+                            {
+
+                            }
+                          }
+                        });
+                      }
+                      if (block.getBlockData() instanceof MultipleFacing multipleFacing)
+                      {
+                        if (multipleFacing instanceof Fence)
+                        {
+                          blockData = Bukkit.createBlockData(Material.BLACKSTONE_WALL);
+                        }
+                        else
+                        {
+                          blockData = Bukkit.createBlockData(Material.BEDROCK);
+                        }
+                      }
+                      if ((Tag.WALLS.isTagged(blockType) || Tag.STAIRS.isTagged(blockType) || Tag.SLABS.isTagged(blockType) || block.getBlockData() instanceof MultipleFacing) && block.getBlockData() instanceof Waterlogged waterlogged)
+                      {
+                        ((Waterlogged) blockData).setWaterlogged(waterlogged.isWaterlogged());
+                      }
                     }
                     if (Variable.customMiningExtraBlocks.containsKey(location))
                     {
@@ -232,6 +331,7 @@ public class MiningScheduler
       final BlockData originData = block.getBlockData().clone();
       final Location locationClone = location.clone();
       ItemStack itemStack = player.getInventory().getItemInMainHand().clone();
+      ItemMeta itemMeta = itemStack.getItemMeta();
       // 드릴 연료 1 이하일 시 사용 불가 처리
       if (ItemStackUtil.itemExists(itemStack))
       {
@@ -251,7 +351,8 @@ public class MiningScheduler
                 if (curDura <= 1)
                 {
                   MessageUtil.sendWarn(player, "%s의 연료가 다 떨어져서 사용할 수 없습니다!", itemStack);
-                  player.sendBlockDamage(new Location(Bukkit.getWorlds().get(0), 0, 0, 0), 0f, MiningScheduler.blockBreakKey.get(uuid));
+                  Location location2 = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+                  player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(location2, 0f, MiningScheduler.blockBreakKey.get(uuid)));
                   CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
                   return;
                 }
@@ -299,7 +400,7 @@ public class MiningScheduler
           {
             switch (customMaterial)
             {
-              case RUBY, AMBER, AMETHYST, JADE, SAPPHIRE, TOPAZ, JASPER -> soundGroup = Bukkit.createBlockData(Material.AMETHYST_CLUSTER).getSoundGroup();
+              case RUBY, AMBER, JADE, SAPPHIRE, TOPAZ, JASPER -> soundGroup = Material.AMETHYST_CLUSTER.createBlockData().getSoundGroup();
             }
           }
           if (Variable.customMiningExtraBlocks.containsKey(location))
@@ -403,7 +504,7 @@ public class MiningScheduler
         }
         // 블록 드롭 처리(염력 인챈트나 효과가 있으면 인벤토리에 지급 혹은 블록 위치에 아이템 떨굼
         {
-          if (itemStack.getEnchantmentLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
+          if (itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
           {
             AddItemUtil.addItem(player, drops);
           }
@@ -418,7 +519,7 @@ public class MiningScheduler
             {
               if (ItemStackUtil.itemExists(content))
               {
-                if (itemStack.getEnchantmentLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
+                if (itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
                 {
                   AddItemUtil.addItem(player, content);
                 }
@@ -452,7 +553,8 @@ public class MiningScheduler
           {
             if (mode3)
             {
-              if (block.getType() == Material.ICE && locationClone.add(0, -1, 0).getBlock().getType().isSolid() && drops.isEmpty() && customMaterial == null)
+              if ((block.getType() == Material.ICE && locationClone.add(0, -1, 0).getBlock().getType().isSolid() && drops.isEmpty() && customMaterial == null) ||
+                      (block.getBlockData() instanceof Waterlogged waterlogged && waterlogged.isWaterlogged()))
               {
                 block.setType(Material.WATER);
               }
@@ -467,7 +569,7 @@ public class MiningScheduler
                 Variable.blockPlaceData.put(location.getWorld().getName(), configuration);
               }
               Variable.fakeBlocks.remove(locationClone);
-              Scheduler.fakeBlocksAsync();
+//              Scheduler.fakeBlocksAsync(null, location, true); commented since 2022.11.08 due to no reason for calling it
             }
             else
             {
@@ -661,7 +763,6 @@ public class MiningScheduler
               }
               else
               {
-                ItemMeta itemMeta = itemStack.getItemMeta();
                 org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemMeta;
                 damageable.setDamage((int) (maxDurability - currentDurability));
                 itemStack.setItemMeta(itemMeta);
@@ -715,7 +816,8 @@ public class MiningScheduler
           {
             blockBreakKey.put(uuid, blockBreakKey.keySet().size() * 10 + 1);
           }
-          player.sendBlockDamage(location, progress, blockBreakKey.get(uuid));
+          float finalProgress = progress;
+          player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(location, finalProgress, blockBreakKey.get(uuid)));
         }
       }
     }
@@ -729,7 +831,8 @@ public class MiningScheduler
     {
       MiningScheduler.blockBreakKey.put(uuid, MiningScheduler.blockBreakKey.keySet().size() * 10 + 1);
     }
-    player.sendBlockDamage(new Location(location.getWorld(), 0, 0, 0), 0f, blockBreakKey.get(uuid));
+    Location location2 = new Location(location.getWorld(), 0, 0, 0);
+    player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(location2, 0f, blockBreakKey.get(uuid)));
     CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
   }
 }

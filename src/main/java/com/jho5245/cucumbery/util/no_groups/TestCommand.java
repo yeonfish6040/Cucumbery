@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.util.no_groups;
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -31,6 +32,13 @@ public class TestCommand implements CommandExecutor, AsyncTabCompleter
     {
       if (sender instanceof Player player)
       {
+        String key = args[0];
+        NBTEntity nbtEntity = new NBTEntity(player);
+        player.sendMessage(nbtEntity.getCompound(key).toString());
+//        player.sendMessage("prev. walk speed : " + player.getWalkSpeed());
+//        player.setWalkSpeed(Float.valueOf(args[0]));
+//        player.sendMessage("prev. fly speed : " + player.getFlySpeed());
+//        player.setFlySpeed(Float.valueOf(args[1]));
 //        try
 //        {
 //          Location location = CommandArgumentUtil.location(sender, args[0], true, true);

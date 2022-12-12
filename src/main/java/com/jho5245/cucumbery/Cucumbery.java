@@ -17,10 +17,7 @@ import com.jho5245.cucumbery.commands.no_groups.*;
 import com.jho5245.cucumbery.commands.reinforce.CommandReinforce;
 import com.jho5245.cucumbery.commands.sound.CommandPlaySound;
 import com.jho5245.cucumbery.commands.sound.CommandSong;
-import com.jho5245.cucumbery.commands.teleport.CommandAdvancedTeleport;
-import com.jho5245.cucumbery.commands.teleport.CommandSwapTeleport;
-import com.jho5245.cucumbery.commands.teleport.CommandTeleport;
-import com.jho5245.cucumbery.commands.teleport.CommandWarp;
+import com.jho5245.cucumbery.commands.teleport.*;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.recipe.RecipeManager;
@@ -29,6 +26,7 @@ import com.jho5245.cucumbery.listeners.UnknownCommand;
 import com.jho5245.cucumbery.listeners.addon.gsit.PreEntitySit;
 import com.jho5245.cucumbery.listeners.addon.noteblockapi.SongEnd;
 import com.jho5245.cucumbery.listeners.addon.quickshop.*;
+import com.jho5245.cucumbery.listeners.addon.ultimatetimber.TreeFell;
 import com.jho5245.cucumbery.listeners.addon.worldguard.DisallowedPVP;
 import com.jho5245.cucumbery.listeners.block.*;
 import com.jho5245.cucumbery.listeners.block.piston.BlockPistonExtend;
@@ -58,6 +56,7 @@ import com.jho5245.cucumbery.listeners.server.ServerCommand;
 import com.jho5245.cucumbery.listeners.server.ServerListPing;
 import com.jho5245.cucumbery.listeners.vehicle.VehicleDamage;
 import com.jho5245.cucumbery.listeners.vehicle.VehicleDestroy;
+import com.jho5245.cucumbery.listeners.vehicle.VehicleExit;
 import com.jho5245.cucumbery.listeners.world.EntitiesLoad;
 import com.jho5245.cucumbery.util.addons.ProtocolLibManager;
 import com.jho5245.cucumbery.util.addons.Songs;
@@ -75,6 +74,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.songoda.ultimatetimber.UltimateTimber;
 import com.xxmicloxx.NoteBlockAPI.NoteBlockAPI;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -112,13 +112,14 @@ import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 33, DEATH_MESSAGES_CONFIG_VERSION = 9, LANG_CONFIG_VERSION = 4;
+  public static final int CONFIG_VERSION = 34, DEATH_MESSAGES_CONFIG_VERSION = 10, LANG_CONFIG_VERSION = 4;
   private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   /**
    * Shaded since 2022.07.04 so always true
    */
   public static boolean using_CommandAPI = true;
+
   public static boolean using_Vault_Economy;
   public static boolean using_Vault_Chat;
   public static boolean using_NoteBlockAPI;
@@ -129,6 +130,8 @@ public class Cucumbery extends JavaPlugin
   public static boolean using_ProtocolLib;
   public static boolean using_WorldEdit;
   public static boolean using_WorldGuard;
+
+  public static boolean using_UltimateTimber;
 
   public static boolean using_GSit;
   /**
@@ -477,6 +480,7 @@ public class Cucumbery extends JavaPlugin
     Cucumbery.using_WorldEdit = Cucumbery.config.getBoolean("use-hook-plugins.WorldEdit") && this.pluginManager.getPlugin("WorldEdit") instanceof WorldEditPlugin;
     Cucumbery.using_WorldGuard = Cucumbery.config.getBoolean("use-hook-plugins.WorldGuard") && this.pluginManager.getPlugin("WorldGuard") instanceof WorldGuardPlugin;
     Cucumbery.using_GSit = Cucumbery.config.getBoolean("use-hook-plugins.GSit") && this.pluginManager.getPlugin("GSit") instanceof GSitMain;
+    Cucumbery.using_UltimateTimber = Cucumbery.config.getBoolean("use-hook-plugins.UltimateTimber") && this.pluginManager.getPlugin("UltimateTimber") instanceof UltimateTimber;
     if (using_WorldEdit)
     {
       Plugin plugin = this.pluginManager.getPlugin("WorldEdit");
@@ -534,6 +538,10 @@ public class Cucumbery extends JavaPlugin
       if (using_GSit)
       {
         MessageUtil.consoleSendMessage(Prefix.INFO, "GSit 플러그인을 연동했습니다");
+      }
+      if (using_UltimateTimber)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "UltimateTimber 플러그인을 연동했습니다");
       }
     }
     if (using_QuickShop)
@@ -699,6 +707,8 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("splash", new CommandSplash());
     Initializer.registerCommand("swingarm", new CommandSwingArm());
     Initializer.registerCommand("shakevillagerhead", new CommandShakeVillagerHead());
+    Initializer.registerCommand("setrotation", new CommandSetRotation());
+    Initializer.registerCommand("lookat", new CommandLookAt());
   }
 
   private void registerEvents()
@@ -740,6 +750,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new EntityBreed());
     Initializer.registerEvent(new EntityChangeBlock());
     Initializer.registerEvent(new EntityDeath());
+    Initializer.registerEvent(new EntityDismount());
     Initializer.registerEvent(new EntityExplode());
     Initializer.registerEvent(new EntityJump());
     Initializer.registerEvent(new EntityLandOnGround());
@@ -760,6 +771,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new FireworkExplode());
     Initializer.registerEvent(new LingeringPotionSplash());
     Initializer.registerEvent(new PotionSplash());
+    Initializer.registerEvent(new ProjectileHit());
     Initializer.registerEvent(new ProjectileLaunch());
     Initializer.registerEvent(new TameableDeathMessage());
     Initializer.registerEvent(new VillagerAcquireTrade());
@@ -858,6 +870,7 @@ public class Cucumbery extends JavaPlugin
     // listener.vehicle
     Initializer.registerEvent(new VehicleDamage());
     Initializer.registerEvent(new VehicleDestroy());
+    Initializer.registerEvent(new VehicleExit());
     // listener.world
     Initializer.registerEvent(new EntitiesLoad());
     // listener.addon.quickshop
@@ -884,6 +897,11 @@ public class Cucumbery extends JavaPlugin
     if (using_GSit)
     {
       Initializer.registerEvent(new PreEntitySit());
+    }
+    // listener.addon.ultimatetimber
+    if (using_UltimateTimber)
+    {
+      Initializer.registerEvent(new TreeFell());
     }
   }
 

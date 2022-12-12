@@ -1,10 +1,5 @@
 package com.jho5245.cucumbery.custom.customeffect.custom_mining;
 
-import com.comphenix.protocol.PacketType.Play;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.reflect.StructureModifier;
 import com.destroystokyo.paper.Namespaced;
 import com.destroystokyo.paper.NamespacedTag;
 import com.jho5245.cucumbery.Cucumbery;
@@ -12,10 +7,12 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
-import com.jho5245.cucumbery.util.addons.ProtocolLibManager;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.*;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -51,7 +48,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class MiningManager
@@ -117,7 +113,7 @@ public class MiningManager
                 STRIPPED_MANGROVE_WOOD, MANGROVE_PLANKS, CRIMSON_HYPHAE, NETHER_WART_BLOCK, GREEN_WOOL, GREEN_TERRACOTTA, GREEN_GLAZED_TERRACOTTA, LIME_WOOL,
                 COAL_ORE, COPPER_ORE, DEEPSLATE_COAL_ORE, DEEPSLATE_COPPER_ORE, DEEPSLATE_DIAMOND_ORE, DEEPSLATE_EMERALD_ORE, DEEPSLATE_GOLD_ORE, DEEPSLATE_IRON_ORE,
                 DEEPSLATE_LAPIS_ORE, DEEPSLATE_REDSTONE_ORE, DIAMOND_ORE, EMERALD_ORE, GOLD_ORE, IRON_ORE, LAPIS_ORE, NETHER_GOLD_ORE, NETHER_QUARTZ_ORE, REDSTONE_ORE,
-                RAW_COPPER_BLOCK, RAW_GOLD_BLOCK, RAW_IRON_BLOCK ->
+                RAW_COPPER_BLOCK, RAW_GOLD_BLOCK, RAW_IRON_BLOCK, COAL_BLOCK ->
         {
 
         }
@@ -127,7 +123,7 @@ public class MiningManager
         }
       }
     }
-    boolean ignoreVanillaModification = CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
+    boolean ignoreVanillaModification = false;
     {
       try
       {
@@ -456,14 +452,14 @@ public class MiningManager
             blockTier = 7;
             blockHardness = 3200f;
             drops.clear();
-            drops.add(CustomMaterial.AMETHYST.create(Method.random(3, 6)));
+            drops.add(new ItemStack(Material.AMETHYST_SHARD, Method.random(3, 6)));
           }
           case PURPLE_STAINED_GLASS_PANE ->
           {
             blockTier = 7;
             blockHardness = 3000f;
             drops.clear();
-            drops.add(CustomMaterial.AMETHYST.create(Method.random(2, 4)));
+            drops.add(new ItemStack(Material.AMETHYST_SHARD, Method.random(2, 4)));
           }
           case LIME_STAINED_GLASS ->
           {
@@ -710,8 +706,8 @@ public class MiningManager
       {
       }
     }
-    // 드롭 경험치가 0이고 바닐라 채광일 경우 드롭 경험치 추가
-    if (expToDrop == 0 && !ignoreVanillaModification)
+    // 드롭 경험치가 0이고 바닐라 채광일 경우 도구에 섬세한 손길이 없을 경우 드롭 경험치 추가
+    if (expToDrop == 0 && !ignoreVanillaModification && !isSilkTouch)
     {
       for (double d : expList)
       {
@@ -835,7 +831,7 @@ public class MiningManager
           finalSpeedMultiplier *= Math.pow(0.3, amplifier + 1);
           vanilla = true;
         }
-        CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectTypeMinecraft.MINECRAFT_MINING_FATIGUE);
+        CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectTypeMinecraft.MINING_FATIGUE);
         if (!vanilla && customEffect != null)
         {
           int amplifier = customEffect.getAmplifier();
@@ -865,9 +861,9 @@ public class MiningManager
       {
         PotionEffect potionEffect = player.getPotionEffect(PotionEffectType.FAST_DIGGING);
         int potionHasteLevel = potionEffect != null && (potionEffect.getDuration() > (Cucumbery.using_ProtocolLib ? 2 : 10) || potionEffect.getAmplifier() > 0) ? potionEffect.getAmplifier() + 1 : 0;
-        if (potionHasteLevel == 0 && CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_HASTE))
+        if (potionHasteLevel == 0 && CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.HASTE))
         {
-          potionHasteLevel = CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.MINECRAFT_HASTE).getAmplifier() + 1;
+          potionHasteLevel = CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.HASTE).getAmplifier() + 1;
         }
         miningSpeed += potionHasteLevel * 50f;
       }
@@ -979,7 +975,7 @@ public class MiningManager
       {
         switch (customMaterial)
         {
-          case MITHRIL_ORE, MITHRIL_INGOT, TITANIUM_ORE, TITANIUM_INGOT, AMBER, AMETHYST, JADE, JASPER, RUBY, TOPAZ, SHROOMITE_ORE, SHROOMITE_INGOT, TUNGSTEN_INGOT, TUNGSTEN_ORE, COBALT_INGOT, COBALT_ORE,
+          case MITHRIL_ORE, MITHRIL_INGOT, TITANIUM_ORE, TITANIUM_INGOT, AMBER, JADE, JASPER, RUBY, TOPAZ, SHROOMITE_ORE, SHROOMITE_INGOT, TUNGSTEN_INGOT, TUNGSTEN_ORE, COBALT_INGOT, COBALT_ORE,
                   CUCUMBERITE_INGOT, CUCUMBERITE_ORE ->
           {
           }
@@ -1230,9 +1226,10 @@ public class MiningManager
       Variable.customMiningProgress.put(uuid, 0f);
       if (!MiningScheduler.blockBreakKey.containsKey(uuid))
       {
-        MiningScheduler.blockBreakKey.put(uuid, MiningScheduler.blockBreakKey.keySet().size() * 10 + 1);
+        MiningScheduler.blockBreakKey.put(uuid, Bukkit.getUnsafe().nextEntityId());
       }
-      player.sendBlockDamage(new Location(Bukkit.getWorlds().get(0), 0, 0, 0), 0f, MiningScheduler.blockBreakKey.get(player.getUniqueId()));
+      Location location = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+      player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(location, 0f, MiningScheduler.blockBreakKey.get(player.getUniqueId())));
       CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
     }
   }

@@ -24,7 +24,7 @@ public class CommandHealthPoint
 
   {
     arguments1.add(new MultiLiteralArgument("set", "give", "take"));
-    arguments1.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
+    arguments1.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
     arguments1.add(new DoubleArgument("값", 0, Double.MAX_VALUE));
   }
 
@@ -32,7 +32,7 @@ public class CommandHealthPoint
 
   {
     arguments2.add(new MultiLiteralArgument("set", "give", "take"));
-    arguments2.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
+    arguments2.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
     arguments2.add(new DoubleArgument("값", 0, Double.MAX_VALUE));
     arguments2.add(new BooleanArgument("경고 무시"));
   }
@@ -41,7 +41,7 @@ public class CommandHealthPoint
 
   {
     arguments3.add(new MultiLiteralArgument("set", "give", "take"));
-    arguments3.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
+    arguments3.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
     arguments3.add(new DoubleArgument("값", 0, Double.MAX_VALUE));
     arguments3.add(new BooleanArgument("경고 무시"));
     arguments3.add(new BooleanArgument("명령어 출력 숨김 여부"));
@@ -126,7 +126,7 @@ public class CommandHealthPoint
       }
       else
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체의 HP에 변화가 없습니다");
+        throw CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체의 HP에 변화가 없습니다");
       }
     });
     commandAPICommand.register();

@@ -57,26 +57,29 @@ public class PlayerJoin implements Listener
       Initializer.loadPlayerConfig(player);
       //			Method.broadcastDebug("데이터 생성 완료, 현재 캐시 유저 데이터 개수 : §e" + Variable.userData.size() + "개");
     }
-    if (CommandSong.playerRadio.containsKey(uuid))
+    if (Cucumbery.using_NoteBlockAPI)
     {
-      if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
+      if (CommandSong.playerRadio.containsKey(uuid))
       {
-        CommandSong.playerRadio.get(uuid).addPlayer(player);
+        if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
+        {
+          CommandSong.playerRadio.get(uuid).addPlayer(player);
+        }
+        else
+        {
+          CommandSong.playerRadio.get(uuid).removePlayer(player);
+        }
       }
-      else
+      else if (CommandSong.radioSongPlayer != null)
       {
-        CommandSong.playerRadio.get(uuid).removePlayer(player);
-      }
-    }
-    else if (CommandSong.radioSongPlayer != null)
-    {
-      if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
-      {
-        CommandSong.radioSongPlayer.addPlayer(player);
-      }
-      else
-      {
-        CommandSong.radioSongPlayer.removePlayer(player);
+        if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
+        {
+          CommandSong.radioSongPlayer.addPlayer(player);
+        }
+        else
+        {
+          CommandSong.radioSongPlayer.removePlayer(player);
+        }
       }
     }
     String name = player.getName();
@@ -102,40 +105,26 @@ public class PlayerJoin implements Listener
       displayname = UserData.DISPLAY_NAME.getString(uuid);
       playerListName = UserData.PLAYER_LIST_NAME.getString(uuid);
     }
-    Component senderComponent = SenderComponentUtil.senderComponent(player);
+    Component senderComponent = SenderComponentUtil.senderComponent(player, player, null);
     if (displayname == null)
     {
       displayname = player.getName();
     }
     Component finalDislay = ComponentUtil.create(displayname).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
     player.displayName(finalDislay);
+    senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+    player.displayName(senderComponent);
     if (playerListName == null)
     {
       playerListName = player.getName();
     }
     finalDislay = ComponentUtil.create(playerListName);
-    if (Cucumbery.using_Vault_Chat)
-    {
-      try
-      {
-        String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
-        if (prefix != null)
-        {
-          finalDislay = ComponentUtil.create(false, prefix, finalDislay);
-        }
-        if (suffix != null)
-        {
-          finalDislay = ComponentUtil.create(false, finalDislay, suffix);
-        }
-      }
-      catch (Exception e)
-      {
-        e.printStackTrace();
-      }
-    }
-    player.playerListName(finalDislay.hoverEvent(null).clickEvent(null).insertion(null));
+    final Component originalDisplayName = player.displayName();
+    player.displayName(finalDislay.hoverEvent(null).clickEvent(null).insertion(null));
+    senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+    player.playerListName(senderComponent.hoverEvent(null).clickEvent(null).insertion(null));
+    player.displayName(originalDisplayName);
     Component displayName = SenderComponentUtil.senderComponent(player);
-    String displayNameString = ComponentUtil.serialize(displayName);
     boolean isSpectator = UserData.SPECTATOR_MODE.getBoolean(player);
     if (isSpectator && UserData.SPECTATOR_MODE_ON_JOIN.getBoolean(player))
     {

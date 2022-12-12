@@ -1,8 +1,8 @@
 package com.jho5245.cucumbery.listeners.block;
 
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTList;
@@ -22,7 +22,6 @@ public class BlockFromTo implements Listener
   {
     Block fromBlock = event.getBlock();
     Block toBlock = event.getToBlock();
-
     if ((fromBlock.getType() == Material.WATER || fromBlock.getType() == Material.LAVA) && !toBlock.getType().isAir())
     {
       Location location = toBlock.getLocation();

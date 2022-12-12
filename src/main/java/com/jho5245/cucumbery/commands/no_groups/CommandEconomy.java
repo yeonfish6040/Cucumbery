@@ -141,8 +141,11 @@ public class CommandEconomy implements CucumberyCommandExecutor
   @Override
   public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
+    if (!Cucumbery.using_Vault_Economy)
+    {
+      return CommandTabUtil.errorMessage("Vault 플러그인을 사용하고 있지 않습니다 (Economy 기능 활성화 안됨)");
+    }
     int length = args.length;
-
     if (length == 1)
     {
       return CommandTabUtil.tabCompleterList(args, "<인수>", false, "give", "set", "take");

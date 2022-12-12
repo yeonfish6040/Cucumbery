@@ -3,12 +3,15 @@ package com.jho5245.cucumbery.util.itemlore;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -99,42 +102,62 @@ public class ItemLore2CustomMaterial
       {
         itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a'그 노래' 재생"), ComponentUtil.translate("&e;&l우클릭")));
+        lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a'그 노래' 재생"), ComponentUtil.translate("&e&l우클릭")));
         lore.add(ComponentUtil.translate("&7재사용 대기시간 : %s", ComponentUtil.translate("&a%s초", 10)));
       }
       case MITHRIL_PICKAXE ->
       {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&7%s 채광 시 채광 행운 15 증가", CustomMaterial.MITHRIL_ORE.getDisplayName()));
+        if (viewer != null && CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&7%s 채광 시 채광 행운 15 증가", CustomMaterial.MITHRIL_ORE.getDisplayName()));
+        }
       }
       case MITHRIL_PICKAXE_REFINED ->
       {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&7%s 채광 시 채광 속도 50 증가", CustomMaterial.MITHRIL_ORE.getDisplayName()));
+        if (viewer != null && CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&7%s 채광 시 채광 속도 50 증가", CustomMaterial.MITHRIL_ORE.getDisplayName()));
+        }
       }
       case TITANIUM_PICKAXE ->
       {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&7%s 채광 시 채광 행운 20 증가", CustomMaterial.TITANIUM_ORE.getDisplayName()));
+        if (viewer != null && CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&7%s 채광 시 채광 행운 20 증가", CustomMaterial.TITANIUM_ORE.getDisplayName()));
+        }
       }
       case TITANIUM_PICKAXE_REFINED ->
       {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&7%s 채광 시 채광 속도 60 증가", CustomMaterial.TITANIUM_ORE.getDisplayName()));
+        if (viewer != null && CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&7%s 채광 시 채광 속도 60 증가", CustomMaterial.TITANIUM_ORE.getDisplayName()));
+        }
       }
       case STONK ->
       {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&7%s, %s, %s 또는 %s 채광 시 채광 속도 10000 증가", Material.STONE, Material.DEEPSLATE, Material.COBBLESTONE, Material.COBBLED_DEEPSLATE));
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a채광 부스터"), ComponentUtil.translate("&e;&l우클릭")));
-        lore.add(ComponentUtil.translate("&f10초간 채광 속도가 3배로 증가"));
-        lore.add(ComponentUtil.translate("&7재사용 대기시간 : %s", ComponentUtil.translate("&a%s초", 120)));
+        if (viewer != null && CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&7%s, %s, %s 또는 %s 채광 시 채광 속도 10000 증가", Material.STONE, Material.DEEPSLATE, Material.COBBLESTONE, Material.COBBLED_DEEPSLATE));
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a채광 부스터"), ComponentUtil.translate("&e&l우클릭")));
+          lore.add(ComponentUtil.translate("&f10초간 채광 속도가 3배로 증가"));
+          lore.add(ComponentUtil.translate("&7재사용 대기시간 : %s", ComponentUtil.translate("&a%s초", 120)));
+        }
       }
       case PORTABLE_CRAFTING_TABLE ->
       {
         lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a작업대 사용"), ComponentUtil.translate("&e;&l우클릭")));
+        lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a작업대 열기"), ComponentUtil.translate("&e&l우클릭")));
+      }
+      case PORTABLE_ENDER_CHEST ->
+      {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a엔더 상자 열기"), ComponentUtil.translate("&e&l우클릭")));
       }
       case TODWOT_PICKAXE ->
       {
@@ -201,6 +224,109 @@ public class ItemLore2CustomMaterial
         lore.add(ComponentUtil.translate("&a[담을 수 있는 아이템들]"));
         lore.add(ComponentUtil.translate("&a%s, %s, %s, %s, %s, %s",
                 Material.STONE, Material.COBBLESTONE, CustomMaterial.MITHRIL_ORE, CustomMaterial.MITHRIL_INGOT, CustomMaterial.TITANIUM_ORE, CustomMaterial.TITANIUM_INGOT));
+      }
+      case TNT_COMBAT -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7전투형으로 특별히 개량된 TNT로 블록을 파괴"));
+        lore.add(ComponentUtil.translate("&7하지 않으며, 개체에게 폭발 피해만 입힘"));
+      }
+      case TNT_DRAIN -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7다른 %s보다 넓은 범위를 가지고 보다 빠르게(약 1초) 폭발하며", ItemNameUtil.itemName(Material.TNT)));
+        lore.add(ComponentUtil.translate("&7블록을 파괴하거나 개체에게 피해를 입히지 않으며 범위 내에 있는"));
+        lore.add(ComponentUtil.translate("&7물 관련 블록을 전부 제거하고 다른 %s와(과) 연쇄 폭발할 수 있음", CustomMaterial.TNT_DRAIN.getDisplayName()));
+        lore.add(ComponentUtil.translate("&e단, 켈프와 해초는 해당 블록을 파괴할 수 없는 상태이거나"));
+        lore.add(ComponentUtil.translate("&e레드스톤 회로를 통해 TNT에 불을 붙인 경우에는 파괴되지 않고"));
+        lore.add(ComponentUtil.translate("&e%s을(를) 제외한 다른 TNT와는 연쇄 폭발을 일으키지 않음", CustomMaterial.TNT_DRAIN.getDisplayName()));
+      }
+      case FIREWORK_ROCKET_EXPLOSIVE -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7블록을 파괴하지 않는 강도 4의 폭발을 발생시킴"));
+      }
+      case FIREWORK_ROCKET_EXPLOSIVE_DESTRUCTION -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7블록을 파괴하는 강도 4의 폭발을 발생시킴"));
+      }
+      case FIREWORK_ROCKET_EXPLOSIVE_FLAME -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7블록을 파괴하지 않으나 불이 나는 강도 4의 폭발을 발생시킴"));
+      }
+      case ARROW_CRIT -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&733% 확률로 대미지 2배로 증가"));
+        lore.add(ComponentUtil.translate("&7%s 마법의 영향을 받지 않음", Enchantment.ARROW_INFINITE));
+      }
+      case ARROW_EXPLOSIVE -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7블록을 파괴하지 않는 강도 2의 폭발을 적중 위치에 발생시킴"));
+        lore.add(ComponentUtil.translate("&7%s 마법의 영향을 받지 않음", Enchantment.ARROW_INFINITE));
+      }
+      case ARROW_EXPLOSIVE_DESTRUCTION -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7블록을 파괴하는 강도 2의 폭발을 적중 위치에 발생시킴"));
+        lore.add(ComponentUtil.translate("&7%s 마법의 영향을 받지 않음", Enchantment.ARROW_INFINITE));
+      }
+      case ARROW_FLAME -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7%s 마법의 영향을 받지 않음", Enchantment.ARROW_INFINITE));
+      }
+      case ARROW_INFINITE -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7활과 함께 사용 시 사라지지 않음"));
+        lore.add(ComponentUtil.translate("&7쇠뇌에는 아무런 효과가 없으며 적중하지 못한 화살은 주울 수 없음"));
+      }
+      case ARROW_MOUNT -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7자신이 발사한 화살에 탑승하여 같이 발사됨"));
+        lore.add(ComponentUtil.translate("&7블록에 적중한 화살은 50% 확률로 파괴됨"));
+        lore.add(ComponentUtil.translate("&7%s 마법의 영향을 받지 않음", Enchantment.ARROW_INFINITE));
+      }
+      case ARROW_MOUNT_INFINITE -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7자신이 발사한 화살에 탑승하여 같이 발사됨"));
+        lore.add(ComponentUtil.translate("&7블록에 적중해도 화살은 파괴되지 않음"));
+        lore.add(ComponentUtil.translate("&7%s 마법의 영향을 받지 않음", Enchantment.ARROW_INFINITE));
+      }
+      case ARROW_MOUNT_DISPOSAL -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7자신이 발사한 화살에 탑승하여 같이 발사됨"));
+        lore.add(ComponentUtil.translate("&7블록에 적중한 화살은 100% 확률로 파괴됨"));
+        lore.add(ComponentUtil.translate("&7%s 마법의 영향을 받지 않음", Enchantment.ARROW_INFINITE));
+      }
+      case BOW_CRIT -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7사용 시 화살의 속성이 %s(으)로 변경됨", CustomMaterial.ARROW_CRIT));
+        lore.addAll(ItemStackUtil.getItemInfoAsComponents(CustomMaterial.ARROW_CRIT.create(), null, null, true));
+      }
+      case BOW_ENDER_PEARL -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7화살 대신 엔더 진주를 발사함"));
+        lore.add(ComponentUtil.translate("&7단, 반드시 %s 또는 %s만 엔더 진주를 발사할 수 있음", Material.ARROW, CustomMaterial.ARROW_INFINITE));
+      }
+      case BOW_EXPLOSIVE -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7사용 시 화살의 속성이 %s(으)로 변경됨", CustomMaterial.ARROW_EXPLOSIVE));
+        lore.addAll(ItemStackUtil.getItemInfoAsComponents(CustomMaterial.ARROW_EXPLOSIVE.create(), null, null, true));
+      }
+      case BOW_EXPLOSIVE_DESTRUCTION -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7사용 시 화살의 속성이 %s(으)로 변경됨", CustomMaterial.ARROW_EXPLOSIVE_DESTRUCTION));
+        lore.addAll(ItemStackUtil.getItemInfoAsComponents(CustomMaterial.ARROW_EXPLOSIVE_DESTRUCTION.create(), null, null, true));
+      }
+      case BOW_FLAME -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7사용 시 화살의 속성이 %s(으)로 변경됨", CustomMaterial.ARROW_FLAME));
+        lore.addAll(ItemStackUtil.getItemInfoAsComponents(CustomMaterial.ARROW_FLAME.create(), null, null, true));
+      }
+      case BOW_INFINITE -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7화살이 소모되지 않으나 적중하지 못한 화살은"));
+        lore.add(ComponentUtil.translate("&7주울 수 없고 일부 화살에는 적용되지 않음"));
+      }
+      case BOW_MOUNT -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7사용 시 화살의 속성이 %s(으)로 변경됨", ItemNameUtil.itemName(CustomMaterial.ARROW_MOUNT.create())));
+        lore.addAll(ItemStackUtil.getItemInfoAsComponents(CustomMaterial.ARROW_MOUNT.create(), null, null, true));
       }
     }
     switch (customMaterial)

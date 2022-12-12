@@ -26,9 +26,8 @@ public class EntityLoadCrossbow implements Listener
   public void onEntityLoadCrossbow(EntityLoadCrossbowEvent event)
   {
     LivingEntity livingEntity = event.getEntity();
-    if (livingEntity instanceof Player)
+    if (livingEntity instanceof Player player)
     {
-      Player player = (Player) livingEntity;
       UUID uuid = player.getUniqueId();
       ItemStack item = event.getCrossbow();
       if (NBTAPI.isRestricted(player, item, Constant.RestrictionType.NO_CROSSBOW_LOAD))

@@ -31,6 +31,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
 import de.tr7zw.changeme.nbtapi.*;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -176,7 +177,7 @@ public class ItemLore2
       if (restrictionTags != null && !restrictionTags.isEmpty())
       {
         StringBuilder restrictionTagLore = new StringBuilder();
-        for (NBTCompound restrictionTag : restrictionTags)
+        for (ReadWriteNBT restrictionTag : restrictionTags)
         {
           String value = restrictionTag.getString(CucumberyTag.VALUE_KEY);
           for (RestrictionType restrictionType : RestrictionType.values())
@@ -396,49 +397,58 @@ public class ItemLore2
       lore.add(ComponentUtil.translate("rgb203,164,12;누적 모루 합성 횟수 : %s", ComponentUtil.translate("rg255,204;%s회", anvilUsedTime + "")));
     }
 
-    if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.CUSTOM_MININGS) && (Constant.TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS.contains(type) || nbtItem.hasKey("ToolTier") || nbtItem.hasKey("ToolSpeed") || nbtItem.hasKey("ToolFortune")) &&
-            params instanceof ItemLoreView view && CustomEffectManager.hasEffect(view.getPlayer(), CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+    if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.CUSTOM_MININGS) &&
+            (Constant.TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS.contains(type) || nbtItem.hasKey("ToolTier") || nbtItem.hasKey("ToolSpeed") || nbtItem.hasKey("ToolFortune")))
     {
-      int toolTier = MiningManager.getToolTier(item);
-      float toolSpeed = MiningManager.getToolSpeed(item);
-      Float toolFortune = nbtItem.getFloat("ToolFortune");
-      if (toolTier > 0 || toolSpeed > 0f || toolFortune > 0f)
+      if (params instanceof ItemLoreView view && CustomEffectManager.hasEffect(view.getPlayer(), CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+      {
+        int toolTier = MiningManager.getToolTier(item);
+        float toolSpeed = MiningManager.getToolSpeed(item);
+        Float toolFortune = nbtItem.getFloat("ToolFortune");
+        if (toolTier > 0 || toolSpeed > 0f || toolFortune > 0f)
+        {
+          lore.add(Component.empty());
+        }
+        if (toolTier > 0)
+        {
+          lore.add(ComponentUtil.translate("&6채광 등급 : %s", ComponentUtil.create(Constant.THE_COLOR_HEX + Constant.Jeongsu.format(toolTier)).append(
+                  (CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.MINDAS_TOUCH) ? (ComponentUtil.translate("&a (+%s) (%s)",
+                          CustomEffectManager.getEffect(viewer, CustomEffectTypeCustomMining.MINDAS_TOUCH).getAmplifier() + 1, CustomEffectTypeCustomMining.MINDAS_TOUCH)) : Component.empty()))));
+        }
+        if (toolSpeed > 0f)
+        {
+          String prefix = "채광";
+          if (toolTier == 0)
+          {
+            if (Constant.AXES.contains(type))
+            {
+              prefix = "벌목";
+            }
+            if (Constant.HOES.contains(type))
+            {
+              prefix = "재배";
+            }
+            if (Constant.SHOVELS.contains(type))
+            {
+              prefix = "굴착";
+            }
+            if (Constant.SWORDS.contains(type) || type == Material.TRIDENT)
+            {
+              prefix = "블록 파괴";
+            }
+          }
+          lore.add(ComponentUtil.translate("&6" + prefix + " 속도 : %s", Constant.THE_COLOR_HEX + (toolSpeed > 0 ? "+" : "") + Constant.Sosu2.format(toolSpeed)));
+        }
+        if (toolFortune != null && toolFortune > 0f)
+        {
+          lore.add(ComponentUtil.translate("&6채광 행운 : %s", Constant.THE_COLOR_HEX + (toolFortune > 0 ? "+" : "") + Constant.Sosu2.format(toolFortune)));
+        }
+      }
+      else if (nbtItem.hasKey("ToolTier") || nbtItem.hasKey("ToolSpeed") || nbtItem.hasKey("ToolFortune"))
       {
         lore.add(Component.empty());
-      }
-      if (toolTier > 0)
-      {
-        lore.add(ComponentUtil.translate("&6채광 등급 : %s", ComponentUtil.create(Constant.THE_COLOR_HEX + Constant.Jeongsu.format(toolTier)).append(
-                (CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.MINDAS_TOUCH) ? (ComponentUtil.translate("&a (+%s) (%s)",
-                        CustomEffectManager.getEffect(viewer, CustomEffectTypeCustomMining.MINDAS_TOUCH).getAmplifier() + 1, CustomEffectTypeCustomMining.MINDAS_TOUCH)) : Component.empty()))));
-      }
-      if (toolSpeed > 0f)
-      {
-        String prefix = "채광";
-        if (toolTier == 0)
-        {
-          if (Constant.AXES.contains(type))
-          {
-            prefix = "벌목";
-          }
-          if (Constant.HOES.contains(type))
-          {
-            prefix = "재배";
-          }
-          if (Constant.SHOVELS.contains(type))
-          {
-            prefix = "굴착";
-          }
-          if (Constant.SWORDS.contains(type) || type == Material.TRIDENT)
-          {
-            prefix = "블록 파괴";
-          }
-        }
-        lore.add(ComponentUtil.translate("&6" + prefix + " 속도 : %s", Constant.THE_COLOR_HEX + (toolSpeed > 0 ? "+" : "") + Constant.Sosu2.format(toolSpeed)));
-      }
-      if (toolFortune != null && toolFortune > 0f)
-      {
-        lore.add(ComponentUtil.translate("&6채광 행운 : %s", Constant.THE_COLOR_HEX + (toolFortune > 0 ? "+" : "") + Constant.Sosu2.format(toolFortune)));
+        lore.add(ComponentUtil.translate("&c이 아이템은 현재 위치에서는 제 기능을 발휘할 수 없습니다!"));
+        lore.add(ComponentUtil.translate("&c현재 기능하는 아이템 : %s", ItemNameUtil.itemName(type)));
       }
     }
 
@@ -1515,7 +1525,8 @@ public class ItemLore2
             }
           }
         }
-        case KNOWLEDGE_BOOK -> {
+        case KNOWLEDGE_BOOK ->
+        {
           KnowledgeBookMeta knowledgeBookMeta = (KnowledgeBookMeta) itemMeta;
           if (knowledgeBookMeta.hasRecipes())
           {
@@ -1607,7 +1618,10 @@ public class ItemLore2
             lore.add(ComponentUtil.translate("&7체공 시간 : %s", ComponentUtil.translate("&6즉시 폭발")));
           }
 
-          if (fireworkMeta.hasEffects())
+          // 폭발형 폭죽은 효과 출력 안함
+          if (fireworkMeta.hasEffects() &&
+                  customMaterial != CustomMaterial.FIREWORK_ROCKET_EXPLOSIVE &&
+                  customMaterial != CustomMaterial.FIREWORK_ROCKET_EXPLOSIVE_DESTRUCTION && customMaterial != CustomMaterial.FIREWORK_ROCKET_EXPLOSIVE_FLAME)
           {
             lore.add(Component.empty());
             lore.add(ComponentUtil.translate("rg255,204;[폭죽 효과 목록]"));
@@ -1635,26 +1649,27 @@ public class ItemLore2
           }
         }
       }
-      case EXPERIENCE_BOTTLE -> {
-          lore.add(Component.empty());
-          int minExp = 3, maxExp = 11;
-          if (nbtItem.hasKey("MinExp") && nbtItem.getType("MinExp") == NBTType.NBTTagInt)
-          {
-            minExp = nbtItem.getInteger("MinExp");
-          }
-          if (nbtItem.hasKey("MaxExp") && nbtItem.getType("MaxExp") == NBTType.NBTTagInt)
-          {
-            maxExp = nbtItem.getInteger("MaxExp");
-          }
-          if (minExp > maxExp)
-          {
-            minExp = maxExp;
-          }
-          lore.add(ComponentUtil.translate("&7경험치 : %s", minExp != maxExp ? ComponentUtil.translate("&a%s~%s", minExp, maxExp) : "&a" + maxExp));
-          if (customMaterial == null)
-          {
-            ItemLoreUtil.setItemRarityValue(lore, (long) (minExp * 0.01 + maxExp * 0.001));
-          }
+      case EXPERIENCE_BOTTLE ->
+      {
+        lore.add(Component.empty());
+        int minExp = 3, maxExp = 11;
+        if (nbtItem.hasKey("MinExp") && nbtItem.getType("MinExp") == NBTType.NBTTagInt)
+        {
+          minExp = nbtItem.getInteger("MinExp");
+        }
+        if (nbtItem.hasKey("MaxExp") && nbtItem.getType("MaxExp") == NBTType.NBTTagInt)
+        {
+          maxExp = nbtItem.getInteger("MaxExp");
+        }
+        if (minExp > maxExp)
+        {
+          minExp = maxExp;
+        }
+        lore.add(ComponentUtil.translate("&7경험치 : %s", minExp != maxExp ? ComponentUtil.translate("&a%s~%s", minExp, maxExp) : "&a" + maxExp));
+        if (customMaterial == null)
+        {
+          ItemLoreUtil.setItemRarityValue(lore, (long) (minExp * 0.01 + maxExp * 0.001));
+        }
 
       }
     }
@@ -1662,36 +1677,38 @@ public class ItemLore2
     if (type == Material.EXPERIENCE_BOTTLE)
 
 
-    if (itemMeta instanceof BundleMeta bundleMeta)
     {
-      List<ItemStack> noDrops = new ArrayList<>(), noTrades = new ArrayList<>();
-      for (ItemStack itemStack : bundleMeta.getItems())
+      if (itemMeta instanceof BundleMeta bundleMeta)
       {
-        if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_DROP))
+        List<ItemStack> noDrops = new ArrayList<>(), noTrades = new ArrayList<>();
+        for (ItemStack itemStack : bundleMeta.getItems())
         {
-          noDrops.add(itemStack);
+          if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_DROP))
+          {
+            noDrops.add(itemStack);
+          }
+          if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_TRADE))
+          {
+            noTrades.add(itemStack);
+          }
         }
-        if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_TRADE))
+        if (!noDrops.isEmpty())
         {
-          noTrades.add(itemStack);
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&c%s에 버릴 수 없는 아이템이 들어있습니다!", ItemNameUtil.itemName(item, NamedTextColor.RED)));
+          for (ItemStack itemStack : noDrops)
+          {
+            lore.add(ItemStackComponent.itemStackComponent(itemStack, NamedTextColor.GRAY));
+          }
         }
-      }
-      if (!noDrops.isEmpty())
-      {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&c%s에 버릴 수 없는 아이템이 들어있습니다!", ItemNameUtil.itemName(item, NamedTextColor.RED)));
-        for (ItemStack itemStack : noDrops)
+        if (!noTrades.isEmpty())
         {
-          lore.add(ItemStackComponent.itemStackComponent(itemStack, NamedTextColor.GRAY));
-        }
-      }
-      if (!noTrades.isEmpty())
-      {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&c%s에 캐릭터 귀속 아이템이 들어있습니다!", ItemNameUtil.itemName(item, NamedTextColor.RED)));
-        for (ItemStack itemStack : noTrades)
-        {
-          lore.add(ItemStackComponent.itemStackComponent(itemStack, NamedTextColor.GRAY));
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&c%s에 캐릭터 귀속 아이템이 들어있습니다!", ItemNameUtil.itemName(item, NamedTextColor.RED)));
+          for (ItemStack itemStack : noTrades)
+          {
+            lore.add(ItemStackComponent.itemStackComponent(itemStack, NamedTextColor.GRAY));
+          }
         }
       }
     }
@@ -2545,7 +2562,7 @@ public class ItemLore2
       TranslatableComponent translatableComponent = Component.translatable("%s%s%s");
       List<Component> arguments = new ArrayList<>();
       Component prefixComponent = Component.empty();
-      for (NBTCompound nbtCompound : prefix)
+      for (ReadWriteNBT nbtCompound : prefix)
       {
         String text = nbtCompound.getString("text");
         if (text != null)
@@ -2567,7 +2584,7 @@ public class ItemLore2
       }
       arguments.add(displayName);
       Component suffixComponent = Component.empty();
-      for (NBTCompound nbtCompound : suffix)
+      for (ReadWriteNBT nbtCompound : suffix)
       {
         String text = nbtCompound.getString("text");
         if (text != null)

@@ -10,7 +10,10 @@ import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,6 +45,13 @@ public class PlayerPostRespawn implements Listener
           MiningScheduler.customMining(player, true);
         }, i * 20);
       }
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.STRANGE_CREATIVE_MODE))
+    {
+      NBTEntity nbtEntity = new NBTEntity(player);
+      player.setGameMode(GameMode.CREATIVE);
+      nbtEntity.mergeCompound(new NBTContainer("{abilities:{instabuild:0b,invulnerable:0b}}"));
+      player.setAllowFlight(false);
     }
   }
 }

@@ -442,6 +442,7 @@ public class CommandTabUtil
         if (arg.toLowerCase().startsWith("@r"))
         {
           list.add(Completion.completion("@rR", Component.translatable("자신을 제외한 무작위 개체")));
+          list.add(Completion.completion("@rr", Component.translatable("자신을 제외한 무작위 플레이어")));
         }
         list.add(Completion.completion("@S", Component.translatable("자신을 제외한 모든 개체")));
         if (arg.toLowerCase().startsWith("@p"))

@@ -10,8 +10,8 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -38,7 +38,7 @@ public class AreaEffectCloudApply implements Listener
     NBTCompoundList potionsTag = NBTAPI.getCompoundList(NBTAPI.getMainCompound(itemStack), CucumberyTag.CUSTOM_EFFECTS);
     if (potionsTag != null && !potionsTag.isEmpty())
     {
-      for (NBTCompound potionTag : potionsTag)
+      for (ReadWriteNBT potionTag : potionsTag)
       {
         try
         {

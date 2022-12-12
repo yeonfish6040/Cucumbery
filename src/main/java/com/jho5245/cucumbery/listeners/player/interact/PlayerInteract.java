@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.player.interact;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.commands.debug.CommandWhatIs;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
@@ -960,22 +961,32 @@ public class PlayerInteract implements Listener
             }
             case STONK ->
             {
-              event.setCancelled(true);
-              CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectTypeCustomMining.MINING_BOOSTER_COOLDOWN);
-              if (customEffect != null)
+              if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
               {
-                MessageUtil.sendWarn(player, "능력을 사용하려면 %s 더 기다려야합니다!", ComponentUtil.translate("rg255,204;%s초", Constant.Sosu2.format(customEffect.getDuration() / 20d)));
+                event.setCancelled(true);
+                CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectTypeCustomMining.MINING_BOOSTER_COOLDOWN);
+                if (customEffect != null)
+                {
+                  MessageUtil.sendWarn(player, "능력을 사용하려면 %s 더 기다려야합니다!", ComponentUtil.translate("rg255,204;%s초", Constant.Sosu2.format(customEffect.getDuration() / 20d)));
+                  return;
+                }
+                CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.MINING_BOOSTER_COOLDOWN);
+                CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.MINING_BOOSTER);
+                MessageUtil.info(player, "&a%s 능력을 사용했습니다!", ComponentUtil.translate("채광 부스터"));
                 return;
               }
-              CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.MINING_BOOSTER_COOLDOWN);
-              CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.MINING_BOOSTER);
-              MessageUtil.info(player, "&a%s 능력을 사용했습니다!", ComponentUtil.translate("채광 부스터"));
-              return;
             }
             case PORTABLE_CRAFTING_TABLE ->
             {
               event.setCancelled(true);
               player.openWorkbench(null, true);
+              return;
+            }
+            case PORTABLE_ENDER_CHEST ->
+            {
+              event.setCancelled(true);
+              SoundPlay.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS);
+              player.openInventory(player.getEnderChest());
               return;
             }
             case SPYGLASS_TELEPORT ->
@@ -993,6 +1004,14 @@ public class PlayerInteract implements Listener
                 MessageUtil.info(player, "&a%s 능력을 사용했습니다!", ComponentUtil.translate("보아라, 닿아라"));
                 MessageUtil.info(player, "&e우클릭을 멈추거나 움직이면 순간 이동이 취소됩니다");
                 return;
+              }
+            }
+            case ENDER_EYE_WEATHER_FORECAST ->
+            {
+              if (rightClick)
+              {
+                event.setCancelled(true);
+                CommandWhatIs.weatherForecast(player.getWorld(), player);
               }
             }
           }
@@ -1733,6 +1752,10 @@ public class PlayerInteract implements Listener
               }
               if (entity instanceof Player victim)
               {
+                if (UserData.GOD_MODE.getBoolean(victim))
+                {
+                  continue;
+                }
                 if (victim.getGameMode() != GameMode.SPECTATOR)
                 {
                   double health = victim.getHealth();

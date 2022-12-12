@@ -14,6 +14,8 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -38,6 +40,7 @@ import org.bukkit.inventory.meta.BlockDataMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Colorable;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,27 +48,42 @@ import java.util.*;
 
 public class EntityComponentUtil
 {
+  public static final String VAULT_DISPLAY_NAME_FORMATTER = "cucumbery-vault-display-name-format";
+  /**
+   * a String to distinguish if display name is formatted with team prefix/suffix or color.
+   */
+  public static final String TEAM_DISPLAY_NAME_FORMATTER = "cucumbery-team-display-name-format";
   @NotNull
   public static Component entityComponent(@Nullable Player p, @NotNull Entity entity, @Nullable TextColor defaultColor)
   {
     boolean tmiMode = p != null && UserData.ENTITY_HOVER_EVENT_TMI_MODE.getBoolean(p);
     Component nameComponent;
+    Team team = Bukkit.getScoreboardManager().getMainScoreboard().getEntityTeam(entity);
     if (entity instanceof Player player)
     {
       nameComponent = player.displayName().hoverEvent(null).clickEvent(null);
+      if (nameComponent instanceof TranslatableComponent translatableComponent && translatableComponent.args().size() == 4 && translatableComponent.args().get(3) instanceof TextComponent textComponent &&
+              textComponent.content().equals(TEAM_DISPLAY_NAME_FORMATTER))
+      {
+        nameComponent = translatableComponent.args().get(1);
+      }
+      if (nameComponent instanceof TranslatableComponent translatableComponent && translatableComponent.args().size() == 4 && translatableComponent.args().get(3) instanceof TextComponent textComponent &&
+              textComponent.content().equals(VAULT_DISPLAY_NAME_FORMATTER))
+      {
+        nameComponent = translatableComponent.args().get(1);
+      }
       if (Cucumbery.using_Vault_Chat)
       {
         try
         {
+          TranslatableComponent translatableComponent = Component.translatable("%s%s%s");
+          List<Component> args = new ArrayList<>();
           String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
-          if (prefix != null)
-          {
-            nameComponent = ComponentUtil.create(false, prefix, nameComponent);
-          }
-          if (suffix != null)
-          {
-            nameComponent = ComponentUtil.create(false, nameComponent, suffix);
-          }
+          args.add(prefix != null ? ComponentUtil.create(prefix) : Component.empty());
+          args.add(nameComponent);
+          args.add(suffix != null ? ComponentUtil.create(suffix) : Component.empty());
+          args.add(Component.text(VAULT_DISPLAY_NAME_FORMATTER));
+          nameComponent = translatableComponent.args(args);
         }
         catch (Exception e)
         {
@@ -80,6 +98,11 @@ public class EntityComponentUtil
       {
         nameComponent = nameComponent.hoverEvent(null).clickEvent(null);
       }
+    }
+    if (nameComponent instanceof TranslatableComponent translatableComponent && translatableComponent.args().size() == 4 && translatableComponent.args().get(3) instanceof TextComponent textComponent &&
+            textComponent.content().equals(TEAM_DISPLAY_NAME_FORMATTER))
+    {
+      nameComponent = translatableComponent.args().get(1);
     }
     if (nameComponent == null)
     {
@@ -111,6 +134,31 @@ public class EntityComponentUtil
       if (entity instanceof Ageable ageable && !ageable.isAdult())
       {
         nameComponent = ComponentUtil.translate("%s %s", "아기", nameComponent);
+      }
+    }
+    if (team != null)
+    {
+      try
+      {
+        TranslatableComponent translatableComponent = Component.translatable("%s%s%s");
+        if (team.hasColor())
+        {
+          translatableComponent = translatableComponent.color(team.color());
+        }
+        List<Component> args = new ArrayList<>();
+        args.add(team.prefix());
+        args.add(nameComponent);
+        args.add(team.suffix());
+        args.add(Component.text(TEAM_DISPLAY_NAME_FORMATTER));
+        nameComponent = translatableComponent.args(args);
+      }
+      catch (IllegalStateException ignored)
+      {
+
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
       }
     }
     UUID uuid = entity.getUniqueId();
@@ -463,15 +511,15 @@ public class EntityComponentUtil
     if (entity instanceof Animals animals)
     {
       UUID breedCause = animals.getBreedCause();
-        if (breedCause != null)
+      if (breedCause != null)
+      {
+        Entity breedCauseEntity = Method2.getEntityAsync(breedCause);
+        if (breedCauseEntity != null)
         {
-          Entity breedCauseEntity = Method2.getEntityAsync(breedCause);
-          if (breedCauseEntity != null)
-          {
-            hover = hover.append(Component.text("\n"));
-            hover = hover.append(ComponentUtil.translate("사육사 : %s", SenderComponentUtil.senderComponent(breedCauseEntity, defaultColor, true)));
-          }
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("사육사 : %s", SenderComponentUtil.senderComponent(breedCauseEntity, defaultColor, true)));
         }
+      }
     }
     if (entity instanceof CommandMinecart commandMinecart)
     {

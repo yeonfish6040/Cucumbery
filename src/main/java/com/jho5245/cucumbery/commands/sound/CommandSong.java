@@ -1099,6 +1099,7 @@ public class CommandSong implements CucumberyCommandExecutor
 
   @Override
   @NotNull
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
     if (!Cucumbery.using_NoteBlockAPI)
@@ -1135,7 +1136,15 @@ public class CommandSong implements CucumberyCommandExecutor
             }
             case "sound-category" ->
             {
-              return CommandTabUtil.tabCompleterList(args, SoundCategory.values(), "<소리 범주>");
+//            return CommandTabUtil.tabCompleterList(args, SoundCategory.values(), "<소리 범주>");
+              try
+              {
+                Class<?> clazz = Class.forName("com.xxmicloxx.NoteBlockAPI.model.SoundCategory");
+                return CommandTabUtil.tabCompleterList(args, (Enum[]) clazz.getMethod("values").invoke(clazz), "<소리 범주>");
+              }
+              catch (Exception ignored)
+              {
+              }
             }
             case "play", "change-song" ->
             {

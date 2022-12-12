@@ -270,4 +270,6 @@ public class Variable
   public static HashMap<Location, BlockData> customMiningMode2BlockData = new HashMap<>();
 
   public static HashMap<Location, BukkitTask> customMiningMode2BlockDataTask = new HashMap<>();
+
+  public static HashMap<UUID, String> entityShootBowConsumableMap = new HashMap<>();
 }

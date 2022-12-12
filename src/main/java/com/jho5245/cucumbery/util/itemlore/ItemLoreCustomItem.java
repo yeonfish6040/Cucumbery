@@ -16,10 +16,8 @@ import de.tr7zw.changeme.nbtapi.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
+import org.bukkit.FireworkEffect.Type;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
@@ -28,6 +26,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -101,7 +100,7 @@ public class ItemLoreCustomItem
       {
         switch (customMaterial)
         {
-          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, BEACON_DECORATIVE ->
+          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN ->
           {
             if (!NBTAPI.arrayContainsValue(extraTags, ExtraTag.PRESERVE_BLOCK_NBT))
             {
@@ -210,7 +209,8 @@ public class ItemLoreCustomItem
             restrictionTag.addCompound(nbtCompound);
           }
         }
-        case BEACON_DECORATIVE -> {
+        case BEACON_DECORATIVE ->
+        {
           if (!NBTAPI.isRestricted(itemStack, RestrictionType.NO_BLOCK_BEACON))
           {
             nbtCompound.setString(CucumberyTag.VALUE_KEY, RestrictionType.NO_BLOCK_BEACON.toString());
@@ -218,14 +218,15 @@ public class ItemLoreCustomItem
             restrictionTag.addCompound(nbtCompound);
           }
         }
-        case BEACON_HAT -> {
+        case BEACON_HAT ->
+        {
           NBTCompound usageTag = itemTag.addCompound(CucumberyTag.USAGE_KEY);
           usageTag.setString("EquipmentSlot", "HELMET");
         }
       }
       switch (customMaterial)
       {
-        case TODWOT_PICKAXE, MUSHROOM_STEW_PICKAXE ->
+        case MUSHROOM_STEW_PICKAXE, STONK, TODWOT_PICKAXE ->
         {
           if (!NBTAPI.isRestricted(itemStack, RestrictionType.NO_GRINDSTONE))
           {
@@ -522,6 +523,12 @@ public class ItemLoreCustomItem
           NBTCompound sack = nbtItem.addCompound("Sack");
           sack.setInteger("Capacity", 1200);
         }
+        case TNT_SUPERIOR -> nbtItem.setFloat("ExplodePower", 10f);
+        case TNT_DRAIN ->
+        {
+          nbtItem.setFloat("ExplodePower", 6f);
+          nbtItem.setShort("Fuse", (short) 20);
+        }
       }
       if (nbtItem.getCompound(CucumberyTag.KEY_MAIN).getKeys().isEmpty())
       {
@@ -543,16 +550,19 @@ public class ItemLoreCustomItem
                 ENCHANTED_MITHRIL_INGOT, TITANIUM_ORE, EXPERIENCE_BOTTLE_GRAND, RUNE_DESTRUCTION, TUNGSTEN_ORE, TUNGSTEN_INGOT, COBALT_ORE, COBALT_INGOT, SHROOMITE_ORE,
                 SHROOMITE_INGOT, CUCUMBERITE_INGOT, COPPER_PICKAXE, TODWOT_PICKAXE, COPPER_AXE, COPPER_HOE, COPPER_SHOVEL, COPPER_SWORD, TUNGSTEN_SHOVEL, TUNGSTEN_AXE,
                 TUNGSTEN_PICKAXE, TUNGSTEN_HOE, TUNGSTEN_SWORD, COPPER_BOOTS, COPPER_CHESTPLATE, COPPER_HELMET, COPPER_LEGGINGS,
-                COBALT_AXE, COBALT_HOE, COBALT_PICKAXE, COBALT_SHOVEL, COBALT_SWORD, TOMATO -> itemMeta.setCustomModelData(25201);
+                COBALT_AXE, COBALT_HOE, COBALT_PICKAXE, COBALT_SHOVEL, COBALT_SWORD, TOMATO, ARROW_CRIT, AMBER, TOPAZ, JASPER -> itemMeta.setCustomModelData(25201);
 
         case BOO_HUNGRY, CUTE_SUGAR_HUNGRY, TITANIUM_INGOT, EXPERIENCE_BOTTLE_TITANIC, RUNE_EARTHQUAKE, CORE_GEMSTONE_EXPERIENCE,
                 MITHRIL_SHOVEL, MITHRIL_SWORD, MITHRIL_AXE, MITHRIL_HOE, MITHRIL_PICKAXE, TITANIUM_SWORD, TITANIUM_AXE, TITANIUM_HOE, TITANIUM_SHOVEL, TITANIUM_PICKAXE,
-                TUNGSTEN_LEGGINGS, TUNGSTEN_BOOTS, TUNGSTEN_HELMET, TUNGSTEN_CHESTPLATE -> itemMeta.setCustomModelData(25202);
+                TUNGSTEN_LEGGINGS, TUNGSTEN_BOOTS, TUNGSTEN_HELMET, TUNGSTEN_CHESTPLATE, ARROW_EXPLOSIVE, JADE, SAPPHIRE, RUBY -> itemMeta.setCustomModelData(25202);
 
         case EXPERIENCE_BOTTLE_COLOSSAL, CUCUMBERITE_ORE, CORE_GEMSTONE_MIRROR, TITANIUM_PICKAXE_REFINED, MITHRIL_PICKAXE_REFINED,
-                COBALT_BOOTS, COBALT_CHESTPLATE, COBALT_HELMET, COBALT_LEGGINGS -> itemMeta.setCustomModelData(25203);
-        case CORE_GEMSTONE_MITRA, MINDAS_BOOTS, MITHRIL_BOOTS, MITHRIL_CHESTPLATE, MITHRIL_HELMET -> itemMeta.setCustomModelData(25204);
-        case MITHRIL_ORE, TITANIUM_BOOTS, TITANIUM_CHESTPLATE, TITANIUM_HELMET, TITANIUM_LEGGINGS -> itemMeta.setCustomModelData(25205);
+                COBALT_BOOTS, COBALT_CHESTPLATE, COBALT_HELMET, COBALT_LEGGINGS, ARROW_EXPLOSIVE_DESTRUCTION -> itemMeta.setCustomModelData(25203);
+        case CORE_GEMSTONE_MITRA, MINDAS_BOOTS, MITHRIL_BOOTS, MITHRIL_CHESTPLATE, MITHRIL_HELMET, ARROW_FLAME -> itemMeta.setCustomModelData(25204);
+        case MITHRIL_ORE, TITANIUM_BOOTS, TITANIUM_CHESTPLATE, TITANIUM_HELMET, TITANIUM_LEGGINGS, ARROW_INFINITE -> itemMeta.setCustomModelData(25205);
+        case ARROW_MOUNT -> itemMeta.setCustomModelData(25206);
+        case ARROW_MOUNT_DISPOSAL -> itemMeta.setCustomModelData(25207);
+        case ARROW_MOUNT_INFINITE -> itemMeta.setCustomModelData(25208);
       }
     }
     // 기타 NBT 설정
@@ -603,92 +613,111 @@ public class ItemLoreCustomItem
             itemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 1, true);
           }
         }
-        case COPPER_PICKAXE -> {
+        case COPPER_PICKAXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 1, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.8, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case COPPER_SWORD -> {
+        case COPPER_SWORD ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.4, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case COPPER_AXE -> {
+        case COPPER_AXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 6, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case COPPER_SHOVEL -> {
+        case COPPER_SHOVEL ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 1.5, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case COPPER_HOE -> {
-          itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
-        }
-        case TUNGSTEN_SWORD -> {
+        case COPPER_HOE -> itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
+        case TUNGSTEN_SWORD ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 5, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.4, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case TUNGSTEN_AXE -> {
+        case TUNGSTEN_AXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 8, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -3.1, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case TUNGSTEN_SHOVEL -> {
+        case TUNGSTEN_SHOVEL ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 3.5, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
         case TUNGSTEN_HOE -> itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -1, Operation.ADD_NUMBER, EquipmentSlot.HAND));
-        case COBALT_PICKAXE -> {
+        case COBALT_PICKAXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 5, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.8, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case COBALT_SWORD -> {
+        case COBALT_SWORD ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 8, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.4, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case COBALT_AXE -> {
+        case COBALT_AXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 9, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case COBALT_SHOVEL -> {
+        case COBALT_SHOVEL ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 5.5, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
         case COBALT_HOE -> itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), 1, Operation.ADD_NUMBER, EquipmentSlot.HAND));
-        case MITHRIL_PICKAXE -> {
+        case MITHRIL_PICKAXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 6, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -1.8, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case MITHRIL_SWORD -> {
+        case MITHRIL_SWORD ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 9, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.1, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case MITHRIL_AXE -> {
+        case MITHRIL_AXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 10, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.6, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case MITHRIL_SHOVEL -> {
+        case MITHRIL_SHOVEL ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 6.5, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.7, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case MITHRIL_HOE -> {
+        case MITHRIL_HOE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 1, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), 2.3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case TITANIUM_PICKAXE -> {
+        case TITANIUM_PICKAXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 7, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -1.8, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case TITANIUM_SWORD -> {
+        case TITANIUM_SWORD ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 10, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.1, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case TITANIUM_AXE -> {
+        case TITANIUM_AXE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 11, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.5, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case TITANIUM_SHOVEL -> {
+        case TITANIUM_SHOVEL ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 7.5, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), -2.7, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
-        case TITANIUM_HOE -> {
+        case TITANIUM_HOE ->
+        {
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID_1, customMaterial.toString(), 1, Operation.ADD_NUMBER, EquipmentSlot.HAND));
           itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID_2, customMaterial.toString(), 3.3, Operation.ADD_NUMBER, EquipmentSlot.HAND));
         }
@@ -774,16 +803,12 @@ public class ItemLoreCustomItem
         case ENCHANTED_TITANIUM -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/3dcc0ec9873f4f8d407ba0a0f983e257787772eaf8784e226a61c7f727ac9e26");
         case MITHRIL_REFINED -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/35a7663300619bb6a156d76351ac05f7b3cafeac31e2ff04c55cc9f236327832");
         case TITANIUM_REFINED -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/704baabf7ef854825aae1992e4a75ff7286ed1654d8f1a08952e7b8669cf692d");
-        case RUBY -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/d159b03243be18a14f3eae763c4565c78f1f339a8742d26fde541be59b7de07");
-        case AMBER -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/da19436f6151a7b66d65ed7624add4325cfbbc2eee815fcf76f4c29ddf08f75b");
-        case AMETHYST -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/e493c6f540c7001fed97b07f6b4c89128e3a7c37563aa223f0acca314f175515");
-        case JADE -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/3b4c2afd544d0a6139e6ae8ef8f0bfc09a9fd837d0cad4f5cd0fe7f607b7d1a0");
-        case SAPPHIRE -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/cfcebe54dbc345ea7e22206f703e6b33befbe95b6a918bd1754b76188bc65bb5");
-        case TOPAZ -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/3fd960722ec29c66716ae5ca97b9b6b2628984e1d6f9d2592cd089914206a1b");
-        case JASPER -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/23d064ec150172d05844c11a18619c1421bbfb2ddd1dbb87cdc10e22252b773b");
         case PORTABLE_CRAFTING_TABLE -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+        case PORTABLE_ENDER_CHEST -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067");
         case FROG_HELMET -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/5710f6f91fafea57278df853131b775f2c2d324a6274bee40d776b16cb5d60b6");
         case MINDAS_HELMET -> ItemStackUtil.setTexture(skullMeta, "http://textures.minecraft.net/texture/316fc913e6ab9b6911003de60c797bad3fbeb80eb73d51afb6928de9c9eedac3");
+        case DRILL_ENGINE -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/fb9051485e15700418022e38a5db28a049a2e627c5ffa56fd313bcdead406a8e");
+        case DRILL_FUEL_TANK -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/aef5acf134fa952f13fdf0b3899060cc18ebc0a971347e45a31ecf95a4b0b31c");
       }
     }
     if (customMaterial.isGlow())
@@ -815,6 +840,28 @@ public class ItemLoreCustomItem
         case TITANIUM_BOOTS, TITANIUM_CHESTPLATE, TITANIUM_HELMET, TITANIUM_LEGGINGS -> leatherArmorMeta.setColor(Color.fromRGB(150, 150, 150));
       }
       itemStack.setItemMeta(leatherArmorMeta);
+    }
+    if (itemMeta instanceof FireworkMeta fireworkMeta)
+    {
+      switch (customMaterial)
+      {
+        case FIREWORK_ROCKET_CHAIN, FIREWORK_ROCKET_REPEATING ->
+        {
+          if (!fireworkMeta.hasEffects())
+          {
+            fireworkMeta.addEffect(FireworkEffect.builder().with(Type.BALL).withColor(Color.WHITE).build());
+            fireworkMeta.setPower(1);
+            itemStack.setItemMeta(fireworkMeta);
+          }
+        }
+        case FIREWORK_ROCKET_EXPLOSIVE, FIREWORK_ROCKET_EXPLOSIVE_DESTRUCTION, FIREWORK_ROCKET_EXPLOSIVE_FLAME ->
+        {
+          fireworkMeta.clearEffects();
+          fireworkMeta.addEffect(FireworkEffect.builder().with(Type.BALL).withColor(Color.WHITE).build());
+          fireworkMeta.setPower(1);
+          itemStack.setItemMeta(fireworkMeta);
+        }
+      }
     }
   }
 

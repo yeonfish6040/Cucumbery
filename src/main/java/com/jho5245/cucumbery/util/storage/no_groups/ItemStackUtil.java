@@ -23,10 +23,7 @@ import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Nameable;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
@@ -909,10 +906,39 @@ public class ItemStackUtil
   }
 
   @NotNull
-  private static Material getAnimatedMaterial(@NotNull List<Material> materials)
+  private static Material getAnimatedMaterial(@NotNull Collection<Material> materials)
   {
     List<Material> newList = new ArrayList<>(materials);
     newList.removeIf(m -> !m.isItem() || m.isAir());
+    return Method2.getAnimated(newList, 2000);
+  }
+
+  @NotNull
+  private static ItemStack getAnimatedItemStack(@Nullable Collection<ItemStack> itemStacks, @Nullable Collection<CustomMaterial> customMaterials, @Nullable Collection<Material> materials)
+  {
+    List<ItemStack> newList = new ArrayList<>();
+    if (itemStacks != null)
+    {
+      newList.addAll(itemStacks);
+    }
+    if (customMaterials != null)
+    {
+      for (CustomMaterial customMaterial : customMaterials)
+      {
+        newList.add(customMaterial.create());
+      }
+    }
+    if (materials != null)
+    {
+      for (Material material : materials)
+      {
+        if (!material.isItem() || material.isAir())
+        {
+          continue;
+        }
+        newList.add(new ItemStack(material));
+      }
+    }
     return Method2.getAnimated(newList, 2000);
   }
 
@@ -962,12 +988,37 @@ public class ItemStackUtil
             if (vanillaTags.getBoolean("minecraft:planks"))
             {
               display = ComponentUtil.translate("아무 종류의 나무 판자");
-              itemStack.setType(getAnimatedMaterial(Constant.PLANKS));
+              itemStack.setType(getAnimatedMaterial(Tag.PLANKS.getValues()));
+            }
+            else if (vanillaTags.getBoolean("minecraft:mineable/pickaxe"))
+            {
+              display = ComponentUtil.translate("곡괭이로 채광할 수 있는 아무 종류의 블록");
+              itemStack.setType(getAnimatedMaterial(Tag.MINEABLE_PICKAXE.getValues()));
+            }
+            else if (vanillaTags.getBoolean("minecraft:mineable/hoe"))
+            {
+              display = ComponentUtil.translate("괭이로 수확할 수 있는 아무 종류의 블록");
+              itemStack.setType(getAnimatedMaterial(Tag.MINEABLE_HOE.getValues()));
+            }
+            else if (vanillaTags.getBoolean("minecraft:mineable/hoe"))
+            {
+              display = ComponentUtil.translate("도끼로 벌목할 수 있는 아무 종류의 블록");
+              itemStack.setType(getAnimatedMaterial(Tag.MINEABLE_AXE.getValues()));
+            }
+            else if (vanillaTags.getBoolean("minecraft:mineable/hoe"))
+            {
+              display = ComponentUtil.translate("삽으로 굴착할 수 있는 아무 종류의 블록");
+              itemStack.setType(getAnimatedMaterial(Tag.MINEABLE_SHOVEL.getValues()));
+            }
+            else if (vanillaTags.getBoolean("minecraft:stone_tool_materials"))
+            {
+              display = ComponentUtil.translate("아무 종류의 돌 도구 재료");
+              itemStack.setType(getAnimatedMaterial(Tag.ITEMS_STONE_TOOL_MATERIALS.getValues()));
             }
             else if (vanillaTags.getBoolean("minecraft:wool"))
             {
               display = ComponentUtil.translate("아무 종류의 양털");
-              itemStack.setType(getAnimatedMaterial(Constant.WOOL));
+              itemStack.setType(getAnimatedMaterial(Tag.WOOL.getValues()));
             }
             else if (vanillaTags.getBoolean("minecraft:flowers"))
             {
@@ -1020,6 +1071,14 @@ public class ItemStackUtil
             {
               display = ComponentUtil.translate("굳검버리가 좋아하는 것");
               itemStack.setType(getAnimatedMaterial(Arrays.asList(Material.TNT, Material.TNT_MINECART, Material.COMMAND_BLOCK, Material.FLINT_AND_STEEL, Material.SCUTE)));
+            }
+            if (customTags.getBoolean("gemstones"))
+            {
+              display = ComponentUtil.translate("아무 젬스톤");
+              ItemStack clone = getAnimatedItemStack(null, Arrays.asList(CustomMaterial.AMBER, CustomMaterial.JADE, CustomMaterial.JASPER, CustomMaterial.SAPPHIRE, CustomMaterial.TOPAZ), null);
+              itemStack.setType(clone.getType());
+              itemStack.setItemMeta(clone.getItemMeta());
+              itemMeta = itemStack.getItemMeta();
             }
           }
           else

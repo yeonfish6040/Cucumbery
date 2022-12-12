@@ -38,6 +38,10 @@ public class CucumberyTag
   public static final String USAGE_COMMANDS_RIGHT_CLICK_KEY = "RightClick";
   public static final String USAGE_COMMANDS_SNEAK_RIGHT_CLICK_KEY = "SneakRightClick";
 
+  public static final String USAGE_COMMANDS_DROP_KEY = "Drop";
+
+  public static final String USAGE_COMMANDS_SNEAK_DROP_KEY = "SneakDrop";
+
   public static final String USAGE_COMMANDS_LEFT_CLICK_KEY = "LeftClick";
   public static final String USAGE_COMMANDS_SNEAK_LEFT_CLICK_KEY = "SneakLeftClick";
 

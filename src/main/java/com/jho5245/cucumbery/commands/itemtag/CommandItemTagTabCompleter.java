@@ -1,15 +1,12 @@
 package com.jho5245.cucumbery.commands.itemtag;
 
-import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.CommandTabUtil;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import com.jho5245.cucumbery.util.no_groups.CommandTabUtil;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -17,7 +14,10 @@ import com.jho5245.cucumbery.util.storage.data.Constant.ItemUsageType;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.*;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -1155,29 +1155,29 @@ public class CommandItemTagTabCompleter implements TabCompleter
       case "expiredate":
         if (args.length == 2)
         {
-          Calendar calendar = Calendar.getInstance();
-          calendar.add(Calendar.HOUR_OF_DAY, Cucumbery.config.getInt("adjust-time-difference-value"));
+//          Calendar calendar = Calendar.getInstance();
+//          calendar.add(Calendar.HOUR_OF_DAY, Cucumbery.config.getInt("adjust-time-difference-value"));
           List<String> list = new ArrayList<>();
           list.add("--remove");
-          list.addAll(Arrays.asList("~1분", "~10분", "~1시간", "~1일", "~7일", "~14일", "~21일", "~30일", "~1년"));
-          calendar.add(Calendar.MINUTE, 1);
-          list.add(Method.getCurrentTime(calendar, true, false));
-          calendar.add(Calendar.MINUTE, 10);
-          list.add(Method.getCurrentTime(calendar, true, false));
-          calendar.add(Calendar.HOUR, 1);
-          list.add(Method.getCurrentTime(calendar, true, false));
-          calendar.add(Calendar.DATE, 1);
-          list.add(Method.getCurrentTime(calendar, true, false));
-          calendar.add(Calendar.DATE, 7);
-          list.add(Method.getCurrentTime(calendar, true, false));
-          calendar.add(Calendar.DATE, 14);
-          list.add(Method.getCurrentTime(calendar, true, false));
-          calendar.add(Calendar.DATE, 21);
-          list.add(Method.getCurrentTime(calendar, true, false));
-          calendar.add(Calendar.DATE, 30);
-          list.add(Method.getCurrentTime(calendar, true, false));
-          calendar.add(Calendar.DATE, 365);
-          list.add(Method.getCurrentTime(calendar, true, false));
+          list.addAll(Arrays.asList("~1분", "~2분", "~5분", "~10분", "~30분", "~1시간", "~1일", "~7일", "~14일", "~21일", "~30일", "~1년"));
+//          calendar.add(Calendar.MINUTE, 1);
+//          list.add(Method.getCurrentTime(calendar, true, false));
+//          calendar.add(Calendar.MINUTE, 10);
+//          list.add(Method.getCurrentTime(calendar, true, false));
+//          calendar.add(Calendar.HOUR, 1);
+//          list.add(Method.getCurrentTime(calendar, true, false));
+//          calendar.add(Calendar.DATE, 1);
+//          list.add(Method.getCurrentTime(calendar, true, false));
+//          calendar.add(Calendar.DATE, 7);
+//          list.add(Method.getCurrentTime(calendar, true, false));
+//          calendar.add(Calendar.DATE, 14);
+//          list.add(Method.getCurrentTime(calendar, true, false));
+//          calendar.add(Calendar.DATE, 21);
+//          list.add(Method.getCurrentTime(calendar, true, false));
+//          calendar.add(Calendar.DATE, 30);
+//          list.add(Method.getCurrentTime(calendar, true, false));
+//          calendar.add(Calendar.DATE, 365);
+//          list.add(Method.getCurrentTime(calendar, true, false));
           return Method.tabCompleterList(args, list, "<기간>", true);
         }
         return Method.tabCompleterList(args, "[<기간>]", true);
@@ -1310,7 +1310,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
               if (nbtCompoundList != null && nbtCompoundList.size() > 0)
               {
                 StringBuilder originValueStringBuilder = new StringBuilder();
-                for (NBTCompound originValue2 : nbtCompoundList)
+                for (ReadWriteNBT originValue2 : nbtCompoundList)
                 {
                   originValueStringBuilder.append(originValue2.toString()).append(";;");
                 }

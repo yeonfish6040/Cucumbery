@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import de.tr7zw.changeme.nbtapi.*;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,7 @@ public class NBTAPI
    * @param nbtCompound 확인할 json
    * @return type에 대한 HideFromLore의 값
    */
-  public static boolean hideFromLore(NBTCompound nbtCompound)
+  public static boolean hideFromLore(ReadWriteNBT nbtCompound)
   {
     try
     {
@@ -56,7 +57,7 @@ public class NBTAPI
     {
       return false;
     }
-    for (NBTCompound restrictionTag : restrictionTags)
+    for (ReadWriteNBT restrictionTag : restrictionTags)
     {
       String value = restrictionTag.getString(CucumberyTag.VALUE_KEY);
       if (type.toString().equals(value))
@@ -87,7 +88,7 @@ public class NBTAPI
     NBTCompoundList restrictionTags = getCompoundList(nbtItem.getCompound(CucumberyTag.KEY_MAIN), CucumberyTag.ITEM_USAGE_RESTRICTIONS_KEY);
     if (restrictionTags != null)
     {
-      for (NBTCompound restrictionTag : restrictionTags)
+      for (ReadWriteNBT restrictionTag : restrictionTags)
       {
         String value = restrictionTag.getString(CucumberyTag.VALUE_KEY);
         if (type.toString().equals(value))
@@ -131,7 +132,7 @@ public class NBTAPI
     NBTCompoundList restrictionTags = getCompoundList(nbtItem.getCompound(CucumberyTag.KEY_MAIN), CucumberyTag.ITEM_USAGE_RESTRICTIONS_KEY);
     if (restrictionTags != null)
     {
-      for (NBTCompound restrictionTag : restrictionTags)
+      for (ReadWriteNBT restrictionTag : restrictionTags)
       {
         String value = restrictionTag.getString(CucumberyTag.VALUE_KEY);
         if (type.toString().equals(value))
@@ -179,11 +180,11 @@ public class NBTAPI
    */
   public static boolean arrayContainsValue(@Nullable NBTList<String> array, @NotNull String value)
   {
-    if (value.length() == 0)
+    if (value.isEmpty())
     {
       return false;
     }
-    if (array == null || array.size() == 0)
+    if (array == null || array.isEmpty())
     {
       return false;
     }
@@ -223,11 +224,11 @@ public class NBTAPI
     {
       return false;
     }
-    for (NBTCompound nbtCompound : array)
+    for (ReadWriteNBT nbtCompound : array)
     {
       try
       {
-        if (nbtCompound.hasKey(key))
+        if (nbtCompound.hasTag(key))
         {
           if (value.equals(nbtCompound.getString(key)))
           {
@@ -263,7 +264,7 @@ public class NBTAPI
       return null;
     }
     NBTItem nbtItem = new NBTItem(item);
-    if (!nbtItem.hasKey(CucumberyTag.KEY_MAIN))
+    if (!nbtItem.hasTag(CucumberyTag.KEY_MAIN))
     {
       return null;
     }
@@ -273,7 +274,7 @@ public class NBTAPI
   @Nullable
   public static NBTCompound getCompound(@Nullable NBTCompound parent, @NotNull String key)
   {
-    if (parent == null || !parent.hasKey(key))
+    if (parent == null || !parent.hasTag(key))
     {
       return null;
     }
@@ -303,7 +304,7 @@ public class NBTAPI
   @Nullable
   public static Integer getInteger(@Nullable NBTCompound parent, @NotNull String key)
   {
-    if (parent == null || !parent.hasKey(key))
+    if (parent == null || !parent.hasTag(key))
     {
       return null;
     }
@@ -313,7 +314,7 @@ public class NBTAPI
   @Nullable
   public static Long getLong(@Nullable NBTCompound parent, @NotNull String key)
   {
-    if (parent == null || !parent.hasKey(key))
+    if (parent == null || !parent.hasTag(key))
     {
       return null;
     }
@@ -323,7 +324,7 @@ public class NBTAPI
   @Nullable
   public static Double getDouble(@Nullable NBTCompound parent, @NotNull String key)
   {
-    if (parent == null || !parent.hasKey(key))
+    if (parent == null || !parent.hasTag(key))
     {
       return null;
     }
@@ -331,9 +332,9 @@ public class NBTAPI
   }
 
   @Nullable
-  public static String getString(@Nullable NBTCompound parent, @NotNull String key)
+  public static String getString(@Nullable ReadWriteNBT parent, @NotNull String key)
   {
-    if (parent == null || !parent.hasKey(key))
+    if (parent == null || !parent.hasTag(key))
     {
       return null;
     }
@@ -343,7 +344,7 @@ public class NBTAPI
   @Nullable
   public static Boolean getBoolean(@Nullable NBTCompound parent, @NotNull String key)
   {
-    if (parent == null || !parent.hasKey(key))
+    if (parent == null || !parent.hasTag(key))
     {
       return null;
     }

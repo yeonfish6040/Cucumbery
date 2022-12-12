@@ -1,10 +1,12 @@
 package com.jho5245.cucumbery.listeners.entity.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTList;
@@ -13,13 +15,17 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,9 +50,67 @@ public class EntityExplode implements Listener
     if (!event.isCancelled())
     {
       Entity entity = event.getEntity();
-      if (entity instanceof TNTPrimed && entity.getScoreboardTags().contains("custom_material_tnt_i_wont_let_you_go"))
+      if (entity instanceof TNTPrimed tntPrimed)
       {
-        SoundPlay.playSoundLocation(entity.getLocation(), "custom_i_wont_let_you_go", 4F, 1F);
+        if (entity.getScoreboardTags().contains("custom_material_tnt_i_wont_let_you_go"))
+        {
+          SoundPlay.playSoundLocation(entity.getLocation(), "custom_i_wont_let_you_go", 4F, 1F);
+        }
+        if (entity.getScoreboardTags().contains("custom_material_tnt_combat"))
+        {
+          event.blockList().removeIf(block -> block.getType() != Material.TNT);
+        }
+        if (entity.getScoreboardTags().contains("custom_material_tnt_drain"))
+        {
+          event.blockList().clear();
+          float radius = tntPrimed.getYield();
+          Location location = event.getLocation();
+          for (int x = (int) (location.getX() - radius); x <= location.getX() + radius; x++)
+          {
+            for (int y = (int) (location.getY() - radius); y <= location.getY() + radius; y++)
+            {
+              for (int z = (int) (location.getZ() - radius); z <= location.getZ() + radius; z++)
+              {
+                Block block = location.getWorld().getBlockAt(x, y, z);
+                if (block.getLocation().distance(location) <= radius)
+                {
+                  Material blockType = block.getType();
+                  if (blockType == Material.WATER || blockType == Material.BUBBLE_COLUMN)
+                  {
+                    block.setType(Material.AIR);
+                  }
+                  if (blockType == Material.SEAGRASS || blockType == Material.TALL_SEAGRASS || blockType == Material.KELP || blockType == Material.KELP_PLANT)
+                  {
+                    Entity owner = tntPrimed.getSource();
+                    if (owner instanceof Player player)
+                    {
+                      BlockBreakEvent blockBreakEvent = new BlockBreakEvent(block, player);
+                      Bukkit.getPluginManager().callEvent(blockBreakEvent);
+                      if (!blockBreakEvent.isCancelled())
+                      {
+                        block.breakNaturally();
+                        block.setType(Material.AIR);
+                      }
+                    }
+                  }
+                  Location loc = new Location(location.getWorld(), x, y, z);
+                  ItemStack itemStack = Method2.getPlacedBlockDataAsItemStack(loc);
+                  CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+                  if (customMaterial == CustomMaterial.TNT_DRAIN)
+                  {
+                    event.blockList().add(block);
+                  }
+                  BlockData blockData = block.getBlockData();
+                  if (blockData instanceof Waterlogged waterlogged && waterlogged.isWaterlogged())
+                  {
+                    waterlogged.setWaterlogged(false);
+                    block.setBlockData(waterlogged);
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

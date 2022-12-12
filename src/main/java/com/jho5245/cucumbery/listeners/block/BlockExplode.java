@@ -27,7 +27,7 @@ public class BlockExplode implements Listener
 		if (!config.getBoolean("enable-respawn-block-protection"))
 			return;
 		List<String> keyList = config.getStringList("respawn-block-protection-coords");
-		if (keyList.size() == 0)
+		if (keyList.isEmpty())
 			return;
 		List<Block> blocks = new ArrayList<>();
 		for (String key : keyList)

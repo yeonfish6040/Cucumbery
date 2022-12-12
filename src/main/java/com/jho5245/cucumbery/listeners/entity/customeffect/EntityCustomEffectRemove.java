@@ -6,10 +6,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectScheduler;
-import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.children.group.LocationVelocityCustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.*;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeReinforce;
@@ -21,6 +18,8 @@ import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
@@ -310,6 +309,23 @@ public class EntityCustomEffectRemove implements Listener
       CustomEffectManager.addEffect(player, CustomEffectTypeReinforce.STAR_CATCH_FINISHED);
       CommandReinforce.REINFORCE_OPERATING.remove(uuid);
       player.performCommand("강화 realstart");
+    }
+
+    if (customEffectType == CustomEffectType.STRANGE_CREATIVE_MODE && entity instanceof Player player && customEffect instanceof StringCustomEffect stringCustomEffect)
+    {
+      String data = stringCustomEffect.getString();
+      try
+      {
+        String[] split = data.split("\\|");
+        player.setGameMode(GameMode.valueOf(split[0]));
+        NBTEntity nbtEntity = new NBTEntity(player);
+        nbtEntity.mergeCompound(new NBTContainer("{abilities:{instabuild:" + split[1] + ",invulnerable:" + split[2] + "}}"));
+        player.setAllowFlight(Boolean.parseBoolean(split[3]));
+      }
+      catch (Exception ignored)
+      {
+
+      }
     }
   }
 }

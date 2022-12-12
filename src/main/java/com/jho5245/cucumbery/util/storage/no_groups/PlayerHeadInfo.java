@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.util.storage.no_groups;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -63,13 +64,13 @@ public class PlayerHeadInfo
       return null;
     }
     NBTCompoundList textures = properties.getCompoundList("textures");
-    if (textures == null || textures.size() == 0)
+    if (textures == null || textures.isEmpty())
     {
       return null;
     }
-    for (NBTCompound texture : textures)
+    for (ReadWriteNBT texture : textures)
     {
-      if (!texture.hasKey("Value"))
+      if (!texture.hasTag("Value"))
       {
         continue;
       }

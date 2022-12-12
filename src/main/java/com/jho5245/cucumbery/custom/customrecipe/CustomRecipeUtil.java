@@ -16,9 +16,11 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -984,14 +986,13 @@ public class CustomRecipeUtil
     }
 
     // 바닥에 있는 블록 조건
-    playerValue = ItemNameUtil.itemName(world.getBlockAt(locationBlockX, (int) Math.floor(location.getY() - 0.01), locationBlockZ).getType()).toString();
     requireString = "belowblock";
     prefixColor = "rg242,121;";
     configString = config.getString(configSection + requireString);
     try
     {
       Material configMaterial = Material.valueOf(configString);
-      configString = ItemNameUtil.itemName(configMaterial).toString();
+      configString = configMaterial.toString();
     }
     catch (Exception e)
     {
@@ -999,10 +1000,18 @@ public class CustomRecipeUtil
     }
     if (configString != null)
     {
+      Block belowBlock = world.getBlockAt(locationBlockX, (int) Math.floor(location.getY() - 0.01), locationBlockZ);
+      playerValue = belowBlock.getType().toString();
       boolean passRequire = playerValue.equals(configString);
-      String equalsString = passRequire ? "&7 = " : "&7 ≠ ";
-      String finalValue = prefixColor + "밟고 있는 블록 : " + (passRequire ? "rgb0,255,84;" + playerValue : "rgb255,0,84;" + MessageUtil.stripColor(playerValue)) + equalsString + "rgb0,255,84;" + configString;
-      requirementsLore.add(ComponentUtil.create(finalValue));
+      String equalsString = passRequire ? "&7=" : "&7≠";
+      requirementsLore.add(
+              ComponentUtil.translate(
+                      prefixColor + "밟고 있는 블록 : %s %s %s",
+                      ItemNameUtil.itemName(Material.valueOf(playerValue), passRequire ? TextColor.color(0, 255, 84) : TextColor.color(255, 0, 84)),
+                      equalsString,
+                      ItemNameUtil.itemName(Material.valueOf(configString), TextColor.color(0, 255, 84))
+              )
+      );
       requirements[requirementOrder] = passRequire;
       requirementOrder++;
     }

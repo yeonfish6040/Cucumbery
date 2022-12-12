@@ -143,6 +143,10 @@ public enum Permission
 
   CMD_SHAKE_VILLAGER_HEAD(C + "shakevillagerhead"),
 
+  CMD_SET_ROTATION(C + "setrotation"),
+
+  CMD_LOOK_AT(C + "lookat"),
+
   OTHER_EVAL("eval"),
   OTHER_PLACEHOLDER("placeholder"),
   ;

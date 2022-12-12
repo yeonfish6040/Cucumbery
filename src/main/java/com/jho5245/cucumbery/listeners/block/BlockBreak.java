@@ -179,7 +179,8 @@ public class BlockBreak implements Listener
     }
 
     if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE)
-            && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE) && blockType == Material.FIRE))
+            && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE) && blockType == Material.FIRE)
+            && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS) && blockType.getHardness() == 0f && Method2.getPlacedBlockDataAsItemStack(location) == null))
     {
       event.setCancelled(true);
       return;

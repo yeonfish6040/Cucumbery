@@ -170,6 +170,8 @@ public class PlayerCommandSend implements Listener
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SPLASH, "splash"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SWING_ARM, "swingarm"));
 		commands.removeAll(this.deleteCommands(player, Permission.CMD_SHAKE_VILLAGER_HEAD, "shakevillagerhead"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_SET_ROTATION, "setrotation"));
+		commands.removeAll(this.deleteCommands(player, Permission.CMD_LOOK_AT, "lookat"));
 
 		// 뭔데 왜 /cucumbery:nick 안사라지는데
 		if (!Method.hasPermission(player, Permission.CMD_NICK, false))

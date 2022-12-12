@@ -59,6 +59,10 @@ public class CustomEffectType implements Translatable, EnumHideable
   /**/ CONTINUAL_SPECTATING = new CustomEffectType("continual_spectating", "관전 지속", builder().keepOnDeath().defaultDuration(-1)),
           CONTINUAL_SPECTATING_EXEMPT = new CustomEffectType("continual_spectating_exempt", "관전 지속 외출", builder().keepOnDeath()),
 
+          CONTINUAL_RIDING = new CustomEffectType("continual_riding", "라이딩 지속", builder().keepOnDeath().defaultDuration(-1).description(ComponentUtil.translate("플레이어를 지속적으로 탑승합니다")
+                          .append(ComponentUtil.translate("해당 플레이어가 재접속하거나 리스폰해도 자동으로 탑승합니다")))),
+          CONTINUAL_RIDING_EXEMPT = new CustomEffectType("continual_riding_exempt", "라이딩 지속 외출", builder().keepOnDeath().description("지속시간 동안은 강제 탑승이 되지 않습니다")),
+
   /**/ CURSE_OF_BEANS = new CustomEffectType("curse_of_beans", "콩의 저주 콩의 저주", builder().negative().keepOnDeath()),
           CURSE_OF_CONSUMPTION = new CustomEffectType("curse_of_consumption", "섭식 장애", builder().negative().keepOnDeath()),
           CURSE_OF_CREATIVITY = new CustomEffectType("curse_of_creativity", "건축 불가능", builder().negative().keepOnDeath()),
@@ -201,6 +205,21 @@ public class CustomEffectType implements Translatable, EnumHideable
 
           AUTO_CHAT_PARSER = new CustomEffectType("auto_chat_parser", "채팅을 자동으로 파싱해주는 마법의 효과", builder().keepOnDeath()),
 
+          STRANGE_CREATIVE_MODE = new CustomEffectType("strange_creative_mode", "뭔가 이상한 크리에이티브 모드", builder().removeOnQuit().keepOnDeath()
+                  .description(ComponentUtil.translate("크리에이티브인데.. 서바이벌인가..?")
+                          .append(Component.text("\n"))
+                          .append(Component.text("\n"))
+                          .append(ComponentUtil.translate("크리에이티브 모드처럼 블록과 아이템을 자유롭게"))
+                          .append(Component.text("\n"))
+                          .append(ComponentUtil.translate("사용할 수 있으나 비행 모드가 비활성화되고"))
+                          .append(Component.text("\n"))
+                          .append(ComponentUtil.translate("%s(%s) 기능을 사용할 수 없으며", Component.translatable("key.pickItem"), Component.keybind("key.pickItem")))
+                          .append(Component.text("\n"))
+                          .append(ComponentUtil.translate("서바이벌 모드와 동일하게 다른 적대적 개체의"))
+                          .append(Component.text("\n"))
+                          .append(ComponentUtil.translate("표적이 될 수 있고 피해를 입을 수 있습니다"))
+                  )),
+
   /**/ NOTHING = new CustomEffectType("nothing", "아무것도 아님"),
 
   /**/ TEST = new CustomEffectType(new NamespacedKey("test", "test"), "테스트뭐", builder());
@@ -212,7 +231,9 @@ public class CustomEffectType implements Translatable, EnumHideable
     register(AWKWARD, THICK, BACKWARDS_CHAT, MUNDANE, UNCRAFTABLE,
             BANE_OF_ARTHROPODS, SHARPNESS, SMITE,
 
-            ENTITY_REMOVER, SHIVA_NO_ONE_CAN_BLOCK_ME, GD_TO_HI, AUTO_CHAT_PARSER,
+            CONTINUAL_RIDING, CONTINUAL_RIDING_EXEMPT,
+
+            ENTITY_REMOVER, SHIVA_NO_ONE_CAN_BLOCK_ME, GD_TO_HI, AUTO_CHAT_PARSER, STRANGE_CREATIVE_MODE,
 
             SPYGLASS_TELEPORT, SPYGLASS_TELEPORT_COOLDOWN,
 

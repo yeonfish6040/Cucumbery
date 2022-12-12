@@ -400,7 +400,7 @@ public class MessageUtil
       {
         ItemLore.removeItemLore(itemStack);
       }
-      if (player.hasPermission("asdf") && (!nbtItem.hasKey("VirtualItem") || nbtItem.getBoolean("VirtualItem") == null) || !nbtItem.getBoolean("VirtualItem"))
+      if (player.hasPermission("asdf") && (!nbtItem.hasKey("VirtualItem") || nbtItem.getBoolean("VirtualItem") == null || !nbtItem.getBoolean("VirtualItem")))
       {
         ItemMeta itemMeta = itemStack.getItemMeta();
         List<Component> lore = itemMeta.lore();
@@ -441,24 +441,22 @@ public class MessageUtil
         itemMeta.lore(lore);
         itemStack.setItemMeta(itemMeta);
       }
+      else
+      {
+        component = component.clickEvent(null);
+      }
       component = component.hoverEvent(ItemStackComponent.itemStackComponent(itemStack).hoverEvent());
     }
     if (component instanceof TranslatableComponent translatableComponent)
     {
       List<Component> args = new ArrayList<>(translatableComponent.args());
-      for (int i = 0; i < args.size(); i++)
-      {
-        args.set(i, translate(player, args.get(i)));
-      }
+      args.replaceAll(component1 -> translate(player, component1));
       component = translatableComponent.args(args);
     }
     if (!component.children().isEmpty())
     {
       List<Component> children = new ArrayList<>(component.children());
-      for (int i = 0; i < children.size(); i++)
-      {
-        children.set(i, translate(player, children.get(i)));
-      }
+      children.replaceAll(component1 -> translate(player, component1));
       component = component.children(children);
     }
     return component;

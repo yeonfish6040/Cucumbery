@@ -74,25 +74,6 @@ public class SenderComponentUtil
       if (entity instanceof Player player)
       {
         nameComponent = player.displayName().hoverEvent(null).clickEvent(null);
-        if (Cucumbery.using_Vault_Chat)
-        {
-          try
-          {
-            String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
-            if (prefix != null)
-            {
-              nameComponent = ComponentUtil.create(false, prefix, nameComponent);
-            }
-            if (suffix != null)
-            {
-              nameComponent = ComponentUtil.create(false, nameComponent, suffix);
-            }
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }
-        }
       }
       else
       {

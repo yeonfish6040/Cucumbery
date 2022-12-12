@@ -62,12 +62,7 @@ public class CommandWhatIs implements CucumberyCommandExecutor
       {
         if ("forecast".equals(args[1]))
         {
-          List<Component> weather = getForecastInfo(world);
-          MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "&m                 &r일기 예보&m                 ");
-          for (Component info : weather)
-          {
-            MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, info);
-          }
+          weatherForecast(world, sender);
         }
         else
         {
@@ -219,6 +214,15 @@ public class CommandWhatIs implements CucumberyCommandExecutor
     }
     return true;
   }
+  
+  public static void weatherForecast(@NotNull World world, @NotNull CommandSender sender)
+  {
+    List<Component> weather = getForecastInfo(world);
+    for (Component info : weather)
+    {
+      MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, info);
+    }
+  }
 
   @Override
   public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
@@ -267,26 +271,27 @@ public class CommandWhatIs implements CucumberyCommandExecutor
     int weatherDuration = world.getWeatherDuration();
     Component weather = Component.empty();
     boolean additionalInfo = false;
+    returnValue.add(ComponentUtil.translate("현재 날씨는 %s이며", ComponentUtil.translate(world.hasStorm() ? (world.isThundering() ? "&e번개를 동반한 비" : "&e비") : "&e맑음")));
     if (!world.hasStorm())
     {
       if (weatherDuration < thunderDuration && world.isThundering())
       {
-        weather = ComponentUtil.translate("현재 날씨는 %s이며, %s 이후 번개를 동반한 비가 올 예정입니다", ComponentUtil.translate("&e맑음"), MessageUtil.periodRealTimeAndGameTime(thunderDuration));
+        weather = ComponentUtil.translate("%s 이후 번개를 동반한 비가 올 예정입니다", MessageUtil.periodRealTimeAndGameTime(thunderDuration));
       }
       else
       {
-        weather = ComponentUtil.translate("현재 날씨는 %s이며, %s 이후 비가 올 예정입니다", ComponentUtil.translate("&e맑음"), MessageUtil.periodRealTimeAndGameTime(thunderDuration));
+        weather = ComponentUtil.translate("%s 이후 비가 올 예정입니다", MessageUtil.periodRealTimeAndGameTime(thunderDuration));
       }
     }
     else if (world.hasStorm() && !world.isThundering())
     {
       if (weatherDuration < thunderDuration)
       {
-        weather = ComponentUtil.translate("현재 날씨는 %s이며, %s 이후 비가 그칠 예정입니다", ComponentUtil.translate("&e비가 오는 중"), MessageUtil.periodRealTimeAndGameTime(weatherDuration));
+        weather = ComponentUtil.translate("%s 이후 비가 그칠 예정입니다", MessageUtil.periodRealTimeAndGameTime(weatherDuration));
       }
       else
       {
-        weather = ComponentUtil.translate("현재 날씨는 %s이며, %s 이후 번개를 동반한 비가 올 예정입니다", ComponentUtil.translate("&e비가 오는 중"), MessageUtil.periodRealTimeAndGameTime(thunderDuration));
+        weather = ComponentUtil.translate("%s 이후 번개를 동반한 비가 올 예정입니다", MessageUtil.periodRealTimeAndGameTime(thunderDuration));
         additionalInfo = true;
       }
     }
@@ -294,11 +299,11 @@ public class CommandWhatIs implements CucumberyCommandExecutor
     {
       if (weatherDuration < thunderDuration)
       {
-        weather = ComponentUtil.translate("현재 날씨는 %s이며, %s 이후 비가 그칠 예정입니다", ComponentUtil.translate("&e번개를 동반한 비가 오는 중"), MessageUtil.periodRealTimeAndGameTime(weatherDuration));
+        weather = ComponentUtil.translate("%s 이후 비가 그칠 예정입니다", MessageUtil.periodRealTimeAndGameTime(weatherDuration));
       }
       else
       {
-        weather = ComponentUtil.translate("현재 날씨는 %s이며, %s 이후 번개가 멈출 예정입니다", ComponentUtil.translate("&e번개를 동반한 비가 오는 중"), MessageUtil.periodRealTimeAndGameTime(thunderDuration));
+        weather = ComponentUtil.translate("%s 이후 번개가 멈출 예정입니다", MessageUtil.periodRealTimeAndGameTime(thunderDuration));
         additionalInfo = true;
       }
     }

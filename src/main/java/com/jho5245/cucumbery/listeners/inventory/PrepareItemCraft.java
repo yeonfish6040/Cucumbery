@@ -20,7 +20,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,9 +41,8 @@ public class PrepareItemCraft implements Listener
   public void onPrepareItemCraft(PrepareItemCraftEvent event)
   {
     HumanEntity humanEntity = event.getView().getPlayer();
-    if (humanEntity.getType() == EntityType.PLAYER)
+    if (humanEntity instanceof Player player)
     {
-      Player player = (Player) humanEntity;
       Inventory inventory = event.getInventory();
       InventoryView inventoryView = event.getView();
       InventoryType inventoryType = inventory.getType();

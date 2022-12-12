@@ -86,7 +86,7 @@ public class CommandNickName implements CommandExecutor, TabCompleter
 
         boolean off = args.length == 2 && args[1].equalsIgnoreCase("--off");
         Component finalNickname = off ? Component.text(player.getName()) : nickName;
-        Component senderComponent = SenderComponentUtil.senderComponent(player);
+        Component senderComponent = SenderComponentUtil.senderComponent(player, player, null);
         finalNickname = finalNickname.hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
         String serialNickname = off ? null : ComponentUtil.serializeAsJson(nickName);
         String originDisplay = MessageUtil.stripColor(ComponentUtil.serialize(player.displayName())), originList = MessageUtil.stripColor(ComponentUtil.serialize(player.playerListName()));
@@ -95,25 +95,6 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         {
           type = "모든";
           player.displayName(finalNickname);
-          if (Cucumbery.using_Vault_Chat)
-          {
-            try
-            {
-              String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
-              if (prefix != null)
-              {
-                finalNickname = ComponentUtil.create(false, prefix, finalNickname);
-              }
-              if (suffix != null)
-              {
-                finalNickname = ComponentUtil.create(false, finalNickname, suffix);
-              }
-            }
-            catch (Exception e)
-            {
-              e.printStackTrace();
-            }
-          }
           player.playerListName(finalNickname);
           UserData.DISPLAY_NAME.set(uuid, serialNickname);
           UserData.PLAYER_LIST_NAME.set(uuid, serialNickname);
@@ -127,25 +108,6 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         else if (args[0].equalsIgnoreCase("list"))
         {
           type = "목록";
-          if (Cucumbery.using_Vault_Chat)
-          {
-            try
-            {
-              String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
-              if (prefix != null)
-              {
-                finalNickname = ComponentUtil.create(false, prefix, finalNickname);
-              }
-              if (suffix != null)
-              {
-                finalNickname = ComponentUtil.create(false, finalNickname, suffix);
-              }
-            }
-            catch (Exception e)
-            {
-              e.printStackTrace();
-            }
-          }
           player.playerListName(finalNickname);
           UserData.PLAYER_LIST_NAME.set(uuid, serialNickname);
         }
@@ -155,6 +117,14 @@ public class CommandNickName implements CommandExecutor, TabCompleter
           MessageUtil.commandInfo(sender, label, usage);
           return true;
         }
+        senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+        player.displayName(senderComponent);
+        final Component originalDisplayName = player.displayName();
+        player.displayName(player.playerListName());
+        senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+        player.playerListName(senderComponent.hoverEvent(null).clickEvent(null).insertion(null));
+        player.displayName(originalDisplayName);
+        finalNickname = senderComponent;
         if (off)
         {
           MessageUtil.sendMessage(player, Prefix.INFO_NICK, "%s을 초기화 했습니다", type + " 닉네임");
@@ -295,6 +265,17 @@ public class CommandNickName implements CommandExecutor, TabCompleter
         MessageUtil.wrongArg(sender, 2, args);
         MessageUtil.commandInfo(sender, label, usage);
         return true;
+      }
+      if (target != null)
+      {
+        Component senderComponent = SenderComponentUtil.senderComponent(target, target, null);
+        target.displayName(senderComponent);
+        final Component originalDisplayName = target.displayName();
+        target.displayName(target.playerListName());
+        senderComponent = SenderComponentUtil.senderComponent(target, target, null);
+        target.playerListName(senderComponent.hoverEvent(null).clickEvent(null).insertion(null));
+        target.displayName(originalDisplayName);
+        finalNickname = senderComponent;
       }
       if (!hideMessage)
       {

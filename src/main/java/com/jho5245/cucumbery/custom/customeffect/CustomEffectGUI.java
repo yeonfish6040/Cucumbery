@@ -270,6 +270,11 @@ public class CustomEffectGUI
       lore.add(Component.empty());
       lore.add(ComponentUtil.translate("rg255,204;좌클릭하여 30초간 관전 외출"));
     }
+    if (effectType == CustomEffectType.CONTINUAL_RIDING && player.getVehicle() != null && player.getVehicle().isValid() && !player.getVehicle().isDead())
+    {
+      lore.add(Component.empty());
+      lore.add(ComponentUtil.translate("rg255,204;좌클릭하여 30초간 탑승 외출"));
+    }
     if (effectType == CustomEffectType.POSITION_MEMORIZE)
     {
       lore.add(Component.empty());

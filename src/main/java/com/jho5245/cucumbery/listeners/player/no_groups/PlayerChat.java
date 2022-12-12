@@ -189,8 +189,13 @@ public class PlayerChat implements Listener
   public void specialParse(AsyncChatEvent event)
   {
     Player player = event.getPlayer();
-    Component senderComponent = SenderComponentUtil.senderComponent(player);
-    player.displayName(player.displayName().hoverEvent(senderComponent.hoverEvent()));
+    Component senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+    player.displayName(senderComponent);
+    final Component originalDisplayName = player.displayName();
+    player.displayName(player.playerListName().hoverEvent(null).clickEvent(null).insertion(null));
+    senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+    player.playerListName(senderComponent.hoverEvent(null).clickEvent(null).insertion(null));
+    player.displayName(originalDisplayName);
     String message = ComponentUtil.serialize(event.message());
     boolean parse = message.startsWith("parse:") && player.hasPermission("asdf");
     boolean hasParseEffect = CustomEffectManager.hasEffect(player, CustomEffectType.AUTO_CHAT_PARSER);

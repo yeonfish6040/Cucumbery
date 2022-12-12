@@ -203,7 +203,7 @@ public class ItemLore
     ItemLore2.setItemLore(itemStack, itemMeta, defaultLore, params);
 
     // 이후 아이템 최하단의 회색 설명 추가
-    ItemLore3.setItemLore(itemStack, defaultLore);
+    ItemLore3.setItemLore(params instanceof ItemLoreView view ? view.getPlayer() : null, itemStack, defaultLore);
     itemMeta = itemStack.getItemMeta();
     itemStack.setItemMeta(itemMeta);
     ItemLore4.setItemLore(itemStack, defaultLore);
@@ -224,6 +224,25 @@ public class ItemLore
         {
           defaultLore.add(Component.empty());
           defaultLore.add(ComponentUtil.translate("&7원래 아이템 이름 : %s", customMaterial.getDisplayName()));
+        }
+      }
+      else if (nbtItem.hasKey("id") && !"".equals(nbtItem.getString("id")))
+      {
+        String id = nbtItem.getString("id");
+        ConfigurationSection section = Variable.customItemsConfig.getConfigurationSection(id);
+        if (section != null)
+        {
+          String displayName = section.getString("display-name");
+          if (displayName == null)
+          {
+            throw new NullPointerException("display name cannot be null! CustomItem.yml - " + id);
+          }
+          Component component = ComponentUtil.create(MessageUtil.n2s(displayName)), itemDisplayName = itemMeta.displayName();
+          if (itemDisplayName != null && itemDisplayName.color() == null && itemDisplayName.decoration(TextDecoration.ITALIC) == State.NOT_SET)
+          {
+            defaultLore.add(Component.empty());
+            defaultLore.add(ComponentUtil.translate("&7원래 아이템 이름 : %s", component));
+          }
         }
       }
       else if (itemMeta.hasDisplayName())
@@ -371,7 +390,11 @@ public class ItemLore
     if (nbtItem.hasKey("id"))
     {
       itemMeta = itemStack.getItemMeta();
-      itemMeta.displayName(null);
+      CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+      if (customMaterial != null && customMaterial.getDisplayName().equals(itemMeta.displayName()))
+      {
+        itemMeta.displayName(null);
+      }
       itemStack.setItemMeta(itemMeta);
       if (itemMeta instanceof SkullMeta skullMeta)
       {

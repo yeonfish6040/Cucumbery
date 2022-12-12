@@ -7,6 +7,8 @@ import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectScheduler;
+import com.jho5245.cucumbery.custom.customeffect.children.group.EntityCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.EntityCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
@@ -148,35 +150,39 @@ public class Scheduler
   {
   }
 
-  public static void fakeBlocksAsync()
+  public static void fakeBlocksAsync(@Nullable Player target, @NotNull Location location, boolean distanceLimit)
   {
-    fakeBlocksAsync(null, false);
+    if (!Variable.fakeBlocks.containsKey(location))
+    {
+      return;
+    }
+    if (Variable.customMiningCooldown.containsKey(location))
+    {
+      return;
+    }
+    if (Variable.customMiningExtraBlocks.containsKey(location))
+    {
+      return;
+    }
+    if (Variable.customMiningMode2BlockData.containsKey(location))
+    {
+      return;
+    }
+    Collection<? extends Player> players = target == null ? Bukkit.getOnlinePlayers() : Collections.singletonList(target);
+    for (Player player : players)
+    {
+      if (player.getWorld().getName().equals(location.getWorld().getName()) && (!distanceLimit || location.distance(player.getLocation()) <= Cucumbery.config.getDouble("custom-mining.maximum-block-packet-distance")))
+      {
+        player.sendBlockChange(location, Variable.fakeBlocks.get(location));
+      }
+    }
   }
 
   public static void fakeBlocksAsync(@Nullable Player target, boolean distanceLimit)
   {
     for (Location location : Variable.fakeBlocks.keySet())
     {
-      if (Variable.customMiningCooldown.containsKey(location))
-      {
-        continue;
-      }
-      if (Variable.customMiningExtraBlocks.containsKey(location))
-      {
-        continue;
-      }
-      if (Variable.customMiningMode2BlockData.containsKey(location))
-      {
-        continue;
-      }
-      Collection<? extends Player> players = target == null ? Bukkit.getOnlinePlayers() : Collections.singletonList(target);
-      for (Player player : players)
-      {
-        if (player.getWorld().getName().equals(location.getWorld().getName()) && (!distanceLimit || location.distance(player.getLocation()) <= Cucumbery.config.getDouble("custom-mining.maximum-block-packet-distance")))
-        {
-          player.sendBlockChange(location, Variable.fakeBlocks.get(location));
-        }
-      }
+      fakeBlocksAsync(target, location, distanceLimit);
     }
   }
 
@@ -201,12 +207,11 @@ public class Scheduler
 
   private static void entityTick()
   {
-    for (World world : Bukkit.getWorlds())
+    for (UUID uuid : CustomEffectManager.effectMap.keySet())
     {
-      for (Entity entity : world.getEntities())
+      Entity entity = Bukkit.getEntity(uuid);
+      if (entity != null)
       {
-        // 커스텀 인챈트
-        customEnchant(entity);
         CustomEffectScheduler.tick(entity);
         CustomEffectScheduler.superiorLevitation(entity);
         CustomEffectScheduler.trueInvisibility(entity);
@@ -216,6 +221,22 @@ public class Scheduler
         CustomEffectScheduler.vanillaEffect(entity);
       }
     }
+//    for (World world : Bukkit.getWorlds())
+//    {
+//      for (Entity entity : world.getEntities())
+//      {
+//        // 커스텀 인챈트
+//        customEnchant(entity);
+//        CustomEffectScheduler.tick(entity);
+//        CustomEffectScheduler.superiorLevitation(entity);
+//        CustomEffectScheduler.trueInvisibility(entity);
+//        CustomEffectScheduler.axolotlsGrace(entity);
+//        CustomEffectScheduler.stop(entity);
+//        CustomEffectScheduler.damageIndicator(entity);
+//        CustomEffectScheduler.vanillaEffect(entity);
+//        mountLoop(entity);
+//      }
+//    }
   }
 
   private static void playerTick()
@@ -1041,15 +1062,7 @@ public class Scheduler
       case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK, NETHERITE_SWORD, DIAMOND_SWORD, GOLDEN_SWORD,
               IRON_SWORD, STONE_SWORD, WOODEN_SWORD, COMPASS, DEBUG_STICK, REDSTONE_BLOCK, WOODEN_AXE, IRON_BLOCK, BARRIER, COMMAND_BLOCK_MINECART, TRIDENT ->
       {
-        Set<Material> transparent = new HashSet<>();
-        for (Material material : Material.values())
-        {
-          if (!material.isOccluding())
-          {
-            transparent.add(material);
-          }
-        }
-        Block block = player.getTargetBlock(transparent, 10);
+        Block block = player.getTargetBlock(null, 10);
         switch (block.getType())
         {
           case COMMAND_BLOCK, REPEATING_COMMAND_BLOCK, CHAIN_COMMAND_BLOCK ->
@@ -1619,8 +1632,8 @@ public class Scheduler
       Entity spectatorTarget = player.getSpectatorTarget();
       if (CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING))
       {
-        CustomEffect effect = CustomEffectManager.getEffect(player, CustomEffectType.CONTINUAL_SPECTATING);
-        if (effect instanceof PlayerCustomEffect playerCustomEffect)
+        CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.CONTINUAL_SPECTATING);
+        if (customEffect instanceof PlayerCustomEffect playerCustomEffect)
         {
           Player target = playerCustomEffect.getPlayer();
           if (!target.equals(spectatorTarget) && spectatorTarget instanceof Player newTarget)
@@ -1637,11 +1650,11 @@ public class Scheduler
         }
         else if (spectatorTarget instanceof Player target)
         {
-          int dura = effect.getDuration(), ample = effect.getAmplifier();
-          effect = new PlayerCustomEffectImple(effect.getType(), effect.getInitDuration(), effect.getInitAmplifier(), effect.getDisplayType(), target);
-          effect.setDuration(dura);
-          effect.setAmplifier(ample);
-          CustomEffectManager.addEffect(player, effect, true);
+          int dura = customEffect.getDuration(), ample = customEffect.getAmplifier();
+          customEffect = new PlayerCustomEffectImple(customEffect.getType(), customEffect.getInitDuration(), customEffect.getInitAmplifier(), customEffect.getDisplayType(), target);
+          customEffect.setDuration(dura);
+          customEffect.setAmplifier(ample);
+          CustomEffectManager.addEffect(player, customEffect, true);
         }
       }
       if (spectatorTarget instanceof Player target)
@@ -1703,6 +1716,44 @@ public class Scheduler
             }
           }
         }
+      }
+    }
+  }
+
+  private static void mountLoop(@NotNull Entity entity)
+  {
+    if (entity instanceof Player player && player.getOpenInventory().getType() != InventoryType.CRAFTING && player.getOpenInventory().getType() != InventoryType.CREATIVE)
+    {
+      return;
+    }
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.CONTINUAL_RIDING))
+    {
+      Entity vehicle = entity.getVehicle();
+      CustomEffect customEffect = CustomEffectManager.getEffect(entity, CustomEffectType.CONTINUAL_RIDING);
+      if (customEffect instanceof EntityCustomEffect entityCustomEffect)
+      {
+        Entity target = entityCustomEffect.getEntity();
+        if (vehicle != target && vehicle != null)
+        {
+          entityCustomEffect.setEntity(vehicle);
+          target = vehicle;
+        }
+        if (!CustomEffectManager.hasEffect(entity, CustomEffectType.CONTINUAL_RIDING_EXEMPT) && vehicle == null && !target.isDead() && target.isValid() && !target.getPassengers().contains(entity))
+        {
+          target.removePassenger(entity);
+          entity.leaveVehicle();
+          entity.teleport(target);
+          target.addPassenger(entity);
+        }
+      }
+      else if (vehicle != null)
+      {
+        int dura = customEffect.getDuration(), ample = customEffect.getAmplifier();
+        customEffect = new EntityCustomEffectImple(customEffect.getType(), customEffect.getInitDuration(), customEffect.getInitAmplifier(), customEffect.getDisplayType(), vehicle);
+        customEffect.setDuration(dura);
+        customEffect.setAmplifier(ample);
+        MessageUtil.broadcastDebug(customEffect);
+        CustomEffectManager.addEffect(entity, customEffect, true);
       }
     }
   }

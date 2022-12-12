@@ -72,7 +72,6 @@ public class EntityDamageByEntity implements Listener
         return;
       }
     }
-
     UUID victimUUID = victim.getUniqueId(), damagerUUID = damager.getUniqueId();
     if (DeathManager.deathMessageApplicable(victim))
     {

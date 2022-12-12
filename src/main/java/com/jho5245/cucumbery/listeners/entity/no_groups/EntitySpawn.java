@@ -6,6 +6,8 @@ import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -32,7 +34,6 @@ public class EntitySpawn implements Listener
         throwableProjectile.setItem(ItemLore.setItemLore(throwableProjectile.getItem()));
       }
     }
-
     if (entity instanceof Projectile projectile)
     {
       UUID projectileUUID = projectile.getUniqueId();
@@ -94,12 +95,37 @@ public class EntitySpawn implements Listener
         }
       }
     }
-    if (entity instanceof TNTPrimed)
+    if (entity instanceof TNTPrimed tntPrimed)
     {
       ItemStack itemStack = Method2.getPlacedBlockDataAsItemStack(entity.getLocation());
-      if (CustomMaterial.itemStackOf(itemStack) == CustomMaterial.TNT_I_WONT_LET_YOU_GO)
+      CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+      if (customMaterial != null)
       {
-        entity.getScoreboardTags().add("custom_material_tnt_i_wont_let_you_go");
+        switch (customMaterial)
+        {
+          case TNT_I_WONT_LET_YOU_GO -> entity.getScoreboardTags().add("custom_material_tnt_i_wont_let_you_go");
+          case TNT_COMBAT -> entity.getScoreboardTags().add("custom_material_tnt_combat");
+          case TNT_DRAIN -> entity.getScoreboardTags().add("custom_material_tnt_drain");
+        }
+      }
+      if (ItemStackUtil.itemExists(itemStack))
+      {
+        NBTItem nbtItem = new NBTItem(itemStack);
+        Float explodePower = nbtItem.getFloat("ExplodePower");
+        if (nbtItem.hasKey("ExplodePower") && nbtItem.getType("ExplodePower") == NBTType.NBTTagFloat && explodePower != null)
+        {
+          tntPrimed.setYield(explodePower);
+        }
+        Boolean fire = nbtItem.getBoolean("Fire");
+        if (nbtItem.hasKey("Fire") && nbtItem.getType("Fire") == NBTType.NBTTagByte && fire != null && fire)
+        {
+          tntPrimed.setIsIncendiary(true);
+        }
+        Short fuse = nbtItem.getShort("Fuse");
+        if (nbtItem.hasKey("Fuse") && nbtItem.getType("Fuse") == NBTType.NBTTagShort && fuse != null)
+        {
+          tntPrimed.setFuseTicks(fuse);
+        }
       }
     }
     /*

@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -34,6 +35,21 @@ public class ItemLore4
     }
     nbtCompound.removeKey(CucumberyTag.TMI_VANILLA_TAGS);
     NBTCompound customTags = nbtCompound.getCompound(CucumberyTag.TMI_CUSTOM_TAGS);
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+    if (customMaterial != null)
+    {
+      customTags = nbtCompound.addCompound(CucumberyTag.TMI_CUSTOM_TAGS);
+      switch (customMaterial)
+      {
+        case AMBER, JADE, JASPER, SAPPHIRE, TOPAZ -> customTags.setBoolean("gemstones", true);
+      }
+      if (customTags.getKeys().isEmpty())
+      {
+        nbtCompound.removeKey(CucumberyTag.TMI_CUSTOM_TAGS);
+      }
+      itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
+      return;
+    }
     if (customTags != null || nbtItem.hasKey("id") && !"".equals(nbtItem.getString("id")))
     {
       itemStack.setItemMeta(nbtItem.getItem().getItemMeta());

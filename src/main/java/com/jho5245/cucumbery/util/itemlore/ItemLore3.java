@@ -17,9 +17,11 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +30,7 @@ import java.util.List;
 
 public class ItemLore3
 {
-  protected static ItemStack setItemLore(@NotNull ItemStack itemStack, @NotNull List<Component> lore)
+  protected static ItemStack setItemLore(@Nullable Player viewer, @NotNull ItemStack itemStack, @NotNull List<Component> lore)
   {
     Material type = itemStack.getType();
     NBTItem nbtItem = new NBTItem(itemStack);

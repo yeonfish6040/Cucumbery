@@ -16,7 +16,6 @@ import java.util.Collection;
 
 public class PlayerStopSpectatingEntity implements Listener
 {
-  @SuppressWarnings("deprecation")
   @EventHandler
   public void onPlayerStopSpectatingEntity(PlayerStopSpectatingEntityEvent event)
   {

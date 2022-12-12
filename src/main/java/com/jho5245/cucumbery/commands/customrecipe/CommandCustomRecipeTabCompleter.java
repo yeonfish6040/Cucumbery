@@ -119,7 +119,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
             {
               case "category":
                 return Method.tabCompleterList(
-                        args, "<인수>", "permission", "wealth", "level", "require", "statistic", "hp", "mhp", "maxplayer", "foodlevel", "saturation", "display", "displayitem", "biome", "belowblock");
+                        args, "<인수>", "permission", "wealth", "level", "require", "statistic", "hp", "mhp", "maxplayer", "foodlevel", "saturation", "display", "displayitem", "biome", "belowblock", "target-block", "decorative");
               case "recipe":
                 YamlConfiguration config = Variable.customRecipes.get(args[2]);
                 if (config == null)
@@ -173,7 +173,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                   return Method.tabCompleterList(args, "<표시 아이템 출처>", hand, "material", "remove");
                 case "biome":
                   return Method.tabCompleterList(args, Method.addAll(Biome.values(), "--remove"), "<생물 군계>");
-                case "belowblock":
+                case "belowblock", "target-block":
                   List<String> list = new ArrayList<>();
                   for (Material material : Material.values())
                   {
@@ -203,12 +203,14 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                     return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                   }
                   return Method.tabCompleterDoubleRadius(args, 0, Double.MAX_VALUE, "<현재 소지 금액의 최소 조건>", "-1");
+                case "decorative":
+                  return Method.tabCompleterBoolean(args, "<꾸미기용 목록 모드>");
               }
               break;
             case "recipe":
               List<String> list = new ArrayList<>(Method.tabCompleterList(args, "<인수>", "permission", "chance", "reusable", "cost", "wealth", "levelcost", "level", "display", "require", "statistic",
                       "hp", "mhp", "maxplayer", "foodlevel", "saturation", "hpcost", "mhpcost", "foodlevelcost", "saturationcost", "craftingtime",
-                      "command", "biome", "belowblock"));
+                      "command", "biome", "belowblock", "target-block", "decorative"));
               if (!Cucumbery.using_Vault_Economy)
               {
                 list.remove("cost");
@@ -378,7 +380,7 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                   return Method.tabCompleterList(args, "<실행 시점>", "craft", "failure", "success");
                 case "biome":
                   return Method.tabCompleterList(args, Method.addAll(Biome.values(), "--remove"), "<생물 군계>");
-                case "belowblock":
+                case "belowblock", "target-block":
                 {
                   List<String> list = new ArrayList<>();
                   for (Material material : Material.values())
@@ -428,6 +430,10 @@ public class CommandCustomRecipeTabCompleter implements TabCompleter
                     return Collections.singletonList("Vault 플러그인을 사용하고 있지 않습니다");
                   }
                   return Method.tabCompleterDoubleRadius(args, 0, Double.MAX_VALUE, "<현재 소지 금액의 최소 조건>", "-1");
+                case "decorative":
+                {
+                  return Method.tabCompleterBoolean(args, "<꾸미기용 레시피 모드>");
+                }
               }
               break;
           }

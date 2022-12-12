@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -803,7 +804,7 @@ public class ItemInfo
       if (restrictions != null && restrictions.size() > 0)
       {
         StringBuilder msg = new StringBuilder(Prefix.INFO_ITEMSTORAGE + "아이템 사용 제한 태그 목록 : ");
-        for (NBTCompound restriction : restrictions)
+        for (ReadWriteNBT restriction : restrictions)
         {
           String value = restriction.getString(CucumberyTag.VALUE_KEY);
           for (RestrictionType restType : Constant.RestrictionType.values())

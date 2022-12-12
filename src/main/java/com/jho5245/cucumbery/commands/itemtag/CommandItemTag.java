@@ -20,6 +20,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemCategory.Rarity;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.*;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
@@ -583,7 +584,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 restrictionTags = itemTag.getCompoundList(CucumberyTag.ITEM_USAGE_RESTRICTIONS_KEY);
               }
-              for (NBTCompound restrictionTag : restrictionTags)
+              for (ReadWriteNBT restrictionTag : restrictionTags)
               {
                 String value = restrictionTag.getString(CucumberyTag.VALUE_KEY);
                 if (restrictType.toString().equals(value))
@@ -640,7 +641,7 @@ public class CommandItemTag implements CommandExecutor
                   }
                   boolean bool = args[4].equals("true");
                   boolean contains = false;
-                  for (NBTListCompound tag : restrictionTags)
+                  for (ReadWriteNBT tag : restrictionTags)
                   {
                     String value = tag.getString(CucumberyTag.VALUE_KEY);
                     if (restrictType.toString().equals(value))
@@ -669,7 +670,7 @@ public class CommandItemTag implements CommandExecutor
                 {
                   String permission = args[4];
                   boolean contains = false;
-                  for (NBTListCompound tag : restrictionTags)
+                  for (ReadWriteNBT tag : restrictionTags)
                   {
                     String value = tag.getString(CucumberyTag.VALUE_KEY);
                     if (restrictType.toString().equals(value))
@@ -677,7 +678,7 @@ public class CommandItemTag implements CommandExecutor
                       contains = true;
                       if (permission.equals("--remove"))
                       {
-                        if (!tag.hasKey(CucumberyTag.PERMISSION_KEY))
+                        if (!tag.hasTag(CucumberyTag.PERMISSION_KEY))
                         {
                           MessageUtil.sendError(player, "입력한 태그(rg255,204;" + restrictType.toString() + "&r(rg255,204;" + restrictType.getRawTag() + "&r))의 퍼미션 노드 값이 주로 사용하는 손에 들고 있는 아이템에 존재하지 않습니다");
                           return true;
@@ -3519,7 +3520,7 @@ public class CommandItemTag implements CommandExecutor
                 return true;
               }
               MessageUtil.info(sender, ComponentUtil.translate("%s에는 포션 태그가 %s개 있습니다", item, potionListTag.size()));
-              for (NBTCompound nbtCompound : potionListTag)
+              for (ReadWriteNBT nbtCompound : potionListTag)
               {
                 try
                 {
@@ -3666,7 +3667,7 @@ public class CommandItemTag implements CommandExecutor
               }
               if (potionListTag != null)
               {
-                for (NBTCompound nbtCompound : potionListTag)
+                for (ReadWriteNBT nbtCompound : potionListTag)
                 {
                   String id = nbtCompound.getString(CucumberyTag.ID_KEY);
                   Integer origiAamplifier = nbtCompound.getInteger(CucumberyTag.CUSTOM_EFFECTS_AMPLIFIER);

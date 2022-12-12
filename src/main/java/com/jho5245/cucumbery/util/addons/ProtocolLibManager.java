@@ -148,33 +148,33 @@ public class ProtocolLibManager
               }
             }
 
-            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_SPEED) && potionEffectType.equals(PotionEffectType.SPEED))
+            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.SPEED) && potionEffectType.equals(PotionEffectType.SPEED))
             {
-              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.MINECRAFT_SPEED).getDuration());
+              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.SPEED).getDuration());
               event.setPacket(packet);
             }
 
-            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_SLOWNESS) && potionEffectType.equals(PotionEffectType.SLOW))
+            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.SLOWNESS) && potionEffectType.equals(PotionEffectType.SLOW))
             {
-              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.MINECRAFT_SLOWNESS).getDuration());
+              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.SLOWNESS).getDuration());
               event.setPacket(packet);
             }
 
-            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_HASTE) && potionEffectType.equals(PotionEffectType.FAST_DIGGING))
+            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.HASTE) && potionEffectType.equals(PotionEffectType.FAST_DIGGING))
             {
-              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.MINECRAFT_HASTE).getDuration());
+              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.HASTE).getDuration());
               event.setPacket(packet);
             }
 
-            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_MINING_FATIGUE) && potionEffectType.equals(PotionEffectType.SLOW_DIGGING))
+            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINING_FATIGUE) && potionEffectType.equals(PotionEffectType.SLOW_DIGGING))
             {
-              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.MINECRAFT_MINING_FATIGUE).getDuration());
+              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.MINING_FATIGUE).getDuration());
               event.setPacket(packet);
             }
 
-            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_NIGHT_VISION) && potionEffectType.equals(PotionEffectType.NIGHT_VISION))
+            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION) && potionEffectType.equals(PotionEffectType.NIGHT_VISION))
             {
-              int effectDuration = CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.MINECRAFT_NIGHT_VISION).getDuration();
+              int effectDuration = CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION).getDuration();
               modifier.write(3, effectDuration == -1 ? Integer.MAX_VALUE : effectDuration);
               event.setPacket(packet);
             }

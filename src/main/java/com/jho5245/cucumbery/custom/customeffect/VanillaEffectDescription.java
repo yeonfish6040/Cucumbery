@@ -50,11 +50,11 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.HEAL))
     {
-      return ComponentUtil.translate("지속적으로 HP가 회복됩니다. 언데드 개체는 HP가 감소합니다");
+      return ComponentUtil.translate("HP가 회복됩니다. 언데드 개체는 HP가 감소합니다");
     }
     if (type.equals(PotionEffectType.HARM))
     {
-      return ComponentUtil.translate("지속적으로 HP가 감소합니다. 언데드 개체는 HP가 회복됩니다");
+      return ComponentUtil.translate("HP가 감소합니다. 언데드 개체는 HP가 회복됩니다");
     }
     if (type.equals(PotionEffectType.JUMP))
     {
@@ -186,6 +186,7 @@ public class VanillaEffectDescription
     boolean hasCustomMining = viewer != null && CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE);
     PotionEffectType type = potionEffect.getType();
     int amplifier = potionEffect.getAmplifier();
+    int duration = potionEffect.getDuration();
     if (type.equals(PotionEffectType.SPEED))
     {
       return ComponentUtil.translate("이동 속도가 %s 증가합니다. %s와(과) 곱적용됩니다", Constant.THE_COLOR_HEX + (amplifier + 1) * 20 + "%", PotionEffectType.SLOW);
@@ -217,12 +218,12 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.HEAL))
     {
-      return ComponentUtil.translate("지속적으로 HP가 %s 회복됩니다. 언데드 개체는 HP가 %s 감소합니다",
+      return ComponentUtil.translate((duration > 2 ? "지속적으로 " : "") + "HP가 %s 회복됩니다. 언데드 개체는 HP가 %s 감소합니다",
               Constant.THE_COLOR_HEX + Constant.Sosu2Floor.format(Math.pow(2, amplifier + 2)), Constant.THE_COLOR_HEX + Constant.Sosu2Floor.format(3 * Math.pow(2, amplifier + 1)));
     }
     if (type.equals(PotionEffectType.HARM))
     {
-      return ComponentUtil.translate("지속적으로 HP가 %s 감소합니다. 언데드 개체는 HP가 %s 회복됩니다",
+      return ComponentUtil.translate((duration > 2 ? "지속적으로 " : "") + "HP가 %s 감소합니다. 언데드 개체는 HP가 %s 회복됩니다",
               Constant.THE_COLOR_HEX + Constant.Sosu2Floor.format(3 * Math.pow(2, amplifier + 1)), Constant.THE_COLOR_HEX + Constant.Sosu2Floor.format(Math.pow(2, amplifier + 2)));
     }
     if (type.equals(PotionEffectType.JUMP))

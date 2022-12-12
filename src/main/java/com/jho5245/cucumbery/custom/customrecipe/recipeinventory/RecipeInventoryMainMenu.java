@@ -6,11 +6,11 @@ import com.jho5245.cucumbery.util.gui.GUIManager;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.CreateItemStack;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -30,8 +30,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
+import static com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryCategory.convert;
 
 public class RecipeInventoryMainMenu
 {
@@ -41,7 +42,7 @@ public class RecipeInventoryMainMenu
    * @param player 메류를 열어줄 플레이어
    * @param page   메뉴 페이지
    */
-  public static void openRecipeInventory(@NotNull Player player, int page, boolean firstOpen)
+  public static void openRecipeInventory(@NotNull final Player player, final int page, final boolean firstOpen)
   {
     int categoryAmount = Variable.customRecipes.size();
     if (categoryAmount == 0)
@@ -50,7 +51,8 @@ public class RecipeInventoryMainMenu
       String openInventoryTitle = player.getOpenInventory().getTitle();
       if (openInventoryTitle.startsWith(Constant.CANCEL_STRING))
       {
-        player.closeInventory();
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                player.closeInventory(), 0L);
       }
       return;
     }
@@ -61,16 +63,17 @@ public class RecipeInventoryMainMenu
     {
       maxPage--;
     }
-    if (page > maxPage)
+    int PAGE = page;
+    if (PAGE > maxPage)
     {
-      page = 1;
+      PAGE = 1;
     }
-    if (page < 1)
+    if (PAGE < 1)
     {
-      page = maxPage;
+      PAGE = maxPage;
     }
-    Inventory menu = Bukkit.createInventory(null, 45,
-            Constant.CANCEL_STRING + Constant.CUSTOM_RECIPE_RECIPE_LIST_MENU + (maxPage == 1 ? "" : (" §3[" + page + "/" + maxPage + "]")) + Method.format("page:" + page, "§"));
+    final String title = Constant.CANCEL_STRING + Constant.CUSTOM_RECIPE_RECIPE_LIST_MENU + (maxPage == 1 ? "" : (" §3[" + PAGE + "/" + maxPage + "]")) + Method.format("page:" + PAGE, "§");
+    Inventory menu = Bukkit.createInventory(null, 45, title);
     if (firstOpen)
     {
       // deco template
@@ -112,12 +115,14 @@ public class RecipeInventoryMainMenu
       }
       else
       {
-        menu.setItem(39, CreateItemStack.create(Material.SPRUCE_BOAT, Math.max(1, page == 1 ? maxPage : page - 1), page == 1 ? "§e마지막 페이지로" : "§e이전 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
+        menu.setItem(39, CreateItemStack.create(Material.SPRUCE_BOAT, Math.max(1, PAGE == 1 ? maxPage : PAGE - 1), PAGE == 1 ? "§e마지막 페이지로" : "§e이전 페이지로", "§a현재 페이지 : " + PAGE + " / " + maxPage, false));
         menu.setItem(
-                41, CreateItemStack.create(Material.SPRUCE_BOAT, Math.min(maxPage, page == maxPage ? 1 : page + 1), page == maxPage ? "§b처음 페이지로" : "§b다음 페이지로", "§a현재 페이지 : " + page + " / " + maxPage, false));
+                41, CreateItemStack.create(Material.SPRUCE_BOAT, Math.min(maxPage, PAGE == maxPage ? 1 : PAGE + 1), PAGE == maxPage ? "§b처음 페이지로" : "§b다음 페이지로", "§a현재 페이지 : " + PAGE + " / " + maxPage, false));
       }
       menu.setItem(40, CreateItemStack.create(Material.CLOCK, 1, "rg255,204;로딩중...", false));
-      player.openInventory(menu);
+      Inventory finalMenu = menu;
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+              player.openInventory(finalMenu), 0L);
       InventoryView lastInventory = GUIManager.getLastInventory(player.getUniqueId());
       if (lastInventory != null)
       {
@@ -131,26 +136,16 @@ public class RecipeInventoryMainMenu
     else
     {
       menu = player.getOpenInventory().getTopInventory();
-      for (int i = 10; i <= 16; i++)
-      {
-        menu.setItem(i, null);
-      }
-      for (int i = 19; i <= 25; i++)
-      {
-        menu.setItem(i, null);
-      }
-      for (int i = 28; i <= 34; i++)
-      {
-        menu.setItem(i, null);
-      }
     }
     List<String> categoryNames = new ArrayList<>(Variable.customRecipes.keySet());
     Method.sort(categoryNames);
-    for (int i = (page - 1) * maxCategoriesPerPage; i < page * maxCategoriesPerPage; i++)
+    ItemStack[] menuItems = new ItemStack[45];
+    for (int i = (PAGE - 1) * maxCategoriesPerPage; i < PAGE * maxCategoriesPerPage; i++)
     {
       if (i >= Variable.customRecipes.size())
       {
-        break;
+        menuItems[convert(i)] = new ItemStack(Material.AIR);
+        continue;
       }
       String category = categoryNames.get(i);
       YamlConfiguration config = Variable.customRecipes.get(category);
@@ -170,14 +165,18 @@ public class RecipeInventoryMainMenu
       {
         categoryItem.setType(Material.CHEST_MINECART);
       }
-      NBTItem nbtItem = new NBTItem(categoryItem);
-      nbtItem.setString("category", category);
-      categoryItem = nbtItem.getItem();
-      ItemMeta categoryItemMeta = categoryItem.getItemMeta();
-      if (!categoryItem.hasItemMeta())
+      ItemMeta itemMeta = categoryItem.getItemMeta();
+      itemMeta.addItemFlags(ItemFlag.values());
+      categoryItem.setItemMeta(itemMeta);
+      boolean isDecorative = config.getBoolean("extra.decorative");
+      if (isDecorative)
       {
-        categoryItemMeta.addItemFlags(ItemFlag.values());
+        menuItems[convert(i)] = categoryItem;
+        continue;
       }
+      NBTItem nbtItem = new NBTItem(categoryItem, true);
+      nbtItem.setString("category", category);
+      ItemMeta categoryItemMeta = categoryItem.getItemMeta();
       String categoryDisplay = config.getString("extra.display");
       if (categoryDisplay == null)
       {
@@ -189,7 +188,7 @@ public class RecipeInventoryMainMenu
         categoryDisplayComp = categoryDisplayComp.color(Constant.THE_COLOR).decoration(TextDecoration.ITALIC, State.FALSE);
       }
       categoryItemMeta.displayName(categoryDisplayComp);
-      List<Component> categoryItemLore = new ArrayList<>();
+      final List<Component> categoryItemLore = new ArrayList<>();
       ConfigurationSection recipeList = config.getConfigurationSection("recipes");
       if (recipeList == null || recipeList.getKeys(false).isEmpty())
       {
@@ -202,6 +201,14 @@ public class RecipeInventoryMainMenu
           categoryItemLore.add(ComponentUtil.translate("gb210,255;카테고리 ID : %s", "rgb93,244,255;" + category));
         }
         int recipeAmount = recipeList.getKeys(false).size();
+        // 장식용 레시피는 제외하기
+        for (String key : recipeList.getKeys(false))
+        {
+          if (config.getBoolean("recipes." + key + ".extra.decorative"))
+          {
+            recipeAmount--;
+          }
+        }
         int maxRecipesPerCategory = Cucumbery.config.getInt("customrecipe.max-recipes-per-category");
         int counter = 0;
         List<Component> categoryDescription = new ArrayList<>();
@@ -217,6 +224,10 @@ public class RecipeInventoryMainMenu
         categoryItemLore.addAll(Arrays.asList(Component.empty(), ComponentUtil.translate("gb210,255;레시피 개수 : %s", ComponentUtil.translate("rgb93,244,255;%s개", recipeAmount))));
         for (String recipe : recipeList.getKeys(false))
         {
+          if (config.getBoolean("recipes." + recipe + ".extra.decorative"))
+          {
+            continue;
+          }
           if (counter >= maxRecipesPerCategory)
           {
             int difference = recipeAmount - counter;
@@ -234,9 +245,6 @@ public class RecipeInventoryMainMenu
           }
           else if (display == null)
           {
-//            ItemStack item = ItemSerializer.deserialize(config.getString("recipes." + recipe + ".result"));
-//            int amount = item.getAmount();
-//            display = Constant.THE_COLOR_HEX + ComponentUtil.itemName(item) + "&6" + (amount == 1 ? "" : amount + "개");
             display = recipe;
           }
           Component displayComp = ComponentUtil.create(display).hoverEvent(null).clickEvent(null);
@@ -271,14 +279,29 @@ public class RecipeInventoryMainMenu
       boolean hideIfNoBase = config.getBoolean("extra.permissions.hide-if-no-base");
       if (permission != null && !player.hasPermission(permission) && hideIfNoBase && (bypassIfHidden == null || !player.hasPermission(bypassIfHidden)))
       {
-        categoryItemLore = new ArrayList<>(Collections.singletonList(ComponentUtil.translate("&c해당 레시피 목록의 정보를 볼 권한이 없습니다")));
+        categoryItemLore.clear();
+        categoryItemLore.add(ComponentUtil.translate("&c해당 레시피 목록의 정보를 볼 권한이 없습니다"));
         categoryItemMeta.displayName(ComponentUtil.translate("&c[비공개 레시피 목록]"));
         categoryItem.setType(Material.BARRIER);
       }
 
       categoryItemMeta.lore(categoryItemLore);
       categoryItem.setItemMeta(categoryItemMeta);
-      menu.addItem(categoryItem);
+      menuItems[convert(i)] = categoryItem;
+    }
+    String invName = menu.getViewers().isEmpty() ? "" : menu.getViewers().get(0).getOpenInventory().getTitle();
+    // for asynchronus issue
+    if (!invName.equals(title))
+    {
+      return;
+    }
+    for (int i = 0; i < menuItems.length; i++)
+    {
+      ItemStack itemStack = menuItems[i];
+      if (itemStack != null)
+      {
+        menu.setItem(i, itemStack);
+      }
     }
     menu.setItem(
             40, CreateItemStack.create(Material.ACACIA_SIGN, 1, "&a여기에서는 무엇을 할 수 있나요?",

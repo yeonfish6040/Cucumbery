@@ -1,8 +1,6 @@
 package com.jho5245.cucumbery.custom.customeffect;
 
-import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.children.group.OfflinePlayerCustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.*;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -10,9 +8,11 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import net.kyori.adventure.text.Component;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -302,6 +302,16 @@ public class CustomEffect
         description = description.append(ComponentUtil.translate("&7관전 중인 플레이어 : %s", player));
       }
     }
+    if (this instanceof EntityCustomEffect entityCustomEffect)
+    {
+      Entity entity = entityCustomEffect.getEntity();
+      if (effectType == CustomEffectType.CONTINUAL_RIDING)
+      {
+        description = description.append(Component.text("\n"));
+        description = description.append(Component.text("\n"));
+        description = description.append(ComponentUtil.translate("&7탑승 중인 개체 : %s", entity));
+      }
+    }
     if (this instanceof LocationCustomEffect locationCustomEffect)
     {
       Location location = locationCustomEffect.getLocation();
@@ -310,6 +320,29 @@ public class CustomEffect
         description = description.append(Component.text("\n"));
         description = description.append(Component.text("\n"));
         description = description.append(ComponentUtil.translate("&7저장된 위치 : %s", location));
+      }
+    }
+    if (this instanceof StringCustomEffect stringCustomEffect)
+    {
+      String data = stringCustomEffect.getString();
+      if (effectType == CustomEffectType.STRANGE_CREATIVE_MODE)
+      {
+        try
+        {
+          GameMode gameMode = GameMode.valueOf(data.split("\\|")[0]);
+          description = description.append(Component.text("\n"));
+          description = description.append(Component.text("\n"));
+          description = description.append(ComponentUtil.translate("&7이전 게임 모드 : %s", gameMode));
+          if (viewer != null && viewer.hasPermission("asdf"))
+          {
+            description = description.append(Component.text("\n"));
+            description = description.append(ComponentUtil.translate("&7데이터 : %s", data));
+          }
+        }
+        catch (Exception ignored)
+        {
+
+        }
       }
     }
     if (!excludeProperty)

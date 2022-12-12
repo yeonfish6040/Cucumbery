@@ -17,6 +17,9 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
@@ -187,6 +190,16 @@ public class CustomEffectManager
       {
         effect = new LocationVelocityCustomEffectImple(effectType, initDura, initAmple, displayType, entity.getLocation(), entity.getVelocity());
       }
+    }
+    if (effectType == CustomEffectType.STRANGE_CREATIVE_MODE && entity instanceof Player player)
+    {
+      NBTEntity nbtEntity = new NBTEntity(player);
+      NBTCompound nbtCompound = nbtEntity.getCompound("abilities");
+      String data = player.getGameMode() + "|" + nbtCompound.getBoolean("instabuild") + "|" + nbtCompound.getBoolean("invulnerable") + "|" + player.getAllowFlight();
+      effect = new StringCustomEffectImple(effectType, initDura, initAmple, displayType, data);
+      player.setGameMode(GameMode.CREATIVE);
+      nbtEntity.mergeCompound(new NBTContainer("{abilities:{instabuild:0b,invulnerable:0b}}"));
+      player.setAllowFlight(false);
     }
     if (effectType.isRealDuration() && effect.getDuration() != -1)
     {
@@ -540,6 +553,10 @@ public class CustomEffectManager
       {
         config.set("effects." + i + ".player", playerCustomEffect.getPlayer().getUniqueId().toString());
       }
+      if (customEffect instanceof EntityCustomEffect entityCustomEffect)
+      {
+        config.set("effects." + i + ".entity", entityCustomEffect.getEntity().getUniqueId().toString());
+      }
       if (customEffect instanceof OfflinePlayerCustomEffect offlinePlayerCustomEffect)
       {
         config.set("effects." + i + ".offline-player", offlinePlayerCustomEffect.getOfflinePlayer().getUniqueId().toString());
@@ -635,6 +652,15 @@ public class CustomEffectManager
             if (player != null)
             {
               customEffect = new PlayerCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, player);
+            }
+          }
+          String entityUuidString = root.getString(typeString + ".entity");
+          if (entityUuidString != null && Method.isUUID(entityUuidString))
+          {
+            Entity entity = Bukkit.getEntity(UUID.fromString(entityUuidString));
+            if (entity != null)
+            {
+              customEffect = new EntityCustomEffectImple(customEffectType, initDuration, initAmplifier, displayType, entity);
             }
           }
           String offlinePlayerUuidString = root.getString(typeString + ".offline-player");
@@ -751,35 +777,35 @@ public class CustomEffectManager
                     potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_NAUSEA) &&
+            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.NAUSEA) &&
                     potionEffect.getType().equals(PotionEffectType.CONFUSION) && potionEffect.getDuration() < 64 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_REGENERATION) &&
+            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.REGENERATION) &&
                     potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-            (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_POISON) || CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_POISON_M)) &&
+            (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON) || CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON_M)) &&
                     potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_BLINDNESS) &&
+            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.BLINDNESS) &&
                     potionEffect.getType().equals(PotionEffectType.BLINDNESS) && potionEffect.getDuration() < 22 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_NIGHT_VISION) &&
+            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION) &&
                     potionEffect.getType().equals(PotionEffectType.NIGHT_VISION) && potionEffect.getDuration() < 5 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_POISON) &&
+            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON) &&
                     potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_WITHER) &&
+            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.WITHER) &&
                     potionEffect.getType().equals(PotionEffectType.WITHER) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.MINECRAFT_DARKNESS) &&
+            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.DARKNESS) &&
                     potionEffect.getType().equals(PotionEffectType.DARKNESS) && potionEffect.getDuration() < 62 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     return new ArrayList<>(potionEffects);

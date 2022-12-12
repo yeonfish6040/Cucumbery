@@ -85,11 +85,11 @@ Component a = ComponentUtil.create(Prefix.INFO, "만약 아이템 강화를 중�
   }
 
 
-  private void itemSwapeUsage(PlayerSwapHandItemsEvent event, Player player, ItemStack item, boolean mainHand, boolean isSneaking)
+  private void itemSwapeUsage(PlayerSwapHandItemsEvent event, Player player, ItemStack itemStack, boolean mainHand, boolean isSneaking)
   {
     UUID uuid = player.getUniqueId();
 
-    NBTCompound itemTag = NBTAPI.getMainCompound(item);
+    NBTCompound itemTag = NBTAPI.getMainCompound(itemStack);
     NBTCompound usageTag = NBTAPI.getCompound(itemTag, CucumberyTag.USAGE_KEY);
     NBTCompound usageSwapTag = NBTAPI.getCompound(usageTag, isSneaking ? CucumberyTag.USAGE_COMMANDS_SNEAK_SWAP_KEY : CucumberyTag.USAGE_COMMANDS_SWAP_KEY);
     NBTCompound cooldownTag = NBTAPI.getCompound(usageSwapTag, CucumberyTag.COOLDOWN_KEY);
@@ -115,7 +115,7 @@ Component a = ComponentUtil.create(Prefix.INFO, "만약 아이템 강화를 중�
         if (currentTime < nextAvailable)
         {
           String remainTime = Constant.THE_COLOR_HEX + Method.timeFormatMilli(nextAvailable - currentTime);
-          MessageUtil.sendWarn(player, ComponentUtil.create("아직 %s을(를)" + (isSneaking ? " 웅크리고" : "") + " 스와핑 사용할 수 없습니다 (남은 시간 : %s)", item, remainTime));
+          MessageUtil.sendWarn(player, ComponentUtil.create("아직 %s을(를)" + (isSneaking ? " 웅크리고" : "") + " 스와핑 사용할 수 없습니다 (남은 시간 : %s)", itemStack, remainTime));
           event.setCancelled(true);
           return;
         }
@@ -154,14 +154,14 @@ Component a = ComponentUtil.create(Prefix.INFO, "만약 아이템 강화를 중�
         }
         if (Math.random() * 100d < disposableChance && player.getGameMode() != GameMode.CREATIVE)
         {
-          item.setAmount(item.getAmount() - 1);
+          itemStack.setAmount(itemStack.getAmount() - 1);
           if (mainHand)
           {
-            player.getInventory().setItemInMainHand(item);
+            player.getInventory().setItemInMainHand(itemStack);
           }
           else
           {
-            player.getInventory().setItemInOffHand(item);
+            player.getInventory().setItemInOffHand(itemStack);
           }
         }
       }
