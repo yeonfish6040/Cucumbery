@@ -170,7 +170,7 @@ public class BlockPlace implements Listener
       NBTCompound tntTag = NBTAPI.getCompound(itemTag, CucumberyTag.TNT);
       if (tntTag != null)
       {
-        if (tntTag.hasKey(CucumberyTag.TNT_IGNITE) && tntTag.getBoolean(CucumberyTag.TNT_IGNITE))
+        if (tntTag.hasTag(CucumberyTag.TNT_IGNITE) && tntTag.getBoolean(CucumberyTag.TNT_IGNITE))
         {
           special = true;
           player.getLocation().getWorld().getBlockAt(event.getBlock().getLocation()).setType(Material.AIR);
@@ -182,7 +182,7 @@ public class BlockPlace implements Listener
           tnt.setSource(player);
           SoundPlay.playSoundLocation(event.getBlock().getLocation(), Sound.ENTITY_CREEPER_PRIMED);
           int fuseTime = 80;
-          if (tntTag.hasKey(CucumberyTag.TNT_FUSE))
+          if (tntTag.hasTag(CucumberyTag.TNT_FUSE))
           {
             try
             {
@@ -200,7 +200,7 @@ public class BlockPlace implements Listener
             tnt.setIsIncendiary(true);
           }
 
-          if (tntTag.hasKey(CucumberyTag.TNT_EXPLODE_POWER) && tntTag.getType(CucumberyTag.TNT_EXPLODE_POWER) == NBTType.NBTTagDouble)
+          if (tntTag.hasTag(CucumberyTag.TNT_EXPLODE_POWER) && tntTag.getType(CucumberyTag.TNT_EXPLODE_POWER) == NBTType.NBTTagDouble)
           {
             double explodePower = tntTag.getDouble(CucumberyTag.TNT_EXPLODE_POWER);
             tnt.setYield((float) explodePower);

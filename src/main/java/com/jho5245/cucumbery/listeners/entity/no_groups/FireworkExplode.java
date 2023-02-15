@@ -54,7 +54,7 @@ public class FireworkExplode implements Listener
           event.setCancelled(true);
           firework.remove();
           int repeatCount = 3;
-          if (nbtItem.hasKey("RepeatCount") && nbtItem.getType("RepeatCount") == NBTType.NBTTagInt)
+          if (nbtItem.hasTag("RepeatCount") && nbtItem.getType("RepeatCount") == NBTType.NBTTagInt)
           {
             repeatCount = nbtItem.getInteger("RepeatCount");
           }

@@ -3,13 +3,12 @@ package com.jho5245.cucumbery.util.no_groups;
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("all")
-public class TestCommand implements CommandExecutor, AsyncTabCompleter
+public class TestCommand implements CucumberyCommandExecutor
 {
   private static final NamespacedKey test = new NamespacedKey("cucumbery", "test_recipe");
 
@@ -32,9 +31,25 @@ public class TestCommand implements CommandExecutor, AsyncTabCompleter
     {
       if (sender instanceof Player player)
       {
-        String key = args[0];
-        NBTEntity nbtEntity = new NBTEntity(player);
-        player.sendMessage(nbtEntity.getCompound(key).toString());
+        if (args.length == 0)
+        {
+          player.showWinScreen();
+        }
+        if (args.length == 2)
+        {
+          Entity entity = SelectorUtil.getEntity(player, args[0]);
+          float f = Float.parseFloat(args[1]);
+          if (entity instanceof LivingEntity livingEntity)
+          {
+            livingEntity.setBodyYaw(f);
+            MessageUtil.broadcastDebug(livingEntity, " : ", livingEntity.getBodyYaw());
+          }
+        }
+//        switch (args[0])
+//        {
+//          case "walk" -> player.setWalkSpeed(player.getWalkSpeed() * -1);
+//          case "fly" -> player.setFlySpeed(player.getFlySpeed() * -1);
+//        }
 //        player.sendMessage("prev. walk speed : " + player.getWalkSpeed());
 //        player.setWalkSpeed(Float.valueOf(args[0]));
 //        player.sendMessage("prev. fly speed : " + player.getFlySpeed());
@@ -117,19 +132,23 @@ public class TestCommand implements CommandExecutor, AsyncTabCompleter
       {
         switch (args[0])
         {
-          case "entities" -> {
+          case "entities" ->
+          {
             List<Entity> entities = SelectorUtil.getEntities(sender, args[1], true);
             MessageUtil.sendMessage(sender, entities != null ? entities : "null");
           }
-          case "entity" -> {
+          case "entity" ->
+          {
             Entity entity = SelectorUtil.getEntity(sender, args[1], true);
             MessageUtil.sendMessage(sender, entity != null ? entity : "null");
           }
-          case "players" -> {
+          case "players" ->
+          {
             List<Player> players = SelectorUtil.getPlayers(sender, args[1], true);
             MessageUtil.sendMessage(sender, players != null ? players : "null");
           }
-          case "player" -> {
+          case "player" ->
+          {
             Player p = SelectorUtil.getPlayer(sender, args[1], true);
             MessageUtil.sendMessage(sender, p != null ? p : "null");
           }
@@ -158,16 +177,20 @@ public class TestCommand implements CommandExecutor, AsyncTabCompleter
     {
       switch (args[0])
       {
-        case "entities" -> {
+        case "entities" ->
+        {
           return Method.tabCompleterEntity(sender, args, "<개체>", true);
         }
-        case "entity" -> {
+        case "entity" ->
+        {
           return Method.tabCompleterEntity(sender, args, "<개체>");
         }
-        case "players" -> {
+        case "players" ->
+        {
           return Method.tabCompleterPlayer(sender, args, "<플레이어>", true);
         }
-        case "player" -> {
+        case "player" ->
+        {
           return Method.tabCompleterPlayer(sender, args, "<플레이어>");
         }
       }
@@ -184,7 +207,7 @@ public class TestCommand implements CommandExecutor, AsyncTabCompleter
     {
       List<Completion> list1 = CommandTabUtil.tabCompleterEntity(sender, args, "<개체>"), list2 = CommandTabUtil.worldArgument(sender, args, "<월드>"),
               list3 = CommandTabUtil.itemStackArgument(sender, args, "<아이템>"), list4 = CommandTabUtil.locationArgument(sender, args, "<위치>", null, false),
-      list5 = CommandTabUtil.rotationArgument(sender, args, "<방향>", null), list6 = CommandTabUtil.tabCompleterList(args, "<아아무거아무거나>", false,
+              list5 = CommandTabUtil.rotationArgument(sender, args, "<방향>", null), list6 = CommandTabUtil.tabCompleterList(args, "<아아무거아무거나>", false,
               "햄버거와 뚱이", "푸아그라탕 샌즈", "와니 필통에 있는 볼펜심 안에 있는 초록색 잉크", "지은지 70년 이상 지나서 철거한 건물 콘크리트 가루",
               "밀랓비탈헝 갹간 국방적으로 깍ㄲ인 구리 세로 반 브록", " <뭐> ", " <나닛>", " ㅇㅅㅇ", " 오", " 오이", "오이 베드서버에 있는 줄 알았는데", "키보드가 있는 것으로 알려졌다 보니 정말 죄송합니다 오후 서울", " 난", " 알아요",
               "자기 서버에 있는것 같구만", " ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", "밀랍칠한 약간 국방적으로 깎인 구리 세로 반 블록 — 오늘 오후 1:23\n" +
@@ -205,12 +228,16 @@ public class TestCommand implements CommandExecutor, AsyncTabCompleter
     if (length == 2)
     {
       if (CommandArgumentUtil.world(sender, args[0], false) != null)
-      return CommandTabUtil.locationArgument(sender, args, "<위치>", location, false);
+      {
+        return CommandTabUtil.locationArgument(sender, args, "<위치>", location, false);
+      }
     }
     if (length == 3)
     {
       if (CommandArgumentUtil.location(sender, args[1], false, false) != null)
-      return CommandTabUtil.rotationArgument(sender, args, "<방향>", location);
+      {
+        return CommandTabUtil.rotationArgument(sender, args, "<방향>", location);
+      }
     }
     return CommandTabUtil.ARGS_LONG;
   }

@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.custom.customeffect.type;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.TypeBuilder;
 import com.jho5245.cucumbery.custom.customeffect.VanillaEffectDescription;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -24,6 +25,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
@@ -48,7 +50,7 @@ public class CustomEffectType implements Translatable, EnumHideable
           AWKWARD = new CustomEffectType("awkward", "어색함", "어색", builder().removeOnMilk()),
           THICK = new CustomEffectType("thick", "진함", builder().removeOnMilk()),
 
-          BACKWARDS_CHAT = new CustomEffectType("backwards_chat", "팅채 로꾸거", builder().removeOnMilk().description("다니됩력입 로꾸거 이팅채")),
+  BACKWARDS_CHAT = new CustomEffectType("backwards_chat", "팅채 로꾸거", builder().removeOnMilk().description("다니됩력입 로꾸거 이팅채")),
           MUNDANE = new CustomEffectType("mundane", "평범함", "평범", builder().removeOnMilk()),
           UNCRAFTABLE = new CustomEffectType("uncraftable", "제작 불가능함", builder().negative().maxAmplifier(2)),
 
@@ -59,8 +61,8 @@ public class CustomEffectType implements Translatable, EnumHideable
   /**/ CONTINUAL_SPECTATING = new CustomEffectType("continual_spectating", "관전 지속", builder().keepOnDeath().defaultDuration(-1)),
           CONTINUAL_SPECTATING_EXEMPT = new CustomEffectType("continual_spectating_exempt", "관전 지속 외출", builder().keepOnDeath()),
 
-          CONTINUAL_RIDING = new CustomEffectType("continual_riding", "라이딩 지속", builder().keepOnDeath().defaultDuration(-1).description(ComponentUtil.translate("플레이어를 지속적으로 탑승합니다")
-                          .append(ComponentUtil.translate("해당 플레이어가 재접속하거나 리스폰해도 자동으로 탑승합니다")))),
+  CONTINUAL_RIDING = new CustomEffectType("continual_riding", "라이딩 지속", builder().keepOnDeath().defaultDuration(-1).description(ComponentUtil.translate("플레이어를 지속적으로 탑승합니다")
+          .append(ComponentUtil.translate("해당 플레이어가 재접속하거나 리스폰해도 자동으로 탑승합니다")))),
           CONTINUAL_RIDING_EXEMPT = new CustomEffectType("continual_riding_exempt", "라이딩 지속 외출", builder().keepOnDeath().description("지속시간 동안은 강제 탑승이 되지 않습니다")),
 
   /**/ CURSE_OF_BEANS = new CustomEffectType("curse_of_beans", "콩의 저주 콩의 저주", builder().negative().keepOnDeath()),
@@ -156,15 +158,15 @@ public class CustomEffectType implements Translatable, EnumHideable
           DO_NOT_PICKUP_BUT_THROW_IT = new CustomEffectType("do_not_pickup_but_throw_it", "줍지 마, 던져!", builder().negative().maxAmplifier(9)),
           DODGE = new CustomEffectType("dodge", "회피", builder().maxAmplifier(99)),
           ELYTRA_BOOSTER = new CustomEffectType("elytra_booster", "겉날개 부스터", builder().maxAmplifier(9)),
-          FEATHER_FALLING = new CustomEffectType("feather_falling", Enchantment.PROTECTION_FALL.translationKey()),
+          FEATHER_FALLING = new CustomEffectType("feather_falling", Enchantment.PROTECTION_FALL.translationKey(), builder().maxAmplifier(9)),
           FROST_WALKER = new CustomEffectType("frost_walker", Enchantment.FROST_WALKER.translationKey()),
           HEALTH_INCREASE = new CustomEffectType("health_increase", "HP 증가", builder().maxAmplifier(99)),
           IDIOT_SHOOTER = new CustomEffectType("idiot_shooter", "똥손", builder().negative().keepOnDeath().maxAmplifier(19)),
           MUTE = new CustomEffectType("mute", "채팅 금지", builder().negative().keepOnDeath()),
-          NEWBIE_SHIELD = new CustomEffectType("newbie_shield", "뉴비 보호막", builder().nonRemovable().enumHidden().defaultDuration(2).timeHidden()),
+          NEWBIE_SHIELD = new CustomEffectType("newbie_shield", "뉴비 보호막", builder().nonRemovable().enumHidden().defaultDuration(2).timeHidden().skipEvent()),
           NO_ENTITY_AGGRO = new CustomEffectType("no_entity_aggro", "개체 관심 없음"),
           PARROTS_CHEER = new CustomEffectType("parrots_cheer", "앵무새의 가호", builder().timeHiddenWhenFull().defaultDuration(100)),
-          SERVER_RADIO_LISTENING = new CustomEffectType("server_radio_listening", "서버 라디오 분위기", builder().enumHidden().nonRemovable().maxAmplifier(4).timeHidden().defaultDuration(-1).removeOnQuit()),
+          SERVER_RADIO_LISTENING = new CustomEffectType("server_radio_listening", "서버 라디오 분위기", builder().enumHidden().nonRemovable().maxAmplifier(4).timeHidden().defaultDuration(-1).removeOnQuit().skipEvent()),
           STOP = new CustomEffectType("stop", "멈춰!", NEGATIVE),
           TRUE_INVISIBILITY = new CustomEffectType("true_invisibility", "찐 투명화"),
           BLESS_OF_VILLAGER = new CustomEffectType("bless_of_villager", "주민의 축복"),
@@ -176,7 +178,7 @@ public class CustomEffectType implements Translatable, EnumHideable
           DAMAGE_INDICATOR = new CustomEffectType("damage_indicator", "", builder().hidden().defaultDuration(20)),
           FREEZING = new CustomEffectType("freezing", "얼음!", builder().negative()),
           NO_CUCUMBERY_ITEM_USAGE_ATTACK = new CustomEffectType("no_cucumbery_item_usage_attack", "", HIDDEN),
-          GLIDING = new CustomEffectType("gliding", "", HIDDEN),
+          GLIDING = new CustomEffectType("gliding", "", builder().hidden().skipEvent()),
           NOTIFY_NO_TRADE_ITEM_DROP = new CustomEffectType("notify_no_trade_item_drop", "아이템", HIDDEN),
           CUSTOM_DEATH_MESSAGE = new CustomEffectType("custom_death_message", "커스텀 데스 메시지", HIDDEN),
           DYNAMIC_LIGHT = new CustomEffectType("dynamic_light", "동적 조명", builder().keepOnDeath().description(ComponentUtil.translate("손에 빛이 나는 아이템을 들고 있으면 %s 효과가 적용됩니다", PotionEffectType.NIGHT_VISION))),
@@ -191,34 +193,92 @@ public class CustomEffectType implements Translatable, EnumHideable
           NIGHT_VISION_SPECTATOR = new CustomEffectType("night_vision_spectator", "관전 모드 야간 투시", builder().keepOnDeath().defaultDuration(-1)
                   .description("관전 모드에서 다른 개체 관전 시 %s 효과가 적용됩니다", PotionEffectType.NIGHT_VISION)),
 
-          SUPERIOR_LEVITATION = new CustomEffectType("superior_levitation", "강력한 공중 부양", builder().negative().maxAmplifier(127).icon(new ItemStack(Material.FEATHER)).description("노빠꾸로 공중으로 떠오릅니다")),
+  SUPERIOR_LEVITATION = new CustomEffectType("superior_levitation", "강력한 공중 부양", builder().negative().maxAmplifier(127).icon(new ItemStack(Material.FEATHER)).description("노빠꾸로 공중으로 떠오릅니다")),
 
-          SPYGLASS_TELEPORT = new CustomEffectType("spyglass_teleport", "망원경 텔레포트", builder().enumHidden().defaultDuration(60)),
+  SPYGLASS_TELEPORT = new CustomEffectType("spyglass_teleport", "망원경 텔레포트", builder().enumHidden().defaultDuration(60)),
 
-          SPYGLASS_TELEPORT_COOLDOWN = new CustomEffectType("spyglass_teleport_cooldown", "망원경 텔레포트 쿨타임", builder().negative().enumHidden().defaultDuration(1200).keepOnDeath()),
+  SPYGLASS_TELEPORT_COOLDOWN = new CustomEffectType("spyglass_teleport_cooldown", "망원경 텔레포트 쿨타임", builder().negative().enumHidden().defaultDuration(1200).keepOnDeath()),
 
-          ENTITY_REMOVER = new CustomEffectType("entity_remover", "개체 삭제", builder().instant().description("개체를 삭제하거나 죽입니다")),
+  ENTITY_REMOVER = new CustomEffectType("entity_remover", "개체 삭제", builder().instant().description("개체를 삭제하거나 죽입니다")),
 
-          SHIVA_NO_ONE_CAN_BLOCK_ME = new CustomEffectType("shiva_no_one_can_block_me", "씨바 아무도 날 막을 순 없으셈 ㅋㅋ", builder().description("다 죽어부러!")),
+  SHIVA_NO_ONE_CAN_BLOCK_ME = new CustomEffectType("shiva_no_one_can_block_me", "씨바 아무도 날 막을 순 없으셈 ㅋㅋ", builder().description("다 죽어부러!")),
 
-          GD_TO_HI = new CustomEffectType("gd_to_hi", "gd를 ㅎㅇ로 바꿔주는 마법의 효과", builder().keepOnDeath()),
+  GD_TO_HI = new CustomEffectType("gd_to_hi", "gd를 ㅎㅇ로 바꿔주는 마법의 효과", builder().keepOnDeath()),
 
-          AUTO_CHAT_PARSER = new CustomEffectType("auto_chat_parser", "채팅을 자동으로 파싱해주는 마법의 효과", builder().keepOnDeath()),
+  AUTO_CHAT_PARSER = new CustomEffectType("auto_chat_parser", "채팅을 자동으로 파싱해주는 마법의 효과", builder().keepOnDeath()),
 
-          STRANGE_CREATIVE_MODE = new CustomEffectType("strange_creative_mode", "뭔가 이상한 크리에이티브 모드", builder().removeOnQuit().keepOnDeath()
-                  .description(ComponentUtil.translate("크리에이티브인데.. 서바이벌인가..?")
-                          .append(Component.text("\n"))
-                          .append(Component.text("\n"))
-                          .append(ComponentUtil.translate("크리에이티브 모드처럼 블록과 아이템을 자유롭게"))
-                          .append(Component.text("\n"))
-                          .append(ComponentUtil.translate("사용할 수 있으나 비행 모드가 비활성화되고"))
-                          .append(Component.text("\n"))
-                          .append(ComponentUtil.translate("%s(%s) 기능을 사용할 수 없으며", Component.translatable("key.pickItem"), Component.keybind("key.pickItem")))
-                          .append(Component.text("\n"))
-                          .append(ComponentUtil.translate("서바이벌 모드와 동일하게 다른 적대적 개체의"))
-                          .append(Component.text("\n"))
-                          .append(ComponentUtil.translate("표적이 될 수 있고 피해를 입을 수 있습니다"))
-                  )),
+  STRANGE_CREATIVE_MODE = new CustomEffectType("strange_creative_mode", "뭔가 이상한 크리에이티브 모드", builder().removeOnQuit().keepOnDeath()
+          .description(ComponentUtil.translate("크리에이티브인데.. 서바이벌인가..?")
+                  .append(Component.text("\n"))
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("크리에이티브 모드처럼 블록과 아이템을 자유롭게"))
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("사용할 수 있으나 비행 모드가 비활성화되고"))
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("%s(%s) 기능을 사용할 수 없으며", Component.translatable("key.pickItem"), Component.keybind("key.pickItem")))
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("서바이벌 모드와 동일하게 다른 적대적 개체의"))
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("표적이 될 수 있고 피해를 입을 수 있습니다"))
+          )),
+
+  ASCENSION = new CustomEffectType("ascension", "승천", builder().description(
+          ComponentUtil.translate("%s 효과와 비슷하게 공중으로 떠오르나", PotionEffectType.LEVITATION)
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("지면에 맞닿아 있을 때와 이후 0.3초간은"))
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("지면에 맞닿아 있지 않아도 공중으로 떠오르지 않고"))
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("웅크리면 천천히 하강하고 낙하 피해를 입지 않습니다"))
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("농도 레벨이 높을 수록 더 빨리 상승하거나 하강합니다"))
+  ).maxAmplifier(60)),
+
+  ASCENSION_COOLDOWN = new CustomEffectType("ascension_cooldown", "승천(저항)", builder().defaultDuration(6)),
+
+  FLY = new CustomEffectType("fly", "플라이", builder().keepOnDeath().description(
+          ComponentUtil.translate("비행 모드가 활성화 됩니다")
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("자유롭게 비행할 수 있으며 낙하 피해를 입지 않습니다"))
+  ).icon(() -> {
+    ItemStack itemStack = new ItemStack(Material.ELYTRA);
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    itemMeta.setCustomModelData(5201);
+    itemStack.setItemMeta(itemMeta);
+    return itemStack;
+  })),
+
+  FLY_REMOVE_ON_QUIT = new CustomEffectType("fly_remove_on_quit", "플라이", builder().keepOnDeath().removeOnQuit().description(
+          ComponentUtil.translate("비행 모드가 활성화 됩니다")
+                  .append(Component.text("\n"))
+                  .append(ComponentUtil.translate("자유롭게 비행할 수 있으며 낙하 피해를 입지 않습니다"))
+  ).icon(() -> {
+    ItemStack itemStack = new ItemStack(Material.ELYTRA);
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    itemMeta.setCustomModelData(5201);
+    itemStack.setItemMeta(itemMeta);
+    return itemStack;
+  })),
+
+  FLY_NOT_ENABLED = new CustomEffectType("fly_not_enabled", "플라이 불가 지역", builder().keepOnDeath().negative().description("비행 모드를 사용할 수 없는 지역입니다").timeHidden().icon(() -> {
+    ItemStack itemStack = new ItemStack(Material.ELYTRA);
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    itemMeta.setCustomModelData(5203);
+    itemMeta.setUnbreakable(true);
+    ((Damageable) itemMeta).setDamage(Material.ELYTRA.getMaxDurability() - 1);
+    itemStack.setItemMeta(itemMeta);
+    return itemStack;
+  })),
+
+  MAESTRO = new CustomEffectType("maestro", "마에스트로", builder().description(
+          ComponentUtil.translate("작곡가가 되었다. 크리에이티브 모드에서 채팅창에")
+                  .append(Component.text("\n"))
+                  .append(Component.translatable("숫자를 입력하면 바로 밑에 해당 음높이를 가진 소리 블록"))
+                  .append(Component.text("\n"))
+                  .append(Component.translatable("을 설치하거나 이미 설치되어 있는 소리 블록의 음높이를 변경한다"))
+                  .append(Component.text("\n"))
+                  .append(Component.translatable("단, 해당 위치에 다른 블록이 있을 경우 설치되지 않는다"))
+  ).keepOnDeath().defaultDuration(-1)),
 
   /**/ NOTHING = new CustomEffectType("nothing", "아무것도 아님"),
 
@@ -229,7 +289,10 @@ public class CustomEffectType implements Translatable, EnumHideable
   public static void register()
   {
     register(AWKWARD, THICK, BACKWARDS_CHAT, MUNDANE, UNCRAFTABLE,
-            BANE_OF_ARTHROPODS, SHARPNESS, SMITE,
+
+            BANE_OF_ARTHROPODS, SHARPNESS, SMITE, MAESTRO,
+
+            ASCENSION, ASCENSION_COOLDOWN, FLY, FLY_REMOVE_ON_QUIT, FLY_NOT_ENABLED,
 
             CONTINUAL_RIDING, CONTINUAL_RIDING_EXEMPT,
 
@@ -315,6 +378,8 @@ public class CustomEffectType implements Translatable, EnumHideable
   private final int maxAmplifier, defaultDuration, customModelData;
   private final boolean isBuffFreezable, isKeepOnDeath, isKeepOnMilk, isKeepOnQuit, isRealDuration, isRemoveable, isNegative, isInstant;
   private final boolean isToggle, isHidden, isTimeHidden, isTimeHiddenWhenFull, isEnumHidden, isStackDisplayed;
+
+  private final boolean callEvent;
   private final Component description;
   private final ItemStack icon;
   private final DisplayType defaultDisplayType;
@@ -368,6 +433,8 @@ public class CustomEffectType implements Translatable, EnumHideable
     this.description = builder.getDescription();
     this.icon = builder.getIcon();
     this.defaultDisplayType = builder.getDefaultDisplayType();
+
+    this.callEvent = builder.doesCallEvent();
   }
 
   public CustomEffectType(@NotNull NamespacedKey namespacedKey, @NotNull String translationKey, @NotNull TypeBuilder builder)
@@ -399,6 +466,8 @@ public class CustomEffectType implements Translatable, EnumHideable
     this.description = builder.getDescription();
     this.icon = builder.getIcon();
     this.defaultDisplayType = builder.getDefaultDisplayType();
+
+    this.callEvent = builder.doesCallEvent();
   }
 
   public static void register(@NotNull CustomEffectType... CustomEffectTypes)
@@ -479,7 +548,29 @@ public class CustomEffectType implements Translatable, EnumHideable
   {
     if (!this.description.equals(Component.empty()))
     {
-      return description;
+      Component modifiedDescrption = description;
+      if (viewer != null)
+      {
+        if (!CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          if (this == CustomEffectTypeCustomMining.AQUA_AFFINITY || this == CustomEffectTypeCustomMining.AIR_SCAFFOLDING || this == CustomEffectTypeCustomMining.HASTE || this == CustomEffectTypeCustomMining.MINING_FATIGUE ||
+          this == CustomEffectTypeCustomMining.TITANIUM_FINDER || this == CustomEffectTypeCustomMining.MINING_FORTUNE || this == CustomEffectTypeCustomMining.MOLE_CLAW || this == CustomEffectTypeCustomMining.MINDAS_TOUCH ||
+          this == CustomEffectTypeCustomMining.MINING_BOOSTER)
+          {
+            modifiedDescrption = modifiedDescrption.append(Component.text("\n"));
+            modifiedDescrption = modifiedDescrption.append(ComponentUtil.translate("&c현재 위치에서는 적용되지 않는 효과입니다!"));
+          }
+        }
+        if (CustomEffectManager.hasEffect(viewer, CustomEffectType.FLY_NOT_ENABLED))
+        {
+          if (this == CustomEffectType.FLY || this == CustomEffectType.FLY_REMOVE_ON_QUIT)
+          {
+            modifiedDescrption = modifiedDescrption.append(Component.text("\n"));
+            modifiedDescrption = modifiedDescrption.append(ComponentUtil.translate("&c현재 위치에서는 적용되지 않는 효과입니다!"));
+          }
+        }
+      }
+      return modifiedDescrption;
     }
     return switch ((this.getNamespacedKey().getNamespace().equals("minecraft") ? "MINECRAFT_" : "") + this.getIdString().toUpperCase())
             {
@@ -526,7 +617,11 @@ public class CustomEffectType implements Translatable, EnumHideable
                       .append(ComponentUtil.translate("동일하게 아이템을 얻을 수 있습니다"));
               case "TELEKINESIS" -> ComponentUtil.translate("블록을 캐거나 적을 처치했을 때 드롭하는")
                       .append(Component.text("\n"))
-                      .append(ComponentUtil.translate("아이템이 즉시 인벤토리에 들어옵니다"));
+                      .append(ComponentUtil.translate("아이템이 즉시 인벤토리에 들어옵니다"))
+                      .append((Cucumbery.using_mcMMO ? (
+                              Component.text("\n")
+                                      .append(ComponentUtil.translate("&e단, mcMMO의 추가 아이템 드롭은 적용되지 않습니다"))
+                      ) : Component.empty()));
               case "SMELTING_TOUCH" -> ComponentUtil.translate("블록을 캐거나 적을 처치했을 때 드롭하는")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("아이템을 제련된 형태로 바꿔줍니다"));
@@ -1120,6 +1215,11 @@ public class CustomEffectType implements Translatable, EnumHideable
   public boolean isStackDisplayed()
   {
     return isStackDisplayed;
+  }
+
+  public boolean doesCallEvent()
+  {
+    return this.callEvent;
   }
 
   @NotNull

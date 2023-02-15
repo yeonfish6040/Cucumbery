@@ -1042,15 +1042,14 @@ public class DeathManager
       {
         return Method.usingLoreFeature(projectile.getLocation()) ? ItemLore.setItemLore(abstractArrow.getItemStack()) : abstractArrow.getItemStack();
       }
-      else if (projectile instanceof ThrownPotion thrownPotion)
+      else
       {
-        return thrownPotion.getItem();
-      }
-      else if (projectile instanceof Firework firework)
-      {
-        ItemStack itemStack = new ItemStack(Material.FIREWORK_ROCKET);
-        itemStack.setItemMeta(firework.getFireworkMeta());
-        return Method.usingLoreFeature(projectile.getLocation()) ? ItemLore.setItemLore(itemStack) : itemStack;
+        if (projectile instanceof Firework firework)
+        {
+          ItemStack itemStack = new ItemStack(Material.FIREWORK_ROCKET);
+          itemStack.setItemMeta(firework.getFireworkMeta());
+          return Method.usingLoreFeature(projectile.getLocation()) ? ItemLore.setItemLore(itemStack) : itemStack;
+        }
       }
       AreaEffectCloud areaEffectCloud = getDamagerAreaEffectCloud(event);
       if (areaEffectCloud != null)

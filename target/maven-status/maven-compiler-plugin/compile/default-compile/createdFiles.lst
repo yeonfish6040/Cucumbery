@@ -154,6 +154,7 @@ com\jho5245\cucumbery\commands\no_groups\CommandNickName.class
 com\jho5245\cucumbery\util\no_groups\MessageUtil.class
 com\jho5245\cucumbery\deathmessages\ConditionType.class
 com\jho5245\cucumbery\util\storage\no_groups\BlockDataInfo.class
+com\jho5245\cucumbery\listeners\player\no_groups\PlayerChat$1.class
 com\jho5245\cucumbery\commands\teleport\CommandSetRotation.class
 com\jho5245\cucumbery\custom\CombatInfo.class
 com\jho5245\cucumbery\util\josautil\JosaFormatter$HangulJongSungDetector.class

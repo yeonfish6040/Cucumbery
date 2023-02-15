@@ -400,7 +400,7 @@ public class MessageUtil
       {
         ItemLore.removeItemLore(itemStack);
       }
-      if (player.hasPermission("asdf") && (!nbtItem.hasKey("VirtualItem") || nbtItem.getBoolean("VirtualItem") == null || !nbtItem.getBoolean("VirtualItem")))
+      if (player.hasPermission("asdf") && (!nbtItem.hasTag("VirtualItem") || nbtItem.getBoolean("VirtualItem") == null || !nbtItem.getBoolean("VirtualItem")))
       {
         ItemMeta itemMeta = itemStack.getItemMeta();
         List<Component> lore = itemMeta.lore();
@@ -468,7 +468,6 @@ public class MessageUtil
    * @param audience 메시지를 받는 대상
    * @param objects  보낼 메시지
    */
-  @SuppressWarnings("unchecked")
   public static void sendMessage(@NotNull Object audience, @NotNull Object... objects)
   {
     if (Cucumbery.using_CommandAPI && audience instanceof NativeProxyCommandSender proxyCommandSender)
@@ -492,6 +491,11 @@ public class MessageUtil
     }
     if (audience instanceof Audience a)
     {
+      // command blocks never get feedback since 2023.02.13
+      if (a instanceof BlockCommandSender)
+      {
+        return;
+      }
       Component message;
       if (objects.length == 1 && objects[0] instanceof Component component)
       {
@@ -719,19 +723,11 @@ public class MessageUtil
     component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.TRUE);
     component = component.color(NamedTextColor.GRAY);
     List<Component> children = new ArrayList<>(component.children());
-    for (int i = 0; i < children.size(); i++)
-    {
-      Component child = setAdminMessage(children.get(i));
-      children.set(i, child);
-    }
+    children.replaceAll(MessageUtil::setAdminMessage);
     if (component instanceof TranslatableComponent translatableComponent)
     {
       List<Component> args = new ArrayList<>(translatableComponent.args());
-      for (int i = 0; i < args.size(); i++)
-      {
-        Component arg = setAdminMessage(args.get(i));
-        args.set(i, arg);
-      }
+      args.replaceAll(MessageUtil::setAdminMessage);
       component = translatableComponent.args(args);
     }
     return component.children(children);
@@ -1140,7 +1136,7 @@ public class MessageUtil
 
   public static void wrongBool(@NotNull Object audience, int input, @NotNull String[] args)
   {
-    sendError(audience, "잘못된 불입니다. 'rg255,204;true&r' 또는 'rg255,204;false&r'가 필요하지만 rg255,204;" + input + "번&r째 인수에 'rg255,204;" + args[input - 1] + "&r'" + getFinalConsonant(args[input - 1], ConsonantType.이가) + " 입력되었습니다");
+    sendError(audience, "잘못된 불입니다. '%s' 또는 '%s'가 필요하지만 %s번째 인수에 '%s'이(가) 입력되었습니다", "true", "false", input, args[input - 1]);
   }
 
   public static void sendTitle(@NotNull Object player, @Nullable Object title, @Nullable Object subTitle)
@@ -1229,13 +1225,11 @@ public class MessageUtil
 
   public static boolean checkNumberSize(CommandSender sender, long value, long min, long max, boolean excludesMin, boolean excludesMax, boolean notice)
   {
-    String valueString = Constant.THE_COLOR_HEX + Constant.Sosu15.format(value) + "&r";
-    valueString += getFinalConsonant(valueString, ConsonantType.이가);
     if (excludesMin && value <= min)
     {
       if (notice)
       {
-        sendError(sender, "정수는 rg255,204;" + Constant.Sosu15.format(min) + "&r 초과여야 하는데, " + valueString + " 있습니다");
+        sendError(sender, "long은 %s 초과여야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(min), Constant.Sosu15.format(value));
       }
       return false;
     }
@@ -1243,7 +1237,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "정수는 rg255,204;" + Constant.Sosu15.format(min) + "&r 이상이어야 하는데, " + valueString + " 있습니다");
+        sendError(sender, "argument.long.low", Constant.Sosu15.format(min), Constant.Sosu15.format(value));
       }
       return false;
     }
@@ -1251,7 +1245,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "정수는 rg255,204;" + Constant.Sosu15.format(max) + "&r 미만이어야 하는데, " + valueString + " 있습니다");
+        sendError(sender, "long은 %s 미만이어야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
       }
       return false;
     }
@@ -1259,7 +1253,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "정수는 rg255,204;" + Constant.Sosu15.format(max) + "&r 이하여야 하는데, " + valueString + " 있습니다");
+        sendError(sender, "argument.long.min", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
       }
       return false;
     }
@@ -1276,62 +1270,49 @@ public class MessageUtil
     return checkNumberSize(sender, value, min, max, false, false, notice);
   }
 
-  public static boolean checkNumberSize(@Nullable CommandSender sender, double value, double min, double max, boolean excludessMin, boolean excludessMax)
+  public static boolean checkNumberSize(CommandSender sender, double value, double min, double max, boolean excludesMin, boolean excludesMax)
   {
-    return checkNumberSize(sender, value, min, max, excludessMin, excludessMax, true);
+    return checkNumberSize(sender, value, min, max, excludesMin, excludesMax, true);
   }
 
-  public static boolean checkNumberSize(@Nullable CommandSender sender, double value, double min, double max, boolean excludessMin, boolean excludessMax, boolean notice)
+  public static boolean checkNumberSize(CommandSender sender, double value, double min, double max, boolean excludesMin, boolean excludesMax, boolean notice)
   {
-    String valueString = Constant.THE_COLOR_HEX + Constant.Sosu15.format(value) + "&r";
-    valueString += getFinalConsonant(valueString, ConsonantType.이가);
-    if (excludessMin && value <= min)
+    if (excludesMin && value <= min)
     {
       if (notice)
       {
-        if (sender != null)
-        {
-          sendError(sender, "숫자는 rg255,204;" + Constant.Sosu15.format(min) + "&r 초과여야 하는데, " + valueString + " 있습니다");
-        }
+        sendError(sender, "double은 %s 초과여야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(min), Constant.Sosu15.format(value));
       }
       return false;
     }
-    else if (!excludessMin && value < min)
+    else if (!excludesMin && value < min)
     {
       if (notice)
       {
-        if (sender != null)
-        {
-          sendError(sender, "숫자는 rg255,204;" + Constant.Sosu15.format(min) + "&r 이상이어야 하는데, " + valueString + " 있습니다");
-        }
+        sendError(sender, "argument.double.low", Constant.Sosu15.format(min), Constant.Sosu15.format(value));
       }
       return false;
     }
-    else if (excludessMax && value >= max)
+    else if (excludesMax && value >= max)
     {
       if (notice)
       {
-        if (sender != null)
-        {
-          sendError(sender, "숫자는 rg255,204;" + Constant.Sosu15.format(max) + "&r 미만이어야 하는데, " + valueString + " 있습니다");
-        }
+        sendError(sender, "double은 %s 미만이어야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
       }
       return false;
     }
-    else if (!excludessMax && value > max)
+    else if (!excludesMax && value > max)
     {
       if (notice)
       {
-        if (sender != null)
-        {
-          sendError(sender, "숫자는 rg255,204;" + Constant.Sosu15.format(max) + "&r 이하여야 하는데, " + valueString + " 있습니다");
-        }
+        sendError(sender, "argument.double.min", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
       }
       return false;
     }
     return true;
   }
 
+  @SuppressWarnings("all")
   @NotNull
   public static String getFinalConsonant(@Nullable String word, @NotNull ConsonantType type)
   {
@@ -1343,9 +1324,10 @@ public class MessageUtil
       }
       word = word.replace(" ", "");
       word = stripColor(n2s(word));
-      word = word.replaceAll("[&%!?\"'\\\\$_,\\-ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅙㅞㅚㅟㅢㅝㅘㅐㅖ∞ㄷ+]", "가");
-      word = word.replaceAll("[.#@ㄱㄲㄴㄷㄸㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ]", "각");
-      word = word.replaceAll("[*ㄹ~]", "갈");
+      word = word.replaceAll("[ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅙㅞㅚㅟㅢㅝㅘㅐㅖ]", "가");
+      word = word.replaceAll("[ㄱㄲㄴㄷㄸㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ]", "각");
+      word = word.replaceAll("[+()<>\\[\\]∞.#@&%!?\"'\\\\$_,*~\\-]", "");
+      word = word.replace("ㄹ", "갈");
       word = word.replace("'", "").replace("\"", "");
       char c;
       boolean b = true;
@@ -1581,11 +1563,7 @@ public class MessageUtil
   public static Component boldify(@NotNull Component component)
   {
     List<Component> children = new ArrayList<>(component.children());
-    for (int i = 0; i < children.size(); i++)
-    {
-      Component child = children.get(i);
-      children.set(i, boldify(child));
-    }
+    children.replaceAll(MessageUtil::boldify);
     component = component.decoration(TextDecoration.BOLD, State.TRUE).children(children);
     return component;
   }

@@ -7,17 +7,21 @@ import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
@@ -34,6 +38,30 @@ public class PlayerToggleSneak implements Listener
     this.itemSneakUsage(player, player.getInventory().getItemInMainHand(), true);
     this.itemSneakUsage(player, player.getInventory().getItemInOffHand(), false);
     this.customEffect(player, event.isSneaking());
+    this.customItem(event);
+  }
+
+  private void customItem(PlayerToggleSneakEvent event)
+  {
+    Player player = event.getPlayer();
+    if (!((Entity) player).isOnGround() && event.isSneaking())
+    {
+      CustomMaterial boots = CustomMaterial.itemStackOf(player.getInventory().getBoots());
+      if (boots == CustomMaterial.SPIDER_BOOTS)
+      {
+        if (player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR)
+        {
+          if (player.getFoodLevel() <= 0)
+          {
+            MessageUtil.sendWarn(player, "음식 포인트가 없어 %s 능력을 사용할 수 없습니다!", ComponentUtil.translate("&a더블 점프"));
+            return;
+          }
+          player.setFoodLevel(player.getFoodLevel() - 1);
+        }
+        Vector vector = player.getLocation().getDirection();
+        player.setVelocity(new Vector(vector.getX() * 1.1, vector.getY() * 1.1 + 0.8d, vector.getZ() * 1.1));
+      }
+    }
   }
 
   private void customEffect(Player player, boolean isSneaking)
@@ -106,10 +134,10 @@ public class PlayerToggleSneak implements Listener
           Method.performCommand(player, command, true, true, null);
         }
       }
-      if (usageSneakTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+      if (usageSneakTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
       {
         double disposableChance = 100d;
-        if (usageSneakTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+        if (usageSneakTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
         {
           disposableChance = usageSneakTag.getDouble(CucumberyTag.USAGE_DISPOSABLE_KEY);
         }

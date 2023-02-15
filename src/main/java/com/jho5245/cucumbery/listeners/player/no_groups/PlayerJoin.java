@@ -42,6 +42,12 @@ public class PlayerJoin implements Listener
   {
     Player player = event.getPlayer();
     UUID uuid = player.getUniqueId();
+    if (!Variable.userData.containsKey(uuid))
+    {
+      //			Method.broadcastDebug("캐시 유저 데이터 생성 - " + uuid.toString());
+      Initializer.loadPlayerConfig(player);
+      //			Method.broadcastDebug("데이터 생성 완료, 현재 캐시 유저 데이터 개수 : §e" + Variable.userData.size() + "개");
+    }
     int invincibleTime = UserData.INVINCIBLE_TIME.getInt(uuid), loginInvincibleTime = UserData.INVINCIBLE_TIME_JOIN.getInt(uuid);
     if (invincibleTime >= 0)
     {
@@ -50,12 +56,6 @@ public class PlayerJoin implements Listener
     if (loginInvincibleTime >= 0)
     {
       player.setNoDamageTicks(loginInvincibleTime);
-    }
-    if (!Variable.userData.containsKey(uuid))
-    {
-      //			Method.broadcastDebug("캐시 유저 데이터 생성 - " + uuid.toString());
-      Initializer.loadPlayerConfig(player);
-      //			Method.broadcastDebug("데이터 생성 완료, 현재 캐시 유저 데이터 개수 : §e" + Variable.userData.size() + "개");
     }
     if (Cucumbery.using_NoteBlockAPI)
     {

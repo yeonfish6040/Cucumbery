@@ -112,17 +112,17 @@ public class EntitySpawn implements Listener
       {
         NBTItem nbtItem = new NBTItem(itemStack);
         Float explodePower = nbtItem.getFloat("ExplodePower");
-        if (nbtItem.hasKey("ExplodePower") && nbtItem.getType("ExplodePower") == NBTType.NBTTagFloat && explodePower != null)
+        if (nbtItem.hasTag("ExplodePower") && nbtItem.getType("ExplodePower") == NBTType.NBTTagFloat && explodePower != null)
         {
           tntPrimed.setYield(explodePower);
         }
         Boolean fire = nbtItem.getBoolean("Fire");
-        if (nbtItem.hasKey("Fire") && nbtItem.getType("Fire") == NBTType.NBTTagByte && fire != null && fire)
+        if (nbtItem.hasTag("Fire") && nbtItem.getType("Fire") == NBTType.NBTTagByte && fire != null && fire)
         {
           tntPrimed.setIsIncendiary(true);
         }
         Short fuse = nbtItem.getShort("Fuse");
-        if (nbtItem.hasKey("Fuse") && nbtItem.getType("Fuse") == NBTType.NBTTagShort && fuse != null)
+        if (nbtItem.hasTag("Fuse") && nbtItem.getType("Fuse") == NBTType.NBTTagShort && fuse != null)
         {
           tntPrimed.setFuseTicks(fuse);
         }

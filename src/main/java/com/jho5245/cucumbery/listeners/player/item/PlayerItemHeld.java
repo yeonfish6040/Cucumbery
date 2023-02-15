@@ -1,11 +1,6 @@
 package com.jho5245.cucumbery.listeners.player.item;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.children.group.LocationItemStackCustomEffect;
-import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.listeners.inventory.InventoryClick;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -143,16 +138,11 @@ public class PlayerItemHeld implements Listener
         }
       }
     }
-    if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS))
-    {
-      CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
-      if (customEffect instanceof LocationItemStackCustomEffect effect)
-      {
-        player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(effect.getLocation(), 0f, MiningScheduler.blockBreakKey.get(uuid)));
-      }
-      CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
-      Variable.customMiningProgress.put(uuid, 0f);
-    }
+    // commented since 2023.01.22 due to its uselessness
+//    if (!Objects.equals(player.getInventory().getItem(event.getPreviousSlot()), player.getInventory().getItem(event.getNewSlot())) && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS))
+//    {
+//      MiningManager.quitCustomMining(player);
+//    }
     this.removeActionbarCooldown(player);
     this.heldItemSound(event, player);
   }

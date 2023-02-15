@@ -144,11 +144,11 @@ Component a = ComponentUtil.create(Prefix.INFO, "만약 아이템 강화를 중�
           Method.performCommand(player, command, true, true, null);
         }
       }
-      if (usageSwapTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+      if (usageSwapTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
       {
         event.setCancelled(true);
         double disposableChance = 100d;
-        if (usageSwapTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+        if (usageSwapTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
         {
           disposableChance = usageSwapTag.getDouble(CucumberyTag.USAGE_DISPOSABLE_KEY);
         }

@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.*;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
 import com.jho5245.cucumbery.events.entity.*;
@@ -76,19 +77,24 @@ public class CustomEffectManager
     return addEffect(entity, new CustomEffect(effectType, duration));
   }
 
-  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect)
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffectType effectType, int duration, int amplifier)
   {
-    return addEffect(entity, customEffect, false);
+    return addEffect(entity, new CustomEffect(effectType, duration, amplifier));
   }
 
-  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect, boolean force)
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect effect)
   {
-    return addEffect(entity, customEffect, ApplyReason.PLUGIN, force, true);
+    return addEffect(entity, effect, false);
   }
 
-  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect customEffect, @NotNull ApplyReason reason)
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect effect, boolean force)
   {
-    return addEffect(entity, customEffect, reason, false, true);
+    return addEffect(entity, effect, ApplyReason.PLUGIN, force, true);
+  }
+
+  public static boolean addEffect(@NotNull Entity entity, @NotNull CustomEffect effect, @NotNull ApplyReason reason)
+  {
+    return addEffect(entity, effect, reason, false, true);
   }
 
   @SuppressWarnings("all")
@@ -111,7 +117,7 @@ public class CustomEffectManager
       }
     }
     effect = effect.copy();
-    if (callEvent)
+    if (callEvent && effect.getType().doesCallEvent())
     {
       EntityCustomEffectPreApplyEvent preApplyEvent = new EntityCustomEffectPreApplyEvent(entity, effect, reason);
       Cucumbery.getPlugin().getPluginManager().callEvent(preApplyEvent);
@@ -205,7 +211,7 @@ public class CustomEffectManager
     {
       effect = new RealDurationCustomEffectImple(effectType, initDura, initAmple, displayType, System.currentTimeMillis(), System.currentTimeMillis() + initDura * 50L);
     }
-    if (callEvent)
+    if (callEvent && effect.getType().doesCallEvent())
     {
       EntityCustomEffectApplyEvent applyEvent = new EntityCustomEffectApplyEvent(entity, effect, reason);
       Cucumbery.getPlugin().getPluginManager().callEvent(applyEvent);
@@ -216,7 +222,7 @@ public class CustomEffectManager
     }
     customEffects.add(effect);
     effectMap.put(entity.getUniqueId(), customEffects);
-    if (callEvent)
+    if (callEvent && effect.getType().doesCallEvent())
     {
       EntityCustomEffectPostApplyEvent postApplyEvent = new EntityCustomEffectPostApplyEvent(entity, effect, reason);
       Cucumbery.getPlugin().getPluginManager().callEvent(postApplyEvent);
@@ -251,11 +257,14 @@ public class CustomEffectManager
     {
       if (effect.getType() == effectType)
       {
-        EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect, reason);
-        Cucumbery.getPlugin().getPluginManager().callEvent(event);
-        if (event.isCancelled())
+        if (effect.getType().doesCallEvent())
         {
-          return false;
+          EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect, reason);
+          Cucumbery.getPlugin().getPluginManager().callEvent(event);
+          if (event.isCancelled())
+          {
+            return false;
+          }
         }
         removed.add(effect);
         return true;
@@ -267,8 +276,11 @@ public class CustomEffectManager
     {
       for (CustomEffect effect : removed)
       {
-        EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect, reason);
-        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        if (effect.getType().doesCallEvent())
+        {
+          EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect, reason);
+          Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        }
       }
     }
     return true;
@@ -291,11 +303,14 @@ public class CustomEffectManager
     {
       if (effect.getType() == effectType && effect.getAmplifier() == amplifier)
       {
-        EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect, reason);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled())
+        if (effect.getType().doesCallEvent())
         {
-          return false;
+          EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect, reason);
+          Bukkit.getPluginManager().callEvent(event);
+          if (event.isCancelled())
+          {
+            return false;
+          }
         }
         removed.add(effect);
         return true;
@@ -307,8 +322,11 @@ public class CustomEffectManager
     {
       for (CustomEffect effect : removed)
       {
-        EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect, reason);
-        Bukkit.getPluginManager().callEvent(event);
+        if (effect.getType().doesCallEvent())
+        {
+          EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect, reason);
+          Bukkit.getPluginManager().callEvent(event);
+        }
       }
     }
   }
@@ -329,8 +347,11 @@ public class CustomEffectManager
     {
       for (CustomEffect effect : customEffects)
       {
-        EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect);
-        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        if (effect.getType().doesCallEvent())
+        {
+          EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect);
+          Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        }
       }
     }
     effectMap.put(entity.getUniqueId(), Collections.emptyList());
@@ -338,8 +359,11 @@ public class CustomEffectManager
     {
       for (CustomEffect effect : customEffects)
       {
-        EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect);
-        Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        if (effect.getType().doesCallEvent())
+        {
+          EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect);
+          Cucumbery.getPlugin().getPluginManager().callEvent(event);
+        }
       }
     }
     return true;
@@ -889,7 +913,24 @@ public class CustomEffectManager
         }
       }
       CustomEffectType effectType = customEffect.getType();
-      Component effectComponent = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + (showDuration ? effectType.translationKey() : effectType.getShortenTranslationKey()));
+      String colorPrefix = effectType.isNegative() ? "&c" : "&a";
+      if (effectType == CustomEffectTypeCustomMining.AQUA_AFFINITY || effectType == CustomEffectTypeCustomMining.AIR_SCAFFOLDING || effectType == CustomEffectTypeCustomMining.HASTE || effectType == CustomEffectTypeCustomMining.MINING_FATIGUE ||
+              effectType == CustomEffectTypeCustomMining.TITANIUM_FINDER || effectType == CustomEffectTypeCustomMining.MINING_FORTUNE || effectType == CustomEffectTypeCustomMining.MOLE_CLAW || effectType == CustomEffectTypeCustomMining.MINDAS_TOUCH ||
+              effectType == CustomEffectTypeCustomMining.MINING_BOOSTER)
+      {
+        if (!CustomEffectManager.hasEffect(entity, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          colorPrefix = "&8";
+        }
+      }
+      if (effectType == CustomEffectType.FLY || effectType == CustomEffectType.FLY_REMOVE_ON_QUIT)
+      {
+        if (CustomEffectManager.hasEffect(entity, CustomEffectType.FLY_NOT_ENABLED))
+        {
+          colorPrefix = "&8";
+        }
+      }
+      Component effectComponent = ComponentUtil.translate(colorPrefix + (showDuration ? effectType.translationKey() : effectType.getShortenTranslationKey()));
       Component create = ComponentUtil.create(entity instanceof Player player ? player : null, customEffect);
       effectComponent = effectComponent.hoverEvent(create.hoverEvent()).clickEvent(create.clickEvent());
       arguments.add(

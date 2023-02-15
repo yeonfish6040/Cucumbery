@@ -64,6 +64,21 @@ public class EntityCustomEffectRemove implements Listener
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 2L);
     }
 
+    if (entity instanceof Player player && (customEffectType == CustomEffectType.FLY || customEffectType == CustomEffectType.FLY_REMOVE_ON_QUIT) && player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR)
+    {
+      MessageUtil.info(player, "비행 모드 종료!");
+      player.setAllowFlight(false);
+      return;
+    }
+
+    if (customEffectType == CustomEffectType.FLY_NOT_ENABLED && entity instanceof Player player && player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR &&
+            (CustomEffectManager.hasEffect(entity, CustomEffectType.FLY) || CustomEffectManager.hasEffect(entity, CustomEffectType.FLY_REMOVE_ON_QUIT)))
+    {
+      CustomEffect effect = CustomEffectManager.hasEffect(entity, CustomEffectType.FLY) ? CustomEffectManager.getEffect(entity, CustomEffectType.FLY) : CustomEffectManager.getEffect(entity, CustomEffectType.FLY_REMOVE_ON_QUIT);
+      MessageUtil.info(player, "비행 모드 사용이 불가능한 지역에서 진출하여 %s 효과가 다시 활성화됩니다!", effect);
+      return;
+    }
+
     if (entity instanceof Player player && customEffectType == CustomEffectType.SPYGLASS_TELEPORT && removeReason == RemoveReason.TIME_OUT)
     {
       RayTraceResult rayTraceResult = player.rayTraceBlocks(100d);

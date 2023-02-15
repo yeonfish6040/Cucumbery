@@ -200,9 +200,9 @@ public class ItemLore2CustomMaterial
       {
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a보아라, 닿아라"), ComponentUtil.translate("&e&l우클릭")));
-        lore.add(ComponentUtil.translate("&f망원경을 3초간 우클릭하고 있으면"));
-        lore.add(ComponentUtil.translate("&f바라보고 있는 블록으로 순간 이동한다"));
-        lore.add(ComponentUtil.translate("&f최대 100블록 거리까지만 이동 가능"));
+        lore.add(ComponentUtil.translate("&7망원경을 3초간 우클릭하고 있으면"));
+        lore.add(ComponentUtil.translate("&7바라보고 있는 블록으로 순간 이동한다"));
+        lore.add(ComponentUtil.translate("&7최대 100블록 거리까지만 이동 가능"));
         lore.add(ComponentUtil.translate("&e단, 너무 가까운 곳으로는 사용이 불가능하며"));
         lore.add(ComponentUtil.translate("&e우클릭 도중 움직이거나 우클릭을 멈추면 순간 이동이 취소됨"));
         lore.add(ComponentUtil.translate("&7재사용 대기시간 : %s", ComponentUtil.translate("&a%s초", 60)));
@@ -327,6 +327,17 @@ public class ItemLore2CustomMaterial
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate("&7사용 시 화살의 속성이 %s(으)로 변경됨", ItemNameUtil.itemName(CustomMaterial.ARROW_MOUNT.create())));
         lore.addAll(ItemStackUtil.getItemInfoAsComponents(CustomMaterial.ARROW_MOUNT.create(), null, null, true));
+      }
+      case RAINBOW_HELMET, RAINBOW_BOOTS, RAINBOW_CHESTPLATE, RAINBOW_LEGGINGS -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7장착하면 지속적으로 색깔이 변한다"));
+      }
+      case SPIDER_BOOTS -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a더블 점프"), ComponentUtil.translate("&e&l웅크리기")));
+        lore.add(ComponentUtil.translate("&7공중에서 웅크리면 더블 점프가 발동된다"));
+        lore.add(ComponentUtil.translate("&e단, 특정한 위치에서는 능력이 비활성화된다"));
+        lore.add(ComponentUtil.translate("&8음식 포인트 비용 : %s", "&31"));
       }
     }
     switch (customMaterial)

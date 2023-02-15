@@ -107,13 +107,11 @@ import org.maxgamer.quickshop.api.shop.Shop;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 34, DEATH_MESSAGES_CONFIG_VERSION = 10, LANG_CONFIG_VERSION = 4;
-  private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
+  public static final int CONFIG_VERSION = 36, DEATH_MESSAGES_CONFIG_VERSION = 10, LANG_CONFIG_VERSION = 5;
+//  private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   /**
    * Shaded since 2022.07.04 so always true
@@ -338,7 +336,7 @@ public class Cucumbery extends JavaPlugin
     }
     if (Cucumbery.using_CommandAPI)
     {
-      brigadierService.shutdownNow();
+//      brigadierService.shutdownNow();
     }
     if (Cucumbery.using_NoteBlockAPI)
     {
@@ -434,7 +432,7 @@ public class Cucumbery extends JavaPlugin
         new CommandBreak().registerCommand("cbreak", "cucumbery.command.break", "cbreak");
         new CommandFakeBlock().registerCommand("fakeblock", "cucumbery.command.fakeblock", "cfakeblock");
         new CommandTag().registerCommand("tag", "minecraft.command.tag", "tag");
-        brigadierService.submit(this::registerBrigadierCommands);
+//        brigadierService.submit(this::registerBrigadierCommands);
       }
       catch (Throwable e)
       {
@@ -589,7 +587,14 @@ public class Cucumbery extends JavaPlugin
       {
         if (plugin instanceof JavaPlugin javaPlugin)
         {
-          Converter.convert(javaPlugin);
+          try
+          {
+            Converter.convert(javaPlugin);
+          }
+          catch (Exception ignored)
+          {
+
+          }
         }
       }
     }

@@ -306,6 +306,12 @@ public class ItemLore3
           case BEACON_HAT -> {
             description.add(ComponentUtil.translate("&7우주 탐험에 필요할지도 모른다!"));
           }
+          case BREAD_DIRTY -> {
+            description.add(ComponentUtil.translate("&7소문에 따른건지 모르지만 먹으면"));
+            description.add(ComponentUtil.translate("&7각종 질병에 노출될 수 있다고 한다.."));
+            description.add(Component.empty());
+            description.add(ComponentUtil.translate("&7&o악 더러워!"));
+          }
         }
       }
       if (!customType.equals(""))

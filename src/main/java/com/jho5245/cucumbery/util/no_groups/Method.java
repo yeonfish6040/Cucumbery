@@ -4,10 +4,11 @@ import com.comphenix.protocol.PacketType.Play;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher.WrappedDataWatcherObject;
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Lists;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -2009,7 +2010,9 @@ public class Method extends SoundPlay
       }
     }
     // ProtocolLib 사용 시 플레이어마다 아이템 이름 표시를 다르게 함
+    // 버그로 인해 비활성화
     if (Cucumbery.using_ProtocolLib)
+//    if (false)
     {
       itemEntity.setCustomNameVisible(false);
       Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
@@ -2024,10 +2027,17 @@ public class Method extends SoundPlay
             {
               showDrop = false;
             }
+//            WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(itemEntity);
+//            dataWatcher.setObject(3, showDrop); // customnamevisible = true
             PacketContainer updateComponent = protocolManager.createPacket(Play.Server.ENTITY_METADATA);
-            List<WrappedWatchableObject> list = new ArrayList<>();
-            list.add(new WrappedWatchableObject(new WrappedDataWatcherObject(3, WrappedDataWatcher.Registry.get(Boolean.class)), showDrop)); // customnamevisible = true
-            updateComponent.getWatchableCollectionModifier().write(0, list);
+            StructureModifier<List<WrappedDataValue>> watchableAccessor = updateComponent.getDataValueCollectionModifier();
+            List<WrappedDataValue> values = Lists.newArrayList(
+                    new WrappedDataValue(3, WrappedDataWatcher.Registry.get(Boolean.class), showDrop)
+            );
+            watchableAccessor.write(0, values);
+//            List<WrappedWatchableObject> list = new ArrayList<>();
+//            list.add(new WrappedWatchableObject(new WrappedDataWatcherObject(3, WrappedDataWatcher.Registry.get(Boolean.class)), showDrop)); // customnamevisible = true
+//            updateComponent.getWatchableCollectionModifier().write(0, list);
             updateComponent.getIntegers().write(0, itemEntity.getEntityId());
             protocolManager.sendServerPacket(player, updateComponent);
           }
@@ -3610,10 +3620,10 @@ public class Method extends SoundPlay
     // 아이템 소비 및 슬롯 장착
     if (usageRightClickTag != null)
     {
-      if (usageRightClickTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+      if (usageRightClickTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
       {
         double disposableChance = 100d;
-        if (usageTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+        if (usageTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
         {
           disposableChance = usageTag.getDouble(CucumberyTag.USAGE_DISPOSABLE_KEY);
         }
@@ -3642,7 +3652,7 @@ public class Method extends SoundPlay
       }
     }
 
-    if (usageTag != null && usageTag.hasKey(CucumberyTag.USAGE_EQUIPMENT_SLOT_KEY))
+    if (usageTag != null && usageTag.hasTag(CucumberyTag.USAGE_EQUIPMENT_SLOT_KEY))
     {
       String equipmentSlot = usageTag.getString(CucumberyTag.USAGE_EQUIPMENT_SLOT_KEY);
       switch (equipmentSlot)

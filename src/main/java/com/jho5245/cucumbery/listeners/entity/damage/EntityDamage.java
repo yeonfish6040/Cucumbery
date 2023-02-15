@@ -77,6 +77,13 @@ public class EntityDamage implements Listener
       event.setCancelled(true);
       return;
     }
+    DamageCause damageCause = event.getCause();
+    // 승천 효과 적용 중에는 낙하 피해 무시(엔더 진주 제외)
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.ASCENSION) && damageCause == DamageCause.FALL && !(event instanceof EntityDamageByEntityEvent))
+    {
+      event.setCancelled(true);
+      return;
+    }
     // config에서 설정된 갑옷 거치대 폭발 피해 무시
     this.cancelEntityDamage(event);
     if (!event.isCancelled())

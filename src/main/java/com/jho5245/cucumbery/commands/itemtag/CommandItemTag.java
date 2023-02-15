@@ -491,7 +491,7 @@ public class CommandItemTag implements CommandExecutor
                   return true;
                 }
               }
-              if (!nbtItem.hasKey(key))
+              if (!nbtItem.hasTag(key))
               {
                 if (!hideOutput)
                 {
@@ -1824,7 +1824,7 @@ public class CommandItemTag implements CommandExecutor
             {
               if (args[2].equals("--remove"))
               {
-                if (customRarityTag == null || !customRarityTag.hasKey(CucumberyTag.CUSTOM_RARITY_BASE_KEY))
+                if (customRarityTag == null || !customRarityTag.hasTag(CucumberyTag.CUSTOM_RARITY_BASE_KEY))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 아이템에 커스텀 희귀도 기본값 태그 값이 없습니다");
                   return true;
@@ -1869,7 +1869,7 @@ public class CommandItemTag implements CommandExecutor
             {
               if (args[2].equals("--remove"))
               {
-                if (customRarityTag == null || !customRarityTag.hasKey(CucumberyTag.CUSTOM_RARITY_FINAL_KEY))
+                if (customRarityTag == null || !customRarityTag.hasTag(CucumberyTag.CUSTOM_RARITY_FINAL_KEY))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 아이템에 커스텀 희귀도 태그 값이 없습니다");
                   return true;
@@ -1923,7 +1923,7 @@ public class CommandItemTag implements CommandExecutor
               }
               if (rarityValue == 0)
               {
-                if (customRarityTag == null || !customRarityTag.hasKey(CucumberyTag.VALUE_KEY))
+                if (customRarityTag == null || !customRarityTag.hasTag(CucumberyTag.VALUE_KEY))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 아이템에 커스텀 희귀도 수치 태그 값이 없습니다");
                   return true;
@@ -2412,7 +2412,7 @@ public class CommandItemTag implements CommandExecutor
                   {
                     return true;
                   }
-                  if ((cooldownTag == null || !cooldownTag.hasKey(CucumberyTag.TIME_KEY)) && inputTime == 0)
+                  if ((cooldownTag == null || !cooldownTag.hasTag(CucumberyTag.TIME_KEY)) && inputTime == 0)
                   {
                     MessageUtil.sendError(sender, "변경 사항이 없습니다. 이미 주로 사용하는 손에 들고 있는 아이템의 " + itemUsageType.getDisplay() + " 대기 시간 태그의 값이 없습니다");
                     return true;
@@ -2434,7 +2434,7 @@ public class CommandItemTag implements CommandExecutor
                     cooldownTag = usageTypeTag.addCompound(CucumberyTag.COOLDOWN_KEY);
                   }
                   long tagTime = 0L;
-                  if (cooldownTag.hasKey(CucumberyTag.TIME_KEY))
+                  if (cooldownTag.hasTag(CucumberyTag.TIME_KEY))
                   {
                     tagTime = cooldownTag.getLong(CucumberyTag.TIME_KEY);
                   }
@@ -2608,7 +2608,7 @@ public class CommandItemTag implements CommandExecutor
                 return true;
               }
               boolean inputBoolean = Boolean.parseBoolean(args[2]);
-              if (!inputBoolean && (blockStateTag == null || !blockStateTag.hasKey("unstable")))
+              if (!inputBoolean && (blockStateTag == null || !blockStateTag.hasTag("unstable")))
               {
                 MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 TNT에 unstable 태그가 없습니다");
                 return true;
@@ -2640,7 +2640,7 @@ public class CommandItemTag implements CommandExecutor
               boolean inputBoolean = Boolean.parseBoolean(args[2]);
               if (!inputBoolean)
               {
-                if (tntTag == null || !tntTag.hasKey(CucumberyTag.TNT_IGNITE))
+                if (tntTag == null || !tntTag.hasTag(CucumberyTag.TNT_IGNITE))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 TNT에 ignite 태그가 없습니다");
                   return true;
@@ -2679,7 +2679,7 @@ public class CommandItemTag implements CommandExecutor
               }
               if (inputInteger == -1)
               {
-                if (tntTag == null || !tntTag.hasKey(CucumberyTag.TNT_FUSE))
+                if (tntTag == null || !tntTag.hasTag(CucumberyTag.TNT_FUSE))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 TNT에 ignite 태그가 없습니다");
                   return true;
@@ -2714,7 +2714,7 @@ public class CommandItemTag implements CommandExecutor
               boolean inputBoolean = Boolean.parseBoolean(args[2]);
               if (!inputBoolean)
               {
-                if (tntTag == null || !tntTag.hasKey(CucumberyTag.TNT_FIRE))
+                if (tntTag == null || !tntTag.hasTag(CucumberyTag.TNT_FIRE))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 TNT에 Fire 태그가 없습니다");
                   return true;
@@ -2754,7 +2754,7 @@ public class CommandItemTag implements CommandExecutor
               }
               if (inputDouble == -1)
               {
-                if (tntTag == null || !tntTag.hasKey(CucumberyTag.TNT_EXPLODE_POWER))
+                if (tntTag == null || !tntTag.hasTag(CucumberyTag.TNT_EXPLODE_POWER))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 TNT에 ExplodePower 태그가 없습니다");
                   return true;
@@ -3183,7 +3183,7 @@ public class CommandItemTag implements CommandExecutor
               boolean input = Boolean.parseBoolean(args[2]);
               if (!input)
               {
-                if (foodTag == null || !foodTag.hasKey(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY))
+                if (foodTag == null || !foodTag.hasTag(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 아이템에는 섭취 시 상태 효과 미적용 여부 태그가 없습니다");
                   return true;
@@ -3229,7 +3229,7 @@ public class CommandItemTag implements CommandExecutor
               }
               if (args[2].equals("--remove"))
               {
-                if (foodTag == null || !foodTag.hasKey(CucumberyTag.FOOD_LEVEL_KEY))
+                if (foodTag == null || !foodTag.hasTag(CucumberyTag.FOOD_LEVEL_KEY))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 아이템에는 음식 포인트 태그가 없습니다");
                   return true;
@@ -3257,7 +3257,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 foodTag = itemTag.addCompound(CucumberyTag.FOOD_KEY);
               }
-              if (foodTag.hasKey(CucumberyTag.FOOD_LEVEL_KEY) && foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY) == input)
+              if (foodTag.hasTag(CucumberyTag.FOOD_LEVEL_KEY) && foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY) == input)
               {
                 MessageUtil.sendError(sender, "변경 사항이 없습니다. 이미 주로 사용하는 손에 들고 있는 아이템의 음식 포인트 태그 값이 rg255,204;" + input + "&r입니다");
                 return true;
@@ -3283,7 +3283,7 @@ public class CommandItemTag implements CommandExecutor
               }
               if (args[2].equals("--remove"))
               {
-                if (foodTag == null || !foodTag.hasKey(CucumberyTag.SATURATION_KEY))
+                if (foodTag == null || !foodTag.hasTag(CucumberyTag.SATURATION_KEY))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 아이템에는 포화도 태그가 없습니다");
                   return true;
@@ -3311,7 +3311,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 foodTag = itemTag.addCompound(CucumberyTag.FOOD_KEY);
               }
-              if (foodTag.hasKey(CucumberyTag.SATURATION_KEY) && foodTag.getInteger(CucumberyTag.SATURATION_KEY) == input)
+              if (foodTag.hasTag(CucumberyTag.SATURATION_KEY) && foodTag.getInteger(CucumberyTag.SATURATION_KEY) == input)
               {
                 MessageUtil.sendError(sender, "변경 사항이 없습니다. 이미 주로 사용하는 손에 들고 있는 아이템의 포화도 태그 값이 rg255,204;" + Constant.Sosu15.format(input) + "&r입니다");
                 return true;
@@ -3331,7 +3331,7 @@ public class CommandItemTag implements CommandExecutor
               }
               if (args.length == 3 && args[2].equals("--remove"))
               {
-                if (foodTag == null || !foodTag.hasKey(CucumberyTag.NOURISHMENT_KEY))
+                if (foodTag == null || !foodTag.hasTag(CucumberyTag.NOURISHMENT_KEY))
                 {
                   MessageUtil.sendError(sender, "주로 사용하는 손에 들고 있는 아이템에는 든든함 태그가 없습니다");
                   return true;

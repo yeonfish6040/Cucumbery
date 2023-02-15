@@ -111,10 +111,10 @@ public class EntityResurrect implements Listener
             }
           }, 0L);
         }
-        if (usageResurrectTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+        if (usageResurrectTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
         {
           double disposableChance = 100d;
-          if (usageResurrectTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+          if (usageResurrectTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
           {
             disposableChance = usageResurrectTag.getDouble(CucumberyTag.USAGE_DISPOSABLE_KEY);
           }

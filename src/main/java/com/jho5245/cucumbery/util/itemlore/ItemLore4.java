@@ -50,7 +50,7 @@ public class ItemLore4
       itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
       return;
     }
-    if (customTags != null || nbtItem.hasKey("id") && !"".equals(nbtItem.getString("id")))
+    if (customTags != null || nbtItem.hasTag("id") && !"".equals(nbtItem.getString("id")))
     {
       itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
       return;

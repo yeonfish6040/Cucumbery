@@ -38,7 +38,6 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
 {
   public static final Set<UUID> NO_STAR_CATCH_ENABLED = new HashSet<>(), REINFORCE_OPERATING = new HashSet<>();
   public static final Set<UUID> CHANCE_TIME = new HashSet<>();
-  protected static final boolean 확률주작 = false;
   protected static final Set<UUID> ANTI_DESTRUCTION_ENABLED = new HashSet<>();
   protected static final int ANTI_DESTRUCTION_STARFORCE_FROM = 12, ANTI_DESTRUCTION_STARFORCE_TO = 16, ANTI_DESTRUCTION_CUCUMBERFORCE_FROM = 24, ANTI_DESTRUCTION_CUCUMBERFORCE_TO = 33;
   protected static final List<String> OPTION = Arrays.asList("STR", "DEX", "INT", "LUK", "최대 HP", "최대 MP", "방어력", "이동속도", "점프력", "공격력", "마력");
@@ -107,31 +106,22 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
         break;
       case 11:
         info = new double[]{
-                45D, 0D, 55D, 0D
+                45D, 55D, 0D, 0D
         };
         break;
       case 12:
-        if (확률주작)
-        {
-          info = new double[]{
-                  40D, 0D, 0.6D, 59.4D
-          };
-        }
-        else
-        {
-          info = new double[]{
-                  40D, 0D, 59.4D, 0.6D
-          };
-        }
+        info = new double[]{
+                40D, 60D, 0D, 0D
+        };
         break;
       case 13:
         info = new double[]{
-                35D, 0D, 63.7D, 1.3D
+                35D, 65D, 0D, 0D
         };
         break;
       case 14:
         info = new double[]{
-                30D, 0D, 68.6D, 1.4D
+                30D, 70D, 0D, 0D
         };
         break;
       case 15:
@@ -629,10 +619,34 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
                   (1000d + Math.pow(itemLevel, 3) * (progress + 1) / 25d)
                           / 100d) * 100d;
         }
-        if (progress <= 14)
+        if (progress == 10)
         {
           return Math.round(
                   (1000d + Math.pow(itemLevel, 3) * Math.pow(progress + 1, 2.7) / 400d)
+                          / 100d) * 100d;
+        }
+        if (progress == 11)
+        {
+          return Math.round(
+                  (1000d + Math.pow(itemLevel, 3) * Math.pow(progress + 1, 2.7) / 220d)
+                          / 100d) * 100d;
+        }
+        if (progress == 12)
+        {
+          return Math.round(
+                  (1000d + Math.pow(itemLevel, 3) * Math.pow(progress + 1, 2.7) / 150d)
+                          / 100d) * 100d;
+        }
+        if (progress == 13)
+        {
+          return Math.round(
+                  (1000d + Math.pow(itemLevel, 3) * Math.pow(progress + 1, 2.7) / 110d)
+                          / 100d) * 100d;
+        }
+        if (progress == 14)
+        {
+          return Math.round(
+                  (1000d + Math.pow(itemLevel, 3) * Math.pow(progress + 1, 2.7) / 75d)
                           / 100d) * 100d;
         }
         return Math.round(
@@ -1772,10 +1786,12 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
     {
       switch (args[0])
       {
-        case "상태" -> {
+        case "상태" ->
+        {
           CommandReinforceConstantsAndUtils.operate(player, OperationType.OBSERVE);
         }
-        case "quit" -> {
+        case "quit" ->
+        {
           if (REINFORCE_OPERATING.contains(uuid))
           {
             MessageUtil.sendError(player, "강화중에는 강화를 중지할 수 없습니다");
@@ -1802,11 +1818,13 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
           MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "강화를 중지했습니다");
           return true;
         }
-        case "시작" -> {
+        case "시작" ->
+        {
           Variable.scrollReinforcing.add(player.getUniqueId());
           CommandReinforceConstantsAndUtils.operate(player, OperationType.SHOW);
         }
-        case "파괴방지사용" -> {
+        case "파괴방지사용" ->
+        {
           if (REINFORCE_OPERATING.contains(uuid))
           {
             MessageUtil.sendError(player, "강화중에는 할 수 없습니다");
@@ -1825,7 +1843,8 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
           ANTI_DESTRUCTION_ENABLED.add(uuid);
           CommandReinforceConstantsAndUtils.operate(player, OperationType.CONTINUE);
         }
-        case "파괴방지미사용" -> {
+        case "파괴방지미사용" ->
+        {
           if (REINFORCE_OPERATING.contains(uuid))
           {
             MessageUtil.sendError(player, "강화중에는 할 수 없습니다");
@@ -1839,7 +1858,8 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
           ANTI_DESTRUCTION_ENABLED.remove(uuid);
           CommandReinforceConstantsAndUtils.operate(player, OperationType.CONTINUE);
         }
-        case "스타캐치해제사용" -> {
+        case "스타캐치해제사용" ->
+        {
           if (REINFORCE_OPERATING.contains(uuid))
           {
             MessageUtil.sendError(player, "강화중에는 할 수 없습니다");
@@ -1853,7 +1873,8 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
           NO_STAR_CATCH_ENABLED.add(uuid);
           CommandReinforceConstantsAndUtils.operate(player, OperationType.CONTINUE);
         }
-        case "스타캐치해제미사용" -> {
+        case "스타캐치해제미사용" ->
+        {
           if (REINFORCE_OPERATING.contains(uuid))
           {
             MessageUtil.sendError(player, "강화중에는 할 수 없습니다");
@@ -1867,7 +1888,8 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
           NO_STAR_CATCH_ENABLED.remove(uuid);
           CommandReinforceConstantsAndUtils.operate(player, OperationType.CONTINUE);
         }
-        case "realstart" -> {
+        case "realstart" ->
+        {
           if (!Variable.scrollReinforcing.contains(uuid))
           {
             MessageUtil.sendError(player, "강화중인 상태가 아닙니다");
@@ -1905,7 +1927,8 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
           }
           CommandReinforceConstantsAndUtils.operate(player, OperationType.OPERATE);
         }
-        case "starcatch" -> {
+        case "starcatch" ->
+        {
           if (CustomEffectManager.hasEffect(player, CustomEffectTypeReinforce.STAR_CATCH_PROCESS))
           {
             CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectTypeReinforce.STAR_CATCH_PROCESS);
@@ -1917,39 +1940,45 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
               penalty = 0;
             }
             int level = Math.min(4, penalty / 20);
-            Outter: for (int i = 1; i <= 10; i++)
+            Outter:
+            for (int i = 1; i <= 10; i++)
             {
               switch (level)
               {
-                case 0 -> {
+                case 0 ->
+                {
                   if (duration >= i * 20 - 14 && duration <= i * 20 - 6)
                   {
                     ok = true;
                     break Outter;
                   }
                 }
-                case 1 -> {
+                case 1 ->
+                {
                   if (duration >= i * 20 - 13 && duration <= i * 20 - 7)
                   {
                     ok = true;
                     break Outter;
                   }
                 }
-                case 2 -> {
+                case 2 ->
+                {
                   if (duration >= i * 20 - 11 && duration <= i * 20 - 8)
                   {
                     ok = true;
                     break Outter;
                   }
                 }
-                case 3 -> {
+                case 3 ->
+                {
                   if (duration >= i * 20 - 10 && duration <= i * 20 - 9)
                   {
                     ok = true;
                     break Outter;
                   }
                 }
-                default -> {
+                default ->
+                {
                   if (duration == i * 20 - 10)
                   {
                     ok = true;
@@ -1993,7 +2022,8 @@ public class CommandReinforce implements CommandExecutor, TabCompleter, AsyncTab
             CustomEffectManager.removeEffect(player, CustomEffectTypeReinforce.STAR_CATCH_PROCESS);
           }
         }
-        default -> {
+        default ->
+        {
           MessageUtil.wrongArg(sender, 1, args);
           MessageUtil.info(player, "/" + label + usage);
           return true;

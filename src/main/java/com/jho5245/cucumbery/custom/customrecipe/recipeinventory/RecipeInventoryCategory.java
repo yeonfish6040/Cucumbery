@@ -270,7 +270,7 @@ public class RecipeInventoryCategory
             if (itemTag != null)
             {
               NBTCompound duraTag = itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
-              if (duraTag != null && duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+              if (duraTag != null && duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
               {
                 long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + bonusDurability;
                 duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, Math.min(cur, duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY)));

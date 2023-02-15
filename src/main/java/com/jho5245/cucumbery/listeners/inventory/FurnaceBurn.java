@@ -58,7 +58,7 @@ public class FurnaceBurn implements Listener
       }
     }
     NBTItem fuelNBTItem = new NBTItem(fuel);
-    int burnTime = fuelNBTItem.hasKey("BurnTime") ? fuelNBTItem.getInteger("BurnTime") : -1;
+    int burnTime = fuelNBTItem.hasTag("BurnTime") ? fuelNBTItem.getInteger("BurnTime") : -1;
     if (burnTime > 0)
     {
       if (blockState instanceof BlastFurnace || blockState instanceof Smoker)
@@ -72,7 +72,7 @@ public class FurnaceBurn implements Listener
       Double cookSpeed = fuelNBTItem.getDouble("CookSpeed");
       short burnTime2 = furnace.getBurnTime(), cookTime2 = furnace.getCookTime();
       int cookTimeTotal2 = furnace.getCookTimeTotal();
-      if (fuelNBTItem.hasKey("CookSpeed") && cookSpeed != null && cookSpeed > 0d && furnace.getCookSpeedMultiplier() != Math.min(cookSpeed, 200d))
+      if (fuelNBTItem.hasTag("CookSpeed") && cookSpeed != null && cookSpeed > 0d && furnace.getCookSpeedMultiplier() != Math.min(cookSpeed, 200d))
       {
         furnace.setCookSpeedMultiplier(Math.min(cookSpeed, 200d));
         furnace.update();
@@ -92,7 +92,7 @@ public class FurnaceBurn implements Listener
           }, 0L);
         }
       }
-      if (furnace.getCookSpeedMultiplier() != 1d && (!fuelNBTItem.hasKey("CookSpeed") || cookSpeed == null || cookSpeed == 0d))
+      if (furnace.getCookSpeedMultiplier() != 1d && (!fuelNBTItem.hasTag("CookSpeed") || cookSpeed == null || cookSpeed == 0d))
       {
         furnace.setCookSpeedMultiplier(1d);
         furnace.update();

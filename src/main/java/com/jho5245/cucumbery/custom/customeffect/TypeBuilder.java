@@ -31,6 +31,8 @@ public class TypeBuilder
   private boolean isEnumHidden;
   private boolean isStackDisplayed;
 
+  private boolean callEvent = true;
+
   private Component description = Component.empty();
 
   private @Nullable ItemStack icon;
@@ -225,6 +227,13 @@ public class TypeBuilder
     return this;
   }
 
+  @NotNull
+  public TypeBuilder skipEvent()
+  {
+    this.callEvent = false;
+    return this;
+  }
+
   @Nullable
   public String getShortenTranslationKey()
   {
@@ -329,5 +338,10 @@ public class TypeBuilder
   public DisplayType getDefaultDisplayType()
   {
     return defaultDisplayType;
+  }
+
+  public boolean doesCallEvent()
+  {
+    return this.callEvent;
   }
 }

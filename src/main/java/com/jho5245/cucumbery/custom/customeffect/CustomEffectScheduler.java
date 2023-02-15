@@ -9,6 +9,7 @@ import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveR
 import com.jho5245.cucumbery.util.gui.GUIManager;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -112,6 +113,7 @@ public class CustomEffectScheduler
       MessageUtil.sendActionBar(player, CustomEffectManager.getDisplay(player, customEffects, customEffects.size() <= 10));
     }
     customEffects = new ArrayList<>(CustomEffectManager.getEffects(player, DisplayType.BOSS_BAR));
+    customEffects.addAll(new ArrayList<>(CustomEffectManager.getEffects(player, DisplayType.BOSS_BAR_ONLY)));
     customEffects.removeIf(CustomEffect::isHidden);
     @NotNull List<CustomEffect> finalCustomEffects = new ArrayList<>(customEffects);
     customEffects.removeIf(e ->
@@ -277,6 +279,46 @@ public class CustomEffectScheduler
     if (GUIManager.isGUITitle(title) && title instanceof TranslatableComponent translatableComponent && translatableComponent.args().get(1) instanceof TextComponent textComponent && textComponent.content().equals(Constant.POTION_EFFECTS))
     {
       CustomEffectGUI.openGUI(player, false);
+    }
+  }
+
+  public static void fly(@NotNull Player player)
+  {
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.FLY_NOT_ENABLED) && !(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR))
+    {
+      player.setAllowFlight(false);
+      return;
+    }
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.FLY) || CustomEffectManager.hasEffect(player, CustomEffectType.FLY_REMOVE_ON_QUIT))
+    {
+      player.setAllowFlight(true);
+    }
+  }
+
+  public static void ascension(@NotNull Entity entity)
+  {
+
+    if (CustomEffectManager.hasEffect(entity, CustomEffectType.ASCENSION))
+    {
+      if (entity.isOnGround())
+      {
+        CustomEffectManager.addEffect(entity, CustomEffectType.ASCENSION_COOLDOWN);
+        return;
+      }
+      if (CustomEffectManager.hasEffect(entity, CustomEffectType.ASCENSION_COOLDOWN))
+      {
+        return;
+      }
+      int amplifier = CustomEffectManager.getEffect(entity, CustomEffectType.ASCENSION).getAmplifier() + 1;
+      Vector vector = entity.getVelocity();
+      if (entity instanceof Player player && player.isSneaking())
+      {
+        entity.setVelocity(new Vector(vector.getX(), -0.08 * amplifier, vector.getZ()));
+      }
+      else
+      {
+        entity.setVelocity(new Vector(vector.getX(), 0.08 * amplifier, vector.getZ()));
+      }
     }
   }
 
@@ -931,7 +973,7 @@ public class CustomEffectScheduler
     {
       return;
     }
-    List<Entity> entities = entity.getNearbyEntities(15, 15, 15);
+    List<Entity> entities = Method2.getNearbyEntitiesAsync(entity, 15);
     for (Entity loop : entities)
     {
       if (loop instanceof Parrot parrot && parrot.getOwner() == entity)

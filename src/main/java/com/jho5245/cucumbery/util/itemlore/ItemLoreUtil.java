@@ -275,7 +275,7 @@ public class ItemLoreUtil
         String msg = "&7화살이 1개 이상 있으면 화살을 소비하지";
         lore.add(ComponentUtil.translate(msg));
         lore.add(ComponentUtil.translate("&7않고 %s (%s)",
-                ComponentUtil.translate("&a계속 사용 가능"), ComponentUtil.translate("rg255,204;%s은 제외", ComponentUtil.translate("item.minecraft.tipped_arrow"))));
+                ComponentUtil.translate("&a계속 사용 가능"), ComponentUtil.translate("&e일부 화살은 제외")));
       }
       if ((compat || material == Material.BOW) && enchant.equals(Enchantment.ARROW_KNOCKBACK))
       {
@@ -302,7 +302,7 @@ public class ItemLoreUtil
         String msg = "&7절지동물류 개체에게 가하는 대미지 %s 증가";
         lore.add(ComponentUtil.translate(msg, "&a" + Constant.Sosu2.format(2.5 * enchantLevel)));
         lore.add(ComponentUtil.translate("&7및 %s 확률로 %s %s (%s) 적용",
-                ComponentUtil.create("rg255,204;100%"), ComponentUtil.translate("rgb255,97,144;effect.minecraft.slowness"),
+                ComponentUtil.create("&e100%"), ComponentUtil.translate("rgb255,97,144;effect.minecraft.slowness"),
                 ComponentUtil.translate("rgb255,97,144;4단계"),
                 ComponentUtil.translate("&a1~%s초", Constant.Sosu2.format(1 + 0.5 * enchantLevel))));
       }
@@ -479,13 +479,13 @@ public class ItemLoreUtil
       {
         int decrease = (enchantLevel < 21 ? enchantLevel * 4 : 80);
         String msg = "&7받는 피해 %s 감소(%s), 일부 피해는 제외";
-        lore.add(ComponentUtil.translate(msg, ComponentUtil.create("&a" + decrease + "%p"), ComponentUtil.translate("rg255,204;최대 80%p")));
+        lore.add(ComponentUtil.translate(msg, ComponentUtil.create("&a" + decrease + "%p"), ComponentUtil.translate("&e최대 80%p")));
       }
       if (enchant.equals(Enchantment.PROTECTION_EXPLOSIONS))
       {
         int decrease = (enchantLevel < 11 ? enchantLevel * 8 : 80);
         String msg = "&7폭발로 받는 피해 %s 감소(%s)";
-        lore.add(ComponentUtil.translate(msg, ComponentUtil.create("&a" + decrease + "%p"), ComponentUtil.translate("rg255,204;최대 80%p")));
+        lore.add(ComponentUtil.translate(msg, ComponentUtil.create("&a" + decrease + "%p"), ComponentUtil.translate("&e최대 80%p")));
         decrease = (enchantLevel < 7 ? enchantLevel * 15 : 100);
         lore.add(ComponentUtil.translate("&7추가로, 폭발로 밀려나는 거리 %s 감소", "&a" + decrease + "%"));
       }
@@ -493,7 +493,7 @@ public class ItemLoreUtil
       {
         int decrease = (enchantLevel < 7 ? enchantLevel * 12 : 80);
         String msg = "&7낙하로 받는 피해 %s 감소(%s)";
-        lore.add(ComponentUtil.translate(msg, ComponentUtil.create("&a" + decrease + "%p"), ComponentUtil.translate("rg255,204;최대 80%p")));
+        lore.add(ComponentUtil.translate(msg, ComponentUtil.create("&a" + decrease + "%p"), ComponentUtil.translate("&e최대 80%p")));
         lore.add(ComponentUtil.translate("&7또한, 낙하 피해량 감소로는 갑옷의 내구도가 깎이지 않음"));
       }
       if (enchant.equals(Enchantment.PROTECTION_FIRE))
@@ -506,7 +506,7 @@ public class ItemLoreUtil
       {
         int decrease = (enchantLevel < 11 ? enchantLevel * 8 : 80);
         String msg = "&7발사체로 받는 피해 %s 감소(%s)";
-        lore.add(ComponentUtil.translate(msg, ComponentUtil.create("&a" + decrease + "%p"), ComponentUtil.translate("rg255,204;최대 80%p")));
+        lore.add(ComponentUtil.translate(msg, ComponentUtil.create("&a" + decrease + "%p"), ComponentUtil.translate("&e최대 80%p")));
       }
       if ((compat || material == Material.CROSSBOW) && enchant.equals(Enchantment.QUICK_CHARGE))
       {
@@ -545,7 +545,7 @@ public class ItemLoreUtil
         int damage = (enchantLevel <= 10 ? -1 : enchantLevel - 10);
         String damageStr = (damage == -1 ? "1~4" : (enchantLevel - 10) + "");
         String msg = "&7자신을 공격한 대상에게 %s 확률로 %s의 대미지를 입힘";
-        lore.add(ComponentUtil.translate(msg, Constant.THE_COLOR_HEX + chance + "%", "&a" + damageStr));
+        lore.add(ComponentUtil.translate(msg, "&e" + chance + "%", "&a" + damageStr));
       }
       if (enchant.equals(Enchantment.VANISHING_CURSE))
       {
@@ -584,10 +584,10 @@ public class ItemLoreUtil
           }
         }
 
-        String msg = "&7영혼 모래, 영혼 흙 위에서 이동 시 %s 확률";
-        lore.add(ComponentUtil.translate(msg, Constant.THE_COLOR_HEX + (Constant.ARMORS.contains(material) || material == Material.ENCHANTED_BOOK ?
+        String msg = "&7영혼 모래, 영혼 흙 위에서 이동 시 %s 확률로";
+        lore.add(ComponentUtil.translate(msg, "&e" + (Constant.ARMORS.contains(material) || material == Material.ENCHANTED_BOOK ?
                 Constant.Sosu2.format(armorChance) : Constant.Sosu2.format(nonArmorChance)) + "%"));
-        lore.add(ComponentUtil.translate("&7로 내구도가 깎이는 대신 이동 속도 %s 증가",
+        lore.add(ComponentUtil.translate("&7내구도가 깎이는 대신 이동 속도 %s 증가",
                 "&a" + Constant.Sosu2.format((enchantLevel * 0.125 - 0.1) * 100d) + "%"));
       }
       if (enchant.equals(Enchantment.SWIFT_SNEAK))

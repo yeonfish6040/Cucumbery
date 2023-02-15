@@ -69,14 +69,38 @@ public class ItemLoreCustomItem
   protected static void itemLore(@NotNull ItemStack itemStack, @NotNull NBTItem nbtItem, @NotNull CustomMaterial customMaterial)
   {
     Material displayMaterial = customMaterial.getDisplayMaterial();
+    NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
+    if (itemTag == null)
     {
-      NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
-      if (itemTag == null)
+      itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+    }
+    NBTCompoundList restrictionTag = itemTag.getCompoundList(CucumberyTag.ITEM_USAGE_RESTRICTIONS_KEY);
+    NBTList<String> extraTags = itemTag.getStringList(CucumberyTag.EXTRA_TAGS_KEY);
+    {
+      int expireDateInDays = customMaterial.getExpireDateInDays();
+      if (expireDateInDays > 0)
       {
-        itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
+        itemTag.setString(CucumberyTag.EXPIRE_DATE_KEY, "~" + expireDateInDays + "일");
       }
-      NBTCompoundList restrictionTag = itemTag.getCompoundList(CucumberyTag.ITEM_USAGE_RESTRICTIONS_KEY);
-      NBTList<String> extraTags = itemTag.getStringList(CucumberyTag.EXTRA_TAGS_KEY);
+      if (customMaterial.isUntradeable())
+      {
+        NBTCompound nbtCompound = new NBTContainer();
+        if (!NBTAPI.isRestricted(itemStack, RestrictionType.NO_TRADE))
+        {
+          nbtCompound.setString(CucumberyTag.VALUE_KEY, RestrictionType.NO_TRADE.toString());
+          nbtCompound.setBoolean(CucumberyTag.ITEM_USAGE_RESTRICTIONS_HIDE_FROM_LORE_KEY, false);
+          restrictionTag.addCompound(nbtCompound);
+        }
+      }
+      CustomMaterial origin = customMaterial.getOrigin();
+      if (origin != null)
+      {
+        nbtItem.setString("id", origin.toString().toLowerCase());
+        itemLore(itemStack, nbtItem, origin);
+        return;
+      }
+    }
+    {
       NBTCompound nbtCompound = new NBTContainer();
       if (RecipeChecker.hasCraftingRecipe(displayMaterial))
       {
@@ -100,7 +124,7 @@ public class ItemLoreCustomItem
       {
         switch (customMaterial)
         {
-          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN ->
+          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN ->
           {
             if (!NBTAPI.arrayContainsValue(extraTags, ExtraTag.PRESERVE_BLOCK_NBT))
             {
@@ -131,7 +155,7 @@ public class ItemLoreCustomItem
       {
         switch (customMaterial)
         {
-          case BAD_APPLE ->
+          case BAD_APPLE, BREAD_DIRTY ->
           {
             NBTCompound foodTag = itemTag.addCompound(CucumberyTag.FOOD_KEY);
             foodTag.setInteger(CucumberyTag.FOOD_LEVEL_KEY, -20);
@@ -247,7 +271,7 @@ public class ItemLoreCustomItem
           nbtItem.setInteger("ToolTier", 10);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 12345678L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 12345678L);
           }
@@ -263,7 +287,7 @@ public class ItemLoreCustomItem
           nbtItem.setInteger("ToolTier", 1);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 1000L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 1000L);
           }
@@ -277,7 +301,7 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 76L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 76L);
           }
@@ -291,7 +315,7 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 318L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 318L);
           }
@@ -305,7 +329,7 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 2474L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 2474L);
           }
@@ -319,7 +343,7 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 2651L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 2651L);
           }
@@ -331,7 +355,7 @@ public class ItemLoreCustomItem
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 3800L);
           duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, 5d);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 3800L);
           }
@@ -345,7 +369,7 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 3710L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 3710L);
           }
@@ -357,16 +381,16 @@ public class ItemLoreCustomItem
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 4500L);
           duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, 10d);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 4500L);
           }
         }
-        case SANS_HELMET, SANS_CHESTPLATE, SANS_LEGGINGS, SANS_BOOTS ->
+        case SANS_HELMET, SANS_CHESTPLATE, SANS_LEGGINGS, SANS_BOOTS, RAINBOW_HELMET, RAINBOW_CHESTPLATE, RAINBOW_LEGGINGS, RAINBOW_BOOTS, SPIDER_BOOTS ->
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 500L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 500L);
           }
@@ -375,7 +399,7 @@ public class ItemLoreCustomItem
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 400L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 400L);
           }
@@ -385,7 +409,7 @@ public class ItemLoreCustomItem
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 450L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 450L);
           }
@@ -395,7 +419,7 @@ public class ItemLoreCustomItem
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 100000L);
           duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, 50d);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 100000L);
           }
@@ -406,11 +430,11 @@ public class ItemLoreCustomItem
           nbtItem.setInteger("ToolTier", 7);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 5000L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 5000L);
           }
-          if (!nbtItem.hasKey("uuid"))
+          if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID_1.toString());
           }
@@ -421,11 +445,11 @@ public class ItemLoreCustomItem
           nbtItem.setInteger("ToolTier", 7);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 7000L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 7000L);
           }
-          if (!nbtItem.hasKey("uuid"))
+          if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID_1.toString());
           }
@@ -436,11 +460,11 @@ public class ItemLoreCustomItem
           nbtItem.setInteger("ToolTier", 8);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 9000L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 9000L);
           }
-          if (!nbtItem.hasKey("uuid"))
+          if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID_1.toString());
           }
@@ -451,11 +475,11 @@ public class ItemLoreCustomItem
           nbtItem.setInteger("ToolTier", 9);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 12000L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 12000L);
           }
-          if (!nbtItem.hasKey("uuid"))
+          if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID_1.toString());
           }
@@ -466,11 +490,11 @@ public class ItemLoreCustomItem
           nbtItem.setInteger("ToolTier", 10);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 15000L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 15000L);
           }
-          if (!nbtItem.hasKey("uuid"))
+          if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID_1.toString());
           }
@@ -479,14 +503,14 @@ public class ItemLoreCustomItem
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 600L);
-          if (!duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
           {
             duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 600L);
           }
         }
         case IQ_CHOOK_CHUCK ->
         {
-          if (!nbtItem.hasKey("IQ"))
+          if (!nbtItem.hasTag("IQ"))
           {
             nbtItem.setInteger("IQ", 70);
           }
@@ -498,7 +522,7 @@ public class ItemLoreCustomItem
           {
             nbtItem.setInteger("IQ", nbtItem.getInteger("IQ") - 1);
           }
-          if (!nbtItem.hasKey("uuid"))
+          if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID_1.toString());
           }

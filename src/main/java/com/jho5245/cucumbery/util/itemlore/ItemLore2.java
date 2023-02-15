@@ -63,6 +63,7 @@ import java.util.*;
 
 public class ItemLore2
 {
+  @SuppressWarnings("unused")
   protected static ItemStack setItemLore(@NotNull ItemStack item, ItemMeta itemMeta, List<Component> lore, @Nullable Object params)
   {
     Player player = params instanceof Player p ? p : null;
@@ -398,7 +399,7 @@ public class ItemLore2
     }
 
     if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.CUSTOM_MININGS) &&
-            (Constant.TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS.contains(type) || nbtItem.hasKey("ToolTier") || nbtItem.hasKey("ToolSpeed") || nbtItem.hasKey("ToolFortune")))
+            (Constant.TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS.contains(type) || nbtItem.hasTag("ToolTier") || nbtItem.hasTag("ToolSpeed") || nbtItem.hasTag("ToolFortune")))
     {
       if (params instanceof ItemLoreView view && CustomEffectManager.hasEffect(view.getPlayer(), CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
       {
@@ -444,7 +445,7 @@ public class ItemLore2
           lore.add(ComponentUtil.translate("&6채광 행운 : %s", Constant.THE_COLOR_HEX + (toolFortune > 0 ? "+" : "") + Constant.Sosu2.format(toolFortune)));
         }
       }
-      else if (nbtItem.hasKey("ToolTier") || nbtItem.hasKey("ToolSpeed") || nbtItem.hasKey("ToolFortune"))
+      else if (nbtItem.hasTag("ToolTier") || nbtItem.hasTag("ToolSpeed") || nbtItem.hasTag("ToolFortune"))
       {
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate("&c이 아이템은 현재 위치에서는 제 기능을 발휘할 수 없습니다!"));
@@ -940,7 +941,7 @@ public class ItemLore2
     List<Component> foodLore = new ArrayList<>();
 
     if (!hideStatusEffects && (!NBTAPI.isRestricted(item, RestrictionType.NO_CONSUME) || NBTAPI.getRestrictionOverridePermission(item, RestrictionType.NO_CONSUME) != null)
-            && (foodTag == null || !foodTag.hasKey(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY) || !foodTag.getBoolean(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY)))
+            && (foodTag == null || !foodTag.hasTag(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY) || !foodTag.getBoolean(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY)))
     {
       switch (type)
       {
@@ -952,22 +953,22 @@ public class ItemLore2
                 ItemLorePotionDescription.getDescription(ItemLorePotionDescription.ABSORPTION, 2 * 60 * 20, 4),
                 ItemLorePotionDescription.getDescription(ItemLorePotionDescription.RESISTANCE, 5 * 60 * 20, 1),
                 ItemLorePotionDescription.getDescription(ItemLorePotionDescription.FIRE_RESISTANCE, 5 * 60 * 20, 1)));
-        case POISONOUS_POTATO -> foodLore.addAll(List.of(
-                ItemLorePotionDescription.getDescription(60d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
-        case SPIDER_EYE -> foodLore.addAll(List.of(
-                ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 4 * 20, 1)));
+        case POISONOUS_POTATO -> foodLore.add(
+                ItemLorePotionDescription.getDescription(60d, ItemLorePotionDescription.POISON, 4 * 20, 1));
+        case SPIDER_EYE -> foodLore.add(
+                ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 4 * 20, 1));
         case PUFFERFISH -> foodLore.addAll(Arrays.asList(
                 ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.HUNGER, 15 * 20, 3),
                 ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.NAUSEA, 15 * 20, 2),
                 ItemLorePotionDescription.getDescription(100d, ItemLorePotionDescription.POISON, 60 * 20, 4)));
-        case ROTTEN_FLESH -> foodLore.addAll(List.of(
-                ItemLorePotionDescription.getDescription(80d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
-        case CHICKEN -> foodLore.addAll(List.of(
-                ItemLorePotionDescription.getDescription(30d, ItemLorePotionDescription.HUNGER, 30 * 20, 1)));
-        case HONEY_BOTTLE -> foodLore.addAll(List.of(
-                ComponentUtil.translate(ItemLorePotionDescription.POTION_DESCRIPTION_COLOR + "%s 효과 제거", ItemLorePotionDescription.getComponent(PotionEffectType.POISON))));
-        case MILK_BUCKET -> foodLore.addAll(List.of(
-                ComponentUtil.translate(ItemLorePotionDescription.POTION_DESCRIPTION_COLOR + "모든 효과 제거 (일부 효과 제외)")));
+        case ROTTEN_FLESH -> foodLore.add(
+                ItemLorePotionDescription.getDescription(80d, ItemLorePotionDescription.HUNGER, 30 * 20, 1));
+        case CHICKEN -> foodLore.add(
+                ItemLorePotionDescription.getDescription(30d, ItemLorePotionDescription.HUNGER, 30 * 20, 1));
+        case HONEY_BOTTLE -> foodLore.add(
+                ComponentUtil.translate(ItemLorePotionDescription.POTION_DESCRIPTION_COLOR + "%s 효과 제거", ItemLorePotionDescription.getComponent(PotionEffectType.POISON)));
+        case MILK_BUCKET -> foodLore.add(
+                ComponentUtil.translate(ItemLorePotionDescription.POTION_DESCRIPTION_COLOR + "모든 효과 제거 (일부 효과 제외)"));
       }
     }
 
@@ -1440,7 +1441,7 @@ public class ItemLore2
         }
         case GOAT_HORN ->
         {
-          if (nbtItem.hasKey("instrument"))
+          if (nbtItem.hasTag("instrument"))
           {
             itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
             lore.add(Component.empty());
@@ -1653,11 +1654,11 @@ public class ItemLore2
       {
         lore.add(Component.empty());
         int minExp = 3, maxExp = 11;
-        if (nbtItem.hasKey("MinExp") && nbtItem.getType("MinExp") == NBTType.NBTTagInt)
+        if (nbtItem.hasTag("MinExp") && nbtItem.getType("MinExp") == NBTType.NBTTagInt)
         {
           minExp = nbtItem.getInteger("MinExp");
         }
-        if (nbtItem.hasKey("MaxExp") && nbtItem.getType("MaxExp") == NBTType.NBTTagInt)
+        if (nbtItem.hasTag("MaxExp") && nbtItem.getType("MaxExp") == NBTType.NBTTagInt)
         {
           maxExp = nbtItem.getInteger("MaxExp");
         }
@@ -1925,7 +1926,7 @@ public class ItemLore2
         if (blockState instanceof Beehive beehive)
         {
           customNameLore = ComponentUtil.translate(colorPrefix + "[%s의 벌들]", customName);
-          int beeCount = beehive.getEntityCount(), maxBeeCount = beehive.getMaxEntities();
+          int beeCount = beehive.getEntityCount();
           lore.add(Component.empty());
           lore.add(customNameLore);
           lore.add(ComponentUtil.translate("#b07c15;벌 %s", beeCount == 0 ? "없음" : "#e6ac6d;" + beeCount + "마리"));
@@ -2350,7 +2351,7 @@ public class ItemLore2
         {
           saturation = 0d;
         }
-        if (foodTag.hasKey(CucumberyTag.NOURISHMENT_KEY))
+        if (foodTag.hasTag(CucumberyTag.NOURISHMENT_KEY))
         {
           nourishment = foodTag.getString(CucumberyTag.NOURISHMENT_KEY);
           lore.add(ComponentUtil.translate("rgb235,163,0;든든함 : %s", ComponentUtil.translate(nourishment)));
@@ -2360,7 +2361,7 @@ public class ItemLore2
           nourishment = ItemStackUtil.getNourishment(foodLevel, saturation);
           lore.add(ComponentUtil.translate("rgb235,163,0;든든함 : %s", ComponentUtil.translate(nourishment)));
         }
-        if (!foodTag.hasKey(CucumberyTag.FOOD_LEVEL_KEY) && ItemStackUtil.getFoodLevel(type) != 0)
+        if (!foodTag.hasTag(CucumberyTag.FOOD_LEVEL_KEY) && ItemStackUtil.getFoodLevel(type) != 0)
         {
           lore.add(ComponentUtil.translate("rgb255,183,0;음식 포인트 : %s", "+" + ItemStackUtil.getFoodLevel(type)));
         }
@@ -2368,7 +2369,7 @@ public class ItemLore2
         {
           lore.add(ComponentUtil.translate("rgb255,183,0;음식 포인트 : %s", (foodLevel > 0 ? "+" : "") + foodLevel));
         }
-        if (!foodTag.hasKey(CucumberyTag.SATURATION_KEY) && ItemStackUtil.getSaturation(type) != 0d)
+        if (!foodTag.hasTag(CucumberyTag.SATURATION_KEY) && ItemStackUtil.getSaturation(type) != 0d)
         {
           lore.add(ComponentUtil.translate("rgb255,183,0;포화도 : %s", "+" + Constant.Sosu2.format(ItemStackUtil.getSaturation(type))));
         }
@@ -2389,7 +2390,7 @@ public class ItemLore2
             && !NBTAPI.isRestrictedFinal(item, RestrictionType.NO_FUEL))
     {
       double sec = ItemStackUtil.getFuelTimeInSecond(type);
-      if (nbtItem.hasKey("BurnTime") && nbtItem.getType("BurnTime") == NBTType.NBTTagInt)
+      if (nbtItem.hasTag("BurnTime") && nbtItem.getType("BurnTime") == NBTType.NBTTagInt)
       {
         sec = nbtItem.getInteger("BurnTime") / 20d;
       }
@@ -2397,7 +2398,7 @@ public class ItemLore2
       lore.add(ComponentUtil.translate(Constant.ITEM_LORE_FUEL));
       lore.add(ComponentUtil.translate("rgb232,99,79;지속 시간 : %s"
               , ComponentUtil.translate("%s초", Constant.Sosu2.format(sec))));
-      if (nbtItem.hasKey("CookSpeed") && nbtItem.getType("CookSpeed") == NBTType.NBTTagDouble)
+      if (nbtItem.hasTag("CookSpeed") && nbtItem.getType("CookSpeed") == NBTType.NBTTagDouble)
       {
         lore.add(ComponentUtil.translate("rgb232,99,79;아이템 굽는 속도 : %s", Constant.Sosu2.format(nbtItem.getDouble("CookSpeed") * 100) + "%"));
       }
@@ -2516,7 +2517,7 @@ public class ItemLore2
       lore.set(1, ComponentUtil.translate("&7아이템 종류 : [%s]", customItemType));
     }
     // CucumberyItemTag - CustomRarity
-    if (customRarityTag != null && customRarityTag.hasKey(CucumberyTag.VALUE_KEY))
+    if (customRarityTag != null && customRarityTag.hasTag(CucumberyTag.VALUE_KEY))
     {
       long rarity = customRarityTag.getLong(CucumberyTag.VALUE_KEY);
       ItemLoreUtil.setItemRarityValue(lore, rarity);
@@ -2616,7 +2617,7 @@ public class ItemLore2
     Component itemRarityComponent = ComponentUtil.translate("&7아이템 등급 : %s", rarityComponent);
     lore.set(2, itemRarityComponent);
     itemMeta.lore(lore);
-//    if (NBTAPI.isRestricted(item, RestrictionType.NO_ANVIL) && itemTag.hasKey("FollowRarityColor"))
+//    if (NBTAPI.isRestricted(item, RestrictionType.NO_ANVIL) && itemTag.hasTag("FollowRarityColor"))
 //    {
 //      Boolean b = itemTag.getBoolean("FollowRarityColor");
 //      if (b != null && b)

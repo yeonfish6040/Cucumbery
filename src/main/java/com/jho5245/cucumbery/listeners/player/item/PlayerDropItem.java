@@ -318,11 +318,11 @@ public class PlayerDropItem implements Listener
           Method.performCommand(player, command, true, true, null);
         }
       }
-      if (usageDropTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+      if (usageDropTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
       {
         event.setCancelled(true);
         double disposableChance = 100d;
-        if (usageDropTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+        if (usageDropTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
         {
           disposableChance = usageDropTag.getDouble(CucumberyTag.USAGE_DISPOSABLE_KEY);
         }

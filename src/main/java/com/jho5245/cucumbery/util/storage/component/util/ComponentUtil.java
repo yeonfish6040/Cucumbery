@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unused"})
 public class ComponentUtil
 {
   private static final JSONParser JSON_PARSER = new JSONParser();
@@ -542,7 +542,7 @@ public class ComponentUtil
       }
       else if (!(object instanceof Boolean))
       {
-        String string = object.toString();
+        String string = object == null ? "null" : object.toString();
         if (string.startsWith("translate:"))
         {
           string = string.substring(10);
@@ -1625,18 +1625,12 @@ public class ComponentUtil
   public static Component stripEvent(@NotNull Component component)
   {
     List<Component> children = new ArrayList<>(component.children());
-    for (int i = 0; i < children.size(); i++)
-    {
-      children.set(i, stripEvent(children.get(i)));
-    }
+    children.replaceAll(ComponentUtil::stripEvent);
     component = component.clickEvent(null).hoverEvent(null).children(children).insertion(null);
     if (component instanceof TranslatableComponent translatableComponent)
     {
       List<Component> args = new ArrayList<>(translatableComponent.args());
-      for (int i = 0; i < args.size(); i++)
-      {
-        args.set(i, stripEvent(args.get(i)));
-      }
+      args.replaceAll(ComponentUtil::stripEvent);
       component = translatableComponent.args(args);
     }
     return component;

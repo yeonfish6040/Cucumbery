@@ -71,6 +71,10 @@ public class PlayerInteract implements Listener
   public void onPlayerInteract(PlayerInteractEvent event)
   {
     Player player = event.getPlayer();
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.INVINCIBLE_RESPAWN))
+    {
+      CustomEffectManager.removeEffect(player, CustomEffectType.INVINCIBLE_RESPAWN);
+    }
     if (player.getGameMode() == GameMode.SPECTATOR)
     {
       return;
@@ -1296,11 +1300,11 @@ public class PlayerInteract implements Listener
           success = true;
         }
       }
-      if (usageClickTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+      if (usageClickTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
       {
         success = true;
         double disposableChance = 100d;
-        if (usageClickTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+        if (usageClickTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
         {
           disposableChance = usageClickTag.getDouble(CucumberyTag.USAGE_DISPOSABLE_KEY);
         }

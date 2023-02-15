@@ -9,10 +9,7 @@ import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMini
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -128,7 +125,7 @@ public class MiningManager
       try
       {
         NBTItem nbtItem = new NBTItem(itemStack);
-        if (nbtItem.hasKey("IgnoreVanillaModification") && nbtItem.getType("IgnoreVanillaModification") == NBTType.NBTTagByte)
+        if (nbtItem.hasTag("IgnoreVanillaModification") && nbtItem.getType("IgnoreVanillaModification") == NBTType.NBTTagByte)
         {
           ignoreVanillaModification = nbtItem.getBoolean("IgnoreVanillaModification");
         }
@@ -160,7 +157,7 @@ public class MiningManager
       if (ItemStackUtil.itemExists(itemStack))
       {
         NBTItem nbtItem = new NBTItem(itemStack);
-        if (nbtItem.hasKey("ToolFortune") && nbtItem.getType("ToolFortune") == NBTType.NBTTagFloat)
+        if (nbtItem.hasTag("ToolFortune") && nbtItem.getType("ToolFortune") == NBTType.NBTTagFloat)
         {
           miningFortune += nbtItem.getFloat("ToolFortune") / 100f;
         }
@@ -555,6 +552,7 @@ public class MiningManager
     Sound breakSound = null;
     String breakCustomSound = null;
     float breakSoundVolume = 0f, breakSoundPitch = 0f;
+    boolean miningMode3 = CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
     // 커스텀 블록 처리 (extra Block 존재 시 무시)
     if (!hasExtra || CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
     {
@@ -570,12 +568,12 @@ public class MiningManager
         if (!dataItem.getType().isAir())
         {
           NBTItem dataNBTItem = new NBTItem(dataItem, true);
-          boolean removeKeys = dataNBTItem.hasKey("RemoveKeys") && dataNBTItem.getType("RemoveKeys") == NBTType.NBTTagByte && dataNBTItem.getBoolean("RemovedKeys") != null && Boolean.TRUE.equals(dataNBTItem.getBoolean("RemoveKeys"));
+          boolean removeKeys = dataNBTItem.hasTag("RemoveKeys") && dataNBTItem.getType("RemoveKeys") == NBTType.NBTTagByte && dataNBTItem.getBoolean("RemovedKeys") != null && Boolean.TRUE.equals(dataNBTItem.getBoolean("RemoveKeys"));
           if (removeKeys)
           {
             dataNBTItem.removeKey("RemoveKeys");
           }
-          if (dataNBTItem.hasKey("CustomHardness") && dataNBTItem.getType("CustomHardness") == NBTType.NBTTagFloat)
+          if (dataNBTItem.hasTag("CustomHardness") && dataNBTItem.getType("CustomHardness") == NBTType.NBTTagFloat)
           {
             blockHardness = dataNBTItem.getFloat("CustomHardness");
             if (removeKeys)
@@ -583,7 +581,7 @@ public class MiningManager
               dataNBTItem.removeKey("CustomHardness");
             }
           }
-          if (dataNBTItem.hasKey("BlockTier") && dataNBTItem.getType("BlockTier") == NBTType.NBTTagInt)
+          if (dataNBTItem.hasTag("BlockTier") && dataNBTItem.getType("BlockTier") == NBTType.NBTTagInt)
           {
             blockTier = dataNBTItem.getInteger("BlockTier");
             if (removeKeys)
@@ -591,7 +589,7 @@ public class MiningManager
               dataNBTItem.removeKey("BlockTier");
             }
           }
-          if (dataNBTItem.hasKey("CustomExp") && dataNBTItem.getType("CustomExp") == NBTType.NBTTagFloat)
+          if (dataNBTItem.hasTag("CustomExp") && dataNBTItem.getType("CustomExp") == NBTType.NBTTagFloat)
           {
             expToDrop = dataNBTItem.getFloat("CustomExp");
             if (removeKeys)
@@ -599,7 +597,7 @@ public class MiningManager
               dataNBTItem.removeKey("CustomExp");
             }
           }
-          if (dataNBTItem.hasKey("RegenCooldown") && dataNBTItem.getType("RegenCooldown") == NBTType.NBTTagInt)
+          if (dataNBTItem.hasTag("RegenCooldown") && dataNBTItem.getType("RegenCooldown") == NBTType.NBTTagInt)
           {
             regenCooldown = dataNBTItem.getInteger("RegenCooldown");
             if (removeKeys)
@@ -607,7 +605,7 @@ public class MiningManager
               dataNBTItem.removeKey("RegenCooldown");
             }
           }
-          if (dataNBTItem.hasKey("IgnoreVanillaModification") && dataNBTItem.getType("IgnoreVanillaModification") == NBTType.NBTTagByte)
+          if (dataNBTItem.hasTag("IgnoreVanillaModification") && dataNBTItem.getType("IgnoreVanillaModification") == NBTType.NBTTagByte)
           {
             ignoreVanillaModification = ignoreVanillaModification || dataNBTItem.getBoolean("IgnoreVanillaModification");
             if (removeKeys)
@@ -615,7 +613,7 @@ public class MiningManager
               dataNBTItem.removeKey("IgnoreVanillaModification");
             }
           }
-          if (dataNBTItem.hasKey("BreakSound") && dataNBTItem.getType("BreakSound") == NBTType.NBTTagString)
+          if (dataNBTItem.hasTag("BreakSound") && dataNBTItem.getType("BreakSound") == NBTType.NBTTagString)
           {
             try
             {
@@ -630,7 +628,7 @@ public class MiningManager
               dataNBTItem.removeKey("BreakSound");
             }
           }
-          if (dataNBTItem.hasKey("BreakSoundVolume") && dataNBTItem.getType("BreakSoundVolume") == NBTType.NBTTagFloat)
+          if (dataNBTItem.hasTag("BreakSoundVolume") && dataNBTItem.getType("BreakSoundVolume") == NBTType.NBTTagFloat)
           {
             breakSoundVolume = dataNBTItem.getInteger("BreakSoundVolume");
             if (removeKeys)
@@ -638,7 +636,7 @@ public class MiningManager
               dataNBTItem.removeKey("BreakSoundVolume");
             }
           }
-          if (dataNBTItem.hasKey("BreakSoundPitch") && dataNBTItem.getType("BreakSoundPitch") == NBTType.NBTTagFloat)
+          if (dataNBTItem.hasTag("BreakSoundPitch") && dataNBTItem.getType("BreakSoundPitch") == NBTType.NBTTagFloat)
           {
             breakSoundPitch = dataNBTItem.getInteger("BreakSoundPitch");
             if (removeKeys)
@@ -670,7 +668,7 @@ public class MiningManager
           {
 
           }
-          if (ignoreVanillaModification)
+          if (ignoreVanillaModification || miningMode3)
           {
             drops.clear();
             drops.add(dataItem);
@@ -802,14 +800,14 @@ public class MiningManager
           int amplifier = CustomEffectManager.getEffect(player, CustomEffectTypeCustomMining.MINING_FATIGUE).getAmplifier() + 1;
           finalSpeedMultiplier *= (1f - amplifier * 0.01f);
         }
-        // 땅에 서 있지 않을 경우 : 80% 감소
-        if (!((LivingEntity) player).isOnGround())
+        // 땅에 서 있지 않고 공중 비계 효과가 없을 경우 : 80% 감소
+        if (!((LivingEntity) player).isOnGround() && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.AIR_SCAFFOLDING))
         {
           finalSpeedMultiplier *= 0.2f;
         }
-        // 친수성이 없고 물 속에 있을 경우 : 80% 감소
+        // 친수성이 없고 물 속에 있을 때 친수성 효과가 없을 경우 : 80% 감소
         ItemStack helmet = player.getInventory().getHelmet();
-        if (!(helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(Enchantment.WATER_WORKER)))
+        if (!(helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(Enchantment.WATER_WORKER)) && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.AQUA_AFFINITY))
         {
           Block b = player.getEyeLocation().getBlock();
           if (b.getState() instanceof Waterlogged waterlogged && waterlogged.isWaterlogged() || b.getType() == Material.WATER)
@@ -825,7 +823,7 @@ public class MiningManager
         // 채굴 피로 효과 : 레벨당 70% 복리로 감소
         boolean vanilla = false;
         PotionEffect miningFatigue = player.getPotionEffect(PotionEffectType.SLOW_DIGGING);
-        if (miningFatigue != null && (miningFatigue.getDuration() > 2 || miningFatigue.getAmplifier() > 0))
+        if (miningFatigue != null && (miningFatigue.getDuration() > 2 || Cucumbery.using_ProtocolLib && miningFatigue.getAmplifier() > 0))
         {
           int amplifier = miningFatigue.getAmplifier();
           finalSpeedMultiplier *= Math.pow(0.3, amplifier + 1);
@@ -1130,7 +1128,7 @@ public class MiningManager
     try
     {
       NBTItem nbtItem = new NBTItem(itemStack);
-      if (nbtItem.hasKey("ToolTier") && nbtItem.getType("ToolTier") == NBTType.NBTTagInt)
+      if (nbtItem.hasTag("ToolTier") && nbtItem.getType("ToolTier") == NBTType.NBTTagInt)
       {
         toolTier = nbtItem.getInteger("ToolTier");
       }
@@ -1171,7 +1169,7 @@ public class MiningManager
     try
     {
       NBTItem nbtItem = new NBTItem(itemStack);
-      if (nbtItem.hasKey("ToolSpeed") && nbtItem.getType("ToolSpeed") == NBTType.NBTTagFloat)
+      if (nbtItem.hasTag("ToolSpeed") && nbtItem.getType("ToolSpeed") == NBTType.NBTTagFloat)
       {
         toolSpeed = nbtItem.getFloat("ToolSpeed");
       }
@@ -1226,13 +1224,16 @@ public class MiningManager
       Variable.customMiningProgress.put(uuid, 0f);
       if (!MiningScheduler.blockBreakKey.containsKey(uuid))
       {
-        MiningScheduler.blockBreakKey.put(uuid, Bukkit.getUnsafe().nextEntityId());
+        int random;
+        do
+        {
+          random = (int) (Math.random() * Integer.MAX_VALUE);
+        } while (MiningScheduler.blockBreakKey.containsValue(random));
+        MiningScheduler.blockBreakKey.put(uuid, random);
       }
       Location location = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
       player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(location, 0f, MiningScheduler.blockBreakKey.get(player.getUniqueId())));
       CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
     }
   }
-
-
 }

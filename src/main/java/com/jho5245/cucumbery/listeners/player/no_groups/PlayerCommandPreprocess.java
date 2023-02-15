@@ -46,6 +46,10 @@ public class PlayerCommandPreprocess implements Listener
       return;
     }
     Player player = event.getPlayer();
+    if (CustomEffectManager.hasEffect(player, CustomEffectType.INVINCIBLE_RESPAWN))
+    {
+      CustomEffectManager.removeEffect(player, CustomEffectType.INVINCIBLE_RESPAWN);
+    }
     UUID uuid = player.getUniqueId();
     FileConfiguration cfg = Cucumbery.config;
     if (!cfg.getBoolean("grant-default-permission-to-players") && !Permission.EVENT_COMMANDPREPROCESS.has(player))

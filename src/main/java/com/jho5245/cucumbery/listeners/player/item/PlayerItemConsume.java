@@ -14,17 +14,15 @@ import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
-import com.jho5245.cucumbery.util.storage.data.Permission;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -188,6 +186,14 @@ public class PlayerItemConsume implements Listener
     {
       return;
     }
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(item);
+    if (customMaterial == CustomMaterial.BREAD_DIRTY)
+    {
+      player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20 * 100, 0));
+      player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 20 * 100, 0));
+      player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * 100, 0));
+      player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 100, 0));
+    }
     this.customEffect(event);
   }
 
@@ -281,7 +287,7 @@ public class PlayerItemConsume implements Listener
       double originSaturation = player.getSaturation();
       Collection<PotionEffect> originEffects = player.getActivePotionEffects();
 
-      if (foodTag.hasKey(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY) && foodTag.getBoolean(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY))
+      if (foodTag.hasTag(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY) && foodTag.getBoolean(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY))
       {
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
         {
@@ -293,14 +299,14 @@ public class PlayerItemConsume implements Listener
         }, 0L);
       }
 
-      if (foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY) != null)
+      if (foodTag.hasTag(CucumberyTag.FOOD_LEVEL_KEY) && foodTag.getType(CucumberyTag.FOOD_LEVEL_KEY) == NBTType.NBTTagInt)
       {
         int itemFoodLevel = foodTag.getInteger(CucumberyTag.FOOD_LEVEL_KEY);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                 player.setFoodLevel(Math.min(20, Math.max(0, originFoodLevel + itemFoodLevel))), 0L);
       }
 
-      if (foodTag.getDouble(CucumberyTag.SATURATION_KEY) != null)
+      if (foodTag.hasTag(CucumberyTag.SATURATION_KEY) && foodTag.getType(CucumberyTag.SATURATION_KEY) == NBTType.NBTTagDouble)
       {
         double itemSaturation = foodTag.getDouble(CucumberyTag.SATURATION_KEY);
         Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
@@ -352,10 +358,10 @@ public class PlayerItemConsume implements Listener
         }, 0L);
       }
       EquipmentSlot slot = ItemStackUtil.getPlayerUsingSlot(player, new HashSet<>(Collections.singletonList(item.getType())));
-      if (usageConsumeTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+      if (usageConsumeTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
       {
         double disposableChance = 100d;
-        if (usageConsumeTag.hasKey(CucumberyTag.USAGE_DISPOSABLE_KEY))
+        if (usageConsumeTag.hasTag(CucumberyTag.USAGE_DISPOSABLE_KEY))
         {
           disposableChance = usageConsumeTag.getDouble(CucumberyTag.USAGE_DISPOSABLE_KEY);
         }

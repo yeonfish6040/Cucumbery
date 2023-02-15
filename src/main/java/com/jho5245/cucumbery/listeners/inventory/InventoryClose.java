@@ -348,53 +348,29 @@ public class InventoryClose implements Listener
       {
         switch (inventoryType)
         {
-          case ANVIL:
-          case SMITHING:
-            SoundPlay.playSound(player, Sound.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1F, 2F);
-            break;
-          case BEACON:
-            SoundPlay.playSound(player, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case BREWING:
-            SoundPlay.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case DISPENSER:
-          case DROPPER:
-          case HOPPER:
-            SoundPlay.playSound(player, Sound.BLOCK_DISPENSER_DISPENSE, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case ENCHANTING:
-            SoundPlay.playSound(player, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case FURNACE:
-            SoundPlay.playSound(player, Sound.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.PLAYERS, 1F, 1F);
-            break;
-          case MERCHANT:
-            SoundPlay.playSound(player, Sound.ENTITY_VILLAGER_NO, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case WORKBENCH:
-            SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case BLAST_FURNACE:
-            SoundPlay.playSound(player, Sound.BLOCK_BLASTFURNACE_FIRE_CRACKLE, SoundCategory.PLAYERS, 1F, 1F);
-            break;
-          case CARTOGRAPHY:
-            SoundPlay.playSound(player, Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case GRINDSTONE:
-            SoundPlay.playSound(player, Sound.BLOCK_GRINDSTONE_USE, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case LOOM:
-            SoundPlay.playSound(player, Sound.UI_LOOM_SELECT_PATTERN, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          case SMOKER:
-            SoundPlay.playSound(player, Sound.BLOCK_SMOKER_SMOKE, SoundCategory.PLAYERS, 1F, 1F);
-            break;
-          case STONECUTTER:
-            SoundPlay.playSound(player, Sound.UI_STONECUTTER_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 1.5F);
-            break;
-          default:
-            break;
+          case ANVIL, SMITHING -> SoundPlay.playSound(player, Sound.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1F, 2F);
+          case BEACON -> SoundPlay.playSound(player, Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.PLAYERS, 1F, 1.5F);
+          case BREWING -> SoundPlay.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, SoundCategory.PLAYERS, 1F, 1.5F);
+          case DISPENSER, DROPPER, HOPPER -> SoundPlay.playSound(player, Sound.BLOCK_DISPENSER_DISPENSE, SoundCategory.PLAYERS, 1F, 1.5F);
+          case ENCHANTING -> SoundPlay.playSound(player, Sound.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1F, 1.5F);
+          case ENDER_CHEST -> {
+            if (inventory.getLocation() == null)
+            {
+              SoundPlay.playSound(player, Sound.BLOCK_ENDER_CHEST_CLOSE, SoundCategory.PLAYERS);
+            }
+          }
+          case FURNACE -> SoundPlay.playSound(player, Sound.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.PLAYERS, 1F, 1F);
+          case MERCHANT -> SoundPlay.playSound(player, Sound.ENTITY_VILLAGER_NO, SoundCategory.PLAYERS, 1F, 1.5F);
+          case WORKBENCH -> SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, SoundCategory.PLAYERS, 1F, 1.5F);
+          case BLAST_FURNACE -> SoundPlay.playSound(player, Sound.BLOCK_BLASTFURNACE_FIRE_CRACKLE, SoundCategory.PLAYERS, 1F, 1F);
+          case CARTOGRAPHY -> SoundPlay.playSound(player, Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 1.5F);
+          case GRINDSTONE -> SoundPlay.playSound(player, Sound.BLOCK_GRINDSTONE_USE, SoundCategory.PLAYERS, 1F, 1.5F);
+          case LOOM -> SoundPlay.playSound(player, Sound.UI_LOOM_SELECT_PATTERN, SoundCategory.PLAYERS, 1F, 1.5F);
+          case SMOKER -> SoundPlay.playSound(player, Sound.BLOCK_SMOKER_SMOKE, SoundCategory.PLAYERS, 1F, 1F);
+          case STONECUTTER -> SoundPlay.playSound(player, Sound.UI_STONECUTTER_TAKE_RESULT, SoundCategory.PLAYERS, 1F, 1.5F);
+          default ->
+          {
+          }
         }
       }
     }

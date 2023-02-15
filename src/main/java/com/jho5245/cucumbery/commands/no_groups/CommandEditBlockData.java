@@ -83,7 +83,7 @@ public class CommandEditBlockData implements CommandExecutor, TabCompleter
       NBTCompound blockStateTag = nbtItem.getCompound(CucumberyTag.MINECRAFT_BLOCK_STATE_TAG_KEY);
       if (removal)
       {
-        if (blockStateTag == null || !blockStateTag.hasKey(key))
+        if (blockStateTag == null || !blockStateTag.hasTag(key))
         {
           MessageUtil.sendError(sender, ComponentUtil.translate("%s에게는 %s 속성이 없습니다", item, Constant.THE_COLOR_HEX + key));
           return true;

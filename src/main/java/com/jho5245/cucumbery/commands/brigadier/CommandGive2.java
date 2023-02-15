@@ -20,9 +20,8 @@ import dev.jorel.commandapi.arguments.CustomArgument.CustomArgumentException;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -57,7 +56,7 @@ public class CommandGive2 extends CommandBase
   private IStringTooltip[] of()
   {
     List<IStringTooltip> list = new ArrayList<>();
-    Arrays.stream(CustomMaterial.values()).toList().forEach(customMaterial -> list.add(StringTooltip.of(customMaterial.toString().toLowerCase(), ComponentUtil.serialize(customMaterial.getDisplayName()))));
+    Arrays.stream(CustomMaterial.values()).toList().forEach(customMaterial -> list.add(StringTooltip.ofAdventureComponent(customMaterial.toString().toLowerCase(), customMaterial.getDisplayName())));
     ConfigurationSection root = Variable.customItemsConfig.getConfigurationSection("");
     if (root != null)
     {
@@ -66,7 +65,7 @@ public class CommandGive2 extends CommandBase
         String displayName = root.getString(key + ".display-name");
         if (displayName != null)
         {
-          list.add(StringTooltip.of(key, ComponentUtil.serialize(ComponentUtil.create(MessageUtil.n2s(displayName)))));
+          list.add(StringTooltip.ofAdventureComponent(key, ComponentUtil.create(MessageUtil.n2s(displayName))));
         }
       }
     }
@@ -122,18 +121,9 @@ public class CommandGive2 extends CommandBase
 
   private void give(@NotNull NativeProxyCommandSender sender, @NotNull Collection<Player> players, @NotNull ItemStack itemStack, int amount, boolean hideOutput) throws WrapperCommandSyntaxException
   {
-    CommandSender commandSender = sender.getCallee();
     if (players.isEmpty())
     {
-      if (commandSender instanceof BlockCommandSender)
-      {
-        throw CommandAPI.fail("개체를 찾을 수 없습니다");
-      }
-      else
-      {
-        MessageUtil.sendError(commandSender, "개체를 찾을 수 없습니다");
-      }
-      return;
+      throw CommandAPI.failWithAdventureComponent(Component.translatable("argument.entity.notfound.entity"));
     }
     itemStack.setAmount(amount);
     AddItemUtil.addItemResult2(sender.getCallee(), players, itemStack, amount).stash().sendFeedback(hideOutput);

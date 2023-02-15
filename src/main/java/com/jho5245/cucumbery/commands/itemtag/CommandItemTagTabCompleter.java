@@ -579,13 +579,13 @@ public class CommandItemTagTabCompleter implements TabCompleter
               switch (args[2])
               {
                 case "boolean":
-                  boolean exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagByte;
+                  boolean exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagByte;
                   byte b = nbtItem.getByte(key);
                   exists = exists && (b == 0 || b == 1);
                   boolean bool = nbtItem.getBoolean(key);
                   return Method.tabCompleterBoolean(args, "<값>", exists ? bool + "(기존값)" : null);
                 case "byte":
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagByte;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagByte;
                   b = nbtItem.getByte(key);
                   return Method.tabCompleterIntegerRadius(args, Byte.MIN_VALUE, Byte.MAX_VALUE, "<값>", exists ? b + "(기존값)" : "");
                 case "byte-array":
@@ -617,7 +617,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                       }
                     }
                   }
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagByteArray;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagByteArray;
                   if (exists)
                   {
                     byte[] originValue = nbtItem.getByteArray(key);
@@ -632,11 +632,11 @@ public class CommandItemTagTabCompleter implements TabCompleter
                   }
                   return Method.tabCompleterList(args, "<값>", true, "<값>", "예시 : 1,2,3");
                 case "short":
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagShort;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagShort;
                   short s = nbtItem.getShort(key);
                   return Method.tabCompleterIntegerRadius(args, Short.MIN_VALUE, Short.MAX_VALUE, "<값>", exists ? s + "(기존값)" : "");
                 case "int":
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagInt;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagInt;
                   int i = nbtItem.getInteger(key);
                   return Method.tabCompleterIntegerRadius(args, Integer.MIN_VALUE, Integer.MAX_VALUE, "<값>", exists ? i + "(기존값)" : "");
                 case "int-array":
@@ -655,7 +655,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                       }
                     }
                   }
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagIntArray;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagIntArray;
                   if (exists)
                   {
                     int[] originValue = nbtItem.getIntArray(key);
@@ -714,7 +714,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                       }
                     }
                   }
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagLong;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagLong;
                   long l = nbtItem.getLong(key);
                   return Method.tabCompleterLongRadius(args, Long.MIN_VALUE, Long.MAX_VALUE, "<값>", exists ? l + "(기존값)" : "");
                 case "long-list":
@@ -747,7 +747,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                   }
                   return Method.tabCompleterList(args, "<값>", true, "<값>", "예시 : 1,2,3");
                 case "float":
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagFloat;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagFloat;
                   float f = nbtItem.getFloat(key);
                   return Method.tabCompleterDoubleRadius(args, -Float.MAX_VALUE, Float.MAX_VALUE, "<값>", exists ? f + "(기존값)" : "");
                 case "float-list":
@@ -793,7 +793,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                   }
                   return Method.tabCompleterList(args, "<값>", true, "<값>", "예시 : 1.5,2.5,3.5");
                 case "double":
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagDouble;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagDouble;
                   double d = nbtItem.getDouble(key);
                   return Method.tabCompleterDoubleRadius(args, -Double.MAX_VALUE, Double.MAX_VALUE, "<값>", exists ? d + "(기존값)" : "");
                 case "double-list":
@@ -826,7 +826,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                   }
                   return Method.tabCompleterList(args, "<값>", true, "<값>", "예시 : 1.5,2.5,3.5");
                 case "uuid":
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagIntArray;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagIntArray;
                   try
                   {
                     UUID uuid = nbtItem.getUUID(key);
@@ -839,7 +839,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
                     return Method.tabCompleterList(args, "<값>", true, "<값>", player.getUniqueId().toString() + "(플레이어 UUID)");
                   }
                 case "string":
-                  exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagString;
+                  exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagString;
                   String str = nbtItem.getString(key);
                   return Method.tabCompleterList(args, "<값>", true, exists ? new String[]{str.replace("§", "&"), "<값>"} : new String[]{"<값>"});
                 case "string-list":
@@ -1276,7 +1276,7 @@ public class CommandItemTagTabCompleter implements TabCompleter
               }
               String key = args[3];
               NBTItem nbtItem = new NBTItem(item);
-              boolean exists = nbtItem.hasKey(key) && nbtItem.getType(key) == NBTType.NBTTagCompound;
+              boolean exists = nbtItem.hasTag(key) && nbtItem.getType(key) == NBTType.NBTTagCompound;
               NBTCompound nbtCompound = nbtItem.getCompound(key);
               if (exists && nbtCompound.toString().length() < 100)
               {

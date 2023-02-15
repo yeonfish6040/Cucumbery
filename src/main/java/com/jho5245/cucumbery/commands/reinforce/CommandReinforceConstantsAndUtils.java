@@ -118,7 +118,7 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
           ComponentUtil.translate("&c강화 중지").hoverEvent(ComponentUtil.translate("클릭하여 강화를 중지합니다")).clickEvent(ClickEvent.runCommand(Constant.REINFORCE_QUIT)));
 
   protected static final TranslatableComponent OPTION_BUTTON_ANTI_DESTRUCTION = ComponentUtil.translate("파괴방지 : [%s]").hoverEvent(ComponentUtil.translate("파괴방지")
-          .append(Component.text("\n")).append(ComponentUtil.translate("스타포스 12성에서 16성 사이의 아이템으로 스타포스 강화를 시도하거나"))
+          .append(Component.text("\n")).append(ComponentUtil.translate("스타포스 15성에서 16성 사이의 아이템으로 스타포스 강화를 시도하거나"))
           .append(Component.text("\n")).append(ComponentUtil.translate("오이포스 24성에서 33성 사이의 아이템으로 강화를 시도할 때"))
           .append(Component.text("\n")).append(ComponentUtil.translate("비용을 2배로 소모하여 파괴 확률을 0%로 만들 수 있습니다"))
           .append(Component.text("\n")).append(ComponentUtil.translate("단, 파괴방지로 인하여 증가하는 비용은 강화 비용 할인의 혜택을 받을 수 없으며"))
@@ -245,8 +245,7 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
             current == 5 || current == 10 || current == 15
     );
     boolean reinforceOpMode = CustomEffectManager.hasEffect(player, CustomEffectTypeReinforce.REINFORCE_OP_MODE);
-    boolean antiDestruction = type == ReinforceType.STARFORCE && current < 15 && CustomEffectManager.hasEffect(player, CustomEffectTypeReinforce.STARFORCE_ANTI_DESTRUCTION) && destroy > 0d;
-    boolean costDoubled = antiDestApplicable && !downTwice && !starforceEvent && !antiDestruction;
+    boolean costDoubled = antiDestApplicable && !downTwice && !starforceEvent;
     // 파괴 방지 기능은 가격이 100% 증가하고 이 가격은 할인의 영향을 받지 않음
     if (costDoubled)
     {
@@ -414,10 +413,6 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
     }
     if (operationType != OperationType.OPERATE)
     {
-      if (antiDestruction)
-      {
-        MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "rg255,204;15성 미만 파괴 방지 적용 중! (%s)", CustomEffectManager.getEffect(player, CustomEffectTypeReinforce.STARFORCE_ANTI_DESTRUCTION));
-      }
       if (failDown == 0d && destroy == 0d)
       {
         MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, SUCCESS);
@@ -548,18 +543,6 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Cucumbery.getPlugin(), () ->
                 MessageUtil.sendTitle(player, "", "", 0, 1, 0), i);
       }
-    }
-    if (antiDestruction)
-    {
-      if (failKeep != 0 && failDown == 0)
-      {
-        failKeep += destroy;
-      }
-      else
-      {
-        failKeep += destroy / 2D;
-      }
-      destroy = 0d;
     }
     CommandReinforce.REINFORCE_OPERATING.add(uuid);
     boolean use = UserData.SERVER_RESOURCEPACK.getBoolean(uuid);

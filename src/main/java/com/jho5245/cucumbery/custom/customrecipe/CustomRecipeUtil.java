@@ -79,7 +79,7 @@ public class CustomRecipeUtil
         }
         else
         {
-          String finalValue = prefixColor + "남은 제작 시간 : rg255,204;" + Method.timeFormatMilli(playerCraftingTime - System.currentTimeMillis(), false);
+          String finalValue = prefixColor + "남은 제작 시간 : rg255,204;" + Method.timeFormatMilli(playerCraftingTime - currentTime, false);
           requirementsLore.add(ComponentUtil.create(finalValue));
           if (Cucumbery.using_Vault_Economy)
           {
@@ -1625,10 +1625,9 @@ public class CustomRecipeUtil
                   boolean isNumber = false;
                   boolean needTimeFormat = statistic.toString().contains("TIME") || statistic.toString().contains("MINUTE");
                   boolean isRadius = false;
-                  if (statisticName.toString().endsWith("CM"))
+                  if (statistic.toString().endsWith("CM"))
                   {
                     isRadius = true;
-                    playerStatistic /= 100d;
                     suffix = "m";
                   }
                   if (statisticName.endsWith("개수"))
@@ -1654,8 +1653,8 @@ public class CustomRecipeUtil
                   else if (isRadius)
                   {
                     playerValueString = Constant.Jeongsu.format(playerStatistic / 100d) + "m";
-                    minValue = Constant.Jeongsu.format(statisticsMin / 100d) + "m";
-                    maxValue = Constant.Jeongsu.format(statisticsMax / 100d) + "m";
+                    minValue = Constant.Jeongsu.format(statisticsMin / 100d);
+                    maxValue = Constant.Jeongsu.format(statisticsMax / 100d);
                   }
                   // 이상, 이하 문자열 지정
                   minValue = statisticsMinExists && statisticsMin != 0d ? (minValue + suffix + " 이상 ") : "";

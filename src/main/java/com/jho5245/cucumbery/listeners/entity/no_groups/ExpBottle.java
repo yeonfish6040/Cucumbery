@@ -25,11 +25,11 @@ public class ExpBottle implements Listener
     {
       NBTItem nbtItem = new NBTItem(itemStack);
       int minExp = 3, maxExp = 11;
-      if (nbtItem.hasKey("MinExp") && nbtItem.getType("MinExp") == NBTType.NBTTagInt)
+      if (nbtItem.hasTag("MinExp") && nbtItem.getType("MinExp") == NBTType.NBTTagInt)
       {
         minExp = nbtItem.getInteger("MinExp");
       }
-      if (nbtItem.hasKey("MaxExp") && nbtItem.getType("MaxExp") == NBTType.NBTTagInt)
+      if (nbtItem.hasTag("MaxExp") && nbtItem.getType("MaxExp") == NBTType.NBTTagInt)
       {
         maxExp = nbtItem.getInteger("MaxExp");
       }

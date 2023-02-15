@@ -38,6 +38,21 @@ public class EntityCustomEffectPreApply implements Listener
       return;
     }
 
+    if (customEffectType == CustomEffectType.FLY_NOT_ENABLED && !(CustomEffectManager.hasEffect(entity, CustomEffectType.FLY) || CustomEffectManager.hasEffect(entity, CustomEffectType.FLY_REMOVE_ON_QUIT)))
+    {
+      event.setCancelled(true);
+      return;
+    }
+
+    if (customEffectType == CustomEffectType.FLY_NOT_ENABLED && !CustomEffectManager.hasEffect(entity, CustomEffectType.FLY_NOT_ENABLED) &&
+            entity instanceof Player player && player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR &&
+            (CustomEffectManager.hasEffect(entity, CustomEffectType.FLY) || CustomEffectManager.hasEffect(entity, CustomEffectType.FLY_REMOVE_ON_QUIT)))
+    {
+      CustomEffect effect = CustomEffectManager.hasEffect(entity, CustomEffectType.FLY) ? CustomEffectManager.getEffect(entity, CustomEffectType.FLY) : CustomEffectManager.getEffect(entity, CustomEffectType.FLY_REMOVE_ON_QUIT);
+      MessageUtil.sendWarn(player,"비행 모드 사용이 불가능한 지역에 진입하여 %s 효과가 비활성화됩니다!", effect);
+      return;
+    }
+
     if (customEffectType == CustomEffectType.PARROTS_CHEER && !(entity instanceof AnimalTamer && entity instanceof Damageable))
     {
       event.setCancelled(true);

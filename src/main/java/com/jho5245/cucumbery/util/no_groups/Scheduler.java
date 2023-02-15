@@ -9,10 +9,10 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectScheduler;
 import com.jho5245.cucumbery.custom.customeffect.children.group.EntityCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.EntityCustomEffectImple;
-import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffectImple;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
@@ -23,7 +23,9 @@ import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.no_groups.ColorUtil.Type;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
@@ -54,13 +56,17 @@ import org.bukkit.entity.*;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class Scheduler
 {
@@ -87,13 +93,6 @@ public class Scheduler
       // 플러그인 실행 시간
       Cucumbery.runTime++;
     }, 0L, 1L);
-    Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
-    {
-      tickSchedulesAsync();
-    }, 0L, 1L);
-    Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
-    {
-    }, 0L, 5L);
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
       // 플레이어 인벤토리의 아이템(손에 들고 있는 아이템 제외) 플레이어가 열고 있는 인벤토리 아이템 루프
@@ -144,10 +143,6 @@ public class Scheduler
     playerTick();
     damageIndicator();
     MiningScheduler.customMiningTicks();
-  }
-
-  private static void tickSchedulesAsync()
-  {
   }
 
   public static void fakeBlocksAsync(@Nullable Player target, @NotNull Location location, boolean distanceLimit)
@@ -213,28 +208,25 @@ public class Scheduler
       if (entity != null)
       {
         CustomEffectScheduler.tick(entity);
+        CustomEffectScheduler.ascension(entity);
         CustomEffectScheduler.superiorLevitation(entity);
         CustomEffectScheduler.trueInvisibility(entity);
         CustomEffectScheduler.axolotlsGrace(entity);
         CustomEffectScheduler.stop(entity);
         CustomEffectScheduler.damageIndicator(entity);
         CustomEffectScheduler.vanillaEffect(entity);
+        mountLoop(entity);
       }
     }
 //    for (World world : Bukkit.getWorlds())
 //    {
-//      for (Entity entity : world.getEntities())
+//      for (Chunk chunk : world.getLoadedChunks())
 //      {
-//        // 커스텀 인챈트
-//        customEnchant(entity);
-//        CustomEffectScheduler.tick(entity);
-//        CustomEffectScheduler.superiorLevitation(entity);
-//        CustomEffectScheduler.trueInvisibility(entity);
-//        CustomEffectScheduler.axolotlsGrace(entity);
-//        CustomEffectScheduler.stop(entity);
-//        CustomEffectScheduler.damageIndicator(entity);
-//        CustomEffectScheduler.vanillaEffect(entity);
-//        mountLoop(entity);
+//        for (Entity entity : chunk.getEntities())
+//        {
+//          // 커스텀 인챈트
+//          customEnchant(entity);
+//        }
 //      }
 //    }
   }
@@ -262,8 +254,8 @@ public class Scheduler
       // 명령 블록 명령어 미리 보기
       commandBlockPreview(player);
       worldEditPositionParticle(player);
-
       CustomEffectScheduler.display(player);
+      CustomEffectScheduler.fly(player);
       CustomEffectScheduler.rune(player);
       CustomEffectScheduler.gaesans(player);
       MiningScheduler.customMining(player);
@@ -314,6 +306,110 @@ public class Scheduler
     else if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.MINER_ARMOR_SET_EFFECT))
     {
       CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.MINER_ARMOR_SET_EFFECT);
+    }
+    if (helmet == CustomMaterial.RAINBOW_HELMET)
+    {
+      player.getWorld().getPlayers().forEach(p ->
+      {
+        ItemStack itemStack = playerInventory.getHelmet().clone();
+        org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta();
+        int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
+        itemStack.setType(Material.LEATHER_HELMET);
+        int newMaxDamage = itemStack.getType().getMaxDurability();
+        damage *= 1d * newMaxDamage / maxDamage;
+        damageable.setDamage(damage);
+        itemStack.setItemMeta(damageable);
+        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+        leatherArmorMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        ColorUtil colorUtil = new ColorUtil(Type.HSL, "hsl" + ((Cucumbery.runTime * 4) % 360) + ",100,50;");
+        leatherArmorMeta.setColor(Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+        Component displayName = leatherArmorMeta.hasDisplayName() ? leatherArmorMeta.displayName() : ItemNameUtil.itemName(itemStack);
+        if (displayName != null)
+        {
+          displayName = displayName.color(TextColor.color(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+          leatherArmorMeta.displayName(displayName);
+        }
+        itemStack.setItemMeta(leatherArmorMeta);
+        p.sendEquipmentChange(player, EquipmentSlot.HEAD, itemStack);
+      });
+    }
+    if (chestplate == CustomMaterial.RAINBOW_CHESTPLATE)
+    {
+      player.getWorld().getPlayers().forEach(p ->
+      {
+        ItemStack itemStack = playerInventory.getChestplate().clone();
+        org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta();
+        int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
+        itemStack.setType(Material.LEATHER_CHESTPLATE);
+        int newMaxDamage = itemStack.getType().getMaxDurability();
+        damage *= 1d * newMaxDamage / maxDamage;
+        damageable.setDamage(damage);
+        itemStack.setItemMeta(damageable);
+        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+        leatherArmorMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        ColorUtil colorUtil = new ColorUtil(Type.HSL, "hsl" + ((Cucumbery.runTime * 4) % 360) + ",100,50;");
+        leatherArmorMeta.setColor(Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+        Component displayName = leatherArmorMeta.hasDisplayName() ? leatherArmorMeta.displayName() : ItemNameUtil.itemName(itemStack);
+        if (displayName != null)
+        {
+          displayName = displayName.color(TextColor.color(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+          leatherArmorMeta.displayName(displayName);
+        }
+        itemStack.setItemMeta(leatherArmorMeta);
+        p.sendEquipmentChange(player, EquipmentSlot.CHEST, itemStack);
+      });
+    }
+    if (leggings == CustomMaterial.RAINBOW_LEGGINGS)
+    {
+      player.getWorld().getPlayers().forEach(p ->
+      {
+        ItemStack itemStack = playerInventory.getLeggings().clone();
+        org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta();
+        int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
+        itemStack.setType(Material.LEATHER_LEGGINGS);
+        int newMaxDamage = itemStack.getType().getMaxDurability();
+        damage *= 1d * newMaxDamage / maxDamage;
+        damageable.setDamage(damage);
+        itemStack.setItemMeta(damageable);
+        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+        leatherArmorMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        ColorUtil colorUtil = new ColorUtil(Type.HSL, "hsl" + ((Cucumbery.runTime * 4) % 360) + ",100,50;");
+        leatherArmorMeta.setColor(Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+        Component displayName = leatherArmorMeta.hasDisplayName() ? leatherArmorMeta.displayName() : ItemNameUtil.itemName(itemStack);
+        if (displayName != null)
+        {
+          displayName = displayName.color(TextColor.color(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+          leatherArmorMeta.displayName(displayName);
+        }
+        itemStack.setItemMeta(leatherArmorMeta);
+        p.sendEquipmentChange(player, EquipmentSlot.LEGS, itemStack);
+      });
+    }
+    if (boots == CustomMaterial.RAINBOW_BOOTS)
+    {
+      player.getWorld().getPlayers().forEach(p ->
+      {
+        ItemStack itemStack = playerInventory.getBoots().clone();
+        org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta();
+        int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
+        itemStack.setType(Material.LEATHER_BOOTS);
+        int newMaxDamage = itemStack.getType().getMaxDurability();
+        damage *= 1d * newMaxDamage / maxDamage;
+        damageable.setDamage(damage);
+        itemStack.setItemMeta(damageable);
+        LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+        leatherArmorMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        ColorUtil colorUtil = new ColorUtil(Type.HSL, "hsl" + ((Cucumbery.runTime * 4) % 360) + ",100,50;");
+        leatherArmorMeta.setColor(Color.fromRGB(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+        Component displayName = leatherArmorMeta.hasDisplayName() ? leatherArmorMeta.displayName() : ItemNameUtil.itemName(itemStack);
+        if (displayName != null)
+        {
+          displayName = displayName.color(TextColor.color(colorUtil.getRed(), colorUtil.getGreen(), colorUtil.getBlue()));
+          leatherArmorMeta.displayName(displayName);
+        }
+        itemStack.setItemMeta(leatherArmorMeta);
+        p.sendEquipmentChange(player, EquipmentSlot.FEET, itemStack);
+      });
     }
   }
 
@@ -535,7 +631,6 @@ public class Scheduler
     {
       return;
     }
-    ItemMeta itemMeta = helmet.getItemMeta();
   }
 
   private static void showSpectatorTargetInfoActionbar(@NotNull Player player)

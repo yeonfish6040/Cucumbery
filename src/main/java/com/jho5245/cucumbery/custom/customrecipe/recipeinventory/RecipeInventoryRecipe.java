@@ -238,7 +238,7 @@ public class RecipeInventoryRecipe
           if (itemTag != null)
           {
             NBTCompound duraTag = itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
-            if (duraTag != null && duraTag.hasKey(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+            if (duraTag != null && duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
             {
               long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + bonusDurability;
               duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, Math.min(cur, duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY)));
@@ -265,10 +265,11 @@ public class RecipeInventoryRecipe
       {
         menu.setItem(4, result);
       }
-      catch (Exception ignored)
+      catch (Exception e)
       {
-        ItemStack errorItem = CreateItemStack.create(Material.BARRIER, 1, ComponentUtil.translate("&c오류 발생!"), Arrays.asList(ComponentUtil.translate("&7일시적인 오류가 발생했습니다"), ComponentUtil.translate("&7이전으로 간 다음 다시 레시피를 선택해주세요")), false);
-        menu.setItem(4, errorItem);
+        MessageUtil.sendWarn(player, "일시적인 오류가 발생하여 이전 메뉴로 돌아갑니다");
+        RecipeInventoryCategory.openRecipeInventory(player, mainPage, category, categoryPage, true);
+        return;
       }
 
       ItemStack createButton = CreateItemStack.create(Material.BARRIER, 1, "§c[재료 부족]", false);

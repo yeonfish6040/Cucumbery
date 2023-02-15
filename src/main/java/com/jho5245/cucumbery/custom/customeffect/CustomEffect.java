@@ -269,7 +269,7 @@ public class CustomEffect
               case "MINECRAFT_BAD_OMEN" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.BAD_OMEN, duration, amplifier));
               case "MINECRAFT_HERO_OF_THE_VILLAGE" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE, duration, amplifier));
               case "MINECRAFT_DARKNESS" -> VanillaEffectDescription.getDescription(new PotionEffect(PotionEffectType.DARKNESS, duration, amplifier));
-              default -> effectType.getDescription();
+              default -> effectType.getDescription(viewer);
             };
     if (effectType == CustomEffectTypeCustomMining.TITANIUM_FINDER)
     {
@@ -405,6 +405,7 @@ public class CustomEffect
 
   /**
    * 효과의 표시 유형
+   * <p>기본적으로 모든 효과는 GUI에서 표시되지만 {@link DisplayType#BOSS_BAR_ONLY}와 {@link DisplayType#NONE}은 GUI에서 표시되지 않는다</p>
    */
   public enum DisplayType
   {
@@ -421,6 +422,10 @@ public class CustomEffect
      * 보스바. 일반적으로 가장 많이 표시되는 기본 유형
      */
     BOSS_BAR,
+    /**
+     * 보스바에만 보이고 gui에서는 보이지 않고, 우클릭으로 해제 불가
+     */
+    BOSS_BAR_ONLY,
     /**
      * /effect3 query 명령어를 통해 보이는 GUI에서만 보이는 효과
      */

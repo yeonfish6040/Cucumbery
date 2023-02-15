@@ -226,7 +226,7 @@ public class ItemLore
           defaultLore.add(ComponentUtil.translate("&7원래 아이템 이름 : %s", customMaterial.getDisplayName()));
         }
       }
-      else if (nbtItem.hasKey("id") && !"".equals(nbtItem.getString("id")))
+      else if (nbtItem.hasTag("id") && !"".equals(nbtItem.getString("id")))
       {
         String id = nbtItem.getString("id");
         ConfigurationSection section = Variable.customItemsConfig.getConfigurationSection(id);
@@ -387,7 +387,7 @@ public class ItemLore
     NBTItem nbtItem = new NBTItem(itemStack);
     nbtItem.removeKey(CucumberyTag.KEY_TMI);
     itemStack.setItemMeta(nbtItem.getItem().getItemMeta());
-    if (nbtItem.hasKey("id"))
+    if (nbtItem.hasTag("id"))
     {
       itemMeta = itemStack.getItemMeta();
       CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
@@ -401,7 +401,7 @@ public class ItemLore
         skullMeta.setOwningPlayer(null);
         itemStack.setItemMeta(skullMeta);
       }
-      if (removeUUID && nbtItem.hasKey("uuid"))
+      if (removeUUID && nbtItem.hasTag("uuid"))
       {
         nbtItem = new NBTItem(itemStack, true);
         nbtItem.removeKey("uuid");

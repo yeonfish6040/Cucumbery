@@ -17,6 +17,7 @@ import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMini
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
+import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Location;
@@ -177,6 +178,17 @@ public class ProtocolLibManager
               int effectDuration = CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION).getDuration();
               modifier.write(3, effectDuration == -1 ? Integer.MAX_VALUE : effectDuration);
               event.setPacket(packet);
+            }
+
+            if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.DYNAMIC_LIGHT) && potionEffectType.equals(PotionEffectType.NIGHT_VISION))
+            {
+              PlayerInventory inventory = player.getInventory();
+              Material mainHand = inventory.getItemInMainHand().getType(), offHand = inventory.getItemInOffHand().getType();
+              if (Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(mainHand) || Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(offHand))
+              {
+                modifier.write(3, Integer.MAX_VALUE);
+                event.setPacket(packet);
+              }
             }
 
             if (CustomEffectManager.hasEffect(player, CustomEffectType.NIGHT_VISION_SPECTATOR) && potionEffectType.equals(PotionEffectType.NIGHT_VISION) && player.getSpectatorTarget() != null)

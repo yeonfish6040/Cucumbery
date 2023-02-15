@@ -90,7 +90,7 @@ public class CustomEffectGUI
       }
     }
     List<CustomEffect> customEffects = new ArrayList<>(CustomEffectManager.getEffects(player));
-    customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE || effect.isHidden());
+    customEffects.removeIf(effect -> effect.getDisplayType() == DisplayType.NONE || effect.getDisplayType() == DisplayType.BOSS_BAR_ONLY || effect.isHidden());
     List<PotionEffect> potionEffects = CustomEffectManager.removeDisplay(player, player.getActivePotionEffects());
     boolean isEmpty = customEffects.isEmpty() && potionEffects.isEmpty();
     if (isEmpty)
@@ -134,6 +134,13 @@ public class CustomEffectGUI
         if (effectType.getCustomModelData() != -1)
         {
           itemMeta.setCustomModelData(effectType.getCustomModelData());
+        }
+        if (effectType == CustomEffectType.FLY || effectType == CustomEffectType.FLY_REMOVE_ON_QUIT)
+        {
+          if (CustomEffectManager.hasEffect(player, CustomEffectType.FLY_NOT_ENABLED))
+          {
+            itemMeta.setCustomModelData(5202);
+          }
         }
         itemStack.setItemMeta(itemMeta);
         if (effectType.isRemoveable())

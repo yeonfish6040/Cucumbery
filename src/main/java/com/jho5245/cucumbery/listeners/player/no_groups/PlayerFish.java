@@ -94,9 +94,9 @@ public class PlayerFish implements Listener
               {
                 return;
               }
-              double maxX = maxValuesTag.hasKey("x") ? maxValuesTag.getDouble("x") : 5;
-              double maxY = maxValuesTag.hasKey("y") ? maxValuesTag.getDouble("y") : 5;
-              double maxZ = maxValuesTag.hasKey("z") ? maxValuesTag.getDouble("z") : 5;
+              double maxX = maxValuesTag.hasTag("x") ? maxValuesTag.getDouble("x") : 5;
+              double maxY = maxValuesTag.hasTag("y") ? maxValuesTag.getDouble("y") : 5;
+              double maxZ = maxValuesTag.hasTag("z") ? maxValuesTag.getDouble("z") : 5;
               FishHook fishHook = event.getHook();
               Location hookLoc = fishHook.getLocation(), playerLoc = player.getLocation();
               double x = (hookLoc.getX() - playerLoc.getX()) / 1.5;
