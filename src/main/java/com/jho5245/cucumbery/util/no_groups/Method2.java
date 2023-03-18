@@ -1,10 +1,10 @@
 package com.jho5245.cucumbery.util.no_groups;
 
-import com.jho5245.cucumbery.util.storage.data.Variable;
-import org.bukkit.*;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,82 +15,6 @@ import java.util.function.Predicate;
 
 public class Method2 extends Method
 {
-  /**
-   * 해당 좌표에 설치되어 있는 커스텀 블록 데이터의 아이템 형태를 가져옵니다. 만약 아이템이 인벤토리에 소지할 수 없는 블록이거나 해당 좌표에 저장된 블록이 없을 경우, null을 반환합니다.
-   *
-   * @param worldName 월드 이름
-   * @param x         x좌표
-   * @param y         y좌표
-   * @param z         z좌표
-   * @return 해당 위치에 있는 아이템 혹은 null
-   */
-  @Nullable
-  public static ItemStack getPlacedBlockDataAsItemStack(@NotNull String worldName, int x, int y, int z)
-  {
-    YamlConfiguration yamlConfiguration = Variable.blockPlaceData.get(worldName);
-    if (yamlConfiguration == null)
-    {
-      return null;
-    }
-    String itemString = yamlConfiguration.getString(x + "_" + y + "_" + z);
-    if (itemString == null)
-    {
-      return null;
-    }
-    ItemStack item = ItemSerializer.deserialize(itemString);
-    Material type = item.getType();
-    if (type == Material.AIR || !type.isItem())
-    {
-      return null;
-    }
-    return item;
-  }
-
-  public static boolean removePlacedBlockData(@NotNull Location location)
-  {
-    return removePlacedBlockData(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
-  }
-
-  public static boolean removePlacedBlockData(@NotNull String worldName, int x, int y, int z)
-  {
-    YamlConfiguration yamlConfiguration = Variable.blockPlaceData.get(worldName);
-    if (yamlConfiguration == null)
-    {
-      return false;
-    }
-    String itemString = yamlConfiguration.getString(x + "_" + y + "_" + z);
-    if (itemString == null)
-    {
-      return false;
-    }
-    yamlConfiguration.set(x + "_" + y + "_" + z, null);
-    Variable.blockPlaceData.put(worldName, yamlConfiguration);
-    return true;
-  }
-
-  /**
-   * 해당 좌표에 설치되어 있는 커스텀 블록 데이터의 아이템 형태를 가져옵니다. 만약 아이템이 인벤토리에 소지할 수 없는 블록이거나 해당 좌표에 저장된 블록이 없을 경우, null을 반환합니다.
-   *
-   * @param location 설치되어 있는 블록의 위치
-   * @return 해당 위치에 있는 아이템 혹은 null
-   */
-  @Nullable
-  public static ItemStack getPlacedBlockDataAsItemStack(@Nullable Location location)
-  {
-    if (location == null)
-    {
-      return null;
-    }
-    World world = location.getWorld();
-    if (world == null)
-    {
-      return null;
-    }
-    String worldName = world.getName();
-    return Method2.getPlacedBlockDataAsItemStack(worldName, location.getBlockX(), location.getBlockY(), location.getBlockZ());
-  }
-
-
   public static boolean isInvalidFileName(@NotNull String fileName)
   {
     return containsIgnoreCase(fileName, "\\", "/", ":", "*", "?", "\"", "<", ">", "|", "&", "§") ||

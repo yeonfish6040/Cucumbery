@@ -6,13 +6,11 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.Method2;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
@@ -143,7 +141,7 @@ public class BlockBreak implements Listener
       }
       return;
     }
-    ItemStack placedBlockDataItem = Method2.getPlacedBlockDataAsItemStack(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+    ItemStack placedBlockDataItem = BlockPlaceDataConfig.getItem(location);
     if (NBTAPI.isRestricted(player, placedBlockDataItem, Constant.RestrictionType.NO_BLOCK_BREAK))
     {
       event.setCancelled(true);
@@ -180,7 +178,8 @@ public class BlockBreak implements Listener
 
     if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE)
             && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE) && blockType == Material.FIRE)
-            && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS) && blockType.getHardness() == 0f && Method2.getPlacedBlockDataAsItemStack(location) == null))
+            && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS) && blockType.getHardness() == 0f
+            && BlockPlaceDataConfig.getItem(location) == null))
     {
       event.setCancelled(true);
       return;
@@ -269,33 +268,20 @@ public class BlockBreak implements Listener
       }
     }
 
-    YamlConfiguration blockPlaceData = Variable.blockPlaceData.get(location.getWorld().getName());
+    YamlConfiguration blockPlaceData = BlockPlaceDataConfig.getInstance(location.getChunk()).getConfig();
     List<ItemStack> customDrops = null;
 
     boolean blockPlaceDataApplied = false;
-    boolean noExpDropDueToForcePreverse = false;
 
     if (drops.size() == 1)
     {
-      if (blockPlaceData != null)
+      String dataString = blockPlaceData.getString(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ());
+      if (dataString != null)
       {
-        String dataString = blockPlaceData.getString(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ());
-        if (dataString != null)
-        {
-          ItemStack dataItem = ItemSerializer.deserialize(dataString);
-          NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(dataItem), CucumberyTag.EXTRA_TAGS_KEY);
-          noExpDropDueToForcePreverse = NBTAPI.arrayContainsValue(extraTag, Constant.ExtraTag.FORCE_PRESERVE_BLOCK_NBT);
-          for (ItemStack drop : drops)
-          {
-            if (drop.getType() == dataItem.getType() || noExpDropDueToForcePreverse)
-            {
-              customDrops = new ArrayList<>();
-              customDrops.add(dataItem);
-              blockPlaceDataApplied = true;
-              break;
-            }
-          }
-        }
+        ItemStack dataItem = ItemSerializer.deserialize(dataString);
+        customDrops = new ArrayList<>();
+        customDrops.add(dataItem);
+        blockPlaceDataApplied = true;
       }
     }
 
@@ -342,7 +328,7 @@ public class BlockBreak implements Listener
           {
             pluginAffected = true;
           }
-          if (isSmeltingTouch && !noExpDropDueToForcePreverse)
+          if (isSmeltingTouch)
           {
             dropsClone = ItemStackUtil.getSmeltedResult(player, customDrops, dropsExp);
             pluginAffected = pluginAffected || !dropsExp.isEmpty();
@@ -512,10 +498,6 @@ public class BlockBreak implements Listener
             }
             campfire.update(true, false);
           }
-          if (noExpDropDueToForcePreverse)
-          {
-            event.setExpToDrop(0);
-          }
           event.setDropItems(false);
           for (ItemStack drop : dropsClone)
           {
@@ -526,7 +508,8 @@ public class BlockBreak implements Listener
         {
           switch (blockType)
           {
-            case ICE, BLUE_ICE, PACKED_ICE -> {
+            case ICE, BLUE_ICE, PACKED_ICE ->
+            {
               ItemStack result = new ItemStack(Material.ICE);
               NBTItem nbtItem = new NBTItem(result);
               NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
@@ -644,7 +627,8 @@ public class BlockBreak implements Listener
               }
               player.getInventory().addItem(result);
             }
-            default -> {
+            default ->
+            {
             }
           }
         }
@@ -720,10 +704,6 @@ public class BlockBreak implements Listener
       drops.forEach(item -> block.getLocation().getWorld().dropItemNaturally(block.getLocation(), item));
     }
 
-    if (blockPlaceData != null)
-    {
-      blockPlaceData.set(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), null);
-      Variable.blockPlaceData.put(location.getWorld().getName(), blockPlaceData);
-    }
+    blockPlaceData.set(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), null);
   }
 }

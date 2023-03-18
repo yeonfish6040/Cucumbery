@@ -7,9 +7,12 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
+import com.jho5245.cucumbery.events.block.PreCustomBlockBreakEvent;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.*;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -49,6 +52,20 @@ import java.util.*;
 
 public class MiningManager
 {
+  public static final String
+          BLOCK_TIER = "BlockTier",
+          BLOCK_HARDNESS = "BlockHardness",
+          BLOCK_EXP = "BlockExp",
+          TOOL_TIER = "ToolTier",
+          TOOL_SPEED = "ToolSpeed",
+          TOOL_FORTUNE = "ToolFortune",
+          IGNORE_VANILLA_MODIFICATION = "IgnoreVanillaModification",
+          REMOVE_KEYS = "RemoveKeys",
+          REGEN_COOLDOWN = "RegenCooldown",
+          BREAK_SOUND = "BreakSound",
+          BREAK_SOUND_VOLUME = "BreakSoundVolume",
+          BREAK_SOUND_PITCH = "BreakSoundPitch"
+  ;
 
   /**
    * Gets the result of mining of a {@link Player}.
@@ -75,6 +92,28 @@ public class MiningManager
         return null;
       }
     }
+    // 아니 레지던스 왜 이상해
+    if (Cucumbery.using_Residence)
+    {
+      try
+      {
+//        Class<?> clazz = Class.forName("com.bekvon.bukkit.residence.Residence");
+//        Class<?> clazz2 = Class.forName("com.bekvon.bukkit.residence.protection.PlayerManager");
+//        Class<?> clazz3 = Class.forName("com.bekvon.bukkit.residence.containers.ResidencePlayer");
+//        java.lang.reflect.Method method = clazz.getMethod("getPlayerManager");
+//        java.lang.reflect.Method method2 = clazz2.getMethod("getResidencePlayer", Player.class);
+//        java.lang.reflect.Method method3 = clazz3.getMethod("canBreakBlock", Block.class, boolean.class);
+////        Residence.getInstance().getPlayerManager().getResidencePlayer(player);
+//        if (!UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player) && !((boolean) method3.invoke(method2.invoke(method.invoke(clazz), player), blockLocation.getBlock(), false)))
+//        {
+//          return null;
+//        }
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+    }
     ItemStack itemStack = player.getInventory().getItemInMainHand().clone();
     if (NBTAPI.isRestricted(player, itemStack, RestrictionType.NO_BREAK))
     {
@@ -83,6 +122,12 @@ public class MiningManager
     Block block = blockLocation.getBlock();
     Material blockType = block.getType();
     if (blockType == Material.FIRE)
+    {
+      return null;
+    }
+    PreCustomBlockBreakEvent preCustomBlockBreakEvent = new PreCustomBlockBreakEvent(block, player);
+    Bukkit.getPluginManager().callEvent(preCustomBlockBreakEvent);
+    if (preCustomBlockBreakEvent.isCancelled())
     {
       return null;
     }
@@ -125,9 +170,9 @@ public class MiningManager
       try
       {
         NBTItem nbtItem = new NBTItem(itemStack);
-        if (nbtItem.hasTag("IgnoreVanillaModification") && nbtItem.getType("IgnoreVanillaModification") == NBTType.NBTTagByte)
+        if (nbtItem.hasTag(IGNORE_VANILLA_MODIFICATION) && nbtItem.getType(IGNORE_VANILLA_MODIFICATION) == NBTType.NBTTagByte)
         {
-          ignoreVanillaModification = nbtItem.getBoolean("IgnoreVanillaModification");
+          ignoreVanillaModification = nbtItem.getBoolean(IGNORE_VANILLA_MODIFICATION);
         }
       }
       catch (Exception ignored)
@@ -157,9 +202,9 @@ public class MiningManager
       if (ItemStackUtil.itemExists(itemStack))
       {
         NBTItem nbtItem = new NBTItem(itemStack);
-        if (nbtItem.hasTag("ToolFortune") && nbtItem.getType("ToolFortune") == NBTType.NBTTagFloat)
+        if (nbtItem.hasTag(TOOL_FORTUNE) && nbtItem.getType(TOOL_FORTUNE) == NBTType.NBTTagFloat)
         {
-          miningFortune += nbtItem.getFloat("ToolFortune") / 100f;
+          miningFortune += nbtItem.getFloat(TOOL_FORTUNE) / 100f;
         }
       }
     }
@@ -556,102 +601,92 @@ public class MiningManager
     // 커스텀 블록 처리 (extra Block 존재 시 무시)
     if (!hasExtra || CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
     {
-      YamlConfiguration blockPlaceData = Variable.blockPlaceData.get(blockLocation.getWorld().getName());
-      if (blockPlaceData != null)
       {
-        String dataString = blockPlaceData.getString(blockLocation.getBlockX() + "_" + blockLocation.getBlockY() + "_" + blockLocation.getBlockZ()) + "";
-        if (dataString.length() - dataString.replace("%", "").length() >= 2)
-        {
-          dataString = PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), dataString, null);
-        }
-        ItemStack dataItem = ItemSerializer.deserialize(dataString);
-        if (!dataItem.getType().isAir())
+        ItemStack dataItem = BlockPlaceDataConfig.getItem(blockLocation, player);
+        if (ItemStackUtil.itemExists(dataItem))
         {
           NBTItem dataNBTItem = new NBTItem(dataItem, true);
-          boolean removeKeys = dataNBTItem.hasTag("RemoveKeys") && dataNBTItem.getType("RemoveKeys") == NBTType.NBTTagByte && dataNBTItem.getBoolean("RemovedKeys") != null && Boolean.TRUE.equals(dataNBTItem.getBoolean("RemoveKeys"));
+          boolean removeKeys = dataNBTItem.hasTag(REMOVE_KEYS) && dataNBTItem.getType(REMOVE_KEYS) == NBTType.NBTTagByte &&
+                  dataNBTItem.getBoolean(REMOVE_KEYS) != null && Boolean.TRUE.equals(dataNBTItem.getBoolean(REMOVE_KEYS));
           if (removeKeys)
           {
-            dataNBTItem.removeKey("RemoveKeys");
+            dataNBTItem.removeKey(REMOVE_KEYS);
           }
-          if (dataNBTItem.hasTag("CustomHardness") && dataNBTItem.getType("CustomHardness") == NBTType.NBTTagFloat)
+          if (dataNBTItem.hasTag(BLOCK_HARDNESS) && dataNBTItem.getType(BLOCK_HARDNESS) == NBTType.NBTTagFloat)
           {
-            blockHardness = dataNBTItem.getFloat("CustomHardness");
+            blockHardness = dataNBTItem.getFloat(BLOCK_HARDNESS);
             if (removeKeys)
             {
-              dataNBTItem.removeKey("CustomHardness");
+              dataNBTItem.removeKey(BLOCK_HARDNESS);
             }
           }
-          if (dataNBTItem.hasTag("BlockTier") && dataNBTItem.getType("BlockTier") == NBTType.NBTTagInt)
+          if (dataNBTItem.hasTag(BLOCK_TIER) && dataNBTItem.getType(BLOCK_TIER) == NBTType.NBTTagInt)
           {
-            blockTier = dataNBTItem.getInteger("BlockTier");
+            blockTier = dataNBTItem.getInteger(BLOCK_TIER);
             if (removeKeys)
             {
-              dataNBTItem.removeKey("BlockTier");
+              dataNBTItem.removeKey(BLOCK_TIER);
             }
           }
-          if (dataNBTItem.hasTag("CustomExp") && dataNBTItem.getType("CustomExp") == NBTType.NBTTagFloat)
+          if (dataNBTItem.hasTag(BLOCK_EXP) && dataNBTItem.getType(BLOCK_EXP) == NBTType.NBTTagFloat)
           {
-            expToDrop = dataNBTItem.getFloat("CustomExp");
+            expToDrop = dataNBTItem.getFloat(BLOCK_EXP);
             if (removeKeys)
             {
-              dataNBTItem.removeKey("CustomExp");
+              dataNBTItem.removeKey(BLOCK_EXP);
             }
           }
-          if (dataNBTItem.hasTag("RegenCooldown") && dataNBTItem.getType("RegenCooldown") == NBTType.NBTTagInt)
+          if (dataNBTItem.hasTag(REGEN_COOLDOWN) && dataNBTItem.getType(REGEN_COOLDOWN) == NBTType.NBTTagInt)
           {
-            regenCooldown = dataNBTItem.getInteger("RegenCooldown");
+            regenCooldown = dataNBTItem.getInteger(REGEN_COOLDOWN);
             if (removeKeys)
             {
-              dataNBTItem.removeKey("RegenCooldown");
+              dataNBTItem.removeKey(REGEN_COOLDOWN);
             }
           }
-          if (dataNBTItem.hasTag("IgnoreVanillaModification") && dataNBTItem.getType("IgnoreVanillaModification") == NBTType.NBTTagByte)
+          if (dataNBTItem.hasTag(IGNORE_VANILLA_MODIFICATION) && dataNBTItem.getType(IGNORE_VANILLA_MODIFICATION) == NBTType.NBTTagByte)
           {
-            ignoreVanillaModification = ignoreVanillaModification || dataNBTItem.getBoolean("IgnoreVanillaModification");
+            ignoreVanillaModification = ignoreVanillaModification || dataNBTItem.getBoolean(IGNORE_VANILLA_MODIFICATION);
             if (removeKeys)
             {
-              dataNBTItem.removeKey("IgnoreVanillaModification");
+              dataNBTItem.removeKey(IGNORE_VANILLA_MODIFICATION);
             }
           }
-          if (dataNBTItem.hasTag("BreakSound") && dataNBTItem.getType("BreakSound") == NBTType.NBTTagString)
+          if (dataNBTItem.hasTag(BREAK_SOUND) && dataNBTItem.getType(BREAK_SOUND) == NBTType.NBTTagString)
           {
             try
             {
-              breakSound = Sound.valueOf(dataNBTItem.getString("BreakSound"));
+              breakSound = Sound.valueOf(dataNBTItem.getString(BREAK_SOUND));
             }
             catch (Exception e)
             {
-              breakCustomSound = dataNBTItem.getString("BreakSound");
+              breakCustomSound = dataNBTItem.getString(BREAK_SOUND);
             }
             if (removeKeys)
             {
-              dataNBTItem.removeKey("BreakSound");
-            }
-          }
-          if (dataNBTItem.hasTag("BreakSoundVolume") && dataNBTItem.getType("BreakSoundVolume") == NBTType.NBTTagFloat)
-          {
-            breakSoundVolume = dataNBTItem.getInteger("BreakSoundVolume");
-            if (removeKeys)
-            {
-              dataNBTItem.removeKey("BreakSoundVolume");
+              dataNBTItem.removeKey(BREAK_SOUND);
             }
           }
-          if (dataNBTItem.hasTag("BreakSoundPitch") && dataNBTItem.getType("BreakSoundPitch") == NBTType.NBTTagFloat)
+          if (dataNBTItem.hasTag(BREAK_SOUND_VOLUME) && dataNBTItem.getType(BREAK_SOUND_VOLUME) == NBTType.NBTTagFloat)
           {
-            breakSoundPitch = dataNBTItem.getInteger("BreakSoundPitch");
+            breakSoundVolume = dataNBTItem.getFloat(BREAK_SOUND_VOLUME);
             if (removeKeys)
             {
-              dataNBTItem.removeKey("BreakSoundPitch");
+              dataNBTItem.removeKey(BREAK_SOUND_VOLUME);
+            }
+          }
+          if (dataNBTItem.hasTag(BREAK_SOUND_PITCH) && dataNBTItem.getType(BREAK_SOUND_PITCH) == NBTType.NBTTagFloat)
+          {
+            breakSoundPitch = dataNBTItem.getFloat(BREAK_SOUND_PITCH);
+            if (removeKeys)
+            {
+              dataNBTItem.removeKey(BREAK_SOUND_PITCH);
             }
           }
           NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(dataItem), CucumberyTag.EXTRA_TAGS_KEY);
           if (removeKeys && NBTAPI.arrayContainsValue(extraTag, ExtraTag.PRESERVE_BLOCK_NBT))
           {
             dataNBTItem.getCompound(CucumberyTag.KEY_MAIN).getStringList(CucumberyTag.EXTRA_TAGS_KEY).removeIf(s -> s.equals(ExtraTag.PRESERVE_BLOCK_NBT.toString()));
-          }
-          if (removeKeys && NBTAPI.arrayContainsValue(extraTag, ExtraTag.FORCE_PRESERVE_BLOCK_NBT))
-          {
-            dataNBTItem.getCompound(CucumberyTag.KEY_MAIN).getStringList(CucumberyTag.EXTRA_TAGS_KEY).removeIf(s -> s.equals(ExtraTag.FORCE_PRESERVE_BLOCK_NBT.toString()));
           }
           try
           {
@@ -1128,9 +1163,9 @@ public class MiningManager
     try
     {
       NBTItem nbtItem = new NBTItem(itemStack);
-      if (nbtItem.hasTag("ToolTier") && nbtItem.getType("ToolTier") == NBTType.NBTTagInt)
+      if (nbtItem.hasTag(TOOL_TIER) && nbtItem.getType(TOOL_TIER) == NBTType.NBTTagInt)
       {
-        toolTier = nbtItem.getInteger("ToolTier");
+        toolTier = nbtItem.getInteger(TOOL_TIER);
       }
     }
     catch (Exception ignored)
@@ -1169,9 +1204,9 @@ public class MiningManager
     try
     {
       NBTItem nbtItem = new NBTItem(itemStack);
-      if (nbtItem.hasTag("ToolSpeed") && nbtItem.getType("ToolSpeed") == NBTType.NBTTagFloat)
+      if (nbtItem.hasTag(TOOL_SPEED) && nbtItem.getType(TOOL_SPEED) == NBTType.NBTTagFloat)
       {
-        toolSpeed = nbtItem.getFloat("ToolSpeed");
+        toolSpeed = nbtItem.getFloat(TOOL_SPEED);
       }
     }
     catch (Exception ignored)

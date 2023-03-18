@@ -5,7 +5,7 @@ import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -19,7 +19,6 @@ import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -83,11 +82,11 @@ public class InventoryOpen implements Listener
       }
       if (inventory.getType() == InventoryType.BEACON && location != null)
       {
-        YamlConfiguration blockPlaceData = Variable.blockPlaceData.get(location.getWorld().getName());
-        if (blockPlaceData != null)
+        BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(location.getChunk());
+        if (blockPlaceDataConfig != null)
         {
-          ItemStack itemStack = ItemSerializer.deserialize(blockPlaceData.getString(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ()));
-          if (itemStack.getType() == Material.BEACON && NBTAPI.isRestricted(player, itemStack, RestrictionType.NO_BLOCK_BEACON))
+          ItemStack itemStack = blockPlaceDataConfig.getItemStack(location);
+          if (ItemStackUtil.itemExists(itemStack) && itemStack.getType() == Material.BEACON && NBTAPI.isRestricted(player, itemStack, RestrictionType.NO_BLOCK_BEACON))
           {
             event.setCancelled(true);
             if (!Variable.inventoryOpenAlertCooldown.contains(uuid))

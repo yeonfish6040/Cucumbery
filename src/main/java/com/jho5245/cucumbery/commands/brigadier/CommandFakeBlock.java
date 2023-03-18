@@ -170,7 +170,7 @@ public class CommandFakeBlock extends CommandBase
         {
           if (Variable.fakeBlocks.containsKey(location))
           {
-            MessageUtil.info(sender, "%s 위치의 블록 유형은 %s입니다", Variable.fakeBlocks.get(location));
+            MessageUtil.info(sender, "%s 위치의 블록 유형은 %s입니다", location, Variable.fakeBlocks.get(location).getMaterial());
             location.getBlock().getState().update();
           }
           else

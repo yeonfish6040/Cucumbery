@@ -1,4 +1,4 @@
-config-version: 10
+config-version: 11
 # 데스 메시지 기능 편집
 death-messages:
   enable: true # 사용 여부. true 또는 false
@@ -255,7 +255,7 @@ death-messages:
     fall-high-combat-suicide:
       - "%1$s이(가) 스스로 몸을 던져 죽었습니다"
     fall-high-combat-suicide-item:
-      - "%1$s이(가) %3$2을(를) 사용하여 스스로 몸을 던져 죽었습니다"
+      - "%1$s이(가) %3$s을(를) 사용하여 스스로 몸을 던져 죽었습니다"
     fall-block:
       - "%1$s이(가) %2$s에서 땅바닥으로 곤두박질쳤습니다"
       - "%1$s이(가) 별로 높지도 않은데 딸피여서 %2$s에서 떨어져 뼈가 부러져 죽었습니다"

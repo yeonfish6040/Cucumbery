@@ -60,6 +60,7 @@ import com.jho5245.cucumbery.listeners.vehicle.VehicleExit;
 import com.jho5245.cucumbery.listeners.world.EntitiesLoad;
 import com.jho5245.cucumbery.util.addons.ProtocolLibManager;
 import com.jho5245.cucumbery.util.addons.Songs;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.gui.GUIManager;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.*;
@@ -110,14 +111,13 @@ import java.util.UUID;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 36, DEATH_MESSAGES_CONFIG_VERSION = 10, LANG_CONFIG_VERSION = 5;
+  public static final int CONFIG_VERSION = 38, DEATH_MESSAGES_CONFIG_VERSION = 11, LANG_CONFIG_VERSION = 5;
 //  private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   /**
    * Shaded since 2022.07.04 so always true
    */
   public static boolean using_CommandAPI = true;
-
   public static boolean using_Vault_Economy;
   public static boolean using_Vault_Chat;
   public static boolean using_NoteBlockAPI;
@@ -128,10 +128,10 @@ public class Cucumbery extends JavaPlugin
   public static boolean using_ProtocolLib;
   public static boolean using_WorldEdit;
   public static boolean using_WorldGuard;
-
+  public static boolean using_GSit;
   public static boolean using_UltimateTimber;
 
-  public static boolean using_GSit;
+  public static boolean using_Residence;
   /**
    * MythicMobs API
    */
@@ -183,7 +183,7 @@ public class Cucumbery extends JavaPlugin
     }
     if (Cucumbery.config.getBoolean("console-messages.plugin"))
     {
-      MessageUtil.consoleSendMessage("&2[#52ee52;활성화&2] rg255,204;" + pluginDescriptionFile.getName() + "&r version : rg255,204;" + pluginDescriptionFile.getVersion() + "&r 플러그인이 활성화 되었습니다");
+      MessageUtil.consoleSendMessage("&2[#52ee52;활성화&2] rg255,204;" + pluginDescriptionFile.getName() + "&r version : rg255,204;" + pluginDescriptionFile.getVersion() + "&r 플러그인이 활성화 되었습니다?");
     }
     MessageUtil.broadcastDebug("Cucumbery 플러그인 활성화");
     for (Player online : Bukkit.getOnlinePlayers())
@@ -290,7 +290,7 @@ public class Cucumbery extends JavaPlugin
       CustomEffectManager.addEffect(player, CustomEffectType.INVINCIBLE_PLUGIN_RELOAD);
     }
     Initializer.saveUserData();
-    Initializer.saveBlockPlaceData();
+    BlockPlaceDataConfig.saveAll();
     Initializer.saveItemUsageData();
     Initializer.saveItemStashData();
     CustomEffectManager.save();
@@ -405,7 +405,7 @@ public class Cucumbery extends JavaPlugin
       {
         CommandAPI.onEnable(this);
         new ExtraExecuteArgument().registerArgument();
-        new CommandRide().registerCommand("ride", "cucumbery.command.ride", "cride");
+        new CommandRide().registerCommand("ride2", "cucumbery.command.ride", "cride");
         new CommandSudo2().registerCommand("sudo2", "cucumbery.command.sudo2", "csudo2");
         new CommandGive2().registerCommand("cgive", "cucumbery.command.cgive", "cgive", "give2");
         new CommandVelocity().registerCommand("velocity", "cucumbery.command.velocity2", "velo", "날리기", "cvelo", "cvelocity");
@@ -417,7 +417,7 @@ public class Cucumbery extends JavaPlugin
         new CommandSendTitle().registerCommand("sendtitle", "cucumbery.command.sendtitle", "csendtitle");
         new CommandUpdateItem().registerCommand("updateitem", "cucumbery.command.updateitem", "cupdateitem");
         new CommandEffect2().registerCommand("ceffect", "cucumbery.command.effect", "ceffect", "effect2");
-        new CommandDamage().registerCommand("damage", "cucumbery.command.damage", "cdamage");
+        new CommandDamage().registerCommand("damage2", "cucumbery.command.damage", "cdamage");
         new CommandSummon2().registerCommand("csummon", "cucumbery.command.summon", "csummon", "summon2");
         new CommandSetBlock2().registerCommand("csetblock", "cucumbery.command.setblock", "csetblock", "setblock2");
         new CommandReplaceEntity().registerCommand("replaceentity", "cucumbery.command.replaceentity", "creplaceentity");
@@ -479,6 +479,12 @@ public class Cucumbery extends JavaPlugin
     Cucumbery.using_WorldGuard = Cucumbery.config.getBoolean("use-hook-plugins.WorldGuard") && this.pluginManager.getPlugin("WorldGuard") instanceof WorldGuardPlugin;
     Cucumbery.using_GSit = Cucumbery.config.getBoolean("use-hook-plugins.GSit") && this.pluginManager.getPlugin("GSit") instanceof GSitMain;
     Cucumbery.using_UltimateTimber = Cucumbery.config.getBoolean("use-hook-plugins.UltimateTimber") && this.pluginManager.getPlugin("UltimateTimber") instanceof UltimateTimber;
+    Cucumbery.using_Residence = Cucumbery.config.getBoolean("use-hook-plugins.Residence");
+    if (using_Residence)
+    {
+      Plugin plugin = pluginManager.getPlugin("Residence");
+      using_Residence = plugin != null && plugin.getClass().getName().equals("com.bekvon.bukkit.residence.Residence");
+    }
     if (using_WorldEdit)
     {
       Plugin plugin = this.pluginManager.getPlugin("WorldEdit");
@@ -540,6 +546,10 @@ public class Cucumbery extends JavaPlugin
       if (using_UltimateTimber)
       {
         MessageUtil.consoleSendMessage(Prefix.INFO, "UltimateTimber 플러그인을 연동했습니다");
+      }
+      if (using_Residence)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "Residence 플러그인을 연동했습니다");
       }
     }
     if (using_QuickShop)

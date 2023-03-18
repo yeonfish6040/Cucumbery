@@ -32,6 +32,11 @@
       <option name="url" value="https://repo.extendedclip.com/content/repositories/placeholderapi/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="amethy" />
+      <option name="name" value="amethy" />
+      <option name="url" value="https://api.wany.io/amethy/repository/maven" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="papermc" />
       <option name="name" value="papermc" />
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />

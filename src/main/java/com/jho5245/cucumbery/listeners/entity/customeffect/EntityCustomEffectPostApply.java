@@ -16,8 +16,6 @@ import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
-import com.jho5245.cucumbery.util.storage.no_groups.Updater;
 import dev.geco.gsit.api.GSitAPI;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
@@ -190,7 +188,7 @@ public class EntityCustomEffectPostApply implements Listener
     if (customEffectType == CustomEffectType.CUCUMBERY_UPDATER)
     {
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              Updater.defaultUpdater.updateLatest(amplifier == 1), 2L);
+              Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "/cucumbery update"), 2L);
     }
 
     if (customEffectType == CustomEffectType.HEROS_ECHO)
@@ -307,11 +305,6 @@ public class EntityCustomEffectPostApply implements Listener
 
     if (customEffectType == CustomEffectTypeReinforce.STAR_CATCH_PREPARE && entity instanceof Player player)
     {
-      Integer penalty = Variable.starCatchPenalty.get(player.getUniqueId());
-      MessageUtil.sendTitle(player, ComponentUtil.translate("rg255,204;스타캐치"), ComponentUtil.translate(
-              penalty != null && penalty >= 20 ? "연속해서 강화를 시도하면 스타캐치 난이도가 증가합니다" :
-                      "별이 초록색일 때 스타캐치 클릭하면 강화 성공률 증가!"
-      ), 0, 100, 0);
       MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, "           %s               ", ComponentUtil.translate("rg255,204;[                스타캐치 클릭                ]").hoverEvent(ComponentUtil.translate("클릭하여 스타캐치를 합니다")).clickEvent(
               ClickEvent.runCommand(Constant.REINFORCE_STAR_CATCH)));
       MessageUtil.sendMessage(player, Prefix.INFO_REINFORCE, Constant.SEPARATOR);

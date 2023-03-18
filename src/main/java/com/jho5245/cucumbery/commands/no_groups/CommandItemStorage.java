@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.no_groups.*;
+
 import com.jho5245.cucumbery.util.no_groups.MessageUtil.ConsonantType;
 import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;

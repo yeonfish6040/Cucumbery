@@ -573,6 +573,14 @@ public class CustomEffectScheduler
 
   public static void starCatch(@NotNull Player player)
   {
+    if (CustomEffectManager.hasEffect(player, CustomEffectTypeReinforce.STAR_CATCH_PREPARE))
+    {
+      Integer penalty = Variable.starCatchPenalty.get(player.getUniqueId());
+      MessageUtil.sendTitle(player, ComponentUtil.translate("rg255,204;스타캐치"), ComponentUtil.translate(
+              penalty != null && penalty >= 20 ? "연속해서 강화를 시도하면 스타캐치 난이도가 증가합니다" :
+                      "별이 초록색일 때 스타캐치 클릭하면 강화 성공률 증가!"
+      ), 0, 100, 0);
+    }
     if (CustomEffectManager.hasEffect(player, CustomEffectTypeReinforce.STAR_CATCH_PROCESS))
     {
       int duration = CustomEffectManager.getEffect(player, CustomEffectTypeReinforce.STAR_CATCH_PROCESS).getDuration();
@@ -647,19 +655,6 @@ public class CustomEffectScheduler
       }
       meh = "" + new String(m) + "";
       MessageUtil.sendTitle(player, ComponentUtil.translate(meh.replace("★", "%s").replace("-", "─"), (ok ? "&a" : "&c") + "★"), Constant.THE_COLOR_HEX + Constant.Jeongsu.format(duration / 20), 0, 5, 0);
-    }
-  }
-
-  public static void damageIndicator(@NotNull Entity entity)
-  {
-    if (!(entity instanceof ArmorStand))
-    {
-      return;
-    }
-    if (CustomEffectManager.hasEffect(entity, CustomEffectType.DAMAGE_INDICATOR))
-    {
-      Location location = entity.getLocation().add(0, 0.02, 0);
-      entity.teleport(location);
     }
   }
 

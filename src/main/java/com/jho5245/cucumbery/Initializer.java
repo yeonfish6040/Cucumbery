@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery;
 
+import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.custommerchant.MerchantData;
@@ -7,11 +8,15 @@ import com.jho5245.cucumbery.deathmessages.CustomDeathMessage;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import net.kyori.adventure.text.Component;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandExecutor;
@@ -404,24 +409,24 @@ public class Initializer
 
     loadNicknamesConfig();
 
-    Variable.blockPlaceData.clear();
-    File blockPlaceDataFolder = new File(getPlugin().getDataFolder() + "/data/BlockPlaceData");
-    if (blockPlaceDataFolder.exists())
-    {
-      File[] dataFiles = blockPlaceDataFolder.listFiles();
-      if (dataFiles != null)
-      {
-        for (File file : dataFiles)
-        {
-          String fileName = file.getName();
-          if (fileName.endsWith(".yml"))
-          {
-            fileName = fileName.substring(0, fileName.length() - 4);
-            Variable.blockPlaceData.put(fileName, CustomConfig.getCustomConfig(file).getConfig());
-          }
-        }
-      }
-    }
+//    Variable.blockPlaceData.clear();
+//    File blockPlaceDataFolder = new File(getPlugin().getDataFolder() + "/data/BlockPlaceData");
+//    if (blockPlaceDataFolder.exists())
+//    {
+//      File[] dataFiles = blockPlaceDataFolder.listFiles();
+//      if (dataFiles != null)
+//      {
+//        for (File file : dataFiles)
+//        {
+//          String fileName = file.getName();
+//          if (fileName.endsWith(".yml"))
+//          {
+//            fileName = fileName.substring(0, fileName.length() - 4);
+//            Variable.blockPlaceData.put(fileName, CustomConfig.getCustomConfig(file).getConfig());
+//          }
+//        }
+//      }
+//    }
 
     MerchantData.merchantDataHashMap.clear();
     File customMerchantFolder = new File(getPlugin().getDataFolder() + "/data/CustomMerchants");
@@ -619,33 +624,123 @@ public class Initializer
 
   private static void loadUserDataConfig(Player player)
   {
-    UUID playerUUID = player.getUniqueId();
+    UUID uuid = player.getUniqueId();
     CustomConfig customConfig = CustomConfig.getPlayerConfig(player.getUniqueId());
     YamlConfiguration userCfg = customConfig.getConfig();
-    Variable.userData.put(playerUUID, userCfg);
-    Variable.userDataUUIDs.add(playerUUID.toString());
+    Variable.userData.put(uuid, userCfg);
+    Variable.userDataUUIDs.add(uuid.toString());
     Variable.nickNames.add(player.getName());
-    Variable.cachedUUIDs.put(player.getName(), playerUUID);
+    Variable.cachedUUIDs.put(player.getName(), uuid);
     String displayname = CustomConfig.UserData.DISPLAY_NAME.getString(player.getUniqueId());
     String playerListName = CustomConfig.UserData.PLAYER_LIST_NAME.getString(player.getUniqueId());
     if (displayname != null)
     {
       displayname = MessageUtil.stripColor(displayname);
       Variable.nickNames.add(displayname);
-      Variable.cachedUUIDs.put(displayname, playerUUID);
+      Variable.cachedUUIDs.put(displayname, uuid);
     }
     if (playerListName != null)
     {
       playerListName = MessageUtil.stripColor(playerListName);
       Variable.nickNames.add(playerListName);
-      Variable.cachedUUIDs.put(playerListName, playerUUID);
+      Variable.cachedUUIDs.put(playerListName, uuid);
+    }
+    int invincibleTime = UserData.INVINCIBLE_TIME.getInt(uuid), loginInvincibleTime = UserData.INVINCIBLE_TIME_JOIN.getInt(uuid);
+    if (invincibleTime >= 0)
+    {
+      player.setMaximumNoDamageTicks(invincibleTime);
+    }
+    if (loginInvincibleTime >= 0)
+    {
+      player.setNoDamageTicks(loginInvincibleTime);
+    }
+    if (Cucumbery.using_NoteBlockAPI)
+    {
+      if (CommandSong.playerRadio.containsKey(uuid))
+      {
+        if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
+        {
+          CommandSong.playerRadio.get(uuid).addPlayer(player);
+        }
+        else
+        {
+          CommandSong.playerRadio.get(uuid).removePlayer(player);
+        }
+      }
+      else if (CommandSong.radioSongPlayer != null)
+      {
+        if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
+        {
+          CommandSong.radioSongPlayer.addPlayer(player);
+        }
+        else
+        {
+          CommandSong.radioSongPlayer.removePlayer(player);
+        }
+      }
+    }
+    boolean healthScaled = UserData.HEALTH_SCALED.getBoolean(uuid);
+    if (healthScaled)
+    {
+      player.setHealthScaled(false);
+    }
+    else
+    {
+      double healthbar = UserData.HEALTH_BAR.getDouble(uuid);
+      if (healthbar <= 0D)
+      {
+        healthbar = 20D;
+      }
+      player.setHealthScale(healthbar);
+    }
+    YamlConfiguration cfg = Cucumbery.config;
+    if (cfg.getBoolean("use-nickname-feature"))
+    {
+      displayname = UserData.DISPLAY_NAME.getString(uuid);
+      playerListName = UserData.PLAYER_LIST_NAME.getString(uuid);
+    }
+    Component senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+    if (displayname == null)
+    {
+      displayname = player.getName();
+    }
+    Component finalDislay = ComponentUtil.create(displayname).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
+    player.displayName(finalDislay);
+    senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+    player.displayName(senderComponent);
+    if (playerListName == null)
+    {
+      playerListName = player.getName();
+    }
+    finalDislay = ComponentUtil.create(playerListName);
+    final Component originalDisplayName = player.displayName();
+    player.displayName(finalDislay.hoverEvent(null).clickEvent(null).insertion(null));
+    senderComponent = SenderComponentUtil.senderComponent(player, player, null);
+    player.playerListName(senderComponent.hoverEvent(null).clickEvent(null).insertion(null));
+    player.displayName(originalDisplayName);
+    boolean isSpectator = UserData.SPECTATOR_MODE.getBoolean(player);
+    if (isSpectator && UserData.SPECTATOR_MODE_ON_JOIN.getBoolean(player))
+    {
+      if (player.getGameMode() != GameMode.SPECTATOR)
+      {
+        player.setGameMode(GameMode.SPECTATOR);
+        MessageUtil.info(player, ComponentUtil.translate("관전자여서 게임 모드가 자동으로 관전 모드로 전환되었습니다"));
+      }
     }
   }
 
   public static void saveUserData()
   {
-    HashMap<UUID, YamlConfiguration> removal = new HashMap<>();
     for (UUID uuid : Variable.userData.keySet())
+    {
+      saveUserData(uuid);
+    }
+    Variable.userData.keySet().removeIf(uuid -> Bukkit.getPlayer(uuid) == null);
+  }
+
+  public static void saveUserData(@NotNull UUID uuid)
+  {
+    if (Variable.userData.containsKey(uuid))
     {
       YamlConfiguration cacheConfig = Variable.userData.get(uuid);
       ConfigurationSection cacheSection = cacheConfig.getConfigurationSection("");
@@ -664,66 +759,6 @@ public class Initializer
         for (String key : cacheSection.getKeys(true))
         {
           config.set(key, cacheSection.get(key));
-        }
-        customConfig.saveConfig();
-      }
-      if (Bukkit.getPlayer(uuid) == null)
-      {
-        removal.put(uuid, Variable.userData.get(uuid));
-      }
-    }
-    for (UUID uuid : removal.keySet())
-    {
-      Variable.userData.remove(uuid);
-    }
-  }
-
-  public static void saveBlockPlaceData()
-  {
-    for (String worldName : Variable.blockPlaceData.keySet())
-    {
-      YamlConfiguration cacheConfig = Variable.blockPlaceData.get(worldName);
-      ConfigurationSection cacheSection = cacheConfig.getConfigurationSection("");
-      if (cacheSection != null)
-      {
-        CustomConfig customConfig = CustomConfig.getCustomConfig("data/BlockPlaceData/" + worldName + ".yml");
-        YamlConfiguration config = customConfig.getConfig();
-        ConfigurationSection section = config.getConfigurationSection("");
-        if (section != null)
-        {
-          for (String key : section.getKeys(true))
-          {
-            config.set(key, null);
-          }
-        }
-        for
-        (String key : cacheSection.getKeys(true))
-        {
-          config.set(key, cacheConfig.getString(key));
-/*          try
-          {
-            String[] split = key.split("_");
-            int x = Integer.parseInt(split[0]);
-            int y = Integer.parseInt(split[1]);
-            int z = Integer.parseInt(split[2]);
-            String itemString = cacheConfig.getString(key);
-            if (itemString != null && itemString.length() - itemString.replace("%", "").length() >= 2)
-            {
-              itemString = PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), itemString, null);
-            }
-            ItemStack item = ItemSerializer.deserialize(itemString);
-            NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
-            boolean forcePreserve = NBTAPI.arrayContainsValue(extraTag, Constant.ExtraTag.FORCE_PRESERVE_BLOCK_NBT);
-            forcePreserve = forcePreserve || new NBTItem(item).getBoolean("ForcePreserveBlockNBT");
-            Location location = new Location(Bukkit.getWorld(worldName), x, y, z);
-            if (forcePreserve || location.getBlock().getType() == item.getType())
-            {
-            }
-          }
-          catch (Exception e)
-          {
-            e.printStackTrace();
-          }*/
         }
         customConfig.saveConfig();
       }

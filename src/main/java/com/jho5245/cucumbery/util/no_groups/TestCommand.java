@@ -8,10 +8,10 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,20 +31,75 @@ public class TestCommand implements CucumberyCommandExecutor
     {
       if (sender instanceof Player player)
       {
-        if (args.length == 0)
+        Connection con = null;
+
+        String server = "localhost"; // MySQL 서버 주소
+        String database = "JDBC"; // MySQL DATABASE 이름
+        String user_name = "root"; //  MySQL 서버 아이디
+        String password = "2354"; // MySQL 서버 비밀번호
+
+        // 1.드라이버 로딩
+        try
         {
-          player.showWinScreen();
+          Class.forName("com.mysql.jdbc.Driver");
         }
-        if (args.length == 2)
+        catch (ClassNotFoundException e)
         {
-          Entity entity = SelectorUtil.getEntity(player, args[0]);
-          float f = Float.parseFloat(args[1]);
-          if (entity instanceof LivingEntity livingEntity)
+          System.err.println(" !! <JDBC 오류> Driver load 오류: " + e.getMessage());
+          e.printStackTrace();
+        }
+
+        // 2.연결
+        try
+        {
+          con = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + "?useSSL=false", user_name, password);
+          System.out.println("정상적으로 연결되었습니다.");
+        }
+        catch (SQLException e)
+        {
+          System.err.println("con 오류:" + e.getMessage());
+          e.printStackTrace();
+        }
+
+        Statement statement = con.createStatement();
+        ResultSet resultSet = statement.executeQuery("");
+        while (resultSet.next())
+        {
+
+        }
+
+        // 3.해제
+        try
+        {
+          if (con != null)
           {
-            livingEntity.setBodyYaw(f);
-            MessageUtil.broadcastDebug(livingEntity, " : ", livingEntity.getBodyYaw());
+            con.close();
           }
         }
+        catch (SQLException e)
+        {
+        }
+//        player.getInventory().addItem(new ItemStackBuilder(player.getInventory().getItemInMainHand()).blockHardness(1000).build());
+//        Entity passenger = player;
+//        while (!passenger.getPassengers().isEmpty())
+//        {
+//          passenger = passenger.getPassengers().get(0);
+//        }
+//        passenger.addPassenger(player.getWorld().spawnEntity(player.getLocation(), EntityType.CHICKEN));
+//        if (args.length == 0)
+//        {
+//          player.showWinScreen();
+//        }
+//        if (args.length == 2)
+//        {
+//          Entity entity = SelectorUtil.getEntity(player, args[0]);
+//          float f = Float.parseFloat(args[1]);
+//          if (entity instanceof LivingEntity livingEntity)
+//          {
+//            livingEntity.setBodyYaw(f);
+//            MessageUtil.broadcastDebug(livingEntity, " : ", livingEntity.getBodyYaw());
+//          }
+//        }
 //        switch (args[0])
 //        {
 //          case "walk" -> player.setWalkSpeed(player.getWalkSpeed() * -1);

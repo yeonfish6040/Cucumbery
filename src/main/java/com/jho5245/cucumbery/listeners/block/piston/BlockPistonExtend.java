@@ -1,18 +1,17 @@
 package com.jho5245.cucumbery.listeners.block.piston;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.storage.data.Constant;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,23 +29,18 @@ public class BlockPistonExtend implements Listener
     Location pistonLocation = event.getBlock().getLocation();
     World world = pistonLocation.getWorld();
     Boolean gameRuleValue = world.getGameRuleValue(GameRule.DO_TILE_DROPS);
-    YamlConfiguration blockPlaceData = Variable.blockPlaceData.get(world.getName());
     BlockPistonExtend.isPistonWorking = true;
     Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
             BlockPistonExtend.isPistonWorking = false, 3L);
-    if (blockPlaceData == null)
-    {
-      return;
-    }
     for (Block beforePushedBlock : event.getBlocks())
     {
       Location beforeLocation = beforePushedBlock.getLocation();
-      int beforeX = beforeLocation.getBlockX(), beforeY = beforeLocation.getBlockY(), beforeZ = beforeLocation.getBlockZ();
-      String beforeItemString = blockPlaceData.getString(beforeX + "_" + beforeY + "_" + beforeZ);
-      if (beforeItemString == null)
+      BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(beforeLocation.getChunk());
+      if (blockPlaceDataConfig == null)
       {
         continue;
       }
+      String beforeItemString = blockPlaceDataConfig.getRawData(beforeLocation);
       ItemStack dataItem = ItemSerializer.deserialize(beforeItemString);
       if (NBTAPI.isRestricted(dataItem, Constant.RestrictionType.NO_BLOCK_PISTON_MOVE) || NBTAPI.isRestricted(dataItem, Constant.RestrictionType.NO_BLOCK_PISTON_PUSH))
       {
@@ -78,13 +72,12 @@ public class BlockPistonExtend implements Listener
         }
         if (!removeItem)
         {
-          int afterX = afterLocation.getBlockX(), afterY = afterLocation.getBlockY(), afterZ = afterLocation.getBlockZ();
-          blockPlaceData.set(afterX + "_" + afterY + "_" + afterZ, beforeItemString);
+          BlockPlaceDataConfig blockPlaceDataConfig1 = BlockPlaceDataConfig.getInstance(afterLocation.getChunk());
+          blockPlaceDataConfig1.set(afterLocation, beforeItemString);
         }
       }, 0L);
 
-      blockPlaceData.set(beforeX + "_" + beforeY + "_" + beforeZ, null);
+      blockPlaceDataConfig.set(beforeLocation, null);
     }
-    Variable.blockPlaceData.put(world.getName(), blockPlaceData);
   }
 }

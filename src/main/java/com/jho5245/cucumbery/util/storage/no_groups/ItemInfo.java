@@ -11,7 +11,6 @@ import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import net.kyori.adventure.text.Component;
@@ -164,7 +163,7 @@ public class ItemInfo
         }
       }
       if ((itemMeta.hasItemFlag(ItemFlag.HIDE_ATTRIBUTES)) || (itemMeta.hasItemFlag(ItemFlag.HIDE_DESTROYS)) || (itemMeta.hasItemFlag(ItemFlag.HIDE_ENCHANTS)) || (itemMeta.hasItemFlag(
-              ItemFlag.HIDE_PLACED_ON)) || (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS)) || (itemMeta.hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)))
+              ItemFlag.HIDE_PLACED_ON)) || (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS)) || (itemMeta.hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)))
       {
         MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, "-- 아이템 플래그 목록 --");
         String flag = Prefix.INFO_ITEMSTORAGE.toString();
@@ -184,7 +183,7 @@ public class ItemInfo
         {
           flag += "설치 가능 블록 숨김, ";
         }
-        if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
+        if (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS))
         {
           flag += "포션 효과 숨김, ";
         }
@@ -712,7 +711,7 @@ public class ItemInfo
           MapMeta mapMeta = (MapMeta) itemMeta;
           if (mapMeta.hasMapView())
           {
-            mapMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            mapMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
             MapView mapView = mapMeta.getMapView();
             int centerX = mapView.getCenterX(), centerZ = mapView.getCenterZ();
             int id = mapView.getId();

@@ -2,6 +2,8 @@ package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
+import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -12,6 +14,7 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ItemLore2CustomMaterial
 {
@@ -100,7 +104,7 @@ public class ItemLore2CustomMaterial
     {
       case THE_MUSIC ->
       {
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a'그 노래' 재생"), ComponentUtil.translate("&e&l우클릭")));
         lore.add(ComponentUtil.translate("&7재사용 대기시간 : %s", ComponentUtil.translate("&a%s초", 10)));
@@ -190,7 +194,7 @@ public class ItemLore2CustomMaterial
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate("&7%s 채굴 시 %s 확률로 %s을(를) 드롭함", Material.GRAVEL, "&a100%", Material.FLINT));
       }
-      case DRILL_FUEL ->
+      case SMALL_DRILL_FUEL ->
       {
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate("&7모루에서 드릴과 함께 사용하여"));
@@ -338,6 +342,40 @@ public class ItemLore2CustomMaterial
         lore.add(ComponentUtil.translate("&7공중에서 웅크리면 더블 점프가 발동된다"));
         lore.add(ComponentUtil.translate("&e단, 특정한 위치에서는 능력이 비활성화된다"));
         lore.add(ComponentUtil.translate("&8음식 포인트 비용 : %s", "&31"));
+      }
+      case UNBINDING_SHEARS -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7장착하고 있는 귀속 저주 마법이 부여된"));
+        lore.add(ComponentUtil.translate("&7아이템을 벗을 수 있게 해준다"));
+        lore.add(ComponentUtil.translate("&7현재 장착하고 있는 아이템에 우클릭하여"));
+        lore.add(ComponentUtil.translate("&7사용할 수 있고 한 번 사용하면 사라진다"));
+        lore.add(ComponentUtil.translate("&e일부 아이템에는 사용할 수 없다"));
+      }
+      case TRACKER -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7특정 개체에게 웅크리고 우클릭하면"));
+        lore.add(ComponentUtil.translate("&7해당 개체의 위치를 알 수 있다"));
+        lore.add(ComponentUtil.translate("&e플레이어를 포함한 일부 개체에게는 사용할 수 없다"));
+        Component track = ComponentUtil.translate("&c없음");
+        String uuidStr = nbtItem.getString("Tracking");
+        if (uuidStr != null && Method.isUUID(uuidStr))
+        {
+          UUID uuid = UUID.fromString(uuidStr);
+          Entity entity = Method2.getEntityAsync(uuid);
+          if (entity == null)
+          {
+            track = ComponentUtil.translate("&c잘못된 개체");
+          }
+          else {
+            track = ComponentUtil.create(entity);
+          }
+        }
+        lore.add(ComponentUtil.translate("&7현재 트래킹 중인 개체 : %s", track));
+      }
+      case TNT_DONUT -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7폭발 시 원 몰라 설명 대충"));
+        lore.add(ComponentUtil.translate("&7수치 : %s", nbtItem.getShort("Size")));
       }
     }
     switch (customMaterial)

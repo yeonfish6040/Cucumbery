@@ -2,11 +2,12 @@ package com.jho5245.cucumbery.custom.customeffect.custom_mining;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.children.group.AttributeCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
+import com.jho5245.cucumbery.events.block.CustomBlockBreakEvent;
 import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
@@ -22,8 +23,6 @@ import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.ShulkerBox;
@@ -290,7 +289,6 @@ public class MiningScheduler
       {
         CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE);
       }
-
       if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag-2", "cucumbery_miner_2")))
       {
         CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2);
@@ -318,37 +316,35 @@ public class MiningScheduler
     }
     if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
     {
-      if (Cucumbery.using_ProtocolLib)
-      {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 2, 0, false, false, false));
-      }
-      else
-      {
-        boolean add = false;
-        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
-        {
-          PotionEffect potionEffect = player.getPotionEffect(PotionEffectType.SLOW_DIGGING);
-          if (potionEffect != null)
-          {
-            int duration = potionEffect.getDuration();
-            if (duration < 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon() && !potionEffect.isAmbient())
-            {
-              add = true;
-            }
-          }
-        }
-        else
-        {
-          add = true;
-        }
-        if (add)
-        {
-          player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 2, 8, false, false, false));
-        }
-      }
+//      if (Cucumbery.using_ProtocolLib)
+//      {
+      player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 2, 0, false, false, false));
+//      }
+//      else
+//      {
+//        boolean add = false;
+//        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
+//        {
+//          PotionEffect potionEffect = player.getPotionEffect(PotionEffectType.SLOW_DIGGING);
+//          if (potionEffect != null)
+//          {
+//            int duration = potionEffect.getDuration();
+//            if (duration < 2 && !potionEffect.hasParticles() && !potionEffect.hasIcon() && !potionEffect.isAmbient())
+//            {
+//              add = true;
+//            }
+//          }
+//        }
+//        else
+//        {
+//          add = true;
+//        }
+//        if (add)
+//        {
+//          player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 2, 0, false, false, false));
+//        }
+//      }
       player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 2, 0, false, false, false));
-      CustomEffectManager.addEffect(player, new AttributeCustomEffectImple(CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_ADJUST_VANILLA_SPEED,
-              UUID.randomUUID(), Attribute.GENERIC_ATTACK_SPEED, Operation.MULTIPLY_SCALAR_1, 4 / (Cucumbery.using_ProtocolLib ? 396d : 0.494377d)));
     }
   }
 
@@ -357,7 +353,7 @@ public class MiningScheduler
     customMiningPre(player);
     if (CustomEffectManager.getEffectNullable(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS) instanceof LocationCustomEffect effect)
     {
-      Location location = effect.getLocation();
+      final Location location = effect.getLocation();
       UUID uuid = player.getUniqueId();
       Block block = location.getBlock();
       final Material blockType = block.getType();
@@ -427,6 +423,9 @@ public class MiningScheduler
       boolean instaBreak = miningResult.blockHardness() == Float.MIN_VALUE;
       if (progress >= 1 || instaBreak) // insta break
       {
+        // 이벤트 호출
+        CustomBlockBreakEvent customBlockBreakEvent = new CustomBlockBreakEvent(block, player);
+        Bukkit.getPluginManager().callEvent(customBlockBreakEvent);
         boolean mode2 = CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2);
         boolean mode3 = CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
         // 블록을 캤을 때 소리 재생 및 채광 모드 2/미복구일 경우 블록 파괴 파티클 처리
@@ -609,8 +608,9 @@ public class MiningScheduler
               {
                 block.setType(Material.AIR);
               }
-              Method2.removePlacedBlockData(location);
-              Variable.fakeBlocks.remove(locationClone);
+              BlockPlaceDataConfig.removeData(location);
+              Variable.fakeBlocks.remove(location);
+
 //              Scheduler.fakeBlocksAsync(null, location, true); commented since 2022.11.08 due to no reason for calling it
             }
             else
@@ -853,7 +853,6 @@ public class MiningScheduler
         return;
       }
       // 블록이 캐지는 중
-
       if (progress > 0.01)
       {
         if (!MiningScheduler.blockBreakKey.containsKey(uuid))

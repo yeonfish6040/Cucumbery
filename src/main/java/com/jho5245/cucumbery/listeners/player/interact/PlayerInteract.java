@@ -1,6 +1,5 @@
 package com.jho5245.cucumbery.listeners.player.interact;
 
-import com.destroystokyo.paper.block.TargetBlockInfo;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.debug.CommandWhatIs;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
@@ -160,6 +159,12 @@ public class PlayerInteract implements Listener
       }
     }
     ItemStack item = event.getItem();
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(item);
+    if (customMaterial == CustomMaterial.UNBINDING_SHEARS)
+    {
+      event.setCancelled(true);
+      return;
+    }
     boolean itemExists = ItemStackUtil.itemExists(item);
     Material itemType = Material.AIR;
     if (item != null)
@@ -938,7 +943,6 @@ public class PlayerInteract implements Listener
         NBTItem nbtItem = new NBTItem(item);
         try
         {
-          CustomMaterial customMaterial = CustomMaterial.valueOf(nbtItem.getString("id").toUpperCase());
           switch (customMaterial)
           {
             case THE_MUSIC ->
@@ -1010,7 +1014,7 @@ public class PlayerInteract implements Listener
                 return;
               }
             }
-            case ENDER_EYE_WEATHER_FORECAST ->
+            case WEATHER_FORECAST ->
             {
               if (rightClick)
               {
@@ -1051,7 +1055,7 @@ public class PlayerInteract implements Listener
       // 유리병을 들고 물에 우클릭
       if (itemType == Material.GLASS_BOTTLE)
       {
-        Block waterSource = player.getTargetBlock(5, TargetBlockInfo.FluidMode.ALWAYS);
+        Block waterSource = player.getTargetBlockExact(5, FluidCollisionMode.ALWAYS);
         if (waterSource != null && waterSource.getType() == Material.WATER)
         {
           if (Method.usingLoreFeature(player))

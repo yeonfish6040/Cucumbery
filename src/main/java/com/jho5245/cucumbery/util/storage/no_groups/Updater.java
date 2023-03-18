@@ -1,13 +1,17 @@
 package com.jho5245.cucumbery.util.storage.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import io.wany.amethyst.Json;
 import org.bukkit.Bukkit;
-import org.jetbrains.annotations.Nullable;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.bukkit.plugin.Plugin;
 
-import java.io.*;
-import java.net.HttpURLConnection;
+import io.wany.amethyst.network.*;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,196 +22,187 @@ import java.util.concurrent.Executors;
 
 public class Updater
 {
-  private static final Cucumbery plugin = Cucumbery.getPlugin();
-  private static final String pluginAPI = plugin.getDescription().getAPIVersion();
-  private static final String userAgent = "Updater";
-  private static final ExecutorService updaterExecutorService = Executors.newFixedThreadPool(1);
-  private static final Timer updaterLoopTimer = new Timer();
-  public static Updater defaultUpdater = new Updater("https://cucumbery.com/api/builds", "dev");
-  private final String api; //http://cherry.wany.io/api/builds
-  private final String channel;
-  private @Nullable String version;
-  private File file;
 
-  public Updater(String api, String channel)
-  {
-    this.api = api;
-    this.channel = channel;
-  }
+  private static final String PACKAGE = "Amethy";
+  private static final String API = "api.wany.io/amethy/repository/" + PACKAGE;
+  public static String CHANNEL = "dev";
+  public static boolean AUTOMATION = false;
 
+  private static final ExecutorService onEnableExecutor = Executors.newFixedThreadPool(1);
+  private static final Timer onEnableTimer = new Timer();
+
+  private static Plugin PLUGIN;
+  private static File FILE;
+  private static File PLUGINS_DIR;
+  private static String VERSION;
+
+  @SuppressWarnings("deprecation")
   public static void onEnable()
   {
-    String channel = "dev"; //OR Config
-    updaterExecutorService.submit(() ->
+
+    PLUGIN = Cucumbery.getPlugin();
+    FILE = Cucumbery.file;
+    PLUGINS_DIR = FILE.getParentFile();
+    VERSION = PLUGIN.getDescription().getVersion();
+
+    // 콘피그에서 업데이터 채널 가져오기
+    if (Cucumbery.config.contains("updater.channel"))
     {
-      switch (channel)
+      CHANNEL = Cucumbery.config.getString("updater.channel");
+    }
+    else
+    {
+      Cucumbery.config.set("updater.channel", CHANNEL);
+    }
+
+    // 콘피그에서 업데이터 자동화 여부 가져오기
+    if (Cucumbery.config.contains("updater.automation"))
+    {
+      AUTOMATION = Cucumbery.config.getBoolean("updater.automation");
+    }
+    else
+    {
+      Cucumbery.config.set("updater.automation", AUTOMATION);
+    }
+
+    // 업데이터 자동화 체커
+    onEnableExecutor.submit(() -> onEnableTimer.schedule((new TimerTask()
+    {
+      @Override
+      public void run()
       {
-        case "release" -> {
-          updaterLoopTimer.schedule(new TimerTask()
-          {
-            @Override
-            public void run()
-            {
-              if (Cucumbery.config.getBoolean("auto-updater.enable"))
-              {
-                defaultUpdater.updateLatest();
-              }
-            }
-          }, 0, 1000 * 60 * 60);
-        }
-        case "dev" -> {
-          updaterLoopTimer.schedule(new TimerTask()
-          {
-            @Override
-            public void run()
-            {
-              if (Cucumbery.config.getBoolean("auto-updater.enable"))
-              {
-                defaultUpdater.updateLatest();
-              }
-            }
-          }, 0, 1000 * 2);
+        if (AUTOMATION)
+        {
+          automation();
         }
       }
-    });
+    }), 5000, 2000));
   }
 
   public static void onDisable()
   {
-    updaterLoopTimer.cancel();
-    updaterExecutorService.shutdownNow();
+    // 업데이터 자동화 체커 종료
+    onEnableTimer.cancel();
+    onEnableExecutor.shutdown();
   }
 
-  public void download() throws IOException
+  /**
+   * 최신 플러그인 버전 가져오기
+   *
+   * @return 최신 플러그인 버전
+   * @throws Exception 오류
+   */
+  public static String getLatest() throws Exception
   {
-    if (this.version == null)
+    Json res = HTTPRequest.JsonGet("https://" + API + "/" + CHANNEL + "/latest");
+    return res.getString("data.version");
+  }
+
+  /**
+   * 현재 플러그인이 최신 버전인지 확인
+   *
+   * @return 최신 버전 여부
+   * @throws Exception 오류
+   */
+  public static boolean isLatest() throws Exception
+  {
+    return getLatest().equals(VERSION);
+  }
+
+  /**
+   * 특정 버전의 플러그인 패키지 다운로드
+   *
+   * @param version 플러그인 버전
+   * @return 다운로드한 플러그인 패키지 파일
+   * @throws Exception 오류
+   */
+  public static File download(String version) throws Exception
+  {
+    File file = new File(PLUGINS_DIR + "/" + version + ".temp");
+
+    try
     {
-      return;
+      if (file.exists())
+      {
+        file.delete();
+      }
+      file.getParentFile().mkdirs();
+      file.createNewFile();
     }
-    File file = new File(plugin.getDataFolder() + "/" + plugin.getDescription().getName() + ".jar.temp");
-    if (file.exists())
+    catch (SecurityException | IOException exception)
     {
       file.delete();
+      throw exception;
     }
 
-    URL url = new URL(this.api + "/" + this.channel + "/" + this.version + "/download");
-
-    file.getParentFile().mkdirs();
-    file.createNewFile();
-
-    BufferedInputStream bis = new BufferedInputStream(url.openStream());
-    FileOutputStream fis = new FileOutputStream(file);
-    byte[] buffer = new byte[1024];
-    int count = 0;
-    while ((count = bis.read(buffer, 0, 1024)) != -1)
+    try
     {
-      fis.write(buffer, 0, count);
+      BufferedInputStream bis = new BufferedInputStream(
+              new URL("https://" + API + "/" + CHANNEL + "/" + version + "/download").openStream());
+      FileOutputStream fis = new FileOutputStream(file);
+      byte[] buffer = new byte[1024];
+      int count;
+      while ((count = bis.read(buffer, 0, 1024)) != -1)
+      {
+        fis.write(buffer, 0, count);
+      }
+      fis.close();
+      bis.close();
+    }
+    catch (Exception exception)
+    {
+      file.delete();
+      throw exception;
     }
 
-    fis.close();
-    bis.close();
-    this.file = file;
+    return file;
   }
 
-  public void update()
+  /**
+   * 특정 버전으로 플러그인 업데이트
+   *
+   * @param tempFile 다운로드한 플러그인 패키지 파일
+   * @param version  다운로드한 플러그인 버전
+   * @throws Exception 오류
+   */
+  public static void update(File tempFile, String version) throws Exception
   {
-    if (this.file == null || this.version == null)
-    {
-      return;
-    }
-    File pluginsDir = new File("plugins");
-    File pluginFile = new File(pluginsDir, plugin.getDescription().getName() + "-" + this.version + ".jar");
+    String name = PLUGIN.getName();
+    File newFile = new File(PLUGINS_DIR, name + "-" + version + ".jar");
 
-    byte[] data = new byte[0];
-    try
-    {
-      data = Files.readAllBytes(this.file.toPath());
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-    Path path = pluginFile.toPath();
-    file.delete();
+    byte[] data;
+    data = Files.readAllBytes(tempFile.toPath());
+    Path path = newFile.toPath();
+    tempFile.delete();
+    Files.write(path, data);
 
-    try
-    {
-      Files.write(path, data);
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-    Bukkit.getScheduler().runTask(plugin, () ->
+    Bukkit.getScheduler().runTask(PLUGIN, () ->
     {
       PluginLoader.unload();
-      if (!pluginFile.getPath().equals(Cucumbery.file.getPath()))
+      if (!newFile.getPath().equals(FILE.getPath()))
       {
-        Cucumbery.file.delete();
+        FILE.delete();
       }
-      PluginLoader.load(pluginFile);
+      PluginLoader.load(newFile);
     });
   }
 
-  public void getLatestVersion()
-  {
-    this.version = null;
-    try
-    {
-      URL url = new URL(this.api + "/" + this.channel + "/latest" + "?api=" + pluginAPI);
-      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      connection.setRequestMethod("GET");
-      connection.setRequestProperty("User-Agent", userAgent);
-      connection.setConnectTimeout(2000);
-      connection.setReadTimeout(2000);
-      int responseCode = connection.getResponseCode();
-      if (responseCode == HttpURLConnection.HTTP_OK)
-      {
-        Reader inputReader = new InputStreamReader(connection.getInputStream());
-        BufferedReader streamReader = new BufferedReader(inputReader);
-        String streamLine;
-        StringBuilder content = new StringBuilder();
-        while ((streamLine = streamReader.readLine()) != null)
-        {
-          content.append(streamLine);
-        }
-        streamReader.close();
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(content.toString());
-        JSONObject data = (JSONObject) object.get("data");
-        this.version = data.get("version").toString();
-      }
-      connection.disconnect();
-    }
-    catch (Exception ignored)
-    {
-
-    }
-
-  }
-
-  public boolean updateLatest()
-  {
-    return updateLatest(false);
-  }
-
-  public boolean updateLatest(boolean force)
+  public static void automation()
   {
     try
     {
-      this.getLatestVersion();
-      if (!force && this.version != null && this.version.equals(plugin.getDescription().getVersion()))
+      String version = Updater.getLatest();
+      if (!VERSION.equals(version))
       {
-        return false;
+        MessageUtil.consoleSendMessage("Found newer version of plugin");
+        MessageUtil.consoleSendMessage("Updating plugin...");
+        File file = Updater.download(version);
+        Updater.update(file, version);
       }
-      this.download();
-      this.update();
     }
     catch (Exception ignored)
     {
-
     }
-
-    return true;
   }
+
 }

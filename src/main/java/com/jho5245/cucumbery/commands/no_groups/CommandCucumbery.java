@@ -5,18 +5,20 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.plugin_support.CustomRecipeSupport;
 import com.jho5245.cucumbery.util.plugin_support.QuickShopSupport;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.PluginLoader;
 import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -32,7 +34,10 @@ import org.maxgamer.quickshop.api.QuickShopAPI;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+@SuppressWarnings("deprecation")
 public class CommandCucumbery implements CucumberyCommandExecutor
 {
   @Override
@@ -61,7 +66,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         Cucumbery.getPlugin().reloadConfig();
         Cucumbery.config = (YamlConfiguration) Cucumbery.getPlugin().getConfig();
         Initializer.saveUserData();
-        Initializer.saveBlockPlaceData();
+        BlockPlaceDataConfig.saveAll();
         Initializer.saveItemUsageData();
         Initializer.saveItemStashData();
         CustomEffectManager.save();
@@ -131,19 +136,80 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         Bukkit.getServer().getPluginManager().enablePlugin(Cucumbery.getPlugin());
         MessageUtil.info(sender, "플러그인을 리로드했습니다. 2");
       }
-      case "version" -> MessageUtil.info(sender, "플러그인 버전 : rg255,204;" + Cucumbery.getPlugin().getDescription().getVersion());
+      case "version" ->
+      {
+        String version = Cucumbery.getPlugin().getDescription().getVersion();
+        Component messasge = ComponentUtil.translate("플러그인 버전 : %s", Component.text(version, Constant.THE_COLOR)
+                        .clickEvent(ClickEvent.copyToClipboard(version)))
+                .hoverEvent(Component.translatable("chat.copy.click"));
+        MessageUtil.info(sender, messasge);
+      }
       case "update" ->
       {
         MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery update 명령어 사용", sender));
-        MessageUtil.sendMessage(sender, Prefix.INFO, "최신 버전인지 확인합니다...");
-        if (Updater.defaultUpdater.updateLatest())
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        @NotNull String[] finalArgs = args;
+        executor.submit(() ->
         {
-          MessageUtil.info(sender, ComponentUtil.translate("최신 Cucumbery 플러그인을 찾았습니다. 업데이트를 시작합니다..."));
-        }
-        else
-        {
-          MessageUtil.sendError(sender, ComponentUtil.translate("이미 최신 버전입니다"));
-        }
+          String version;
+          try
+          {
+            version = Updater.getLatest();
+          }
+          catch (Exception e)
+          {
+            // 오류: 버전 확인 실패
+            MessageUtil.sendError(sender, "버전 확인 실패. (" + e.getMessage() + ")");
+            executor.shutdown();
+            return true;
+          }
+          if (Updater.isLatest())
+          {
+            // 경고: 이미 최신 버전임
+            MessageUtil.sendWarn(sender, "이미 플러그인이 최신 버전입니다.");
+            executor.shutdown();
+            return true;
+          }
+          // 정보: 플러그인 버전
+          MessageUtil.info(sender, "플러그인의 최신 버전을 발견했습니다.");
+          MessageUtil.info(sender, "  현재 버전: " + Cucumbery.getPlugin().getDescription().getName() + " v" + Cucumbery.getPlugin().getDescription().getVersion());
+          MessageUtil.info(sender, "  최신 버전: " + Cucumbery.getPlugin().getDescription().getName() + " v" + version);
+          // 정보: 파일 다운로드 시작
+          MessageUtil.info(sender, "파일 다운로드 중...");
+          File file;
+          try
+          {
+            file = Updater.download(version);
+          }
+          catch (Exception e)
+          {
+            // 오류: 파일 다운로드 실패
+            MessageUtil.sendError(sender, "파일 다운로드 실패. (" + e.getMessage() + ")");
+            executor.shutdown();
+            return true;
+          }
+          // 정보: 파일 다운로드 완료
+          MessageUtil.info(sender, "파일 다운로드 완료.");
+          // 정보: 플러그인 업데이트 시작
+          MessageUtil.info(sender, "플러그인 업데이트 중...");
+          try
+          {
+            Updater.update(file, version);
+          }
+          catch (Exception e)
+          {
+            // 오류: 업데이트 실패
+            MessageUtil.sendError(sender, "플러그인 업데이트 실패. (" + e.getMessage() + ")");
+            executor.shutdown();
+            return true;
+          }
+          // 정보: 업데이트 완료
+          MessageUtil.info(sender, "업데이트 완료.");
+          executor.shutdown();
+          return true;
+        });
+
+        executor.shutdown();
       }
       case "update-quickshop-item" ->
       {
@@ -160,7 +226,8 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         int size = CustomRecipeSupport.updateCustomRecipe();
         MessageUtil.info(sender, "rg255,204;특수 조합법&r의 모든 결과물 아이템과 재료 아이템을 업데이트 했습니다.(총 " + size + "개)");
       }
-      case "purge-user-data-files" -> {
+      case "purge-user-data-files" ->
+      {
         File userDataFolder = new File(Cucumbery.getPlugin().getDataFolder() + "/data/UserData");
         if (userDataFolder.exists())
         {

@@ -1,14 +1,14 @@
 package com.jho5245.cucumbery.listeners.player.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
 import org.bukkit.Bukkit;
@@ -74,7 +74,7 @@ public class PlayerChangeBeaconEffect implements Listener
       Block block = event.getBeacon();
       if (block != null)
       {
-        ItemStack placedBlockDataItemStack = Method2.getPlacedBlockDataAsItemStack(block.getLocation());
+        ItemStack placedBlockDataItemStack = BlockPlaceDataConfig.getItem(block.getLocation());
         if (NBTAPI.isRestricted(player, placedBlockDataItemStack, Constant.RestrictionType.NO_BLOCK_BEACON))
         {
           event.setCancelled(true);

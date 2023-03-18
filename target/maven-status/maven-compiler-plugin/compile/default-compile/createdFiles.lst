@@ -52,7 +52,6 @@ com\jho5245\cucumbery\commands\brigadier\CommandConsoleSudo2.class
 com\jho5245\cucumbery\listeners\inventory\PrepareAnvil.class
 com\jho5245\cucumbery\listeners\block\BlockPreDispense.class
 com\jho5245\cucumbery\util\rpg\Level.class
-com\jho5245\cucumbery\util\storage\no_groups\Updater$2.class
 com\jho5245\cucumbery\deathmessages\DeathManager.class
 com\jho5245\cucumbery\Initializer.class
 com\jho5245\cucumbery\util\storage\component\ItemStackComponent.class
@@ -79,6 +78,7 @@ com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantKeepInventory.clas
 com\jho5245\cucumbery\util\storage\data\Permission$Constant.class
 com\jho5245\cucumbery\commands\no_groups\CommandDelay.class
 com\jho5245\cucumbery\commands\brigadier\CommandBreak.class
+com\jho5245\cucumbery\events\block\CustomBlockBreakEvent.class
 com\jho5245\cucumbery\commands\no_groups\CommandSpectate2.class
 com\jho5245\cucumbery\listeners\entity\no_groups\ExplosionPrime.class
 com\jho5245\cucumbery\util\no_groups\SelectorUtil.class
@@ -89,6 +89,7 @@ com\jho5245\cucumbery\util\itemeditor\ItemEditor.class
 com\jho5245\cucumbery\listeners\entity\no_groups\ExpBottle.class
 com\jho5245\cucumbery\util\no_groups\ItemSerializer.class
 com\jho5245\cucumbery\util\storage\no_groups\ItemInfo.class
+com\jho5245\cucumbery\util\blockplacedata\ExplodeEventManager.class
 com\jho5245\cucumbery\commands\brigadier\CommandSummon2.class
 com\jho5245\cucumbery\util\itemeditor\JsonProperty.class
 com\jho5245\cucumbery\listeners\block\BlockExplode.class
@@ -124,6 +125,7 @@ com\jho5245\cucumbery\listeners\inventory\FurnaceSmelt.class
 com\jho5245\cucumbery\commands\no_groups\CommandCustomFix.class
 com\jho5245\cucumbery\listeners\entity\no_groups\FireworkExplode$1.class
 com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantAssassinationBow.class
+com\jho5245\cucumbery\util\storage\no_groups\ItemStackBuilder.class
 com\jho5245\cucumbery\util\storage\no_groups\ItemCategory$1.class
 com\jho5245\cucumbery\listeners\entity\no_groups\FireworkExplode.class
 com\jho5245\cucumbery\util\josautil\JosaFormatter$EnglishNumberJongSungDetector.class
@@ -192,6 +194,7 @@ com\jho5245\cucumbery\events\entity\EntityCustomEffectAbstractApplyEvent$ApplyRe
 com\jho5245\cucumbery\custom\customeffect\children\group\StringCustomEffectImple.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerChangedWorld$1.class
 com\jho5245\cucumbery\commands\debug\CommandWhoIs$1.class
+com\jho5245\cucumbery\util\no_groups\ChunkConfig.class
 com\jho5245\cucumbery\commands\air\CommandAirPoint.class
 com\jho5245\cucumbery\listeners\block\BlockBreak.class
 com\jho5245\cucumbery\listeners\entity\customeffect\EntityCustomEffectRemove$1.class
@@ -248,6 +251,7 @@ com\jho5245\cucumbery\listeners\entity\customeffect\EntityCustomEffectApply.clas
 com\jho5245\cucumbery\listeners\entity\no_groups\EntityDismount.class
 com\jho5245\cucumbery\listeners\addon\ultimatetimber\TreeFell.class
 com\jho5245\cucumbery\listeners\inventory\FurnaceBurn$1.class
+com\jho5245\cucumbery\listeners\world\ChunkLoad.class
 com\jho5245\cucumbery\custom\customeffect\children\group\EntityCustomEffect.class
 com\jho5245\cucumbery\listeners\player\interact\PlayerInteractEntity.class
 com\jho5245\cucumbery\commands\no_groups\CommandEditCommandBlock.class
@@ -290,6 +294,7 @@ com\jho5245\cucumbery\commands\no_groups\CommandSplash.class
 com\jho5245\cucumbery\listeners\addon\quickshop\ShopDelete.class
 com\jho5245\cucumbery\commands\no_groups\CommandSetAggro.class
 com\jho5245\cucumbery\util\combat\CombatManager.class
+com\jho5245\cucumbery\listeners\player\interact\PlayerInteractEntity$1.class
 com\jho5245\cucumbery\util\no_groups\MessageUtil$ConsonantType.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerDeath.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerFlowerPotManipulate.class
@@ -405,7 +410,6 @@ com\jho5245\cucumbery\listeners\player\no_groups\PlayerExpChange.class
 com\jho5245\cucumbery\util\no_groups\NumberHangulConverter.class
 com\jho5245\cucumbery\listeners\world\EntitiesLoad.class
 com\jho5245\cucumbery\util\storage\component\util\ComponentUtil.class
-com\jho5245\cucumbery\listeners\block\BlockDestroy$1.class
 com\jho5245\cucumbery\commands\msg\CommandSendToast.class
 com\jho5245\cucumbery\custom\customrecipe\recipeinventory\RecipeInventoryCategory.class
 com\jho5245\cucumbery\custom\customeffect\children\group\ItemStackCustomEffectImple.class
@@ -419,6 +423,7 @@ com\jho5245\cucumbery\custom\customeffect\children\group\EntityCustomEffectImple
 com\jho5245\cucumbery\util\storage\component\util\sendercomponent\MerchantComponentUtil.class
 com\jho5245\cucumbery\commands\brigadier\CommandRide.class
 com\jho5245\cucumbery\commands\no_groups\CommandAllPlayer.class
+com\jho5245\cucumbery\events\block\PreCustomBlockBreakEvent.class
 com\jho5245\cucumbery\listeners\addon\worldguard\DisallowedPVP.class
 com\jho5245\cucumbery\listeners\entity\no_groups\EntityLandOnGround.class
 com\jho5245\cucumbery\listeners\block\BlockDispense$1.class
@@ -477,6 +482,7 @@ com\jho5245\cucumbery\util\storage\data\Constant$ExtraTag.class
 com\jho5245\cucumbery\custom\customeffect\children\group\PlayerCustomEffect.class
 com\jho5245\cucumbery\custom\customeffect\TypeBuilder.class
 com\jho5245\cucumbery\listeners\entity\customeffect\EntityCustomEffectPreRemove.class
+com\jho5245\cucumbery\util\blockplacedata\BlockPlaceDataConfig.class
 com\jho5245\cucumbery\util\itemeditor\JsonComponent.class
 com\jho5245\cucumbery\custom\customeffect\children\group\LocationVelocityCustomEffect.class
 com\jho5245\cucumbery\util\plugin_support\CustomRecipeSupport.class
@@ -503,6 +509,7 @@ com\jho5245\cucumbery\util\itemlore\ItemLoreEnchantRarity.class
 com\jho5245\cucumbery\custom\customeffect\type\CustomEffectType.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerChangedWorld$ConditionType.class
 com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantDullTouch.class
+com\jho5245\cucumbery\events\DeathMessageEvent.class
 com\jho5245\cucumbery\util\storage\data\Constant.class
 com\jho5245\cucumbery\commands\no_groups\CommandVirtualChest.class
 com\jho5245\cucumbery\commands\brigadier\CommandKill2.class

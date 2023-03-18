@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 public class EntityCustomEffectImple extends CustomEffect implements EntityCustomEffect
 {
   private Entity entity;
-
   public EntityCustomEffectImple(@NotNull CustomEffectType effectType, @NotNull Entity entity)
   {
     super(effectType);

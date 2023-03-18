@@ -8,7 +8,7 @@ import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -16,7 +16,6 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
-import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -26,7 +25,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -36,7 +34,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.io.File;
 import java.util.UUID;
 
 public class BlockPlace implements Listener
@@ -232,28 +229,14 @@ public class BlockPlace implements Listener
       }
       item = nbtItem.getItem();
       NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
-
-
-      String worldName = location.getWorld().getName();
-      int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
-      YamlConfiguration yamlConfiguration = Variable.blockPlaceData.get(worldName);
-
       if (item.hasItemMeta() && (NBTAPI.arrayContainsValue(extraTag, Constant.ExtraTag.PRESERVE_BLOCK_NBT) || !Cucumbery.config.getBoolean("block-place-data-feature-with-specific-tag")))
       {
         item.setAmount(1);
-        if (yamlConfiguration == null)
-        {
-          File file = new File(Cucumbery.getPlugin().getDataFolder() + "/data/BlockPlaceData/" + worldName + ".yml");
-          CustomConfig customConfig = CustomConfig.getCustomConfig(file);
-          yamlConfiguration = customConfig.getConfig();
-        }
-        yamlConfiguration.set(x + "_" + y + "_" + z, ItemSerializer.serialize(item));
-        Variable.blockPlaceData.put(worldName, yamlConfiguration);
+        BlockPlaceDataConfig.setItem(location, item);
       }
-      else if (yamlConfiguration != null)
+      else
       {
-        yamlConfiguration.set(x + "_" + y + "_" + z, null);
-        Variable.blockPlaceData.put(worldName, yamlConfiguration);
+        BlockPlaceDataConfig.removeData(location);
       }
     }
   }

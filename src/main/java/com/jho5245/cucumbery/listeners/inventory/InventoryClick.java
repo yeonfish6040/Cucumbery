@@ -16,18 +16,15 @@ import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
-import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
-import com.jho5245.cucumbery.util.storage.data.Permission;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.BlockDataInfo;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
@@ -468,7 +465,7 @@ public class InventoryClick implements Listener
     ItemStack current = event.getCurrentItem(), cursor = event.getCursor();
     Inventory inventory = event.getInventory();
     Location inventoryLocation = inventory.getLocation();
-    ItemStack placedBlockDataItemStack = Method2.getPlacedBlockDataAsItemStack(inventoryLocation);
+    ItemStack placedBlockDataItemStack = inventoryLocation == null ? null : BlockPlaceDataConfig.getItem(inventoryLocation);
     Inventory clickedIvnentory = event.getClickedInventory();
     String key = GUIManager.isGUITitle(title) ? GUIManager.getGUIKey(title) : "";
     InventoryType clickedInventoryType = null;
@@ -488,7 +485,7 @@ public class InventoryClick implements Listener
         // 모루에서 이벤트가 캔슬되더라도 캐릭터의 레벨이 줄어드는 것처럼 보이는 버그가 있어서 새로고침 해줌 (실제 레벨이 깎이지는 않음)
         if (openInventoryType == InventoryType.ANVIL)
         {
-          player.setLevel(player.getLevel());
+          player.sendExperienceChange(player.getExp(), player.getLevel());
         }
         return;
       }
@@ -1298,6 +1295,37 @@ public class InventoryClick implements Listener
       this.itemLore(event, player);
       this.gui(event);
       this.gui2(event);
+      this.unbindingShears(event);
+    }
+  }
+
+  private void unbindingShears(InventoryClickEvent event)
+  {
+    ItemStack cursor = event.getCursor(), current = event.getCurrentItem();
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(cursor);
+    if (cursor != null && customMaterial == CustomMaterial.UNBINDING_SHEARS && current != null && current.hasItemMeta() && current.getItemMeta().hasEnchant(Enchantment.BINDING_CURSE))
+    {
+      if (NBTAPI.isRestricted(current, RestrictionType.NO_UNBINDING_SHEARS))
+      {
+        return;
+      }
+      Player player = (Player) event.getWhoClicked();
+      ClickType clickType = event.getClick();
+      SlotType slotType = event.getSlotType();
+      if (clickType == ClickType.RIGHT && slotType == SlotType.ARMOR)
+      {
+        PlayerInventory playerInventory = player.getInventory();
+        if (playerInventory.firstEmpty() == -1)
+        {
+          MessageUtil.sendWarn(player, "인벤토리 공간이 부족하여 %s을(를) 사용할 수 없습니다!", cursor);
+          return;
+        }
+        player.setItemOnCursor(null);
+        current = current.clone();
+        event.setCurrentItem(null);
+        playerInventory.addItem(current);
+        Method.playSound(player, Sound.ENTITY_SHEEP_SHEAR, SoundCategory.PLAYERS);
+      }
     }
   }
 
@@ -2015,6 +2043,10 @@ public class InventoryClick implements Listener
             GUIManager.openGUI(player, GUIManager.GUIType.SERVER_SETTINGS_ADMIN);
           }
           break;
+        case 19:
+          UserData.SHOW_DEATH_SELF_MESSAGE.setToggle(uuid);
+          saveConfig = true;
+          break;
         case 20:
           UserData.LISTEN_HELDITEM.setToggle(uuid);
           saveConfig = true;
@@ -2036,11 +2068,7 @@ public class InventoryClick implements Listener
           saveConfig = true;
           break;
         case 28:
-          if (event.getClick() != ClickType.SHIFT_RIGHT)
-          {
-            break;
-          }
-          UserData.USE_HELPFUL_LORE_FEATURE.setToggle(uuid);
+          UserData.SHOW_DEATH_MESSAGE.setToggle(uuid);
           saveConfig = true;
           break;
         case 29:
@@ -2061,6 +2089,10 @@ public class InventoryClick implements Listener
           break;
         case 33:
           UserData.SHOW_DAMAGE_INDICATOR.setToggle(uuid);
+          saveConfig = true;
+          break;
+        case 37:
+          UserData.SHOW_DEATH_PVP_MESSAGE.setToggle(uuid);
           saveConfig = true;
           break;
         case 39:

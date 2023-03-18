@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -372,6 +373,7 @@ public class MessageUtil
   /**
    * 플레이어마다 컵포넌트의 내용물을(주로 아이템) 다르게 하기 위함
    */
+  @SuppressWarnings("all")
   @NotNull
   private static Component translate(@NotNull Player player, @NotNull Component component)
   {
@@ -770,8 +772,23 @@ public class MessageUtil
    */
   public static void broadcastPlayer(@NotNull Object... objects)
   {
+    broadcastPlayer((Predicate<Player>) null, objects);
+  }
+
+  /**
+   * 모든 플레이어에게 메시지를 보냅니다.
+   *
+   * @param exclude 메시지를 보내지 않을 플레이어
+   * @param objects 보낼 메시지
+   */
+  public static void broadcastPlayer(@Nullable Predicate<Player> exclude, @NotNull Object... objects)
+  {
     for (Player player : Bukkit.getOnlinePlayers())
     {
+      if (exclude != null && exclude.test(player))
+      {
+        continue;
+      }
       MessageUtil.sendMessage(player, objects);
     }
   }
@@ -1253,7 +1270,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "argument.long.min", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
+        sendError(sender, "argument.long.big", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
       }
       return false;
     }
@@ -1305,7 +1322,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "argument.double.min", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
+        sendError(sender, "argument.double.big", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
       }
       return false;
     }

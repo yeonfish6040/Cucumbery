@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.no_groups.*;
+
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -30,14 +31,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CommandSong implements CucumberyCommandExecutor
 {
   public static @Nullable RadioSongPlayer radioSongPlayer;
+
+  private static final Set<String> isDownloading = new HashSet<>();
 
   public static @Nullable Song song;
 
@@ -147,6 +147,11 @@ public class CommandSong implements CucumberyCommandExecutor
             {
               fileName = list.get((int) (list.size() * Math.random()));
             }
+            if (!isDownloading.isEmpty())
+            {
+              MessageUtil.sendError(sender, "마 좀 기다리려");
+              return true;
+            }
             if (!stop && radioSongPlayer != null && song != null)
             {
               if (!console)
@@ -190,52 +195,59 @@ public class CommandSong implements CucumberyCommandExecutor
             }
             try
             {
-              File songFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/songs/" + fileName);
+              isDownloading.add("foo");
+              String finalFileName = fileName;
+              SoundCategory finalCategory = category;
+              Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () -> {
+              File songFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/songs/" + finalFileName);
               if (force || !songFile.exists())
               {
                 List<String> songs = Songs.list;
-                if (songs.contains(fileName.substring(0, fileName.length() - 4)))
+                if (songs.contains(finalFileName.substring(0, finalFileName.length() - 4)))
                 {
                   try
                   {
-                    songFile = Songs.download(fileName, force);
+                    songFile = Songs.download(finalFileName, force);
                   }
                   catch (Exception e)
                   {
-                    MessageUtil.noArg(sender, Prefix.NO_FILE, fileName);
-                    return true;
+                    isDownloading.clear();
+                    MessageUtil.noArg(sender, Prefix.NO_FILE, finalFileName);
+                    return;
                   }
                 }
                 else
                 {
-                  MessageUtil.noArg(sender, Prefix.NO_FILE, fileName);
-                  return true;
+                  isDownloading.clear();
+                  MessageUtil.noArg(sender, Prefix.NO_FILE, finalFileName);
+                  return;
                 }
               }
               song = NBSDecoder.parse(songFile);
               if (song == null)
               {
-                MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다 (%s)", fileName);
-                return true;
+                isDownloading.clear();
+                MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다 (%s)", finalFileName);
+                return;
               }
               if (radioSongPlayer != null)
               {
                 radioSongPlayer.setPlaying(false);
                 radioSongPlayer.destroy();
               }
-
               radioSongPlayer = new RadioSongPlayer(song);
-              radioSongPlayer.setCategory(category);
+              radioSongPlayer.setCategory(finalCategory);
               radioSongPlayer.setEnable10Octave(!disable10Octave);
               if (enableRepeat)
               {
                 radioSongPlayer.setRepeatMode(RepeatMode.ONE);
               }
+              isDownloading.clear();
               if (!silent)
               {
                 MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s을(를) 재생합니다", song);
               }
-              Scheduler.fileNameLength = fileName.length() - 1;
+              Scheduler.fileNameLength = finalFileName.length() - 1;
               if (Scheduler.delayTask != null)
               {
                 Scheduler.delayTask.cancel();
@@ -253,6 +265,7 @@ public class CommandSong implements CucumberyCommandExecutor
                 }
               }
               radioSongPlayer.setPlaying(true);
+              }, 0L);
             }
             catch (Exception e)
             {

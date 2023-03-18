@@ -2,8 +2,8 @@ package com.jho5245.cucumbery.listeners.block;
 
 import com.destroystokyo.paper.event.block.TNTPrimeEvent;
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -27,7 +27,7 @@ public class TNTPrime implements Listener
     }
     this.staticTnt(event);
     Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-            Method2.removePlacedBlockData(event.getBlock().getLocation()), 0L);
+            BlockPlaceDataConfig.removeData(event.getBlock().getLocation()), 0L);
   }
 
   private void staticTnt(TNTPrimeEvent event)

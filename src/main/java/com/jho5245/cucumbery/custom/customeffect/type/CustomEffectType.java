@@ -151,7 +151,7 @@ public class CustomEffectType implements Translatable, EnumHideable
 
   /**/ BUFF_FREEZE = new CustomEffectType("buff_freeze", "버프 프리저"),
           BUFF_FREEZE_D = new CustomEffectType("buff_freeze_d", "버프 프리저", builder().keepOnDeath()),
-          CUCUMBERY_UPDATER = new CustomEffectType("cucumbery_updater", "즉시 큐컴버리 업데이트", builder().instant().maxAmplifier(1)),
+          CUCUMBERY_UPDATER = new CustomEffectType("cucumbery_updater", "즉시 큐컴버리 업데이트", builder().instant()),
           CHEESE_EXPERIMENT = new CustomEffectType("cheese_experiment", "치즈 실험", builder().negative().removeOnMilk()),
           CONFUSION = new CustomEffectType("confusion", "혼란", builder().negative().keepOnDeath().hidden()),
           DEBUG_WATCHER = new CustomEffectType("debug_watcher", "디버그 염탐", builder().keepOnDeath()),
@@ -280,6 +280,8 @@ public class CustomEffectType implements Translatable, EnumHideable
                   .append(Component.translatable("단, 해당 위치에 다른 블록이 있을 경우 설치되지 않는다"))
   ).keepOnDeath().defaultDuration(-1)),
 
+  CUSTOM_MATERIAL_TNT_DONUT = new CustomEffectType("custom_material_tnt_donut", "", builder().hidden().defaultDuration(-1).skipEvent()),
+
   /**/ NOTHING = new CustomEffectType("nothing", "아무것도 아님"),
 
   /**/ TEST = new CustomEffectType(new NamespacedKey("test", "test"), "테스트뭐", builder());
@@ -290,7 +292,7 @@ public class CustomEffectType implements Translatable, EnumHideable
   {
     register(AWKWARD, THICK, BACKWARDS_CHAT, MUNDANE, UNCRAFTABLE,
 
-            BANE_OF_ARTHROPODS, SHARPNESS, SMITE, MAESTRO,
+            BANE_OF_ARTHROPODS, SHARPNESS, SMITE, MAESTRO, CUSTOM_MATERIAL_TNT_DONUT,
 
             ASCENSION, ASCENSION_COOLDOWN, FLY, FLY_REMOVE_ON_QUIT, FLY_NOT_ENABLED,
 

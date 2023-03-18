@@ -1,15 +1,13 @@
 package com.jho5245.cucumbery.listeners.entity.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.nbt.CucumberyTag;
-import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
-import com.jho5245.cucumbery.util.no_groups.Method2;
-import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LongCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
+import com.jho5245.cucumbery.util.blockplacedata.ExplodeEventManager;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
-import de.tr7zw.changeme.nbtapi.NBTList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,16 +16,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +90,7 @@ public class EntityExplode implements Listener
                     }
                   }
                   Location loc = new Location(location.getWorld(), x, y, z);
-                  ItemStack itemStack = Method2.getPlacedBlockDataAsItemStack(loc);
+                  ItemStack itemStack = BlockPlaceDataConfig.getItem(loc);
                   CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
                   if (customMaterial == CustomMaterial.TNT_DRAIN)
                   {
@@ -111,46 +107,65 @@ public class EntityExplode implements Listener
             }
           }
         }
+        if (entity.getScoreboardTags().contains("custom_material_tnt_donut"))
+        {
+          if (CustomEffectManager.getEffectNullable(entity, CustomEffectType.CUSTOM_MATERIAL_TNT_DONUT) instanceof LongCustomEffect longCustomEffect)
+          {
+            long l = longCustomEffect.getLong();
+            double offset = 360d / l;
+            for (int i = 1; i <= l; i++)
+            {
+              TNTPrimed tnt = (TNTPrimed) entity.getWorld().spawnEntity(entity.getLocation(), EntityType.PRIMED_TNT, SpawnReason.CUSTOM, (e) ->
+              {
+                TNTPrimed tnt2 = (TNTPrimed) e;
+                tnt2.setSource(((TNTPrimed) entity).getSource());
+              });
+              tnt.setVelocity(new Vector(Math.sin(Math.toRadians(offset * i)), 1, Math.cos(Math.toRadians(offset * i))));
+            }
+          }
+        }
       }
     }
   }
-
   public void blockPlaceData(EntityExplodeEvent event)
   {
-    YamlConfiguration yamlConfiguration = Variable.blockPlaceData.get(event.getEntity().getWorld().getName());
-    List<Block> removeList = new ArrayList<>();
-    if (yamlConfiguration != null)
+    int defaultExplosionPower = Cucumbery.config.getInt("custom-mining.default-explosion-power.default");
+    Entity entity = event.getEntity();
+    EntityType entityType = event.getEntityType();
+    if (Cucumbery.config.contains("custom-mining.default-explosion-power." + entityType))
     {
-      for (Block block : event.blockList())
+      if (entity instanceof Creeper creeper)
       {
-        if (block.getType() == Material.TNT)
+        if (creeper.isPowered())
         {
-          continue;
+          defaultExplosionPower = Cucumbery.config.getInt("custom-mining.default-explosion-power." + entityType + ".powered");
         }
-        Location location = block.getLocation();
-        String itemData = yamlConfiguration.getString(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ());
-        if (itemData != null)
+        else
         {
-          ItemStack item = ItemSerializer.deserialize(itemData);
-          NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
-          for (ItemStack drop : block.getDrops())
-          {
-            if (drop.getType() == item.getType() || NBTAPI.arrayContainsValue(extraTag, Constant.ExtraTag.FORCE_PRESERVE_BLOCK_NBT.toString()))
-            {
-              removeList.add(block);
-              if (event.getEntity().getType() == EntityType.PRIMED_TNT || Math.random() >= 0.5)
-              {
-                location.getWorld().dropItemNaturally(location, item);
-              }
-              break;
-            }
-          }
-          yamlConfiguration.set(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), null);
+          defaultExplosionPower = Cucumbery.config.getInt("custom-mining.default-explosion-power." + entityType + ".default");
         }
       }
-      Variable.blockPlaceData.put(event.getEntity().getWorld().getName(), yamlConfiguration);
+      else if (entity instanceof WitherSkull witherSkull)
+      {
+        if (witherSkull.isCharged())
+        {
+          defaultExplosionPower = Cucumbery.config.getInt("custom-mining.default-explosion-power." + entityType + ".blue");
+        }
+        else
+        {
+          defaultExplosionPower = Cucumbery.config.getInt("custom-mining.default-explosion-power." + entityType + ".default");
+        }
+      }
+      else
+      {
+        defaultExplosionPower = Cucumbery.config.getInt("custom-mining.default-explosion-power." + entityType);
+      }
     }
+    List<Block> removeList = new ArrayList<>();
+    List<Block> removeListButNobreak = new ArrayList<>();
+    ExplodeEventManager.manage(defaultExplosionPower, event.getYield(), event.blockList(), removeList, removeListButNobreak);
     event.blockList().removeAll(removeList);
+    removeList.removeAll(removeListButNobreak);
     for (Block block : removeList)
     {
       Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
@@ -170,7 +185,7 @@ public class EntityExplode implements Listener
       return;
     }
     List<String> keyList = config.getStringList("tnt-protection-coords");
-    if (keyList.size() == 0)
+    if (keyList.isEmpty())
     {
       return;
     }

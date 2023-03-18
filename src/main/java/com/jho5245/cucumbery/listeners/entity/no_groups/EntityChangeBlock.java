@@ -1,15 +1,18 @@
 package com.jho5245.cucumbery.listeners.entity.no_groups;
 
-import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
+import com.jho5245.cucumbery.util.nbt.NBTAPI;
+import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class EntityChangeBlock implements Listener
 {
@@ -19,16 +22,17 @@ public class EntityChangeBlock implements Listener
     Entity entity = event.getEntity();
     Block block = event.getBlock();
     Location location = block.getLocation();
-    YamlConfiguration yamlConfiguration = Variable.blockPlaceData.get(location.getWorld().getName());
-    if (yamlConfiguration != null)
+    ItemStack itemStack = BlockPlaceDataConfig.getItem(location, Bukkit.getConsoleSender());
+    if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_BLOCK_ENTITY_CHANGE))
     {
-     // 불 붙은 화살이 TNT를 붙이는 경우는 제외, 다른 이벤트에서 처리함
-      if (entity instanceof Arrow && block.getType() == Material.TNT)
-      {
-        return;
-      }
-      yamlConfiguration.set(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), null);
-      Variable.blockPlaceData.put(location.getWorld().getName(), yamlConfiguration);
+      event.setCancelled(true);
+      return;
+    }
+
+    // 화살이 TNT에게 불붙인 경우는 다른 이벤트에서 처리하므로 제거하지 않음
+    if (!(entity instanceof Arrow && block.getType() == Material.TNT))
+    {
+      BlockPlaceDataConfig.removeData(location);
     }
   }
 }

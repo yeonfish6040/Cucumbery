@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.itemlore;
 
 import com.google.common.collect.Multimap;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -124,7 +125,7 @@ public class ItemLoreCustomItem
       {
         switch (customMaterial)
         {
-          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN ->
+          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT ->
           {
             if (!NBTAPI.arrayContainsValue(extraTags, ExtraTag.PRESERVE_BLOCK_NBT))
             {
@@ -267,8 +268,8 @@ public class ItemLoreCustomItem
       {
         case TEST_PICKAXE ->
         {
-          nbtItem.setFloat("ToolSpeed", 18000f);
-          nbtItem.setInteger("ToolTier", 10);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 18000f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 10);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 12345678L);
           if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
@@ -278,13 +279,13 @@ public class ItemLoreCustomItem
         }
         case MUSHROOM_STEW_PICKAXE ->
         {
-          nbtItem.setFloat("ToolSpeed", 18_000_000f);
-          nbtItem.setInteger("ToolTier", 99);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 18_000_000f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 99);
         }
         case TODWOT_PICKAXE ->
         {
-          nbtItem.setFloat("ToolSpeed", 1f);
-          nbtItem.setInteger("ToolTier", 1);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 1f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 1);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 1000L);
           if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
@@ -294,10 +295,10 @@ public class ItemLoreCustomItem
         }
         case COPPER_AXE, COPPER_HOE, COPPER_PICKAXE, COPPER_SHOVEL, COPPER_SWORD ->
         {
-          nbtItem.setFloat("ToolSpeed", customMaterial != CustomMaterial.COPPER_SWORD ? 60f : 300f);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, customMaterial != CustomMaterial.COPPER_SWORD ? 60f : 300f);
           if (customMaterial == CustomMaterial.COPPER_PICKAXE)
           {
-            nbtItem.setInteger("ToolTier", 1);
+            nbtItem.setInteger(MiningManager.TOOL_TIER, 1);
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 76L);
@@ -308,10 +309,10 @@ public class ItemLoreCustomItem
         }
         case TUNGSTEN_AXE, TUNGSTEN_HOE, TUNGSTEN_PICKAXE, TUNGSTEN_SHOVEL, TUNGSTEN_SWORD ->
         {
-          nbtItem.setFloat("ToolSpeed", customMaterial != CustomMaterial.TUNGSTEN_SWORD ? 300f : 600f);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, customMaterial != CustomMaterial.TUNGSTEN_SWORD ? 300f : 600f);
           if (customMaterial == CustomMaterial.TUNGSTEN_PICKAXE)
           {
-            nbtItem.setInteger("ToolTier", 3);
+            nbtItem.setInteger(MiningManager.TOOL_TIER, 3);
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 318L);
@@ -322,10 +323,10 @@ public class ItemLoreCustomItem
         }
         case COBALT_AXE, COBALT_HOE, COBALT_PICKAXE, COBALT_SHOVEL, COBALT_SWORD ->
         {
-          nbtItem.setFloat("ToolSpeed", customMaterial != CustomMaterial.COBALT_SWORD ? 600f : 800f);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, customMaterial != CustomMaterial.COBALT_SWORD ? 600f : 800f);
           if (customMaterial == CustomMaterial.COBALT_PICKAXE)
           {
-            nbtItem.setInteger("ToolTier", 5);
+            nbtItem.setInteger(MiningManager.TOOL_TIER, 5);
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 2474L);
@@ -336,10 +337,10 @@ public class ItemLoreCustomItem
         }
         case MITHRIL_PICKAXE, MITHRIL_SWORD, MITHRIL_AXE, MITHRIL_HOE, MITHRIL_SHOVEL ->
         {
-          nbtItem.setFloat("ToolSpeed", customMaterial != CustomMaterial.MITHRIL_SWORD ? 850f : 900f);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, customMaterial != CustomMaterial.MITHRIL_SWORD ? 850f : 900f);
           if (customMaterial == CustomMaterial.MITHRIL_PICKAXE)
           {
-            nbtItem.setInteger("ToolTier", 6);
+            nbtItem.setInteger(MiningManager.TOOL_TIER, 6);
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 2651L);
@@ -350,8 +351,8 @@ public class ItemLoreCustomItem
         }
         case MITHRIL_PICKAXE_REFINED ->
         {
-          nbtItem.setFloat("ToolSpeed", 2350f);
-          nbtItem.setInteger("ToolTier", 6);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 2350f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 6);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 3800L);
           duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, 5d);
@@ -362,10 +363,10 @@ public class ItemLoreCustomItem
         }
         case TITANIUM_PICKAXE, TITANIUM_SWORD, TITANIUM_AXE, TITANIUM_HOE, TITANIUM_SHOVEL ->
         {
-          nbtItem.setFloat("ToolSpeed", customMaterial != CustomMaterial.TITANIUM_SWORD ? 1100f : 1000f);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, customMaterial != CustomMaterial.TITANIUM_SWORD ? 1100f : 1000f);
           if (customMaterial == CustomMaterial.TITANIUM_PICKAXE)
           {
-            nbtItem.setInteger("ToolTier", 7);
+            nbtItem.setInteger(MiningManager.TOOL_TIER, 7);
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 3710L);
@@ -376,8 +377,8 @@ public class ItemLoreCustomItem
         }
         case TITANIUM_PICKAXE_REFINED ->
         {
-          nbtItem.setFloat("ToolSpeed", 2850f);
-          nbtItem.setInteger("ToolTier", 7);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 2850f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 7);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 4500L);
           duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, 10d);
@@ -426,8 +427,8 @@ public class ItemLoreCustomItem
         }
         case TITANIUM_DRILL_R266 ->
         {
-          nbtItem.setFloat("ToolSpeed", 3500f);
-          nbtItem.setInteger("ToolTier", 7);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 3500f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 7);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 5000L);
           if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
@@ -441,8 +442,8 @@ public class ItemLoreCustomItem
         }
         case TITANIUM_DRILL_R366 ->
         {
-          nbtItem.setFloat("ToolSpeed", 4000f);
-          nbtItem.setInteger("ToolTier", 7);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 4000f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 7);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 7000L);
           if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
@@ -456,8 +457,8 @@ public class ItemLoreCustomItem
         }
         case TITANIUM_DRILL_R466 ->
         {
-          nbtItem.setFloat("ToolSpeed", 4500f);
-          nbtItem.setInteger("ToolTier", 8);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 4500f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 8);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 9000L);
           if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
@@ -471,8 +472,8 @@ public class ItemLoreCustomItem
         }
         case TITANIUM_DRILL_R566 ->
         {
-          nbtItem.setFloat("ToolSpeed", 5000f);
-          nbtItem.setInteger("ToolTier", 9);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 5000f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 9);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 12000L);
           if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
@@ -486,8 +487,8 @@ public class ItemLoreCustomItem
         }
         case MINDAS_DRILL ->
         {
-          nbtItem.setFloat("ToolSpeed", 6000f);
-          nbtItem.setInteger("ToolTier", 10);
+          nbtItem.setFloat(MiningManager.TOOL_SPEED, 6000f);
+          nbtItem.setInteger(MiningManager.TOOL_TIER, 10);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 15000L);
           if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
@@ -553,6 +554,12 @@ public class ItemLoreCustomItem
           nbtItem.setFloat("ExplodePower", 6f);
           nbtItem.setShort("Fuse", (short) 20);
         }
+        case TNT_DONUT -> {
+          if (!nbtItem.hasTag("Size"))
+          {
+            nbtItem.setShort("Size", (short) 30);
+          }
+        }
       }
       if (nbtItem.getCompound(CucumberyTag.KEY_MAIN).getKeys().isEmpty())
       {
@@ -570,18 +577,19 @@ public class ItemLoreCustomItem
     {
       switch (customMaterial)
       {
-        case STONK, TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566, MINDAS_DRILL, CORE_GEMSTONE, CUTE_SUGAR, BOO, MITHRIL_INGOT,
+        case STONK, MINDAS_DRILL, CORE_GEMSTONE, CUTE_SUGAR, BOO, MITHRIL_INGOT,
                 ENCHANTED_MITHRIL_INGOT, TITANIUM_ORE, EXPERIENCE_BOTTLE_GRAND, RUNE_DESTRUCTION, TUNGSTEN_ORE, TUNGSTEN_INGOT, COBALT_ORE, COBALT_INGOT, SHROOMITE_ORE,
                 SHROOMITE_INGOT, CUCUMBERITE_INGOT, COPPER_PICKAXE, TODWOT_PICKAXE, COPPER_AXE, COPPER_HOE, COPPER_SHOVEL, COPPER_SWORD, TUNGSTEN_SHOVEL, TUNGSTEN_AXE,
                 TUNGSTEN_PICKAXE, TUNGSTEN_HOE, TUNGSTEN_SWORD, COPPER_BOOTS, COPPER_CHESTPLATE, COPPER_HELMET, COPPER_LEGGINGS,
-                COBALT_AXE, COBALT_HOE, COBALT_PICKAXE, COBALT_SHOVEL, COBALT_SWORD, TOMATO, ARROW_CRIT, AMBER, TOPAZ, JASPER -> itemMeta.setCustomModelData(25201);
+                COBALT_AXE, COBALT_HOE, COBALT_PICKAXE, COBALT_SHOVEL, COBALT_SWORD, TOMATO, ARROW_CRIT, AMBER, TOPAZ, JASPER, UNBINDING_SHEARS, DRILL_FUEL_TANK, SMALL_DRILL_FUEL, DRILL_ENGINE -> itemMeta.setCustomModelData(25201);
 
         case BOO_HUNGRY, CUTE_SUGAR_HUNGRY, TITANIUM_INGOT, EXPERIENCE_BOTTLE_TITANIC, RUNE_EARTHQUAKE, CORE_GEMSTONE_EXPERIENCE,
                 MITHRIL_SHOVEL, MITHRIL_SWORD, MITHRIL_AXE, MITHRIL_HOE, MITHRIL_PICKAXE, TITANIUM_SWORD, TITANIUM_AXE, TITANIUM_HOE, TITANIUM_SHOVEL, TITANIUM_PICKAXE,
-                TUNGSTEN_LEGGINGS, TUNGSTEN_BOOTS, TUNGSTEN_HELMET, TUNGSTEN_CHESTPLATE, ARROW_EXPLOSIVE, JADE, SAPPHIRE, RUBY -> itemMeta.setCustomModelData(25202);
+                TUNGSTEN_LEGGINGS, TUNGSTEN_BOOTS, TUNGSTEN_HELMET, TUNGSTEN_CHESTPLATE, ARROW_EXPLOSIVE, JADE, SAPPHIRE, RUBY, MEDIUM_DRILL_FUEL,
+                TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566 -> itemMeta.setCustomModelData(25202);
 
         case EXPERIENCE_BOTTLE_COLOSSAL, CUCUMBERITE_ORE, CORE_GEMSTONE_MIRROR, TITANIUM_PICKAXE_REFINED, MITHRIL_PICKAXE_REFINED,
-                COBALT_BOOTS, COBALT_CHESTPLATE, COBALT_HELMET, COBALT_LEGGINGS, ARROW_EXPLOSIVE_DESTRUCTION -> itemMeta.setCustomModelData(25203);
+                COBALT_BOOTS, COBALT_CHESTPLATE, COBALT_HELMET, COBALT_LEGGINGS, ARROW_EXPLOSIVE_DESTRUCTION, LARGE_DRILL_FUEL -> itemMeta.setCustomModelData(25203);
         case CORE_GEMSTONE_MITRA, MINDAS_BOOTS, MITHRIL_BOOTS, MITHRIL_CHESTPLATE, MITHRIL_HELMET, ARROW_FLAME -> itemMeta.setCustomModelData(25204);
         case MITHRIL_ORE, TITANIUM_BOOTS, TITANIUM_CHESTPLATE, TITANIUM_HELMET, TITANIUM_LEGGINGS, ARROW_INFINITE -> itemMeta.setCustomModelData(25205);
         case ARROW_MOUNT -> itemMeta.setCustomModelData(25206);
@@ -831,8 +839,6 @@ public class ItemLoreCustomItem
         case PORTABLE_ENDER_CHEST -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067");
         case FROG_HELMET -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/5710f6f91fafea57278df853131b775f2c2d324a6274bee40d776b16cb5d60b6");
         case MINDAS_HELMET -> ItemStackUtil.setTexture(skullMeta, "http://textures.minecraft.net/texture/316fc913e6ab9b6911003de60c797bad3fbeb80eb73d51afb6928de9c9eedac3");
-        case DRILL_ENGINE -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/fb9051485e15700418022e38a5db28a049a2e627c5ffa56fd313bcdead406a8e");
-        case DRILL_FUEL_TANK -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/aef5acf134fa952f13fdf0b3899060cc18ebc0a971347e45a31ecf95a4b0b31c");
       }
     }
     if (customMaterial.isGlow())

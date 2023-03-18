@@ -262,13 +262,20 @@ public class PrepareAnvil implements Listener
           switch (firstCustomMaterial)
           {
             case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566, MINDAS_DRILL -> {
-              if (secondCustomMaterial == CustomMaterial.DRILL_FUEL)
+              int repairAmount = switch (secondCustomMaterial)
+                      {
+                        case SMALL_DRILL_FUEL -> 100;
+                        case MEDIUM_DRILL_FUEL -> 1000;
+                        case LARGE_DRILL_FUEL -> 10000;
+                        default -> 0;
+                      };
+              if (repairAmount > 0)
               {
                 ItemStack result = firstItem.clone();
                 NBTItem resultNBTItem = new NBTItem(result, true);
                 NBTCompound itemTag = resultNBTItem.addCompound(CucumberyTag.KEY_MAIN);
                 NBTCompound duraTag = itemTag.addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
-                duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, Math.min(duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + secondItem.getAmount() * 1000L, duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY)));
+                duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, Math.min(duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + (long) secondItem.getAmount() * repairAmount, duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY)));
                 event.setResult(result);
                 event.getInventory().setRepairCost(5 * secondItem.getAmount());
                 customDuraFix = true;
@@ -282,7 +289,6 @@ public class PrepareAnvil implements Listener
       NBTCompound duraTag = NBTAPI.getCompound(itemTag, CucumberyTag.CUSTOM_DURABILITY_KEY);
       if (!customDuraFix && ItemStackUtil.itemExists(resultItem) && ItemStackUtil.itemExists(secondItem) && duraTag != null)
       {
-        MessageUtil.broadcastDebug("foo");
         long maxDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
         long curDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
         int firstItemMaxOriginMaxDura = Objects.requireNonNull(firstItem).getType().getMaxDurability();

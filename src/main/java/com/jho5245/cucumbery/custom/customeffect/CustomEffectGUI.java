@@ -160,7 +160,7 @@ public class CustomEffectGUI
         PotionEffectType effectType = potionEffect.getType();
         ItemStack itemStack = new ItemStack(Material.POTION, Math.min(64, potionEffect.getAmplifier() + 1));
         PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
-        potionMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ENCHANTS);
+        potionMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS, ItemFlag.HIDE_ENCHANTS);
         String effectKey = TranslatableKeyParser.getKey(effectType);
         @SuppressWarnings("deprecation")
         int id = potionEffect.getType().getId() + 15200;

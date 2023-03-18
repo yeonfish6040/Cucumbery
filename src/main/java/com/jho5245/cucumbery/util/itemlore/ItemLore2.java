@@ -162,6 +162,30 @@ public class ItemLore2
       Calendar calendar = Calendar.getInstance();
       calendar.add(Calendar.HOUR_OF_DAY, Cucumbery.config.getInt("adjust-time-difference-value"));
       long expireMills = Method.getTimeDifference(calendar, expireDate);
+      if (expireDate.contains("시"))
+      {
+        try
+        {
+          String[] split =  expireDate.split("시")[0].split(" ");
+          int hour = Integer.parseInt(split[split.length - 1]);
+          if (hour == 0)
+          {
+            expireDate = expireDate.replace("00시", "오전 12시").replace("0시", "오전 12시");
+          }
+          else if (hour < 12)
+          {
+            expireDate = expireDate.replace(hour + "시", "오전 " + hour + "시").replace("0" + hour + "시", "오전 " + hour + "시");
+          }
+          else
+          {
+            expireDate = expireDate.replace(hour + "시", "오후 " + (hour - 12) + "시");
+          }
+        }
+        catch (Exception ignored)
+        {
+
+        }
+      }
       if (!relative && expireMills <= 20000)
       {
         lore.add(ComponentUtil.create("&e유효 기간이 만료되었습니다"));
@@ -212,65 +236,68 @@ public class ItemLore2
               case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566, MINDAS_DRILL -> true;
               default -> false;
             };
-    if (itemMeta.isUnbreakable())
-    {
-      ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.UNIQUE.getRarityValue());
-      if (!hideDurability)
-      {
 
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("rgb225,100,205;" + (isDrill ? "연료" : "내구도") + " : %s / %s", Component.text("∞"), Component.text("∞")));
+    if (customMaterial != CustomMaterial.UNBINDING_SHEARS)
+    {
+      if (itemMeta.isUnbreakable())
+      {
+        ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.UNIQUE.getRarityValue());
+        if (!hideDurability)
+        {
+
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("rgb225,100,205;" + (isDrill ? "연료" : "내구도") + " : %s / %s", Component.text("∞"), Component.text("∞")));
+        }
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
       }
-      itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-    }
-    else if (Constant.DURABLE_ITEMS.contains(type) || duraTag != null)
-    {
-      long currentDurability = 0, maxDurability = 0;
-      double chanceNotToConsumeDura = 0d;
-      boolean duraTagExists = duraTag != null;
-      if (duraTagExists)
+      else if (Constant.DURABLE_ITEMS.contains(type) || duraTag != null)
       {
-        try
+        long currentDurability = 0, maxDurability = 0;
+        double chanceNotToConsumeDura = 0d;
+        boolean duraTagExists = duraTag != null;
+        if (duraTagExists)
         {
-          maxDurability = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
-          currentDurability = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
-        }
-        catch (Exception e)
-        {
-          currentDurability = 0;
-          maxDurability = 0;
-        }
-        try
-        {
-          chanceNotToConsumeDura = duraTag.getDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY);
-        }
-        catch (Exception e)
-        {
-          chanceNotToConsumeDura = 0d;
-        }
+          try
+          {
+            maxDurability = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
+            currentDurability = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
+          }
+          catch (Exception e)
+          {
+            currentDurability = 0;
+            maxDurability = 0;
+          }
+          try
+          {
+            chanceNotToConsumeDura = duraTag.getDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY);
+          }
+          catch (Exception e)
+          {
+            chanceNotToConsumeDura = 0d;
+          }
 
-        if (maxDurability != 0)
-        {
-          int originMaxDura = type.getMaxDurability();
-          double originItemDuraDouble = (originMaxDura * ((maxDurability - currentDurability) * 1d / maxDurability));
-          if (originItemDuraDouble > 0d && originItemDuraDouble < 1d)
+          if (maxDurability != 0)
           {
-            originItemDuraDouble = 1d;
-          }
-          if (type == Material.ELYTRA)
-          {
-            if (currentDurability == 1)
+            int originMaxDura = type.getMaxDurability();
+            double originItemDuraDouble = (originMaxDura * ((maxDurability - currentDurability) * 1d / maxDurability));
+            if (originItemDuraDouble > 0d && originItemDuraDouble < 1d)
             {
-              originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 1;
+              originItemDuraDouble = 1d;
             }
-            else if (currentDurability > 1 && originItemDuraDouble > 430)
+            if (type == Material.ELYTRA)
             {
-              originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 2;
+              if (currentDurability == 1)
+              {
+                originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 1;
+              }
+              else if (currentDurability > 1 && originItemDuraDouble > 430)
+              {
+                originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 2;
+              }
             }
-          }
-          Damageable damageable = (Damageable) itemMeta;
-          damageable.setDamage((int) originItemDuraDouble);
-          item.setItemMeta(damageable);
+            Damageable damageable = (Damageable) itemMeta;
+            damageable.setDamage((int) originItemDuraDouble);
+            item.setItemMeta(damageable);
 //          long duraDifference = originMaxDura - maxDurability;
 //          if (duraDifference > 0)
 //          {
@@ -280,61 +307,62 @@ public class ItemLore2
 //          {
 //            ItemLoreUtil.setItemRarityValue(lore, (long) -Math.pow(Math.abs(duraDifference / 30d), 1.05));
 //          }
+          }
+        }
+
+        if (maxDurability == 0 && Constant.DURABLE_ITEMS.contains(type))
+        {
+          maxDurability = type.getMaxDurability();
+          currentDurability = maxDurability - ((Damageable) item.getItemMeta()).getDamage();
+        }
+
+        if (maxDurability != 0 || Constant.DURABLE_ITEMS.contains(type))
+        {
+          if (!hideDurability)
+          {
+            lore.add(Component.empty());
+            String color = Method2.getPercentageColor(currentDurability, maxDurability);
+            lore.add(ComponentUtil.translate("rg255,204;" + (isDrill ? "연료" : "내구도") + " : %s",
+                    ComponentUtil.translate("&7%s / %s", color + Constant.Jeongsu.format(currentDurability), "g255;" + Constant.Jeongsu.format(maxDurability))));
+          }
+        }
+
+        int dura = 0;
+        if (itemMeta.hasEnchant(Enchantment.DURABILITY))
+        {
+          dura = itemMeta.getEnchantLevel(Enchantment.DURABILITY);
+        }
+        if (itemMeta.hasEnchant(Enchantment.MENDING))
+        {
+          dura += 9;
+        }
+        double ratio = 1d * currentDurability / maxDurability;
+        // 내구도로 인한 아이템 등급 수치 감소에서는 내구도가 꽉 찼을 때 비율이 0으로 되게 함
+        ItemLoreUtil.setItemRarityValue(lore, (long) (ItemLoreUtil.getItemRarityValue(lore) * 0.01 + maxDurability * 0.05));
+        long duraNegative = (long) ((1 + ItemLoreUtil.getItemRarityValue(lore) / 10000) * Math.pow(1.055 - (dura / 1000d), (100 - ratio * 100)) - 1);
+        //(long) Math.pow(ratio * (2.0 + (20.0 / maxDurability)), Math.abs(Math.pow(3.0 - dura / 10.0, Math.abs(ratio)) + 1.7 + (200.0 / maxDurability) - maxDurability / 1300.0)); // 내구도로 인한 아이템 등급 수치 감소
+        if (duraNegative > 0)
+        {
+          ItemLoreUtil.setItemRarityValue(lore, -duraNegative);
+        }
+        if (maxDurability != 0 && chanceNotToConsumeDura > 0d && chanceNotToConsumeDura <= 100d)
+        {
+          if (!hideDurabilityChanceNotToConsume)
+          {
+            lore.add(Component.empty());
+            lore.add(ComponentUtil.create("&a내구도 감소 무효 확률 : +" + Constant.Sosu4.format(chanceNotToConsumeDura) + "%"));
+          }
         }
       }
-
-      if (maxDurability == 0 && Constant.DURABLE_ITEMS.contains(type))
+      else if (type != Material.MAP)
       {
-        maxDurability = type.getMaxDurability();
-        currentDurability = maxDurability - ((Damageable) item.getItemMeta()).getDamage();
-      }
-
-      if (maxDurability != 0 || Constant.DURABLE_ITEMS.contains(type))
-      {
-        if (!hideDurability)
+        if (itemMeta instanceof Damageable duraMeta)
         {
-          lore.add(Component.empty());
-          String color = Method2.getPercentageColor(currentDurability, maxDurability);
-          lore.add(ComponentUtil.translate("rg255,204;" + (isDrill ? "연료" : "내구도") + " : %s",
-                  ComponentUtil.translate("&7%s / %s", color + Constant.Jeongsu.format(currentDurability), "g255;" + Constant.Jeongsu.format(maxDurability))));
-        }
-      }
-
-      int dura = 0;
-      if (itemMeta.hasEnchant(Enchantment.DURABILITY))
-      {
-        dura = itemMeta.getEnchantLevel(Enchantment.DURABILITY);
-      }
-      if (itemMeta.hasEnchant(Enchantment.MENDING))
-      {
-        dura += 9;
-      }
-      double ratio = 1d * currentDurability / maxDurability;
-      // 내구도로 인한 아이템 등급 수치 감소에서는 내구도가 꽉 찼을 때 비율이 0으로 되게 함
-      ItemLoreUtil.setItemRarityValue(lore, (long) (ItemLoreUtil.getItemRarityValue(lore) * 0.01 + maxDurability * 0.05));
-      long duraNegative = (long) ((1 + ItemLoreUtil.getItemRarityValue(lore) / 10000) * Math.pow(1.055 - (dura / 1000d), (100 - ratio * 100)) - 1);
-      //(long) Math.pow(ratio * (2.0 + (20.0 / maxDurability)), Math.abs(Math.pow(3.0 - dura / 10.0, Math.abs(ratio)) + 1.7 + (200.0 / maxDurability) - maxDurability / 1300.0)); // 내구도로 인한 아이템 등급 수치 감소
-      if (duraNegative > 0)
-      {
-        ItemLoreUtil.setItemRarityValue(lore, -duraNegative);
-      }
-      if (maxDurability != 0 && chanceNotToConsumeDura > 0d && chanceNotToConsumeDura <= 100d)
-      {
-        if (!hideDurabilityChanceNotToConsume)
-        {
-          lore.add(Component.empty());
-          lore.add(ComponentUtil.create("&a내구도 감소 무효 확률 : +" + Constant.Sosu4.format(chanceNotToConsumeDura) + "%"));
-        }
-      }
-    }
-    else if (type != Material.MAP)
-    {
-      if (itemMeta instanceof Damageable duraMeta)
-      {
-        if (duraMeta.getDamage() != 0)
-        {
-          lore.add(Component.empty());
-          lore.add(ComponentUtil.translate("&6내구도 손상 : %s", duraMeta.getDamage() + ""));
+          if (duraMeta.getDamage() != 0)
+          {
+            lore.add(Component.empty());
+            lore.add(ComponentUtil.translate("&6내구도 손상 : %s", duraMeta.getDamage() + ""));
+          }
         }
       }
     }
@@ -398,58 +426,61 @@ public class ItemLore2
       lore.add(ComponentUtil.translate("rgb203,164,12;누적 모루 합성 횟수 : %s", ComponentUtil.translate("rg255,204;%s회", anvilUsedTime + "")));
     }
 
-    if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.CUSTOM_MININGS) &&
-            (Constant.TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS.contains(type) || nbtItem.hasTag("ToolTier") || nbtItem.hasTag("ToolSpeed") || nbtItem.hasTag("ToolFortune")))
+    if (customMaterial != CustomMaterial.UNBINDING_SHEARS)
     {
-      if (params instanceof ItemLoreView view && CustomEffectManager.hasEffect(view.getPlayer(), CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+      if (!NBTAPI.arrayContainsValue(hideFlags, CucumberyHideFlag.CUSTOM_MININGS) &&
+              (Constant.TOOLS_LOSE_DURABILITY_BY_BREAKING_BLOCKS.contains(type) || nbtItem.hasTag(MiningManager.TOOL_TIER) || nbtItem.hasTag(MiningManager.TOOL_SPEED) || nbtItem.hasTag(MiningManager.TOOL_FORTUNE)))
       {
-        int toolTier = MiningManager.getToolTier(item);
-        float toolSpeed = MiningManager.getToolSpeed(item);
-        Float toolFortune = nbtItem.getFloat("ToolFortune");
-        if (toolTier > 0 || toolSpeed > 0f || toolFortune > 0f)
+        if (params instanceof ItemLoreView view && CustomEffectManager.hasEffect(view.getPlayer(), CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          int toolTier = MiningManager.getToolTier(item);
+          float toolSpeed = MiningManager.getToolSpeed(item);
+          Float toolFortune = nbtItem.getFloat(MiningManager.TOOL_FORTUNE);
+          if (toolTier > 0 || toolSpeed > 0f || toolFortune > 0f)
+          {
+            lore.add(Component.empty());
+          }
+          if (toolTier > 0)
+          {
+            lore.add(ComponentUtil.translate("&6채광 등급 : %s", ComponentUtil.create(Constant.THE_COLOR_HEX + Constant.Jeongsu.format(toolTier)).append(
+                    (CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.MINDAS_TOUCH) ? (ComponentUtil.translate("&a (+%s) (%s)",
+                            CustomEffectManager.getEffect(viewer, CustomEffectTypeCustomMining.MINDAS_TOUCH).getAmplifier() + 1, CustomEffectTypeCustomMining.MINDAS_TOUCH)) : Component.empty()))));
+          }
+          if (toolSpeed > 0f)
+          {
+            String prefix = "채광";
+            if (toolTier == 0)
+            {
+              if (Constant.AXES.contains(type))
+              {
+                prefix = "벌목";
+              }
+              if (Constant.HOES.contains(type))
+              {
+                prefix = "재배";
+              }
+              if (Constant.SHOVELS.contains(type))
+              {
+                prefix = "굴착";
+              }
+              if (Constant.SWORDS.contains(type) || type == Material.TRIDENT)
+              {
+                prefix = "블록 파괴";
+              }
+            }
+            lore.add(ComponentUtil.translate("&6" + prefix + " 속도 : %s", Constant.THE_COLOR_HEX + (toolSpeed > 0 ? "+" : "") + Constant.Sosu2.format(toolSpeed)));
+          }
+          if (toolFortune != null && toolFortune > 0f)
+          {
+            lore.add(ComponentUtil.translate("&6채광 행운 : %s", Constant.THE_COLOR_HEX + (toolFortune > 0 ? "+" : "") + Constant.Sosu2.format(toolFortune)));
+          }
+        }
+        else if (nbtItem.hasTag(MiningManager.TOOL_TIER) || nbtItem.hasTag(MiningManager.TOOL_SPEED) || nbtItem.hasTag(MiningManager.TOOL_FORTUNE))
         {
           lore.add(Component.empty());
+          lore.add(ComponentUtil.translate("&c이 아이템은 현재 위치에서는 제 기능을 발휘할 수 없습니다!"));
+          lore.add(ComponentUtil.translate("&c현재 기능하는 아이템 : %s", ItemNameUtil.itemName(type)));
         }
-        if (toolTier > 0)
-        {
-          lore.add(ComponentUtil.translate("&6채광 등급 : %s", ComponentUtil.create(Constant.THE_COLOR_HEX + Constant.Jeongsu.format(toolTier)).append(
-                  (CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.MINDAS_TOUCH) ? (ComponentUtil.translate("&a (+%s) (%s)",
-                          CustomEffectManager.getEffect(viewer, CustomEffectTypeCustomMining.MINDAS_TOUCH).getAmplifier() + 1, CustomEffectTypeCustomMining.MINDAS_TOUCH)) : Component.empty()))));
-        }
-        if (toolSpeed > 0f)
-        {
-          String prefix = "채광";
-          if (toolTier == 0)
-          {
-            if (Constant.AXES.contains(type))
-            {
-              prefix = "벌목";
-            }
-            if (Constant.HOES.contains(type))
-            {
-              prefix = "재배";
-            }
-            if (Constant.SHOVELS.contains(type))
-            {
-              prefix = "굴착";
-            }
-            if (Constant.SWORDS.contains(type) || type == Material.TRIDENT)
-            {
-              prefix = "블록 파괴";
-            }
-          }
-          lore.add(ComponentUtil.translate("&6" + prefix + " 속도 : %s", Constant.THE_COLOR_HEX + (toolSpeed > 0 ? "+" : "") + Constant.Sosu2.format(toolSpeed)));
-        }
-        if (toolFortune != null && toolFortune > 0f)
-        {
-          lore.add(ComponentUtil.translate("&6채광 행운 : %s", Constant.THE_COLOR_HEX + (toolFortune > 0 ? "+" : "") + Constant.Sosu2.format(toolFortune)));
-        }
-      }
-      else if (nbtItem.hasTag("ToolTier") || nbtItem.hasTag("ToolSpeed") || nbtItem.hasTag("ToolFortune"))
-      {
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate("&c이 아이템은 현재 위치에서는 제 기능을 발휘할 수 없습니다!"));
-        lore.add(ComponentUtil.translate("&c현재 기능하는 아이템 : %s", ItemNameUtil.itemName(type)));
       }
     }
 
@@ -552,7 +583,7 @@ public class ItemLore2
     {
       if (((EnchantmentStorageMeta) itemMeta).hasStoredEnchants())
       {
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate(Constant.ITEM_LORE_STORED_ENCHANT));
         for (Enchantment enchant : Enchantment.values())
@@ -575,7 +606,7 @@ public class ItemLore2
       }
       else
       {
-        itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
       }
     }
 
@@ -993,7 +1024,7 @@ public class ItemLore2
           {
             lore.addAll(ItemLorePotionDescription.getPotionList(viewer, item));
           }
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
 
           PotionMeta potionMeta = (PotionMeta) itemMeta;
           PotionData data = potionMeta.getBasePotionData();
@@ -1021,7 +1052,7 @@ public class ItemLore2
           {
             lore.addAll(ItemLorePotionDescription.getSplashPotionList(viewer, item));
           }
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
 
           PotionMeta potionMeta = (PotionMeta) itemMeta;
           PotionData data = potionMeta.getBasePotionData();
@@ -1049,7 +1080,7 @@ public class ItemLore2
           {
             lore.addAll(ItemLorePotionDescription.getLingeringPotionList(viewer, item));
           }
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
 
           PotionMeta potionMeta = (PotionMeta) itemMeta;
           PotionData data = potionMeta.getBasePotionData();
@@ -1077,7 +1108,7 @@ public class ItemLore2
           {
             lore.addAll(ItemLorePotionDescription.getTippedArrowList(viewer, item));
           }
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
 
           PotionMeta potionMeta = (PotionMeta) itemMeta;
           PotionData data = potionMeta.getBasePotionData();
@@ -1108,9 +1139,9 @@ public class ItemLore2
         case WRITABLE_BOOK ->
         {
           // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
-          if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
+          if (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS))
           {
-            itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           }
           BookMeta bookMeta = (BookMeta) item.getItemMeta();
           if (bookMeta.hasPages())
@@ -1123,7 +1154,7 @@ public class ItemLore2
         }
         case WRITTEN_BOOK ->
         {
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           BookMeta bookMeta = (BookMeta) item.getItemMeta();
           Component author = bookMeta.author();
           if (author != null && author.color() == null)
@@ -1144,7 +1175,7 @@ public class ItemLore2
           BannerMeta bannerMeta = (BannerMeta) itemMeta;
           if (bannerMeta.numberOfPatterns() != 0)
           {
-            bannerMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            bannerMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
             List<Pattern> patterns = bannerMeta.getPatterns();
             lore.add(Component.empty());
             lore.add(ComponentUtil.translate("#D0DCDE;[현수막 무늬 목록]"));
@@ -1176,7 +1207,7 @@ public class ItemLore2
           }
           else
           {
-            itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           }
         }
         case SHIELD ->
@@ -1184,7 +1215,7 @@ public class ItemLore2
           Banner bannerMeta = (Banner) ((BlockStateMeta) itemMeta).getBlockState();
           if (bannerMeta.numberOfPatterns() != 0)
           {
-            itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
             List<Pattern> patterns = bannerMeta.getPatterns();
             lore.add(Component.empty());
             lore.add(ComponentUtil.translate("#D0DCDE;[방패 무늬 목록]"));
@@ -1213,7 +1244,7 @@ public class ItemLore2
           }
           else
           {
-            itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           }
         }
         case TROPICAL_FISH_BUCKET ->
@@ -1221,7 +1252,7 @@ public class ItemLore2
           TropicalFishBucketMeta bucketMeta = (TropicalFishBucketMeta) itemMeta;
           if (bucketMeta.hasVariant())
           {
-            bucketMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            bucketMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
             lore.add(Component.empty());
             String key = TropicalFishLore.getTropicalFishKey(bucketMeta.getBodyColor(), bucketMeta.getPatternColor(), bucketMeta.getPattern());
 
@@ -1270,7 +1301,7 @@ public class ItemLore2
         case FILLED_MAP ->
         {
           MapMeta mapMeta = (MapMeta) itemMeta;
-          mapMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          mapMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           if (mapMeta.hasMapView() && mapMeta.getMapView() != null)
           {
             MapView mapView = mapMeta.getMapView();
@@ -1304,7 +1335,7 @@ public class ItemLore2
         case FIREWORK_STAR ->
         {
           FireworkEffectMeta fireworkEffectMeta = (FireworkEffectMeta) itemMeta;
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           if (fireworkEffectMeta.hasEffect())
           {
             lore.add(Component.empty());
@@ -1317,7 +1348,7 @@ public class ItemLore2
           CrossbowMeta crossbowMeta = (CrossbowMeta) itemMeta;
           if (crossbowMeta.hasChargedProjectiles())
           {
-            itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
             lore.add(Component.empty());
             ItemStack chargedProjectile = crossbowMeta.getChargedProjectiles().get(0).clone();
             if (ItemStackUtil.itemExists(chargedProjectile))
@@ -1327,12 +1358,12 @@ public class ItemLore2
             else
             {
               lore.remove(lore.size() - 1);
-              itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+              itemMeta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
             }
           }
           else
           {
-            itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           }
         }
         case BOW ->
@@ -1409,7 +1440,7 @@ public class ItemLore2
         case CREEPER_BANNER_PATTERN, FLOWER_BANNER_PATTERN, GLOBE_BANNER_PATTERN, MOJANG_BANNER_PATTERN,
                 PIGLIN_BANNER_PATTERN, SKULL_BANNER_PATTERN ->
         {
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           lore.add(Component.empty());
           lore.add(ComponentUtil.translate("rg255,204;무늬 : %s", ComponentUtil.translate("&7" + type.translationKey() + ".desc")));
         }
@@ -1417,7 +1448,7 @@ public class ItemLore2
                 MUSIC_DISC_FAR, MUSIC_DISC_MALL, MUSIC_DISC_MELLOHI, MUSIC_DISC_PIGSTEP, MUSIC_DISC_STAL,
                 MUSIC_DISC_STRAD, MUSIC_DISC_WAIT, MUSIC_DISC_WARD, MUSIC_DISC_5, MUSIC_DISC_OTHERSIDE ->
         {
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           lore.add(Component.empty());
           @SuppressWarnings("all")
           String composer = switch (type)
@@ -1435,7 +1466,7 @@ public class ItemLore2
         }
         case DISC_FRAGMENT_5 ->
         {
-          itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           lore.add(Component.empty());
           lore.add(ComponentUtil.translate("rg255,204;곡 : %s", "&75"));
         }
@@ -1443,14 +1474,14 @@ public class ItemLore2
         {
           if (nbtItem.hasTag("instrument"))
           {
-            itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
             lore.add(Component.empty());
             String instrument = (nbtItem.getString("instrument") + "").replace("minecraft:", "minecraft.");
             lore.add(ComponentUtil.translate("&7유형 : %s", ComponentUtil.translate("instrument." + instrument)));
           }
           else
           {
-            itemMeta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           }
         }
         case DEBUG_STICK ->
@@ -1597,7 +1628,7 @@ public class ItemLore2
       case FIREWORK_ROCKET ->
       {
         FireworkMeta fireworkMeta = (FireworkMeta) itemMeta;
-        fireworkMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        fireworkMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
         int power = fireworkMeta.getPower();
         if (power >= 0 && power <= 127)
         {
@@ -1716,7 +1747,7 @@ public class ItemLore2
 
     if (itemMeta instanceof BlockStateMeta blockStateMeta)
     {
-      itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+      itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
       if (!hideBlockState && blockStateMeta.hasBlockState())
       {
         NBTCompound blockEntityTag = nbtItem.getCompound("BlockEntityTag");

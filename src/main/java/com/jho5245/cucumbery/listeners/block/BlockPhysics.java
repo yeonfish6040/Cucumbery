@@ -3,14 +3,13 @@ package com.jho5245.cucumbery.listeners.block;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.listeners.block.piston.BlockPistonExtend;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
-import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,8 +28,8 @@ public class BlockPhysics implements Listener
     Block block = event.getBlock();//, sourceBlock = event.getSourceBlock();
     Boolean gameRuleValue = block.getWorld().getGameRuleValue(GameRule.DO_TILE_DROPS);
     boolean drop = gameRuleValue != null && gameRuleValue;
-    YamlConfiguration blockPlaceData = Variable.blockPlaceData.get(block.getWorld().getName());
-    if (blockPlaceData == null)
+    BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(block.getChunk());
+    if (blockPlaceDataConfig == null)
     {
       return;
     }
@@ -67,8 +66,7 @@ public class BlockPhysics implements Listener
         break;
     }
     Location bLoc = block.getLocation();
-    int bX = bLoc.getBlockX(), bY = bLoc.getBlockY(), bZ = bLoc.getBlockZ();
-    String dataString = blockPlaceData.getString(bX + "_" + bY + "_" + bZ);
+    String dataString = blockPlaceDataConfig.getRawData(bLoc);
     if (dataString == null)
     {
       return;
@@ -100,7 +98,7 @@ public class BlockPhysics implements Listener
                 if (!itemStack.hasItemMeta() && item.getPickupDelay() != 0)
                 {
                   bLoc.getWorld().dropItemNaturally(bLoc.add(-0.5d, -0.5d, -0.5d), dataItem);
-                  blockPlaceData.set(bX + "_" + bY + "_" + bZ, null);
+                  blockPlaceDataConfig.set(bLoc, null);
                   item.remove();
                 }
               }
@@ -109,6 +107,5 @@ public class BlockPhysics implements Listener
         }
       }
     }, 0L);
-    Variable.blockPlaceData.put(bLoc.getWorld().getName(), blockPlaceData);
   }
 }

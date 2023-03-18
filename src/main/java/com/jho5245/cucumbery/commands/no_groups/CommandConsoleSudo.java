@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.commands.no_groups;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.util.no_groups.*;
+
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

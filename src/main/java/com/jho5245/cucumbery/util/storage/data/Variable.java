@@ -189,7 +189,7 @@ public class Variable
   /**
    * 블록을 설치했을 때 해당 아이템의 NBT 보존
    */
-  public static HashMap<String, YamlConfiguration> blockPlaceData = new HashMap<>();
+//  public static HashMap<String, YamlConfiguration> blockPlaceData = new HashMap<>();
 
   public static HashMap<String, YamlConfiguration> customGameRules = new HashMap<>();
   /**

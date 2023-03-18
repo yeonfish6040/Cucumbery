@@ -50,7 +50,7 @@ public class ItemStackComponent
     ItemStack hover = new ItemStack(Material.BUNDLE);
     BundleMeta bundleMeta = (BundleMeta) hover.getItemMeta();
     bundleMeta.addItem(itemStack);
-    bundleMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+    bundleMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
     bundleMeta.displayName(ItemNameUtil.itemName(itemStack));
     List<Component> lore = itemStack.getItemMeta().lore();
     bundleMeta.lore(lore);

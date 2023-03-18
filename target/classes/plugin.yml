@@ -4,7 +4,7 @@ api-version: 1.19
 main: com.jho5245.cucumbery.Cucumbery
 author: jho5245
 description: 굳검버리 플러그인
-softdepend: [Vault, NoteBlockAPI, QuickShop, PlaceHolderAPI, mcMMO, MythicMobs, ProtocolLib, WorldEdit, WorldGuard, GSit, UltimateTimber]
+softdepend: [Vault, NoteBlockAPI, QuickShop, PlaceHolderAPI, mcMMO, MythicMobs, ProtocolLib, WorldEdit, WorldGuard, GSit, UltimateTimber, Residence]
 website: https://cucumbery.com/
 
 commands:
@@ -389,10 +389,7 @@ commands:
     aliases: [csetrotation]
   lookat:
     description: 개체의 바라보는 위치/개체를 설정합니다
-    usage: "\n
-    /<command> <개체> <대상 위치> [명령어 출력 숨김 여부]\n
-    /<command> <개체> <대상 개체> [명령어 출력 숨김 여부]\n
-    /<command> <개체> <대상 개체> <기준> [명령어 출력 숨김 여부]"
+    usage: /<command> <개체> <대상 위치> [명령어 출력 숨김 여부]
 
 permissions:
   cucumbery.error.hide:

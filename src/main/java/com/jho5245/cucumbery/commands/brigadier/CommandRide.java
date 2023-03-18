@@ -66,7 +66,7 @@ public class CommandRide extends CommandBase
     /*
      * /ride <탑승할 개체>
      */
-    CommandAPICommand commandAPICommand = getCommandBase("ride", permission, aliases);
+    CommandAPICommand commandAPICommand = getCommandBase(command, permission, aliases);
     commandAPICommand = commandAPICommand.withArguments(ride1);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {

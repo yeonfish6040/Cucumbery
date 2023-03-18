@@ -74,6 +74,7 @@ G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\jav
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\inventory\PrepareItemCraft.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\additemmanager\AddItemUtil.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\block\BlockDamageAbort.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\events\block\PreCustomBlockBreakEvent.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\events\entity\EntityCustomEffectPreApplyEvent.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\events\entity\EntityCustomEffectPostApplyEvent.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\sound\CommandSong.java
@@ -102,6 +103,8 @@ G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\jav
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\AsyncTabComplete.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\no_groups\CommandBlockPlaceData.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\custom\customeffect\custom_mining\MiningManager.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\blockplacedata\ExplodeEventManager.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\blockplacedata\BlockPlaceDataConfig.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\inventory\InventoryMoveItem.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantColdTouch.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\custom\customeffect\children\group\LocationVelocityCustomEffectImple.java
@@ -109,6 +112,7 @@ G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\jav
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\entity\no_groups\EntityBreed.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\no_groups\PluginLoader.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\no_groups\CommandMenu.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\events\block\CustomBlockBreakEvent.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\teleport\CommandAdvancedTeleport.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantUnskilledTouch.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\player\no_groups\PlayerPickupArrow.java
@@ -140,6 +144,7 @@ G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\jav
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\hanging\HangingBreak.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\no_groups\AsyncTabCompleter.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\data\TranslatableKeyParser.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\world\ChunkLoad.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\addon\quickshop\ShopPreCreate.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\deathmessages\ConditionChecker.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\player\no_groups\PlayerQuit.java
@@ -181,6 +186,7 @@ G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\jav
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\player\no_groups\PlayerPreLogin.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\no_groups\ItemInfo.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\inventory\PrepareAnvil.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\no_groups\ItemStackBuilder.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\brigadier\CommandSudo2.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\component\util\sendercomponent\EntityComponentUtil.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\inventory\InventoryClick.java
@@ -217,6 +223,7 @@ G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\jav
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\inventory\CraftItem.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\brigadier\CommandTag.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\entity\no_groups\EntityDeath.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\no_groups\ChunkConfig.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\itemlore\ItemLoreUtil.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\brigadier\CommandRepeat2.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\entity\item\ItemMerge.java
@@ -271,6 +278,7 @@ G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\jav
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\custom\CombatInfo.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\player\no_groups\PlayerArmorChange.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\msg\CommandClearChat.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\events\DeathMessageEvent.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\entity\customeffect\EntityCustomEffectApply.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\custom\customeffect\children\group\StringCustomEffect.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\player\no_groups\PlayerStopSpectatingEntity.java

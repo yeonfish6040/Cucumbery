@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.jho5245</groupId>
   <artifactId>Cucumbery</artifactId>
-  <version>1.0</version>
+  <version>1.0-dev</version>
   <build>
     <plugins>
       <plugin>
@@ -42,6 +42,9 @@
               <pattern>dev.jorel.commandapi</pattern>
               <shadedPattern>com.jho5245.cucumbery.util.shading</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>io.wany.amethyst</pattern>
+            </relocation>
           </relocations>
           <transformers>
             <transformer>
@@ -63,6 +66,10 @@
     <repository>
       <id>localrepository</id>
       <url>file://${basedir}/lib</url>
+    </repository>
+    <repository>
+      <id>amethy</id>
+      <url>https://api.wany.io/amethy/repository/maven</url>
     </repository>
     <repository>
       <id>papermc</id>
@@ -113,7 +120,7 @@
     <dependency>
       <groupId>io.papermc.paper</groupId>
       <artifactId>paper-api</artifactId>
-      <version>1.19.3-R0.1-SNAPSHOT</version>
+      <version>1.19.4-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -131,13 +138,13 @@
     <dependency>
       <groupId>org.maxgamer</groupId>
       <artifactId>QuickShop</artifactId>
-      <version>5.1.1.2</version>
+      <version>5.1.2.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>me.clip</groupId>
       <artifactId>placeholderapi</artifactId>
-      <version>2.11.2</version>
+      <version>2.11.3</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

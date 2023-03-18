@@ -1,8 +1,11 @@
 package com.jho5245.cucumbery.listeners.entity.no_groups;
 
+import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LongCustomEffectImple;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
@@ -97,7 +100,7 @@ public class EntitySpawn implements Listener
     }
     if (entity instanceof TNTPrimed tntPrimed)
     {
-      ItemStack itemStack = Method2.getPlacedBlockDataAsItemStack(entity.getLocation());
+      ItemStack itemStack = BlockPlaceDataConfig.getItem(entity.getLocation());
       CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
       if (customMaterial != null)
       {
@@ -106,6 +109,14 @@ public class EntitySpawn implements Listener
           case TNT_I_WONT_LET_YOU_GO -> entity.getScoreboardTags().add("custom_material_tnt_i_wont_let_you_go");
           case TNT_COMBAT -> entity.getScoreboardTags().add("custom_material_tnt_combat");
           case TNT_DRAIN -> entity.getScoreboardTags().add("custom_material_tnt_drain");
+          case TNT_DONUT ->
+          {
+            entity.getScoreboardTags().add("custom_material_tnt_donut");
+            if (itemStack != null)
+            {
+              CustomEffectManager.addEffect(entity, new LongCustomEffectImple(CustomEffectType.CUSTOM_MATERIAL_TNT_DONUT, new NBTItem(itemStack).getShort("Size")));
+            }
+          }
         }
       }
       if (ItemStackUtil.itemExists(itemStack))

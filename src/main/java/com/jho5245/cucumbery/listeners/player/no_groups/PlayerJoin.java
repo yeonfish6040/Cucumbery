@@ -2,7 +2,6 @@ package com.jho5245.cucumbery.listeners.player.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.Initializer;
-import com.jho5245.cucumbery.commands.sound.CommandSong;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
@@ -23,12 +22,12 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -37,7 +36,7 @@ import java.util.UUID;
 
 public class PlayerJoin implements Listener
 {
-  @EventHandler
+  @EventHandler(priority = EventPriority.HIGHEST)
   public void onPlayerJoin(PlayerJoinEvent event)
   {
     Player player = event.getPlayer();
@@ -48,96 +47,14 @@ public class PlayerJoin implements Listener
       Initializer.loadPlayerConfig(player);
       //			Method.broadcastDebug("데이터 생성 완료, 현재 캐시 유저 데이터 개수 : §e" + Variable.userData.size() + "개");
     }
-    int invincibleTime = UserData.INVINCIBLE_TIME.getInt(uuid), loginInvincibleTime = UserData.INVINCIBLE_TIME_JOIN.getInt(uuid);
-    if (invincibleTime >= 0)
-    {
-      player.setMaximumNoDamageTicks(invincibleTime);
-    }
-    if (loginInvincibleTime >= 0)
-    {
-      player.setNoDamageTicks(loginInvincibleTime);
-    }
-    if (Cucumbery.using_NoteBlockAPI)
-    {
-      if (CommandSong.playerRadio.containsKey(uuid))
-      {
-        if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
-        {
-          CommandSong.playerRadio.get(uuid).addPlayer(player);
-        }
-        else
-        {
-          CommandSong.playerRadio.get(uuid).removePlayer(player);
-        }
-      }
-      else if (CommandSong.radioSongPlayer != null)
-      {
-        if (UserData.LISTEN_GLOBAL.getBoolean(uuid) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(uuid))
-        {
-          CommandSong.radioSongPlayer.addPlayer(player);
-        }
-        else
-        {
-          CommandSong.radioSongPlayer.removePlayer(player);
-        }
-      }
-    }
     String name = player.getName();
-    boolean healthScaled = UserData.HEALTH_SCALED.getBoolean(uuid);
-    if (healthScaled)
-    {
-      player.setHealthScaled(false);
-    }
-    else
-    {
-      double healthbar = UserData.HEALTH_BAR.getDouble(uuid);
-      if (healthbar <= 0D)
-      {
-        healthbar = 20D;
-      }
-      player.setHealthScale(healthbar);
-    }
     YamlConfiguration cfg = Cucumbery.config;
-    String displayname = null;
-    String playerListName = null;
-    if (cfg.getBoolean("use-nickname-feature"))
-    {
-      displayname = UserData.DISPLAY_NAME.getString(uuid);
-      playerListName = UserData.PLAYER_LIST_NAME.getString(uuid);
-    }
-    Component senderComponent = SenderComponentUtil.senderComponent(player, player, null);
-    if (displayname == null)
-    {
-      displayname = player.getName();
-    }
-    Component finalDislay = ComponentUtil.create(displayname).hoverEvent(senderComponent.hoverEvent()).clickEvent(senderComponent.clickEvent());
-    player.displayName(finalDislay);
-    senderComponent = SenderComponentUtil.senderComponent(player, player, null);
-    player.displayName(senderComponent);
-    if (playerListName == null)
-    {
-      playerListName = player.getName();
-    }
-    finalDislay = ComponentUtil.create(playerListName);
-    final Component originalDisplayName = player.displayName();
-    player.displayName(finalDislay.hoverEvent(null).clickEvent(null).insertion(null));
-    senderComponent = SenderComponentUtil.senderComponent(player, player, null);
-    player.playerListName(senderComponent.hoverEvent(null).clickEvent(null).insertion(null));
-    player.displayName(originalDisplayName);
-    Component displayName = SenderComponentUtil.senderComponent(player);
-    boolean isSpectator = UserData.SPECTATOR_MODE.getBoolean(player);
-    if (isSpectator && UserData.SPECTATOR_MODE_ON_JOIN.getBoolean(player))
-    {
-      if (player.getGameMode() != GameMode.SPECTATOR)
-      {
-        player.setGameMode(GameMode.SPECTATOR);
-        MessageUtil.info(player, ComponentUtil.translate("관전자여서 게임 모드가 자동으로 관전 모드로 전환되었습니다"));
-      }
-    }
     Location location = player.getLocation();
     List<String> noTellrawWorlds = cfg.getStringList("no-tellraw-feature-on-join-worlds"), noActionbarWorlds = cfg.getStringList("no-actionbar-feature-on-join-worlds");
     boolean enabledTellraw = cfg.getBoolean("use-tellraw-feature-on-join") && !Method.configContainsLocation(location, noTellrawWorlds);
     boolean enabeldActionbar = cfg.getBoolean("use-actionbar-feature-on-join") && !Method.configContainsLocation(location, noActionbarWorlds);
+    boolean isSpectator = UserData.SPECTATOR_MODE.getBoolean(player);
+    Component displayName = SenderComponentUtil.senderComponent(player);
     if (enabeldActionbar || enabledTellraw)
     {
       event.joinMessage(null);

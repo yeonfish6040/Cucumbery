@@ -2042,6 +2042,9 @@ public class Method extends SoundPlay
             protocolManager.sendServerPacket(player, updateComponent);
           }
         }
+        catch (ConcurrentModificationException ignored)
+        {
+        }
         catch (Exception e)
         {
           e.printStackTrace();
@@ -2128,7 +2131,7 @@ public class Method extends SoundPlay
     {
       return false;
     }
-    if (configList == null || configList.size() == 0)
+    if (configList == null || configList.isEmpty())
     {
       return false;
     }
@@ -3522,7 +3525,8 @@ public class Method extends SoundPlay
       {
         if (UserData.FIREWORK_LAUNCH_ON_AIR.getBoolean(player.getUniqueId()))
         {
-          player.getWorld().spawnEntity(player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(radius)), EntityType.FIREWORK, SpawnReason.CUSTOM, entity -> {
+          player.getWorld().spawnEntity(player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(radius)), EntityType.FIREWORK, SpawnReason.CUSTOM, entity ->
+          {
             Firework firework = (Firework) entity;
             firework.setFireworkMeta(((FireworkMeta) itemMeta));
             if (player.isSneaking())

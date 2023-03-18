@@ -17,6 +17,7 @@ import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMini
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryCategory;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryRecipe;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.gui.GUIManager;
 import com.jho5245.cucumbery.util.gui.GUIManager.GUIType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
@@ -26,6 +27,7 @@ import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.ColorUtil.Type;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
+import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.EntityComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
@@ -40,6 +42,7 @@ import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.bossbar.BossBar.Overlay;
 import net.kyori.adventure.text.Component;
@@ -108,6 +111,8 @@ public class Scheduler
       stashGUI();
       // 레시피 메뉴 업데이트
       updateCustomRecipeGUI();
+      // 이름표 - 트래커
+      nameTagTracker();
     }, 20L, 20L);
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
@@ -124,10 +129,10 @@ public class Scheduler
     Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
     {
       Initializer.saveUserData();
-      Initializer.saveBlockPlaceData();
       Initializer.saveItemUsageData();
       Initializer.saveItemStashData();
       CustomEffectManager.save();
+      BlockPlaceDataConfig.saveAll();
     }, 1200L, 20L * 60L * 5L);
     reinforceChancetime();
     Bukkit.getScheduler().runTaskTimer(cucumbery, () ->
@@ -143,6 +148,34 @@ public class Scheduler
     playerTick();
     damageIndicator();
     MiningScheduler.customMiningTicks();
+  }
+
+  private static void nameTagTracker()
+  {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      ItemStack mainHand = player.getInventory().getItemInMainHand();
+      CustomMaterial customMaterial = CustomMaterial.itemStackOf(mainHand);
+      if (customMaterial == CustomMaterial.TRACKER)
+      {
+        String uuidStr = new NBTItem(mainHand).getString("Tracking");
+        if (uuidStr != null && Method.isUUID(uuidStr))
+        {
+          Entity entity = Method2.getEntityAsync(UUID.fromString(uuidStr));
+          Component message = ComponentUtil.translate("&cargument.entity.notfound.entity");
+          if (entity != null)
+          {
+            Location location = entity.getLocation();
+            int x = location.getBlockX(), y = location.getBlockY(), z = location.getBlockZ();
+            int distance = (int) Method2.distance(player.getLocation(), location);
+            String distanceString = distance == -1 ? "&c다른 월드에 있음!" : "&f" + distance + "m";
+            message = ComponentUtil.translate("%s : %s", ComponentUtil.translate("&d[%s]", EntityComponentUtil.entityComponent(player, entity, NamedTextColor.WHITE)),
+                    ComponentUtil.translate("&e거리= %s x= %s y= %s z= %s", ComponentUtil.translate(distanceString), "&f" + x, "&f" + y, "&f" + z));
+          }
+          player.sendActionBar(message);
+        }
+      }
+    }
   }
 
   public static void fakeBlocksAsync(@Nullable Player target, @NotNull Location location, boolean distanceLimit)
@@ -213,7 +246,6 @@ public class Scheduler
         CustomEffectScheduler.trueInvisibility(entity);
         CustomEffectScheduler.axolotlsGrace(entity);
         CustomEffectScheduler.stop(entity);
-        CustomEffectScheduler.damageIndicator(entity);
         CustomEffectScheduler.vanillaEffect(entity);
         mountLoop(entity);
       }
@@ -1431,7 +1463,7 @@ public class Scheduler
           if (type == Material.WRITABLE_BOOK)
           {
             // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
-            if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
+            if (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS))
             {
               ItemLore.setItemLore(mainHand, new ItemLoreView(player));
             }
@@ -1444,7 +1476,7 @@ public class Scheduler
           if (type == Material.WRITABLE_BOOK)
           {
             // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
-            if (itemMeta.hasItemFlag(ItemFlag.HIDE_POTION_EFFECTS))
+            if (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS))
             {
               ItemLore.setItemLore(offHand, new ItemLoreView(player));
             }

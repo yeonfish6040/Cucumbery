@@ -31,11 +31,14 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
+import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.Display.Brightness;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -49,6 +52,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Consumer;
+import org.bukkit.util.Transformation;
+import org.joml.Vector3f;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -552,7 +557,8 @@ public class EntityDamage implements Listener
     location.setY(boundingBox.getMaxY() + offset);
     location.setZ(boundingBox.getCenterZ());
     Component finalDisplay = display;
-    if (Cucumbery.using_ProtocolLib)
+//    if (Cucumbery.using_ProtocolLib)
+    if (false)
     {
       DamageIndicatorProtocolLib.displayDamage(viewSelf, entity, location, finalDisplay);
     }
@@ -580,8 +586,55 @@ public class EntityDamage implements Listener
           }
         }
       };
-      Entity armorStand = location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND, SpawnReason.DEFAULT, consumer);
-      CustomEffectManager.addEffect(armorStand, CustomEffectType.DAMAGE_INDICATOR);
+      consumer = e ->
+      {
+        TextDisplay textDisplay = (TextDisplay) e;
+        textDisplay.text(finalDisplay);
+        textDisplay.setBillboard(Billboard.CENTER);
+        textDisplay.setSeeThrough(false);
+        textDisplay.setViewRange(30f);
+        textDisplay.setShadowed(true);
+        textDisplay.setShadowRadius(0);
+        textDisplay.setShadowStrength(0);
+        textDisplay.setBrightness(brightness);
+        textDisplay.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
+        textDisplay.setTextOpacity((byte) -2);
+        Transformation transformation = textDisplay.getTransformation();
+        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.2f, 0f), transformation.getLeftRotation(), new Vector3f(1.2f, 1.2f, 1.2f), transformation.getRightRotation());
+        textDisplay.setTransformation(newTransformation);
+        textDisplay.addScoreboardTag("damage_indicator");
+        if (!viewSelf)
+        {
+          textDisplay.addScoreboardTag("no_cucumbery_true_invisibility");
+          if (entity instanceof Player player)
+          {
+            player.hideEntity(Cucumbery.getPlugin(), textDisplay);
+          }
+        }
+      };
+
+      TextDisplay textDisplay = (TextDisplay) location.getWorld().spawnEntity(location, EntityType.TEXT_DISPLAY, SpawnReason.DEFAULT, consumer);
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+      {
+        textDisplay.setInterpolationDelay(-1);
+        textDisplay.setInterpolationDuration(10);
+        Transformation transformation = textDisplay.getTransformation();
+        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.4f, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
+        textDisplay.setTransformation(newTransformation);
+      }, 2L);
+
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+      {
+        textDisplay.setInterpolationDelay(-1);
+        textDisplay.setInterpolationDuration(10);
+        textDisplay.setTextOpacity((byte) 5);
+        Transformation transformation = textDisplay.getTransformation();
+        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.6f, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
+        textDisplay.setTransformation(newTransformation);
+      }, 12L);
+      CustomEffectManager.addEffect(textDisplay, CustomEffectType.DAMAGE_INDICATOR);
     }
   }
+
+  private final Brightness brightness = new Brightness(0, 15);
 }

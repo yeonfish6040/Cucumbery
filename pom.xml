@@ -7,7 +7,7 @@
     <groupId>me.jho5245</groupId>
     <artifactId>Cucumbery</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.0-dev</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,6 +22,13 @@
             <id>localrepository</id>
             <url>file://${basedir}/lib</url>
         </repository>
+
+        <!-- repo:wanyne-amethy -->
+        <repository>
+            <id>amethy</id>
+            <url>https://api.wany.io/amethy/repository/maven</url>
+        </repository>
+
         <!-- Paper Repository -->
         <repository>
             <id>papermc</id>
@@ -92,11 +99,18 @@
 
 
     <dependencies>
+        <!-- amethyst (repo:wanyne-amethy) -->
+        <dependency>
+            <groupId>io.wany.amethyst</groupId>
+            <artifactId>Amethyst</artifactId>
+            <version>0.8.1</version>
+        </dependency>
+
         <!-- Paper Dependency -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19.3-R0.1-SNAPSHOT</version>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -104,14 +118,14 @@
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api</artifactId>
-            <version>2.11.1</version>
+            <version>2.11.2</version>
         </dependency>
 
         <!-- CommandAPI Dependency -->
         <dependency>
             <groupId>dev.jorel</groupId>
             <artifactId>commandapi-shade</artifactId>
-            <version>8.7.1</version>
+            <version>8.8.0</version>
         </dependency>
 
         <!-- Mojang Brigadier Dependency -->
@@ -141,7 +155,7 @@
         <dependency>
             <groupId>org.maxgamer</groupId>
             <artifactId>QuickShop</artifactId>
-            <version>5.1.1.2</version>
+            <version>5.1.2.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -149,7 +163,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.2</version>
+            <version>2.11.3</version>
             <scope>provided</scope>
         </dependency>
 
@@ -252,6 +266,9 @@
                         <relocation>
                             <pattern>dev.jorel.commandapi</pattern>
                             <shadedPattern>com.jho5245.cucumbery.util.shading</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.wany.amethyst</pattern>
                         </relocation>
                     </relocations>
                     <transformers>

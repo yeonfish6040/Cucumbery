@@ -6,6 +6,5 @@ import org.jetbrains.annotations.NotNull;
 public interface EntityCustomEffect
 {
   @NotNull Entity getEntity();
-
   void setEntity(@NotNull Entity entity);
 }

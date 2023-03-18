@@ -7,6 +7,7 @@ import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.recipe.RecipeManager;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
+import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -283,5 +284,10 @@ public class PrepareItemCraft implements Listener
       return;
     }
     ItemLore.setItemLore(result, new ItemLoreView(player));
+    String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(result), CucumberyTag.EXPIRE_DATE_KEY);
+    if (expireDate != null)
+    {
+      Method.isTimeUp(result, expireDate);
+    }
   }
 }

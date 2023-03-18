@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffect;
+import com.jho5245.cucumbery.events.DeathMessageEvent;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -14,12 +15,14 @@ import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderC
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
+import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.*;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
@@ -33,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class DeathManager
 {
@@ -364,11 +368,6 @@ public class DeathManager
         }
         case BLOCK_EXPLOSION ->
         {
-          if (damageCause instanceof EntityDamageByBlockEvent damageByBlockEvent)
-          {
-            Block block = damageByBlockEvent.getDamager();
-            MessageUtil.broadcastDebug(block + "");
-          }
           key += "bad_respawn";
           extraArgs.add(BAD_RESPAWM_POINT);
         }
@@ -673,9 +672,9 @@ public class DeathManager
       }
       final Component insiderComponent = deathMessageComponent;
       Component insiderPrefix = Component.empty();
+      boolean isPvP = isPlayerDeath && (damager instanceof Player && !entity.equals(damager));
       if (usePrefix)
       {
-        boolean isPvP = isPlayerDeath && (damager instanceof Player && !entity.equals(damager));
         Projectile projectile = getDamagerProjectile(event);
         if (projectile != null)
         {
@@ -726,14 +725,25 @@ public class DeathManager
       }
       if (!key.equals("none"))
       {
-        MessageUtil.broadcastPlayer(deathMessageComponent);
+        DeathMessageEvent deathMessageEvent = new DeathMessageEvent(entity, deathMessageComponent, isPvP, damager);
+        Bukkit.getPluginManager().callEvent(deathMessageEvent);
+        boolean finalIsPvP = isPvP;
+        @Nullable Object finalDamager = damager;
+        Predicate<Player> playerPredicate = player -> !(
+                ((player == entity || player == finalDamager) && UserData.SHOW_DEATH_SELF_MESSAGE.getBoolean(player)) ||
+                        (!(player == entity || player == finalDamager) && UserData.SHOW_DEATH_MESSAGE.getBoolean(player) && (!finalIsPvP || UserData.SHOW_DEATH_PVP_MESSAGE.getBoolean(player)))
+                );
+        MessageUtil.broadcastPlayer(playerPredicate, deathMessageComponent);
         if (CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_BEANS))
         {
           for (Player online : Bukkit.getOnlinePlayers())
           {
-            if (entity != online && !CustomEffectManager.hasEffect(online, CustomEffectType.CURSE_OF_BEANS))
+            if (!playerPredicate.test(online))
             {
-              MessageUtil.sendMessage(online, deathMessageComponent);
+              if (!CustomEffectManager.hasEffect(online, CustomEffectType.CURSE_OF_BEANS))
+              {
+                MessageUtil.sendMessage(online, deathMessageComponent);
+              }
             }
           }
         }
@@ -760,6 +770,11 @@ public class DeathManager
   public static boolean deathMessageApplicable(@NotNull Entity entity)
   {
     if (entity.getScoreboardTags().contains("damage_indicator"))
+    {
+      return false;
+    }
+    // 갑옷 거치대는 데스 메시지 띄우지 않음
+    if (entity instanceof ArmorStand)
     {
       return false;
     }
@@ -803,7 +818,10 @@ public class DeathManager
     {
       if (damageCause.getDamage() < 100)
       {
-        success = true;
+        if (!(entity instanceof Enderman && location.getWorld().getEnvironment() == Environment.THE_END))
+        {
+          success = true;
+        }
       }
     }
     return success;

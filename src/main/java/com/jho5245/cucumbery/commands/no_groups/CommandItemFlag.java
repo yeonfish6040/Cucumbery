@@ -66,7 +66,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
           case "HIDE_DESTROYS" -> meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
           case "HIDE_ENCHANTS" -> meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
           case "HIDE_PLACED_ON" -> meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-          case "HIDE_POTION_EFFECTS" -> meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          case "HIDE_POTION_EFFECTS" -> meta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           case "HIDE_UNBREAKABLE" -> meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
           case "HIDE_DYE" -> meta.addItemFlags(ItemFlag.HIDE_DYE);
           case "내구성" -> meta.setUnbreakable(true);
@@ -103,7 +103,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
           case "HIDE_DESTROYS" -> meta.removeItemFlags(ItemFlag.HIDE_DESTROYS);
           case "HIDE_ENCHANTS" -> meta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
           case "HIDE_PLACED_ON" -> meta.removeItemFlags(ItemFlag.HIDE_PLACED_ON);
-          case "HIDE_POTION_EFFECTS" -> meta.removeItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+          case "HIDE_POTION_EFFECTS" -> meta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           case "HIDE_UNBREAKABLE" -> meta.removeItemFlags(ItemFlag.HIDE_UNBREAKABLE);
           case "HIDE_DYE" -> meta.removeItemFlags(ItemFlag.HIDE_DYE);
           case "내구성" -> meta.setUnbreakable(false);

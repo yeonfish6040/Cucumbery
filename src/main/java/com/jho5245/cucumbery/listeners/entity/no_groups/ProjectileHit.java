@@ -40,7 +40,7 @@ public class ProjectileHit implements Listener
       }
       if (tags.contains("custom_material_arrow_mount_disposal"))
       {
-          abstractArrow.remove();
+        abstractArrow.remove();
       }
     }
   }

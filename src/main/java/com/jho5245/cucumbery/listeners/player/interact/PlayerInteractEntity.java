@@ -11,10 +11,12 @@ import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -46,8 +48,33 @@ public class PlayerInteractEntity implements Listener
     }
     EquipmentSlot hand = event.getHand();
     ItemStack item = player.getInventory().getItem(hand);
-    Material material = item.getType();
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(item);
     Entity entity = event.getRightClicked();
+    if (customMaterial != null)
+    {
+      switch (customMaterial)
+      {
+        case UNBINDING_SHEARS -> {
+          event.setCancelled(true);
+          return;
+        }
+        case TRACKER -> {
+          if (entity instanceof ItemFrame)
+          {
+            return;
+          }
+          event.setCancelled(true);
+          if (player.isSneaking() && !(entity instanceof Player))
+          {
+            MessageUtil.info(player, "%s을(를) 트래킹합니다", entity);
+            NBTItem nbtItem = new NBTItem(item, true);
+            nbtItem.setString("Tracking", entity.getUniqueId().toString());
+            Method.updateInventory(player, item);
+          }
+        }
+      }
+    }
+    Material material = item.getType();
     EntityType entityType = entity.getType();
     if (entity instanceof Parrot)
     {

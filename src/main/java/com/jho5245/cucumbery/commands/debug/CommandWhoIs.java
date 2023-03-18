@@ -165,7 +165,10 @@ public class CommandWhoIs implements CucumberyCommandExecutor
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Yaw : rg255,204;" + locationYaw);
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Pitch : rg255,204;" + locationPitch);
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "거리 : rg255,204;" + distanceStr + "rg255,204;m");
-          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "생물 군계 : rg255,204;" + locationBiome + "rg255,204;(&r" + biome + "rg255,204;)");
+          MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "생물 군계 : %s(%s, %s)",
+                  Component.translatable(biome.translationKey(), Constant.THE_COLOR),
+                  Constant.THE_COLOR_HEX + biome,
+                  Constant.THE_COLOR_HEX + biome.getKey());
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, Constant.separatorSubString(3));
         }
         else if (args.length == 2 && args[1].equalsIgnoreCase("name"))

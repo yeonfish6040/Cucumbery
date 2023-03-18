@@ -106,13 +106,27 @@ public class GUIManager
     {
       inv.setItem(18, CreateItemStack.create(Material.COMMAND_BLOCK, 1, "&b관리자 전용 설정", Arrays.asList("&7관리자 전용 개인 설정 메뉴를 엽니다", "&7아직 귀찮아서 미완성인게 많습니다 ㅁㄴㅇㄹ"), true));
     }
+    List<String> trueLore = Arrays.asList("", "&6현재 설정 : &a켜짐", "", "&c클릭하면 해당 기능을 끕니다");
+    List<String> falseLore = Arrays.asList("", "&6현재 설정 : &c꺼짐", "", "&a클릭하면 해당 기능을 켭니다");
+
+    inv.setItem(19, CreateItemStack
+          .toggleItem(getBool(player, UserData.SHOW_DEATH_SELF_MESSAGE), "&b자신의 데스 메시지 표시",
+                  Arrays.asList("&7플레이어가 사망할 때 또는 자신이 공격한", "&7다른 개체가 죽을 때 데스 메시지를 표시합니다"), trueLore, falseLore));
+
+    inv.setItem(28, CreateItemStack
+          .toggleItem(getBool(player, UserData.SHOW_DEATH_MESSAGE), "&b데스 메시지 표시",
+                  Arrays.asList("&7자신이 공격하지 않은 다른 개체가", "&7죽을 때 데스 메시지를 표시합니다"), trueLore, falseLore));
+
+    inv.setItem(37, CreateItemStack
+          .toggleItem(getBool(player, UserData.SHOW_DEATH_PVP_MESSAGE), "&bPvP 데스 메시지 표시",
+                  Arrays.asList("&7자신이 공격하지 않은 다른 플레이어가", "&7PvP를 하여 죽을 때 데스 메시지를 표시합니다"), trueLore, falseLore));
+
 
     inv.setItem(15, CreateItemStack.toggleItem(UserData.TRAMPLE_SOIL_ALERT.getBoolean(player.getUniqueId()), "&b경작지 파괴 방지 기능 타이틀 띄움",
             Arrays.asList("&7경작지 파괴 방지 기능 사용으로 인해", "&7경작지 파괴가 막혔을때 타이틀을 띄워줍니다", "&e특정한 상황에서는 해당 기능을 사용해도", "&e타이틀이 뜨지 않을 수 있습니다", "", "&6현재 설정 : &a타이틀을 봅니다", "", "&c클릭하면 타이틀을 띄우지 않습니다"),
             "&b경작지 파괴 방지 기능 타이틀 띄움",
             Arrays.asList("&7경작지 파괴 방지 기능 사용으로 인해", "&7경작지 파괴가 막혔을때 타이틀을 띄워줍니다", "&e특정한 상황에서는 해당 기능을 사용해도", "&e타이틀이 뜨지 않을 수 있습니다", "", "&6현재 설정 : &c타이틀을 보지 않습니다", "", "&a클릭하면 타이틀을 띄웁니다")));
-    List<String> trueLore = Arrays.asList("", "&6현재 설정 : &a켜짐", "", "&c클릭하면 해당 기능을 끕니다");
-    List<String> falseLore = Arrays.asList("", "&6현재 설정 : &c꺼짐", "", "&a클릭하면 해당 기능을 켭니다");
+
     if (player.getGameMode() == GameMode.CREATIVE)
     {
       inv.setItem(7, CreateItemStack.toggleItem(getBool(player, UserData.COPY_NOTE_BLOCK_VALUE_WHEN_SNEAKING), "&b[크리에이티브 전용] 웅크리기 상태에서만 소리 블록 값 복사",

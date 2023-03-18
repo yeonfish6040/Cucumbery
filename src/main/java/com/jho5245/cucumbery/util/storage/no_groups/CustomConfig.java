@@ -241,6 +241,10 @@ public class CustomConfig
 
   public void delete()
   {
+    if (!this.file.exists())
+    {
+      return;
+    }
     try
     {
       boolean success = this.file.delete();
@@ -374,6 +378,10 @@ public class CustomConfig
     USE_HELPFUL_LORE_FEATURE("아이템-설명-기능-사용", true),
     USE_QUICK_COMMAND_BLOCK("빠른-명령-블록-사용", false),
     UUID("UUID", "플레이어-UUID"),
+    SHOW_DEATH_MESSAGE("데스-메시지-표시", true),
+
+    SHOW_DEATH_SELF_MESSAGE("자신의-데스-메시지-표시", true),
+    SHOW_DEATH_PVP_MESSAGE("데스-메시지-PVP-표시", true),
     ;
 
     private final String key;

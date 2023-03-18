@@ -15,15 +15,13 @@ import com.jho5245.cucumbery.events.entity.EntityLandOnGroundEvent;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.no_groups.Scheduler;
-import com.jho5245.cucumbery.util.storage.data.Constant;
-import com.jho5245.cucumbery.util.storage.data.Permission;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -31,6 +29,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
@@ -78,12 +78,43 @@ public class PlayerMove implements Listener
     {
       return;
     }
+    this.customMaterial(event);
     if (Math.random() > 0.9999 && Permission.CMD_STASH.has(player) && Variable.itemStash.containsKey(uuid) && !Variable.itemStash.get(uuid).isEmpty())
     {
       MessageUtil.sendMessage(player, Prefix.INFO_STASH, "보관함에 아이템이 %s개 있습니다. %s 명령어로 확인하세요!", Variable.itemStash.get(uuid).size(), "rg255,204;/stash");
     }
     this.entityLandOnGround(event);
     this.getLastTrampledBlock(event);
+  }
+
+  private void customMaterial(PlayerMoveEvent event)
+  {
+    Player player = event.getPlayer();
+    EntityEquipment equipment = player.getEquipment();
+    ItemStack chestplate = equipment.getChestplate();
+    if (event.hasExplicitlyChangedBlock() && player.isGliding() && chestplate != null && chestplate.getType() == Material.ELYTRA && CustomMaterial.itemStackOf(chestplate) == CustomMaterial.ELYTRA_SHIVA_AMOODO_NAREUL_MAKEURLSOON_UPSOROAN)
+    {
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+      {
+        World world = player.getWorld();
+        Location location = event.getTo().clone().add(player.getEyeLocation().getDirection().multiply(2d));
+        double radius = 3;
+        for (int x = (int) (location.getBlockX() - radius); x <= location.getBlockX() + radius; x++)
+        {
+          for (int y = (int) (location.getBlockY() - radius); y <= location.getBlockY() + radius; y++)
+          {
+            for (int z = (int) (location.getBlockZ() - radius); z <= location.getBlockZ() + radius; z++)
+            {
+              Location newLocation = new Location(world, x, y, z);
+              if (newLocation.distance(location) <= radius)
+              {
+                newLocation.getBlock().breakNaturally(player.getInventory().getItemInMainHand(), true, true);
+              }
+            }
+          }
+        }
+      }, 0L);
+    }
   }
 
   private void customEffect(PlayerMoveEvent event)
@@ -108,7 +139,8 @@ public class PlayerMove implements Listener
     }
     if (event.hasChangedPosition() && CustomEffectManager.hasEffect(player, CustomEffectType.SHIVA_NO_ONE_CAN_BLOCK_ME))
     {
-      Method2.getNearbyEntitiesAsync(player.getLocation(), 1.5d).forEach(entity -> {
+      Method2.getNearbyEntitiesAsync(player.getLocation(), 1.5d).forEach(entity ->
+      {
         if (entity instanceof LivingEntity livingEntity && entity != player)
         {
           if (!(livingEntity instanceof Player p && UserData.GOD_MODE.getBoolean(p)))
