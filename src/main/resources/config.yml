@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 39
+config-version: 40
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -841,8 +841,3 @@ custom-mining:
     BEDS: 3
     # 이 외에 상기되지 않은 개체
     default: 3
-
-# 문자열 번역 시스템 사용 시 key와 fallback을 구분할 구분자, java.lang.String#split(String) 의 정규식 사용함!
-# 기존 translation key 사용법은 그냥 문자열을 사용하면 그게 키임.
-# fallback 기능 사용법: "key:your_translation.key,이곳에 fallback 문장 입력..."     (,가 구분자)
-translation-parser-separator: ","

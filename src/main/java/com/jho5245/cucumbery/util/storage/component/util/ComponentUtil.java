@@ -1242,15 +1242,14 @@ public class ComponentUtil
     String fallback = null;
     if (message.startsWith("key:"))
     {
-      String separator = Cucumbery.config.getString("translation-parser-separator", ",");
-      String[] split = message.split(separator);
+      String[] split = message.split(";");
       message = split[0].substring(4);
       if (split.length > 1)
       {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 1; i < split.length; i++)
         {
-          stringBuilder.append(split[i]).append(separator);
+          stringBuilder.append(split[i]).append(";");
         }
         fallback = stringBuilder.toString();
       }
