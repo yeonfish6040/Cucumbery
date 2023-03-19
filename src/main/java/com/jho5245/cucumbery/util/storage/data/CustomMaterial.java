@@ -264,15 +264,11 @@ public enum CustomMaterial implements Translatable
   NAUTILITE_INGOT(Material.IRON_INGOT, "&i노틸라이트 주괴", Rarity.EXCELLENT),
   NAUTILITE_ORE(Material.WHITE_DYE, "&i노틸라이트 원석", Rarity.EXCELLENT),
   NETHERITE_BLOCK_DECORATIVE(Material.NETHERITE_BLOCK, "&i장식용 네더라이트 블록", Rarity.NORMAL, CreativeCategory.BUILDING_BLOCKS.translationKey()),
-
-
   NETHERITE_CHESTPLATE_WITH_ELYTRA(Material.ELYTRA, "&i네더라이트 겉날개", Rarity.EXCELLENT, CreativeCategory.TRANSPORTATION.translationKey()),
   PLASTIC_DEBRIS(Material.LIGHT_BLUE_DYE, "&i플라스틱 파편", Rarity.RARE),
   PLASTIC_MATERIAL(Material.LAPIS_LAZULI, "&i플라스틱 자재", Rarity.RARE),
-  PLATNIUM_INGOT(Material.GOLD_INGOT, "&i백금 주괴", Rarity.RARE),
-
-
-  PLATNIUM_ORE(Material.YELLOW_DYE, "&i백금 원석", Rarity.RARE),
+  PLATINUM_INGOT(Material.GOLD_INGOT, "&i백금 주괴", Rarity.RARE),
+  PLATINUM_ORE(Material.YELLOW_DYE, "&i백금 원석", Rarity.RARE),
   PORTABLE_CRAFTING_TABLE(Material.PLAYER_HEAD, "&i휴대용 작업대", Rarity.RARE, CreativeCategory.TOOLS.translationKey()),
   PORTABLE_ENDER_CHEST(Material.PLAYER_HEAD, "&i휴대용 엔더 상자", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   RAINBOW_BOOTS(Material.IRON_BOOTS, "&i무지개 부츠", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
