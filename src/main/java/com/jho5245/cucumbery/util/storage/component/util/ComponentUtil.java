@@ -850,6 +850,11 @@ public class ComponentUtil
     }
     else
     {
+      String fallback = component.fallback();
+      if (fallback != null)
+      {
+        key = fallback;
+      }
       for (MessageUtil.ConsonantType type : MessageUtil.ConsonantType.values())
       {
         if (key.contains(type.toString()))
@@ -913,9 +918,10 @@ public class ComponentUtil
     return key;
   }
 
+  @SuppressWarnings("all")
   private static String replace(@NotNull String key, @NotNull String from, @NotNull String to, int index)
   {
-    StringBuffer sb = new StringBuffer();
+    StringBuilder sb = new StringBuilder();
     Pattern p = Pattern.compile(from);
     Matcher m = p.matcher(key);
     int count = 0;
@@ -1007,6 +1013,7 @@ public class ComponentUtil
     return fromLegacyText(message, true);
   }
 
+  @SuppressWarnings("all")
   @NotNull
   private static List<Component> fromLegacyText(@NotNull String message, boolean n2s)
   {
@@ -1146,10 +1153,7 @@ public class ComponentUtil
                 component = component.decoration(TextDecoration.STRIKETHROUGH, component.decoration(TextDecoration.STRIKETHROUGH) == State.TRUE ? State.FALSE : State.NOT_SET);
                 component = component.decoration(TextDecoration.OBFUSCATED, component.decoration(TextDecoration.OBFUSCATED) == State.TRUE ? State.FALSE : State.NOT_SET);
               }
-              case 'i' ->
-              {
-                component = component.decoration(TextDecoration.ITALIC, State.FALSE);
-              }
+              case 'i' -> component = component.decoration(TextDecoration.ITALIC, State.FALSE);
             }
           }
         }
@@ -1400,10 +1404,7 @@ public class ComponentUtil
                 component = component.decoration(TextDecoration.STRIKETHROUGH, component.decoration(TextDecoration.STRIKETHROUGH) == State.TRUE ? State.FALSE : State.NOT_SET);
                 component = component.decoration(TextDecoration.OBFUSCATED, component.decoration(TextDecoration.OBFUSCATED) == State.TRUE ? State.FALSE : State.NOT_SET);
               }
-              case 'i' ->
-              {
-                component = component.decoration(TextDecoration.ITALIC, State.FALSE);
-              }
+              case 'i' -> component = component.decoration(TextDecoration.ITALIC, State.FALSE);
             }
           }
         }
@@ -1563,6 +1564,11 @@ public class ComponentUtil
       if (serial != null)
       {
         key = serial;
+      }
+      String fallback = translatableComponent.fallback();
+      if (fallback != null)
+      {
+        key = fallback;
       }
       String test = key.replace("%%", "");
       int keyContains = (int) (p.matcher(test).results().count() + p2.matcher(test).results().count());
