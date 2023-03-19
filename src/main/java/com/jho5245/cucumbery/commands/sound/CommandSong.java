@@ -149,7 +149,7 @@ public class CommandSong implements CucumberyCommandExecutor
             }
             if (!isDownloading.isEmpty())
             {
-              MessageUtil.sendError(sender, "마 좀 기다리려");
+              MessageUtil.sendError(sender, "이미 재생할 노래를 불러오는 중입니다");
               return true;
             }
             if (!stop && radioSongPlayer != null && song != null)

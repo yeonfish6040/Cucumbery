@@ -189,7 +189,7 @@ public class Cucumbery extends JavaPlugin
     }
     if (Cucumbery.config.getBoolean("console-messages.plugin"))
     {
-      MessageUtil.consoleSendMessage("&2[#52ee52;활성화&2] rg255,204;" + pluginDescriptionFile.getName() + "&r version : rg255,204;" + pluginDescriptionFile.getVersion() + "&r 플러그인이 활성화 되었습니다?");
+      MessageUtil.consoleSendMessage("&2[#52ee52;활성화&2] rg255,204;" + pluginDescriptionFile.getName() + "&r version : rg255,204;" + pluginDescriptionFile.getVersion() + "&r 플러그인이 활성화 되었습니다");
     }
     MessageUtil.broadcastDebug("Cucumbery 플러그인 활성화");
     for (Player online : Bukkit.getOnlinePlayers())
@@ -220,6 +220,7 @@ public class Cucumbery extends JavaPlugin
   }
 
   // 플러그인 활성화 시 초기화 과정
+  @SuppressWarnings("deprecation")
   private void init()
   {
     String version = Bukkit.getServer().getVersion().toLowerCase();
@@ -341,10 +342,6 @@ public class Cucumbery extends JavaPlugin
     catch (Exception e)
     {
       e.printStackTrace();
-    }
-    if (Cucumbery.using_CommandAPI)
-    {
-//      brigadierService.shutdownNow();
     }
     if (Cucumbery.using_NoteBlockAPI)
     {
@@ -597,6 +594,7 @@ public class Cucumbery extends JavaPlugin
     }
   }
 
+  @SuppressWarnings("unused")
   private void registerBrigadierCommands()
   {
     try

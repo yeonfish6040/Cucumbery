@@ -56,7 +56,7 @@ public class Updater
 //    }
 
     // 콘피그에서 업데이터 자동화 여부 가져오기
-    AUTOMATION = Cucumbery.config.getBoolean("auto-updater");
+    AUTOMATION = Cucumbery.config.getBoolean("auto-updater.enable");
 
 
     // 업데이터 자동화 체커
