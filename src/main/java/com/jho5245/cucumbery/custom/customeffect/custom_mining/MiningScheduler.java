@@ -435,7 +435,7 @@ public class MiningScheduler
           {
             switch (customMaterial)
             {
-              case RUBY, AMBER, JADE, SAPPHIRE, TOPAZ, JASPER -> soundGroup = Material.AMETHYST_CLUSTER.createBlockData().getSoundGroup();
+              case RUBY, AMBER, JADE, SAPPHIRE, TOPAZ, MORGANITE -> soundGroup = Material.AMETHYST_CLUSTER.createBlockData().getSoundGroup();
             }
           }
           if (Variable.customMiningExtraBlocks.containsKey(location))

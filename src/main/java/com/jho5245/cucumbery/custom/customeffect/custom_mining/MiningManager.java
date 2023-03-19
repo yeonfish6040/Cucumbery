@@ -550,14 +550,14 @@ public class MiningManager
             blockTier = 9;
             blockHardness = 5000f;
             drops.clear();
-            drops.add(CustomMaterial.JASPER.create(Method.random(3, 6)));
+            drops.add(CustomMaterial.MORGANITE.create(Method.random(3, 6)));
           }
           case PINK_STAINED_GLASS_PANE ->
           {
             blockTier = 9;
             blockHardness = 4800f;
             drops.clear();
-            drops.add(CustomMaterial.JASPER.create(Method.random(2, 4)));
+            drops.add(CustomMaterial.MORGANITE.create(Method.random(2, 4)));
           }
         }
       }
@@ -1008,7 +1008,7 @@ public class MiningManager
       {
         switch (customMaterial)
         {
-          case MITHRIL_ORE, MITHRIL_INGOT, TITANIUM_ORE, TITANIUM_INGOT, AMBER, JADE, JASPER, RUBY, TOPAZ, SHROOMITE_ORE, SHROOMITE_INGOT, TUNGSTEN_INGOT, TUNGSTEN_ORE, COBALT_INGOT, COBALT_ORE,
+          case MITHRIL_ORE, MITHRIL_INGOT, TITANIUM_ORE, TITANIUM_INGOT, AMBER, JADE, MORGANITE, RUBY, TOPAZ, SHROOMITE_ORE, SHROOMITE_INGOT, TUNGSTEN_INGOT, TUNGSTEN_ORE, COBALT_INGOT, COBALT_ORE,
                   CUCUMBERITE_INGOT, CUCUMBERITE_ORE ->
           {
           }

@@ -41,7 +41,7 @@ public class ItemLore4
       customTags = nbtCompound.addCompound(CucumberyTag.TMI_CUSTOM_TAGS);
       switch (customMaterial)
       {
-        case AMBER, JADE, JASPER, SAPPHIRE, TOPAZ -> customTags.setBoolean("gemstones", true);
+        case AMBER, JADE, MORGANITE, SAPPHIRE, TOPAZ -> customTags.setBoolean("gemstones", true);
       }
       if (customTags.getKeys().isEmpty())
       {

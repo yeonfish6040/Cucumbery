@@ -1075,7 +1075,7 @@ public class ItemStackUtil
             if (customTags.getBoolean("gemstones"))
             {
               display = ComponentUtil.translate("아무 젬스톤");
-              ItemStack clone = getAnimatedItemStack(null, Arrays.asList(CustomMaterial.AMBER, CustomMaterial.JADE, CustomMaterial.JASPER, CustomMaterial.SAPPHIRE, CustomMaterial.TOPAZ), null);
+              ItemStack clone = getAnimatedItemStack(null, Arrays.asList(CustomMaterial.AMBER, CustomMaterial.JADE, CustomMaterial.MORGANITE, CustomMaterial.SAPPHIRE, CustomMaterial.TOPAZ), null);
               itemStack.setType(clone.getType());
               itemStack.setItemMeta(clone.getItemMeta());
               itemMeta = itemStack.getItemMeta();

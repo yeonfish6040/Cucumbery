@@ -39,60 +39,53 @@ public enum CustomMaterial implements Translatable
   BEACON_HAT(Material.BEACON, "&i신호기 모자", Rarity.EPIC, CreativeCategory.DECORATIONS.translationKey()),
   BEACON_HAT_EXPIRE_1D(Material.BEACON, "&i신호기 모자", Rarity.EPIC, CreativeCategory.DECORATIONS.translationKey()),
   BEACON_HAT_EXPIRE_1D_UNTRADEABLE(Material.BEACON, "&i신호기 모자", Rarity.EPIC, CreativeCategory.DECORATIONS.translationKey()),
-
   BEACON_HAT_EXPIRE_7D(Material.BEACON, "&i신호기 모자", Rarity.EPIC, CreativeCategory.DECORATIONS.translationKey()),
-
   BEACON_HAT_EXPIRE_7D_UNTRADEABLE(Material.BEACON, "&i신호기 모자", Rarity.EPIC, CreativeCategory.DECORATIONS.translationKey()),
-
   BEACON_HAT_UNTRADEABLE(Material.BEACON, "&i신호기 모자", Rarity.EPIC, CreativeCategory.DECORATIONS.translationKey()),
-
   BOO(Material.SCUTE, "&b부우"),
-
   BOO_HUNGRY(Material.SCUTE, "&b배고프부우.."),
-
   BOW_CRIT(Material.BOW, "&i치명적인 활", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   BOW_ENDER_PEARL(Material.BOW, "&i엔더 진주 활", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   BOW_EXPLOSIVE(Material.BOW, "&i폭발성 활", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   BOW_EXPLOSIVE_DESTRUCTION(Material.BOW, "&i파괴형 폭발성 활", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
-
   BOW_FLAME(Material.BOW, "&i화염 활", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   BOW_INFINITE(Material.BOW, "&i무한의 활", Rarity.ELITE, CreativeCategory.COMBAT.translationKey()),
-
   BOW_MOUNT(Material.BOW, "&i라이딩 활", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
-
   BREAD_DIRTY(Material.BREAD, "&i더러운 빵", Rarity.JUNK, CreativeCategory.FOOD.translationKey()),
-
   BRONZE_INGOT(Material.BRICK, "&i청동 주괴"),
   COBALT_AXE(Material.DIAMOND_AXE, "&i코발트 도끼", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   COBALT_BOOTS(Material.LEATHER_BOOTS, "&i코발트 부츠", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+
   COBALT_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i코발트 흉갑", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
   COBALT_HELMET(Material.LEATHER_HELMET, "&i코발트 투구", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
   COBALT_HOE(Material.DIAMOND_HOE, "&i코발트 괭이", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   COBALT_INGOT(Material.LAPIS_LAZULI, "&i코발트 주괴", Rarity.UNIQUE),
+
   COBALT_LEGGINGS(Material.LEATHER_LEGGINGS, "&i코발트 레깅스", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
   COBALT_ORE(Material.BLUE_DYE, "&i코발트 원석", Rarity.UNIQUE),
-  COBALT_PICKAXE(Material.DIAMOND_PICKAXE, "&i코발트 곡괭이", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
-  COBALT_SHOVEL(Material.DIAMOND_SHOVEL, "&i코발트 삽", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
 
+  COBALT_PICKAXE(Material.DIAMOND_PICKAXE, "&i코발트 곡괭이", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
+
+  COBALT_SHOVEL(Material.DIAMOND_SHOVEL, "&i코발트 삽", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   COBALT_SWORD(Material.DIAMOND_SWORD, "&i코발트 검", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
   COPPER_AXE(Material.STONE_AXE, "&i구리 도끼", CreativeCategory.TOOLS.translationKey()),
-
   COPPER_BOOTS(Material.LEATHER_BOOTS, "&i구리 부츠", CreativeCategory.COMBAT.translationKey()),
-
   COPPER_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i구리 흉갑", CreativeCategory.COMBAT.translationKey()),
-
   COPPER_HELMET(Material.LEATHER_HELMET, "&i구리 투구", CreativeCategory.COMBAT.translationKey()),
   COPPER_HOE(Material.STONE_HOE, "&i구리 괭이", CreativeCategory.TOOLS.translationKey()),
   COPPER_LEGGINGS(Material.LEATHER_LEGGINGS, "&i구리 레깅스", CreativeCategory.COMBAT.translationKey()),
   COPPER_PICKAXE(Material.STONE_PICKAXE, "&i구리 곡괭이", CreativeCategory.TOOLS.translationKey()),
   COPPER_SHOVEL(Material.STONE_SHOVEL, "&i구리 삽", CreativeCategory.TOOLS.translationKey()),
   COPPER_SWORD(Material.STONE_SWORD, "&i구리 검", CreativeCategory.COMBAT.translationKey()),
+
   CORE_GEMSTONE(Material.PRISMARINE_CRYSTALS, "&b코어 젬스톤", Rarity.EPIC),
   CORE_GEMSTONE_EXPERIENCE(Material.PRISMARINE_CRYSTALS, "&a경험의 코어 젬스톤", Rarity.EPIC),
-  CORE_GEMSTONE_MIRROR(Material.PRISMARINE_CRYSTALS, "&c거울세계의 코어 젬스톤", Rarity.EPIC),
-  CORE_GEMSTONE_MITRA(Material.PRISMARINE_CRYSTALS, "&6미트라의 코어 젬스톤", Rarity.EPIC),
-  CUCUMBERITE_INGOT(Material.EMERALD, "&i오이스터늄 주괴"),
 
+  CORE_GEMSTONE_MIRROR(Material.PRISMARINE_CRYSTALS, "&c거울세계의 코어 젬스톤", Rarity.EPIC),
+
+  CORE_GEMSTONE_MITRA(Material.PRISMARINE_CRYSTALS, "&6미트라의 코어 젬스톤", Rarity.EPIC),
+
+  CUCUMBERITE_INGOT(Material.EMERALD, "&i오이스터늄 주괴"),
   CUCUMBERITE_ORE(Material.SCUTE, "&i오이스터늄 원석"),
   CUTE_SUGAR(Material.SUGAR, "&a커여운 슦가", Rarity.EPIC, "슈가"),
   CUTE_SUGAR_HUNGRY(Material.SUGAR, "&a배고푼 커여운 슦가", Rarity.EPIC, "슈가"),
@@ -103,6 +96,7 @@ public enum CustomMaterial implements Translatable
   DRILL_FUEL_TANK(Material.BARREL, "&i드릴 연료 탱크", Rarity.UNIQUE, "재료"),
   ELYTRA_SHIVA_AMOODO_NAREUL_MAKEURLSOON_UPSOROAN(Material.ELYTRA, "&i시바 아무도 나를 막을 순 없겉날개", Rarity.LEGENDARY, CreativeCategory.COMBAT.translationKey()),
   ENCHANTED_ACACIA_LOG(Material.ACACIA_LOG, "&i마법이 부여된 아카시아나무 원목", Rarity.RARE),
+
   ENCHANTED_AMETHYST_BLOCK(Material.AMETHYST_BLOCK, "&i마법이 부여된 자수정 블록", Rarity.EPIC),
   ENCHANTED_AMETHYST_SHARD(Material.AMETHYST_SHARD, "&i마법이 부여된 자수정 조각", Rarity.RARE),
   ENCHANTED_APPLE(Material.APPLE, "&i마법이 부여된 사과", Rarity.RARE),
@@ -114,7 +108,6 @@ public enum CustomMaterial implements Translatable
   ENCHANTED_BLUE_ICE(Material.BLUE_ICE, "&i마법이 부여된 푸른얼음", Rarity.ELITE),
   ENCHANTED_BONE(Material.BONE, "&i마법이 부여된 뼈다귀", Rarity.RARE),
   ENCHANTED_BONE_BLOCK(Material.BONE_BLOCK, "&i마법이 부여된 뼈 블록", Rarity.EPIC),
-
   ENCHANTED_BROWN_MUSHROOM(Material.BROWN_MUSHROOM, "&i마법이 부여된 갈색 버섯", Rarity.RARE),
   ENCHANTED_BROWN_MUSHROOM_BLOCK(Material.BROWN_MUSHROOM_BLOCK, "&i마법이 부여된 갈색 버섯 블록", Rarity.EPIC),
   ENCHANTED_CACTUS(Material.CACTUS, "&i마법이 부여된 선인장", Rarity.RARE),
@@ -125,6 +118,7 @@ public enum CustomMaterial implements Translatable
   ENCHANTED_CHORUS_FRUIT(Material.CHORUS_FRUIT, "&i마법이 부여된 후렴과", Rarity.EPIC),
   ENCHANTED_CLAY_BALL(Material.CLAY_BALL, "&i마법이 부여된 점토 덩이", Rarity.RARE),
   ENCHANTED_COAL(Material.COAL, "&i마법이 부여된 석탄", Rarity.RARE),
+
   ENCHANTED_COAL_BLOCK(Material.COAL_BLOCK, "&i마법이 부여된 석탄 블록", Rarity.EPIC),
   ENCHANTED_COBBLED_DEEPSLATE(Material.COBBLED_DEEPSLATE, "&i마법이 부여된 심층암 조약돌", Rarity.RARE),
   ENCHANTED_COBBLESTONE(Material.COBBLESTONE, "&i마법이 부여된 조약돌", Rarity.RARE),
@@ -237,7 +231,6 @@ public enum CustomMaterial implements Translatable
   FROG_LEGGINGS(Material.LEATHER_LEGGINGS, "&2개구리 바지", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   IQ_CHOOK_CHUCK(Material.REDSTONE_BLOCK, "&iIQ 축척기", Rarity.RARE),
   JADE(Material.LIME_DYE, "&i옥 원석", Rarity.UNIQUE),
-  JASPER(Material.PINK_DYE, "&i벽옥 원석", Rarity.UNIQUE),
   LARGE_DRILL_FUEL(Material.COAL, "&i대형 드릴 연료", Rarity.UNIQUE, "드릴 연료"),
   LEAD_INGOT(Material.IRON_INGOT, "&i납 주괴"),
   LEAD_ORE(Material.GRAY_DYE, "&i납 원석"),
@@ -245,9 +238,7 @@ public enum CustomMaterial implements Translatable
   MINDAS_BOOTS(Material.GOLDEN_BOOTS, "&R마인더스의 신발", Rarity.LEGENDARY, "갑옷"),
   MINDAS_CHESTPLATE(Material.GOLDEN_CHESTPLATE, "&R마인더스의 상의", Rarity.LEGENDARY, "갑옷"),
   MINDAS_DRILL(Material.PRISMARINE_SHARD, "&i마인더스의 드릴", Rarity.LEGENDARY, CreativeCategory.TOOLS.translationKey()),
-
   MINDAS_HELMET(Material.PLAYER_HEAD, "&R마인더스의 헬멧", Rarity.LEGENDARY, "갑옷"),
-
   MINDAS_LEGGINGS(Material.GOLDEN_LEGGINGS, "&R마인더스의 하의", Rarity.LEGENDARY, "갑옷"),
   MINER_BOOTS(Material.LEATHER_BOOTS, "&i광부 신발", Rarity.RARE, "갑옷"),
   MINER_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i광부 상의", Rarity.RARE, "갑옷"),
@@ -256,50 +247,53 @@ public enum CustomMaterial implements Translatable
   MITHRIL_AXE(Material.DIAMOND_AXE, "&i미스릴 도끼", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   MITHRIL_BOOTS(Material.LEATHER_BOOTS, "&i미스릴 부츠", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
   MITHRIL_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&i미스릴 흉갑", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+
   MITHRIL_HELMET(Material.LEATHER_HELMET, "&i미스릴 투구", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+
   MITHRIL_HOE(Material.DIAMOND_HOE, "&i미스릴 괭이", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   MITHRIL_INGOT(Material.IRON_INGOT, "&i미스릴 주괴", Rarity.UNIQUE),
   MITHRIL_LEGGINGS(Material.LEATHER_LEGGINGS, "&i미스릴 레깅스", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
   MITHRIL_ORE(Material.PRISMARINE_CRYSTALS, "&i미스릴 원석", Rarity.UNIQUE),
   MITHRIL_PICKAXE(Material.DIAMOND_PICKAXE, "&i미스릴 곡괭이", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
-
-
   MITHRIL_PICKAXE_REFINED(Material.DIAMOND_PICKAXE, "&i정제된 미스릴 곡괭이", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   MITHRIL_REFINED(Material.PLAYER_HEAD, "&i정제된 미스릴", Rarity.LEGENDARY),
   MITHRIL_SHOVEL(Material.DIAMOND_SHOVEL, "&i미스릴 삽", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   MITHRIL_SWORD(Material.DIAMOND_SWORD, "&i미스릴 검", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
-
-
+  MORGANITE(Material.PINK_DYE, "&i홍주석 원석", Rarity.UNIQUE),
   MUSHROOM_STEW_PICKAXE(Material.MUSHROOM_STEW, "&i스튜 곡괭이?", Rarity.ARTIFACT, CreativeCategory.TOOLS.translationKey()),
   NAUTILITE_INGOT(Material.IRON_INGOT, "&i노틸라이트 주괴", Rarity.EXCELLENT),
   NAUTILITE_ORE(Material.WHITE_DYE, "&i노틸라이트 원석", Rarity.EXCELLENT),
   NETHERITE_BLOCK_DECORATIVE(Material.NETHERITE_BLOCK, "&i장식용 네더라이트 블록", Rarity.NORMAL, CreativeCategory.BUILDING_BLOCKS.translationKey()),
+
+
   NETHERITE_CHESTPLATE_WITH_ELYTRA(Material.ELYTRA, "&i네더라이트 겉날개", Rarity.EXCELLENT, CreativeCategory.TRANSPORTATION.translationKey()),
-  PLASTIC_DEBRIS(Material.BLUE_DYE, "&i플라스틱 잔해", Rarity.RARE),
+  PLASTIC_DEBRIS(Material.LIGHT_BLUE_DYE, "&i플라스틱 파편", Rarity.RARE),
   PLASTIC_MATERIAL(Material.LAPIS_LAZULI, "&i플라스틱 자재", Rarity.RARE),
   PLATNIUM_INGOT(Material.GOLD_INGOT, "&i백금 주괴", Rarity.RARE),
+
+
   PLATNIUM_ORE(Material.YELLOW_DYE, "&i백금 원석", Rarity.RARE),
   PORTABLE_CRAFTING_TABLE(Material.PLAYER_HEAD, "&i휴대용 작업대", Rarity.RARE, CreativeCategory.TOOLS.translationKey()),
   PORTABLE_ENDER_CHEST(Material.PLAYER_HEAD, "&i휴대용 엔더 상자", Rarity.UNIQUE, CreativeCategory.TOOLS.translationKey()),
   RAINBOW_BOOTS(Material.IRON_BOOTS, "&i무지개 부츠", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   RAINBOW_CHESTPLATE(Material.IRON_CHESTPLATE, "&i무지개 흉갑", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   RAINBOW_HELMET(Material.IRON_HELMET, "&i무지개 투구", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
-
   RAINBOW_LEGGINGS(Material.IRON_LEGGINGS, "&i무지개 레깅스", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   RUBY(Material.RED_DYE, "&i루비 원석", Rarity.UNIQUE),
 
   RUNE_DESTRUCTION(Material.TNT_MINECART, "&i파멸의 룬"),
-
   RUNE_EARTHQUAKE(Material.TNT_MINECART, "&i지진의 룬"),
 
   SANS_BOOTS(Material.LEATHER_BOOTS, "&7샌즈 부츠", Rarity.RARE, "갑옷"),
 
   SANS_CHESTPLATE(Material.LEATHER_CHESTPLATE, "&7샌즈 흉갑", Rarity.RARE, "갑옷"),
+
   SANS_HELMET(Material.LEATHER_HELMET, "&7샌즈 투구", Rarity.RARE, "갑옷"),
 
   SANS_LEGGINGS(Material.LEATHER_LEGGINGS, "&7샌즈 각반", Rarity.RARE, "갑옷"),
   SAPPHIRE(Material.BLUE_DYE, "&i사파이어", Rarity.UNIQUE),
-  SHROOMITE_INGOT(Material.BRICK, "&i쉬루마이트 주괴"),
+
+  SHROOMITE_INGOT(Material.NETHER_BRICK, "&i쉬루마이트 주괴"),
   SHROOMITE_ORE(Material.RED_DYE, "&i쉬루마이트 원석"),
   SMALL_DRILL_FUEL(Material.COAL, "&i소형 드릴 연료", Rarity.NORMAL, "드릴 연료"),
   SMALL_MINING_SACK(Material.PLAYER_HEAD, "&i소형 광물 가방", Rarity.RARE, "가방"),
