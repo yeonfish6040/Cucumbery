@@ -32,7 +32,9 @@ import org.jetbrains.annotations.NotNull;
 import org.maxgamer.quickshop.api.QuickShopAPI;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,6 +42,7 @@ import java.util.concurrent.Executors;
 @SuppressWarnings("deprecation")
 public class CommandCucumbery implements CucumberyCommandExecutor
 {
+  private final Set<String> isTryingUpdating = new HashSet<>();
   @Override
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
@@ -147,33 +150,40 @@ public class CommandCucumbery implements CucumberyCommandExecutor
       case "update" ->
       {
         MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery update 명령어 사용", sender));
+        if (!isTryingUpdating.isEmpty())
+        {
+          MessageUtil.sendError(sender, "이미 업데이트를 확인하는 중입니다");
+          return true;
+        }
+        isTryingUpdating.add("");
+        MessageUtil.info(sender, "플러그인이 최신 버전인지 확인합니다...");
         ExecutorService executor = Executors.newFixedThreadPool(1);
-        @NotNull String[] finalArgs = args;
         executor.submit(() ->
         {
           String version;
           try
           {
             version = Updater.getLatest();
+            isTryingUpdating.clear();
           }
           catch (Exception e)
           {
             // 오류: 버전 확인 실패
-            MessageUtil.sendError(sender, "버전 확인 실패. (" + e.getMessage() + ")");
+            MessageUtil.sendError(sender, "버전 확인을 실패하였습니다 (%s)", e.getMessage());
             executor.shutdown();
             return true;
           }
           if (Updater.isLatest())
           {
             // 경고: 이미 최신 버전임
-            MessageUtil.sendWarn(sender, "이미 플러그인이 최신 버전입니다.");
+            MessageUtil.info(sender, "이미 플러그인이 최신 버전입니다");
             executor.shutdown();
             return true;
           }
           // 정보: 플러그인 버전
-          MessageUtil.info(sender, "플러그인의 최신 버전을 발견했습니다.");
-          MessageUtil.info(sender, "  현재 버전: " + Cucumbery.getPlugin().getDescription().getName() + " v" + Cucumbery.getPlugin().getDescription().getVersion());
-          MessageUtil.info(sender, "  최신 버전: " + Cucumbery.getPlugin().getDescription().getName() + " v" + version);
+          MessageUtil.info(sender, "플러그인의 최신 버전을 발견했습니다");
+          MessageUtil.info(sender, "  현재 버전 : " + Cucumbery.getPlugin().getDescription().getName() + " v" + Cucumbery.getPlugin().getDescription().getVersion());
+          MessageUtil.info(sender, "  최신 버전 : " + Cucumbery.getPlugin().getDescription().getName() + " v" + version);
           // 정보: 파일 다운로드 시작
           MessageUtil.info(sender, "파일 다운로드 중...");
           File file;
@@ -184,12 +194,12 @@ public class CommandCucumbery implements CucumberyCommandExecutor
           catch (Exception e)
           {
             // 오류: 파일 다운로드 실패
-            MessageUtil.sendError(sender, "파일 다운로드 실패. (" + e.getMessage() + ")");
+            MessageUtil.sendError(sender, "파일 다운로드 실패 (%s)", e.getMessage());
             executor.shutdown();
             return true;
           }
           // 정보: 파일 다운로드 완료
-          MessageUtil.info(sender, "파일 다운로드 완료.");
+          MessageUtil.info(sender, "파일 다운로드 완료");
           // 정보: 플러그인 업데이트 시작
           MessageUtil.info(sender, "플러그인 업데이트 중...");
           try
@@ -199,12 +209,12 @@ public class CommandCucumbery implements CucumberyCommandExecutor
           catch (Exception e)
           {
             // 오류: 업데이트 실패
-            MessageUtil.sendError(sender, "플러그인 업데이트 실패. (" + e.getMessage() + ")");
+            MessageUtil.sendError(sender, "플러그인 업데이트 실패 (%s)", e.getMessage());
             executor.shutdown();
             return true;
           }
           // 정보: 업데이트 완료
-          MessageUtil.info(sender, "업데이트 완료.");
+          MessageUtil.info(sender, "업데이트 완료");
           executor.shutdown();
           return true;
         });

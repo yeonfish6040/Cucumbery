@@ -23,7 +23,7 @@ public class PluginLoader
   {
     Plugin plugin = Cucumbery.getPlugin();
     // May not be compatible with Spigot
-    String name = plugin.getPluginMeta().getName().toLowerCase(Locale.ENGLISH);
+    String name = Cucumbery.isPaper ? plugin.getPluginMeta().getName().toLowerCase(Locale.ENGLISH) : plugin.getName();
     // commandwrap
     PluginManager pluginManager = Bukkit.getPluginManager();
     SimpleCommandMap commandMap = null;

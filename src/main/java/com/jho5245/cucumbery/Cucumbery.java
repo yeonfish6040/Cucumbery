@@ -111,7 +111,7 @@ import java.util.UUID;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 38, DEATH_MESSAGES_CONFIG_VERSION = 11, LANG_CONFIG_VERSION = 5;
+  public static final int CONFIG_VERSION = 39, DEATH_MESSAGES_CONFIG_VERSION = 11, LANG_CONFIG_VERSION = 6;
 //  private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   /**
@@ -142,6 +142,9 @@ public class Cucumbery extends JavaPlugin
   public static File file;
   public static File dataFolder;
   public static long runTime;
+  public static boolean isPaper;
+
+  private boolean isLoaded;
   private static Cucumbery cucumbery;
   public PluginDescriptionFile pluginDescriptionFile;
   private PluginManager pluginManager;
@@ -159,6 +162,9 @@ public class Cucumbery extends JavaPlugin
   @Override
   public void onLoad()
   {
+    if (isLoaded)
+      return;
+    isLoaded = true;
     try
     {
       CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false).silentLogs(true).initializeNBTAPI(NBTContainer.class, NBTContainer::new));
@@ -216,6 +222,8 @@ public class Cucumbery extends JavaPlugin
   // 플러그인 활성화 시 초기화 과정
   private void init()
   {
+    String version = Bukkit.getServer().getVersion().toLowerCase();
+    isPaper = version.contains("paper") || version.contains("pufferfish");
     cucumbery = this;
     file = this.getFile();
     dataFolder = this.getDataFolder();

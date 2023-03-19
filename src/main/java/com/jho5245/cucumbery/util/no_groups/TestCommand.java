@@ -11,7 +11,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,56 +28,98 @@ public class TestCommand implements CucumberyCommandExecutor
     }
     try
     {
+//      Class<?> clazz = Class.forName("io.papermc.paper.plugin.entrypoint.LaunchEntryPointHandler");
+//      Field instance = clazz.getField("INSTANCE");
+//      instance.setAccessible(true);
+//      Field storage = clazz.getDeclaredField("storage");
+//      storage.setAccessible(true);
+//      Map<?, ?> map = (Map<?, ?>) storage.get(instance.get(null));
+//      Class<?> keyClazz = Class.forName("io.papermc.paper.plugin.entrypoint.Entrypoint"), valueClazz = Class.forName("io.papermc.paper.plugin.storage.ServerPluginProviderStorage");
+//      for (java.lang.reflect.Method method : keyClazz.getDeclaredMethods())
+//      {
+//        MessageUtil.consoleSendMessage("key name:" + method.getName() + ", params:" + Arrays.toString(method.getParameters()));
+//      }
+//      for (java.lang.reflect.Method method : valueClazz.getDeclaredMethods())
+//      {
+//        MessageUtil.consoleSendMessage("value name:" + method.getName() + ", params:" + Arrays.toString(method.getParameters()));
+//      }
+
+//      map.forEach((key, value) ->
+//      {
+//        MessageUtil.broadcastDebug(value.toString());
+//      });
+//
+//      Set<String> foo = new HashSet<>();
+//
+//      map.keySet().removeIf(key ->
+//      {
+//        if (foo.isEmpty())
+//        {
+//          foo.add("foo");
+//          return true;
+//        };
+//        return false;
+//      });
+
+//      map.keySet().removeIf(key -> {
+//        return map.containsValue(map.get(key));
+//      });
       if (sender instanceof Player player)
       {
-        Connection con = null;
-
-        String server = "localhost"; // MySQL 서버 주소
-        String database = "JDBC"; // MySQL DATABASE 이름
-        String user_name = "root"; //  MySQL 서버 아이디
-        String password = "2354"; // MySQL 서버 비밀번호
-
-        // 1.드라이버 로딩
-        try
-        {
-          Class.forName("com.mysql.jdbc.Driver");
-        }
-        catch (ClassNotFoundException e)
-        {
-          System.err.println(" !! <JDBC 오류> Driver load 오류: " + e.getMessage());
-          e.printStackTrace();
-        }
-
-        // 2.연결
-        try
-        {
-          con = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + "?useSSL=false", user_name, password);
-          System.out.println("정상적으로 연결되었습니다.");
-        }
-        catch (SQLException e)
-        {
-          System.err.println("con 오류:" + e.getMessage());
-          e.printStackTrace();
-        }
-
-        Statement statement = con.createStatement();
-        ResultSet resultSet = statement.executeQuery("");
-        while (resultSet.next())
-        {
-
-        }
-
-        // 3.해제
-        try
-        {
-          if (con != null)
-          {
-            con.close();
-          }
-        }
-        catch (SQLException e)
-        {
-        }
+//        ItemStack itemStack = new ItemStack(Material.TNT);
+//        ItemMeta itemMeta = itemStack.getItemMeta();
+//        TranslatableComponent component = Component.translatable("wa sans");
+//        itemMeta.displayName(component);
+//        itemStack.setItemMeta(itemMeta);
+//        player.getInventory().addItem(itemStack);
+//        Connection con = null;
+//
+//        String server = "localhost"; // MySQL 서버 주소
+//        String database = "JDBC"; // MySQL DATABASE 이름
+//        String user_name = "root"; //  MySQL 서버 아이디
+//        String password = "2354"; // MySQL 서버 비밀번호
+//
+//        // 1.드라이버 로딩
+//        try
+//        {
+//          Class.forName("com.mysql.jdbc.Driver");
+//        }
+//        catch (ClassNotFoundException e)
+//        {
+//          System.err.println(" !! <JDBC 오류> Driver load 오류: " + e.getMessage());
+//          e.printStackTrace();
+//        }
+//
+//        // 2.연결
+//        try
+//        {
+//          con = DriverManager.getConnection("jdbc:mysql://" + server + "/" + database + "?useSSL=false", user_name, password);
+//          System.out.println("정상적으로 연결되었습니다.");
+//        }
+//        catch (SQLException e)
+//        {
+//          System.err.println("con 오류:" + e.getMessage());
+//          e.printStackTrace();
+//        }
+//
+//        Statement statement = con.createStatement();
+//        ResultSet resultSet = statement.executeQuery("");
+//        while (resultSet.next())
+//        {
+//
+//        }
+//
+//        // 3.해제
+//        try
+//        {
+//          if (con != null)
+//          {
+//            con.close();
+//          }
+//        }
+//        catch (SQLException e)
+//        {
+//        }
 //        player.getInventory().addItem(new ItemStackBuilder(player.getInventory().getItemInMainHand()).blockHardness(1000).build());
 //        Entity passenger = player;
 //        while (!passenger.getPassengers().isEmpty())

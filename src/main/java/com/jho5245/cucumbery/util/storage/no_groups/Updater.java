@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 public class Updater
 {
 
-  private static final String PACKAGE = "Amethy";
+  private static final String PACKAGE = "Cucumbery";
   private static final String API = "api.wany.io/amethy/repository/" + PACKAGE;
   public static String CHANNEL = "dev";
   public static boolean AUTOMATION = false;
@@ -45,25 +45,19 @@ public class Updater
     PLUGINS_DIR = FILE.getParentFile();
     VERSION = PLUGIN.getDescription().getVersion();
 
-    // 콘피그에서 업데이터 채널 가져오기
-    if (Cucumbery.config.contains("updater.channel"))
-    {
-      CHANNEL = Cucumbery.config.getString("updater.channel");
-    }
-    else
-    {
-      Cucumbery.config.set("updater.channel", CHANNEL);
-    }
+//    // 콘피그에서 업데이터 채널 가져오기
+//    if (Cucumbery.config.contains("updater.channel"))
+//    {
+//      CHANNEL = Cucumbery.config.getString("updater.channel");
+//    }
+//    else
+//    {
+//      Cucumbery.config.set("updater.channel", CHANNEL);
+//    }
 
     // 콘피그에서 업데이터 자동화 여부 가져오기
-    if (Cucumbery.config.contains("updater.automation"))
-    {
-      AUTOMATION = Cucumbery.config.getBoolean("updater.automation");
-    }
-    else
-    {
-      Cucumbery.config.set("updater.automation", AUTOMATION);
-    }
+    AUTOMATION = Cucumbery.config.getBoolean("auto-updater");
+
 
     // 업데이터 자동화 체커
     onEnableExecutor.submit(() -> onEnableTimer.schedule((new TimerTask()

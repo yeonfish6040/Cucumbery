@@ -1239,6 +1239,22 @@ public class ComponentUtil
   @SuppressWarnings("all")
   private static TranslatableComponent fromLegacyTextTranslate(@Nullable Audience audience, @NotNull String message, boolean n2s)
   {
+    String fallback = null;
+    if (message.startsWith("key:"))
+    {
+      String separator = Cucumbery.config.getString("translation-parser-separator", ",");
+      String[] split = message.split(separator);
+      message = split[0].substring(4);
+      if (split.length > 1)
+      {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 1; i < split.length; i++)
+        {
+          stringBuilder.append(split[i]).append(separator);
+        }
+        fallback = stringBuilder.toString();
+      }
+    }
     if (n2s)
     {
       message = MessageUtil.n2s(message);
@@ -1401,6 +1417,17 @@ public class ComponentUtil
     else
     {
       components = components.append(component);
+    }
+    if (fallback != null)
+    {
+      try
+      {
+        components = components.fallback(fallback);
+      }
+      catch (Throwable t)
+      {
+        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
+      }
     }
     return components;
   }
