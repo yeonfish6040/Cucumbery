@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum CustomMaterial implements Translatable
 {
-  AMBER(Material.ORANGE_DYE, "key:item.cucumbery.amber;&i호박", Rarity.UNIQUE),
+  AMBER(Material.ORANGE_DYE, "key:item.cucumbery.amber|&i호박", Rarity.UNIQUE),
   ARROW_CRIT(Material.ARROW, "&i치명적인 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   ARROW_EXPLOSIVE(Material.ARROW, "&i폭발성 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   ARROW_EXPLOSIVE_DESTRUCTION(Material.ARROW, "&i파괴형 폭발성 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
@@ -369,13 +369,13 @@ public enum CustomMaterial implements Translatable
 
   CustomMaterial(Material displayMaterial, String displayName)
   {
-    this(displayMaterial, displayName, Rarity.NORMAL, CreativeCategory.MISC.translationKey());
+    this(displayMaterial, displayName, Rarity.NORMAL, "itemGroup.ingredients");
   }
 
   @SuppressWarnings("unused")
   CustomMaterial(Material displayMaterial, Component displayName)
   {
-    this(displayMaterial, displayName, Rarity.NORMAL, CreativeCategory.MISC.translationKey());
+    this(displayMaterial, displayName, Rarity.NORMAL, "itemGroup.ingredients");
   }
 
   @SuppressWarnings("unused")
@@ -392,13 +392,13 @@ public enum CustomMaterial implements Translatable
 
   CustomMaterial(Material displayMaterial, String displayName, Rarity rarity)
   {
-    this(displayMaterial, displayName, rarity, CreativeCategory.MISC.translationKey());
+    this(displayMaterial, displayName, rarity, "itemGroup.ingredients");
   }
 
   @SuppressWarnings("unused")
   CustomMaterial(Material displayMaterial, Component displayName, Rarity rarity)
   {
-    this(displayMaterial, displayName, rarity, CreativeCategory.MISC.translationKey());
+    this(displayMaterial, displayName, rarity, "itemGroup.ingredients");
   }
 
   CustomMaterial(Material displayMaterial, String displayName, Rarity rarity, String category)

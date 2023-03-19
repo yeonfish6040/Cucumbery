@@ -1236,22 +1236,29 @@ public class ComponentUtil
     return fromLegacyTextTranslate(null, message, n2s);
   }
 
-  @SuppressWarnings("all")
   private static TranslatableComponent fromLegacyTextTranslate(@Nullable Audience audience, @NotNull String message, boolean n2s)
   {
-    String fallback = null;
+    String key = null;
+    if (message.contains("cucumbery"))
+    {
+      Bukkit.broadcastMessage("message:" + message);
+    }
     if (message.startsWith("key:"))
     {
-      String[] split = message.split(";");
-      message = split[0].substring(4);
+      String[] split = message.split("\\|");
+      key = split[0].substring(4);
       if (split.length > 1)
       {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 1; i < split.length; i++)
         {
-          stringBuilder.append(split[i]).append(";");
+          stringBuilder.append(split[i]);
+          if (i + 1 < split.length)
+          {
+            stringBuilder.append("|");
+          }
         }
-        fallback = stringBuilder.toString();
+        message = stringBuilder.toString();
       }
     }
     if (n2s)
@@ -1407,8 +1414,21 @@ public class ComponentUtil
         builder.append(c);
       }
     }
-
-    component = component.key(builder.toString());
+    if (key == null)
+    {
+      component = component.key(builder.toString());
+    }
+    else
+    {
+      try
+      {
+        component = component.key(key).fallback(builder.toString());
+      }
+      catch (Throwable t)
+      {
+        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
+      }
+    }
     if (components == null)
     {
       components = component;
@@ -1416,17 +1436,6 @@ public class ComponentUtil
     else
     {
       components = components.append(component);
-    }
-    if (fallback != null)
-    {
-      try
-      {
-        components = components.fallback(fallback);
-      }
-      catch (Throwable t)
-      {
-        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
-      }
     }
     return components;
   }
