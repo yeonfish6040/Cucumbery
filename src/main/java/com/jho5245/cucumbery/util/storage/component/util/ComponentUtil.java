@@ -850,10 +850,18 @@ public class ComponentUtil
     }
     else
     {
-      String fallback = component.fallback();
-      if (fallback != null)
+      //
+      try
       {
-        key = fallback;
+        String fallback = component.fallback();
+        if (fallback != null)
+        {
+          key = fallback;
+        }
+      }
+      catch (Throwable ignored)
+      {
+
       }
       for (MessageUtil.ConsonantType type : MessageUtil.ConsonantType.values())
       {
@@ -1243,10 +1251,6 @@ public class ComponentUtil
   private static TranslatableComponent fromLegacyTextTranslate(@Nullable Audience audience, @NotNull String message, boolean n2s)
   {
     String key = null;
-    if (message.contains("cucumbery"))
-    {
-      Bukkit.broadcastMessage("message:" + message);
-    }
     if (message.startsWith("key:"))
     {
       String[] split = message.split("\\|");
@@ -1565,10 +1569,17 @@ public class ComponentUtil
       {
         key = serial;
       }
-      String fallback = translatableComponent.fallback();
-      if (fallback != null)
+      try
       {
-        key = fallback;
+        String fallback = translatableComponent.fallback();
+        if (fallback != null)
+        {
+          key = fallback;
+        }
+      }
+      catch (Throwable t)
+      {
+
       }
       String test = key.replace("%%", "");
       int keyContains = (int) (p.matcher(test).results().count() + p2.matcher(test).results().count());
