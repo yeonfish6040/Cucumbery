@@ -49,7 +49,7 @@ public class Data
     this.failure = failure;
     this.amount = amount;
     this.amountComponent = Component.text(amount, Constant.THE_COLOR);
-    this.item = given;
+    this.item = given.clone();
   }
 
   public void sendFeedback(boolean hideOutput)
