@@ -26,7 +26,6 @@ public class Updater
   private static final String PACKAGE = "Cucumbery";
   private static final String API = "api.wany.io/amethy/repository/" + PACKAGE;
   public static String CHANNEL = "dev";
-  public static boolean AUTOMATION = false;
 
   private static final ExecutorService onEnableExecutor = Executors.newFixedThreadPool(1);
   private static final Timer onEnableTimer = new Timer();
@@ -55,9 +54,6 @@ public class Updater
 //      Cucumbery.config.set("updater.channel", CHANNEL);
 //    }
 
-    // 콘피그에서 업데이터 자동화 여부 가져오기
-    AUTOMATION = Cucumbery.config.getBoolean("auto-updater.enable");
-
 
     // 업데이터 자동화 체커
     onEnableExecutor.submit(() -> onEnableTimer.schedule((new TimerTask()
@@ -65,7 +61,7 @@ public class Updater
       @Override
       public void run()
       {
-        if (AUTOMATION)
+        if (Cucumbery.config.getBoolean("auto-updater.enable"))
         {
           automation();
         }

@@ -1,6 +1,5 @@
 package com.jho5245.cucumbery.listeners.entity.item;
 
-import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
@@ -30,7 +29,9 @@ public class ItemSpawn implements Listener
     }
     Item entity = event.getEntity();
     // ProtocolLib에서 아이템 생성 패킷 호출 시 updateItem을 호출함
-    if (!Cucumbery.using_ProtocolLib)
+
+    // 현재 ProcotolLib에서 SPAWN_ENTITY 패킷을 불러오지 못하는 버그가 있어 임시로 항상 업데이트함
+//    if (!Cucumbery.using_ProtocolLib)
     {
       Method.updateItem(entity);
     }

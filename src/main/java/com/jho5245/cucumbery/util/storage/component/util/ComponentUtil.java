@@ -254,8 +254,11 @@ public class ComponentUtil
         hover = hover.append(Component.text("\n"));
         hover = hover.append(VanillaEffectDescription.getDescription(potionEffect, player));
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+        if (duration != -1)
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("지속 시간 : %s", Constant.THE_COLOR_HEX + Method.timeFormatMilli(duration * 50L)));
+        }
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("농도 레벨 : %s단계", amplifier + 1));
         if (player == null || player.hasPermission("asdf"))

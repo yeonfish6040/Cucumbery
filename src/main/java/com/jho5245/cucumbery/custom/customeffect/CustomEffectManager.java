@@ -795,42 +795,42 @@ public class CustomEffectManager
   public static List<PotionEffect> removeDisplay(@NotNull Player player, @NotNull Collection<PotionEffect> potionEffects)
   {
     potionEffects = new ArrayList<>(potionEffects);
-    potionEffects.removeIf(potionEffect -> potionEffect.getDuration() <= 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon());
+    potionEffects.removeIf(potionEffect -> (potionEffect.getDuration() > 0 && potionEffect.getDuration() <= 100) && !potionEffect.hasParticles() && !potionEffect.hasIcon());
     potionEffects.removeIf(potionEffect ->
             (CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT) || CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED)) &&
-                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.NAUSEA) &&
-                    potionEffect.getType().equals(PotionEffectType.CONFUSION) && potionEffect.getDuration() < 64 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.CONFUSION) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 64 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.REGENERATION) &&
-                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
             (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON) || CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON_M)) &&
-                    potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.BLINDNESS) &&
-                    potionEffect.getType().equals(PotionEffectType.BLINDNESS) && potionEffect.getDuration() < 22 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.BLINDNESS) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 22 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION) &&
-                    potionEffect.getType().equals(PotionEffectType.NIGHT_VISION) && potionEffect.getDuration() < 5 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.NIGHT_VISION) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 5 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON) &&
-                    potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.WITHER) &&
-                    potionEffect.getType().equals(PotionEffectType.WITHER) && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.WITHER) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     potionEffects.removeIf(potionEffect ->
             CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.DARKNESS) &&
-                    potionEffect.getType().equals(PotionEffectType.DARKNESS) && potionEffect.getDuration() < 62 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
+                    potionEffect.getType().equals(PotionEffectType.DARKNESS) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 62 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
     );
     return new ArrayList<>(potionEffects);
   }
@@ -970,7 +970,7 @@ public class CustomEffectManager
         }
       }
       int amplifier = potionEffect.getAmplifier();
-      boolean isInfinite = duration > 20 * 60 * 60 * 24 * 365, less10Sec = duration > 0 && duration < 200, less1Min = duration > 0 && duration < 1200;
+      boolean isInfinite = duration == -1, less10Sec = duration > 0 && duration < 200, less1Min = duration > 0 && duration < 1200;
       boolean ampleZero = amplifier == 0;
       int remain = 255 - (duration % 20 * 10 + 56);
       String timePrefixColor = initDuration > 200 && (initDuration > 20 * 60 || duration * 1d / initDuration <= 0.2) && less10Sec ?

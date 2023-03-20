@@ -134,12 +134,12 @@ public class ProtocolLibManager
             {
               if (potionEffectType.equals(PotionEffectType.FAST_DIGGING) && duration < 3 && amplifier == 0)
               {
-                modifier.write(3, Integer.MAX_VALUE);
+                modifier.write(3, -1);
                 event.setPacket(packet);
               }
               if (potionEffectType.equals(PotionEffectType.SLOW_DIGGING) && duration < 3 && amplifier == 0)
               {
-                modifier.write(3, Integer.MAX_VALUE);
+                modifier.write(3, -1);
                 event.setPacket(packet);
               }
               if (potionEffectType.equals(PotionEffectType.SLOW_DIGGING))
@@ -175,8 +175,7 @@ public class ProtocolLibManager
 
             if (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION) && potionEffectType.equals(PotionEffectType.NIGHT_VISION))
             {
-              int effectDuration = CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION).getDuration();
-              modifier.write(3, effectDuration == -1 ? Integer.MAX_VALUE : effectDuration);
+              modifier.write(3, CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION).getDuration());
               event.setPacket(packet);
             }
 
@@ -203,7 +202,7 @@ public class ProtocolLibManager
 
             if ((helmetType == CustomMaterial.MINER_HELMET || helmetType == CustomMaterial.MINDAS_HELMET) && potionEffectType.equals(PotionEffectType.NIGHT_VISION) && duration < 3)
             {
-              modifier.write(3, Integer.MAX_VALUE);
+              modifier.write(3, -1);
               event.setPacket(packet);
             }
 
@@ -212,7 +211,7 @@ public class ProtocolLibManager
                     leggingsType == CustomMaterial.MINER_LEGGINGS &&
                     bootsType == CustomMaterial.MINER_BOOTS && potionEffectType.equals(PotionEffectType.FAST_DIGGING) && duration < 5)
             {
-              packet.getModifier().write(3, Integer.MAX_VALUE);
+              packet.getModifier().write(3, -1);
               event.setPacket(packet);
             }
 
@@ -221,7 +220,7 @@ public class ProtocolLibManager
                     leggingsType == CustomMaterial.FROG_LEGGINGS &&
                     bootsType == CustomMaterial.FROG_BOOTS && potionEffectType.equals(PotionEffectType.JUMP) && duration < 3)
             {
-              packet.getModifier().write(3, Integer.MAX_VALUE);
+              packet.getModifier().write(3, -1);
               event.setPacket(packet);
             }
           }
