@@ -125,7 +125,7 @@ public class CustomEffectGUI
         }
         itemMeta = itemStack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.values());
-        itemMeta.displayName(ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key));
+        itemMeta.displayName(ComponentUtil.translate(key).color(effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, State.FALSE));
         itemMeta.lore(customEffectLore(player, customEffect));
         if (!itemMeta.hasCustomModelData())
         {

@@ -290,7 +290,7 @@ public class ComponentUtil
       else if (object instanceof CustomEffectType effectType)
       {
         String key = effectType.translationKey();
-        Component concat = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key);
+        Component concat = ComponentUtil.translate(key).color(effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = ComponentUtil.translate(key);
         hover = hover.append(Component.text("\n"));
         hover = hover.append(effectType.getDescription());
@@ -351,7 +351,7 @@ public class ComponentUtil
         String key = effectType.translationKey();
         int duration = customEffect.getInitDuration();
         int amplifier = customEffect.getInitAmplifier();
-        Component concat = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key);
+        Component concat = ComponentUtil.translate(key).color(effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
         Component hover = ComponentUtil.translate(key);
         Component description = customEffect.getDescription(player);
         boolean isFinite = duration != -1, isAmplifiable = effectType.getMaxAmplifier() > 0;
@@ -1013,8 +1013,8 @@ public class ComponentUtil
     if (!componentArgs.isEmpty())
     {
       component = component.args(componentArgs);
+      component = yeet(component.key(), component);
     }
-    component = yeet(component.key(), component);
     return component;
   }
 

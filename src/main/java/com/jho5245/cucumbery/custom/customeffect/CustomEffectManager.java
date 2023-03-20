@@ -22,6 +22,8 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -913,24 +915,24 @@ public class CustomEffectManager
         }
       }
       CustomEffectType effectType = customEffect.getType();
-      String colorPrefix = effectType.isNegative() ? "&c" : "&a";
+      TextColor textColor = effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN;
       if (effectType == CustomEffectTypeCustomMining.AQUA_AFFINITY || effectType == CustomEffectTypeCustomMining.AIR_SCAFFOLDING || effectType == CustomEffectTypeCustomMining.HASTE || effectType == CustomEffectTypeCustomMining.MINING_FATIGUE ||
               effectType == CustomEffectTypeCustomMining.TITANIUM_FINDER || effectType == CustomEffectTypeCustomMining.MINING_FORTUNE || effectType == CustomEffectTypeCustomMining.MOLE_CLAW || effectType == CustomEffectTypeCustomMining.MINDAS_TOUCH ||
               effectType == CustomEffectTypeCustomMining.MINING_BOOSTER)
       {
         if (!CustomEffectManager.hasEffect(entity, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
         {
-          colorPrefix = "&8";
+          textColor = NamedTextColor.GRAY;
         }
       }
       if (effectType == CustomEffectType.FLY || effectType == CustomEffectType.FLY_REMOVE_ON_QUIT)
       {
         if (CustomEffectManager.hasEffect(entity, CustomEffectType.FLY_NOT_ENABLED))
         {
-          colorPrefix = "&8";
+          textColor = NamedTextColor.GRAY;
         }
       }
-      Component effectComponent = ComponentUtil.translate(colorPrefix + (showDuration ? effectType.translationKey() : effectType.getShortenTranslationKey()));
+      Component effectComponent = ComponentUtil.translate((showDuration ? effectType.translationKey() : effectType.getShortenTranslationKey())).color(textColor);
       Component create = ComponentUtil.create(entity instanceof Player player ? player : null, customEffect);
       effectComponent = effectComponent.hoverEvent(create.hoverEvent()).clickEvent(create.clickEvent());
       arguments.add(
