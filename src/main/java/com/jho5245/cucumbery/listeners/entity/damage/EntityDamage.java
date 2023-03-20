@@ -55,6 +55,8 @@ import org.bukkit.util.Consumer;
 import org.bukkit.util.Transformation;
 import org.joml.Vector3f;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
@@ -440,6 +442,8 @@ public class EntityDamage implements Listener
     }
   }
 
+  private final BigDecimal compare = new BigDecimal("33000000");
+
   private void displayDamage(EntityDamageEvent event)
   {
     if (!Cucumbery.config.getBoolean("use-damage-indicator.enabled"))
@@ -515,8 +519,11 @@ public class EntityDamage implements Listener
     double damage = event.getFinalDamage();
     Component display;
     double health = damageable.getHealth();
-    if (health - damage >= health - 0.01 || damage <= 0.0001 || health - damage >= health)
+    BigDecimal damageBig = new BigDecimal(damage), healthBig = new BigDecimal(health), ratioBig = healthBig.divide(damageBig, RoundingMode.FLOOR);
+    boolean isMiss = false;
+    if (health - damage >= health - 0.01 || damage <= 0.0001 || health - damage >= health || ratioBig.compareTo(compare) > 0)
     {
+      isMiss = true;
       String type = "&e&lMISS!";
       if (entity instanceof Player player && player.isBlocking())
       {
@@ -528,7 +535,7 @@ public class EntityDamage implements Listener
     {
       display = maplelized ? ComponentUtil.create(NumberHangulConverter.convert2(damage, true, damageColor)) : Component.text(Constant.Sosu2.format(damage), damageColor);
     }
-    if (isCrit)
+    if (!isMiss && isCrit)
     {
       display = MessageUtil.boldify(Component.text("✧").append(display.color(null))).color(damageColor);
     }

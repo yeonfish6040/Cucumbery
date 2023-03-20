@@ -224,7 +224,7 @@ public class Scheduler
     Variable.damageIndicatorStack.keySet().removeIf(uuid ->
     {
       int stack = Variable.damageIndicatorStack.get(uuid);
-      if (stack > 450)
+      if (stack > 200)
       {
         return true;
       }

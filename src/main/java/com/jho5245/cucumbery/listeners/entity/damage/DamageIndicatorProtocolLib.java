@@ -97,20 +97,21 @@ public class DamageIndicatorProtocolLib
 
       for (int i = 0; i < 1; i++)
       {
+        int j = i;
         Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> {
           PacketContainer edit = protocolManager.createPacket(Server.ENTITY_METADATA);
           StructureModifier<List<WrappedDataValue>> watchableAccessor = edit.getDataValueCollectionModifier();
+          WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromJson(ComponentUtil.serializeAsJson(finalDisplay));
           List<WrappedDataValue> values = Lists.newArrayList(
+                  new WrappedDataValue(2, Registry.getChatComponentSerializer(true), Optional.of(
+                          wrappedChatComponent.getHandle()
+                  )),
                   new WrappedDataValue(3, Registry.get(Boolean.class), true),
                   new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.2f, 0f)),
                   new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(1.2f, 1.2f, 1.2f)),
                   new WrappedDataValue(14, Registry.get(Byte.class), (byte) 3),
                   new WrappedDataValue(16, Registry.get(Float.class), 32f),
-                  new WrappedDataValue(18, Registry.get(Float.class), 0f),
-                  new WrappedDataValue(22, Registry.get(Long.class), 34534L),
-                  new WrappedDataValue(23, Registry.getChatComponentSerializer(true), Optional.of(
-                          WrappedChatComponent.fromJson(ComponentUtil.serializeAsJson(finalDisplay)).getHandle()
-                  ))
+                  new WrappedDataValue(18, Registry.get(Float.class), 0f)
           );
           watchableAccessor.write(0, values);
           edit.getIntegers().write(0, entityId);

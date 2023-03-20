@@ -2045,6 +2045,13 @@ public class Method extends SoundPlay
         catch (ConcurrentModificationException ignored)
         {
         }
+        catch (IllegalArgumentException e)
+        {
+          if (!e.getMessage().contains("No serializer found for class java.lang.Boolean"))
+          {
+            e.printStackTrace();
+          }
+        }
         catch (Exception e)
         {
           e.printStackTrace();
