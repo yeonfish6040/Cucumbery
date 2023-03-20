@@ -861,7 +861,7 @@ public class ComponentUtil
       }
       catch (Throwable ignored)
       {
-
+//        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
       }
       for (MessageUtil.ConsonantType type : MessageUtil.ConsonantType.values())
       {
@@ -1431,7 +1431,7 @@ public class ComponentUtil
       }
       catch (Throwable t)
       {
-        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
+//        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
       }
     }
     if (components == null)
@@ -1579,7 +1579,7 @@ public class ComponentUtil
       }
       catch (Throwable t)
       {
-
+//        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
       }
       String test = key.replace("%%", "");
       int keyContains = (int) (p.matcher(test).results().count() + p2.matcher(test).results().count());

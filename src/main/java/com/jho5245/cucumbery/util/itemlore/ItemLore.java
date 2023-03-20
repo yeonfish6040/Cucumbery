@@ -118,18 +118,6 @@ public class ItemLore
         nbtContainer.setString(CucumberyTag.CUSTOM_EFFECTS_ID, customEffectType.toString());
         nbtContainer.setString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE, customEffectType.getDefaultDisplayType().toString());
         potionsTag.addCompound(nbtContainer);
-        if (type == Material.POTION || type == Material.SPLASH_POTION || type == Material.LINGERING_POTION)
-        {
-          NBTCompoundList vanillaPotions = nbtItem.getCompoundList("CustomPotionEffects");
-          if (vanillaPotions.isEmpty())
-          {
-            NBTContainer vanillaPotion = new NBTContainer();
-            vanillaPotion.setByte("Id", (byte) (24));
-            vanillaPotion.setInteger("Duration", 0);
-            vanillaPotions.addCompound(vanillaPotion);
-          }
-          nbtItem.setInteger("CustomPotionColor", potionType == PotionType.UNCRAFTABLE ? 15007977 : 3298470);
-        }
       }
     }
     if (hasOnlyNbtTagLore)
