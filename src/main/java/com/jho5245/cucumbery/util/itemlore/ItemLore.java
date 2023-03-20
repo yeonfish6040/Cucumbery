@@ -134,19 +134,19 @@ public class ItemLore
     {
       itemGroup = switch (type)
               {
-                case SUSPICIOUS_STEW -> Component.translatable(CreativeCategory.FOOD.translationKey());
-                case ENCHANTED_BOOK -> Component.translatable(Material.ENCHANTED_BOOK.translationKey());
-                case WRITTEN_BOOK -> Component.translatable(CreativeCategory.MISC.translationKey());
-                default -> Component.translatable("치트");
+                case SUSPICIOUS_STEW -> ComponentUtil.translate(CreativeCategory.FOOD.translationKey());
+                case ENCHANTED_BOOK -> ComponentUtil.translate(Material.ENCHANTED_BOOK.translationKey());
+                case WRITTEN_BOOK -> ComponentUtil.translate(CreativeCategory.MISC.translationKey());
+                default -> ComponentUtil.translate("치트");
               };
     }
     else
     {
-      itemGroup = Component.translatable(itemCategoryType.translationKey());
+      itemGroup = ComponentUtil.translate(itemCategoryType.translationKey());
     }
     if (customMaterial != null)
     {
-      itemGroup = Component.translatable(customMaterial.getCategory());
+      itemGroup = ComponentUtil.translate(customMaterial.getCategory());
       rarity = customMaterial.getRarity();
     }
     if (!customType.equals(""))
@@ -177,7 +177,7 @@ public class ItemLore
     long rarityValue = rarity.getRarityValue();
     // 기본 설명 추가(공백, 종류, 등급)
     // 아이템의 맨 첫번째 설명은 아이템의 등급 수치 추가
-    List<Component> defaultLore = new ArrayList<>(Collections.singletonList(Component.translatable(ItemLoreUtil.FIRST_LINE_EMPTY_LORE).args(Component.text(rarityValue))));
+    List<Component> defaultLore = new ArrayList<>(Collections.singletonList(ComponentUtil.translate(ItemLoreUtil.FIRST_LINE_EMPTY_LORE).args(Component.text(rarityValue))));
     // 그 다음 2번째 설명에는 아이템의 종류를 추가
     Component itemGroupComponent = ComponentUtil.translate("&7아이템 종류 : [%s]", itemGroup);
     defaultLore.add(itemGroupComponent);

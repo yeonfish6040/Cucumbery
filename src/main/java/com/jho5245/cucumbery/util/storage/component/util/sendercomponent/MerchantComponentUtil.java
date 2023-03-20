@@ -69,7 +69,7 @@ public class MerchantComponentUtil
           for (Enchantment enchantment : itemMeta.getEnchants().keySet())
           {
             int level = itemMeta.getEnchantLevel(enchantment);
-            Component enchant = Component.translatable(enchantment.translationKey());
+            Component enchant = ComponentUtil.translate(enchantment.translationKey());
             if (level > 255)
             {
               level = 255;
@@ -95,7 +95,7 @@ public class MerchantComponentUtil
           for (Enchantment enchantment : storageMeta.getStoredEnchants().keySet())
           {
             int level = storageMeta.getStoredEnchantLevel(enchantment);
-            Component enchant = Component.translatable(enchantment.translationKey());
+            Component enchant = ComponentUtil.translate(enchantment.translationKey());
             if (level > 255)
             {
               level = 255;

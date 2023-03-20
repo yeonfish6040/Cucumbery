@@ -39,11 +39,11 @@ public class CommandTabUtil
 
   public static HashMap<UUID, BukkitTask> taskHashMap = new HashMap<>();
 
-  public static final List<Completion> ARGS_LONG = Collections.singletonList(Completion.completion(Prefix.ARGS_LONG.toString(), Component.translatable(Prefix.ARGS_LONG.toString())));
-  private static final List<Completion> SELECTORS = List.of(Completion.completion("@p", Component.translatable("argument.entity.selector.nearestPlayer")),
-          Completion.completion("@r", Component.translatable("argument.entity.selector.randomPlayer")),
-          Completion.completion("@a", Component.translatable("argument.entity.selector.allPlayers")),
-          Completion.completion("@s", Component.translatable("argument.entity.selector.self")));
+  public static final List<Completion> ARGS_LONG = Collections.singletonList(Completion.completion(Prefix.ARGS_LONG.toString(), ComponentUtil.translate(Prefix.ARGS_LONG.toString())));
+  private static final List<Completion> SELECTORS = List.of(Completion.completion("@p", ComponentUtil.translate("argument.entity.selector.nearestPlayer")),
+          Completion.completion("@r", ComponentUtil.translate("argument.entity.selector.randomPlayer")),
+          Completion.completion("@a", ComponentUtil.translate("argument.entity.selector.allPlayers")),
+          Completion.completion("@s", ComponentUtil.translate("argument.entity.selector.self")));
 
   @Deprecated
   public static List<String> customItemTabCompleter(Player player, String[] args)
@@ -191,7 +191,7 @@ public class CommandTabUtil
       list.forEach(s -> completions.add(Completion.completion(s)));
       return completions;
     }
-    return Collections.singletonList(Completion.completion("[<인수>]", Component.translatable("인수")));
+    return Collections.singletonList(Completion.completion("[<인수>]", ComponentUtil.translate("인수")));
   }
 
   @NotNull
@@ -260,7 +260,7 @@ public class CommandTabUtil
       List<Completion> errors = new ArrayList<>();
       for (CommandSyntaxException exception : parseResults.getExceptions().values())
       {
-        errors.add(Completion.completion(exception.getRawMessage().getString(), Component.translatable(exception.getRawMessage().getString())));
+        errors.add(Completion.completion(exception.getRawMessage().getString(), ComponentUtil.translate(exception.getRawMessage().getString())));
       }
       if (!errors.isEmpty())
       {
@@ -274,12 +274,12 @@ public class CommandTabUtil
         return s;
       });
       List<Completion> completions = new ArrayList<>();
-      suggestionsList.forEach(s -> completions.add(Completion.completion(s.getText(), Component.translatable(s.getText()))));
+      suggestionsList.forEach(s -> completions.add(Completion.completion(s.getText(), ComponentUtil.translate(s.getText()))));
       if (!completions.isEmpty())
       {
         return completions;
       }*/
-      return Collections.singletonList(Completion.completion("[<인수>]", Component.translatable("인수")));
+      return Collections.singletonList(Completion.completion("[<인수>]", ComponentUtil.translate("인수")));
     }
   }
 
@@ -395,7 +395,7 @@ public class CommandTabUtil
     }
     if (lastArg.equals(""))
     {
-      list.add(Completion.completion("#", Component.translatable("특정 태그가 있는 개체 (예 : #foo)")));
+      list.add(Completion.completion("#", ComponentUtil.translate("특정 태그가 있는 개체 (예 : #foo)")));
     }
     return list;
   }
@@ -433,22 +433,22 @@ public class CommandTabUtil
     List<Completion> list = new ArrayList<>(tabCompleterEntity(sender, arg, false));
     if (sender.hasPermission("minecraft.command.selector"))
     {
-      list.add(Completion.completion("@e", Component.translatable("argument.entity.selector.allEntities")));
+      list.add(Completion.completion("@e", ComponentUtil.translate("argument.entity.selector.allEntities")));
       if (arg.startsWith("@"))
       {
-        list.add(Completion.completion("@A", Component.translatable("자신을 제외한 모든 플레이어")));
-        list.add(Completion.completion("@E", Component.translatable("플레이어를 제외한 모든 개체")));
-        list.add(Completion.completion("@R", Component.translatable("무작위 개체")));
+        list.add(Completion.completion("@A", ComponentUtil.translate("자신을 제외한 모든 플레이어")));
+        list.add(Completion.completion("@E", ComponentUtil.translate("플레이어를 제외한 모든 개체")));
+        list.add(Completion.completion("@R", ComponentUtil.translate("무작위 개체")));
         if (arg.toLowerCase().startsWith("@r"))
         {
-          list.add(Completion.completion("@rR", Component.translatable("자신을 제외한 무작위 개체")));
-          list.add(Completion.completion("@rr", Component.translatable("자신을 제외한 무작위 플레이어")));
+          list.add(Completion.completion("@rR", ComponentUtil.translate("자신을 제외한 무작위 개체")));
+          list.add(Completion.completion("@rr", ComponentUtil.translate("자신을 제외한 무작위 플레이어")));
         }
-        list.add(Completion.completion("@S", Component.translatable("자신을 제외한 모든 개체")));
+        list.add(Completion.completion("@S", ComponentUtil.translate("자신을 제외한 모든 개체")));
         if (arg.toLowerCase().startsWith("@p"))
         {
-          list.add(Completion.completion("@P", Component.translatable("자신을 제외한 가장 가까운 플레이어")));
-          list.add(Completion.completion("@pp", Component.translatable("자신을 제외한 가장 가까운 개체")));
+          list.add(Completion.completion("@P", ComponentUtil.translate("자신을 제외한 가장 가까운 플레이어")));
+          list.add(Completion.completion("@pp", ComponentUtil.translate("자신을 제외한 가장 가까운 개체")));
         }
       }
       if (arg.startsWith("#"))
@@ -546,14 +546,14 @@ public class CommandTabUtil
     {
       if (arg.startsWith("@"))
       {
-        list.add(Completion.completion("@A", Component.translatable("자신을 제외한 모든 플레이어")));
+        list.add(Completion.completion("@A", ComponentUtil.translate("자신을 제외한 모든 플레이어")));
         if (arg.toLowerCase().startsWith("@r"))
         {
-          list.add(Completion.completion("@rr", Component.translatable("자신을 제외한 무작위 플레이어")));
+          list.add(Completion.completion("@rr", ComponentUtil.translate("자신을 제외한 무작위 플레이어")));
         }
         if (arg.toLowerCase().startsWith("@p"))
         {
-          list.add(Completion.completion("@P", Component.translatable("자신을 제외한 가장 가까운 플레이어")));
+          list.add(Completion.completion("@P", ComponentUtil.translate("자신을 제외한 가장 가까운 플레이어")));
         }
       }
       if (arg.startsWith("#"))
@@ -589,14 +589,14 @@ public class CommandTabUtil
     {
       if (arg.startsWith("@"))
       {
-        list.add(Completion.completion("@A", Component.translatable("자신을 제외한 모든 플레이어")));
+        list.add(Completion.completion("@A", ComponentUtil.translate("자신을 제외한 모든 플레이어")));
         if (arg.toLowerCase().startsWith("@r"))
         {
-          list.add(Completion.completion("@rr", Component.translatable("자신을 제외한 무작위 플레이어")));
+          list.add(Completion.completion("@rr", ComponentUtil.translate("자신을 제외한 무작위 플레이어")));
         }
         if (arg.toLowerCase().startsWith("@p"))
         {
-          list.add(Completion.completion("@P", Component.translatable("자신을 제외한 가장 가까운 플레이어")));
+          list.add(Completion.completion("@P", ComponentUtil.translate("자신을 제외한 가장 가까운 플레이어")));
         }
       }
       if (arg.startsWith("#"))
@@ -648,13 +648,13 @@ public class CommandTabUtil
       suggestion = completion.suggestion();
       if (completion.tooltip() == null)
       {
-        returnKey = Completion.completion(completion.suggestion(), Component.translatable(suggestion.substring(1, suggestion.length() - 1)));
+        returnKey = Completion.completion(completion.suggestion(), ComponentUtil.translate(suggestion.substring(1, suggestion.length() - 1)));
       }
     }
     else
     {
       suggestion = key.toString();
-      returnKey = Completion.completion(suggestion, Component.translatable(suggestion.substring(1, suggestion.length() - 1)));
+      returnKey = Completion.completion(suggestion, ComponentUtil.translate(suggestion.substring(1, suggestion.length() - 1)));
     }
     if (!ignoreEmpty && tabArg.equals("") && list.isEmpty() || ignoreEmpty && list.isEmpty())
     {
@@ -718,7 +718,7 @@ public class CommandTabUtil
           case "인수" -> msg = "명령어에 잘못된 인수가 있습니다: %s";
           case "개체 유형" -> msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
         }
-        return errorMessage(msg, tabArg, Component.translatable(key2));
+        return errorMessage(msg, tabArg, ComponentUtil.translate(key2));
       }
       returnValue = sort(returnValue);
       if ((ignoreEmpty && returnValue.isEmpty()) || (!(key instanceof Completion completion ? completion.suggestion() : key.toString())
@@ -779,18 +779,18 @@ public class CommandTabUtil
           {
             hover = switch (statistic)
                     {
-                      case ENTITY_KILLED_BY -> Component.translatable("개체에게 죽은 횟수");
-                      case KILL_ENTITY -> Component.translatable("개체를 죽인 횟수");
-                      default -> Component.translatable(TranslatableKeyParser.getKey(statistic));
+                      case ENTITY_KILLED_BY -> ComponentUtil.translate("개체에게 죽은 횟수");
+                      case KILL_ENTITY -> ComponentUtil.translate("개체를 죽인 횟수");
+                      default -> ComponentUtil.translate(TranslatableKeyParser.getKey(statistic));
                     };
           }
           else if (e instanceof UserData userData)
           {
-            hover = Component.translatable(userData.getKey().replace("-", " "));
+            hover = ComponentUtil.translate(userData.getKey().replace("-", " "));
           }
           else if (e instanceof Translatable translatable)
           {
-            hover = Component.translatable(translatable.translationKey());
+            hover = ComponentUtil.translate(translatable.translationKey());
           }
           list.add(Completion.completion(e.toString().toLowerCase(), hover));
         }
@@ -833,7 +833,7 @@ public class CommandTabUtil
       Component hover = null;
       if (v instanceof CustomEffectType customEffectType)
       {
-        hover = Component.translatable(customEffectType.translationKey()).color(customEffectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
+        hover = ComponentUtil.translate(customEffectType.translationKey()).color(customEffectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
       }
       list.add(Completion.completion(s, hover));
     }
@@ -861,7 +861,7 @@ public class CommandTabUtil
     String hover = key instanceof Completion completion ? completion.suggestion() : key.toString();
     // '[명령어 출력 숨김 여부]' 일 경우 앞뒤 끝의 '['와 ']' 제거
     hover = hover.substring(1, hover.length() - 1);
-    return CommandTabUtil.tabCompleterList(args, key, false, Completion.completion("true", Component.translatable(hover)), Completion.completion("false", Component.translatable(hover)));
+    return CommandTabUtil.tabCompleterList(args, key, false, Completion.completion("true", ComponentUtil.translate(hover)), Completion.completion("false", ComponentUtil.translate(hover)));
   }
 
   @NotNull

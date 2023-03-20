@@ -1624,8 +1624,8 @@ public class Method extends SoundPlay
     }
     if (notice)
     {
-      sender.sendMessage(Component.translatable("command.unknown.command", NamedTextColor.RED));
-      sender.sendMessage(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+      sender.sendMessage(ComponentUtil.translate("command.unknown.command", NamedTextColor.RED));
+      sender.sendMessage(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       MessageUtil.consoleSendMessage(Prefix.INFO_WARN, sender, "translate:이(가) 권한이 부족하여 명령어 사용에 실패했습니다");
     }
     return false;
@@ -3036,7 +3036,7 @@ public class Method extends SoundPlay
         }
         if ((!entity.equals(player)))
         {
-          String type = MessageUtil.stripColor(ComponentUtil.serialize(Component.translatable(entity.getType().translationKey())));
+          String type = MessageUtil.stripColor(ComponentUtil.serialize(ComponentUtil.translate(entity.getType().translationKey())));
           String display;
           if (entity instanceof Player p)
           {
@@ -3600,7 +3600,7 @@ public class Method extends SoundPlay
           ItemStack[] contents = shulker.getInventory().getContents();
           Component display = ItemNameUtil.itemName(item, NamedTextColor.DARK_GRAY);
           Inventory inv = Bukkit.createInventory(null, InventoryType.SHULKER_BOX,
-                  Component.translatable("%s").args(display, Component.text(Constant.ITEM_PORTABLE_SHULKER_BOX_GUI + (slot == EquipmentSlot.HAND ? "MAIN_HAND" : "OFF_HAND"))));
+                  ComponentUtil.translate("%s").args(display, Component.text(Constant.ITEM_PORTABLE_SHULKER_BOX_GUI + (slot == EquipmentSlot.HAND ? "MAIN_HAND" : "OFF_HAND"))));
           inv.setContents(contents);
           playSound(player, Sound.BLOCK_SHULKER_BOX_OPEN, SoundCategory.BLOCKS);
           player.openInventory(inv);

@@ -57,12 +57,12 @@ public class Constant
   public static final TextColor THE_COLOR = TextColor.color(255, 204, 0);
   public static final String THE_COLOR_HEX = THE_COLOR.asHexString() + ";";
   public static final String ITEM_MODIFIERS_BRACKET = "rgb235,170,41;[%s]";
-  public static final Component ITEM_MODIFIERS_CHEST = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.chest"));
-  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.feet"));
-  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.head"));
-  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.legs"));
-  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.mainhand"));
-  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, Component.translatable("item.modifiers.offhand"));
+  public static final Component ITEM_MODIFIERS_CHEST = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, ComponentUtil.translate("item.modifiers.chest"));
+  public static final Component ITEM_MODIFIERS_FEET = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, ComponentUtil.translate("item.modifiers.feet"));
+  public static final Component ITEM_MODIFIERS_HEAD = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, ComponentUtil.translate("item.modifiers.head"));
+  public static final Component ITEM_MODIFIERS_LEGS = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, ComponentUtil.translate("item.modifiers.legs"));
+  public static final Component ITEM_MODIFIERS_MAINHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, ComponentUtil.translate("item.modifiers.mainhand"));
+  public static final Component ITEM_MODIFIERS_OFFHAND = ComponentUtil.translate(ITEM_MODIFIERS_BRACKET, ComponentUtil.translate("item.modifiers.offhand"));
   public static final String TMI_LORE_NBT_TAG_COPIED = "[NBT 태그 복사됨]";
   public static final String ITEM_LORE_MATERIAL_CRAFTABLE = "#F0E68C;[조합 가능]";
   public static final String ITEM_LORE_MATERIAL_CRAFTABLE_ONLY_CRAFTING_TABLE = "#F0E68C;[제작대에서만 조합 가능]";
@@ -83,26 +83,26 @@ public class Constant
   public static final String ITEM_LORE_GRAVITION = "&7중력의 영향을 받는다";
   public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS = "%s이 부여된 아이템이나 %s로만 직접 얻을 수 있다";
   public static final Component ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS_COMPONENT =
-          Component.translatable(ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS)
+          ComponentUtil.translate(ITEM_LORE_ONLY_WITH_SILKTOUCH_OR_SWEARS)
                   .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                   .color(TextColor.color(170, 170, 170))
                   .args(
-                          Component.translatable("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)),
-                          Component.translatable("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
+                          ComponentUtil.translate("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)),
+                          ComponentUtil.translate("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
   public static final String ITEM_LORE_ONLY_WITH_SWEARS = "%s로만 직접 얻을 수 있다";
   public static final Component ITEM_LORE_ONLY_WITH_SHEARS_COMPONENT =
-          Component.translatable(ITEM_LORE_ONLY_WITH_SWEARS)
+          ComponentUtil.translate(ITEM_LORE_ONLY_WITH_SWEARS)
                   .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                   .color(TextColor.color(170, 170, 170))
                   .args(
-                          Component.translatable("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
+                          ComponentUtil.translate("item.minecraft.shears").color(TextColor.color(255, 255, 85)));
   public static final String ITEM_LORE_ONLY_WITH_SILKTOUCH = "%s이 부여된 아이템으로만 직접 얻을 수 있다";
   public static final Component ITEM_LORE_ONLY_WITH_SILKTOUCH_COMPONENT =
-          Component.translatable(ITEM_LORE_ONLY_WITH_SILKTOUCH)
+          ComponentUtil.translate(ITEM_LORE_ONLY_WITH_SILKTOUCH)
                   .decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                   .color(TextColor.color(170, 170, 170))
                   .args(
-                          Component.translatable("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)));
+                          ComponentUtil.translate("enchantment.minecraft.silk_touch").color(TextColor.color(255, 255, 85)));
 
   // DecimalFormat
   public static final DecimalFormat rawFormat = new DecimalFormat("###0.#############");
@@ -123,7 +123,7 @@ public class Constant
   public static final String GUI_SUFFIX = "§큐§컴§버§리§G§U§I";
   public static final String GUI_NO_ITEM_LORE_FEATURE = "§아§이§템§ §설§명§ §없§음" + GUI_SUFFIX;
   public static final String CANCEL_STRING = "§클§릭§캔§슬" + GUI_SUFFIX;
-  public static final TranslatableComponent GUI_PREFIX = Component.translatable("%1$s").args(Component.empty(), Component.empty(), Component.text(CANCEL_STRING));
+  public static final TranslatableComponent GUI_PREFIX = ComponentUtil.translate("%1$s").args(Component.empty(), Component.empty(), Component.text(CANCEL_STRING));
   public static final String POTION_EFFECTS = "potion_effects";
   public static final String TRASH_CAN = "§쓰§레§기§통" + GUI_SUFFIX;
   public static final String MAIN_MENU = "§메§인§메§뉴§3[§2메뉴§3]" + GUI_SUFFIX;

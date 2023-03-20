@@ -129,17 +129,17 @@ public class ItemNameUtil
     else
     {
       String id = material.translationKey();
-      component = Component.translatable(id);
+      component = ComponentUtil.translate(id);
       // 특정 아이템은 다른 번역 규칙을 가지고 있으므로 해당 규칙을 적용한다.
       switch (material)
       {
-        case WHEAT -> component = Component.translatable("item.minecraft.wheat");
+        case WHEAT -> component = ComponentUtil.translate("item.minecraft.wheat");
         case PLAYER_HEAD, PLAYER_WALL_HEAD ->
         {
           String playerName = PlayerHeadInfo.getPlayerHeadInfo(itemStack, PlayerHeadInfo.PlayerHeadInfoType.NAME);
           if (playerName != null)
           {
-            component = Component.translatable("block.minecraft.player_head.named").args(Component.text(playerName));
+            component = ComponentUtil.translate("block.minecraft.player_head.named").args(Component.text(playerName));
           }
         }
         case POTION, SPLASH_POTION, LINGERING_POTION, TIPPED_ARROW ->
@@ -150,13 +150,13 @@ public class ItemNameUtil
             String potionId = potionMeta.getBasePotionData().getType().toString().toLowerCase();
             switch (potionMeta.getBasePotionData().getType())
             {
-              default -> component = Component.translatable(id + ".effect." + potionId);
-              case UNCRAFTABLE -> component = Component.translatable(id + ".effect.empty");
-              case JUMP -> component = Component.translatable(id + ".effect.leaping");
-              case REGEN -> component = Component.translatable(id + ".effect.regeneration");
-              case SPEED -> component = Component.translatable(id + ".effect.swiftness");
-              case INSTANT_HEAL -> component = Component.translatable(id + ".effect.healing");
-              case INSTANT_DAMAGE -> component = Component.translatable(id + ".effect.harming");
+              default -> component = ComponentUtil.translate(id + ".effect." + potionId);
+              case UNCRAFTABLE -> component = ComponentUtil.translate(id + ".effect.empty");
+              case JUMP -> component = ComponentUtil.translate(id + ".effect.leaping");
+              case REGEN -> component = ComponentUtil.translate(id + ".effect.regeneration");
+              case SPEED -> component = ComponentUtil.translate(id + ".effect.swiftness");
+              case INSTANT_HEAL -> component = ComponentUtil.translate(id + ".effect.healing");
+              case INSTANT_DAMAGE -> component = ComponentUtil.translate(id + ".effect.harming");
             }
           }
         }
@@ -168,7 +168,7 @@ public class ItemNameUtil
             component = bookMeta.title();
             if (component == null || ComponentUtil.serialize(component).isEmpty())
             {
-              component = Component.translatable(id);
+              component = ComponentUtil.translate(id);
             }
           }
         }
@@ -177,7 +177,7 @@ public class ItemNameUtil
           CompassMeta compassMeta = (CompassMeta) itemMeta;
           if (compassMeta != null && compassMeta.hasLodestone())
           {
-            component = Component.translatable("item.minecraft.lodestone_compass");
+            component = ComponentUtil.translate("item.minecraft.lodestone_compass");
           }
         }
         case SHIELD ->
@@ -188,7 +188,7 @@ public class ItemNameUtil
             BlockState blockState = blockStateMeta.getBlockState();
             Banner bannerState = (Banner) blockState;
             DyeColor baseColor = bannerState.getBaseColor();
-            component = Component.translatable(id + "." + baseColor.toString().toLowerCase());
+            component = ComponentUtil.translate(id + "." + baseColor.toString().toLowerCase());
           }
         }
       }

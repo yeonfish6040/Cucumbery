@@ -49,7 +49,7 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
     String name = target.getName();
     MessageUtil.sendMessage(player, Prefix.INFO_SOCIAL, Constant.SEPARATOR);
     MessageUtil.sendMessage(player, Prefix.INFO_SOCIAL, ComponentUtil.translate("소셜 메뉴 - %s", target));
-    Component panel = Component.empty().append(Prefix.INFO_SOCIAL.get()).append(Component.translatable("     "));
+    Component panel = Component.empty().append(Prefix.INFO_SOCIAL.get()).append(ComponentUtil.translate("     "));
     if (!player.equals(target))
     {
       panel = panel.append(
@@ -94,7 +94,7 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
     MessageUtil.sendMessage(player, panel);
     if (player.hasPermission("asdf"))
     {
-      Component adminPanel = Component.empty().append(Prefix.INFO_SOCIAL.get()).append(Component.translatable("     "));
+      Component adminPanel = Component.empty().append(Prefix.INFO_SOCIAL.get()).append(ComponentUtil.translate("     "));
       if (!player.equals(target))
       {
         adminPanel = adminPanel.append(
@@ -121,7 +121,7 @@ public class CommandSocialMenu implements CommandExecutor, TabCompleter
                         .clickEvent(ClickEvent.runCommand("/spectate"))
         );
         MessageUtil.sendMessage(player, adminPanel);
-        adminPanel = Component.empty().append(Prefix.INFO_SOCIAL.get()).append(Component.translatable("     "));
+        adminPanel = Component.empty().append(Prefix.INFO_SOCIAL.get()).append(ComponentUtil.translate("     "));
         if (Cucumbery.getPlugin().getPluginManager().getPlugin("OpenInv") != null)
         {
           adminPanel = adminPanel.append(

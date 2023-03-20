@@ -215,7 +215,7 @@ public class CustomEffectType implements Translatable, EnumHideable
                   .append(Component.text("\n"))
                   .append(ComponentUtil.translate("사용할 수 있으나 비행 모드가 비활성화되고"))
                   .append(Component.text("\n"))
-                  .append(ComponentUtil.translate("%s(%s) 기능을 사용할 수 없으며", Component.translatable("key.pickItem"), Component.keybind("key.pickItem")))
+                  .append(ComponentUtil.translate("%s(%s) 기능을 사용할 수 없으며", ComponentUtil.translate("key.pickItem"), Component.keybind("key.pickItem")))
                   .append(Component.text("\n"))
                   .append(ComponentUtil.translate("서바이벌 모드와 동일하게 다른 적대적 개체의"))
                   .append(Component.text("\n"))
@@ -273,18 +273,18 @@ public class CustomEffectType implements Translatable, EnumHideable
   MAESTRO = new CustomEffectType("maestro", "마에스트로", builder().description(
           ComponentUtil.translate("작곡가가 되었다. 크리에이티브 모드에서 채팅창에")
                   .append(Component.text("\n"))
-                  .append(Component.translatable("숫자를 입력하면 바로 밑에 해당 음높이를 가진 소리 블록"))
+                  .append(ComponentUtil.translate("숫자를 입력하면 바로 밑에 해당 음높이를 가진 소리 블록"))
                   .append(Component.text("\n"))
-                  .append(Component.translatable("을 설치하거나 이미 설치되어 있는 소리 블록의 음높이를 변경한다"))
+                  .append(ComponentUtil.translate("을 설치하거나 이미 설치되어 있는 소리 블록의 음높이를 변경한다"))
                   .append(Component.text("\n"))
-                  .append(Component.translatable("단, 해당 위치에 다른 블록이 있을 경우 설치되지 않는다"))
+                  .append(ComponentUtil.translate("단, 해당 위치에 다른 블록이 있을 경우 설치되지 않는다"))
   ).keepOnDeath().defaultDuration(-1)),
 
   CUSTOM_MATERIAL_TNT_DONUT = new CustomEffectType("custom_material_tnt_donut", "", builder().hidden().defaultDuration(-1).skipEvent()),
 
   /**/ NOTHING = new CustomEffectType("nothing", "아무것도 아님"),
 
-  /**/ TEST = new CustomEffectType(new NamespacedKey("test", "test"), "테스트뭐", builder());
+  /**/ TEST = new CustomEffectType(new NamespacedKey("test", "test"), "key:effect.cucumbery.test|테스트뭐", builder());
 
   private static final HashMap<NamespacedKey, CustomEffectType> effects = new HashMap<>();
 
@@ -666,7 +666,7 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "DARKNESS_TERROR" -> ComponentUtil.translate("어두운거... 무섭다...")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("%s 효과나 손에 빛을 내는 아이템 없이 어두운 곳에 가면 %s 효과가 걸립니다",
-                              Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.NIGHT_VISION), NamedTextColor.GREEN), DARKNESS_TERROR_ACTIVATED));
+                              ComponentUtil.translate(TranslatableKeyParser.getKey(PotionEffectType.NIGHT_VISION), NamedTextColor.GREEN), DARKNESS_TERROR_ACTIVATED));
               case "DARKNESS_TERROR_ACTIVATED" -> ComponentUtil.translate("너무 어둡습니다! 피해량이 30% 증가하고 블록을 캘 때마다")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("%s 확률로 받는 피해량 증가에 영향을 받는 1의 피해를 입습니다", "rg255,204;15%"));
@@ -683,9 +683,9 @@ public class CustomEffectType implements Translatable, EnumHideable
               case "FANCY_SPOTLIGHT" -> ComponentUtil.translate("화려한 조명이 나를 비추네~")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("주변에 충분히 밝은 블록이 있으면 %s와(과) %s이(가) 적용됩니다",
-                              Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN)));
+                              ComponentUtil.translate(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), ComponentUtil.translate(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN)));
               case "FANCY_SPOTLIGHT_ACTIVATED" -> ComponentUtil.translate("주변에 충분히 밝은 블록이 있어 %s와(과) %s이(가) 적용됩니다",
-                      Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), Component.translatable(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN));
+                      ComponentUtil.translate(TranslatableKeyParser.getKey(PotionEffectType.SPEED), NamedTextColor.GREEN), ComponentUtil.translate(TranslatableKeyParser.getKey(PotionEffectType.REGENERATION), NamedTextColor.GREEN));
               case "WA_SANS" -> ComponentUtil.translate("스켈레톤 유형의 개체에게 받는")
                       .append(Component.text("\n"))
                       .append(ComponentUtil.translate("피해량이 감소하고, 대미지가 증가합니다"));
@@ -1259,7 +1259,7 @@ public class CustomEffectType implements Translatable, EnumHideable
     }
     if (!buffFreezable)
     {
-      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&e%s의 영향을 받지 않습니다", Component.translatable(CustomEffectType.BUFF_FREEZE.translationKey())));
+      description = description.append(Component.text("\n")).append(ComponentUtil.translate("&e%s의 영향을 받지 않습니다", ComponentUtil.translate(CustomEffectType.BUFF_FREEZE.translationKey())));
     }
     if (isRealDuration)
     {

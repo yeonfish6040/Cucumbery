@@ -182,7 +182,7 @@ public class CommandSong implements CucumberyCommandExecutor
                     fileName = "'" + fileName.replace("'", "''") + "'";
                   }
                   String command = "/csong play " + fileName;
-                  Component component = Component.translatable("혹은 이 메시지를 클릭하여 노래를 재생할 수 있습니다", Constant.THE_COLOR);
+                  Component component = ComponentUtil.translate("혹은 이 메시지를 클릭하여 노래를 재생할 수 있습니다", Constant.THE_COLOR);
                   component = component.hoverEvent(Component.text(command)).clickEvent(ClickEvent.suggestCommand(command));
                   MessageUtil.info(player, component);
                 }
@@ -1127,17 +1127,17 @@ public class CommandSong implements CucumberyCommandExecutor
         if (length == 1)
         {
           return CommandTabUtil.tabCompleterList(args, "<인수>", false,
-                  Completion.completion("play", Component.translatable("서버 전체에 노래를 재생함니다")),
-                  Completion.completion("stop", Component.translatable("재생 중인 노래를 먐춥니다")),
-                  Completion.completion("info", Component.translatable("재생 중인 노래의 정보를 참조합니다")),
-                  Completion.completion("listening", Component.translatable("재생 중인 노래를 듣오 있는 플레이어 목록을 참조합니다")),
-                  Completion.completion("pause", Component.translatable("재생 중인 노래를 일시 중지합니다")),
-                  Completion.completion("repeating", Component.translatable("재생 중인 노래를 반복 모드로 전환합니다")),
-                  Completion.completion("sound-category", Component.translatable("재생 중인 노래의 재생 범주를 변경합니다")),
-                  Completion.completion("octave-limit", Component.translatable("재생 중인 노래의 음역대 제한 모드를 전환합니다")),
-                  Completion.completion("change-tick", Component.translatable("재생 중인 노래의 비율을 변경합니다")),
-                  Completion.completion("change-song", Component.translatable("재생 중인 노래의 파일을 변경합니다")),
-                  Completion.completion("volume", Component.translatable("재생 중인 노래의 볼륨을 변경합니다")));
+                  Completion.completion("play", ComponentUtil.translate("서버 전체에 노래를 재생함니다")),
+                  Completion.completion("stop", ComponentUtil.translate("재생 중인 노래를 멈춥니다")),
+                  Completion.completion("info", ComponentUtil.translate("재생 중인 노래의 정보를 참조합니다")),
+                  Completion.completion("listening", ComponentUtil.translate("재생 중인 노래를 듣오 있는 플레이어 목록을 참조합니다")),
+                  Completion.completion("pause", ComponentUtil.translate("재생 중인 노래를 일시 중지합니다")),
+                  Completion.completion("repeating", ComponentUtil.translate("재생 중인 노래를 반복 모드로 전환합니다")),
+                  Completion.completion("sound-category", ComponentUtil.translate("재생 중인 노래의 재생 범주를 변경합니다")),
+                  Completion.completion("octave-limit", ComponentUtil.translate("재생 중인 노래의 음역대 제한 모드를 전환합니다")),
+                  Completion.completion("change-tick", ComponentUtil.translate("재생 중인 노래의 비율을 변경합니다")),
+                  Completion.completion("change-song", ComponentUtil.translate("재생 중인 노래의 파일을 변경합니다")),
+                  Completion.completion("volume", ComponentUtil.translate("재생 중인 노래의 볼륨을 변경합니다")));
         }
         if (length == 2)
         {
@@ -1166,7 +1166,7 @@ public class CommandSong implements CucumberyCommandExecutor
               Variable.songFiles.forEach(s -> list.add(Completion.completion(s)));
               if (!Variable.songFiles.isEmpty())
               {
-                list.add(Completion.completion("--random", Component.translatable("무작위 노래; '--random/(문자열)'으로 필터 가능")));
+                list.add(Completion.completion("--random", ComponentUtil.translate("무작위 노래; '--random/(문자열)'으로 필터 가능")));
               }
               return CommandTabUtil.tabCompleterList(args, list, "<노래 파일>", true);
             }
@@ -1238,7 +1238,7 @@ public class CommandSong implements CucumberyCommandExecutor
             Variable.songFiles.forEach(s -> list.add(Completion.completion(s)));
             if (!Variable.songFiles.isEmpty())
             {
-              list.add(Completion.completion("--random", Component.translatable("무작위 노래; '--random/(문자열)'으로 필터 가능")));
+              list.add(Completion.completion("--random", ComponentUtil.translate("무작위 노래; '--random/(문자열)'으로 필터 가능")));
             }
             return CommandTabUtil.tabCompleterList(args, list, "<노래 파일>", true);
           }

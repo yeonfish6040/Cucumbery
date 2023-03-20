@@ -346,9 +346,9 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
     if (length == 1)
     {
       return CommandTabUtil.tabCompleterList(args, "<인수>", false,
-              Completion.completion("amount", Component.translatable("손에 들고 있는 아이템의 개수를 변경합니다")),
-              Completion.completion("durability", Component.translatable("손에 들고 있는 아이템의 내구도를 변경합니다")),
-              Completion.completion("material", Component.translatable("손에 들고 있는 아이템의 종류를 변경합니다"))
+              Completion.completion("amount", ComponentUtil.translate("손에 들고 있는 아이템의 개수를 변경합니다")),
+              Completion.completion("durability", ComponentUtil.translate("손에 들고 있는 아이템의 내구도를 변경합니다")),
+              Completion.completion("material", ComponentUtil.translate("손에 들고 있는 아이템의 종류를 변경합니다"))
       );
     }
     Player other = length >= 3 ? Bukkit.getPlayer(args[2]) : null;
@@ -367,7 +367,7 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
         }
         if (length == 3)
         {
-          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 개수를 변경합니다")));
+          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", ComponentUtil.translate("자신이 아닌 다른 플레이어의 아이템의 개수를 변경합니다")));
         }
         if (length == 4)
         {
@@ -381,7 +381,7 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
         }
         if (length == 3)
         {
-          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 내구도를 변경합니다")));
+          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", ComponentUtil.translate("자신이 아닌 다른 플레이어의 아이템의 내구도를 변경합니다")));
         }
         if (length == 4)
         {
@@ -395,7 +395,7 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
         }
         if (length == 3)
         {
-          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", Component.translatable("자신이 아닌 다른 플레이어의 아이템의 종류를 변경합니다")));
+          return CommandTabUtil.tabCompleterPlayer(sender, args, Completion.completion("[다른 플레이어]", ComponentUtil.translate("자신이 아닌 다른 플레이어의 아이템의 종류를 변경합니다")));
         }
         if (length == 4)
         {

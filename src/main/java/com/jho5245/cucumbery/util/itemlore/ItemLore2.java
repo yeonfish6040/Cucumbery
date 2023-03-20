@@ -372,7 +372,7 @@ public class ItemLore2
     {
       if (anvilUsedTime > 30)
       {
-        itemMeta.displayName(Component.translatable(""));
+        itemMeta.displayName(ComponentUtil.translate(""));
         itemMeta.lore(null);
         item.setItemMeta(itemMeta);
         return item;
@@ -518,11 +518,11 @@ public class ItemLore2
             Component component;
             if (enchantment.getMaxLevel() == 1)
             {
-              component = Component.translatable(enchantment.translationKey());
+              component = ComponentUtil.translate(enchantment.translationKey());
             }
             else
             {
-              component = Component.translatable("%s %s").args(Component.translatable(enchantment.translationKey()), level <= 10 ? Component.translatable("enchantment.level." + level) : Component.text(level));
+              component = ComponentUtil.translate("%s %s").args(ComponentUtil.translate(enchantment.translationKey()), level <= 10 ? ComponentUtil.translate("enchantment.level." + level) : Component.text(level));
             }
             component = component.color(enchantment.isCursed() ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
             if (enchantment instanceof CustomEnchant customEnchant && customEnchant.isUltimate())
@@ -662,7 +662,7 @@ public class ItemLore2
                 }
                 String operationString = ItemLoreUtil.operationValue(operation);
                 Component component = ComponentUtil.translate("rgb255,142,82;%s : %s",
-                        Component.translatable(attribute.translationKey()), (amount > 0 ? "+" : "") + Constant.Sosu2.format(amount) + operationString);
+                        ComponentUtil.translate(attribute.translationKey()), (amount > 0 ? "+" : "") + Constant.Sosu2.format(amount) + operationString);
                 lore.add(component);
               }
             }
@@ -675,11 +675,11 @@ public class ItemLore2
           Component chestplate = Constant.ITEM_MODIFIERS_CHEST;
           Component leggings = Constant.ITEM_MODIFIERS_LEGS;
           Component boots = Constant.ITEM_MODIFIERS_FEET;
-          Component attackSpeed = Component.translatable("attribute.name.generic.attack_speed");
-          Component damage = Component.translatable("attribute.name.generic.attack_damage");
-          Component armor = Component.translatable("attribute.name.generic.armor");
-          Component armorToughness = Component.translatable("attribute.name.generic.armor_toughness");
-          Component knockbackResistance = Component.translatable("attribute.name.generic.knockback_resistance");
+          Component attackSpeed = ComponentUtil.translate("attribute.name.generic.attack_speed");
+          Component damage = ComponentUtil.translate("attribute.name.generic.attack_damage");
+          Component armor = ComponentUtil.translate("attribute.name.generic.armor");
+          Component armorToughness = ComponentUtil.translate("attribute.name.generic.armor_toughness");
+          Component knockbackResistance = ComponentUtil.translate("attribute.name.generic.knockback_resistance");
           lore.add(Component.empty());
           switch (type)
           {
@@ -2009,7 +2009,7 @@ public class ItemLore2
           }
           if (!lastOutput.equals(Component.empty()))
           {
-            lore.add(ComponentUtil.translate("&7%s : %s", Component.translatable("advMode.previousOutput"), lastOutput));
+            lore.add(ComponentUtil.translate("&7%s : %s", ComponentUtil.translate("advMode.previousOutput"), lastOutput));
           }
           if (successCount != 0)
           {
@@ -2591,7 +2591,7 @@ public class ItemLore2
       NBTCompound d = m.getCompound(CucumberyTag.ITEMSTACK_DISPLAY_KEY);
       d.setString(CucumberyTag.ORIGINAL_NAME, displayName == null ? "" : ComponentUtil.serializeAsJson(displayName));
       itemMeta = n.getItem().getItemMeta();
-      TranslatableComponent translatableComponent = Component.translatable("%s%s%s");
+      TranslatableComponent translatableComponent = ComponentUtil.translate("%s%s%s");
       List<Component> arguments = new ArrayList<>();
       Component prefixComponent = Component.empty();
       for (ReadWriteNBT nbtCompound : prefix)

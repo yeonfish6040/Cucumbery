@@ -44,7 +44,7 @@ public class CommandArgumentUtil
     {
       if (notice)
       {
-        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos3d.incomplete"), Component.text(arg, NamedTextColor.YELLOW)));
+        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos3d.incomplete"), Component.text(arg, NamedTextColor.YELLOW)));
       }
       return null;
     }
@@ -52,7 +52,7 @@ public class CommandArgumentUtil
     {
       if (notice)
       {
-        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("좌표값은 3개이어야 합니다"), Component.text(arg, NamedTextColor.YELLOW)));
+        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("좌표값은 3개이어야 합니다"), Component.text(arg, NamedTextColor.YELLOW)));
       }
       return null;
     }
@@ -60,7 +60,7 @@ public class CommandArgumentUtil
     {
       if (notice)
       {
-        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.mixed"), Component.text(arg, NamedTextColor.YELLOW)));
+        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.mixed"), Component.text(arg, NamedTextColor.YELLOW)));
       }
       return null;
     }
@@ -81,7 +81,7 @@ public class CommandArgumentUtil
         {
           if (notice)
           {
-            MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+            MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
           }
           return null;
         }
@@ -101,7 +101,7 @@ public class CommandArgumentUtil
         {
           if (notice)
           {
-            MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+            MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
           }
           return null;
         }
@@ -121,7 +121,7 @@ public class CommandArgumentUtil
         {
           if (notice)
           {
-            MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+            MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
           }
           return null;
         }
@@ -153,7 +153,7 @@ public class CommandArgumentUtil
             xStr = xStr.substring(1);
             if (!MessageUtil.isInteger(sender, xStr, false))
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.int"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.int"), Component.text(arg)));
               return null;
             }
             else
@@ -165,7 +165,7 @@ public class CommandArgumentUtil
           {
             if (notice)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.int"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.int"), Component.text(arg)));
             }
             return null;
           }
@@ -185,7 +185,7 @@ public class CommandArgumentUtil
             yStr = yStr.substring(1);
             if (!MessageUtil.isInteger(sender, yStr, false))
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.int"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.int"), Component.text(arg)));
               return null;
             }
             else
@@ -197,7 +197,7 @@ public class CommandArgumentUtil
           {
             if (notice)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.int"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.int"), Component.text(arg)));
             }
             return null;
           }
@@ -217,7 +217,7 @@ public class CommandArgumentUtil
             zStr = zStr.substring(1);
             if (!MessageUtil.isInteger(sender, zStr, false))
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.int"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.int"), Component.text(arg)));
               return null;
             }
             else
@@ -229,7 +229,7 @@ public class CommandArgumentUtil
           {
             if (notice)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.int"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.int"), Component.text(arg)));
             }
             return null;
           }
@@ -252,7 +252,7 @@ public class CommandArgumentUtil
             xStr = xStr.substring(1);
             if (!MessageUtil.isDouble(sender, xStr, false))
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
               return null;
             }
             else
@@ -264,7 +264,7 @@ public class CommandArgumentUtil
           {
             if (notice)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
             }
             return null;
           }
@@ -284,7 +284,7 @@ public class CommandArgumentUtil
             yStr = yStr.substring(1);
             if (!MessageUtil.isDouble(sender, yStr, false))
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
               return null;
             }
             else
@@ -296,7 +296,7 @@ public class CommandArgumentUtil
           {
             if (notice)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
             }
             return null;
           }
@@ -316,7 +316,7 @@ public class CommandArgumentUtil
             zStr = zStr.substring(1);
             if (!MessageUtil.isDouble(sender, zStr, false))
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
               return null;
             }
             else
@@ -328,7 +328,7 @@ public class CommandArgumentUtil
           {
             if (notice)
             {
-              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+              MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
             }
             return null;
           }
@@ -350,7 +350,7 @@ public class CommandArgumentUtil
     {
       if (notice)
       {
-        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos2d.incomplete"), Component.text(arg, NamedTextColor.YELLOW)));
+        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos2d.incomplete"), Component.text(arg, NamedTextColor.YELLOW)));
       }
       return null;
     }
@@ -358,7 +358,7 @@ public class CommandArgumentUtil
     {
       if (notice)
       {
-        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("좌표값은 2개이어야 합니다"), Component.text(arg, NamedTextColor.YELLOW)));
+        MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("좌표값은 2개이어야 합니다"), Component.text(arg, NamedTextColor.YELLOW)));
       }
       return null;
     }
@@ -376,7 +376,7 @@ public class CommandArgumentUtil
         yawStr = yawStr.substring(1);
         if (!MessageUtil.isDouble(sender, yawStr, false))
         {
-          MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+          MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
           return null;
         }
         else
@@ -388,7 +388,7 @@ public class CommandArgumentUtil
       {
         if (notice)
         {
-          MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+          MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
         }
         return null;
       }
@@ -408,7 +408,7 @@ public class CommandArgumentUtil
         pitchStr = pitchStr.substring(1);
         if (!MessageUtil.isDouble(sender, pitchStr, false))
         {
-          MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+          MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
           return null;
         }
         else
@@ -420,7 +420,7 @@ public class CommandArgumentUtil
       {
         if (notice)
         {
-          MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", Component.translatable("argument.pos.missing.double"), Component.text(arg)));
+          MessageUtil.sendError(sender, ComponentUtil.translate("%s (%s)", ComponentUtil.translate("argument.pos.missing.double"), Component.text(arg)));
         }
         return null;
       }

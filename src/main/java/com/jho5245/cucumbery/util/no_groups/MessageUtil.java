@@ -69,7 +69,7 @@ public class MessageUtil
     input = forTabComplete ? PlaceHolderUtil.evalString(PlaceHolderUtil.placeholder(Bukkit.getConsoleSender(), input, null)) : input;
     if (input.equals("'") || input.equals("\""))
     {
-      return new String[]{(ComponentUtil.serialize(Component.translatable("command.expected.separator")))};
+      return new String[]{(ComponentUtil.serialize(ComponentUtil.translate("command.expected.separator")))};
     }
     List<String> a = new ArrayList<>();
     StringBuilder builder = new StringBuilder();
@@ -91,7 +91,7 @@ public class MessageUtil
           }
           if (b)
           {
-            return new String[]{(ComponentUtil.serialize(Component.translatable("command.expected.separator")))};
+            return new String[]{(ComponentUtil.serialize(ComponentUtil.translate("command.expected.separator")))};
           }
           if (!builder.isEmpty())
           {
@@ -117,7 +117,7 @@ public class MessageUtil
           }
           if (b)
           {
-            return new String[]{(ComponentUtil.serialize(Component.translatable("command.expected.separator")))};
+            return new String[]{(ComponentUtil.serialize(ComponentUtil.translate("command.expected.separator")))};
           }
           if (!builder.isEmpty())
           {
@@ -148,7 +148,7 @@ public class MessageUtil
     {
       if (isInDoubleQuote || isInQuote)
       {
-        return new String[]{(ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end")))};
+        return new String[]{(ComponentUtil.serialize(ComponentUtil.translate("parsing.quote.expected.end")))};
       }
       a.add(builder.toString());
     }
@@ -919,19 +919,19 @@ public class MessageUtil
 
   public static boolean checkQuoteIsValidInArgs(@NotNull CommandSender sender, @NotNull String[] args, boolean forTabComplete)
   {
-    if (args.length == 1 && args[0].equals(ComponentUtil.serialize(Component.translatable("parsing.quote.expected.end"))))
+    if (args.length == 1 && args[0].equals(ComponentUtil.serialize(ComponentUtil.translate("parsing.quote.expected.end"))))
     {
       if (!forTabComplete)
       {
-        MessageUtil.sendError(sender, Component.translatable("parsing.quote.expected.end"));
+        MessageUtil.sendError(sender, ComponentUtil.translate("parsing.quote.expected.end"));
       }
       return false;
     }
-    if (args.length == 1 && args[0].equals(ComponentUtil.serialize(Component.translatable("command.expected.separator"))))
+    if (args.length == 1 && args[0].equals(ComponentUtil.serialize(ComponentUtil.translate("command.expected.separator"))))
     {
       if (!forTabComplete)
       {
-        MessageUtil.sendError(sender, Component.translatable("command.expected.separator"));
+        MessageUtil.sendError(sender, ComponentUtil.translate("command.expected.separator"));
       }
       return false;
     }

@@ -66,7 +66,7 @@ public class CustomEffectGUI
       menu.setItem(51, deco);
       menu.setItem(52, deco);
       menu.setItem(53, deco);
-      menu.setItem(4, CreateItemStack.create(Material.CLOCK, 1, Component.translatable("rg255,204;로딩중..."), false));
+      menu.setItem(4, CreateItemStack.create(Material.CLOCK, 1, ComponentUtil.translate("rg255,204;로딩중..."), false));
       player.openInventory(menu);
     }
     else

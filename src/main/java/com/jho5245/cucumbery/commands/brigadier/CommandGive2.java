@@ -123,7 +123,7 @@ public class CommandGive2 extends CommandBase
   {
     if (players.isEmpty())
     {
-      throw CommandAPI.failWithAdventureComponent(Component.translatable("argument.entity.notfound.entity"));
+      throw CommandAPI.failWithAdventureComponent(ComponentUtil.translate("argument.entity.notfound.entity"));
     }
     itemStack.setAmount(amount);
     AddItemUtil.addItemResult2(sender.getCallee(), players, itemStack, amount).stash().sendFeedback(hideOutput);

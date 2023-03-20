@@ -1228,13 +1228,13 @@ public class ItemStackUtil
     }
     if (message.startsWith("Expected key"))
     {
-      return Component.translatable("argument.nbt.expected.key");
+      return ComponentUtil.translate("argument.nbt.expected.key");
     }
     if (message.startsWith("Expected value"))
     {
-      return Component.translatable("argument.nbt.expected.value");
+      return ComponentUtil.translate("argument.nbt.expected.value");
     }
-    return Component.translatable("");
+    return ComponentUtil.translate("");
   }
 
   public static SkullMeta setTexture(@NotNull SkullMeta skullMeta, @NotNull String url)

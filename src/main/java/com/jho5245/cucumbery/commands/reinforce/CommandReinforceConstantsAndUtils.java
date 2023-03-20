@@ -48,46 +48,46 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
 
   protected static final String REINFORCE_DESTRUCTION_DROP_CHANCE = "파괴 확률 : %s";
 
-  protected static final Component STARFORCE_10_INFO = Component.translatable("★10성+★", NamedTextColor.YELLOW).hoverEvent(
-          Component.translatable("★10성+★").append(Component.text("\n"))
-                  .append(Component.translatable("10성을 달성했습니다!")).append(Component.text("\n"))
-                  .append(Component.translatable("스타포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
-                  .append(Component.translatable("하락하더라도 10성 밑으로는 하락하지 않습니다"))
+  protected static final Component STARFORCE_10_INFO = ComponentUtil.translate("★10성+★", NamedTextColor.YELLOW).hoverEvent(
+          ComponentUtil.translate("★10성+★").append(Component.text("\n"))
+                  .append(ComponentUtil.translate("10성을 달성했습니다!")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("스타포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("하락하더라도 10성 밑으로는 하락하지 않습니다"))
   );
 
-  protected static final Component STARFORCE_15_INFO = Component.translatable("★★15성+★★", NamedTextColor.AQUA).hoverEvent(
-          Component.translatable("★★15성+★★").append(Component.text("\n"))
-                  .append(Component.translatable("15성을 달성했습니다!")).append(Component.text("\n"))
-                  .append(Component.translatable("스타포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
-                  .append(Component.translatable("하락하더라도 15성 밑으로는 하락하지 않습니다"))
+  protected static final Component STARFORCE_15_INFO = ComponentUtil.translate("★★15성+★★", NamedTextColor.AQUA).hoverEvent(
+          ComponentUtil.translate("★★15성+★★").append(Component.text("\n"))
+                  .append(ComponentUtil.translate("15성을 달성했습니다!")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("스타포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("하락하더라도 15성 밑으로는 하락하지 않습니다"))
   );
 
-  protected static final Component STARFORCE_20_INFO = Component.translatable("★☆★20성+★☆★", NamedTextColor.LIGHT_PURPLE).hoverEvent(
-          Component.translatable("★☆★20성+★☆★").append(Component.text("\n"))
-                  .append(Component.translatable("20성을 달성했습니다!")).append(Component.text("\n"))
-                  .append(Component.translatable("스타포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
-                  .append(Component.translatable("하락하더라도 20성 밑으로는 하락하지 않습니다"))
+  protected static final Component STARFORCE_20_INFO = ComponentUtil.translate("★☆★20성+★☆★", NamedTextColor.LIGHT_PURPLE).hoverEvent(
+          ComponentUtil.translate("★☆★20성+★☆★").append(Component.text("\n"))
+                  .append(ComponentUtil.translate("20성을 달성했습니다!")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("스타포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("하락하더라도 20성 밑으로는 하락하지 않습니다"))
   );
 
-  protected static final Component CUCUMBER_FORCE_20_INFO = Component.translatable("★20성+★", NamedTextColor.YELLOW).hoverEvent(
-          Component.translatable("★20성+★").append(Component.text("\n"))
-                  .append(Component.translatable("20성을 달성했습니다!")).append(Component.text("\n"))
-                  .append(Component.translatable("오이포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
-                  .append(Component.translatable("하락하더라도 20성 밑으로는 하락하지 않습니다"))
+  protected static final Component CUCUMBER_FORCE_20_INFO = ComponentUtil.translate("★20성+★", NamedTextColor.YELLOW).hoverEvent(
+          ComponentUtil.translate("★20성+★").append(Component.text("\n"))
+                  .append(ComponentUtil.translate("20성을 달성했습니다!")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("오이포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("하락하더라도 20성 밑으로는 하락하지 않습니다"))
   );
 
-  protected static final Component CUCUMBER_ORCE_30_INFO = Component.translatable("★★30성+★★", NamedTextColor.AQUA).hoverEvent(
-          Component.translatable("★★30성+★★").append(Component.text("\n"))
-                  .append(Component.translatable("30성을 달성했습니다!")).append(Component.text("\n"))
-                  .append(Component.translatable("오이포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
-                  .append(Component.translatable("하락하더라도 30성 밑으로는 하락하지 않습니다"))
+  protected static final Component CUCUMBER_ORCE_30_INFO = ComponentUtil.translate("★★30성+★★", NamedTextColor.AQUA).hoverEvent(
+          ComponentUtil.translate("★★30성+★★").append(Component.text("\n"))
+                  .append(ComponentUtil.translate("30성을 달성했습니다!")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("오이포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("하락하더라도 30성 밑으로는 하락하지 않습니다"))
   );
 
-  protected static final Component CUCUMBER_FORCE_40_INFO = Component.translatable("★☆★40성+★☆★", NamedTextColor.LIGHT_PURPLE).hoverEvent(
-          Component.translatable("★☆★40성+★☆★").append(Component.text("\n"))
-                  .append(Component.translatable("30성을 달성했습니다!")).append(Component.text("\n"))
-                  .append(Component.translatable("오이포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
-                  .append(Component.translatable("하락하더라도 40성 밑으로는 하락하지 않습니다"))
+  protected static final Component CUCUMBER_FORCE_40_INFO = ComponentUtil.translate("★☆★40성+★☆★", NamedTextColor.LIGHT_PURPLE).hoverEvent(
+          ComponentUtil.translate("★☆★40성+★☆★").append(Component.text("\n"))
+                  .append(ComponentUtil.translate("30성을 달성했습니다!")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("오이포스 강화에 실패하여 강화 단계가")).append(Component.text("\n"))
+                  .append(ComponentUtil.translate("하락하더라도 40성 밑으로는 하락하지 않습니다"))
   );
 
   protected static final Component SUCCESS = ComponentUtil.translate("비용을 지불하여 아이템을 강화합니다");
@@ -504,13 +504,13 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
       Component costInfo = ComponentUtil.translate(MONEY_INFO, moneyString, cost == originalCost ? costString : Constant.THE_COLOR_HEX + "&m" + Constant.Sosu2.format(originalCost) + Constant.THE_COLOR_HEX + " " + costString);
       if (cost != originalCost)
       {
-        Component hover = Component.translatable("할인 비율 정보");
+        Component hover = ComponentUtil.translate("할인 비율 정보");
         hover = hover.append(Component.text("\n")).append(ComponentUtil.translate("할인 비율 : %s, 최대 할인 가격 : %s", Constant.THE_COLOR_HEX + Constant.Sosu2.format(discount) + "%", "rg255,204;90%"));
         hover = hover.append(Component.text("\n")).append(ComponentUtil.translate("rg255,204;주의! 파괴 방지 비용은 할인의 영향을 받지 않습니다"));
         if (!discountReason.isEmpty())
         {
           hover = hover.append(Component.text("\n\n"));
-          hover = hover.append(Component.translatable("적용 중인 할인 요인들"));
+          hover = hover.append(ComponentUtil.translate("적용 중인 할인 요인들"));
           for (Component reason : discountReason)
           {
             hover = hover.append(Component.text("\n")).append(reason);

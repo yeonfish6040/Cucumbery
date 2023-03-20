@@ -76,7 +76,7 @@ public class EntityComponentUtil
       {
         try
         {
-          TranslatableComponent translatableComponent = Component.translatable("%s%s%s");
+          TranslatableComponent translatableComponent = ComponentUtil.translate("%s%s%s");
           List<Component> args = new ArrayList<>();
           String prefix = Cucumbery.chat.getPlayerPrefix(player), suffix = Cucumbery.chat.getPlayerSuffix(player);
           args.add(prefix != null ? ComponentUtil.create(prefix) : Component.empty());
@@ -121,11 +121,11 @@ public class EntityComponentUtil
       }
       else
       {
-        nameComponent = Component.translatable(key);
+        nameComponent = ComponentUtil.translate(key);
       }
       if (entity instanceof MushroomCow mushroomCow && mushroomCow.getVariant() == MushroomCow.Variant.BROWN)
       {
-        nameComponent = ComponentUtil.translate("%s %s", Component.translatable("color.minecraft.brown"), nameComponent);
+        nameComponent = ComponentUtil.translate("%s %s", ComponentUtil.translate("color.minecraft.brown"), nameComponent);
       }
       if (entity instanceof Villager villager)
       {
@@ -140,7 +140,7 @@ public class EntityComponentUtil
     {
       try
       {
-        TranslatableComponent translatableComponent = Component.translatable("%s%s%s");
+        TranslatableComponent translatableComponent = ComponentUtil.translate("%s%s%s");
         if (team.hasColor())
         {
           translatableComponent = translatableComponent.color(team.color());
@@ -208,10 +208,10 @@ public class EntityComponentUtil
       {
         key = "entity.minecraft.killer_bunny";
       }
-      Component typeComponent = Component.translatable(key);
+      Component typeComponent = ComponentUtil.translate(key);
       if (entity instanceof MushroomCow mushroomCow && mushroomCow.getVariant() == MushroomCow.Variant.BROWN)
       {
-        typeComponent = ComponentUtil.translate("%s %s", Component.translatable("color.minecraft.brown"), typeComponent);
+        typeComponent = ComponentUtil.translate("%s %s", ComponentUtil.translate("color.minecraft.brown"), typeComponent);
       }
       if (entity instanceof Ageable ageable && !ageable.isAdult())
       {
@@ -241,7 +241,7 @@ public class EntityComponentUtil
       Variant variant = parrot.getVariant();
       Color color = DyeColor.valueOf(variant.toString()).getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("색상 : %s", Component.translatable("color.minecraft." + variant.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+      hover = hover.append(ComponentUtil.translate("색상 : %s", ComponentUtil.translate("color.minecraft." + variant.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
     }
     if (entity instanceof Axolotl axolotl)
     {
@@ -249,14 +249,14 @@ public class EntityComponentUtil
       String variantString = variant.toString().replace("LUCY", "PINK").replace("WILD", "BROWN").replace("GOLD", "YELLOW");
       Color color = DyeColor.valueOf(variantString).getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("색상 : %s", Component.translatable("color.minecraft." + variantString.toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+      hover = hover.append(ComponentUtil.translate("색상 : %s", ComponentUtil.translate("color.minecraft." + variantString.toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
     }
     if (entity instanceof Wolf wolf)
     {
       DyeColor collarColor = wolf.getCollarColor();
       Color color = collarColor.getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("목줄 색상 : %s", Component.translatable("color.minecraft." + collarColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+      hover = hover.append(ComponentUtil.translate("목줄 색상 : %s", ComponentUtil.translate("color.minecraft." + collarColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
     }
     if (entity instanceof Cat cat)
     {
@@ -266,7 +266,7 @@ public class EntityComponentUtil
       DyeColor collarColor = cat.getCollarColor();
       Color color = collarColor.getColor();
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("목줄 색상 : %s", Component.translatable("color.minecraft." + collarColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+      hover = hover.append(ComponentUtil.translate("목줄 색상 : %s", ComponentUtil.translate("color.minecraft." + collarColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
     }
     if (entity instanceof Panda panda)
     {
@@ -279,7 +279,7 @@ public class EntityComponentUtil
     if (entity instanceof Snowman snowman && snowman.isDerp())
     {
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(Component.translatable("derp."));
+      hover = hover.append(ComponentUtil.translate("derp."));
     }
     if (entity instanceof Colorable colorable)
     {
@@ -288,7 +288,7 @@ public class EntityComponentUtil
       {
         Color color = dyeColor.getColor();
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.translate("색상 : %s", Component.translatable("color.minecraft." + dyeColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
+        hover = hover.append(ComponentUtil.translate("색상 : %s", ComponentUtil.translate("color.minecraft." + dyeColor.toString().toLowerCase()).color(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))));
       }
     }
     if (entity instanceof Villager villager)
@@ -305,12 +305,12 @@ public class EntityComponentUtil
       {
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("레벨 : %s (%s)",
-                Component.translatable("merchant.level." + villager.getVillagerLevel()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + villagerExperience));
+                ComponentUtil.translate("merchant.level." + villager.getVillagerLevel()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + villagerExperience));
       }
       Villager.Type villagerType = villager.getVillagerType();
       Biome biome = Biome.valueOf(villagerType.toString().replace("SNOW", "SNOWY_PLAINS"));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("기후 : %s", Component.translatable("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
+      hover = hover.append(ComponentUtil.translate("기후 : %s", ComponentUtil.translate("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
       Map<UUID, Reputation> reputationMap = villager.getReputations();
       Set<UUID> uuidSet = reputationMap.keySet();
       if (!uuidSet.isEmpty())
@@ -395,7 +395,7 @@ public class EntityComponentUtil
     {
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("종 : %s",
-              Component.translatable(TropicalFishLore.getTropicalFishKey(tropicalFish.getBodyColor(), tropicalFish.getPatternColor(), tropicalFish.getPattern())).color(Constant.THE_COLOR)));
+              ComponentUtil.translate(TropicalFishLore.getTropicalFishKey(tropicalFish.getBodyColor(), tropicalFish.getPatternColor(), tropicalFish.getPattern())).color(Constant.THE_COLOR)));
     }
     if (entity instanceof Phantom phantom)
     {
@@ -489,7 +489,7 @@ public class EntityComponentUtil
       Villager.Type villagerType = zombieVillager.getVillagerType();
       Biome biome = Biome.valueOf(villagerType.toString().replace("SNOW", "SNOWY_TUNDRA"));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(ComponentUtil.translate("기후 : %s", Component.translatable("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
+      hover = hover.append(ComponentUtil.translate("기후 : %s", ComponentUtil.translate("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
 
       OfflinePlayer offlinePlayer = zombieVillager.getConversionPlayer();
       if (offlinePlayer != null)
@@ -796,7 +796,7 @@ public class EntityComponentUtil
     if (entity instanceof EvokerFangs evokerFangs)
     {
       LivingEntity owner = evokerFangs.getOwner();
-      Component summoner = owner != null ? SenderComponentUtil.senderComponent(owner, defaultColor, true) : Component.translatable("없음", NamedTextColor.RED);
+      Component summoner = owner != null ? SenderComponentUtil.senderComponent(owner, defaultColor, true) : ComponentUtil.translate("없음", NamedTextColor.RED);
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("소환사 : %s", summoner));
     }

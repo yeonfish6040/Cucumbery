@@ -269,9 +269,9 @@ public class CommandCustomEffect implements CucumberyCommandExecutor
     if (length == 1)
     {
       return CommandTabUtil.tabCompleterList(args, "<인수>", false,
-              Completion.completion("give", Component.translatable("대상에게 효과를 부여합니다")),
-              Completion.completion("clear", Component.translatable("대상으로부터 특정 효과 혹은 모든 효과를 제거합니다")),
-              Completion.completion("query", Component.translatable("자신의 적용 중인 효과를 GUI로 참조하거나 다른 대상의 효과를 참조합니다")));
+              Completion.completion("give", ComponentUtil.translate("대상에게 효과를 부여합니다")),
+              Completion.completion("clear", ComponentUtil.translate("대상으로부터 특정 효과 혹은 모든 효과를 제거합니다")),
+              Completion.completion("query", ComponentUtil.translate("자신의 적용 중인 효과를 GUI로 참조하거나 다른 대상의 효과를 참조합니다")));
     }
     switch (args[0])
     {
@@ -313,7 +313,7 @@ public class CommandCustomEffect implements CucumberyCommandExecutor
             CustomEffectType customEffectType = CustomEffectType.valueOf(effect);
             if (force)
             {
-              Component component = ComponentUtil.translate("%s 효과를 강제로 적용합니다", Component.translatable(customEffectType.translationKey()));
+              Component component = ComponentUtil.translate("%s 효과를 강제로 적용합니다", ComponentUtil.translate(customEffectType.translationKey()));
               return CommandTabUtil.completions(component);
             }
             else
@@ -345,7 +345,7 @@ public class CommandCustomEffect implements CucumberyCommandExecutor
          List<Completion> list = CommandTabUtil.tabCompleterDoubleRadius(args, 0.05, Integer.MAX_VALUE / 20d, "[지속 시간(초)]");
          String time = Method.timeFormatMilli(defaultDuration * 50L, true, 2);
          List<Completion> list1 = CommandTabUtil.tabCompleterList(args, "[인수]", false,
-         Completion.completion("infinite", Component.translatable("무제한 지속시간")),
+         Completion.completion("infinite", ComponentUtil.translate("무제한 지속시간")),
          Completion.completion("default", ComponentUtil.translate("기본 지속시간(%s)",
                  (defaultDuration == -1 ? "무제한" : time))));
          return CommandTabUtil.sortError(list, list1);

@@ -117,7 +117,7 @@ public class CommandWhatIs implements CucumberyCommandExecutor
         if (description != null)
         {
           hover = hover.append(Component.text("\n"));
-          hover = hover.append(Component.translatable(key + ".description"));
+          hover = hover.append(ComponentUtil.translate(key + ".description"));
         }
         component = component.hoverEvent(hover);
         gamerule = gamerule.append(ComponentUtil.translate("%s : %s", component, value));
@@ -158,7 +158,7 @@ public class CommandWhatIs implements CucumberyCommandExecutor
 
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, Constant.separatorSubString(3));
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "%s의 정보", world);
-      MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "난이도 : %s", Component.translatable(world.getDifficulty().translationKey(), Constant.THE_COLOR));
+      MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "난이도 : %s", ComponentUtil.translate(world.getDifficulty().translationKey(), Constant.THE_COLOR));
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, "월드 환경 : rg255,204;" + worldType);
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, pvp);
       MessageUtil.sendMessage(sender, Prefix.INFO_WHATIS, canGenerateStructures);
@@ -235,7 +235,7 @@ public class CommandWhatIs implements CucumberyCommandExecutor
     }
     if (length == 2)
     {
-      return CommandTabUtil.tabCompleterList(args, "<인수>", false, Completion.completion("forecast", Component.translatable("현재 월드의 날씨 정보만 참조")));
+      return CommandTabUtil.tabCompleterList(args, "<인수>", false, Completion.completion("forecast", ComponentUtil.translate("현재 월드의 날씨 정보만 참조")));
     }
     return CommandTabUtil.ARGS_LONG;
   }

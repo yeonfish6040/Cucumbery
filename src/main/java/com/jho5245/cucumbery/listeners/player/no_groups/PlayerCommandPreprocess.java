@@ -86,9 +86,9 @@ public class PlayerCommandPreprocess implements Listener
       {
         event.setCancelled(true);
         // 알 수 없는 명령어 처리
-        player.sendMessage(Component.translatable("command.unknown.command", NamedTextColor.RED));
+        player.sendMessage(ComponentUtil.translate("command.unknown.command", NamedTextColor.RED));
         player.sendMessage(Component.empty().append(Component.text(label, NamedTextColor.RED).decoration(TextDecoration.UNDERLINED, State.TRUE))
-                .append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE)));
+                .append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE)));
         if (UserData.LISTEN_COMMAND.getBoolean(player.getUniqueId()))
         {
           SoundPlay.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS);

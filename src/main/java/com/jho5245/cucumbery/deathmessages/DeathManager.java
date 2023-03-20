@@ -268,10 +268,10 @@ public class DeathManager
           if (!worldBorder.isInside(location))
           {
             key = "world_border";
-            Component worldBorderComponent = Component.translatable("세계 경계", Constant.THE_COLOR);
+            Component worldBorderComponent = ComponentUtil.translate("세계 경계", Constant.THE_COLOR);
             Location center = worldBorder.getCenter();
             double size = worldBorder.getSize();
-            Component hover = Component.translatable("세계 경계");
+            Component hover = ComponentUtil.translate("세계 경계");
             hover = hover.append(Component.text("\n"));
             hover = hover.append(ComponentUtil.translate("크기 : %s", size));
             hover = hover.append(Component.text("\n"));
@@ -629,7 +629,7 @@ public class DeathManager
         extraArgs.clear();
         args.add(SenderComponentUtil.senderComponent(entity));
         args.add(reportBugURL);
-        args.add(Component.text(key).hoverEvent(Component.translatable("chat.copy.click")).clickEvent(ClickEvent.copyToClipboard(key)).color(Constant.THE_COLOR));
+        args.add(Component.text(key).hoverEvent(ComponentUtil.translate("chat.copy.click")).clickEvent(ClickEvent.copyToClipboard(key)).color(Constant.THE_COLOR));
         keys.add("%1$s이(가) 알 수 없는 이유로 죽었습니다. 죄송합니다! 이 메시지가 뜨면 개발자가 일을 안 한겁니다! %2$s에서 해당 버그를 제보해주세요! 키 : %3$s");
       }
 

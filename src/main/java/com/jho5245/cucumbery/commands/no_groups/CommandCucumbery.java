@@ -144,7 +144,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         String version = Cucumbery.getPlugin().getDescription().getVersion();
         Component messasge = ComponentUtil.translate("플러그인 버전 : %s", Component.text(version, Constant.THE_COLOR)
                         .clickEvent(ClickEvent.copyToClipboard(version)))
-                .hoverEvent(Component.translatable("chat.copy.click"));
+                .hoverEvent(ComponentUtil.translate("chat.copy.click"));
         MessageUtil.info(sender, messasge);
       }
       case "update" ->

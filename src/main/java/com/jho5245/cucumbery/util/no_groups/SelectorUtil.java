@@ -585,86 +585,86 @@ public class SelectorUtil
       {
         msg = "command.expected.separator";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Unknown selector type"))
       {
         msg = "argument.entity.selector.unknown";
         args.add(Component.text(origin.substring("Unknown selector tpye '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Missing selector type"))
       {
         msg = "argument.entity.selector.missing";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected value for option"))
       {
         msg = "argument.entity.options.valueless";
         args.add(Component.text(origin.substring("Expected value for option '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Unknown option"))
       {
         msg = "argument.entity.options.unknown";
         args.add(Component.text(origin.substring("Unknown option '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Option") && msg.contains("isn't applicable here"))
       {
         msg = "argument.entity.options.inapplicable";
         args.add(Component.text(origin.substring("Option '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid or unknown sort type"))
       {
         msg = "argument.entity.options.sort.irreversible";
         args.add(Component.text(origin.substring("Invalid or unknown sort type '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid or unknown game mode"))
       {
         msg = "argument.entity.options.mode.invalid";
         args.add(Component.text(origin.substring("Invalid or unknown game mode '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid or unknown entity type"))
       {
         msg = "argument.entity.options.type.invalid";
         args.add(Component.text(origin.substring("Invalid or unknown entity type '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected end of options"))
       {
         msg = "argument.entity.options.unterminated";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Distance cannot be negative"))
       {
         msg = "argument.entity.options.distance.negative";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Level shouldn't be negative"))
       {
         msg = "argument.entity.options.level.negative";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Limit must be at least 1"))
       {
         msg = "argument.entity.options.limit.toosmall";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid name or UUID"))
       {
@@ -680,19 +680,19 @@ public class SelectorUtil
       {
         msg = "argument.range.empty";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Only whole numbers allowed, not decimals"))
       {
         msg = "argument.range.ints";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Min cannot be bigger than max"))
       {
         msg = "argument.range.swapped";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Incomplete (expected 1 angle)"))
       {
@@ -702,7 +702,7 @@ public class SelectorUtil
       {
         msg = "argument.angle.invalid";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("No entity was found"))
       {
@@ -724,7 +724,7 @@ public class SelectorUtil
       {
         msg = "parsing.quote.expected.end";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid escape sequence"))
       {
@@ -739,70 +739,70 @@ public class SelectorUtil
         msg = "parsing.int.invalid";
         args.add(Component.text(origin.substring("Invalid integer '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected integer"))
       {
         msg = "parsing.int.expected";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid long"))
       {
         msg = "parsing.long.invalid";
         args.add(Component.text(origin.substring("Invalid long '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected long"))
       {
         msg = "parsing.long.expected";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid double"))
       {
         msg = "parsing.double.invalid";
         args.add(Component.text(origin.substring("Invalid double '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected double"))
       {
         msg = "parsing.double.expected";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid float"))
       {
         msg = "parsing.float.invalid";
         args.add(Component.text(origin.substring("Invalid float '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected float"))
       {
         msg = "parsing.float.expected";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected boolean"))
       {
         msg = "parsing.bool.expected";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected key"))
       {
         msg = "argument.nbt.expected.key";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected value"))
       {
         msg = "argument.nbt.expected.value";
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Can't insert ") && msg.contains("into list of"))
       {
@@ -811,7 +811,7 @@ public class SelectorUtil
         args.add(Component.text(split[2]));
         args.add(Component.text(split[6]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Can't insert ") && !msg.contains("into list of"))
       {
@@ -820,21 +820,21 @@ public class SelectorUtil
         args.add(Component.text(split[2]));
         args.add(Component.text(split[4]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Invalid array type "))
       {
         msg = "argument.nbt.array.invalid";
         args.add(Component.text(origin.substring("Invalid array type '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       if (msg.startsWith("Expected"))
       {
         msg = "parsing.expected";
         args.add(Component.text(origin.substring("Expected '".length()).split("'")[0]));
         concat = Component.text(origin.split(": ")[1].replace("<--[HERE]", ""));
-        concat = concat.append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+        concat = concat.append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
       }
       TranslatableComponent component = ComponentUtil.translate(msg, args);
       if (!concat.equals(Component.empty()))
@@ -846,10 +846,10 @@ public class SelectorUtil
     if (msg.startsWith("Spurious trailing data in selector"))
     {
 //      MessageUtil.broadcastDebug(msg);
-      return Component.translatable("command.expected.separator").append(Component.text(" ")).append(Component.text(msg.split(": ")[1], NamedTextColor.RED))
-              .append(Component.translatable("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
+      return ComponentUtil.translate("command.expected.separator").append(Component.text(" ")).append(Component.text(msg.split(": ")[1], NamedTextColor.RED))
+              .append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE));
     }
-    return Component.translatable(msg);
+    return ComponentUtil.translate(msg);
   }
 }
 

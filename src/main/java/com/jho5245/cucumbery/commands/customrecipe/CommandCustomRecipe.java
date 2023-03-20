@@ -8,8 +8,8 @@ import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventory
 import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryRecipe;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.*;
-
 import com.jho5245.cucumbery.util.no_groups.MessageUtil.ConsonantType;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -3786,7 +3786,7 @@ public class CommandCustomRecipe implements CommandExecutor
     switch (length)
     {
       case 1 -> {
-        return CommandTabUtil.tabCompleterList(args, "<인수>", false,Completion.completion("open", Component.translatable("")), "create", "remove", "edit");
+        return CommandTabUtil.tabCompleterList(args, "<인수>", false,Completion.completion("open", ComponentUtil.translate("레시피를 엽니다")), "create", "remove", "edit");
       }
     }
     return CommandTabUtil.ARGS_LONG;

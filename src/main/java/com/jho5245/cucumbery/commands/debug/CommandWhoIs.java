@@ -166,7 +166,7 @@ public class CommandWhoIs implements CucumberyCommandExecutor
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "Pitch : rg255,204;" + locationPitch);
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "거리 : rg255,204;" + distanceStr + "rg255,204;m");
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "생물 군계 : %s(%s, %s)",
-                  Component.translatable(biome.translationKey(), Constant.THE_COLOR),
+                  ComponentUtil.translate(biome.translationKey(), Constant.THE_COLOR),
                   Constant.THE_COLOR_HEX + biome,
                   Constant.THE_COLOR_HEX + biome.getKey());
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, Constant.separatorSubString(3));
@@ -197,12 +197,12 @@ public class CommandWhoIs implements CucumberyCommandExecutor
           displayComponent = displayComponent.clickEvent(ClickEvent.copyToClipboard(playerDisplayName));
           if (displayComponent.hoverEvent() == null)
           {
-            displayComponent = displayComponent.hoverEvent(Component.translatable("chat.copy.click"));
+            displayComponent = displayComponent.hoverEvent(ComponentUtil.translate("chat.copy.click"));
           }
           listComponent = listComponent.clickEvent(ClickEvent.copyToClipboard(playerListName));
           if (listComponent.hoverEvent() == null)
           {
-            listComponent = listComponent.hoverEvent(Component.translatable("chat.copy.click"));
+            listComponent = listComponent.hoverEvent(ComponentUtil.translate("chat.copy.click"));
           }
           if (displayComponent.color() == null)
           {
@@ -226,12 +226,12 @@ public class CommandWhoIs implements CucumberyCommandExecutor
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "닉네임 : %s", displayComponent != null ? displayComponent : ComponentUtil.translate("&c알 수 없음"));
           if (displayComponent != null)
           {
-            MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "닉네임(NBT) : %s", Component.text(display).hoverEvent(Component.translatable("chat.copy.click")).clickEvent(ClickEvent.copyToClipboard(display)));
+            MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "닉네임(NBT) : %s", Component.text(display).hoverEvent(ComponentUtil.translate("chat.copy.click")).clickEvent(ClickEvent.copyToClipboard(display)));
           }
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "목록 닉네임 : %s", listComponent != null ? listComponent : ComponentUtil.translate("&c알 수 없음"));
           if (listComponent != null)
           {
-            MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "목록 닉네임(NBT) : %s", Component.text(listName).hoverEvent(Component.translatable("chat.copy.click")).clickEvent(ClickEvent.copyToClipboard(listName)));
+            MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, "목록 닉네임(NBT) : %s", Component.text(listName).hoverEvent(ComponentUtil.translate("chat.copy.click")).clickEvent(ClickEvent.copyToClipboard(listName)));
           }
           MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, Constant.separatorSubString(3));
         }
@@ -632,7 +632,7 @@ public class CommandWhoIs implements CucumberyCommandExecutor
           }
           switch (stats)
           {            default -> {
-            Component key = Component.translatable(TranslatableKeyParser.getKey(stats));
+            Component key = ComponentUtil.translate(TranslatableKeyParser.getKey(stats));
             String statisticName = ComponentUtil.serialize(key);
             double value = offlinePlayer.getStatistic(stats);
             String valueString = Constant.THE_COLOR_HEX;
@@ -698,7 +698,7 @@ public class CommandWhoIs implements CucumberyCommandExecutor
           {
             default -> MessageUtil.sendError(sender, "해당 값은 rg255,204;/whois <플레이어 ID> stats_general <통계>&r 명령어를 사용해주세요.");
             case BREAK_ITEM, CRAFT_ITEM, DROP, MINE_BLOCK, PICKUP, USE_ITEM -> {
-              Component key = Component.translatable(TranslatableKeyParser.getKey(stats));
+              Component key = ComponentUtil.translate(TranslatableKeyParser.getKey(stats));
               int value = offlinePlayer.getStatistic(stats, type);
               MessageUtil.sendMessage(sender, Prefix.INFO_WHOIS, Constant.separatorSubString(3));
               MessageUtil.sendMessage(
@@ -748,7 +748,7 @@ public class CommandWhoIs implements CucumberyCommandExecutor
                 MessageUtil.sendMessage(
                         sender, Prefix.INFO_WHOIS, "%s은(는) %s", offlinePlayer,
                                 ComponentUtil.translate(TranslatableKeyParser.getKey(stats),
-                                        Constant.THE_COLOR_HEX + Constant.Sosu2.format(value), Component.translatable(type.translationKey()).color(Constant.THE_COLOR)));
+                                        Constant.THE_COLOR_HEX + Constant.Sosu2.format(value), ComponentUtil.translate(type.translationKey()).color(Constant.THE_COLOR)));
               }
               else
               {
@@ -756,7 +756,7 @@ public class CommandWhoIs implements CucumberyCommandExecutor
                 MessageUtil.sendMessage(
                         sender, Prefix.INFO_WHOIS, ComponentUtil.translate("%s은(는) %s", offlinePlayer,
                                 ComponentUtil.translate(TranslatableKeyParser.getKey(stats),
-                                        Component.translatable(type.translationKey()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
+                                        ComponentUtil.translate(type.translationKey()).color(Constant.THE_COLOR), Constant.THE_COLOR_HEX + Constant.Sosu2.format(value))));
               }
             }
           }
@@ -914,24 +914,24 @@ public class CommandWhoIs implements CucumberyCommandExecutor
           return CommandTabUtil.errorMessage("해당 정보 유형은 온라인 상태의 플레이어에게만 사용할 수 있습니다");
         }
         return CommandTabUtil.tabCompleterList(args, "[정보 유형]", false,
-                Completion.completion("name", Component.translatable("닉네임")),
-                Completion.completion("stats", Component.translatable("전체적인 통계")),
-                Completion.completion("stats_general", Component.translatable("일반 통계")),
-                Completion.completion("stats_entity", Component.translatable("개체 유형의 통계")),
-                Completion.completion("stats_material", Component.translatable("아이템 유형의 통계")),
-                Completion.completion("offline", Component.translatable("접속 통계")));
+                Completion.completion("name", ComponentUtil.translate("닉네임")),
+                Completion.completion("stats", ComponentUtil.translate("전체적인 통계")),
+                Completion.completion("stats_general", ComponentUtil.translate("일반 통계")),
+                Completion.completion("stats_entity", ComponentUtil.translate("개체 유형의 통계")),
+                Completion.completion("stats_material", ComponentUtil.translate("아이템 유형의 통계")),
+                Completion.completion("offline", ComponentUtil.translate("접속 통계")));
       }
       boolean hasPotionEffects = player != null && !player.getActivePotionEffects().isEmpty();
       return CommandTabUtil.tabCompleterList(args, "[정보 유형]", false,
-              Completion.completion("state", Component.translatable("정보")),
-              Completion.completion("pos", Component.translatable("위치 및 스폰 포인트 위치")),
-              Completion.completion(Constant.TAB_COMPLETER_QUOTE_ESCAPE + "effect" + (hasPotionEffects ? "" : "(적용 중인 표과 없음)"), Component.translatable("적용 중인 효과")),
-              Completion.completion("name", Component.translatable("닉네임")),
-              Completion.completion("stats", Component.translatable("전체적인 통계")),
-              Completion.completion("stats_general", Component.translatable("일반 통계")),
-              Completion.completion("stats_entity", Component.translatable("개체 유형의 통계")),
-              Completion.completion("stats_material", Component.translatable("아이템 유형의 통계")),
-              Completion.completion("offline", Component.translatable("접속 통계")));
+              Completion.completion("state", ComponentUtil.translate("정보")),
+              Completion.completion("pos", ComponentUtil.translate("위치 및 스폰 포인트 위치")),
+              Completion.completion(Constant.TAB_COMPLETER_QUOTE_ESCAPE + "effect" + (hasPotionEffects ? "" : "(적용 중인 표과 없음)"), ComponentUtil.translate("적용 중인 효과")),
+              Completion.completion("name", ComponentUtil.translate("닉네임")),
+              Completion.completion("stats", ComponentUtil.translate("전체적인 통계")),
+              Completion.completion("stats_general", ComponentUtil.translate("일반 통계")),
+              Completion.completion("stats_entity", ComponentUtil.translate("개체 유형의 통계")),
+              Completion.completion("stats_material", ComponentUtil.translate("아이템 유형의 통계")),
+              Completion.completion("offline", ComponentUtil.translate("접속 통계")));
     }
     else if (length == 3)
     {

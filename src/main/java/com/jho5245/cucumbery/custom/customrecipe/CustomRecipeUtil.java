@@ -1617,7 +1617,7 @@ public class CustomRecipeUtil
                   Statistic statistic = Statistic.valueOf(requireGeneralStatistic);
                   double playerStatistic = player.getStatistic(statistic);
                   List<Component> args = new ArrayList<>();
-                  Component key = Component.translatable(TranslatableKeyParser.getKey(statistic));
+                  Component key = ComponentUtil.translate(TranslatableKeyParser.getKey(statistic));
                   args.add(key);
                   String statisticName = ComponentUtil.serialize(key);
                   String suffix = "";
@@ -1728,7 +1728,7 @@ public class CustomRecipeUtil
                       Statistic statistic = Statistic.valueOf(requireEntityStatistic);
                       EntityType entityType = EntityType.valueOf(requireEntityTypeStatistic);
                       List<Component> args = new ArrayList<>();
-                      Component entityComponent = Component.translatable(entityType.translationKey());
+                      Component entityComponent = ComponentUtil.translate(entityType.translationKey());
                       if (statistic == Statistic.KILL_ENTITY)
                       {
                         args.add(ComponentUtil.translate("%s을(를) 죽인 횟수", entityComponent));
@@ -1798,7 +1798,7 @@ public class CustomRecipeUtil
                       List<Component> args = new ArrayList<>();
                       Component materialComponent = ItemNameUtil.itemName(material);
                       args.add(materialComponent);
-                      args.add(Component.translatable(TranslatableKeyParser.getKey(statistic)));
+                      args.add(ComponentUtil.translate(TranslatableKeyParser.getKey(statistic)));
                       TranslatableComponent statisticDisplay = ComponentUtil.translate("rgb105,255,89;%s %s : %s");
                       int playerStatistic = player.getStatistic(statistic, material);
                       String color = getRadiusPercentColor(playerStatistic, statisticsMinExists, statisticsMaxExists, recipeMin, recipeMax);

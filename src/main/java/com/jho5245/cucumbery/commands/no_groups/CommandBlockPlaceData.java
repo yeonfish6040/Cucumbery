@@ -79,7 +79,7 @@ public class CommandBlockPlaceData implements CucumberyCommandExecutor
           MessageUtil.info(sender, "%s에 있는 아이템: %s %s", location, itemStack,
                   ComponentUtil.translate("rg255,204;[복사]")
                           .clickEvent(ClickEvent.copyToClipboard("'" + data.replace("'", "''") + "'"))
-                          .hoverEvent(Component.translatable("클릭하여 이스케이프된 nbt 복사").append(Component.text("\n" + data))));
+                          .hoverEvent(ComponentUtil.translate("클릭하여 이스케이프된 nbt 복사").append(Component.text("\n" + data))));
           return true;
         }
       }
@@ -96,7 +96,7 @@ public class CommandBlockPlaceData implements CucumberyCommandExecutor
           MessageUtil.info(sender, "%s 위치에 있는 블록 데이터를 제거했습니다. (%s) %s", location, ItemSerializer.deserialize(data),
                   ComponentUtil.translate("rg255,204;[복사]")
                           .clickEvent(ClickEvent.copyToClipboard("'" + data.replace("'", "''") + "'"))
-                          .hoverEvent(Component.translatable("클릭하여 이스케이프된 nbt 복사").append(Component.text("\n" + data))));
+                          .hoverEvent(ComponentUtil.translate("클릭하여 이스케이프된 nbt 복사").append(Component.text("\n" + data))));
           return true;
         }
       }

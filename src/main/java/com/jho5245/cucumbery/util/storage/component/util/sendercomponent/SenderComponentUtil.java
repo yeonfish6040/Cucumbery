@@ -100,11 +100,11 @@ public class SenderComponentUtil
         }
         else
         {
-          nameComponent = Component.translatable(key);
+          nameComponent = ComponentUtil.translate(key);
         }
         if (entity instanceof MushroomCow mushroomCow && mushroomCow.getVariant() == MushroomCow.Variant.BROWN)
         {
-          nameComponent = ComponentUtil.translate("%s %s", Component.translatable("color.minecraft.brown"), nameComponent);
+          nameComponent = ComponentUtil.translate("%s %s", ComponentUtil.translate("color.minecraft.brown"), nameComponent);
         }
         if (entity instanceof Villager villager)
         {
@@ -130,18 +130,18 @@ public class SenderComponentUtil
       return component;
     }
     Location location = null;
-    Component typeComponent = null; // Component.translatable(entity.getType().translationKey());
+    Component typeComponent = null; // ComponentUtil.translate(entity.getType().translationKey());
     boolean customNameNull = false;
     if (object instanceof BlockCommandSender blockCommandSender)
     {
       Block block = blockCommandSender.getBlock();
       location = block.getLocation();
-      typeComponent = Component.translatable(block.getType().translationKey());
+      typeComponent = ComponentUtil.translate(block.getType().translationKey());
     }
     else if (object instanceof Entity entity)
     {
       location = entity.getLocation();
-      typeComponent = Component.translatable(entity.getType().translationKey());
+      typeComponent = ComponentUtil.translate(entity.getType().translationKey());
       customNameNull = entity.customName() == null;
     }
     if (location != null)
@@ -298,7 +298,7 @@ public class SenderComponentUtil
       Location location = block.getLocation();
       Component name = blockCommandSender.name();
       boolean nameNull = name.equals(Component.text("@"));
-      Component defaultName = Component.translatable(block.translationKey());
+      Component defaultName = ComponentUtil.translate(block.translationKey());
       defaultName = switch (type)
               {
                 case COMMAND_BLOCK -> defaultName.color(TextColor.color(215, 180, 157));
@@ -350,7 +350,7 @@ public class SenderComponentUtil
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("UUID : %s", Constant.THE_COLOR_HEX + uuid));
       hover = hover.append(Component.text("\n"));
-      hover = hover.append(Component.translatable("chat.copy.click"));
+      hover = hover.append(ComponentUtil.translate("chat.copy.click"));
       component = component.hoverEvent(HoverEvent.showText(hover));
       component = component.clickEvent(ClickEvent.copyToClipboard(uuid.toString()));
       return component;

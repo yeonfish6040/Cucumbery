@@ -190,7 +190,7 @@ public class ComponentUtil
                   case CUSTOM -> "사용자 지정";
                 };
         hover = hover.append(Component.text("\n"));
-        hover = hover.append(ComponentUtil.translate("유형 : %s", Component.translatable(environmentKey).color(Constant.THE_COLOR)));
+        hover = hover.append(ComponentUtil.translate("유형 : %s", ComponentUtil.translate(environmentKey).color(Constant.THE_COLOR)));
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("ID : %s", Constant.THE_COLOR_HEX + world.getName()));
         hover = hover.append(Component.text("\n"));
@@ -229,8 +229,8 @@ public class ComponentUtil
       {
         String effectKey = TranslatableKeyParser.getKey(potionEffectType);
         String id = effectKey.substring(17);
-        Component concat = Component.translatable(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
-        Component hover = Component.translatable(effectKey);
+        Component concat = ComponentUtil.translate(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
+        Component hover = ComponentUtil.translate(effectKey);
         hover = hover.append(VanillaEffectDescription.getDescription(potionEffectType, player));
         if (player == null || player.hasPermission("asdf"))
         {
@@ -249,8 +249,8 @@ public class ComponentUtil
         String id = effectKey.substring(17);
         int duration = potionEffect.getDuration(), amplifier = potionEffect.getAmplifier();
         boolean hasParticles = potionEffect.hasParticles(), hasIcon = potionEffect.hasIcon(), isAmbient = potionEffect.isAmbient();
-        Component concat = Component.translatable(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
-        Component hover = Component.translatable(effectKey);
+        Component concat = ComponentUtil.translate(effectKey, CustomEffectManager.isVanillaNegative(potionEffectType) ? NamedTextColor.RED : NamedTextColor.GREEN);
+        Component hover = ComponentUtil.translate(effectKey);
         hover = hover.append(Component.text("\n"));
         hover = hover.append(VanillaEffectDescription.getDescription(potionEffect, player));
         hover = hover.append(Component.text("\n"));
@@ -290,8 +290,8 @@ public class ComponentUtil
       else if (object instanceof CustomEffectType effectType)
       {
         String key = effectType.translationKey();
-        Component concat = Component.translatable(key, effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
-        Component hover = Component.translatable(key);
+        Component concat = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key);
+        Component hover = ComponentUtil.translate(key);
         hover = hover.append(Component.text("\n"));
         hover = hover.append(effectType.getDescription());
         Component propertyDescription = effectType.getPropertyDescription();
@@ -351,8 +351,8 @@ public class ComponentUtil
         String key = effectType.translationKey();
         int duration = customEffect.getInitDuration();
         int amplifier = customEffect.getInitAmplifier();
-        Component concat = Component.translatable(key, effectType.isNegative() ? NamedTextColor.RED : NamedTextColor.GREEN);
-        Component hover = Component.translatable(key);
+        Component concat = ComponentUtil.translate((effectType.isNegative() ? "&c" : "&a") + key);
+        Component hover = ComponentUtil.translate(key);
         Component description = customEffect.getDescription(player);
         boolean isFinite = duration != -1, isAmplifiable = effectType.getMaxAmplifier() > 0;
         if (!description.equals(Component.empty()))
@@ -430,7 +430,7 @@ public class ComponentUtil
         String display = song.getPath().getName().replace("＃", "#").replace("？", "?").replace("：", ":");
         display = display.substring(0, display.length() - 4);
         Component concat = Component.text(display).color(Constant.THE_COLOR);
-        Component hover = Component.translatable(display);
+        Component hover = ComponentUtil.translate(display);
         String title = song.getTitle(), description = song.getDescription();
         String author = song.getAuthor(), originalAuthor = song.getOriginalAuthor();
         if (!title.equals(""))
@@ -515,10 +515,10 @@ public class ComponentUtil
       else if (object instanceof UserData userData)
       {
         String key = userData.getKey().replace("-", " ");
-        Component concat = Component.translatable(key, Constant.THE_COLOR);
+        Component concat = ComponentUtil.translate(key, Constant.THE_COLOR);
         if (player != null && player.hasPermission("asdf"))
         {
-          Component hover = Component.empty().append(Component.translatable(key));
+          Component hover = Component.empty().append(ComponentUtil.translate(key));
           hover = hover.append(Component.text("\n"));
           hover = hover.append(ComponentUtil.translate("내부 ID : %s", Constant.THE_COLOR_HEX + userData.toString().toLowerCase()));
           hover = hover.append(Component.text("\n"));
@@ -541,7 +541,7 @@ public class ComponentUtil
       }
       else if (object instanceof Translatable translatable)
       {
-        component = component.append(Component.translatable(translatable.translationKey()));
+        component = component.append(ComponentUtil.translate(translatable.translationKey()));
       }
       else if (!(object instanceof Boolean))
       {
@@ -1627,7 +1627,7 @@ public class ComponentUtil
           }
           else
           {
-            args.add(Component.translatable(entity.getType().translationKey()));
+            args.add(ComponentUtil.translate(entity.getType().translationKey()));
           }
         }
         key = new StringBuilder(key.substring(0, key.length() - 2));
@@ -1641,7 +1641,7 @@ public class ComponentUtil
     }
     if (component instanceof KeybindComponent keybindComponent)
     {
-      builder.append(ComponentUtil.serialize(Component.translatable(keybindComponent.keybind())));
+      builder.append(ComponentUtil.serialize(ComponentUtil.translate(keybindComponent.keybind())));
     }
     List<Component> children = component.children();
     for (Component child : children)

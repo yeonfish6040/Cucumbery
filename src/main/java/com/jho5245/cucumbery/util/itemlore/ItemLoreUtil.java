@@ -133,7 +133,7 @@ public class ItemLoreUtil
     {
       return;
     }
-    lore.set(0, Component.translatable(ItemLoreUtil.FIRST_LINE_EMPTY_LORE).args(Component.empty(), Component.empty()));
+    lore.set(0, ComponentUtil.translate(ItemLoreUtil.FIRST_LINE_EMPTY_LORE).args(Component.empty(), Component.empty()));
     itemMeta.lore(lore);
     itemStack.setItemMeta(itemMeta);
   }
@@ -222,7 +222,7 @@ public class ItemLoreUtil
   public static void setItemRarityValue(@NotNull List<Component> lore, long value, boolean change)
   {
     long before = (change ? getItemRarityValue(lore) : 0) + value;
-    lore.set(0, Component.translatable(ItemLoreUtil.FIRST_LINE_EMPTY_LORE, Component.text(before)));
+    lore.set(0, ComponentUtil.translate(ItemLoreUtil.FIRST_LINE_EMPTY_LORE, Component.text(before)));
   }
 
   /**
@@ -242,11 +242,11 @@ public class ItemLoreUtil
     Component component;
     if (enchant.getMaxLevel() == 1 && enchantLevel == 1)
     {
-      component = Component.translatable(enchant.translationKey());
+      component = ComponentUtil.translate(enchant.translationKey());
     }
     else
     {
-      component = ComponentUtil.translate("%s %s", Component.translatable(enchant.translationKey()), Component.text(enchantLevel));
+      component = ComponentUtil.translate("%s %s", ComponentUtil.translate(enchant.translationKey()), Component.text(enchantLevel));
     }
     component = component.decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     component = component.color(enchant.isCursed() ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));

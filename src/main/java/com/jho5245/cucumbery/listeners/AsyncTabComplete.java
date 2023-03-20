@@ -60,7 +60,7 @@ public class AsyncTabComplete implements Listener
           args = temp;
           if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
           {
-            event.completions(Collections.singletonList(Completion.completion(ComponentUtil.serialize(Component.translatable(args[0])), Component.translatable(args[0]))));
+            event.completions(Collections.singletonList(Completion.completion(ComponentUtil.serialize(ComponentUtil.translate(args[0])), ComponentUtil.translate(args[0]))));
             return;
           }
           if (location == null)

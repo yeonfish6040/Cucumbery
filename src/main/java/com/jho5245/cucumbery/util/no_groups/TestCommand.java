@@ -68,7 +68,7 @@ public class TestCommand implements CucumberyCommandExecutor
       {
 //        ItemStack itemStack = new ItemStack(Material.TNT);
 //        ItemMeta itemMeta = itemStack.getItemMeta();
-//        TranslatableComponent component = Component.translatable("wa sans");
+//        TranslatableComponent component = ComponentUtil.translate("wa sans");
 //        itemMeta.displayName(component);
 //        itemStack.setItemMeta(itemMeta);
 //        player.getInventory().addItem(itemStack);

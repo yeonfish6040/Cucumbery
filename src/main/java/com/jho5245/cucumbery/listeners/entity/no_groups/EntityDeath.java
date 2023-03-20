@@ -3,8 +3,8 @@ package com.jho5245.cucumbery.listeners.entity.no_groups;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffectImple;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.deathmessages.DeathManager;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -13,7 +13,6 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
@@ -228,7 +227,7 @@ public class EntityDeath implements Listener
         @Nullable Consumer<Entity> consumer = (e) -> {
           ExperienceOrb experienceOrb = (ExperienceOrb) e;
           experienceOrb.setExperience(finalStack + 1);
-          experienceOrb.customName(Component.translatable("콤보 구슬", NamedTextColor.YELLOW));
+          experienceOrb.customName(ComponentUtil.translate("콤보 구슬", NamedTextColor.YELLOW));
           experienceOrb.setCustomNameVisible(true);
           experienceOrb.setVelocity(new Vector(0, 0, 0));
           experienceOrb.setGravity(false);
