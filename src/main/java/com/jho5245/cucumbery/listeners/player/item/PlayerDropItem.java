@@ -184,7 +184,7 @@ public class PlayerDropItem implements Listener
         CustomEffectManager.removeEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP);
       }
       CustomEffectManager.addEffect(player, new ItemStackCustomEffectImple(CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP, itemStack.clone()));
-      Component itemComponent = ItemStackComponent.itemStackComponent(itemStack, Constant.THE_COLOR);
+      Object itemComponent = itemStack.getMaxStackSize() == 1 ? itemStack : ItemStackComponent.itemStackComponent(itemStack, Constant.THE_COLOR);
       MessageUtil.sendWarn(player, "%s은(는) 버린 후 다시 습득할 수 없습니다", itemComponent);
       MessageUtil.info(player, ComponentUtil.translate("그래도 버리시겠습니까? ").append(ComponentUtil.translate("&a[버리기]").hoverEvent(ComponentUtil.translate("클릭하여 %s을(를) 제거합니다", itemComponent))
               .clickEvent(ClickEvent.runCommand(Constant.DROP_UNTRADABLE_ITEM))));

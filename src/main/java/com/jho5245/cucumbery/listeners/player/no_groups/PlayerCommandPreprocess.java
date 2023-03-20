@@ -151,10 +151,10 @@ public class PlayerCommandPreprocess implements Listener
         if (customEffect instanceof ItemStackCustomEffect itemStackCustomEffect)
         {
           ItemStack itemStack = itemStackCustomEffect.getItemStack();
-          Component itemComponent = ItemStackComponent.itemStackComponent(itemStack, Constant.THE_COLOR);
+          Object itemComponent = itemStack.getMaxStackSize() == 1 ? itemStack : ItemStackComponent.itemStackComponent(itemStack, Constant.THE_COLOR);
           if (ItemStackUtil.countItem(player.getInventory(), itemStack) == 0)
           {
-            MessageUtil.sendWarn(player, "인벤토리에 %s이(가) 충분히 없어 제거할 수 없었습니다", itemComponent);
+            MessageUtil.sendWarn(player, "인벤토리에 %s이(가) 충분히 없거나 아이템의 속성이 변경되어 제거할 수 없었습니다", itemComponent);
             Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                     CustomEffectManager.removeEffect(player, CustomEffectType.NOTIFY_NO_TRADE_ITEM_DROP, RemoveReason.TIME_OUT), 0L);
             event.setCancelled(true);
