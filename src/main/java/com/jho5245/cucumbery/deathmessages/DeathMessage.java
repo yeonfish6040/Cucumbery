@@ -145,6 +145,11 @@ public enum DeathMessage
   CRAMMING,
 
   /**
+   * %1$s이(가) 으깨져버렸습니다
+   */
+  CRAMMING_NONE,
+
+  /**
    * %1$s이(가) %2$s에게 짓눌렸습니다
    */
   CRAMMING_COMBAT,

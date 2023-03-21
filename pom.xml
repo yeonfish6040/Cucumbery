@@ -97,7 +97,6 @@
         </pluginRepository>
     </pluginRepositories>
 
-
     <dependencies>
         <!-- amethyst (repo:wanyne-amethy) -->
         <dependency>
@@ -223,7 +222,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 
     <build>
         <plugins>

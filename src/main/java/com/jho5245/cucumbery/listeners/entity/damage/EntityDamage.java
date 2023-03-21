@@ -519,7 +519,7 @@ public class EntityDamage implements Listener
     double damage = event.getFinalDamage();
     Component display;
     double health = damageable.getHealth();
-    BigDecimal damageBig = new BigDecimal(damage), healthBig = new BigDecimal(health), ratioBig = healthBig.divide(damageBig, RoundingMode.FLOOR);
+    BigDecimal damageBig = new BigDecimal(damage), healthBig = new BigDecimal(health), ratioBig = healthBig.divide(damageBig.max(BigDecimal.ONE), RoundingMode.FLOOR);
     boolean isMiss = false;
     if (health - damage >= health - 0.01 || damage <= 0.0001 || health - damage >= health || ratioBig.compareTo(compare) > 0)
     {
@@ -573,27 +573,6 @@ public class EntityDamage implements Listener
     {
       @SuppressWarnings("all")
       Consumer<Entity> consumer = e ->
-      {
-        ArmorStand armorStand = (ArmorStand) e;
-        armorStand.setMarker(true);
-        armorStand.setCanMove(false);
-        armorStand.setCanTick(false);
-        armorStand.setSmall(true);
-        armorStand.setBasePlate(false);
-        armorStand.setInvisible(true);
-        armorStand.customName(finalDisplay);
-        armorStand.setCustomNameVisible(true);
-        armorStand.addScoreboardTag("damage_indicator");
-        if (!viewSelf)
-        {
-          armorStand.addScoreboardTag("no_cucumbery_true_invisibility");
-          if (entity instanceof Player player)
-          {
-            player.hideEntity(Cucumbery.getPlugin(), armorStand);
-          }
-        }
-      };
-      consumer = e ->
       {
         TextDisplay textDisplay = (TextDisplay) e;
         textDisplay.text(finalDisplay);
