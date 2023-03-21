@@ -853,18 +853,10 @@ public class ComponentUtil
     }
     else
     {
-      //
-      try
+      String fallback = component.fallback();
+      if (fallback != null)
       {
-        String fallback = component.fallback();
-        if (fallback != null)
-        {
-          key = fallback;
-        }
-      }
-      catch (Throwable ignored)
-      {
-//        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
+        key = fallback;
       }
       for (MessageUtil.ConsonantType type : MessageUtil.ConsonantType.values())
       {
@@ -1428,14 +1420,7 @@ public class ComponentUtil
     }
     else
     {
-      try
-      {
-        component = component.key(key).fallback(builder.toString());
-      }
-      catch (Throwable t)
-      {
-//        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
-      }
+      component = component.key(key).fallback(builder.toString());
     }
     if (components == null)
     {
@@ -1572,17 +1557,10 @@ public class ComponentUtil
       {
         key = serial;
       }
-      try
+      String fallback = translatableComponent.fallback();
+      if (fallback != null)
       {
-        String fallback = translatableComponent.fallback();
-        if (fallback != null)
-        {
-          key = fallback;
-        }
-      }
-      catch (Throwable t)
-      {
-//        Bukkit.getConsoleSender().sendMessage(Component.text("1.19.4 기능 사용해서 터짐 무시하삼", NamedTextColor.RED));
+        key = fallback;
       }
       String test = key.replace("%%", "");
       int keyContains = (int) (p.matcher(test).results().count() + p2.matcher(test).results().count());
