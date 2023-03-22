@@ -1,4 +1,4 @@
-config-version: 11
+config-version: 12
 # 데스 메시지 기능 편집
 death-messages:
   enable: true # 사용 여부. true 또는 false
@@ -85,6 +85,10 @@ death-messages:
       - "%1$s이(가) %2$s 때문에 으깨져버렸습니다"
       - "%1$s이(가) %2$s에게 짓눌렸습니다"
       - "%1$s이(가) %2$s 때문에 압사당했습니다"
+    cramming-none: # 주변에 아무도 없을때 압사 피해(명령어?)
+      - "death.attack.cramming" # %1$s이(가) 으깨져버렸습니다
+      - "%1$s이(가) 짓눌렸습니다"
+      - "%1$s이(가) 압사당했습니다"
     cramming-combat:
      # - "death.attack.cramming.player" # %1$s이(가) %2$s에게 짓눌렸습니다
       - "%1$s이(가) %2$s와(과) 싸우다 %3$s 때문에 으깨져버렸습니다"

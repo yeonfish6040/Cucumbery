@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum CustomMaterial implements Translatable
 {
-  AMBER(Material.ORANGE_DYE, "key:item.cucumbery.amber|&i호박", Rarity.UNIQUE),
-  ARROW_CRIT(Material.ARROW, "&i치명적인 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
+  AMBER(Material.ORANGE_DYE, "&ikey:item.cucumbery.amber|호박", Rarity.UNIQUE),
+  ARROW_CRIT(Material.ARROW, "&ikey:item.cucumbery.arrow_crit|치명적인 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   ARROW_EXPLOSIVE(Material.ARROW, "&i폭발성 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   ARROW_EXPLOSIVE_DESTRUCTION(Material.ARROW, "&i파괴형 폭발성 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   ARROW_FLAME(Material.ARROW, "&i화염 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
