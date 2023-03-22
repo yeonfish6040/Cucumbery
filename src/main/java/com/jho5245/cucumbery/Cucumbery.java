@@ -130,7 +130,6 @@ public class Cucumbery extends JavaPlugin
   public static boolean using_WorldGuard;
   public static boolean using_GSit;
   public static boolean using_UltimateTimber;
-
   public static boolean using_Residence;
   /**
    * MythicMobs API

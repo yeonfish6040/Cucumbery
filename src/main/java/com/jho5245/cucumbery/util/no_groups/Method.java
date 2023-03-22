@@ -2014,7 +2014,7 @@ public class Method extends SoundPlay
     if (Cucumbery.using_ProtocolLib)
 //    if (false)
     {
-      itemEntity.setCustomNameVisible(false);
+      itemEntity.setCustomNameVisible(true);
       Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
       {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
