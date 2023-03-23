@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class DamageIndicatorProtocolLib
@@ -35,19 +34,7 @@ public class DamageIndicatorProtocolLib
     ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     PacketContainer packet = protocolManager.createPacket(Server.SPAWN_ENTITY);
     packet.getIntegers().write(0, entityId);
-//    packet.getEntityTypeModifier().write(0, EntityType.ARMOR_STAND);
     packet.getEntityTypeModifier().write(0, EntityType.TEXT_DISPLAY);
-//    MessageUtil.broadcastDebug(
-//              "intsize:" + packet.getIntegers().size()
-//            + ", doubleSize:" + packet.getDoubles().size()
-//            + ", modifier:" + packet.getModifier().size()
-//            + ", modifier2:" + packet.getWatchableCollectionModifier().size()
-//            + ", modifier3:" + packet.getDataValueCollectionModifier().size()
-//    );
-    // Set optional velocity (/8000)
-//    packet.getIntegers().write(1, 0);
-//    packet.getIntegers().write(2, 0);
-//    packet.getIntegers().write(3, 0);
     // Set location
     packet.getDoubles().write(0, location.getX());
     packet.getDoubles().write(1, location.getY());
@@ -69,7 +56,6 @@ public class DamageIndicatorProtocolLib
         continue;
       }
       protocolManager.sendServerPacket(player, packet);
-
 
 //      edit.getIntegers().write(0, entityId);
 //      Entity e = edit.getEntityModifier(player.getWorld()).read(0);
@@ -94,72 +80,60 @@ public class DamageIndicatorProtocolLib
 //              new WrappedDataValue(15, Registry.get(Byte.class), (byte) 0x10)
 //      );
 //      watchableAccessor.write(0, values);
+//      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+//      {
 
-      for (int i = 0; i < 1; i++)
-      {
-        int j = i;
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> {
-          PacketContainer edit = protocolManager.createPacket(Server.ENTITY_METADATA);
-          StructureModifier<List<WrappedDataValue>> watchableAccessor = edit.getDataValueCollectionModifier();
-          WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromJson(ComponentUtil.serializeAsJson(finalDisplay));
-          List<WrappedDataValue> values = Lists.newArrayList(
-                  new WrappedDataValue(2, Registry.getChatComponentSerializer(true), Optional.of(
-                          wrappedChatComponent.getHandle()
-                  )),
-                  new WrappedDataValue(3, Registry.get(Boolean.class), true),
-                  new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.2f, 0f)),
-                  new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(1.2f, 1.2f, 1.2f)),
-                  new WrappedDataValue(14, Registry.get(Byte.class), (byte) 3),
-                  new WrappedDataValue(16, Registry.get(Float.class), 32f),
-                  new WrappedDataValue(18, Registry.get(Float.class), 0f)
-          );
-          watchableAccessor.write(0, values);
-          edit.getIntegers().write(0, entityId);
-          protocolManager.sendServerPacket(player, edit);
-        }, i);
-      }
+      //                  new WrappedDataValue(22, Registry.getChatComponentSerializer(true), Optional.of(
+//                          wrappedChatComponent.getHandle()
+//                  )),
 
       PacketContainer edit = protocolManager.createPacket(Server.ENTITY_METADATA);
+      StructureModifier<List<WrappedDataValue>> watchableAccessor = edit.getDataValueCollectionModifier();
+      WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromJson(ComponentUtil.serializeAsJson(finalDisplay));
+      List<WrappedDataValue> values = Lists.newArrayList(
+              new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.2f, 0f)),
+              new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(1.2f, 1.2f, 1.2f)),
+              new WrappedDataValue(14, Registry.get(Byte.class), (byte) 3),
+              new WrappedDataValue(15, Registry.get(Integer.class), (15 << 4 | 15 << 20)),
+              new WrappedDataValue(16, Registry.get(Float.class), 2f),
+              new WrappedDataValue(18, Registry.get(Float.class), 0f),
+              new WrappedDataValue(22, Registry.getChatComponentSerializer(), wrappedChatComponent.getHandle()),
+              new WrappedDataValue(24, Registry.get(Integer.class), 0),
+              new WrappedDataValue(25, Registry.get(Byte.class), (byte) -2),
+              new WrappedDataValue(26, Registry.get(Byte.class), (byte) 0x01)
+      );
+      watchableAccessor.write(0, values);
+      edit.getIntegers().write(0, entityId);
+      protocolManager.sendServerPacket(player, edit);
+
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
       {
-        StructureModifier<List<WrappedDataValue>> watchableAccessor2 = edit.getDataValueCollectionModifier();
+        PacketContainer edit2 = protocolManager.createPacket(Server.ENTITY_METADATA);
+        StructureModifier<List<WrappedDataValue>> watchableAccessor2 = edit2.getDataValueCollectionModifier();
         List<WrappedDataValue> values2 = Lists.newArrayList(
                 new WrappedDataValue(8, Registry.get(Integer.class), -1),
                 new WrappedDataValue(9, Registry.get(Integer.class), 10),
                 new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.4f, 0f))
         );
         watchableAccessor2.write(0, values2);
-        edit.getIntegers().write(0, entityId);
-        protocolManager.sendServerPacket(player, edit);
+        edit2.getIntegers().write(0, entityId);
+        protocolManager.sendServerPacket(player, edit2);
       }, 2L);
 
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
       {
-        StructureModifier<List<WrappedDataValue>> watchableAccessor2 = edit.getDataValueCollectionModifier();
+        PacketContainer edit2 = protocolManager.createPacket(Server.ENTITY_METADATA);
+        StructureModifier<List<WrappedDataValue>> watchableAccessor2 = edit2.getDataValueCollectionModifier();
         List<WrappedDataValue> values2 = Lists.newArrayList(
                 new WrappedDataValue(8, Registry.get(Integer.class), -1),
                 new WrappedDataValue(9, Registry.get(Integer.class), 10),
-                new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.6f, 0f))
+                new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.6f, 0f)),
+                new WrappedDataValue(25, Registry.get(Byte.class), (byte) 5)
         );
         watchableAccessor2.write(0, values2);
-        edit.getIntegers().write(0, entityId);
-        protocolManager.sendServerPacket(player, edit);
+        edit2.getIntegers().write(0, entityId);
+        protocolManager.sendServerPacket(player, edit2);
       }, 12L);
-
-
-//      PacketContainer teleport = protocolManager.createPacket(Server.ENTITY_TELEPORT);
-//      teleport.getIntegers().write(0, entityId);
-//      for (int i = 0; i < 20; i++)
-//      {
-//        int finalI = i;
-//        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-//        {
-//          teleport.getDoubles().write(0, location.getX());
-//          teleport.getDoubles().write(1, location.getY() + (finalI * 0.02));
-//          teleport.getDoubles().write(2, location.getZ());
-//          protocolManager.sendServerPacket(player, teleport);
-//        }, i);
-//      }
 
 
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
@@ -167,7 +141,7 @@ public class DamageIndicatorProtocolLib
         PacketContainer remove = protocolManager.createPacket(Server.ENTITY_DESTROY);
         remove.getIntLists().write(0, List.of(entityId));
         protocolManager.sendServerPacket(player, remove);
-      }, 20L);
+      }, 22L);
     }
   }
 }

@@ -564,8 +564,8 @@ public class EntityDamage implements Listener
     location.setY(boundingBox.getMaxY() + offset);
     location.setZ(boundingBox.getCenterZ());
     Component finalDisplay = display;
-//    if (Cucumbery.using_ProtocolLib)
-    if (false)
+    if (Cucumbery.using_ProtocolLib)
+//    if (false)
     {
       DamageIndicatorProtocolLib.displayDamage(viewSelf, entity, location, finalDisplay);
     }
