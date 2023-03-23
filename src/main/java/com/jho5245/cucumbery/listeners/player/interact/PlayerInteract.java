@@ -1612,7 +1612,7 @@ public class PlayerInteract implements Listener
       }
       if (item.hasItemMeta() && item.getItemMeta().hasEnchants())
       {
-        level = Math.max(level, item.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+        level = Math.max(level, CustomEnchant.isEnabled() ? item.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER) : 0);
       }
       if (level > 0)
       {
@@ -1690,7 +1690,7 @@ public class PlayerInteract implements Listener
       }
       if (item.hasItemMeta() && item.getItemMeta().hasEnchants())
       {
-        level = Math.max(level, item.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+        level = Math.max(level, CustomEnchant.isEnabled() ? item.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER) : 0);
       }
       if (level > 0)
       {

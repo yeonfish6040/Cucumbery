@@ -33,7 +33,7 @@ public class PlayerLaunchProjectile implements Listener
     }
     if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchants())
     {
-      level = Math.max(level, itemStack.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+      level = Math.max(level, CustomEnchant.isEnabled() ? itemStack.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER) : 0);
     }
     if (level > 0)
     {

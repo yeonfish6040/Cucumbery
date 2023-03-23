@@ -112,7 +112,7 @@ import java.util.UUID;
 public class Cucumbery extends JavaPlugin
 {
   public static final int CONFIG_VERSION = 40, DEATH_MESSAGES_CONFIG_VERSION = 12, LANG_CONFIG_VERSION = 6;
-//  private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
+  //  private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   /**
    * Shaded since 2022.07.04 so always true
@@ -162,7 +162,9 @@ public class Cucumbery extends JavaPlugin
   public void onLoad()
   {
     if (isLoaded)
+    {
       return;
+    }
     isLoaded = true;
     try
     {
@@ -191,6 +193,10 @@ public class Cucumbery extends JavaPlugin
       MessageUtil.consoleSendMessage("&2[#52ee52;활성화&2] rg255,204;" + pluginDescriptionFile.getName() + "&r version : rg255,204;" + pluginDescriptionFile.getVersion() + "&r 플러그인이 활성화 되었습니다");
     }
     MessageUtil.broadcastDebug("Cucumbery 플러그인 활성화");
+    if (config.getBoolean("use-custom-enchant-features") && !CustomEnchant.isEnabled())
+    {
+      MessageUtil.broadcastDebug("커스텀 인챈트 등록 도중 오류가 발생했습니다. 원활한 처리를 위해 서버를 껐다 키는 것을 권장합니다 (플러그인을 업데이트 했나요?)");
+    }
     for (Player online : Bukkit.getOnlinePlayers())
     {
       if (UserData.SHOW_PLUGIN_DEV_DEBUG_MESSAGE.getBoolean(online))
@@ -335,13 +341,16 @@ public class Cucumbery extends JavaPlugin
       }
     }
     Updater.onDisable();
-    try
+    if (config.getBoolean("use-custom-enchant-features"))
     {
-      CustomEnchant.onDisable();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
+      try
+      {
+        CustomEnchant.onDisable();
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
     }
     if (Cucumbery.using_NoteBlockAPI)
     {
@@ -396,13 +405,16 @@ public class Cucumbery extends JavaPlugin
     {
       e.printStackTrace();
     }
-    try
+    if (config.getBoolean("use-custom-enchant-features"))
     {
-      CustomEnchant.onEnable();
-    }
-    catch (Exception ignored)
-    {
+      try
+      {
+        CustomEnchant.onEnable();
+      }
+      catch (Exception ignored)
+      {
 
+      }
     }
     if (using_CommandAPI)
     {

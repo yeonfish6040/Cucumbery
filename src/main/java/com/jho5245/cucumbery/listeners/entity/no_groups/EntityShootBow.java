@@ -312,7 +312,7 @@ public class EntityShootBow implements Listener
     }
     if (bow != null && bow.hasItemMeta() && bow.getItemMeta().hasEnchants())
     {
-      level = Math.max(level, bow.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+      level = Math.max(level, CustomEnchant.isEnabled() ? bow.getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER) : 0);
     }
     if (level > 0)
     {

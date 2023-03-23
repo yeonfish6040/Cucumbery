@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.util.*;
 
-@SuppressWarnings("deprecation")
 public abstract class CustomEnchant extends EnchantmentWrapper
 {
   /**
@@ -112,7 +111,7 @@ public abstract class CustomEnchant extends EnchantmentWrapper
   private static final Map<NamespacedKey, Enchantment> byKey = new HashMap<>();
   private static final Map<String, Enchantment> byName = new HashMap<>();
 
-  private static void registerEnchants()
+  public static void registerEnchants()
   {
     GLOW = registerEnchant(new EnchantGlow("glow"));
 
@@ -150,6 +149,11 @@ public abstract class CustomEnchant extends EnchantmentWrapper
     return enchant;
   }
 
+  public static boolean isEnabled()
+  {
+    return GLOW != null;
+  }
+
   public CustomEnchant(@NotNull String name)
   {
     super(name);
@@ -169,6 +173,7 @@ public abstract class CustomEnchant extends EnchantmentWrapper
 
   @Override
   @NotNull
+  @SuppressWarnings("deprecation")
   public EnchantmentTarget getItemTarget()
   {
     return EnchantmentTarget.ALL;

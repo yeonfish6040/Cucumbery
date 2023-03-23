@@ -240,7 +240,8 @@ public class CustomEffectType implements Translatable, EnumHideable
           ComponentUtil.translate("비행 모드가 활성화 됩니다")
                   .append(Component.text("\n"))
                   .append(ComponentUtil.translate("자유롭게 비행할 수 있으며 낙하 피해를 입지 않습니다"))
-  ).icon(() -> {
+  ).icon(() ->
+  {
     ItemStack itemStack = new ItemStack(Material.ELYTRA);
     ItemMeta itemMeta = itemStack.getItemMeta();
     itemMeta.setCustomModelData(5201);
@@ -252,7 +253,8 @@ public class CustomEffectType implements Translatable, EnumHideable
           ComponentUtil.translate("비행 모드가 활성화 됩니다")
                   .append(Component.text("\n"))
                   .append(ComponentUtil.translate("자유롭게 비행할 수 있으며 낙하 피해를 입지 않습니다"))
-  ).icon(() -> {
+  ).icon(() ->
+  {
     ItemStack itemStack = new ItemStack(Material.ELYTRA);
     ItemMeta itemMeta = itemStack.getItemMeta();
     itemMeta.setCustomModelData(5201);
@@ -260,7 +262,8 @@ public class CustomEffectType implements Translatable, EnumHideable
     return itemStack;
   })),
 
-  FLY_NOT_ENABLED = new CustomEffectType("fly_not_enabled", "플라이 불가 지역", builder().keepOnDeath().negative().description("비행 모드를 사용할 수 없는 지역입니다").timeHidden().icon(() -> {
+  FLY_NOT_ENABLED = new CustomEffectType("fly_not_enabled", "플라이 불가 지역", builder().keepOnDeath().negative().description("비행 모드를 사용할 수 없는 지역입니다").timeHidden().icon(() ->
+  {
     ItemStack itemStack = new ItemStack(Material.ELYTRA);
     ItemMeta itemMeta = itemStack.getItemMeta();
     itemMeta.setCustomModelData(5203);
@@ -556,8 +559,8 @@ public class CustomEffectType implements Translatable, EnumHideable
         if (!CustomEffectManager.hasEffect(viewer, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
         {
           if (this == CustomEffectTypeCustomMining.AQUA_AFFINITY || this == CustomEffectTypeCustomMining.AIR_SCAFFOLDING || this == CustomEffectTypeCustomMining.HASTE || this == CustomEffectTypeCustomMining.MINING_FATIGUE ||
-          this == CustomEffectTypeCustomMining.TITANIUM_FINDER || this == CustomEffectTypeCustomMining.MINING_FORTUNE || this == CustomEffectTypeCustomMining.MOLE_CLAW || this == CustomEffectTypeCustomMining.MINDAS_TOUCH ||
-          this == CustomEffectTypeCustomMining.MINING_BOOSTER)
+                  this == CustomEffectTypeCustomMining.TITANIUM_FINDER || this == CustomEffectTypeCustomMining.MINING_FORTUNE || this == CustomEffectTypeCustomMining.MOLE_CLAW || this == CustomEffectTypeCustomMining.MINDAS_TOUCH ||
+                  this == CustomEffectTypeCustomMining.MINING_BOOSTER)
           {
             modifiedDescrption = modifiedDescrption.append(Component.text("\n"));
             modifiedDescrption = modifiedDescrption.append(ComponentUtil.translate("&c현재 위치에서는 적용되지 않는 효과입니다!"));
@@ -870,7 +873,10 @@ public class CustomEffectType implements Translatable, EnumHideable
       case "FROST_WALKER" ->
       {
         itemStack = new ItemStack(Material.DIAMOND_BOOTS);
-        itemMeta.addEnchant(CustomEnchant.GLOW, 1, true);
+        if (CustomEnchant.isEnabled())
+        {
+          itemMeta.addEnchant(CustomEnchant.GLOW, 1, true);
+        }
       }
       case "GAESANS" -> itemStack = new ItemStack(Material.POTION);
       case "HEALTH_INCREASE" -> itemStack = new ItemStack(Material.RED_DYE);

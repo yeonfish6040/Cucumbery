@@ -1788,9 +1788,13 @@ public class Scheduler
           }
           if (!CustomEffectManager.hasEffect(player, CustomEffectType.CONTINUAL_SPECTATING_EXEMPT) && spectatorTarget == null && !target.isDead() && target.isOnline() && target.isValid() && player.canSee(target))
           {
-            player.setSpectatorTarget(null);
-            player.teleport(target);
-            player.setSpectatorTarget(target);
+            Player finalTarget = target;
+            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+            {
+              player.setSpectatorTarget(null);
+              player.teleport(finalTarget);
+              player.setSpectatorTarget(finalTarget);
+            }, 0L);
           }
         }
         else if (spectatorTarget instanceof Player target)
@@ -1799,7 +1803,9 @@ public class Scheduler
           customEffect = new PlayerCustomEffectImple(customEffect.getType(), customEffect.getInitDuration(), customEffect.getInitAmplifier(), customEffect.getDisplayType(), target);
           customEffect.setDuration(dura);
           customEffect.setAmplifier(ample);
-          CustomEffectManager.addEffect(player, customEffect, true);
+          CustomEffect finalCustomEffect = customEffect;
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          CustomEffectManager.addEffect(player, finalCustomEffect, true), 0L);
         }
       }
       if (spectatorTarget instanceof Player target)
@@ -1822,10 +1828,13 @@ public class Scheduler
         Collection<Entity> entities = Method2.getNearbyEntitiesAsync(plLoc, 1D);
         if (!entities.contains(target) && plLoc != tarLoc)
         {
-          player.setSpectatorTarget(null);
-          player.teleport(target);
-          player.setSpectatorTarget(target);
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.setSpectatorTarget(target), 1L);
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          {
+            player.setSpectatorTarget(null);
+            player.teleport(target);
+            player.setSpectatorTarget(target);
+            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.setSpectatorTarget(target), 1L);
+          }, 0L);
         }
       }
     }
@@ -1850,13 +1859,17 @@ public class Scheduler
             double distance = Method2.distance(plLoc, tarLoc);
             if (distance == -1D || distance > 100D)
             {
-              player.setSpectatorTarget(null);
-              player.teleport(target);
-              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+
+              Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
               {
+                player.setSpectatorTarget(null);
                 player.teleport(target);
-                player.setSpectatorTarget(target);
-              }, 1L);
+                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                {
+                  player.teleport(target);
+                  player.setSpectatorTarget(target);
+                }, 1L);
+              }, 0L);
               Variable.spectateUpdater.put(uuid, target.getLocation());
             }
           }
@@ -1885,10 +1898,14 @@ public class Scheduler
         }
         if (!CustomEffectManager.hasEffect(entity, CustomEffectType.CONTINUAL_RIDING_EXEMPT) && vehicle == null && !target.isDead() && target.isValid() && !target.getPassengers().contains(entity))
         {
-          target.removePassenger(entity);
-          entity.leaveVehicle();
-          entity.teleport(target);
-          target.addPassenger(entity);
+          Entity finalTarget = target;
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          {
+            finalTarget.removePassenger(entity);
+            entity.leaveVehicle();
+            entity.teleport(finalTarget);
+            finalTarget.addPassenger(entity);
+          }, 0L);
         }
       }
       else if (vehicle != null)
@@ -1897,8 +1914,9 @@ public class Scheduler
         customEffect = new EntityCustomEffectImple(customEffect.getType(), customEffect.getInitDuration(), customEffect.getInitAmplifier(), customEffect.getDisplayType(), vehicle);
         customEffect.setDuration(dura);
         customEffect.setAmplifier(ample);
-        MessageUtil.broadcastDebug(customEffect);
-        CustomEffectManager.addEffect(entity, customEffect, true);
+        CustomEffect finalCustomEffect = customEffect;
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                CustomEffectManager.addEffect(entity, finalCustomEffect, true), 0L);
       }
     }
   }

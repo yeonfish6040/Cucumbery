@@ -64,7 +64,7 @@ public class PlayerDeath implements Listener
     {
       ItemStack drop = iterator.next();
       ItemMeta itemMeta = drop.getItemMeta();
-      if (keepInv || itemMeta.hasEnchant(CustomEnchant.KEEP_INVENTORY) || NBTAPI.isRestricted(player, drop, RestrictionType.NO_TRADE))
+      if (keepInv || CustomEnchant.isEnabled() && itemMeta.hasEnchant(CustomEnchant.KEEP_INVENTORY) || NBTAPI.isRestricted(player, drop, RestrictionType.NO_TRADE))
       {
         iterator.remove();
         event.getItemsToKeep().add(drop);

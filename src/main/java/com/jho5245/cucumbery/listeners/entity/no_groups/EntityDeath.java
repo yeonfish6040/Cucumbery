@@ -127,23 +127,23 @@ public class EntityDeath implements Listener
     {
       itemMeta = mainHand.getItemMeta();
     }
-    boolean hasCoarseTouch = itemMeta != null && itemMeta.hasEnchants() && itemMeta.hasEnchant(CustomEnchant.COARSE_TOUCH);
+    boolean hasCoarseTouch = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchants() && itemMeta.hasEnchant(CustomEnchant.COARSE_TOUCH);
     if (hasCoarseTouch)
     {
       drops.clear();
     }
-    boolean hasUnskilledTouch = itemMeta != null && itemMeta.hasEnchants() &&  itemMeta.hasEnchant(CustomEnchant.UNSKILLED_TOUCH);
+    boolean hasUnskilledTouch = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchants() &&  itemMeta.hasEnchant(CustomEnchant.UNSKILLED_TOUCH);
     if (hasUnskilledTouch)
     {
       event.setDroppedExp(0);
     }
-    boolean isTelekinesis = (entityIsPlayer && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.TELEKINESIS_PVP) ||
+    boolean isTelekinesis = (entityIsPlayer && CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.TELEKINESIS_PVP) ||
             (!entityIsPlayer && (
-                    (itemMeta != null && (itemMeta.hasEnchant(CustomEnchant.TELEKINESIS))) ||
+                    (CustomEnchant.isEnabled() && itemMeta != null && (itemMeta.hasEnchant(CustomEnchant.TELEKINESIS))) ||
                     CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS)
             )));
     boolean isSmeltingTouch = Cucumbery.config.getBoolean("use-smelting-touch-on-entities") && (
-                    (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
+                    (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
                     CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH)
             );
 

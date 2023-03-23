@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.PluginLoader;
 import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
@@ -119,26 +120,32 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         Constant.ERROR_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.error-sound.volume");
         MessageUtil.info(sender, "모든 콘픽 파일을 리로드했습니다");
       }
-      case "reloaddata" ->
+      case "reload-data" ->
       {
-        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloaddata 명령어 사용", sender));
+        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reload-data 명령어 사용", sender));
         Bukkit.reloadData();
         MessageUtil.info(sender, "서버 데이터 파일을 리로드했습니다");
       }
-      case "reloadplugin" ->
+      case "reload-plugin" ->
       {
-        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin 명령어 사용", sender));
+        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reload-plugin 명령어 사용", sender));
         PluginLoader.unload();
         PluginLoader.load(Cucumbery.file);
         MessageUtil.info(sender, "플러그인을 리로드했습니다");
       }
-      case "reloadplugin2" ->
-      {
-        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin2 명령어 사용", sender));
-        Bukkit.getServer().getPluginManager().disablePlugin(Cucumbery.getPlugin());
-        Bukkit.getServer().getPluginManager().enablePlugin(Cucumbery.getPlugin());
-        MessageUtil.info(sender, "플러그인을 리로드했습니다. 2");
+      case "reload-custom-enchants" -> {
+        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reload-custom-enchants 명령어 사용", sender));
+        CustomEnchant.onDisable();
+        CustomEnchant.onEnable();
+        MessageUtil.info(sender, "커스텀 인챈트를 리로드했습니다");
       }
+//      case "reloadplugin2" ->
+//      {
+//        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reloadplugin2 명령어 사용", sender));
+//        Bukkit.getServer().getPluginManager().disablePlugin(Cucumbery.getPlugin());
+//        Bukkit.getServer().getPluginManager().enablePlugin(Cucumbery.getPlugin());
+//        MessageUtil.info(sender, "플러그인을 리로드했습니다. 2");
+//      }
       case "version" ->
       {
         String version = Cucumbery.getPlugin().getDescription().getVersion();
@@ -356,7 +363,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
     if (length == 1)
     {
       return CommandTabUtil.tabCompleterList(args, "<인수>", false,
-              "reload", "reloaddata", "reloadplugin", "version", "update", "update-quickshop-item", "update-customrecipe-item", "purge-user-data-files", "reset-custom-mining-cooldowns");
+              "reload", "reload-data", "reload-plugin", "reload-custom-enchants", "version", "update", "update-quickshop-item", "update-customrecipe-item", "purge-user-data-files", "reset-custom-mining-cooldowns");
     }
     if (length == 2)
     {

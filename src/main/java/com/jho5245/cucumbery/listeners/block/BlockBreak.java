@@ -206,9 +206,9 @@ public class BlockBreak implements Listener
 
     boolean modified = false;
 
-    boolean isTelekinesis = (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.TELEKINESIS)) ||
+    boolean isTelekinesis = CustomEnchant.isEnabled() && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.TELEKINESIS)) ||
             CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS),
-            isSmeltingTouch = (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
+            isSmeltingTouch = CustomEnchant.isEnabled() && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
                     CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH),
             isSilkTouch = CustomEffectManager.hasEffect(player, CustomEffectType.SILK_TOUCH);
     List<ItemStack> drops = new ArrayList<>(block.getDrops(itemStack, player));
@@ -236,21 +236,21 @@ public class BlockBreak implements Listener
     }
 
     boolean vanilliaDrop = !drops.isEmpty() && player.getGameMode() != GameMode.CREATIVE && event.isDropItems() && value != null && value.equals(true);
-    boolean isCoarseTouch = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.COARSE_TOUCH);
+    boolean isCoarseTouch = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.COARSE_TOUCH);
 
     if (isCoarseTouch)
     {
       event.setDropItems(false);
     }
 
-    boolean isUnskilledTouch = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.UNSKILLED_TOUCH);
+    boolean isUnskilledTouch = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.UNSKILLED_TOUCH);
 
     if (isUnskilledTouch || isSilkTouch)
     {
       event.setExpToDrop(0);
     }
 
-    if (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.VANISHING_TOUCH))
+    if (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.VANISHING_TOUCH))
     {
       if (block.getState() instanceof Container container)
       {
@@ -285,7 +285,7 @@ public class BlockBreak implements Listener
       }
     }
 
-    boolean hasFranticFortune = itemMeta != null && itemMeta.hasEnchant(CustomEnchant.FRANTIC_FORTUNE);
+    boolean hasFranticFortune = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.FRANTIC_FORTUNE);
 
     if (customDrops == null)
     {
@@ -296,7 +296,7 @@ public class BlockBreak implements Listener
       }
     }
 
-    if (vanilliaDrop && !isCoarseTouch && !isUnskilledTouch && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.DULL_TOUCH)))
+    if (vanilliaDrop && !isCoarseTouch && !isUnskilledTouch && (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.DULL_TOUCH)))
     {
       int level = itemMeta.getEnchantLevel(CustomEnchant.DULL_TOUCH);
       if (Method.random(1, 100) <= level)
@@ -504,7 +504,7 @@ public class BlockBreak implements Listener
             player.getWorld().dropItemNaturally(location, drop);
           }
         }
-        if (!blockPlaceDataApplied && !isCoarseTouch && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.COLD_TOUCH) && itemMeta.hasEnchant(Enchantment.SILK_TOUCH)))
+        if (!blockPlaceDataApplied && !isCoarseTouch && (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.COLD_TOUCH) && itemMeta.hasEnchant(Enchantment.SILK_TOUCH)))
         {
           switch (blockType)
           {
@@ -632,7 +632,7 @@ public class BlockBreak implements Listener
             }
           }
         }
-        else if (!isCoarseTouch && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.WARM_TOUCH)) && blockType == Material.CACTUS)
+        else if (!isCoarseTouch && (itemMeta != null && CustomEnchant.isEnabled() && itemMeta.hasEnchant(CustomEnchant.WARM_TOUCH)) && blockType == Material.CACTUS)
         {
           event.setDropItems(false);
           ItemStack result = new ItemStack(Material.CACTUS);

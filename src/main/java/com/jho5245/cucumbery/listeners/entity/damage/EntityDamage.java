@@ -302,7 +302,7 @@ public class EntityDamage implements Listener
             if (mainHand.hasItemMeta())
             {
               ItemMeta itemMeta = mainHand.getItemMeta();
-              if (itemMeta.hasEnchant(CustomEnchant.JUSTIFICATION))
+              if (CustomEnchant.isEnabled() && itemMeta.hasEnchant(CustomEnchant.JUSTIFICATION))
               {
                 Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                         living.setNoDamageTicks(0), 0L);
@@ -319,7 +319,7 @@ public class EntityDamage implements Listener
             if (weapon != null && weapon.hasItemMeta())
             {
               ItemMeta itemMeta = weapon.getItemMeta();
-              if (itemMeta.hasEnchant(CustomEnchant.JUSTIFICATION_BOW))
+              if (CustomEnchant.isEnabled() && itemMeta.hasEnchant(CustomEnchant.JUSTIFICATION_BOW))
               {
                 Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
                         living.setNoDamageTicks(0), 0L);
@@ -565,7 +565,6 @@ public class EntityDamage implements Listener
     location.setZ(boundingBox.getCenterZ());
     Component finalDisplay = display;
     if (Cucumbery.using_ProtocolLib)
-//    if (false)
     {
       DamageIndicatorProtocolLib.displayDamage(viewSelf, entity, location, finalDisplay);
     }

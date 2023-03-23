@@ -738,7 +738,7 @@ public class MiningManager
     {
       try
       {
-        if (itemStack.getItemMeta().hasEnchant(CustomEnchant.SMELTING_TOUCH))
+        if (CustomEnchant.isEnabled() && itemStack.getItemMeta().hasEnchant(CustomEnchant.SMELTING_TOUCH))
         {
           drops = new ArrayList<>(ItemStackUtil.getSmeltedResult(player, drops, expList));
         }

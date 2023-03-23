@@ -105,10 +105,10 @@ public class DamageManager
             if (equipment != null)
             {
               ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
-              if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+              if (CustomEnchant.isEnabled() && (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
                       chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
                       leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                      boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
+                      boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN)))
               {
                 damageMultiplier += 5d;
               }
@@ -244,10 +244,10 @@ public class DamageManager
             if (equipment != null)
             {
               ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
-              if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+              if (CustomEnchant.isEnabled() && (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
                       chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
                       leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                      boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
+                      boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN)))
               {
                 damageMultiplier += 5d;
               }
@@ -380,10 +380,10 @@ public class DamageManager
               if (equipment != null)
               {
                 ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
-                if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
+                if (CustomEnchant.isEnabled() && (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
                         chestplate != null && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
                         leggings != null && leggings.hasItemMeta() && leggings.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN) ||
-                        boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN))
+                        boots != null && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.HIGH_RISK_HIGH_RETURN)))
                 {
                   damageMultiplier += 5d;
                 }

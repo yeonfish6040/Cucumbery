@@ -522,7 +522,7 @@ public class MiningScheduler
         }
         // 블록 드롭 처리(염력 인챈트나 효과가 있으면 인벤토리에 지급 혹은 블록 위치에 아이템 떨굼
         {
-          if (itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
+          if (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
           {
             AddItemUtil.addItem(player, drops);
           }
@@ -540,7 +540,7 @@ public class MiningScheduler
               {
                 if (ItemStackUtil.itemExists(content))
                 {
-                  if (itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
+                  if (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
                   {
                     AddItemUtil.addItem(player, content);
                   }

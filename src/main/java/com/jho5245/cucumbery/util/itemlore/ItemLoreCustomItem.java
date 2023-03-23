@@ -842,7 +842,7 @@ public class ItemLoreCustomItem
         case MINDAS_HELMET -> ItemStackUtil.setTexture(skullMeta, "http://textures.minecraft.net/texture/316fc913e6ab9b6911003de60c797bad3fbeb80eb73d51afb6928de9c9eedac3");
       }
     }
-    if (customMaterial.isGlow())
+    if (CustomEnchant.isEnabled() && customMaterial.isGlow())
     {
       itemMeta.addEnchant(CustomEnchant.GLOW, 1, true);
     }

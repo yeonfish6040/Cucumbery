@@ -259,7 +259,7 @@ public class EntityPickupItem implements Listener
         }
         if (item.getItemStack().hasItemMeta() && item.getItemStack().getItemMeta().hasEnchants())
         {
-          level = Math.max(level, item.getItemStack().getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER));
+          level = Math.max(level, CustomEnchant.isEnabled() ? item.getItemStack().getEnchantmentLevel(CustomEnchant.IDIOT_SHOOTER) : 0);
         }
         if (level > 0)
         {

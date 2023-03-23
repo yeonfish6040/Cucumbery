@@ -527,8 +527,8 @@ public class DeathManager
         }
       }
       boolean assassinationEnchant = (damager instanceof Entity e && CustomEffectManager.hasEffect(e, CustomEffectType.ASSASSINATION)) || (weapon != null && weapon.hasItemMeta() && weapon.getItemMeta().hasEnchants() &&
-              ((weapon.getType() != Material.BOW && weapon.getType() != Material.CROSSBOW && weapon.getItemMeta().hasEnchant(CustomEnchant.ASSASSINATION)) || (
-                      weapon.getItemMeta().hasEnchant(CustomEnchant.ASSASSINATION_BOW)
+              ((weapon.getType() != Material.BOW && weapon.getType() != Material.CROSSBOW && CustomEnchant.isEnabled() && weapon.getItemMeta().hasEnchant(CustomEnchant.ASSASSINATION)) || (
+                      CustomEnchant.isEnabled() && weapon.getItemMeta().hasEnchant(CustomEnchant.ASSASSINATION_BOW)
               )));
       if (damager != null)
       {

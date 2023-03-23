@@ -54,7 +54,7 @@ public class PlayerFish implements Listener
         return;
       }
 
-      if (state == State.CAUGHT_FISH && event.getCaught() instanceof Item caughtItem && item.getItemMeta().hasEnchant(CustomEnchant.FRANTIC_LUCK_OF_THE_SEA))
+      if (state == State.CAUGHT_FISH && event.getCaught() instanceof Item caughtItem && CustomEnchant.isEnabled() && item.getItemMeta().hasEnchant(CustomEnchant.FRANTIC_LUCK_OF_THE_SEA))
       {
         ItemStack i = caughtItem.getItemStack();
         i.setAmount(i.getAmount() * 2);
