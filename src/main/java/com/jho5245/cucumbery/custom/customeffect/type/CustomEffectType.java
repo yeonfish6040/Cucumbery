@@ -78,11 +78,11 @@ public class CustomEffectType implements Translatable, EnumHideable
           CURSE_OF_VANISHING = new CustomEffectType("curse_of_vanishing", Enchantment.VANISHING_CURSE.translationKey(), builder().negative().keepOnDeath().description("아이템을 버리면 즉시 사라집니다")),
 
   /**/ DARKNESS_TERROR = new CustomEffectType("darkness_terror", "어두운거 싫어요", builder().negative()),
-          DARKNESS_TERROR_ACTIVATED = new CustomEffectType("darkness_terror_activated", "어둠의 공포", builder().negative().enumHidden().timeHidden()),
+          DARKNESS_TERROR_ACTIVATED = new CustomEffectType("darkness_terror_activated", "어둠의 공포", builder().negative().enumHidden().timeHidden().skipEvent()),
           DARKNESS_TERROR_RESISTANCE = new CustomEffectType("darkness_terror_resistance", "어둠의 공포 내성"),
 
   /**/ FANCY_SPOTLIGHT = new CustomEffectType("fancy_spotlight", "화려한 조명", builder().removeOnQuit()),
-          FANCY_SPOTLIGHT_ACTIVATED = new CustomEffectType("fancy_spotlight_activated", "화려한 조명 활성화", builder().removeOnQuit().enumHidden().timeHidden().defaultDuration(20)),
+          FANCY_SPOTLIGHT_ACTIVATED = new CustomEffectType("fancy_spotlight_activated", "화려한 조명 활성화", builder().removeOnQuit().enumHidden().timeHidden().defaultDuration(20).skipEvent()),
 
   /**/ HEROS_ECHO = new CustomEffectType("heros_echo", "영웅의 메아리", builder().removeOnQuit().defaultDuration(20 * 60 * 40)),
           HEROS_ECHO_OTHERS = new CustomEffectType("heros_echo_others", "영웅의 메아리", builder().removeOnQuit().defaultDuration(20 * 60 * 40).enumHidden()),

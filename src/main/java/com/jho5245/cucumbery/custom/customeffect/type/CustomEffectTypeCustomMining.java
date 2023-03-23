@@ -50,7 +50,7 @@ public class CustomEffectTypeCustomMining extends CustomEffectType
 
   MOVEMENT_CHECK = new CustomEffectType("custom_mining_movement_check", "", builder().hidden().defaultDuration(-1).skipEvent()),
 
-  MINER_ARMOR_SET_EFFECT = new CustomEffectType("miner_armor_set_effect", "노동력 충만", builder().enumHidden().timeHidden().defaultDuration(-1).nonRemovable()
+  MINER_ARMOR_SET_EFFECT = new CustomEffectType("miner_armor_set_effect", "노동력 충만", builder().enumHidden().timeHidden().defaultDuration(-1).nonRemovable().skipEvent()
           .description("광부 갑옷 세트 효과로 %s 1단계 효과가 적용 중입니다", PotionEffectType.FAST_DIGGING).icon(() ->
           {
             ItemStack itemStack = new ItemStack(Material.POTION);

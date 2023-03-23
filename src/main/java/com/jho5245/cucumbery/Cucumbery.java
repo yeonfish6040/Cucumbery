@@ -264,6 +264,7 @@ public class Cucumbery extends JavaPlugin
     }
     Scheduler.Schedule(this);
     Updater.onEnable();
+    Bukkit.getScheduler().scheduleSyncRepeatingTask(cucumbery, new TPSMeter(), 100L, 1L);
     if (using_NoteBlockAPI)
     {
       Songs.onEnable();

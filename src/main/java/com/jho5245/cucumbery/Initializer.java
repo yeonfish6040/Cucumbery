@@ -631,8 +631,8 @@ public class Initializer
     Variable.userDataUUIDs.add(uuid.toString());
     Variable.nickNames.add(player.getName());
     Variable.cachedUUIDs.put(player.getName(), uuid);
-    String displayname = CustomConfig.UserData.DISPLAY_NAME.getString(player.getUniqueId());
-    String playerListName = CustomConfig.UserData.PLAYER_LIST_NAME.getString(player.getUniqueId());
+    String displayname = UserData.DISPLAY_NAME.getString(player.getUniqueId());
+    String playerListName = UserData.PLAYER_LIST_NAME.getString(player.getUniqueId());
     if (displayname != null)
     {
       displayname = MessageUtil.stripColor(displayname);
@@ -727,6 +727,28 @@ public class Initializer
         MessageUtil.info(player, ComponentUtil.translate("관전자여서 게임 모드가 자동으로 관전 모드로 전환되었습니다"));
       }
     }
+  }
+
+  public static void setNickName(@NotNull Player player)
+  {
+    YamlConfiguration cfg = Cucumbery.config;
+    if (!cfg.getBoolean("use-nickname-feature"))
+    {
+      return;
+    }
+    String displayName = UserData.DISPLAY_NAME.getString(player), listName = UserData.PLAYER_LIST_NAME.getString(player);
+    if (displayName == null)
+    {
+      displayName = player.getName();
+    }
+    if (listName == null)
+    {
+      listName = player.getName();
+    }
+    Component display = ComponentUtil.create(displayName);
+    player.displayName(display);
+    Component list = ComponentUtil.create(listName);
+    player.playerListName(list);
   }
 
   public static void saveUserData()

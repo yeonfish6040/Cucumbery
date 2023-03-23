@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.storage.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
+import io.papermc.paper.plugin.configuration.PluginMeta;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
@@ -32,7 +33,6 @@ public class PluginLoader
     Map<String, Command> commands = null;
     Map<Event, SortedSet<RegisteredListener>> listeners = null;
     boolean reloadlisteners = true;
-
     if (pluginManager != null)
     {
       pluginManager.disablePlugin(plugin);
@@ -63,6 +63,28 @@ public class PluginLoader
         commandMap = (SimpleCommandMap) commandMapField.get(instanceManager);
         commands = (Map<String, Command>) knownCommandsField.get(commandMap);
 
+        // Detaching plugin from entrypoint storage
+        Class<?> handlerClass = Class.forName("io.papermc.paper.plugin.entrypoint.LaunchEntryPointHandler");
+        Class<?> entrypointClass = Class.forName("io.papermc.paper.plugin.entrypoint.Entrypoint");
+        Class<?> providerStorageClass = Class.forName("io.papermc.paper.plugin.storage.SimpleProviderStorage");
+        Class<?> pluginProviderClass = Class.forName("io.papermc.paper.plugin.provider.PluginProvider");
+        Object handler = handlerClass.getDeclaredField("INSTANCE").get(null);
+        Object entrypoint = entrypointClass.getDeclaredField("PLUGIN").get(null);
+        Object providerStorage = handlerClass.getMethod("get", entrypointClass).invoke(handler, entrypoint);
+        Iterable<?> iterable = (Iterable<?>) providerStorageClass.getMethod("getRegisteredProviders").invoke(providerStorage);
+        Iterator<?> iter = iterable.iterator();
+        String pluginName = Cucumbery.getPlugin().getPluginMeta().getName();
+
+        while (iter.hasNext())
+        {
+          Object pluginProvider = iter.next();
+          PluginMeta pluginMeta = (PluginMeta) pluginProviderClass.getMethod("getMeta").invoke(pluginProvider);
+          if (pluginMeta.getName().equals(pluginName))
+          {
+            iter.remove();
+            break;
+          }
+        }
       }
       catch (Exception e)
       {
@@ -138,31 +160,8 @@ public class PluginLoader
     {
       names.remove(name);
     }
-
-    //PaperClassLoaderStorage pcls = PaperClassLoaderStorage.instance();
+    // Closing the plugin classloader
     ClassLoader cl = plugin.getClass().getClassLoader();
-
-    /*if (cl instanceof ConfiguredPluginClassLoader ccl) {
-      // For Paper
-      try {
-        Field pluginField = cl.getClass().getDeclaredField("plugin");
-        pluginField.setAccessible(true);
-        pluginField.set(cl, null);
-        Field pluginInitField = cl.getClass().getDeclaredField("pluginInit");
-        pluginInitField.setAccessible(true);
-        pluginInitField.set(cl, null);
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-
-      try {
-        ((URLClassLoader) cl).close();
-        System.gc();
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-
-    } else */
     if (cl instanceof URLClassLoader)
     {
       try
@@ -187,7 +186,6 @@ public class PluginLoader
         ex.printStackTrace();
       }
     }
-
     System.gc();
   }
 
@@ -217,5 +215,4 @@ public class PluginLoader
     plugin.onLoad();
     Bukkit.getPluginManager().enablePlugin(plugin);
   }
-
 }

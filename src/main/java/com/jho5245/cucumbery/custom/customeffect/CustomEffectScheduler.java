@@ -85,7 +85,8 @@ public class CustomEffectScheduler
       customEffect.tick();
       if (customEffect.getDuration() == 0)
       {
-        CustomEffectManager.removeEffect(entity, customEffect.getType(), customEffect.getAmplifier(), RemoveReason.TIME_OUT);
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                CustomEffectManager.removeEffect(entity, customEffect.getType(), customEffect.getAmplifier(), RemoveReason.TIME_OUT), 0L);
       }
     }
   }
@@ -297,12 +298,12 @@ public class CustomEffectScheduler
 
   public static void ascension(@NotNull Entity entity)
   {
-
     if (CustomEffectManager.hasEffect(entity, CustomEffectType.ASCENSION))
     {
       if (entity.isOnGround())
       {
-        CustomEffectManager.addEffect(entity, CustomEffectType.ASCENSION_COOLDOWN);
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                CustomEffectManager.addEffect(entity, CustomEffectType.ASCENSION_COOLDOWN), 0L);
         return;
       }
       if (CustomEffectManager.hasEffect(entity, CustomEffectType.ASCENSION_COOLDOWN))
@@ -311,14 +312,18 @@ public class CustomEffectScheduler
       }
       int amplifier = CustomEffectManager.getEffect(entity, CustomEffectType.ASCENSION).getAmplifier() + 1;
       Vector vector = entity.getVelocity();
-      if (entity instanceof Player player && player.isSneaking())
+
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
       {
-        entity.setVelocity(new Vector(vector.getX(), -0.08 * amplifier, vector.getZ()));
-      }
-      else
-      {
-        entity.setVelocity(new Vector(vector.getX(), 0.08 * amplifier, vector.getZ()));
-      }
+        if (entity instanceof Player player && player.isSneaking())
+        {
+          entity.setVelocity(new Vector(vector.getX(), -0.08 * amplifier, vector.getZ()));
+        }
+        else
+        {
+          entity.setVelocity(new Vector(vector.getX(), 0.08 * amplifier, vector.getZ()));
+        }
+      }, 0L);
     }
   }
 
@@ -349,7 +354,8 @@ public class CustomEffectScheduler
   {
     if (CustomEffectManager.hasEffect(player, CustomEffectType.GAESANS) && player.isSneaking() && ((Entity) player).isOnGround())
     {
-      player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2, 0, false, false, false));
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+              player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2, 0, false, false, false)), 0L);
     }
   }
 
@@ -373,7 +379,8 @@ public class CustomEffectScheduler
       Material mainHand = inventory.getItemInMainHand().getType(), offHand = inventory.getItemInOffHand().getType();
       if (Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(mainHand) || Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(offHand))
       {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 4, 0, false, false, false));
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 4, 0, false, false, false)), 0L);
       }
     }
   }
@@ -662,7 +669,8 @@ public class CustomEffectScheduler
   {
     if (CustomEffectManager.hasEffect(player, CustomEffectType.TOWN_SHIELD))
     {
-      player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2, 0, true, false, false));
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+              player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2, 0, true, false, false)), 0L);
     }
   }
 
@@ -681,29 +689,29 @@ public class CustomEffectScheduler
       boolean pneumonia = CustomEffectManager.hasEffect(player, CustomEffectType.VAR_PNEUMONIA);
       boolean podagra = CustomEffectManager.hasEffect(player, CustomEffectType.VAR_PODAGRA);
       boolean stomachache = CustomEffectManager.hasEffect(player, CustomEffectType.VAR_STOMACHACHE);
-      Collection<Player> nearbyPlayers = player.getWorld().getNearbyPlayers(player.getLocation(), spreadAmplifier + 1);
-      for (Player nearbyPlayer : nearbyPlayers)
+      Collection<Entity> nearbyPlayers = Method2.getNearbyEntitiesAsync(player.getLocation(), spreadAmplifier + 1);
+      for (Entity entity : nearbyPlayers)
       {
-        if (nearbyPlayer.getGameMode() == GameMode.SPECTATOR)
+        if (!(entity instanceof Player p) || p.getGameMode() == GameMode.SPECTATOR)
         {
           continue;
         }
-        CustomEffectManager.addEffect(nearbyPlayer, customEffectSpread);
+        CustomEffectManager.addEffect(entity, customEffectSpread);
         if (detoxicate)
         {
-          CustomEffectManager.addEffect(nearbyPlayer, CustomEffectManager.getEffect(player, CustomEffectType.VAR_DETOXICATE));
+          CustomEffectManager.addEffect(entity, CustomEffectManager.getEffect(player, CustomEffectType.VAR_DETOXICATE));
         }
         if (pneumonia)
         {
-          CustomEffectManager.addEffect(nearbyPlayer, CustomEffectManager.getEffect(player, CustomEffectType.VAR_PNEUMONIA));
+          CustomEffectManager.addEffect(entity, CustomEffectManager.getEffect(player, CustomEffectType.VAR_PNEUMONIA));
         }
         if (podagra)
         {
-          CustomEffectManager.addEffect(nearbyPlayer, CustomEffectManager.getEffect(player, CustomEffectType.VAR_PODAGRA));
+          CustomEffectManager.addEffect(entity, CustomEffectManager.getEffect(player, CustomEffectType.VAR_PODAGRA));
         }
         if (stomachache)
         {
-          CustomEffectManager.addEffect(nearbyPlayer, CustomEffectManager.getEffect(player, CustomEffectType.VAR_STOMACHACHE));
+          CustomEffectManager.addEffect(entity, CustomEffectManager.getEffect(player, CustomEffectType.VAR_STOMACHACHE));
         }
       }
       if (detoxicate)
@@ -846,7 +854,8 @@ public class CustomEffectScheduler
       {
         if (entity != player && player.canSee(entity))
         {
-          player.hideEntity(Cucumbery.getPlugin(), entity);
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                  player.hideEntity(Cucumbery.getPlugin(), entity), 0L);
         }
       }
     }
@@ -856,7 +865,8 @@ public class CustomEffectScheduler
       {
         if (entity != player && !player.canSee(entity))
         {
-          player.showEntity(Cucumbery.getPlugin(), entity);
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                  player.showEntity(Cucumbery.getPlugin(), entity), 0L);
         }
       }
     }
@@ -875,12 +885,15 @@ public class CustomEffectScheduler
     }
     if (CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED))
     {
-      player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2, 0, false, false, false));
-      PotionEffect potionEffect = player.getPotionEffect(PotionEffectType.REGENERATION);
-      if (potionEffect == null || (potionEffect.getDuration() <= 48 && potionEffect.getAmplifier() == 0))
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
       {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 98, 0, false, false, false));
-      }
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2, 0, false, false, false));
+        PotionEffect potionEffect = player.getPotionEffect(PotionEffectType.REGENERATION);
+        if (potionEffect == null || (potionEffect.getDuration() <= 48 && potionEffect.getAmplifier() == 0))
+        {
+          player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 98, 0, false, false, false));
+        }
+      }, 0L);
     }
   }
 
@@ -973,7 +986,8 @@ public class CustomEffectScheduler
     {
       if (loop instanceof Parrot parrot && parrot.getOwner() == entity)
       {
-        CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectType.PARROTS_CHEER));
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                CustomEffectManager.addEffect(entity, new CustomEffect(CustomEffectType.PARROTS_CHEER)), 0L);
         break;
       }
     }

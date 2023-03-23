@@ -47,6 +47,7 @@ public class PlayerJoin implements Listener
       Initializer.loadPlayerConfig(player);
       //			Method.broadcastDebug("데이터 생성 완료, 현재 캐시 유저 데이터 개수 : §e" + Variable.userData.size() + "개");
     }
+    Initializer.setNickName(player);
     String name = player.getName();
     YamlConfiguration cfg = Cucumbery.config;
     Location location = player.getLocation();

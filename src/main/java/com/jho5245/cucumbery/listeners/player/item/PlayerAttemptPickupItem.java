@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -100,7 +101,12 @@ public class PlayerAttemptPickupItem implements Listener
     if (amount > 0)
     {
       Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
-              Method.updateItem(item), 0L);
+      {
+        if (item.isValid() && ItemStackUtil.itemExists(item.getItemStack()))
+        {
+          Method.updateItem(item);
+        }
+      }, 0L);
       if (UserData.SHOW_ACTIONBAR_ON_ITEM_PICKUP.getBoolean(player.getUniqueId()))
       {
         Component itemStackComponent = ItemNameUtil.itemName(itemStack, TextColor.fromHexString("#00ff3c"));

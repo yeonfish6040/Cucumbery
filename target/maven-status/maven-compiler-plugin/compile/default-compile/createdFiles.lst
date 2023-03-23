@@ -403,6 +403,7 @@ com\jho5245\cucumbery\listeners\entity\damage\EntityDamageByBlock.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerGameModeChange.class
 com\jho5245\cucumbery\util\itemlore\ItemLore.class
 com\jho5245\cucumbery\util\josautil\JosaFormatter$JongSungDetector.class
+com\jho5245\cucumbery\util\no_groups\TPSMeter.class
 com\jho5245\cucumbery\custom\recipe\PredicateChoice.class
 com\jho5245\cucumbery\custom\customeffect\VanillaEffectDescription.class
 com\jho5245\cucumbery\commands\brigadier\CommandUpdateItem.class

@@ -64,8 +64,7 @@ public class MiningManager
           REGEN_COOLDOWN = "RegenCooldown",
           BREAK_SOUND = "BreakSound",
           BREAK_SOUND_VOLUME = "BreakSoundVolume",
-          BREAK_SOUND_PITCH = "BreakSoundPitch"
-  ;
+          BREAK_SOUND_PITCH = "BreakSoundPitch";
 
   /**
    * Gets the result of mining of a {@link Player}.
@@ -126,7 +125,8 @@ public class MiningManager
       return null;
     }
     PreCustomBlockBreakEvent preCustomBlockBreakEvent = new PreCustomBlockBreakEvent(block, player);
-    Bukkit.getPluginManager().callEvent(preCustomBlockBreakEvent);
+    Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+            Bukkit.getPluginManager().callEvent(preCustomBlockBreakEvent), 0L);
     if (preCustomBlockBreakEvent.isCancelled())
     {
       return null;
@@ -218,7 +218,15 @@ public class MiningManager
       clone.setItemMeta(cloneMeta);
     }
     boolean isSilkTouch = clone.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
-    List<ItemStack> drops = new ArrayList<>(block.getDrops(clone, player));
+    List<ItemStack> drops;
+    try
+    {
+      drops = new ArrayList<>(block.getDrops(clone, player));
+    }
+    catch (IllegalStateException e)
+    {
+      drops = Collections.emptyList();
+    }
     // 채광 모드 커스텀 광물 처리(일부 블록은 반드시 커스텀 광물이 됨)
     {
       BlockData blockData = Variable.customMiningExtraBlocks.get(blockLocation);

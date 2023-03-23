@@ -487,7 +487,7 @@ public class EntityComponentUtil
         hover = hover.append(ComponentUtil.translate("직업 : %s", ComponentUtil.translate(key)));
       }
       Villager.Type villagerType = zombieVillager.getVillagerType();
-      Biome biome = Biome.valueOf(villagerType.toString().replace("SNOW", "SNOWY_TUNDRA"));
+      Biome biome = Biome.valueOf(villagerType.toString().replace("SNOW", Biome.SNOWY_TAIGA.toString()));
       hover = hover.append(Component.text("\n"));
       hover = hover.append(ComponentUtil.translate("기후 : %s", ComponentUtil.translate("biome.minecraft." + biome.toString().toLowerCase()).color(Constant.THE_COLOR)));
 
