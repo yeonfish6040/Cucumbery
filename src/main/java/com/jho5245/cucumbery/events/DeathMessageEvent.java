@@ -20,7 +20,9 @@ import java.util.function.Predicate;
 import static com.jho5245.cucumbery.deathmessages.DeathManager.DEATH_PREFIX;
 import static com.jho5245.cucumbery.deathmessages.DeathManager.DEATH_PREFIX_PVP;
 
-@SuppressWarnings("unused")
+/**
+ * Called when after {@link org.bukkit.event.entity.PlayerDeathEvent} or {@link org.bukkit.event.entity.EntityDeathEvent} on certain conditions, <p>sending custom death message with {@link Component}
+ */
 public class DeathMessageEvent extends EntityEvent
 {
   private static final HandlerList handlers = new HandlerList();
@@ -37,17 +39,28 @@ public class DeathMessageEvent extends EntityEvent
     this.damager = damager;
   }
 
+  /**
+   * Sets the death message
+   * @param deathMessage to set
+   */
   public void setDeathMessage(@NotNull Component deathMessage)
   {
     this.deathMessage = deathMessage;
   }
 
+  /**
+   * Gets the death message
+   * @return the death message component
+   */
   @NotNull
   public Component getDeathMessage()
   {
     return deathMessage;
   }
 
+  /**
+   * Sends the death message to players as if the {@link DeathMessageEvent#getEntity()} is died.
+   */
   public void showMessage()
   {
     Predicate<Player> playerPredicate = player -> !(
@@ -86,6 +99,9 @@ public class DeathMessageEvent extends EntityEvent
     }
   }
 
+  /**
+   * Sends the death message and location to console.
+   */
   public void showConsoleMessage()
   {
     Location location = entity.getLocation();
