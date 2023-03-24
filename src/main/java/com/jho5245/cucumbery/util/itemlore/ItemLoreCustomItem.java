@@ -203,7 +203,6 @@ public class ItemLoreCustomItem
             }
           }
         }
-
       }
       if (ItemStackUtil.getCompostChance(displayMaterial) > 0)
       {

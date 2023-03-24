@@ -296,7 +296,7 @@ public class CommandQuickShopAddon implements CucumberyCommandExecutor
     }
     if (sender instanceof Player player)
     {
-      Block block = player.getTargetBlock(5);
+      Block block = player.getTargetBlockExact(5);
       if (block != null)
       {
         switch (block.getType())
@@ -428,6 +428,6 @@ public class CommandQuickShopAddon implements CucumberyCommandExecutor
   @Override
   public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
-    return null;
+    return Collections.emptyList();
   }
 }

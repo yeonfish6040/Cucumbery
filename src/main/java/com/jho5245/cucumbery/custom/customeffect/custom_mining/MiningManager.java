@@ -226,7 +226,7 @@ public class MiningManager
     }
     catch (IllegalStateException e)
     {
-      drops = Collections.emptyList();
+      drops = new ArrayList<>();
     }
     // 채광 모드 커스텀 광물 처리(일부 블록은 반드시 커스텀 광물이 됨)
     {
