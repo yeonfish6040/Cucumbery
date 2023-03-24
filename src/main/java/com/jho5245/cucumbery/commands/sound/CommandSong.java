@@ -37,7 +37,7 @@ public class CommandSong implements CucumberyCommandExecutor
 {
   public static @Nullable RadioSongPlayer radioSongPlayer;
 
-  private static final Set<String> isDownloading = new HashSet<>();
+  public static final Set<String> isDownloading = new HashSet<>();
 
   public static @Nullable Song song;
 
@@ -50,6 +50,8 @@ public class CommandSong implements CucumberyCommandExecutor
   private static boolean changeSongCooldown = false;
 
   private double TICK_PERCENTAGE = 0;
+
+  public static boolean autoNext = false;
 
   @Override
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
@@ -125,6 +127,11 @@ public class CommandSong implements CucumberyCommandExecutor
             {
               fileName = fileName.replace("--silent", "");
             }
+            boolean auto = fileName.contains("--auto");
+            if (auto)
+            {
+              fileName = fileName.replace("--auto", "");
+            }
             SoundCategory category;
             try
             {
@@ -198,73 +205,75 @@ public class CommandSong implements CucumberyCommandExecutor
               isDownloading.add("foo");
               String finalFileName = fileName;
               SoundCategory finalCategory = category;
-              Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () -> {
-              File songFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/songs/" + finalFileName);
-              if (force || !songFile.exists())
+              Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
               {
-                List<String> songs = Songs.list;
-                if (songs.contains(finalFileName.substring(0, finalFileName.length() - 4)))
+                File songFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/songs/" + finalFileName);
+                if (force || !songFile.exists())
                 {
-                  try
+                  List<String> songs = Songs.list;
+                  if (songs.contains(finalFileName.substring(0, finalFileName.length() - 4)))
                   {
-                    songFile = Songs.download(finalFileName, force);
+                    try
+                    {
+                      songFile = Songs.download(finalFileName, force);
+                    }
+                    catch (Exception e)
+                    {
+                      isDownloading.clear();
+                      MessageUtil.noArg(sender, Prefix.NO_FILE, finalFileName);
+                      return;
+                    }
                   }
-                  catch (Exception e)
+                  else
                   {
                     isDownloading.clear();
                     MessageUtil.noArg(sender, Prefix.NO_FILE, finalFileName);
                     return;
                   }
                 }
-                else
+                song = NBSDecoder.parse(songFile);
+                if (song == null)
                 {
                   isDownloading.clear();
-                  MessageUtil.noArg(sender, Prefix.NO_FILE, finalFileName);
+                  MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다 (%s)", finalFileName);
                   return;
                 }
-              }
-              song = NBSDecoder.parse(songFile);
-              if (song == null)
-              {
-                isDownloading.clear();
-                MessageUtil.sendError(sender, "파일이 손상되어 재생할 수 없습니다 (%s)", finalFileName);
-                return;
-              }
-              if (radioSongPlayer != null)
-              {
-                radioSongPlayer.setPlaying(false);
-                radioSongPlayer.destroy();
-              }
-              radioSongPlayer = new RadioSongPlayer(song);
-              radioSongPlayer.setCategory(finalCategory);
-              radioSongPlayer.setEnable10Octave(!disable10Octave);
-              if (enableRepeat)
-              {
-                radioSongPlayer.setRepeatMode(RepeatMode.ONE);
-              }
-              isDownloading.clear();
-              if (!silent)
-              {
-                MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s을(를) 재생합니다", song);
-              }
-              Scheduler.fileNameLength = finalFileName.length() - 1;
-              if (Scheduler.delayTask != null)
-              {
-                Scheduler.delayTask.cancel();
-              }
-              Scheduler.delay = false;
-              for (Player player : Bukkit.getServer().getOnlinePlayers())
-              {
-                if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
+                if (radioSongPlayer != null)
                 {
-                  radioSongPlayer.addPlayer(player);
-                  if (!silent && !sender.equals(player))
+                  radioSongPlayer.setPlaying(false);
+                  radioSongPlayer.destroy();
+                }
+                radioSongPlayer = new RadioSongPlayer(song);
+                radioSongPlayer.setCategory(finalCategory);
+                radioSongPlayer.setEnable10Octave(!disable10Octave);
+                if (enableRepeat)
+                {
+                  radioSongPlayer.setRepeatMode(RepeatMode.ONE);
+                }
+                isDownloading.clear();
+                autoNext = auto;
+                if (!silent)
+                {
+                  MessageUtil.sendMessage(sender, Prefix.INFO_SONG, "%s을(를) 재생합니다", song);
+                }
+                Scheduler.fileNameLength = finalFileName.length() - 1;
+                if (Scheduler.delayTask != null)
+                {
+                  Scheduler.delayTask.cancel();
+                }
+                Scheduler.delay = false;
+                for (Player player : Bukkit.getServer().getOnlinePlayers())
+                {
+                  if (UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()) || UserData.LISTEN_GLOBAL_FORCE.getBoolean(player.getUniqueId()))
                   {
-                    MessageUtil.sendMessage(player, Prefix.INFO_SONG, "%s이(가) %s을(를) 재생합니다", sender, song);
+                    radioSongPlayer.addPlayer(player);
+                    if (!silent && !sender.equals(player))
+                    {
+                      MessageUtil.sendMessage(player, Prefix.INFO_SONG, "%s이(가) %s을(를) 재생합니다", sender, song);
+                    }
                   }
                 }
-              }
-              radioSongPlayer.setPlaying(true);
+                radioSongPlayer.setPlaying(true);
               }, 0L);
             }
             catch (Exception e)

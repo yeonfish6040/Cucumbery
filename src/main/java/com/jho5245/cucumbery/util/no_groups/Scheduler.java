@@ -60,6 +60,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -82,65 +83,76 @@ public class Scheduler
   @SuppressWarnings("all")
   public static void Schedule(Cucumbery cucumbery)
   {
-    Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
+    try
     {
-      // 틱 단위로 무한 반복하는 애들
-      tickSchedulesAsync();
-      // 서버 라디오
-      serverRadio();
-      // sendBossBar
-      BossBarMessage.tick();
-      // 플러그인 실행 시간
-      Cucumbery.runTime++;
-    }, 0L, 1L);
-    Bukkit.getScheduler().runTaskTimer(cucumbery, () ->
+      Bukkit.getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        tickSchedules();
+      }, 0L, 1L);
+      Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
+      {
+        // 틱 단위로 무한 반복하는 애들
+        tickSchedulesAsync();
+        // 서버 라디오
+        serverRadio();
+        // sendBossBar
+        BossBarMessage.tick();
+        // 플러그인 실행 시간
+        Cucumbery.runTime++;
+      }, 0L, 1L);
+      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        // 플레이어 인벤토리의 아이템(손에 들고 있는 아이템 제외) 플레이어가 열고 있는 인벤토리 아이템 루프
+        playerExpireItem();
+      }, 0L, 10L);
+      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        // 관전 중인 개체의 거리가 멀어졌을 때 관전 위치 갱신
+        spectateUpdater();
+        // 인벤토리가 가득 찼을때 타이틀 알림
+        inventoryFullNotify();
+        // 아이템 보관함 gui 업데이트
+        stashGUI();
+        // 레시피 메뉴 업데이트
+        updateCustomRecipeGUI();
+        // 이름표 - 트래커
+        nameTagTracker();
+      }, 20L, 20L);
+      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        expireItemAvailableTime();
+      }, 400L, 400L);
+      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        starCatchPenalty();
+      }, 20L * 60L * 10L, 20L * 60L * 10L);
+      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        playerExpireHandItem();
+      }, 1200L, 1200L);
+      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        Initializer.saveUserData();
+        Initializer.saveItemUsageData();
+        Initializer.saveItemStashData();
+        CustomEffectManager.save();
+        BlockPlaceDataConfig.saveAll();
+      }, 1200L, 20L * 60L * 5L);
+      reinforceChancetime();
+      Bukkit.getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        fakeBlocksAsync(null, true);
+        MiningScheduler.customMining(null, true);
+      }, 0L, 1200L);
+    }
+    catch (IllegalPluginAccessException ignored)
     {
-      tickSchedules();
-    }, 0L, 1L);
-    Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+
+    }
+    catch (Throwable t)
     {
-      // 플레이어 인벤토리의 아이템(손에 들고 있는 아이템 제외) 플레이어가 열고 있는 인벤토리 아이템 루프
-      playerExpireItem();
-    }, 0L, 10L);
-    Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
-    {
-      // 관전 중인 개체의 거리가 멀어졌을 때 관전 위치 갱신
-      spectateUpdater();
-      // 인벤토리가 가득 찼을때 타이틀 알림
-      inventoryFullNotify();
-      // 아이템 보관함 gui 업데이트
-      stashGUI();
-      // 레시피 메뉴 업데이트
-      updateCustomRecipeGUI();
-      // 이름표 - 트래커
-      nameTagTracker();
-    }, 20L, 20L);
-    Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
-    {
-      expireItemAvailableTime();
-    }, 400L, 400L);
-    Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
-    {
-      starCatchPenalty();
-    }, 20L * 60L * 10L, 20L * 60L * 10L);
-    Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
-    {
-      playerExpireHandItem();
-    }, 1200L, 1200L);
-    Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
-    {
-      Initializer.saveUserData();
-      Initializer.saveItemUsageData();
-      Initializer.saveItemStashData();
-      CustomEffectManager.save();
-      BlockPlaceDataConfig.saveAll();
-    }, 1200L, 20L * 60L * 5L);
-    reinforceChancetime();
-    Bukkit.getScheduler().runTaskTimer(cucumbery, () ->
-    {
-      fakeBlocksAsync(null, true);
-      MiningScheduler.customMining(null, true);
-    }, 0L, 1200L);
+      t.printStackTrace();
+    }
   }
 
   private static void tickSchedulesAsync()
@@ -155,6 +167,7 @@ public class Scheduler
   {
     Bukkit.getOnlinePlayers().forEach(player ->
     {
+      MiningScheduler.customMiningPre(player);
       if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
       {
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 2, 0, false, false, false));
@@ -679,7 +692,7 @@ public class Scheduler
               case PURPLE -> NamedTextColor.DARK_PURPLE;
               case WHITE -> NamedTextColor.WHITE;
             };
-    serverRadio.progress(ratio).name(ComponentUtil.translate((radio.isPlaying() ? "♬" : "■") + " %s" + (radio.getRepeatMode() == RepeatMode.ONE ? " ♺" : ""),
+    serverRadio.progress(ratio).name(ComponentUtil.translate((radio.isPlaying() ? "♬" : "■") + " %s" + (radio.getRepeatMode() == RepeatMode.ONE ? " ⟳" : "") + (CommandSong.autoNext ? " ⤭" : ""),
             Component.text(songName, NamedTextColor.WHITE), Constant.JeongsuFloor.format(ratio * 100d) + "%", Constant.Sosu2.format(speed)).color(textColor));
 
     for (Player online : Bukkit.getOnlinePlayers())

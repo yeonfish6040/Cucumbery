@@ -272,7 +272,7 @@ public class MiningScheduler
     });
   }
 
-  private static void customMiningPre(@NotNull Player player)
+  public static void customMiningPre(@NotNull Player player)
   {
     if (Cucumbery.config.getBoolean("custom-mining.enable-wild-mode"))
     {
@@ -321,7 +321,6 @@ public class MiningScheduler
 
   public static void customMining(@NotNull Player player)
   {
-    customMiningPre(player);
     if (CustomEffectManager.getEffectNullable(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS) instanceof LocationCustomEffect effect)
     {
       final Location location = effect.getLocation();

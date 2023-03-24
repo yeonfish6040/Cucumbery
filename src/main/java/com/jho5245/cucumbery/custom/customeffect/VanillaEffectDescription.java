@@ -1,11 +1,18 @@
 package com.jho5245.cucumbery.custom.customeffect;
 
+import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningResult;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.TranslatableKeyParser;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -34,7 +41,7 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.FAST_DIGGING))
     {
-      return ComponentUtil.translate(hasCustomMining ? "채광 속도가 증가합니다" : "채광 속도와 공격 속도가 증가합니다. %s와(과) 곱적용됩니다", "translate:&c" + TranslatableKeyParser.getKey(PotionEffectType.SLOW_DIGGING));
+      return ComponentUtil.translate("채광 속도와 공격 속도가 증가합니다. %s와(과) 곱적용됩니다", "translate:&c" + TranslatableKeyParser.getKey(PotionEffectType.SLOW_DIGGING));
     }
     if (type.equals(PotionEffectType.SLOW_DIGGING))
     {
@@ -197,11 +204,29 @@ public class VanillaEffectDescription
     }
     if (type.equals(PotionEffectType.FAST_DIGGING))
     {
+      String display;
       if (hasCustomMining)
       {
-        return ComponentUtil.translate("채광 속도가 %s 증가합니다", Constant.THE_COLOR_HEX + (amplifier + 1) * 50);
+        Block block = viewer.getTargetBlockExact(5);
+        MiningResult miningResult = MiningManager.getMiningInfo(viewer, block != null ? block.getLocation() : viewer.getLocation().add(0, -1, 0));
+        String formula = Cucumbery.config.getString("custom-mining.haste", "0.2*%mining_speed%*%level%")
+                .replace("%level%", (amplifier + 1) + "").replace("%mining_speed%", (miningResult != null ? miningResult.miningSpeedBeforeHaste() : 50) + "");
+        float value = 0f;
+        try
+        {
+          value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+        }
+        catch (NumberFormatException e)
+        {
+          MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.haste의 값이 잘못 지정되어 있습니다!");
+        }
+        display = Constant.Sosu2.format(value);
       }
-      return ComponentUtil.translate("채광 속도가 %s 증가하고 공격 속도가", Constant.THE_COLOR_HEX + (amplifier + 1) * 20 + "%")
+      else
+      {
+        display = (amplifier + 1) * 20 + "%";
+      }
+      return ComponentUtil.translate("채광 속도가 %s 증가하고 공격 속도가", Constant.THE_COLOR_HEX + display)
               .append(Component.text("\n"))
               .append(ComponentUtil.translate("%s 증가합니다. %s와(과) 곱적용됩니다", Constant.THE_COLOR_HEX + (amplifier + 1) * 10 + "%", PotionEffectType.SLOW_DIGGING));
     }

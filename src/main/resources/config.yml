@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 40
+config-version: 41
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -841,3 +841,11 @@ custom-mining:
     BEDS: 3
     # 이 외에 상기되지 않은 개체
     default: 3
+  # 인챈트 설정 공식
+  # 행운과 효율 인챈트만 조정할 수 있다
+  # %level%이 인챈트 레벨을 뜻함
+  efficiency: '50*(1+%level%^2)'
+  fortune: '100*((1/(%level%+2)+(%level%+1)/2)-1)'
+  # 성급함 포션 효과 공식
+  # %mining_speed%가 채광 속도를 뜻함
+  haste: '0.2*%mining_speed%*%level%'

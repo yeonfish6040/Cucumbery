@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.ExtraTag;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -192,7 +193,7 @@ public class MiningManager
     // 드롭 경험치
     float expToDrop = 0;
     // 채광 속도 처리
-    float miningSpeed = 0f, speedMultiplier = 1f, finalSpeedMultiplier = 1f, bonusSpeed = 0f;
+    float miningSpeed = 0f, miningSpeedBeforeHaste = 0f, speedMultiplier = 1f, finalSpeedMultiplier = 1f, bonusSpeed = 0f;
     // 블록 리젠 속도 (틱)
     int regenCooldown = Math.max(0, Cucumbery.config.getInt("custom-mining.default-ore-regen-in-ticks"));
     // 드롭율 배수
@@ -772,7 +773,17 @@ public class MiningManager
           // 바닐라 채광이 아니거나 효율의 영향을 받을 경우에만 속도 증가
           if (enchantDigSpeedLevel > 0 && (blockTier > 0 || ignoreVanillaModification || block.getDestroySpeed(itemStack, true) > block.getDestroySpeed(itemStack, false)))
           {
-            toolSpeed += 30f + (enchantDigSpeedLevel - 1) * 20f;
+            String formula = Cucumbery.config.getString("custom-mining.efficiency", "50*(1+%level%^2)").replace("%level%", enchantDigSpeedLevel + "");
+            float value = 0f;
+            try
+            {
+              value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+            }
+            catch (NumberFormatException e)
+            {
+              MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.efficiency의 값이 잘못 지정되어 있습니다!");
+            }
+            toolSpeed += value;
           }
         }
         if (CustomMaterial.MITHRIL_PICKAXE_REFINED.toString().equalsIgnoreCase(toolId) && CustomMaterial.MITHRIL_ORE.toString().equalsIgnoreCase(blockId))
@@ -882,6 +893,7 @@ public class MiningManager
 
       // 채광 속도에 도구 속도 추가
       miningSpeed += toolSpeed;
+      miningSpeedBeforeHaste = miningSpeed;
     }
 
     // 바닐라 채광 속도 처리
@@ -906,7 +918,18 @@ public class MiningManager
         {
           potionHasteLevel = CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.HASTE).getAmplifier() + 1;
         }
-        miningSpeed += potionHasteLevel * 50f;
+        String formula = Cucumbery.config.getString("custom-mining.haste", "0.2*%mining_speed%*%level%")
+                .replace("%level%", potionHasteLevel + "").replace("%mining_speed%", miningSpeed + "");
+        float value = 0f;
+        try
+        {
+          value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+        }
+        catch (NumberFormatException e)
+        {
+          MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.haste의 값이 잘못 지정되어 있습니다!");
+        }
+        miningSpeed += value;
       }
     }
 
@@ -916,7 +939,17 @@ public class MiningManager
       // 바닐라 채광이 아니거나 효율의 영향을 받을 경우에만 속도 증가
       if (enchantFortuneLevel > 0)
       {
-        miningFortune += 0.15 * enchantFortuneLevel;
+        String formula = Cucumbery.config.getString("custom-mining.fortune", "100*((1/(%level%+2)+(%level%+1)/2)-1)").replace("%level%", enchantFortuneLevel + "");
+        float value = 0f;
+        try
+        {
+          value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+        }
+        catch (NumberFormatException e)
+        {
+          MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.fortune의 값이 잘못 지정되어 있습니다!");
+        }
+        miningFortune += value * 0.01f;
       }
       CustomEffect miningFortuneEffect = CustomEffectManager.getEffectNullable(player, CustomEffectTypeCustomMining.MINING_FORTUNE);
       if (miningFortuneEffect != null)
@@ -1106,7 +1139,7 @@ public class MiningManager
               Constant.Sosu2.format(miningSpeed), Constant.Sosu2.format(block.getDestroySpeed(itemStack, true)), Constant.Sosu2.format(blockHardness),
               Constant.Sosu2.format(miningFortune * 100), Constant.Sosu2Force.format(Variable.customMiningProgress.getOrDefault(player.getUniqueId(), 0f) * 100d) + "%");
     }
-    return new MiningResult(canMine, toolSpeed, miningSpeed, blockHardness, miningFortune, expToDrop, toolTier, blockTier, regenCooldown, drop, breakSound, breakCustomSound, breakSoundVolume, breakSoundPitch);
+    return new MiningResult(canMine, toolSpeed, miningSpeed, miningSpeedBeforeHaste, blockHardness, miningFortune, expToDrop, toolTier, blockTier, regenCooldown, drop, breakSound, breakCustomSound, breakSoundVolume, breakSoundPitch);
   }
 
   public static float miningExp(@NotNull Material blockType)

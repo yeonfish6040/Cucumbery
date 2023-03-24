@@ -5,6 +5,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
@@ -18,6 +19,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.format.TextDecoration.State;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
@@ -319,12 +321,26 @@ public class ItemLoreUtil
       }
       if ((compat || Constant.TOOLS.contains(material) || customMiningMode) && enchant.equals(Enchantment.DIG_SPEED))
       {
-        String msg = customMiningMode ? "&7채광 속도 %s 증가" : "&7블록을 캐는 속도 %s 증가";
-        lore.add(ComponentUtil.translate(msg, "&a" + Constant.Jeongsu.format(
-                customMiningMode ?
-                        30L + (enchantLevel - 1) * 20L :
-                        (long) enchantLevel * enchantLevel + 1
-        )));
+        if (customMiningMode)
+        {
+          String formula = Cucumbery.config.getString("custom-mining.efficiency", "50*(1+%level%^2)").replace("%level%", enchantLevel + "");
+          float value = 0f;
+          try
+          {
+            value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+          }
+          catch (NumberFormatException e)
+          {
+            MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.efficiency의 값이 잘못 지정되어 있습니다!");
+          }
+          String msg = "&7채광 속도 %s 증가";
+          lore.add(ComponentUtil.translate(msg, "&a" + Constant.Jeongsu.format(value)));
+        }
+        else
+        {
+          String msg = "&7블록을 캐는 속도 %s 증가";
+          lore.add(ComponentUtil.translate(msg, "&a" + Constant.Jeongsu.format((long) enchantLevel * enchantLevel + 1)));
+        }
       }
       if ((compat || Constant.DURABLE_ITEMS.contains(material)) && enchant.equals(Enchantment.DURABILITY))
       {
@@ -371,7 +387,17 @@ public class ItemLoreUtil
       {
         if (customMiningMode)
         {
-          lore.add(ComponentUtil.translate("&7채광 행운 %s 증가", "&a" + (enchantLevel * 15)));
+          String formula = Cucumbery.config.getString("custom-mining.fortune", "100*((1/(%level%+2)+(%level%+1)/2)-1)").replace("%level%", enchantLevel + "");
+          float value = 0f;
+          try
+          {
+            value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+          }
+          catch (NumberFormatException e)
+          {
+            MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.fortune의 값이 잘못 지정되어 있습니다!");
+          }
+          lore.add(ComponentUtil.translate("&7채광 행운 %s 증가", "&a" + Constant.Sosu2.format(value)));
         }
         else
         {
