@@ -3,8 +3,8 @@ package com.jho5245.cucumbery.listeners.player.no_groups;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.ItemStackCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -114,6 +114,26 @@ public class PlayerCommandPreprocess implements Listener
             }
           }, 0L);
         }
+      }
+    }
+
+    if ("i".equals(label) && split.length == 2)
+    {
+      String itemName = split[1].replace("cpick", "copper_pickaxe")
+              .replace("tpick", "tungsten_pickaxe")
+              .replace("copick", "cobalt_pickaxe")
+              .replace("mpick", "mithril_pickaxe")
+              .replace("tipick", "titanium_pickaxe")
+              .replace("td2", "titanium_drill_r266")
+              .replace("td3", "titanium_drill_r366")
+              .replace("td4", "titanium_drill_r466")
+              .replace("td5", "titanium_drill_r566")
+              .replace("md", "mindas_drill");
+      if (!itemName.equals(split[1]))
+      {
+        Bukkit.dispatchCommand(player, "cgive @s " + itemName);
+        this.playSoundOnPerformCommand(event);
+        return;
       }
     }
 

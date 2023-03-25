@@ -219,15 +219,7 @@ public class MiningManager
       clone.setItemMeta(cloneMeta);
     }
     boolean isSilkTouch = clone.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
-    List<ItemStack> drops;
-    try
-    {
-      drops = new ArrayList<>(block.getDrops(clone, player));
-    }
-    catch (IllegalStateException e)
-    {
-      drops = new ArrayList<>();
-    }
+    List<ItemStack> drops = new ArrayList<>(block.getDrops(clone, player));
     // 채광 모드 커스텀 광물 처리(일부 블록은 반드시 커스텀 광물이 됨)
     {
       BlockData blockData = Variable.customMiningExtraBlocks.get(blockLocation);

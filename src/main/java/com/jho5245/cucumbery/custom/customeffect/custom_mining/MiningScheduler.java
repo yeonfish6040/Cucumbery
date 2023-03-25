@@ -414,8 +414,7 @@ public class MiningScheduler
       {
         // 이벤트 호출
         CustomBlockBreakEvent customBlockBreakEvent = new CustomBlockBreakEvent(block, player);
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                Bukkit.getPluginManager().callEvent(customBlockBreakEvent), 0L);
+        Bukkit.getPluginManager().callEvent(customBlockBreakEvent);
         boolean mode2 = CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2);
         boolean mode3 = CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
         // 블록을 캤을 때 소리 재생 및 채광 모드 2/미복구일 경우 블록 파괴 파티클 처리
@@ -544,30 +543,26 @@ public class MiningScheduler
           }
           else
           {
-            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                    drops.forEach(itemStack1 -> player.getWorld().dropItemNaturally(location, itemStack1)), 0L);
+            drops.forEach(itemStack1 -> player.getWorld().dropItemNaturally(location, itemStack1));
           }
-          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+          if (mode3 && block.getState() instanceof BlockInventoryHolder inventoryHolder && !(inventoryHolder instanceof ShulkerBox))
           {
-            if (mode3 && block.getState() instanceof BlockInventoryHolder inventoryHolder && !(inventoryHolder instanceof ShulkerBox))
+            Inventory inventory = inventoryHolder.getInventory();
+            for (ItemStack content : inventory.getContents())
             {
-              Inventory inventory = inventoryHolder.getInventory();
-              for (ItemStack content : inventory.getContents())
+              if (ItemStackUtil.itemExists(content))
               {
-                if (ItemStackUtil.itemExists(content))
+                if (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
                 {
-                  if (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
-                  {
-                    AddItemUtil.addItem(player, content);
-                  }
-                  else
-                  {
-                    player.getWorld().dropItemNaturally(location, content);
-                  }
+                  AddItemUtil.addItem(player, content);
+                }
+                else
+                {
+                  player.getWorld().dropItemNaturally(location, content);
                 }
               }
             }
-          }, 0L);
+          }
         }
         // 경험치 드롭 처리
         {
@@ -581,8 +576,7 @@ public class MiningScheduler
           int finalIntSide = intSide;
           if ((!drops.isEmpty() || Arrays.asList(Material.SPAWNER, Material.SCULK, Material.SCULK_CATALYST, Material.SCULK_SENSOR, Material.SCULK_SHRIEKER).contains(block.getType())) && finalIntSide > 0)
           {
-            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                    player.getWorld().spawnEntity(location, EntityType.EXPERIENCE_ORB, SpawnReason.CUSTOM, (entity -> ((ExperienceOrb) entity).setExperience(finalIntSide))), 0L);
+            player.getWorld().spawnEntity(location, EntityType.EXPERIENCE_ORB, SpawnReason.CUSTOM, (entity -> ((ExperienceOrb) entity).setExperience(finalIntSide)));
           }
         }
         // 채굴 모드 처리
@@ -598,13 +592,11 @@ public class MiningScheduler
                       (block.getBlockData() instanceof Waterlogged waterlogged && waterlogged.isWaterlogged()))
               {
 
-                Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                        block.setType(Material.WATER), 0L);
+                block.setType(Material.WATER);
               }
               else
               {
-                Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                        block.setType(Material.AIR), 0L);
+                block.setType(Material.AIR);
               }
               BlockPlaceDataConfig.removeData(location);
               Variable.fakeBlocks.remove(location);
@@ -620,8 +612,7 @@ public class MiningScheduler
               Variable.customMiningMode2BlockData.put(locationClone, originData);
               boolean isWater = originData instanceof Waterlogged waterlogged && waterlogged.isWaterlogged();
 
-              Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                      block.setBlockData(Bukkit.createBlockData(isWater ? Material.WATER : Material.AIR), false), 0L);
+              block.setBlockData(Bukkit.createBlockData(isWater ? Material.WATER : Material.AIR), false);
               Variable.customMiningMode2BlockDataTask.put(locationClone, Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
               {
                 Variable.customMiningMode2BlockData.remove(locationClone);
@@ -794,8 +785,7 @@ public class MiningScheduler
               player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 1F, 1F);
               player.spawnParticle(Particle.ITEM_CRACK, player.getEyeLocation().add(0, -0.5, 0), 30, 0, 0, 0, 0.1, itemStack);
               PlayerItemBreakEvent playerItemBreakEvent = new PlayerItemBreakEvent(player, itemStack);
-              Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                      Bukkit.getPluginManager().callEvent(playerItemBreakEvent), 0L);
+              Bukkit.getPluginManager().callEvent(playerItemBreakEvent);
               itemStack.setAmount(itemStack.getAmount() - 1);
             }
             else

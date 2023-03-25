@@ -168,6 +168,7 @@ public class Scheduler
     Bukkit.getOnlinePlayers().forEach(player ->
     {
       MiningScheduler.customMiningPre(player);
+      MiningScheduler.customMining(player);
       if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
       {
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 2, 0, false, false, false));
@@ -347,7 +348,6 @@ public class Scheduler
       CustomEffectScheduler.fly(player);
       CustomEffectScheduler.rune(player);
       CustomEffectScheduler.gaesans(player);
-      MiningScheduler.customMining(player);
       CustomEffectScheduler.masterOfFishing(player);
       CustomEffectScheduler.dynamicLight(player);
       CustomEffectScheduler.gliding(player);
