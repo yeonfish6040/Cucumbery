@@ -34,7 +34,9 @@ public class PlayerBucketFill implements Listener
     }
     Player player = event.getPlayer();
     // 커스텀 채광 모드에서는 불가능하게 막음
-    if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE) && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
+    if (player.getGameMode() != GameMode.CREATIVE &&
+            CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE) &&
+            !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
     {
       event.setCancelled(true);
       return;

@@ -537,7 +537,7 @@ public class ItemLorePotionDescription
       PotionEffectType potionEffectType = potionType.getEffectType();
       if (potionEffectType != null)
       {
-        lore.addAll(ComponentUtil.convertHoverToItemLore(VanillaEffectDescription.getDescription(new PotionEffect(potionEffectType, 2, potionMeta.getBasePotionData().isUpgraded() ? 1 : 0)), NamedTextColor.GRAY));
+        lore.addAll(ComponentUtil.convertHoverToItemLore(VanillaEffectDescription.getDescription(new PotionEffect(potionEffectType, 2, potionMeta.getBasePotionData().isUpgraded() ? (potionEffectType.equals(PotionEffectType.SLOW) ? 3 : 1) : 0)), NamedTextColor.GRAY));
       }
     }
     lore.addAll(customEffects);
@@ -782,7 +782,7 @@ public class ItemLorePotionDescription
       PotionEffectType potionEffectType = potionType.getEffectType();
       if (potionEffectType != null)
       {
-        lore.addAll(ComponentUtil.convertHoverToItemLore(VanillaEffectDescription.getDescription(new PotionEffect(potionEffectType, 2, potionMeta.getBasePotionData().isUpgraded() ? 1 : 0)), NamedTextColor.GRAY));
+        lore.addAll(ComponentUtil.convertHoverToItemLore(VanillaEffectDescription.getDescription(new PotionEffect(potionEffectType, 2, potionMeta.getBasePotionData().isUpgraded() ? (potionEffectType.equals(PotionEffectType.SLOW) ? 3 : 1): 0)), NamedTextColor.GRAY));
       }
     }
     lore.addAll(customEffects);
@@ -933,11 +933,11 @@ public class ItemLorePotionDescription
       case SLOW_FALLING:
         if (potionMeta.getBasePotionData().isExtended())
         {
-          lore.add(getDescription(SLOW_FALLING, 22 * 20, 1));
+          lore.add(getDescription(SLOW_FALLING, 60 * 20, 1));
         }
         else
         {
-          lore.add(getDescription(SLOW_FALLING, 60 * 20, 1));
+          lore.add(getDescription(SLOW_FALLING, 22 * 20, 1));
         }
         break;
       case SPEED:
@@ -1025,7 +1025,7 @@ public class ItemLorePotionDescription
       PotionEffectType potionEffectType = potionType.getEffectType();
       if (potionEffectType != null)
       {
-        lore.addAll(ComponentUtil.convertHoverToItemLore(VanillaEffectDescription.getDescription(new PotionEffect(potionEffectType, 2, potionMeta.getBasePotionData().isUpgraded() ? 1 : 0)), NamedTextColor.GRAY));
+        lore.addAll(ComponentUtil.convertHoverToItemLore(VanillaEffectDescription.getDescription(new PotionEffect(potionEffectType, 2, potionMeta.getBasePotionData().isUpgraded() ? (potionEffectType.equals(PotionEffectType.SLOW) ? 3 : 1) : 0)), NamedTextColor.GRAY));
       }
     }
     lore.addAll(customEffects);
@@ -1268,7 +1268,7 @@ public class ItemLorePotionDescription
       PotionEffectType potionEffectType = potionType.getEffectType();
       if (potionEffectType != null)
       {
-        lore.addAll(ComponentUtil.convertHoverToItemLore(VanillaEffectDescription.getDescription(new PotionEffect(potionEffectType, 2, potionMeta.getBasePotionData().isUpgraded() ? 1 : 0)), NamedTextColor.GRAY));
+        lore.addAll(ComponentUtil.convertHoverToItemLore(VanillaEffectDescription.getDescription(new PotionEffect(potionEffectType, 2, potionMeta.getBasePotionData().isUpgraded() ? (potionEffectType.equals(PotionEffectType.SLOW) ? 3 : 1) : 0)), NamedTextColor.GRAY));
       }
     }
     lore.addAll(customEffects);
