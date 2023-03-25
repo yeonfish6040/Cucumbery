@@ -5,6 +5,7 @@ import com.destroystokyo.paper.NamespacedTag;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
 import com.jho5245.cucumbery.events.block.PreCustomBlockBreakEvent;
@@ -727,11 +728,11 @@ public class MiningManager
     }
     // 드롭 경험치 처리
     List<Double> expList = new ArrayList<>();
-    // 제련의 손길 처리
+    // 제련의 손길 처리(인챈트 또는 포션 효과)
     {
       try
       {
-        if (CustomEnchant.isEnabled() && itemStack.getItemMeta().hasEnchant(CustomEnchant.SMELTING_TOUCH))
+        if (CustomEnchant.isEnabled() && itemStack.getItemMeta().hasEnchant(CustomEnchant.SMELTING_TOUCH) || CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH))
         {
           drops = new ArrayList<>(ItemStackUtil.getSmeltedResult(player, drops, expList));
         }
