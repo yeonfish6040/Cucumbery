@@ -2027,17 +2027,12 @@ public class Method extends SoundPlay
             {
               showDrop = false;
             }
-//            WrappedDataWatcher dataWatcher = WrappedDataWatcher.getEntityWatcher(itemEntity);
-//            dataWatcher.setObject(3, showDrop); // customnamevisible = true
             PacketContainer updateComponent = protocolManager.createPacket(Play.Server.ENTITY_METADATA);
             StructureModifier<List<WrappedDataValue>> watchableAccessor = updateComponent.getDataValueCollectionModifier();
             List<WrappedDataValue> values = Lists.newArrayList(
                     new WrappedDataValue(3, WrappedDataWatcher.Registry.get(Boolean.class), showDrop)
             );
             watchableAccessor.write(0, values);
-//            List<WrappedWatchableObject> list = new ArrayList<>();
-//            list.add(new WrappedWatchableObject(new WrappedDataWatcherObject(3, WrappedDataWatcher.Registry.get(Boolean.class)), showDrop)); // customnamevisible = true
-//            updateComponent.getWatchableCollectionModifier().write(0, list);
             updateComponent.getIntegers().write(0, itemEntity.getEntityId());
             protocolManager.sendServerPacket(player, updateComponent);
           }
@@ -2059,9 +2054,9 @@ public class Method extends SoundPlay
       }, 0L);
     }
     // 이외의 경우에는 config 설정에 따른 전역 아이템 표시 여부 결정
-    else
+    else if (Cucumbery.config.getBoolean("name-tag-on-item-spawn"))
     {
-      itemEntity.setCustomNameVisible(Cucumbery.config.getBoolean("name-tag-on-item-spawn"));
+      itemEntity.setCustomNameVisible(true);
     }
   }
 
