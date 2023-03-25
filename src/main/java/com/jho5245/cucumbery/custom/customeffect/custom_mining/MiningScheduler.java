@@ -274,31 +274,48 @@ public class MiningScheduler
 
   public static void customMiningPre(@NotNull Player player)
   {
-    if (Cucumbery.config.getBoolean("custom-mining.enable-wild-mode"))
+    String miner1Tag = Cucumbery.config.getString("custom-mining.tag", "cucumbery_miner");
+    String miner2Tag = Cucumbery.config.getString("custom-mining.tag-2", "cucumbery_miner_2");
+    String miner3Tag = Cucumbery.config.getString("custom-mining.tag-3", "cucumbery_miner_3");
+    boolean wildMode = Cucumbery.config.getBoolean("custom-mining.enable-wild-mode");
+    if (wildMode)
     {
-      player.addScoreboardTag(Cucumbery.config.getString("custom-mining.tag", "cucumbery_miner"));
-      player.addScoreboardTag(Cucumbery.config.getString("custom-mining.tag-3", "cucumbery_miner_3"));
-      CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS);
+      player.addScoreboardTag(miner1Tag);
+      player.addScoreboardTag(miner3Tag);
+      if (!CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS))
+      {
+        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS);
+      }
+    }
+    else if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS))
+    {
+      CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS);
     }
     if (Cucumbery.config.getBoolean("custom-mining.enable-by-tag"))
     {
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag", "cucumbery_miner")) && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+      if (player.getScoreboardTags().contains(miner1Tag) && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
       {
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE), 0L);
+        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE);
       }
-      if (!player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag", "cucumbery_miner")) && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+      if (!player.getScoreboardTags().contains(miner1Tag) && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
       {
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE), 0L);
+        CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE);
       }
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag-2", "cucumbery_miner_2")))
+      if (player.getScoreboardTags().contains(miner2Tag) && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2))
       {
         CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2);
       }
-      if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.tag-3", "cucumbery_miner_3")))
+      if (!player.getScoreboardTags().contains(miner2Tag) && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2))
+      {
+        CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2);
+      }
+      if (player.getScoreboardTags().contains(miner3Tag) && !CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
       {
         CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
+      }
+      if (!player.getScoreboardTags().contains(miner3Tag) && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
+      {
+        CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
       }
       if (player.getScoreboardTags().contains(Cucumbery.config.getString("custom-mining.predefined-ores-tag.dwarven-gold", "cucumbery_miner_dwarven_gold")))
       {

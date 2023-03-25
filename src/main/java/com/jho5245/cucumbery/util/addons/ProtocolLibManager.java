@@ -243,10 +243,10 @@ public class ProtocolLibManager
           StructureModifier<Object> modifier = packet.getModifier();
           int[] ary = getBlockPositionOf(modifier.read(0));
           Location location = new Location(player.getWorld(), ary[0], ary[1], ary[2]);
-          Material type = packet.getBlockData().read(0).getType();
-          Material locationType = location.getBlock().getType();
           if (Variable.customMiningCooldown.containsKey(location) || Variable.customMiningExtraBlocks.containsKey(location) || Variable.fakeBlocks.containsKey(location))
           {
+            Material type = packet.getBlockData().read(0).getType();
+            Material locationType = location.getBlock().getType();
             if (type == location.getBlock().getType() && !Variable.customMiningMode2BlockData.containsKey(location) ||
                     (Variable.customMiningMode2BlockData.containsKey(location) && locationType != Variable.customMiningMode2BlockData.get(location).getMaterial()))
             {
@@ -260,6 +260,7 @@ public class ProtocolLibManager
           {
             if (!Variable.customMiningCooldown.containsKey(location) && !Variable.customMiningExtraBlocks.containsKey(location) && !Variable.customMiningMode2BlockData.containsKey(location) && Variable.fakeBlocks.containsKey(location))
             {
+              Material type = packet.getBlockData().read(0).getType();
               if (Variable.fakeBlocks.get(location).getMaterial() != Material.AIR && type == Material.AIR)
               {
                 event.setCancelled(true);

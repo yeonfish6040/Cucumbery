@@ -909,7 +909,7 @@ public class Cucumbery extends JavaPlugin
     // listener.addon.quickshop
     if (using_QuickShop)
     {
-      Initializer.registerEvent(new ShopClick());
+      Initializer.registerEvent(new PlayerShopClick());
       Initializer.registerEvent(new ShopDelete());
       Initializer.registerEvent(new ShopItemChange());
       Initializer.registerEvent(new ShopPreCreate());

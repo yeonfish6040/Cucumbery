@@ -543,7 +543,6 @@ com\jho5245\cucumbery\deathmessages\LastTrampledBlockManager.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerQuit$1.class
 com\jho5245\cucumbery\custom\customrecipe\CustomRecipeUtil.class
 com\jho5245\cucumbery\util\addons\ProtocolLibManager$1.class
-com\jho5245\cucumbery\listeners\addon\quickshop\ShopClick.class
 com\jho5245\cucumbery\util\josautil\HanjaMap.class
 com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantTelekinesisPVP.class
 com\jho5245\cucumbery\util\storage\component\LocationComponent.class
@@ -563,6 +562,7 @@ com\jho5245\cucumbery\listeners\inventory\PrepareResult.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerArmorChange.class
 com\jho5245\cucumbery\util\no_groups\ColorUtil$Type.class
 com\jho5245\cucumbery\util\itemlore\ItemLoreCustomItem.class
+com\jho5245\cucumbery\listeners\addon\quickshop\PlayerShopClick.class
 com\jho5245\cucumbery\util\itemlore\ItemLore2Food.class
 com\jho5245\cucumbery\listeners\entity\no_groups\EntityMount.class
 com\jho5245\cucumbery\listeners\inventory\InventoryPickupItem.class
