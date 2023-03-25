@@ -730,15 +730,9 @@ public class MiningManager
     List<Double> expList = new ArrayList<>();
     // 제련의 손길 처리(인챈트 또는 포션 효과)
     {
-      try
+      if (CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH) || CustomEnchant.isEnabled() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchant(CustomEnchant.SMELTING_TOUCH))
       {
-        if (CustomEnchant.isEnabled() && itemStack.getItemMeta().hasEnchant(CustomEnchant.SMELTING_TOUCH) || CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH))
-        {
-          drops = new ArrayList<>(ItemStackUtil.getSmeltedResult(player, drops, expList));
-        }
-      }
-      catch (Exception ignored)
-      {
+        drops = new ArrayList<>(ItemStackUtil.getSmeltedResult(player, drops, expList));
       }
     }
     // 드롭 경험치가 0이고 바닐라 채광일 경우 도구에 섬세한 손길이 없을 경우 드롭 경험치 추가

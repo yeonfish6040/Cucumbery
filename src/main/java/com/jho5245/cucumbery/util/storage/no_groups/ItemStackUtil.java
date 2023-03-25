@@ -534,7 +534,7 @@ public class ItemStackUtil
    * @param expOutput 각 아이템의 제련 경험치를 반환하기 위한 리스트
    * @return 아이템이 교체된 배열
    */
-  public static List<ItemStack> getSmeltedResult(@NotNull Player player, @NotNull Collection<ItemStack> input, @Nullable List<Double> expOutput)
+  public static List<ItemStack> getSmeltedResult(@Nullable Player player, @NotNull Collection<ItemStack> input, @Nullable List<Double> expOutput)
   {
     List<ItemStack> dropsClone = new ArrayList<>();
     for (ItemStack drop : input)
@@ -550,7 +550,7 @@ public class ItemStackUtil
             if (expOutput != null)
             {
               double exp = cookingRecipe.getExperience();
-              if (CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
+              if (player != null && CustomEffectManager.hasEffect(player, CustomEffectType.EXPERIENCE_BOOST))
               {
                 int amplifier = CustomEffectManager.getEffect(player, CustomEffectType.EXPERIENCE_BOOST).getAmplifier();
                 exp = (1d * exp * (1 + (amplifier + 1) * 0.05));
