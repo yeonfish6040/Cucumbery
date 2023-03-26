@@ -66,7 +66,9 @@ public class MiningManager
           REGEN_COOLDOWN = "RegenCooldown",
           BREAK_SOUND = "BreakSound",
           BREAK_SOUND_VOLUME = "BreakSoundVolume",
-          BREAK_SOUND_PITCH = "BreakSoundPitch";
+          BREAK_SOUND_PITCH = "BreakSoundPitch",
+
+          BREAK_PARTICLE = "BreakParticle";
 
   /**
    * Gets the result of mining of a {@link Player}.
@@ -599,6 +601,8 @@ public class MiningManager
     Sound breakSound = null;
     String breakCustomSound = null;
     float breakSoundVolume = 0f, breakSoundPitch = 0f;
+    // 블록 파괴 입자(BLOCK:TYPE 또는 ITEM:{id})
+    String breakParticle = null;
     boolean miningMode3 = CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE);
     // 커스텀 블록 처리 (extra Block 존재 시 무시)
     if (!hasExtra || CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
@@ -685,7 +689,19 @@ public class MiningManager
               dataNBTItem.removeKey(BREAK_SOUND_PITCH);
             }
           }
+          if (dataNBTItem.hasTag(BREAK_PARTICLE) && dataNBTItem.getType(BREAK_PARTICLE) == NBTType.NBTTagString)
+          {
+            breakParticle = dataNBTItem.getString(BREAK_PARTICLE);
+            if (removeKeys)
+            {
+              dataNBTItem.removeKey(BREAK_PARTICLE);
+            }
+          }
           NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(dataItem), CucumberyTag.EXTRA_TAGS_KEY);
+          if (removeKeys)
+          {
+            dataNBTItem.removeKey("url");
+          }
           if (removeKeys && NBTAPI.arrayContainsValue(extraTag, ExtraTag.PRESERVE_BLOCK_NBT))
           {
             dataNBTItem.getCompound(CucumberyTag.KEY_MAIN).getStringList(CucumberyTag.EXTRA_TAGS_KEY).removeIf(s -> s.equals(ExtraTag.PRESERVE_BLOCK_NBT.toString()));
@@ -1140,7 +1156,7 @@ public class MiningManager
               Constant.Sosu2.format(miningFortune * 100), Constant.Sosu2Force.format(Variable.customMiningProgress.getOrDefault(player.getUniqueId(), 0d) * 100d) + "%");
     }
 
-    return new MiningResult(canMine, toolSpeed, miningSpeed, miningSpeedBeforeHaste, blockHardness, miningFortune, expToDrop, toolTier, blockTier, regenCooldown, drop, breakSound, breakCustomSound, breakSoundVolume, breakSoundPitch);
+    return new MiningResult(canMine, toolSpeed, miningSpeed, miningSpeedBeforeHaste, blockHardness, miningFortune, expToDrop, toolTier, blockTier, regenCooldown, drop, breakSound, breakCustomSound, breakSoundVolume, breakSoundPitch, breakParticle);
   }
 
   public static float miningExp(@NotNull Material blockType)

@@ -58,6 +58,8 @@ import com.jho5245.cucumbery.listeners.vehicle.VehicleDamage;
 import com.jho5245.cucumbery.listeners.vehicle.VehicleDestroy;
 import com.jho5245.cucumbery.listeners.vehicle.VehicleExit;
 import com.jho5245.cucumbery.listeners.world.EntitiesLoad;
+import com.jho5245.cucumbery.listeners.world.chunk.PlayerChunkLoad;
+import com.jho5245.cucumbery.listeners.world.chunk.PlayerChunkUnload;
 import com.jho5245.cucumbery.util.addons.ProtocolLibManager;
 import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
@@ -87,10 +89,8 @@ import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
@@ -294,6 +294,26 @@ public class Cucumbery extends JavaPlugin
           itemFrame.setItem(ItemLore.setItemLore(itemStack));
         }
       }
+      if (using_ProtocolLib)
+      {
+        for (Chunk chunk : world.getLoadedChunks())
+        {
+          BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
+          YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
+          ConfigurationSection root = cfg.getRoot();
+          if (root != null)
+          {
+            for (String key : root.getKeys(false))
+            {
+              Location location = ChunkConfig.stringToLocation(world, key);
+              if (location != null)
+              {
+                BlockPlaceDataConfig.spawnItemDisplay(location);
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -303,6 +323,21 @@ public class Cucumbery extends JavaPlugin
     for (Player player : Bukkit.getOnlinePlayers())
     {
       CustomEffectManager.addEffect(player, CustomEffectType.INVINCIBLE_PLUGIN_RELOAD);
+    }
+    if (using_ProtocolLib)
+    {
+      BlockPlaceDataConfig.ITEM_DISPLAY_MAP.keySet().forEach(location -> {
+        String[] split = location.split("_");
+        try
+        {
+          Location location1 = new Location(Bukkit.getWorld(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
+          BlockPlaceDataConfig.despawnItemDisplay(location1);
+        }
+        catch (Exception e)
+        {
+          e.printStackTrace();
+        }
+      });
     }
     Initializer.saveUserData();
     BlockPlaceDataConfig.saveAll();
@@ -906,6 +941,9 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new VehicleExit());
     // listener.world
     Initializer.registerEvent(new EntitiesLoad());
+    // listener.world.chunk
+    Initializer.registerEvent(new PlayerChunkLoad());
+    Initializer.registerEvent(new PlayerChunkUnload());
     // listener.addon.quickshop
     if (using_QuickShop)
     {

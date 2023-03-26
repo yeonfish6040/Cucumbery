@@ -131,6 +131,7 @@ com\jho5245\cucumbery\util\storage\no_groups\ItemStackBuilder.class
 com\jho5245\cucumbery\util\storage\no_groups\ItemCategory$1.class
 com\jho5245\cucumbery\listeners\entity\no_groups\FireworkExplode.class
 com\jho5245\cucumbery\util\josautil\JosaFormatter$EnglishNumberJongSungDetector.class
+com\jho5245\cucumbery\listeners\world\chunk\PlayerChunkUnload.class
 com\jho5245\cucumbery\commands\brigadier\CommandEffect2.class
 com\jho5245\cucumbery\deathmessages\ConditionChecker.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerLecternPageChange.class
@@ -369,6 +370,7 @@ com\jho5245\cucumbery\util\storage\data\Constant$AllPlayer.class
 com\jho5245\cucumbery\listeners\entity\no_groups\EntityTarget.class
 com\jho5245\cucumbery\listeners\entity\no_groups\EntityRemoveFromWorld.class
 com\jho5245\cucumbery\listeners\entity\no_groups\ProjectileLaunch.class
+com\jho5245\cucumbery\listeners\world\chunk\PlayerChunkLoad.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerElytraBoost.class
 com\jho5245\cucumbery\listeners\inventory\InventoryOpen.class
 com\jho5245\cucumbery\listeners\server\ServerListPing.class
@@ -513,7 +515,6 @@ com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantWarmTouch.cl
 com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantVanishingTouch.class
 com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantSmeltingTouch.class
 com\jho5245\cucumbery\listeners\inventory\PrepareAnvil$1.class
-com\jho5245\cucumbery\util\addons\ProtocolLibManager$4.class
 com\jho5245\cucumbery\util\no_groups\ColorUtil$ColorPattern.class
 com\jho5245\cucumbery\util\itemlore\ItemLore2BlockState$1.class
 com\jho5245\cucumbery\listeners\entity\no_groups\ProjectileHit.class

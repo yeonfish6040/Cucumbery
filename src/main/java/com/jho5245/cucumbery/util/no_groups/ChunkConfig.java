@@ -90,9 +90,22 @@ public abstract class ChunkConfig
     }
     customConfig.saveConfig();
   }
-  protected String locationToString(@NotNull Location location)
+  public static String locationToString(@NotNull Location location)
   {
     return location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
+  }
+
+  public static Location stringToLocation(@NotNull World world, String key)
+  {
+    String[] split = key.split("_");
+    try
+    {
+      return new Location(world, Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+    }
+    catch (Exception e)
+    {
+      return null;
+    }
   }
 
   @NotNull

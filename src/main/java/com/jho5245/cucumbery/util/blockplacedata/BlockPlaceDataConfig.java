@@ -1,19 +1,40 @@
 package com.jho5245.cucumbery.util.blockplacedata;
 
+import com.comphenix.protocol.PacketType.Play.Server;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.utility.MinecraftReflection;
+import com.comphenix.protocol.wrappers.WrappedDataValue;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
+import com.google.common.collect.Lists;
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.ChunkConfig;
-import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
-import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.no_groups.*;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.NBTType;
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class BlockPlaceDataConfig extends ChunkConfig
 {
@@ -75,6 +96,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
     {
       blockPlaceDataConfig.set(location, null);
     }
+    despawnItemDisplay(new ArrayList<>(Bukkit.getOnlinePlayers()), location);
   }
 
   @Nullable
@@ -156,5 +178,208 @@ public class BlockPlaceDataConfig extends ChunkConfig
   {
     String value = o instanceof ItemStack itemStack ? ItemSerializer.serialize(itemStack) : o == null ? null : o.toString();
     getConfig().set(locationToString(location), value);
+    if (o != null)
+    {
+      spawnItemDisplay(location);
+    }
+  }
+
+  public static final HashMap<String, Set<Integer>> ITEM_DISPLAY_MAP = new HashMap<>();
+
+  public static void spawnItemDisplay(@NotNull Location location)
+  {
+    spawnItemDisplay(new ArrayList<>(Bukkit.getOnlinePlayers()), location);
+  }
+
+  public static void spawnItemDisplay(@NotNull Player player, @NotNull Location location)
+  {
+    spawnItemDisplay(Collections.singletonList(player), location);
+  }
+
+  public static void spawnItemDisplay(@NotNull Collection<Player> players, @NotNull Location location)
+  {
+    if (!Cucumbery.using_ProtocolLib)
+    {
+      return;
+    }
+    ItemStack itemStack = getItem(location);
+    if (!ItemStackUtil.itemExists(itemStack))
+    {
+      return;
+    }
+    NBTItem nbtItem = new NBTItem(itemStack);
+    String item = nbtItem.hasTag("item") && nbtItem.getType("item") == NBTType.NBTTagString ? nbtItem.getString("item") : null;
+    String url = nbtItem.hasTag("url") && nbtItem.getType("url") == NBTType.NBTTagString ? nbtItem.getString("url") : null;
+    if (item == null && url == null)
+    {
+      return;
+    }
+    NBTCompound transformation = nbtItem.getOrCreateCompound("transformation");
+
+    NBTList<Float> scale = transformation.getFloatList("scale");
+    float scaleX = scale != null && scale.size() == 3 ? scale.get(0) : 1f,
+            scaleY = scale != null && scale.size() == 3 ? scale.get(1) : 1f,
+            scaleZ = scale != null && scale.size() == 3 ? scale.get(2) : 1f;
+
+    NBTList<Float> translation = transformation.getFloatList("translation");
+    float translationX = translation != null && translation.size() == 3 ? translation.get(0) : 0f,
+            translationY = translation != null && translation.size() == 3 ? translation.get(1) : 0f,
+            translationZ = translation != null && translation.size() == 3 ? translation.get(2) : 0f;
+
+    NBTList<Float> rotation = transformation.getFloatList("rotation");
+    float rotationX = rotation != null && rotation.size() == 2 ? rotation.get(0) : 0f,
+            rotationY = rotation != null && rotation.size() == 2 ? rotation.get(1) : 0f;
+
+    NBTCompound brightness = nbtItem.getOrCreateCompound("brightness");
+    int brightnessBlock = brightness.hasTag("block") && brightness.getType("block") == NBTType.NBTTagInt ? brightness.getInteger("block") : -1,
+            brightnessSky = brightness.hasTag("sky") && brightness.getType("sky") == NBTType.NBTTagInt ? brightness.getInteger("sky") : -1;
+
+    Boolean glowing = nbtItem.hasTag("Glowing") && nbtItem.getType("Glowing") == NBTType.NBTTagByte ? nbtItem.getBoolean("Glowing") : null;
+
+    int glowColorOverride = nbtItem.hasTag("glow_color_override") && nbtItem.getType("glow_color_override") == NBTType.NBTTagInt ? nbtItem.getInteger("glow_color_override") : -1;
+
+    ItemStack displayItemStack = item != null ? ItemStackUtil.createItemStack(Bukkit.getConsoleSender(), item, false) : new ItemStack(Material.PLAYER_HEAD);
+    if (item == null)
+    {
+      SkullMeta skullMeta = (SkullMeta) displayItemStack.getItemMeta();
+      displayItemStack.setItemMeta(ItemStackUtil.setTexture(skullMeta, url));
+    }
+    if (!ItemStackUtil.itemExists(displayItemStack))
+    {
+      try
+      {
+        Bukkit.getItemFactory().createItemStack(item == null ? "" : item);
+      }
+      catch (Exception e)
+      {
+        MessageUtil.sendWarn(Bukkit.getConsoleSender(), "잘못된 아이템 데이터가 있습니다: " + item);
+        return;
+      }
+      displayItemStack = new ItemStack(Material.STONE);
+    }
+    ItemLore.setItemLore(displayItemStack);
+    int entityId = Method.random(1, Integer.MAX_VALUE);
+    String key = location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
+    Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(key, new HashSet<>());
+    integerSet.add(entityId);
+    ITEM_DISPLAY_MAP.put(key, integerSet);
+    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    PacketContainer packet = protocolManager.createPacket(Server.SPAWN_ENTITY);
+    packet.getIntegers().write(0, entityId);
+    packet.getEntityTypeModifier().write(0, EntityType.ITEM_DISPLAY);
+    // Set location
+    packet.getDoubles().write(0, location.getX() + 0.50005);
+    packet.getDoubles().write(1, location.getY() + 0.5001);
+    packet.getDoubles().write(2, location.getZ() + 0.50005);
+    // Set yaw/pitch
+    packet.getBytes().write(0, (byte) (rotationY * 256f / 360f));
+    packet.getBytes().write(1, (byte) (rotationX * 256f / 360f));
+    // Set UUID
+    packet.getUUIDs().write(0, UUID.randomUUID());
+    for (Player player : players)
+    {
+      double distance = Method2.distance(location, player.getLocation());
+      if (distance == -1 || distance > 64)
+      {
+        return;
+      }
+      protocolManager.sendServerPacket(player, packet);
+      PacketContainer edit = protocolManager.createPacket(Server.ENTITY_METADATA);
+      StructureModifier<List<WrappedDataValue>> watchableAccessor = edit.getDataValueCollectionModifier();
+      List<WrappedDataValue> values = Lists.newArrayList(
+              new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(translationX, 0.50005f + translationY, translationZ)),
+              new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(2.001f * scaleX, 2.001f * scaleY, 2.001f * scaleZ)),
+              new WrappedDataValue(22, Registry.getItemStackSerializer(false), MinecraftReflection.getMinecraftItemStack(displayItemStack))
+      );
+      if (glowing != null)
+      {
+        values.add(new WrappedDataValue(0, Registry.get(Byte.class), (byte) 0x40));
+      }
+      if (brightnessBlock != -1 && brightnessSky != -1)
+      {
+        values.add(new WrappedDataValue(15, Registry.get(Integer.class), brightnessBlock << 4 | brightnessSky << 20));
+      }
+      if (glowColorOverride > -1)
+      {
+        values.add(new WrappedDataValue(21, Registry.get(Integer.class), glowColorOverride));
+      }
+      watchableAccessor.write(0, values);
+      edit.getIntegers().write(0, entityId);
+      protocolManager.sendServerPacket(player, edit);
+    }
+  }
+
+  public static void despawnItemDisplay(@NotNull Location location)
+  {
+    despawnItemDisplay(new ArrayList<>(Bukkit.getOnlinePlayers()), location);
+  }
+
+  public static void despawnItemDisplay(@NotNull Player player, @NotNull Location location)
+  {
+    despawnItemDisplay(Collections.singletonList(player), location);
+  }
+
+  public static void despawnItemDisplay(@NotNull Collection<Player> players, @NotNull Location location)
+  {
+    if (!Cucumbery.using_ProtocolLib)
+    {
+      return;
+    }
+    for (Player player : players)
+    {
+      double distance = Method2.distance(location, player.getLocation());
+      if (distance == -1 || distance > 64)
+      {
+        return;
+      }
+      Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), new HashSet<>());
+      for (int id : integerSet)
+      {
+        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+        PacketContainer remove = protocolManager.createPacket(Server.ENTITY_DESTROY);
+        remove.getIntLists().write(0, List.of(id));
+        protocolManager.sendServerPacket(player, remove);
+      }
+    }
+  }
+
+  public static void onPlayerChunkLoad(PlayerChunkLoadEvent event)
+  {
+    Player player = event.getPlayer();
+    Chunk chunk = event.getChunk();
+    BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
+    YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
+    ConfigurationSection root = cfg.getRoot();
+    if (root != null)
+    {
+      for (String key : root.getKeys(false))
+      {
+        Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
+        if (location != null)
+        {
+          BlockPlaceDataConfig.spawnItemDisplay(player, location);
+        }
+      }
+    }
+  }
+
+  public static void onPlayerChunkUnload(PlayerChunkUnloadEvent event)
+  {
+    Player player = event.getPlayer();
+    Chunk chunk = event.getChunk();
+    BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
+    YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
+    ConfigurationSection root = cfg.getRoot();
+    if (root != null)
+    {
+      for (String key : root.getKeys(false))
+      {
+        Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
+        if (location != null)
+        {
+          BlockPlaceDataConfig.despawnItemDisplay(player, location);
+        }
+      }
+    }
   }
 }

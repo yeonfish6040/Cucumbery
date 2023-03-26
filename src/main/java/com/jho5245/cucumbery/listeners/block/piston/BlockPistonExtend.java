@@ -77,7 +77,7 @@ public class BlockPistonExtend implements Listener
         }
       }, 0L);
 
-      blockPlaceDataConfig.set(beforeLocation, null);
+      BlockPlaceDataConfig.removeData(beforeLocation);
     }
   }
 }

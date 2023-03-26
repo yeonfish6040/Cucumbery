@@ -703,7 +703,6 @@ public class BlockBreak implements Listener
       event.setDropItems(false);
       drops.forEach(item -> block.getLocation().getWorld().dropItemNaturally(block.getLocation(), item));
     }
-
-    blockPlaceData.set(location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), null);
+    BlockPlaceDataConfig.removeData(location);
   }
 }

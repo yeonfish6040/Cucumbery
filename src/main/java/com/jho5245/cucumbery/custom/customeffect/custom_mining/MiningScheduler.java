@@ -464,11 +464,40 @@ public class MiningScheduler
           // 채굴 모드 2, 3은 실제로 블록이 부숴졌으므로 블록이 부서지는 입자 출력
           if (mode2 || mode3)
           {
-            BlockData blockData = block.getBlockData();
+            @Nullable BlockData blockData = block.getBlockData();
             if (Variable.fakeBlocks.containsKey(location))
             {
               blockData = Variable.fakeBlocks.get(location);
             }
+            String breakParticle = miningResult.breakParticle();
+            ItemStack breakParticleItem = new ItemStack(Material.STONE);
+            if (breakParticle != null)
+            {
+              if (breakParticle.startsWith("block:"))
+              {
+                try
+                {
+                  blockData = Bukkit.createBlockData(breakParticle.substring(6));
+                }
+                catch (Exception e)
+                {
+                  MessageUtil.sendWarn(Bukkit.getConsoleSender(), "커스텀 채광 처리 도중 잘못된 블록 데이터 감지! " + breakParticle);
+                }
+              }
+              else if (breakParticle.startsWith("item:"))
+              {
+                blockData = null;
+                try
+                {
+                  breakParticleItem = Bukkit.getItemFactory().createItemStack(breakParticle.substring(5));
+                }
+                catch (Exception e)
+                {
+                  MessageUtil.sendWarn(Bukkit.getConsoleSender(), "커스텀 채광 처리 도중 잘못된 아이템 감지! " + breakParticle);
+                }
+              }
+            }
+            ItemLore.setItemLore(breakParticleItem, ItemLoreView.of(player));
             VoxelShape voxelShape = block.getCollisionShape();
             Collection<BoundingBox> boundingBoxes = voxelShape.getBoundingBoxes();
             int overridenSize = -1;
@@ -511,17 +540,34 @@ public class MiningScheduler
                   maxY -= 0.2 * diffY;
                   minZ += 0.2 * diffZ;
                   maxZ -= 0.2 * diffZ;
-                  online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(minX, minY, minZ), count, 0, 0, 0, 0, blockData);
+                  if (blockData == null)
+                  {
+                    online.spawnParticle(Particle.ITEM_CRACK, location.clone().add(minX, minY, minZ), count, 0, 0, 0, 0.05, breakParticleItem);
 
-                  online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(maxX, minY, minZ), count, 0, 0, 0, 0, blockData);
-                  online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(minX, maxY, minZ), count, 0, 0, 0, 0, blockData);
-                  online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(minX, minY, maxZ), count, 0, 0, 0, 0, blockData);
+                    online.spawnParticle(Particle.ITEM_CRACK, location.clone().add(maxX, minY, minZ), count, 0, 0, 0, 0.05, breakParticleItem);
+                    online.spawnParticle(Particle.ITEM_CRACK, location.clone().add(minX, maxY, minZ), count, 0, 0, 0, 0.05, breakParticleItem);
+                    online.spawnParticle(Particle.ITEM_CRACK, location.clone().add(minX, minY, maxZ), count, 0, 0, 0, 0.05, breakParticleItem);
 
-                  online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(maxX, maxY, minZ), count, 0, 0, 0, 0, blockData);
-                  online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(maxX, minY, maxZ), count, 0, 0, 0, 0, blockData);
-                  online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(minX, maxY, maxZ), count, 0, 0, 0, 0, blockData);
+                    online.spawnParticle(Particle.ITEM_CRACK, location.clone().add(maxX, maxY, minZ), count, 0, 0, 0, 0.05, breakParticleItem);
+                    online.spawnParticle(Particle.ITEM_CRACK, location.clone().add(maxX, minY, maxZ), count, 0, 0, 0, 0.05, breakParticleItem);
+                    online.spawnParticle(Particle.ITEM_CRACK, location.clone().add(minX, maxY, maxZ), count, 0, 0, 0, 0.05, breakParticleItem);
 
-                  online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(maxX, maxY, maxZ), count, 0, 0, 0, 0, blockData);
+                    online.spawnParticle(Particle.ITEM_CRACK, location.clone().add(maxX, maxY, maxZ), count, 0, 0, 0, 0.05, breakParticleItem);
+                  }
+                  else
+                  {
+                    online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(minX, minY, minZ), count, 0, 0, 0, 0, blockData);
+
+                    online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(maxX, minY, minZ), count, 0, 0, 0, 0, blockData);
+                    online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(minX, maxY, minZ), count, 0, 0, 0, 0, blockData);
+                    online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(minX, minY, maxZ), count, 0, 0, 0, 0, blockData);
+
+                    online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(maxX, maxY, minZ), count, 0, 0, 0, 0, blockData);
+                    online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(maxX, minY, maxZ), count, 0, 0, 0, 0, blockData);
+                    online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(minX, maxY, maxZ), count, 0, 0, 0, 0, blockData);
+
+                    online.spawnParticle(Particle.BLOCK_CRACK, location.clone().add(maxX, maxY, maxZ), count, 0, 0, 0, 0, blockData);
+                  }
                 }
               }
             }

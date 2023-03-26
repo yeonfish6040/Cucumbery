@@ -45,8 +45,7 @@ public class BlockPistonRetract implements Listener
         BlockPlaceDataConfig blockPlaceDataConfig1 = BlockPlaceDataConfig.getInstance(afterLocation.getChunk());
         blockPlaceDataConfig1.set(afterLocation, beforeItemString);
       }, 0L);
-
-      blockPlaceDataConfig.set(beforeLocation, null);
+      BlockPlaceDataConfig.removeData(beforeLocation);
     }
   }
 }

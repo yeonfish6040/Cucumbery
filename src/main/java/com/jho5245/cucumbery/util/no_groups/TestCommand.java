@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.no_groups;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -9,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -66,6 +68,46 @@ public class TestCommand implements CucumberyCommandExecutor
 //      });
       if (sender instanceof Player player)
       {
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
+        Location location = CommandArgumentUtil.location(player, args[0], true, true);
+        switch (args[1])
+        {
+          case "spawn" -> {
+            BlockPlaceDataConfig.spawnItemDisplay(location);
+            MessageUtil.broadcastDebug(location + " 위치에 블록 표시함");
+          }
+          case "despawn" -> {
+            BlockPlaceDataConfig.despawnItemDisplay(location);
+            MessageUtil.broadcastDebug(location + " 위치에 블록 숨김");
+          }
+        }
+//        String url = args[1];
+//        int entityId = Bukkit.getUnsafe().nextEntityId();
+//        MessageUtil.broadcastDebug("id:" + entityId);
+//        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+//        PacketContainer packet = protocolManager.createPacket(Server.SPAWN_ENTITY);
+//        packet.getIntegers().write(0, entityId);
+//        packet.getEntityTypeModifier().write(0, EntityType.ITEM_DISPLAY);
+//        // Set location
+//        packet.getDoubles().write(0, location.getX() + 0.5);
+//        packet.getDoubles().write(1, location.getY() + 0.5);
+//        packet.getDoubles().write(2, location.getZ() + 0.5);
+//        // Set UUID
+//        packet.getUUIDs().write(0, UUID.randomUUID());
+//        for (Player online : Bukkit.getOnlinePlayers())
+//        {
+//          protocolManager.sendServerPacket(online, packet);
+//          PacketContainer edit = protocolManager.createPacket(Server.ENTITY_METADATA);
+//          StructureModifier<List<WrappedDataValue>> watchableAccessor = edit.getDataValueCollectionModifier();
+//          List<WrappedDataValue> values = Lists.newArrayList(
+//                  new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.50005f, 0f)),
+//                  new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(2.001f, 2.001f, 2.001f)),
+//                  new WrappedDataValue(22, Registry.getItemStackSerializer(false), MinecraftReflection.getMinecraftItemStack(itemStack))
+//          );
+//          watchableAccessor.write(0, values);
+//          edit.getIntegers().write(0, entityId);
+//          protocolManager.sendServerPacket(online, edit);
+//        }
 //        ItemStack itemStack = new ItemStack(Material.TNT);
 //        ItemMeta itemMeta = itemStack.getItemMeta();
 //        TranslatableComponent component = ComponentUtil.translate("wa sans");
