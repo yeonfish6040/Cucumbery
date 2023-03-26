@@ -250,7 +250,7 @@ public class Variable
   /**
    * {@link org.bukkit.entity.Player}가 {@link CustomEffectTypeCustomMining#CUSTOM_MINING_SPEED_MODE} 효과를 가지고 있을 때 사용할 블록 파괴 진행도를 저장할 맵
    */
-  public static HashMap<UUID, Float> customMiningProgress = new HashMap<>();
+  public static HashMap<UUID, Double> customMiningProgress = new HashMap<>();
 
   public static Set<UUID> customMiningTierAlertCooldown = new HashSet<>();
 

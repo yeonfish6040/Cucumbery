@@ -15,7 +15,6 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
@@ -25,8 +24,6 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -37,6 +34,8 @@ import java.lang.reflect.Constructor;
 
 public class ProtocolLibManager
 {
+//  private static final List<Item> items = new ArrayList<>();
+//  private static final List<BukkitTask> tasks = new ArrayList<>();
   public static void manage()
   {
     ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
@@ -83,31 +82,34 @@ public class ProtocolLibManager
         }
       }
     });
-    protocolManager.addPacketListener(new PacketAdapter(Cucumbery.getPlugin(), ListenerPriority.NORMAL, Server.SPAWN_ENTITY)
-    {
-      @Override
-      public void onPacketSending(PacketEvent event)
-      {
-        if (!Cucumbery.using_ProtocolLib)
-        {
-          return;
-        }
-        PacketContainer packet = event.getPacket();
-        if (packet.getType() == Server.SPAWN_ENTITY)
-        {
-          EntityType entityType = packet.getEntityTypeModifier().read(0);
-          if (entityType == EntityType.DROPPED_ITEM)
-          {
-            int id = packet.getIntegers().read(0);
-            Entity entity = Method2.getEntityById(id);
-            if (entity instanceof Item item)
-            {
-              Method.updateItem(item);
-            }
-          }
-        }
-      }
-    });
+//    protocolManager.addPacketListener(new PacketAdapter(Cucumbery.getPlugin(), ListenerPriority.NORMAL, Server.SPAWN_ENTITY)
+//    {
+//      @Override
+//      public void onPacketSending(PacketEvent event)
+//      {
+//        if (!Cucumbery.using_ProtocolLib)
+//        {
+//          return;
+//        }
+//        PacketContainer packet = event.getPacket();
+//        if (packet.getType() == Server.SPAWN_ENTITY)
+//        {
+//          EntityType entityType = packet.getEntityTypeModifier().read(0);
+//          if (entityType == EntityType.DROPPED_ITEM)
+//          {
+//            int id = packet.getIntegers().read(0);
+//            Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
+//            {
+//              Item item = (Item) Method2.getEntityById(id);
+//              if (item != null)
+//              {
+//                Method.updateItem(item);
+//              }
+//            }, 0L);
+//          }
+//        }
+//      }
+//    });
     protocolManager.addPacketListener(new PacketAdapter(Cucumbery.getPlugin(), ListenerPriority.NORMAL, Server.ENTITY_EFFECT)
     {
       @Override

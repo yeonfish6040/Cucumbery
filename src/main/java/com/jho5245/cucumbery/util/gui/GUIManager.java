@@ -174,8 +174,8 @@ public class GUIManager
       list.add("&c현재 바닥에 떨어진 아이템 이름을 볼 수 없는 상태입니다");
     }
 
-    inv.setItem(32, CreateItemStack.toggleItem(getBool(player, UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME), "&b바닥에 떨어진 아이템 이름 표시",
-            list, trueLore, falseLore));
+//    inv.setItem(32, CreateItemStack.toggleItem(getBool(player, UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME), "&b바닥에 떨어진 아이템 이름 표시",
+//            list, trueLore, falseLore));
     inv.setItem(33, CreateItemStack.toggleItem(getBool(player, UserData.SHOW_DAMAGE_INDICATOR), "&b대미지 숫자 표시",
             List.of("&7몬스터 혹은 다른 플레이어가 대미지를 입을 때", "&7해당 개체의 상단에 대미지 숫자를 표시합니다"), trueLore, falseLore));
     String itemDropMode = switch (UserData.ITEM_DROP_MODE.getString(player.getUniqueId()))

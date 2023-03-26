@@ -10,6 +10,7 @@ import org.bukkit.*;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -626,21 +627,46 @@ public class CustomConfig
           }
           case SHOW_DROPPED_ITEM_CUSTOM_NAME, FORCE_HIDE_DROPPED_ITEM_CUSTOM_NAME -> Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
           {
+            if (!tasks.isEmpty())
+            {
+              tasks.forEach(BukkitTask::cancel);
+              tasks.clear();
+            }
+            if (!items.isEmpty())
+            {
+              items.clear();
+            }
             Location location = player.getLocation();
             for (Chunk chunk : location.getWorld().getLoadedChunks())
             {
               for (Entity entity : chunk.getEntities())
               {
-                if (entity.getLocation().distance(location) <= 32d && entity instanceof Item item)
+                if (entity instanceof Item item && entity.getLocation().distance(location) <= 32d)
                 {
-                  Method.updateItem(item);
+                  items.add(item);
                 }
               }
             }
+            BukkitTask bukkitTask = Bukkit.getScheduler().runTaskTimerAsynchronously(Cucumbery.getPlugin(), () -> {
+              items.removeIf(item -> !item.isValid());
+              if (!items.isEmpty())
+              {
+                Method.updateItem(items.get(0));
+                items.remove(0);
+              }
+              if (items.isEmpty() && !tasks.isEmpty())
+              {
+                tasks.forEach(BukkitTask::cancel);
+                tasks.clear();
+              }
+            }, 0L, 1L);
+            tasks.add(bukkitTask);
           }, 0L);
         }
       }
     }
+    private final List<BukkitTask> tasks = new ArrayList<>();
+    private final List<Item> items = new ArrayList<>();
 
     public void set(OfflinePlayer player, Object value)
     {

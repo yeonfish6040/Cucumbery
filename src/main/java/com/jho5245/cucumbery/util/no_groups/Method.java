@@ -1942,6 +1942,10 @@ public class Method extends SoundPlay
    */
   public static void updateItem(@NotNull Item itemEntity, int mergeAmount)
   {
+    if (!itemEntity.isValid())
+    {
+      return;
+    }
     ItemStack item = itemEntity.getItemStack();
     // 아이템 제거
     {
@@ -1961,9 +1965,10 @@ public class Method extends SoundPlay
       }
       itemEntity.customName(component);
     }
+    NBTCompound itemTag = NBTAPI.getMainCompound(item);
     // 아이템 무적 모드 설정
     {
-      NBTList<String> extraTags = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
+      NBTList<String> extraTags = NBTAPI.getStringList(itemTag, CucumberyTag.EXTRA_TAGS_KEY);
       if (NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.INVULNERABLE))
       {
         itemEntity.setInvulnerable(true);
@@ -1982,7 +1987,7 @@ public class Method extends SoundPlay
     }
     // 이름이 표시되지 않을 아이템이면 표시하지 않고 빠꾸
     {
-      NBTList<String> hideFlags = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.HIDE_FLAGS_KEY);
+      NBTList<String> hideFlags = NBTAPI.getStringList(itemTag, CucumberyTag.HIDE_FLAGS_KEY);
       if (NBTAPI.arrayContainsValue(hideFlags, Constant.CucumberyHideFlag.CUSTOM_NAME))
       {
         itemEntity.setCustomNameVisible(false);
@@ -2011,10 +2016,10 @@ public class Method extends SoundPlay
     }
     // ProtocolLib 사용 시 플레이어마다 아이템 이름 표시를 다르게 함
     // 버그로 인해 비활성화
-    if (Cucumbery.using_ProtocolLib)
-//    if (false)
+//    if (Cucumbery.using_ProtocolLib)
+    if (false)
     {
-      itemEntity.setCustomNameVisible(true);
+      itemEntity.setCustomNameVisible(false);
       Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
       {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
@@ -2022,6 +2027,14 @@ public class Method extends SoundPlay
         {
           for (Player player : Bukkit.getOnlinePlayers())
           {
+            if (!player.getWorld().getName().equals(itemEntity.getWorld().getName()))
+            {
+              continue;
+            }
+            if (player.getLocation().distance(itemEntity.getLocation()) > 100d)
+            {
+              continue;
+            }
             boolean showDrop = UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME.getBoolean(player);
             if (UserData.FORCE_HIDE_DROPPED_ITEM_CUSTOM_NAME.getBoolean(player))
             {

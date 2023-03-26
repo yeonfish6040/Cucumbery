@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.listeners.entity.item;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
@@ -10,6 +11,7 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.event.ClickEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -28,12 +30,10 @@ public class ItemSpawn implements Listener
       return;
     }
     Item entity = event.getEntity();
-    // ProtocolLib에서 아이템 생성 패킷 호출 시 updateItem을 호출함
-
-    // 현재 ProcotolLib에서 SPAWN_ENTITY 패킷을 불러오지 못하는 버그가 있어 임시로 항상 업데이트함
 //    if (!Cucumbery.using_ProtocolLib)
     {
-      Method.updateItem(entity);
+      Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
+              Method.updateItem(entity), 0L);
     }
     ItemStack itemStack = entity.getItemStack();
     NBTItem nbtItem = new NBTItem(itemStack);

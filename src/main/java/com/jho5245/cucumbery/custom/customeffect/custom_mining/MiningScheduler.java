@@ -401,12 +401,12 @@ public class MiningScheduler
         return;
       }
       // 채굴 진행도 처리
-      float origin = Variable.customMiningProgress.getOrDefault(uuid, 0f);
-      float damage = miningResult.miningSpeed() / 20f / miningResult.blockHardness();
+      double origin = Variable.customMiningProgress.getOrDefault(uuid, 0d);
+      double damage = miningResult.miningSpeed() / 20f / miningResult.blockHardness();
       float tps = (float) Math.max(1, Math.min(20, TPSMeter.getTPS()));
       float lagMultiplier = 25f / tps;
       Variable.customMiningProgress.put(uuid, origin + damage * (tps > 16f ? 1 : lagMultiplier));
-      float progress = Variable.customMiningProgress.getOrDefault(uuid, 0f);
+      double progress = Variable.customMiningProgress.getOrDefault(uuid, 0d);
       progress = Math.max(0f, Math.min(1f, progress));
       // 블록이 캐짐
       boolean instaBreak = miningResult.blockHardness() == Float.MIN_VALUE;
@@ -855,8 +855,8 @@ public class MiningScheduler
           } while (MiningScheduler.blockBreakKey.containsValue(random));
           MiningScheduler.blockBreakKey.put(uuid, random);
         }
-        float finalProgress = progress;
-        player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(location, finalProgress, blockBreakKey.get(uuid)));
+        double finalProgress = progress;
+        player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(location, (float) finalProgress, blockBreakKey.get(uuid)));
       }
     }
   }

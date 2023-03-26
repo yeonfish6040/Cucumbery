@@ -194,7 +194,7 @@ public class MiningManager
     // 드롭 경험치
     float expToDrop = 0;
     // 채광 속도 처리
-    float miningSpeed = 0f, miningSpeedBeforeHaste = 0f, speedMultiplier = 1f, finalSpeedMultiplier = 1f, bonusSpeed = 0f;
+    double miningSpeed = 0f, miningSpeedBeforeHaste, speedMultiplier = 1f, finalSpeedMultiplier = 1f, bonusSpeed = 0f;
     // 블록 리젠 속도 (틱)
     int regenCooldown = Math.max(0, Cucumbery.config.getInt("custom-mining.default-ore-regen-in-ticks"));
     // 드롭율 배수
@@ -761,10 +761,14 @@ public class MiningManager
           if (enchantDigSpeedLevel > 0 && (blockTier > 0 || ignoreVanillaModification || block.getDestroySpeed(itemStack, true) > block.getDestroySpeed(itemStack, false)))
           {
             String formula = Cucumbery.config.getString("custom-mining.efficiency", "50*(1+%level%^2)").replace("%level%", enchantDigSpeedLevel + "");
-            float value = 0f;
+            double value = 0d;
             try
             {
-              value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+              value = Double.parseDouble(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+              if (Double.isNaN(value) || Double.isInfinite(value))
+              {
+                throw new NumberFormatException();
+              }
             }
             catch (NumberFormatException e)
             {
@@ -905,18 +909,25 @@ public class MiningManager
         {
           potionHasteLevel = CustomEffectManager.getEffect(player, CustomEffectTypeMinecraft.HASTE).getAmplifier() + 1;
         }
-        String formula = Cucumbery.config.getString("custom-mining.haste", "0.2*%mining_speed%*%level%")
-                .replace("%level%", potionHasteLevel + "").replace("%mining_speed%", miningSpeed + "");
-        float value = 0f;
-        try
+        if (potionHasteLevel > 0)
         {
-          value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+          String formula = Cucumbery.config.getString("custom-mining.haste", "0.2*%mining_speed%*%level%")
+                  .replace("%level%", potionHasteLevel + "").replace("%mining_speed%", Constant.Sosu2rawFormat.format(miningSpeed) + "");
+          double value = 0d;
+          try
+          {
+            value = Double.parseDouble(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+            if (Double.isNaN(value) || Double.isInfinite(value))
+            {
+              throw new NumberFormatException();
+            }
+          }
+          catch (NumberFormatException e)
+          {
+            MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.haste의 값이 잘못 지정되어 있습니다!");
+          }
+          miningSpeed += value;
         }
-        catch (NumberFormatException e)
-        {
-          MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.haste의 값이 잘못 지정되어 있습니다!");
-        }
-        miningSpeed += value;
       }
     }
 
@@ -1097,6 +1108,7 @@ public class MiningManager
     {
       blockHardness = -1f;
     }
+
     miningSpeed = miningSpeed * speedMultiplier * finalSpeedMultiplier + bonusSpeed;
     List<ItemStack> drop = new ArrayList<>();
     int intSide = (int) miningFortune;
@@ -1120,12 +1132,14 @@ public class MiningManager
       toolSpeed = 0f;
       miningSpeed = 0f;
     }
+
     if (UserData.SHOW_PLUGIN_DEV_DEBUG_MESSAGE.getBoolean(player))
     {
       MessageUtil.sendActionBar(player, "IgnoreVanilla: %s, ToolSpeed: %s, MiningSpeed: %s, VanillaSpeed: %s, Hardness: %s, Fortune: %s, Progress: %s", ignoreVanillaModification + "", Constant.Sosu2.format(toolSpeed),
               Constant.Sosu2.format(miningSpeed), Constant.Sosu2.format(block.getDestroySpeed(itemStack, true)), Constant.Sosu2.format(blockHardness),
-              Constant.Sosu2.format(miningFortune * 100), Constant.Sosu2Force.format(Variable.customMiningProgress.getOrDefault(player.getUniqueId(), 0f) * 100d) + "%");
+              Constant.Sosu2.format(miningFortune * 100), Constant.Sosu2Force.format(Variable.customMiningProgress.getOrDefault(player.getUniqueId(), 0d) * 100d) + "%");
     }
+
     return new MiningResult(canMine, toolSpeed, miningSpeed, miningSpeedBeforeHaste, blockHardness, miningFortune, expToDrop, toolTier, blockTier, regenCooldown, drop, breakSound, breakCustomSound, breakSoundVolume, breakSoundPitch);
   }
 
@@ -1284,7 +1298,7 @@ public class MiningManager
     UUID uuid = player.getUniqueId();
     if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
     {
-      Variable.customMiningProgress.put(uuid, 0f);
+      Variable.customMiningProgress.put(uuid, 0d);
       if (!MiningScheduler.blockBreakKey.containsKey(uuid))
       {
         int random;

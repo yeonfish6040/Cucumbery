@@ -2083,10 +2083,10 @@ public class InventoryClick implements Listener
           UserData.SHOW_ACTIONBAR_WHEN_ITEM_IS_COOLDOWN.setToggle(uuid);
           saveConfig = true;
           break;
-        case 32:
-          UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME.setToggle(uuid);
-          saveConfig = true;
-          break;
+//        case 32:
+//          UserData.SHOW_DROPPED_ITEM_CUSTOM_NAME.setToggle(uuid);
+//          saveConfig = true;
+//          break;
         case 33:
           UserData.SHOW_DAMAGE_INDICATOR.setToggle(uuid);
           saveConfig = true;
