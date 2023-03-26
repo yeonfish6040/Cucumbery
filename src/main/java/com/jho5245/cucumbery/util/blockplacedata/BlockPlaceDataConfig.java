@@ -279,7 +279,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
     for (Player player : players)
     {
       double distance = Method2.distance(location, player.getLocation());
-      if (distance == -1 || distance > 64)
+      if (distance == -1)
       {
         return;
       }
@@ -328,7 +328,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
     for (Player player : players)
     {
       double distance = Method2.distance(location, player.getLocation());
-      if (distance == -1 || distance > 64)
+      if (distance == -1)
       {
         return;
       }

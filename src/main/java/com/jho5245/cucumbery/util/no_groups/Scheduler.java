@@ -303,7 +303,7 @@ public class Scheduler
           }
         }
       }
-      catch (ConcurrentModificationException ignored)
+      catch (ConcurrentModificationException | IllegalPluginAccessException ignored)
       {
 
       }

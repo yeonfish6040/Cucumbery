@@ -38,6 +38,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.BlockInventoryHolder;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -594,6 +595,17 @@ public class MiningScheduler
           if (mode3 && block.getState() instanceof BlockInventoryHolder inventoryHolder && !(inventoryHolder instanceof ShulkerBox))
           {
             Inventory inventory = inventoryHolder.getInventory();
+            if (inventory instanceof DoubleChestInventory doubleChestInventory)
+            {
+              if (block.getBlockData() instanceof Chest chest)
+              {
+                switch (chest.getType())
+                {
+                  case LEFT -> inventory = doubleChestInventory.getRightSide();
+                  case RIGHT -> inventory = doubleChestInventory.getLeftSide();
+                }
+              }
+            }
             for (ItemStack content : inventory.getContents())
             {
               if (ItemStackUtil.itemExists(content))

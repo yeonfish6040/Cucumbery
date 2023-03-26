@@ -159,7 +159,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery update 명령어 사용", sender));
         if (!isTryingUpdating.isEmpty())
         {
-          MessageUtil.sendError(sender, "이미 업데이트를 확인하는 중입니다");
+          MessageUtil.sendError(sender, "이미 업데이트를 진행하는 중입니다");
           return true;
         }
         isTryingUpdating.add("");
@@ -171,13 +171,13 @@ public class CommandCucumbery implements CucumberyCommandExecutor
           try
           {
             version = Updater.getLatest();
-            isTryingUpdating.clear();
           }
           catch (Exception e)
           {
             // 오류: 버전 확인 실패
             MessageUtil.sendError(sender, "버전 확인을 실패하였습니다 (%s)", e.getMessage());
             executor.shutdown();
+            isTryingUpdating.clear();
             return true;
           }
           if (Updater.isLatest())
@@ -185,6 +185,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
             // 경고: 이미 최신 버전임
             MessageUtil.info(sender, "이미 플러그인이 최신 버전입니다");
             executor.shutdown();
+            isTryingUpdating.clear();
             return true;
           }
           // 정보: 플러그인 버전
@@ -203,6 +204,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
             // 오류: 파일 다운로드 실패
             MessageUtil.sendError(sender, "파일 다운로드 실패 (%s)", e.getMessage());
             executor.shutdown();
+            isTryingUpdating.clear();
             return true;
           }
           // 정보: 파일 다운로드 완료
@@ -218,6 +220,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
             // 오류: 업데이트 실패
             MessageUtil.sendError(sender, "플러그인 업데이트 실패 (%s)", e.getMessage());
             executor.shutdown();
+            isTryingUpdating.clear();
             return true;
           }
           // 정보: 업데이트 완료
@@ -225,7 +228,6 @@ public class CommandCucumbery implements CucumberyCommandExecutor
           executor.shutdown();
           return true;
         });
-
         executor.shutdown();
       }
       case "update-quickshop-item" ->
