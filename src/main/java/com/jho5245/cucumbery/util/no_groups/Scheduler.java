@@ -351,8 +351,15 @@ public class Scheduler
       CustomEffectScheduler.masterOfFishing(player);
       CustomEffectScheduler.dynamicLight(player);
       CustomEffectScheduler.gliding(player);
-      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              CustomEffectScheduler.spreadAndVariation(player), 0L);
+      try
+      {
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                CustomEffectScheduler.spreadAndVariation(player), 0L);
+      }
+      catch (IllegalPluginAccessException ignored)
+      {
+
+      }
       CustomEffectScheduler.fancySpotlight(player);
       CustomEffectScheduler.newbieShield(player);
       CustomEffectScheduler.darknessTerror(player);

@@ -220,7 +220,11 @@ public class ItemInfo
           MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, Constant.THE_COLOR_HEX + "닉네임 : rg255,204;" + (name != null ? name : "&c없음"));
           MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, Constant.THE_COLOR_HEX + "UUID : rg255,204;" + (uuid != null ? uuid : "&c없음"));
           MessageUtil.sendMessage(sender, Prefix.INFO_ITEMSTORAGE, Constant.THE_COLOR_HEX + "url : %s", url != null ?
-                  Component.text(url).color(NamedTextColor.YELLOW).hoverEvent(ComponentUtil.translate("chat.link.open")).clickEvent(ClickEvent.openUrl(url)) : "&c없음");
+                  Component.text(url).color(NamedTextColor.YELLOW)
+                          .hoverEvent(ComponentUtil.translate("chat.link.open")
+                          .append(Component.text("\n"))
+                          .append(ComponentUtil.translate("시프트 클릭하여 hash 채팅창에 입력")))
+                          .clickEvent(ClickEvent.openUrl(url)).insertion(url.split("texture/")[1]) : "&c없음");
           break;
         case POTION:
         case SPLASH_POTION:
