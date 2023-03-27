@@ -4,9 +4,11 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.BlastingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +51,11 @@ public class RecipeManager
     register(new FurnaceRecipe(of("cucumberite_ingot_from_furnace_2"), CustomMaterial.CUCUMBERITE_INGOT.create(false), new ExactChoice(CustomMaterial.CUCUMBERITE_ORE.create(false)), 1f, 400));
     register(new BlastingRecipe(of("cucumberite_ingot_from_blast_furnace"), CustomMaterial.CUCUMBERITE_INGOT.create(false), new ExactChoice(CustomMaterial.CUCUMBERITE_ORE.create()), 1f, 200));
     register(new BlastingRecipe(of("cucumberite_ingot_from_blast_furnace_2"), CustomMaterial.CUCUMBERITE_INGOT.create(false), new ExactChoice(CustomMaterial.CUCUMBERITE_ORE.create(false)), 1f, 200));
+
+    register(new FurnaceRecipe(of("tnt_from_furnace"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create()), 2f, 100));
+    register(new FurnaceRecipe(of("tnt_from_furnace_2"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create(false)), 2f, 100));
+    register(new BlastingRecipe(of("tnt_from_blast_furnace"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create()), 2f, 50));
+    register(new BlastingRecipe(of("tnt_from_blast_furnace_2"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create(false)), 2f, 50));
   }
 
   @NotNull

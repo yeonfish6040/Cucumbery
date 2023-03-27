@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum CustomMaterial implements Translatable
 {
+  WNYNYA_ORE(Material.PLAYER_HEAD, "&fkey:block.cucumbery.wnynya_ore|완YEE 광석", Rarity.RARE, "itemGroup.natural"),
   AMBER(Material.ORANGE_DYE, "&ikey:item.cucumbery.amber|호박", Rarity.UNIQUE),
   ARROW_CRIT(Material.ARROW, "&ikey:item.cucumbery.arrow_crit|치명적인 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   ARROW_EXPLOSIVE(Material.ARROW, "&i폭발성 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
@@ -464,6 +465,16 @@ public enum CustomMaterial implements Translatable
               case TITANIUM_ORE -> TITANIUM_INGOT;
               case SHROOMITE_ORE -> SHROOMITE_INGOT;
               case CUCUMBERITE_ORE -> CUCUMBERITE_INGOT;
+              default -> null;
+            };
+  }
+
+  @Nullable
+  public Material getSmeltedItemVanilla()
+  {
+    return switch (this)
+            {
+              case WNYNYA_ORE -> Material.TNT;
               default -> null;
             };
   }

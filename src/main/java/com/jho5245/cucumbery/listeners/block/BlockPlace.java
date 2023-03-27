@@ -11,6 +11,7 @@ import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -233,6 +234,12 @@ public class BlockPlace implements Listener
       {
         item.setAmount(1);
         BlockPlaceDataConfig.setItem(location, item);
+        if (nbtItem.hasTag("item") || nbtItem.hasTag("url") || nbtItem.hasTag("urls"))
+        {
+          String materialString = nbtItem.hasTag("material") && nbtItem.getType("material") == NBTType.NBTTagString ? nbtItem.getString("material") : "";
+          Material material = Method2.valueOf(materialString + "_stained_glass", Material.class);
+          block.setType(material != null ? material : Material.WHITE_STAINED_GLASS);
+        }
       }
       else
       {

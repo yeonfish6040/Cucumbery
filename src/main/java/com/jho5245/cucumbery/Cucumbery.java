@@ -298,20 +298,23 @@ public class Cucumbery extends JavaPlugin
       {
         for (Chunk chunk : world.getLoadedChunks())
         {
-          BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
-          YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
-          ConfigurationSection root = cfg.getRoot();
-          if (root != null)
+          Bukkit.getScheduler().runTaskLaterAsynchronously(this, () ->
           {
-            for (String key : root.getKeys(false))
+            BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
+            YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
+            ConfigurationSection root = cfg.getRoot();
+            if (root != null)
             {
-              Location location = ChunkConfig.stringToLocation(world, key);
-              if (location != null)
+              for (String key : root.getKeys(false))
               {
-                BlockPlaceDataConfig.spawnItemDisplay(location);
+                Location location = ChunkConfig.stringToLocation(world, key);
+                if (location != null)
+                {
+                  BlockPlaceDataConfig.spawnItemDisplay(location);
+                }
               }
             }
-          }
+          }, 0L);
         }
       }
     }
@@ -326,7 +329,8 @@ public class Cucumbery extends JavaPlugin
     }
     if (using_ProtocolLib)
     {
-      BlockPlaceDataConfig.ITEM_DISPLAY_MAP.keySet().forEach(location -> {
+      BlockPlaceDataConfig.ITEM_DISPLAY_MAP.keySet().forEach(location ->
+      {
         String[] split = location.split("_");
         try
         {

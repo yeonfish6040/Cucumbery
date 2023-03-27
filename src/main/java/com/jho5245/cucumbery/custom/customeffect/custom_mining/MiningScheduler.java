@@ -394,7 +394,7 @@ public class MiningScheduler
       {
         if (miningResult.miningTier() > 0 && !Variable.customMiningTierAlertCooldown.contains(uuid))
         {
-          MessageUtil.sendWarn(player, "%s을(를) 캐기 위해 더 높은 등급의 도구가 필요합니다!", drops.isEmpty() || customMaterial == null ? block.getType() : drops.get(0));
+          MessageUtil.sendWarn(player, "%s을(를) 캐기 위해 더 높은 등급의 도구가 필요합니다!", drops.isEmpty() || BlockPlaceDataConfig.getItem(location) == null ? block.getType() : drops.get(0));
           Variable.customMiningTierAlertCooldown.add(uuid);
           Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.customMiningTierAlertCooldown.remove(uuid), 20L);
         }
@@ -590,7 +590,28 @@ public class MiningScheduler
           }
           else
           {
-            drops.forEach(itemStack1 -> player.getWorld().dropItemNaturally(location, itemStack1));
+            for (ItemStack item : drops)
+            {
+/*              MessageUtil.broadcastDebug(item);
+              CustomMaterial c = CustomMaterial.itemStackOf(item);
+              boolean dropped = false;
+              if (c != null)
+              {
+                switch (c)
+                {
+                  case WNYNYA_ORE ->
+                  {
+                    dropped = true;
+                    Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                            player.getWorld().dropItemNaturally(location, item), 0L);
+                  }
+                }
+              }
+              if (!dropped)
+              {*/
+                player.getWorld().dropItemNaturally(location, item);
+//              }
+            }
           }
           if (mode3 && block.getState() instanceof BlockInventoryHolder inventoryHolder && !(inventoryHolder instanceof ShulkerBox))
           {

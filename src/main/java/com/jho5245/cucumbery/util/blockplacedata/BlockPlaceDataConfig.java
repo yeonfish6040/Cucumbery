@@ -180,7 +180,8 @@ public class BlockPlaceDataConfig extends ChunkConfig
     getConfig().set(locationToString(location), value);
     if (o != null)
     {
-      spawnItemDisplay(location);
+      Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
+              spawnItemDisplay(location), 0L);
     }
   }
 
@@ -239,6 +240,8 @@ public class BlockPlaceDataConfig extends ChunkConfig
     Boolean glowing = nbtItem.hasTag("Glowing") && nbtItem.getType("Glowing") == NBTType.NBTTagByte ? nbtItem.getBoolean("Glowing") : null;
     int glowColorOverride = nbtItem.hasTag("glow_color_override") && nbtItem.getType("glow_color_override") == NBTType.NBTTagInt ? nbtItem.getInteger("glow_color_override") : -1;
 
+    float view_range = nbtItem.hasTag("view_range") && nbtItem.getType("view_range") == NBTType.NBTTagFloat ? nbtItem.getFloat("view_range") : 0.5f;
+
     ItemStack displayItemStack = item != null ? ItemStackUtil.createItemStack(Bukkit.getConsoleSender(), item, false) : new ItemStack(Material.PLAYER_HEAD);
     if (item == null)
     {
@@ -291,6 +294,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
                     2.001f * scaleX * (modifier == -1 ? 1f : 0.5f),
                     2.001f * scaleY * (modifier == -1 ? 1f : 0.5f),
                     2.001f * scaleZ * (modifier == -1 ? 1f : 0.5f))),
+            new WrappedDataValue(16, Registry.get(Float.class), view_range),
             new WrappedDataValue(22, Registry.getItemStackSerializer(false), minecraftItemStack)
     );
     if (glowing != null)

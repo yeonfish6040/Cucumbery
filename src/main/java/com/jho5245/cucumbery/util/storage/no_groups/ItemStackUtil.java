@@ -573,19 +573,27 @@ public class ItemStackUtil
           {
             nbtItem.setString("id", smeltedItem.toString().toLowerCase());
           }
+          Material smeltedItemVanilla = customMaterial.getSmeltedItemVanilla();
+          if (smeltedItemVanilla != null)
+          {
+            drop = new ItemStack(smeltedItemVanilla, drop.getAmount());
+          }
         }
         catch (Exception ignored)
         {
 
         }
       }
-      if (Method.usingLoreFeature(player))
+      if (player != null)
       {
-        ItemLore.setItemLore(drop);
-      }
-      else
-      {
-        ItemLore.removeItemLore(drop);
+        if (Method.usingLoreFeature(player))
+        {
+          ItemLore.setItemLore(drop);
+        }
+        else
+        {
+          ItemLore.removeItemLore(drop);
+        }
       }
       dropsClone.add(drop);
     }

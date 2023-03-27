@@ -125,7 +125,7 @@ public class ItemLoreCustomItem
       {
         switch (customMaterial)
         {
-          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT ->
+          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT, WNYNYA_ORE ->
           {
             if (!NBTAPI.arrayContainsValue(extraTags, ExtraTag.PRESERVE_BLOCK_NBT))
             {
@@ -224,6 +224,15 @@ public class ItemLoreCustomItem
       }
       switch (customMaterial)
       {
+        case WNYNYA_ORE ->
+        {
+          if (!NBTAPI.isRestricted(itemStack, RestrictionType.NO_EQUIP))
+          {
+            nbtCompound.setString(CucumberyTag.VALUE_KEY, RestrictionType.NO_EQUIP.toString());
+            nbtCompound.setBoolean(CucumberyTag.ITEM_USAGE_RESTRICTIONS_HIDE_FROM_LORE_KEY, true);
+            restrictionTag.addCompound(nbtCompound);
+          }
+        }
         case TODWOT_PICKAXE ->
         {
           if (!NBTAPI.isRestricted(itemStack, RestrictionType.NO_ANVIL_ENCHANTED_BOOK_ENCHANT))
@@ -265,6 +274,26 @@ public class ItemLoreCustomItem
     {
       switch (customMaterial)
       {
+        case WNYNYA_ORE ->
+        {
+          nbtItem.setString("material", "purple");
+          nbtItem.setInteger("BlockTier", 2);
+          nbtItem.setFloat("BlockHardness", 500f);
+          nbtItem.setString("BreakSound", Sound.BLOCK_STONE_BREAK.toString());
+          nbtItem.setString("BreakParticle", "block:stone[]");
+          NBTList<String> urls = nbtItem.getStringList("urls");
+          if (urls.isEmpty())
+          {
+            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg5MmRmNjUxY2M3YWExYjJhMjliMGRiZGE0OWNlNGZhYWU5ZmQ0OTI5MjYxMjc1MWFhOTk3ZWJmMGRjM2RhYyJ9fX0=");
+            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2ViMWNhNmYzNGQwNGEyYmY3Mzc5NTk0YTRjNjFhNDhmMGIyMDUzOTQ3YjM2NmNjMTQ5NDcwODZmMzA5ZjMxNSJ9fX0=");
+            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmIwOWE3ZjliOWRmNDJjZjg4MWE3MWQyM2JiOTI5MzhlMzJiYTY4ZTFlOGRhNWEyMjY3OGVjOGEwMjQ0OTdjMiJ9fX0=");
+            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc3MWQ1OGJjZDYwYTU2YWMwYmJmMzA2YWNiOGVlZjM5OTMwOGQxZWU5ZjBiYzQ0NGI5MWNkOGNmYTU0Mzk3In19fQ==");
+            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDg4YWM5NGEyMTk3NWJlYTllMmU0M2VmNjcwNTY2YjA0NjI5MTY0ZjE3MWYyYTA0MWU0NzYyNzBlMGU2YTVlZCJ9fX0=");
+            urls.add("ff176fd84f05c0b78a85d744fdae5279e3d818489394c215d357cd3b7a1a9757");
+            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzZiYWQ1MGZlOTc1N2VkZDJjZTI4MjNiM2FmMjZkMWY1OWM5ZDdlYTMxMjM4YWFjOTIzNzRmYWRhMjQ5NGVjMSJ9fX0=");
+            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWEyNjQzNjQ3YzNmMjZmOTRjNjJkZDJhZTIwY2ZkMjRiYTNmODIzNmY4NGQ2NTYzNzczZmY1ZThhNjQ3MDhjMSJ9fX0=");
+          }
+        }
         case TEST_PICKAXE ->
         {
           nbtItem.setFloat(MiningManager.TOOL_SPEED, 18000f);
@@ -553,7 +582,8 @@ public class ItemLoreCustomItem
           nbtItem.setFloat("ExplodePower", 6f);
           nbtItem.setShort("Fuse", (short) 20);
         }
-        case TNT_DONUT -> {
+        case TNT_DONUT ->
+        {
           if (!nbtItem.hasTag("Size"))
           {
             nbtItem.setShort("Size", (short) 30);
@@ -830,15 +860,19 @@ public class ItemLoreCustomItem
     }
     if (itemMeta instanceof SkullMeta skullMeta)
     {
-      switch (customMaterial)
+      if (!skullMeta.hasOwner())
       {
-        case ENCHANTED_TITANIUM -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/3dcc0ec9873f4f8d407ba0a0f983e257787772eaf8784e226a61c7f727ac9e26");
-        case MITHRIL_REFINED -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/35a7663300619bb6a156d76351ac05f7b3cafeac31e2ff04c55cc9f236327832");
-        case TITANIUM_REFINED -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/704baabf7ef854825aae1992e4a75ff7286ed1654d8f1a08952e7b8669cf692d");
-        case PORTABLE_CRAFTING_TABLE -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-        case PORTABLE_ENDER_CHEST -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067");
-        case FROG_HELMET -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/5710f6f91fafea57278df853131b775f2c2d324a6274bee40d776b16cb5d60b6");
-        case MINDAS_HELMET -> ItemStackUtil.setTexture(skullMeta, "http://textures.minecraft.net/texture/316fc913e6ab9b6911003de60c797bad3fbeb80eb73d51afb6928de9c9eedac3");
+        switch (customMaterial)
+        {
+          case ENCHANTED_TITANIUM -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/3dcc0ec9873f4f8d407ba0a0f983e257787772eaf8784e226a61c7f727ac9e26");
+          case MITHRIL_REFINED -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/35a7663300619bb6a156d76351ac05f7b3cafeac31e2ff04c55cc9f236327832");
+          case TITANIUM_REFINED -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/704baabf7ef854825aae1992e4a75ff7286ed1654d8f1a08952e7b8669cf692d");
+          case PORTABLE_CRAFTING_TABLE -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+          case PORTABLE_ENDER_CHEST -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067");
+          case FROG_HELMET -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/5710f6f91fafea57278df853131b775f2c2d324a6274bee40d776b16cb5d60b6");
+          case MINDAS_HELMET -> ItemStackUtil.setTexture(skullMeta, "http://textures.minecraft.net/texture/316fc913e6ab9b6911003de60c797bad3fbeb80eb73d51afb6928de9c9eedac3");
+          case WNYNYA_ORE -> ItemStackUtil.setTexture(skullMeta, "http://textures.minecraft.net/texture/3fff5379e980aca266d7d1a3a4939ecafd42e2028d436ffa41ae96b076937d09");
+        }
       }
     }
     if (CustomEnchant.isEnabled() && customMaterial.isGlow())

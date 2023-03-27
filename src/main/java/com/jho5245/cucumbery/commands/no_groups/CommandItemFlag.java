@@ -69,6 +69,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
           case "HIDE_POTION_EFFECTS" -> meta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           case "HIDE_UNBREAKABLE" -> meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
           case "HIDE_DYE" -> meta.addItemFlags(ItemFlag.HIDE_DYE);
+          case "HIDE_ARMOR_TRIM" -> meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
           case "내구성" -> meta.setUnbreakable(true);
           default -> {
             MessageUtil.wrongArg(sender, 2, args);
@@ -106,6 +107,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
           case "HIDE_POTION_EFFECTS" -> meta.removeItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
           case "HIDE_UNBREAKABLE" -> meta.removeItemFlags(ItemFlag.HIDE_UNBREAKABLE);
           case "HIDE_DYE" -> meta.removeItemFlags(ItemFlag.HIDE_DYE);
+          case "HIDE_ARMOR_TRIM" -> meta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
           case "내구성" -> meta.setUnbreakable(false);
           default -> {
             MessageUtil.wrongArg(sender, 2, args);
