@@ -196,6 +196,18 @@ public class BlockPlaceDataConfig extends ChunkConfig
     spawnItemDisplay(Collections.singletonList(player), location);
   }
 
+  private static final float[][] offsets = {
+          {0f, 0f, 0f},
+          {0.5f, 0f, 0.5f},
+          {0.5f, 0f, -0.5f},
+          {-0.5f, 0f, 0.5f},
+          {-0.5f, 0f, -0.5f},
+          {0.5f, -0.5f, 0.5f},
+          {0.5f, -0.5f, -0.5f},
+          {-0.5f, -0.5f, 0.5f},
+          {-0.5f, -0.5f, -0.5f}
+  };
+
   private static void spawnItemDisplay_(@NotNull Collection<Player> players, @NotNull Location location, @NotNull NBTItem nbtItem, @Nullable NBTList<String> urls, int modifier)
   {
     String item = nbtItem.hasTag("item") && nbtItem.getType("item") == NBTType.NBTTagString ? nbtItem.getString("item") : null;
@@ -249,22 +261,11 @@ public class BlockPlaceDataConfig extends ChunkConfig
     float[] offset;
     if (modifier == -1)
     {
-      offset = new float[]{0f, 0f, 0f};
+      offset = offsets[0];
     }
     else
     {
-      offset = switch (modifier)
-              {
-                case 0 -> new float[]{0.5f, 0f, 0.5f};
-                case 1 -> new float[]{0.5f, 0f, -0.5f};
-                case 2 -> new float[]{-0.5f, 0f, 0.5f};
-                case 3 -> new float[]{-0.5f, 0f, -0.5f};
-                case 4 -> new float[]{0.5f, -0.5f, 0.5f};
-                case 5 -> new float[]{0.5f, -0.5f, -0.5f};
-                case 6 -> new float[]{-0.5f, -0.5f, 0.5f};
-                case 7 -> new float[]{-0.5f, -0.5f, -0.5f};
-                default -> new float[]{0f, 0f, 0f};
-              };
+      offset = offsets[modifier + 1];
     }
     PacketContainer packet = protocolManager.createPacket(Server.SPAWN_ENTITY);
     packet.getIntegers().write(0, entityId);
@@ -287,9 +288,9 @@ public class BlockPlaceDataConfig extends ChunkConfig
                     translationY + offset[1] * scaleY + 0.50005f,
                     translationZ + offset[2] * scaleZ * 0.5f)),
             new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(
-                    2.001f * scaleX * modifier == -1 ? 1f : 0.5f,
-                    2.001f * scaleY * modifier == -1 ? 1f : 0.5f,
-                    2.001f * scaleZ * modifier == -1 ? 1f : 0.5f)),
+                    2.001f * scaleX * (modifier == -1 ? 1f : 0.5f),
+                    2.001f * scaleY * (modifier == -1 ? 1f : 0.5f),
+                    2.001f * scaleZ * (modifier == -1 ? 1f : 0.5f))),
             new WrappedDataValue(22, Registry.getItemStackSerializer(false), minecraftItemStack)
     );
     if (glowing != null)
