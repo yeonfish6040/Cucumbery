@@ -377,6 +377,11 @@ public class ItemLore2CustomMaterial
         lore.add(ComponentUtil.translate("&7폭발 시 원 몰라 설명 대충"));
         lore.add(ComponentUtil.translate("&7수치 : %s", nbtItem.getShort("Size")));
       }
+      case REDSTONE_BLOCK_INSTA_BREAK -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7설치 즉시 파괴됩니다! 짧은 레드스톤"));
+        lore.add(ComponentUtil.translate("&7신호가 필요한 곳에 사용하세요!"));
+      }
     }
     switch (customMaterial)
     {

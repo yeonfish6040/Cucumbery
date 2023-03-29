@@ -19,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum CustomMaterial implements Translatable
 {
-  WNYNYA_ORE(Material.PLAYER_HEAD, "&fkey:block.cucumbery.wnynya_ore|완YEE 광석", Rarity.RARE, "itemGroup.natural"),
+  REDSTONE_BLOCK_INSTA_BREAK(Material.REDSTONE_BLOCK, "&i즉시 부서지는 레드스톤 블록", Rarity.RARE, CreativeCategory.REDSTONE.translationKey()),
+  WNYNYA_ORE(Material.PLAYER_HEAD, "rgb200,100,255;완YEE 광석", Rarity.RARE, "itemGroup.natural"),
   AMBER(Material.ORANGE_DYE, "&ikey:item.cucumbery.amber|호박", Rarity.UNIQUE),
   ARROW_CRIT(Material.ARROW, "&ikey:item.cucumbery.arrow_crit|치명적인 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),
   ARROW_EXPLOSIVE(Material.ARROW, "&i폭발성 화살", Rarity.RARE, CreativeCategory.COMBAT.translationKey()),

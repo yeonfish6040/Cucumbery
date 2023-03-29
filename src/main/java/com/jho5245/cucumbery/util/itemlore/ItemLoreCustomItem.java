@@ -125,7 +125,7 @@ public class ItemLoreCustomItem
       {
         switch (customMaterial)
         {
-          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT, WNYNYA_ORE ->
+          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT, WNYNYA_ORE, REDSTONE_BLOCK_INSTA_BREAK ->
           {
             if (!NBTAPI.arrayContainsValue(extraTags, ExtraTag.PRESERVE_BLOCK_NBT))
             {
@@ -276,12 +276,14 @@ public class ItemLoreCustomItem
       {
         case WNYNYA_ORE ->
         {
-          nbtItem.setString("material", "purple");
+          nbtItem.setString("material", Material.GRAY_STAINED_GLASS.toString());
           nbtItem.setInteger("BlockTier", 2);
           nbtItem.setFloat("BlockHardness", 500f);
           nbtItem.setString("BreakSound", Sound.BLOCK_STONE_BREAK.toString());
           nbtItem.setString("BreakParticle", "block:stone[]");
-          NBTList<String> urls = nbtItem.getStringList("urls");
+          NBTCompound nbtCompound = nbtItem.addCompound("displays");
+          nbtCompound.setString("type", "player_heads");
+          NBTList<String> urls = nbtCompound.getStringList("value");
           if (urls.isEmpty())
           {
             urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg5MmRmNjUxY2M3YWExYjJhMjliMGRiZGE0OWNlNGZhYWU5ZmQ0OTI5MjYxMjc1MWFhOTk3ZWJmMGRjM2RhYyJ9fX0=");
@@ -576,7 +578,16 @@ public class ItemLoreCustomItem
           NBTCompound sack = nbtItem.addCompound("Sack");
           sack.setInteger("Capacity", 1200);
         }
-        case TNT_SUPERIOR -> nbtItem.setFloat("ExplodePower", 10f);
+        case TNT_SUPERIOR ->
+        {
+          nbtItem.setFloat("ExplodePower", 10f);
+          NBTCompound nbtCompound = nbtItem.addCompound("displays");
+          nbtCompound.setString("type", "item");
+          nbtCompound.setString("value", "tnt");
+          NBTCompound brightness = nbtCompound.addCompound("brightness");
+          brightness.setInteger("sky", 15);
+          brightness.setInteger("block", 15);
+        }
         case TNT_DRAIN ->
         {
           nbtItem.setFloat("ExplodePower", 6f);

@@ -89,8 +89,10 @@ import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
@@ -278,6 +280,10 @@ public class Cucumbery extends JavaPlugin
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {
       Method.updateInventory(player);
+      if (using_ProtocolLib)
+      {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(cucumbery, () -> BlockPlaceDataConfig.display(player, player.getLocation()), 0L);
+      }
     }
     for (World world : Bukkit.getWorlds())
     {
@@ -294,38 +300,46 @@ public class Cucumbery extends JavaPlugin
           itemFrame.setItem(ItemLore.setItemLore(itemStack));
         }
       }
-      if (using_ProtocolLib)
-      {
-        for (Chunk chunk : world.getLoadedChunks())
-        {
-          Bukkit.getScheduler().runTaskLaterAsynchronously(this, () ->
-          {
-            BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
-            YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
-            ConfigurationSection root = cfg.getRoot();
-            if (root != null)
-            {
-              for (String key : root.getKeys(false))
-              {
-                Location location = ChunkConfig.stringToLocation(world, key);
-                if (location != null)
-                {
-                  BlockPlaceDataConfig.spawnItemDisplay(location);
-                }
-              }
-            }
-          }, 0L);
-        }
-      }
     }
   }
 
   // 플러그인 비활성화 시 처리 과정
   private void disableOperation()
   {
+    Initializer.saveUserData();
+    BlockPlaceDataConfig.saveAll();
+    Initializer.saveItemUsageData();
+    Initializer.saveItemStashData();
+    CustomEffectManager.save();
+    Initializer.loadBrigadierTabListConfig();
+    if (Cucumbery.using_NoteBlockAPI)
+    {
+      if (CommandSong.radioSongPlayer != null)
+      {
+        CommandSong.radioSongPlayer.setPlaying(false);
+        CommandSong.radioSongPlayer.destroy();
+      }
+      if (!CommandSong.playerRadio.isEmpty())
+      {
+        for (RadioSongPlayer playerRadio : CommandSong.playerRadio.values())
+        {
+          playerRadio.setPlaying(false);
+          playerRadio.destroy();
+        }
+      }
+      Songs.onDisable();
+    }
     for (Player player : Bukkit.getOnlinePlayers())
     {
       CustomEffectManager.addEffect(player, CustomEffectType.INVINCIBLE_PLUGIN_RELOAD);
+      player.hideBossBar(Scheduler.serverRadio);
+      InventoryView inventoryView = player.getOpenInventory();
+      String title = ComponentUtil.serialize(inventoryView.title());
+      if (title.contains(Constant.GUI_SUFFIX) || GUIManager.isGUITitle(inventoryView.title()))
+      {
+        player.closeInventory();
+        MessageUtil.sendWarn(player, "플러그인이 비활성화되어 GUI 창이 닫힙니다");
+      }
     }
     if (using_ProtocolLib)
     {
@@ -342,22 +356,6 @@ public class Cucumbery extends JavaPlugin
           e.printStackTrace();
         }
       });
-    }
-    Initializer.saveUserData();
-    BlockPlaceDataConfig.saveAll();
-    Initializer.saveItemUsageData();
-    Initializer.saveItemStashData();
-    CustomEffectManager.save();
-    Initializer.loadBrigadierTabListConfig();
-    for (Player player : Bukkit.getOnlinePlayers())
-    {
-      InventoryView inventoryView = player.getOpenInventory();
-      String title = ComponentUtil.serialize(inventoryView.title());
-      if (title.contains(Constant.GUI_SUFFIX) || GUIManager.isGUITitle(inventoryView.title()))
-      {
-        player.closeInventory();
-        MessageUtil.sendWarn(player, "플러그인이 비활성화되어 GUI 창이 닫힙니다");
-      }
     }
     for (UUID uuid : Variable.customEffectBossBarMap.keySet())
     {
@@ -390,27 +388,6 @@ public class Cucumbery extends JavaPlugin
       {
         e.printStackTrace();
       }
-    }
-    if (Cucumbery.using_NoteBlockAPI)
-    {
-      if (CommandSong.radioSongPlayer != null)
-      {
-        CommandSong.radioSongPlayer.setPlaying(false);
-        CommandSong.radioSongPlayer.destroy();
-      }
-      if (!CommandSong.playerRadio.isEmpty())
-      {
-        for (RadioSongPlayer playerRadio : CommandSong.playerRadio.values())
-        {
-          playerRadio.setPlaying(false);
-          playerRadio.destroy();
-        }
-      }
-      Songs.onDisable();
-    }
-    for (Player onlone : Bukkit.getOnlinePlayers())
-    {
-      onlone.hideBossBar(Scheduler.serverRadio);
     }
     // 채광 모드 2 블록 복구 모드
     if (Cucumbery.config.getBoolean("custom-mining.restore-mining-mode-2-blocks-on-plugin-disable"))

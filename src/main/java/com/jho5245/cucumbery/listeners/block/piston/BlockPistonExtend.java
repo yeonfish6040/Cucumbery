@@ -74,6 +74,7 @@ public class BlockPistonExtend implements Listener
         {
           BlockPlaceDataConfig blockPlaceDataConfig1 = BlockPlaceDataConfig.getInstance(afterLocation.getChunk());
           blockPlaceDataConfig1.set(afterLocation, beforeItemString);
+          BlockPlaceDataConfig.spawnItemDisplay(afterLocation);
         }
       }, 0L);
 

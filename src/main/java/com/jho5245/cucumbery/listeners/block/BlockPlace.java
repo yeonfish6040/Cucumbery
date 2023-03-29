@@ -13,10 +13,7 @@ import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import com.jho5245.cucumbery.util.storage.data.Constant;
-import com.jho5245.cucumbery.util.storage.data.Permission;
-import com.jho5245.cucumbery.util.storage.data.Prefix;
-import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -26,6 +23,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -33,6 +31,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import java.util.UUID;
@@ -215,11 +214,62 @@ public class BlockPlace implements Listener
       Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.getInventory().setItem(event.getHand(), finalItem), 0L);
     }
 
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(item);
+    if (customMaterial == CustomMaterial.REDSTONE_BLOCK_INSTA_BREAK)
+    {
+      Location locationClone = location.clone().add(0.5, 0.5, 0.5);
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> {
+        if (block.getType() == Material.REDSTONE_BLOCK)
+        {
+          block.setType(Material.AIR);
+          BlockData blockData = Material.REDSTONE_BLOCK.createBlockData();
+          SoundGroup soundGroup = blockData.getSoundGroup();
+          block.getWorld().playSound(location, soundGroup.getBreakSound(), SoundCategory.BLOCKS, 1f, soundGroup.getPitch() * 0.8f);
+          BoundingBox boundingBox = block.getBoundingBox();
+          double minX = boundingBox.getMinX(), maxX = boundingBox.getMaxX();
+          double minY = boundingBox.getMinY(), maxY = Math.min(1d, boundingBox.getMaxY());
+          double minZ = boundingBox.getMinZ(), maxZ = boundingBox.getMaxZ();
+          double diffX = maxX - minX, diffY = maxY - minY, diffZ = maxZ - minZ;
+          minX += 0.2 * diffX;
+          maxX -= 0.2 * diffX;
+          minY += 0.2 * diffY;
+          maxY -= 0.2 * diffY;
+          minZ += 0.2 * diffZ;
+          maxZ -= 0.2 * diffZ;
+          for (Player online : Bukkit.getOnlinePlayers())
+          {
+            if (!online.getWorld().getName().equals(location.getWorld().getName()))
+            {
+              continue;
+            }
+            online.spawnParticle(Particle.BLOCK_CRACK, locationClone.clone().add(minX, minY, minZ), 5, 0, 0, 0, 0, blockData);
+
+            online.spawnParticle(Particle.BLOCK_CRACK, locationClone.clone().add(maxX, minY, minZ), 5, 0, 0, 0, 0, blockData);
+            online.spawnParticle(Particle.BLOCK_CRACK, locationClone.clone().add(minX, maxY, minZ), 5, 0, 0, 0, 0, blockData);
+            online.spawnParticle(Particle.BLOCK_CRACK, locationClone.clone().add(minX, minY, maxZ), 5, 0, 0, 0, 0, blockData);
+
+            online.spawnParticle(Particle.BLOCK_CRACK, locationClone.clone().add(maxX, maxY, minZ), 5, 0, 0, 0, 0, blockData);
+            online.spawnParticle(Particle.BLOCK_CRACK, locationClone.clone().add(maxX, minY, maxZ), 5, 0, 0, 0, 0, blockData);
+            online.spawnParticle(Particle.BLOCK_CRACK, locationClone.clone().add(minX, maxY, maxZ), 5, 0, 0, 0, 0, blockData);
+
+            online.spawnParticle(Particle.BLOCK_CRACK, locationClone.clone().add(maxX, maxY, maxZ), 5, 0, 0, 0, 0, blockData);
+          }
+          if (player.getGameMode() != GameMode.CREATIVE)
+          {
+            ItemStack itemStack = event.getItemInHand().clone();
+            itemStack.setAmount(1);
+            block.getWorld().dropItemNaturally(location, itemStack);
+          }
+        }
+      }, 2L);
+      return;
+    }
+
     if (!special && Cucumbery.config.getBoolean("use-block-place-data-feature") && !Method.configContainsLocation(location, Cucumbery.config.getStringList("no-use-block-place-data-feature-location")))
     {
       item = item.clone();
       ItemLore.removeItemLore(item);
-      NBTItem nbtItem = new NBTItem(item);
+      NBTItem nbtItem = new NBTItem(item, true);
       if (!NBTAPI.arrayContainsValue(extraTags, Constant.ExtraTag.PRESERVE_BLOCK_ENTITY_TAG))
       {
         nbtItem.removeKey("BlockEntityTag");
@@ -228,16 +278,44 @@ public class BlockPlace implements Listener
       {
         nbtItem.removeKey("BlockStateTag");
       }
-      item = nbtItem.getItem();
       NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
       if (item.hasItemMeta() && (NBTAPI.arrayContainsValue(extraTag, Constant.ExtraTag.PRESERVE_BLOCK_NBT) || !Cucumbery.config.getBoolean("block-place-data-feature-with-specific-tag")))
       {
         item.setAmount(1);
+        if (nbtItem.hasTag("perspectiveYaw") && nbtItem.getType("perspectiveYaw") == NBTType.NBTTagByte && nbtItem.getBoolean("perspectiveYaw"))
+        {
+          float yaw = Math.round((player.getLocation().getYaw() - 180f) / 22.5f) * 22.5f;
+          NBTList<Float> rotation = nbtItem.addCompound("displays").getFloatList("rotation");
+          if (rotation.isEmpty())
+          {
+            rotation.add(yaw);
+            rotation.add(0f);
+          }
+          else
+          {
+            rotation.set(0, yaw);
+          }
+        }
+        if (nbtItem.hasTag("perspectivePitch") && nbtItem.getType("perspectivePitch") == NBTType.NBTTagByte && nbtItem.getBoolean("perspectivePitch"))
+        {
+          float pitch = Math.round(-player.getLocation().getPitch() / 22.5f) * 22.5f;
+          NBTList<Float> rotation = nbtItem.addCompound("displays").getFloatList("rotation");
+          if (rotation.isEmpty())
+          {
+            rotation.add(0f);
+            rotation.add(pitch);
+          }
+          else
+          {
+            rotation.set(1, pitch);
+          }
+        }
         BlockPlaceDataConfig.setItem(location, item);
-        if (nbtItem.hasTag("item") || nbtItem.hasTag("url") || nbtItem.hasTag("urls"))
+        BlockPlaceDataConfig.spawnItemDisplay(location);
+        if (nbtItem.hasTag("material") && nbtItem.hasTag("displays"))
         {
           String materialString = nbtItem.hasTag("material") && nbtItem.getType("material") == NBTType.NBTTagString ? nbtItem.getString("material") : "";
-          Material material = Method2.valueOf(materialString + "_stained_glass", Material.class);
+          Material material = Method2.valueOf(materialString, Material.class);
           block.setType(material != null ? material : Material.WHITE_STAINED_GLASS);
         }
       }

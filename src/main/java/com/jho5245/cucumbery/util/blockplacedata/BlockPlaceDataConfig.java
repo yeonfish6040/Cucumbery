@@ -6,28 +6,25 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.utility.MinecraftReflection;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry;
 import com.google.common.collect.Lists;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.*;
+import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTItem;
-import de.tr7zw.changeme.nbtapi.NBTList;
-import de.tr7zw.changeme.nbtapi.NBTType;
-import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import de.tr7zw.changeme.nbtapi.*;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
@@ -178,11 +175,6 @@ public class BlockPlaceDataConfig extends ChunkConfig
   {
     String value = o instanceof ItemStack itemStack ? ItemSerializer.serialize(itemStack) : o == null ? null : o.toString();
     getConfig().set(locationToString(location), value);
-    if (o != null)
-    {
-      Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
-              spawnItemDisplay(location), 0L);
-    }
   }
 
   public static final HashMap<String, Set<Integer>> ITEM_DISPLAY_MAP = new HashMap<>();
@@ -199,68 +191,72 @@ public class BlockPlaceDataConfig extends ChunkConfig
 
   private static final float[][] offsets = {
           {0f, 0f, 0f},
-          {0.5f, 0f, 0.5f},
-          {0.5f, 0f, -0.5f},
-          {-0.5f, 0f, 0.5f},
-          {-0.5f, 0f, -0.5f},
-          {0.5f, -0.5f, 0.5f},
-          {0.5f, -0.5f, -0.5f},
-          {-0.5f, -0.5f, 0.5f},
-          {-0.5f, -0.5f, -0.5f}
+          {0.25f, 0.5f, 0.25f},
+          {0.25f, 0.5f, -0.25f},
+          {-0.25f, 0.5f, 0.25f},
+          {-0.25f, 0.5f, -0.25f},
+          {0.25f, 0f, 0.25f},
+          {0.25f, 0f, -0.25f},
+          {-0.25f, 0f, 0.25f},
+          {-0.25f, 0f, -0.25f}
   };
 
-  private static void spawnItemDisplay_(@NotNull Collection<Player> players, @NotNull Location location, @NotNull NBTItem nbtItem, @Nullable NBTList<String> urls, int modifier)
+  private static void _spawnItemDisplay(@NotNull Collection<Player> players, @NotNull Location location, @NotNull NBTCompound nbtCompound)
   {
-    String item = nbtItem.hasTag("item") && nbtItem.getType("item") == NBTType.NBTTagString ? nbtItem.getString("item") : null;
-    String url = urls == null || urls.size() != 8 ? (nbtItem.hasTag("url") && nbtItem.getType("url") == NBTType.NBTTagString ? nbtItem.getString("url") : null) : urls.get(modifier);
-    if (item == null && url == null)
+    if (!nbtCompound.hasTag("type"))
     {
       return;
     }
-    NBTCompound transformation = nbtItem.getOrCreateCompound("transformation");
-
-    NBTList<Float> scale = transformation.getFloatList("scale");
-    float scaleX = scale != null && scale.size() == 3 ? scale.get(0) : 1f,
-            scaleY = scale != null && scale.size() == 3 ? scale.get(1) : 1f,
-            scaleZ = scale != null && scale.size() == 3 ? scale.get(2) : 1f;
-
-    NBTList<Float> translation = transformation.getFloatList("translation");
-    float translationX = translation != null && translation.size() == 3 ? translation.get(0) : 0f,
-            translationY = translation != null && translation.size() == 3 ? translation.get(1) : 0f,
-            translationZ = translation != null && translation.size() == 3 ? translation.get(2) : 0f;
-
-    NBTList<Float> rotation = transformation.getFloatList("rotation");
-    float rotationX = rotation != null && rotation.size() == 2 ? rotation.get(0) : 0f,
-            rotationY = rotation != null && rotation.size() == 2 ? rotation.get(1) : 0f;
-
-    NBTCompound brightness = nbtItem.getOrCreateCompound("brightness");
-    int brightnessBlock = brightness.hasTag("block") && brightness.getType("block") == NBTType.NBTTagInt ? brightness.getInteger("block") : -1,
-            brightnessSky = brightness.hasTag("sky") && brightness.getType("sky") == NBTType.NBTTagInt ? brightness.getInteger("sky") : -1;
-
-    Boolean glowing = nbtItem.hasTag("Glowing") && nbtItem.getType("Glowing") == NBTType.NBTTagByte ? nbtItem.getBoolean("Glowing") : null;
-    int glowColorOverride = nbtItem.hasTag("glow_color_override") && nbtItem.getType("glow_color_override") == NBTType.NBTTagInt ? nbtItem.getInteger("glow_color_override") : -1;
-
-    float view_range = nbtItem.hasTag("view_range") && nbtItem.getType("view_range") == NBTType.NBTTagFloat ? nbtItem.getFloat("view_range") : 0.5f;
-
-    ItemStack displayItemStack = item != null ? ItemStackUtil.createItemStack(Bukkit.getConsoleSender(), item, false) : new ItemStack(Material.PLAYER_HEAD);
-    if (item == null)
+    if (!nbtCompound.hasTag("value"))
     {
-      SkullMeta skullMeta = (SkullMeta) displayItemStack.getItemMeta();
-      displayItemStack.setItemMeta(ItemStackUtil.setTexture(skullMeta, url));
-    }
-    if (!ItemStackUtil.itemExists(displayItemStack))
-    {
-      MessageUtil.sendWarn(Bukkit.getConsoleSender(), "잘못된 아이템 데이터가 있습니다: " + item);
       return;
     }
-    ItemLore.setItemLore(displayItemStack);
-    Object minecraftItemStack = MinecraftReflection.getMinecraftItemStack(displayItemStack);
-    int entityId = Method.random(1, Integer.MAX_VALUE);
-    String key = location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
-    Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(key, new HashSet<>());
-    integerSet.add(entityId);
-    ITEM_DISPLAY_MAP.put(key, integerSet);
-    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    String type = nbtCompound.getString("type");
+    if (type == null)
+    {
+      return;
+    }
+    EntityType entityType = switch (type)
+            {
+              case "item", "player_head", "player_heads" -> EntityType.ITEM_DISPLAY;
+              case "block" -> EntityType.BLOCK_DISPLAY;
+              case "text" -> EntityType.TEXT_DISPLAY;
+              default -> null;
+            };
+    if (entityType == null)
+    {
+      return;
+    }
+    if ("player_heads".equals(type) && nbtCompound.getType("value") != NBTType.NBTTagList)
+    {
+      return;
+    }
+    else if (!"player_heads".equals(type) && nbtCompound.getType("value") != NBTType.NBTTagString)
+    {
+      return;
+    }
+    if ("player_heads".equals(type))
+    {
+      NBTList<String> values = nbtCompound.getStringList("value");
+      if (values.size() != 8)
+      {
+        return;
+      }
+      for (int i = 0; i < 8; i++)
+      {
+        String value = values.get(i);
+        _spawnItemDisplay(players, location, entityType, nbtCompound, type, value, i);
+      }
+    }
+    else
+    {
+      String value = nbtCompound.getString("value");
+      _spawnItemDisplay(players, location, entityType, nbtCompound, type, value, -1);
+    }
+  }
+
+  private static void _spawnItemDisplay(@NotNull Collection<Player> players, Location location, EntityType entityType, NBTCompound nbtItem, String type, String value, int modifier)
+  {
     float[] offset;
     if (modifier == -1)
     {
@@ -270,13 +266,92 @@ public class BlockPlaceDataConfig extends ChunkConfig
     {
       offset = offsets[modifier + 1];
     }
+
+    NBTList<Float> rotation = nbtItem.getFloatList("rotation");
+    float rotationX = rotation != null && rotation.size() == 2 ? rotation.get(0) : 0f,
+            rotationY = rotation != null && rotation.size() == 2 ? rotation.get(1) : 0f;
+
+    NBTCompound transformation = nbtItem.getOrCreateCompound("transformation");
+
+    NBTList<Float> translation = transformation.getFloatList("translation");
+    float translationX = translation != null && translation.size() == 3 ? translation.get(0) : 0f,
+            translationY = translation != null && translation.size() == 3 ? translation.get(1) : 0f,
+            translationZ = translation != null && translation.size() == 3 ? translation.get(2) : 0f;
+
+    NBTList<Float> scale = transformation.getFloatList("scale");
+    float scaleX = scale != null && scale.size() == 3 ? scale.get(0) : 1f,
+            scaleY = scale != null && scale.size() == 3 ? scale.get(1) : 1f,
+            scaleZ = scale != null && scale.size() == 3 ? scale.get(2) : 1f;
+
+
+    if ("player_head".equals(type))
+    {
+      scaleX *= 2.0001f;
+      scaleY *= 2.0002f;
+      scaleZ *= 2.0001f;
+      translationY += 0.5001f * (scaleY - 1.0002f);
+    }
+    if ("player_heads".equals(type))
+    {
+      scaleX *= 1.0005f;
+      scaleY *= 1.0005f;
+      scaleZ *= 1.0005f;
+    }
+
+    // TODO: NO serializer for 4d packet yet
+//    NBTList<Float> leftRotation = transformation.getFloatList("left_rotation");
+//    float leftRotationX = leftRotation != null && leftRotation.size() == 4 ? leftRotation.get(0) : 0f,
+//            leftRotationY = leftRotation != null && leftRotation.size() == 4 ? leftRotation.get(1) : 0f,
+//            leftRotationZ = leftRotation != null && leftRotation.size() == 4 ? leftRotation.get(2) : 0f,
+//            leftRotationW = leftRotation != null && leftRotation.size() == 4 ? leftRotation.get(3) : 1f;
+//
+//    NBTList<Float> rightRotation = transformation.getFloatList("right_rotation");
+//    float rightRotationX = rightRotation != null && rightRotation.size() == 4 ? rightRotation.get(0) : 0f,
+//            rightRotationY = rightRotation != null && rightRotation.size() == 4 ? rightRotation.get(1) : 0f,
+//            rightRotationZ = rightRotation != null && rightRotation.size() == 4 ? rightRotation.get(2) : 0f,
+//            rightRotationW = rightRotation != null && rightRotation.size() == 4 ? rightRotation.get(3) : 1f;
+
+    byte billBoard = 0;
+    if (nbtItem.hasTag("billboard") && nbtItem.getType("billboard") == NBTType.NBTTagString)
+    {
+      billBoard = switch (nbtItem.getString("billboard"))
+              {
+                case "vertical" -> 1;
+                case "horizontal" -> 2;
+                case "center" -> 3;
+                default -> 0;
+              };
+    }
+
+    NBTCompound brightness = nbtItem.getOrCreateCompound("brightness");
+    int brightnessBlock = brightness.hasTag("block") && brightness.getType("block") == NBTType.NBTTagInt ? brightness.getInteger("block") : -1,
+            brightnessSky = brightness.hasTag("sky") && brightness.getType("sky") == NBTType.NBTTagInt ? brightness.getInteger("sky") : -1;
+
+    float viewRange = nbtItem.hasTag("view_range") && nbtItem.getType("view_range") == NBTType.NBTTagFloat ? nbtItem.getFloat("view_range") : 0.5f;
+    float shadowRadius = nbtItem.hasTag("shadow_radius") && nbtItem.getType("shadow_radius") == NBTType.NBTTagFloat ? nbtItem.getFloat("shadow_radius") : 0f;
+    float shadowStrength = nbtItem.hasTag("shadow_strength") && nbtItem.getType("shadow_strength") == NBTType.NBTTagFloat ? nbtItem.getFloat("shadow_strength") : 1f;
+    float width = nbtItem.hasTag("width") && nbtItem.getType("width") == NBTType.NBTTagFloat ? nbtItem.getFloat("width") : 0f;
+    float height = nbtItem.hasTag("height") && nbtItem.getType("height") == NBTType.NBTTagFloat ? nbtItem.getFloat("height") : 0f;
+
+    int glowColorOverride = nbtItem.hasTag("glow_color_override") && nbtItem.getType("glow_color_override") == NBTType.NBTTagInt ? nbtItem.getInteger("glow_color_override") : -1;
+
+    Boolean glowing = nbtItem.hasTag("Glowing") && nbtItem.getType("Glowing") == NBTType.NBTTagByte ? nbtItem.getBoolean("Glowing") : null;
+
+
+    int entityId = Method.random(1, Integer.MAX_VALUE);
+    String key = location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
+    Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(key, new HashSet<>());
+    integerSet.add(entityId);
+    ITEM_DISPLAY_MAP.put(key, integerSet);
+
+    ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     PacketContainer packet = protocolManager.createPacket(Server.SPAWN_ENTITY);
     packet.getIntegers().write(0, entityId);
-    packet.getEntityTypeModifier().write(0, EntityType.ITEM_DISPLAY);
+    packet.getEntityTypeModifier().write(0, entityType);
     // Set location
-    packet.getDoubles().write(0, location.getX() + 0.50005);
-    packet.getDoubles().write(1, location.getY() + 0.5001);
-    packet.getDoubles().write(2, location.getZ() + 0.50005);
+    packet.getDoubles().write(0, location.getX() + 0.5);
+    packet.getDoubles().write(1, location.getY() + 0.5);
+    packet.getDoubles().write(2, location.getZ() + 0.5);
     // Set yaw/pitch
     packet.getBytes().write(0, (byte) (rotationY * 256f / 360f));
     packet.getBytes().write(1, (byte) (rotationX * 256f / 360f));
@@ -287,15 +362,26 @@ public class BlockPlaceDataConfig extends ChunkConfig
     StructureModifier<List<WrappedDataValue>> watchableAccessor = edit.getDataValueCollectionModifier();
     List<WrappedDataValue> values = Lists.newArrayList(
             new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(
-                    translationX + offset[0] * scaleX * 0.5f,
-                    translationY + offset[1] * scaleY + 0.50005f,
-                    translationZ + offset[2] * scaleZ * 0.5f)),
+                    translationX + offset[0] * scaleX,
+                    translationY + offset[1] * scaleY,
+                    translationZ + offset[2] * scaleZ)),
             new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(
-                    2.001f * scaleX * (modifier == -1 ? 1f : 0.5f),
-                    2.001f * scaleY * (modifier == -1 ? 1f : 0.5f),
-                    2.001f * scaleZ * (modifier == -1 ? 1f : 0.5f))),
-            new WrappedDataValue(16, Registry.get(Float.class), view_range),
-            new WrappedDataValue(22, Registry.getItemStackSerializer(false), minecraftItemStack)
+                    1.0005f * scaleX,
+                    1.0005f * scaleY,
+                    1.0005f * scaleZ)),
+//            new WrappedDataValue(12, Registry.get(Vector4f.class), new Vector4f(
+//                    leftRotationX, leftRotationY, leftRotationZ, leftRotationW
+//            )),
+//            new WrappedDataValue(13, Registry.get(Vector4f.class), new Vector4f(
+//                    rightRotationX, rightRotationY, rightRotationZ, rightRotationW
+//            )),
+            new WrappedDataValue(14, Registry.get(Byte.class), billBoard),
+            new WrappedDataValue(16, Registry.get(Float.class), viewRange * ("player_heads".equals(type) ? 0.5f : 1f)),
+            new WrappedDataValue(17, Registry.get(Float.class), shadowRadius),
+            new WrappedDataValue(18, Registry.get(Float.class), shadowStrength),
+            new WrappedDataValue(19, Registry.get(Float.class), width),
+            new WrappedDataValue(20, Registry.get(Float.class), height),
+            new WrappedDataValue(21, Registry.get(Integer.class), glowColorOverride)
     );
     if (glowing != null)
     {
@@ -305,13 +391,119 @@ public class BlockPlaceDataConfig extends ChunkConfig
     {
       values.add(new WrappedDataValue(15, Registry.get(Integer.class), brightnessBlock << 4 | brightnessSky << 20));
     }
-    if (glowColorOverride > -1)
+    switch (type)
     {
-      values.add(new WrappedDataValue(21, Registry.get(Integer.class), glowColorOverride));
+      // TODO: WIP
+      case "block" ->
+      {
+        Material material;
+        try
+        {
+          material = Material.valueOf(value);
+        }
+        catch (IllegalArgumentException e)
+        {
+          MessageUtil.sendWarn(Bukkit.getConsoleSender(), "잘못된 블록 데이터가 있습니다: " + value);
+          material = Material.AIR;
+        }
+        values.add(new WrappedDataValue(22, Registry.get(Integer.class), 35 + (1 << 0xC)));
+      }
+      case "player_head", "player_heads" ->
+      {
+        ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+        ItemStackUtil.setTexture(skullMeta, value);
+        itemStack.setItemMeta(skullMeta);
+        Object minecraftItemStack = MinecraftReflection.getMinecraftItemStack(itemStack);
+        values.add(new WrappedDataValue(22, Registry.getItemStackSerializer(false), minecraftItemStack));
+
+        int itemDisplay = 0;
+        if (nbtItem.hasTag("item_display") && nbtItem.getType("item_display") == NBTType.NBTTagString)
+        {
+          itemDisplay = switch (nbtItem.getString("item_display"))
+                  {
+                    case "third_person_left_hand" -> 1;
+                    case "third_person_right_hand" -> 2;
+                    case "first_person_left_hand" -> 3;
+                    case "first_person_right_hand" -> 4;
+                    case "head" -> 5;
+                    case "gui" -> 6;
+                    case "ground" -> 7;
+                    case "fixed" -> 8;
+                    default -> 0;
+                  };
+        }
+        if (itemDisplay != 0)
+        {
+          // packet bug?? disabled temporaly
+//          values.add(new WrappedDataValue(23, Registry.get(Integer.class), itemDisplay));
+        }
+      }
+      case "item" ->
+      {
+        ItemStack itemStack = ItemStackUtil.createItemStack(Bukkit.getConsoleSender(), value);
+        if (itemStack == null)
+        {
+          MessageUtil.sendWarn(Bukkit.getConsoleSender(), "잘못된 아이템 데이터가 있습니다: " + value);
+          itemStack = new ItemStack(Material.AIR);
+        }
+        else
+        {
+          ItemLore.setItemLore(itemStack);
+        }
+        Object minecraftItemStack = MinecraftReflection.getMinecraftItemStack(itemStack);
+        values.add(new WrappedDataValue(22, Registry.getItemStackSerializer(false), minecraftItemStack));
+        int itemDisplay = 0;
+        if (nbtItem.hasTag("item_display") && nbtItem.getType("item_display") == NBTType.NBTTagString)
+        {
+          itemDisplay = switch (nbtItem.getString("item_display"))
+                  {
+                    case "third_person_left_hand" -> 1;
+                    case "third_person_right_hand" -> 2;
+                    case "first_person_left_hand" -> 3;
+                    case "first_person_right_hand" -> 4;
+                    case "head" -> 5;
+                    case "gui" -> 6;
+                    case "ground" -> 7;
+                    case "fixed" -> 8;
+                    default -> 0;
+                  };
+        }
+        if (itemDisplay != 0)
+        {
+          // packet bug?? disabled temporaly
+//          values.add(new WrappedDataValue(23, Registry.get(Integer.class), itemDisplay));
+        }
+      }
+      case "text" ->
+      {
+        WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromJson(ComponentUtil.serializeAsJson(ComponentUtil.create(value)));
+        values.add(new WrappedDataValue(22, Registry.getChatComponentSerializer(), wrappedChatComponent.getHandle()));
+        int lineWidth = nbtItem.hasTag("line_width") && nbtItem.getType("line_width") == NBTType.NBTTagInt ? nbtItem.getInteger("line_width") : 200;
+        int background = nbtItem.hasTag("background") && nbtItem.getType("background") == NBTType.NBTTagInt ? nbtItem.getInteger("background") : 0x40_00_00_00;
+        byte textOpacity = nbtItem.hasTag("text_opacity") && nbtItem.getType("text_opacity") == NBTType.NBTTagByte ? nbtItem.getByte("text_opacity") : -1;
+        byte bitMask = 0;
+        if (nbtItem.hasTag("shadow") && nbtItem.getType("shadow") == NBTType.NBTTagByte && nbtItem.getBoolean("shadow"))
+        {
+          bitMask |= 0x01;
+        }
+        if (nbtItem.hasTag("see_through") && nbtItem.getType("see_through") == NBTType.NBTTagByte && nbtItem.getBoolean("see_through"))
+        {
+          bitMask |= 0x02;
+        }
+        if (nbtItem.hasTag("default_background") && nbtItem.getType("default_background") == NBTType.NBTTagByte && nbtItem.getBoolean("default_background"))
+        {
+          bitMask |= 0x04;
+        }
+        values.add(new WrappedDataValue(23, Registry.get(Integer.class), lineWidth));
+        values.add(new WrappedDataValue(24, Registry.get(Integer.class), background));
+        values.add(new WrappedDataValue(25, Registry.get(Byte.class), textOpacity));
+        values.add(new WrappedDataValue(26, Registry.get(Byte.class), bitMask));
+      }
     }
+
     watchableAccessor.write(0, values);
     edit.getIntegers().write(0, entityId);
-
     for (Player player : players)
     {
       protocolManager.sendServerPacket(player, packet);
@@ -341,17 +533,24 @@ public class BlockPlaceDataConfig extends ChunkConfig
       return;
     }
     NBTItem nbtItem = new NBTItem(itemStack);
-    NBTList<String> urls = nbtItem.getStringList("urls");
-    if (urls.size() == 8)
+    if (!nbtItem.getKeys().contains("displays"))
     {
-      for (int i = 0; i < 8; i++)
-      {
-        spawnItemDisplay_(players, location, nbtItem, urls, i);
-      }
+      return;
     }
-    else
+    if (nbtItem.getType("displays") == NBTType.NBTTagCompound)
     {
-      spawnItemDisplay_(players, location, nbtItem, null, -1);
+      _spawnItemDisplay(players, location, nbtItem.getCompound("displays"));
+    }
+    else if (nbtItem.getType("displays") == NBTType.NBTTagList)
+    {
+      NBTCompoundList nbtCompoundList = nbtItem.getCompoundList("displays");
+      for (ReadWriteNBT readWriteNBT : nbtCompoundList)
+      {
+        if (readWriteNBT instanceof NBTCompound nbtCompound)
+        {
+          _spawnItemDisplay(players, location, nbtCompound);
+        }
+      }
     }
   }
 
@@ -381,56 +580,137 @@ public class BlockPlaceDataConfig extends ChunkConfig
     {
       return;
     }
-    Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), new HashSet<>());
-    for (int id : integerSet)
+    try
     {
-      ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-      PacketContainer remove = protocolManager.createPacket(Server.ENTITY_DESTROY);
-      remove.getIntLists().write(0, List.of(id));
-      for (Player player : players)
+      Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), new HashSet<>());
+      for (int id : integerSet)
       {
-        protocolManager.sendServerPacket(player, remove);
-      }
-    }
-  }
-
-  public static void onPlayerChunkLoad(PlayerChunkLoadEvent event)
-  {
-    Player player = event.getPlayer();
-    Chunk chunk = event.getChunk();
-    BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
-    YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
-    ConfigurationSection root = cfg.getRoot();
-    if (root != null)
-    {
-      for (String key : root.getKeys(false))
-      {
-        Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
-        if (location != null)
+        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+        PacketContainer remove = protocolManager.createPacket(Server.ENTITY_DESTROY);
+        remove.getIntLists().write(0, List.of(id));
+        for (Player player : players)
         {
-          BlockPlaceDataConfig.spawnItemDisplay(player, location);
+          protocolManager.sendServerPacket(player, remove);
         }
       }
     }
+    catch (ConcurrentModificationException e)
+    {
+      MessageUtil.consoleSendMessage("아야");
+    }
+  }
+
+  public static final HashMap<UUID, List<Chunk>> CHUNK_MAP = new HashMap<>();
+
+  public static void display(@NotNull Player player, @NotNull Location currentLocation)
+  {
+    UUID uuid = player.getUniqueId();
+    World currentWorld = currentLocation.getWorld();
+    Chunk currentChunk = currentLocation.getChunk();
+    int currentChunkX = currentChunk.getX(), currentChunkZ = currentChunk.getZ();
+    List<Chunk> nearbyChunks = new ArrayList<>();
+    for (int x = -3; x <= 3; x++)
+    {
+      for (int z = -3; z <= 3; z++)
+      {
+        if (Math.abs(x) <= 2 && Math.abs(z) <= 2)
+        {
+          nearbyChunks.add(currentWorld.getChunkAt(currentChunkX + x, currentChunkZ + z));
+        }
+      }
+    }
+    List<Chunk> map = CHUNK_MAP.getOrDefault(uuid, new ArrayList<>());
+    for (Chunk chunk : nearbyChunks)
+    {
+      if (map.contains(chunk))
+      {
+        continue;
+      }
+      map.add(chunk);
+      BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
+      YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
+      ConfigurationSection root = cfg.getRoot();
+      if (root != null)
+      {
+        for (String key : root.getKeys(false))
+        {
+          Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
+          if (location != null)
+          {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () -> spawnItemDisplay(player, location), 0);
+          }
+        }
+      }
+    }
+    CHUNK_MAP.put(uuid, map);
+  }
+
+  public static void hide(@NotNull Player player, @NotNull Location currentLocation)
+  {
+    UUID uuid = player.getUniqueId();
+    List<Chunk> map = CHUNK_MAP.getOrDefault(uuid, new ArrayList<>());
+    if (map.isEmpty())
+    {
+      return;
+    }
+    World currentWorld = currentLocation.getWorld();
+    Chunk currentChunk = currentLocation.getChunk();
+    int currentChunkX = currentChunk.getX(), currentChunkZ = currentChunk.getZ();
+    List<Chunk> farChunks = new ArrayList<>();
+    for (int x = -3; x <= 3; x++)
+    {
+      for (int z = -3; z <= 3; z++)
+      {
+        if (!(Math.abs(x) <= 2 && Math.abs(z) <= 2))
+        {
+          farChunks.add(currentWorld.getChunkAt(currentChunkX + x, currentChunkZ + z));
+        }
+      }
+    }
+    for (Chunk chunk : farChunks)
+    {
+      map.remove(chunk);
+      BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
+      YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
+      ConfigurationSection root = cfg.getRoot();
+      if (root != null)
+      {
+        for (String key : root.getKeys(false))
+        {
+          Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
+          if (location != null)
+          {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () -> despawnItemDisplay(player, location), 0);
+          }
+        }
+      }
+    }
+    CHUNK_MAP.put(uuid, map);
+  }
+
+  public static void calculateDisplay(@NotNull Player player, @NotNull Location currentLocation)
+  {
+    display(player, currentLocation);
+    hide(player, currentLocation);
+  }
+
+  public static void onPlayerMove(PlayerMoveEvent event)
+  {
+    if (!event.hasChangedBlock())
+    {
+      return;
+    }
+    Location from = event.getFrom(), to = event.getTo();
+    Chunk fromChunk = from.getChunk(), toChunk = to.getChunk();
+    if (from.getBlockY() / 16 == to.getBlockY() / 16 && fromChunk.getX() == toChunk.getX() && fromChunk.getZ() == toChunk.getZ())
+    {
+      return;
+    }
+    calculateDisplay(event.getPlayer(), to);
   }
 
   public static void onPlayerChunkUnload(PlayerChunkUnloadEvent event)
   {
-    Player player = event.getPlayer();
-    Chunk chunk = event.getChunk();
-    BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
-    YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
-    ConfigurationSection root = cfg.getRoot();
-    if (root != null)
-    {
-      for (String key : root.getKeys(false))
-      {
-        Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
-        if (location != null)
-        {
-          BlockPlaceDataConfig.despawnItemDisplay(player, location);
-        }
-      }
-    }
+
   }
 }

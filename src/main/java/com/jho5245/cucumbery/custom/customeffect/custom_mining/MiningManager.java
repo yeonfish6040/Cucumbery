@@ -698,13 +698,17 @@ public class MiningManager
             }
           }
           NBTList<String> extraTag = NBTAPI.getStringList(NBTAPI.getMainCompound(dataItem), CucumberyTag.EXTRA_TAGS_KEY);
-          if (removeKeys)
-          {
-            dataNBTItem.removeKey("url");
-          }
           if (removeKeys && NBTAPI.arrayContainsValue(extraTag, ExtraTag.PRESERVE_BLOCK_NBT))
           {
             dataNBTItem.getCompound(CucumberyTag.KEY_MAIN).getStringList(CucumberyTag.EXTRA_TAGS_KEY).removeIf(s -> s.equals(ExtraTag.PRESERVE_BLOCK_NBT.toString()));
+          }
+          if (dataNBTItem.hasTag("displays") && dataNBTItem.getCompound("displays").hasTag("rotation") && (dataNBTItem.hasTag("perspectiveYaw") || dataNBTItem.hasTag("perspectivePitch")))
+          {
+            dataNBTItem.getCompound("displays").removeKey("rotation");
+            if (dataNBTItem.getCompound("displays").getKeys().isEmpty())
+            {
+              dataNBTItem.removeKey("displays");
+            }
           }
           try
           {

@@ -9,6 +9,7 @@ import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Scheduler;
@@ -46,6 +47,10 @@ public class PlayerJoin implements Listener
       //			Method.broadcastDebug("캐시 유저 데이터 생성 - " + uuid.toString());
       Initializer.loadPlayerConfig(player);
       //			Method.broadcastDebug("데이터 생성 완료, 현재 캐시 유저 데이터 개수 : §e" + Variable.userData.size() + "개");
+    }
+    if (Cucumbery.using_ProtocolLib)
+    {
+      BlockPlaceDataConfig.display(player, player.getLocation());
     }
     Initializer.setNickName(player);
     String name = player.getName();

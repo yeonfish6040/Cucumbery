@@ -12,6 +12,7 @@ import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMini
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeRune;
 import com.jho5245.cucumbery.deathmessages.LastTrampledBlockManager;
 import com.jho5245.cucumbery.events.entity.EntityLandOnGroundEvent;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.no_groups.Scheduler;
@@ -85,6 +86,7 @@ public class PlayerMove implements Listener
     }
     this.entityLandOnGround(event);
     this.getLastTrampledBlock(event);
+    BlockPlaceDataConfig.onPlayerMove(event);
   }
 
   private void customMaterial(PlayerMoveEvent event)

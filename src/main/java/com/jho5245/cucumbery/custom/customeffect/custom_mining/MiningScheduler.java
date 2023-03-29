@@ -592,25 +592,7 @@ public class MiningScheduler
           {
             for (ItemStack item : drops)
             {
-/*              MessageUtil.broadcastDebug(item);
-              CustomMaterial c = CustomMaterial.itemStackOf(item);
-              boolean dropped = false;
-              if (c != null)
-              {
-                switch (c)
-                {
-                  case WNYNYA_ORE ->
-                  {
-                    dropped = true;
-                    Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                            player.getWorld().dropItemNaturally(location, item), 0L);
-                  }
-                }
-              }
-              if (!dropped)
-              {*/
-                player.getWorld().dropItemNaturally(location, item);
-//              }
+              player.getWorld().dropItemNaturally(location, item);
             }
           }
           if (mode3 && block.getState() instanceof BlockInventoryHolder inventoryHolder && !(inventoryHolder instanceof ShulkerBox))
