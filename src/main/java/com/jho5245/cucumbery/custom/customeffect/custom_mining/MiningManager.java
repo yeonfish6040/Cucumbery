@@ -186,13 +186,6 @@ public class MiningManager
     int blockTier = getVanillaBlockTier(blockType), toolTier = getToolTier(itemStack);
     float blockHardness = getBlockHardness(blockType), toolSpeed = getToolSpeed(itemStack);
     boolean toolSpeedZero = toolSpeed <= 0f;
-    float multiplier = 100f;
-    YamlConfiguration config = Cucumbery.config;
-    if (config.contains("custom-mining.default-block-info.multiplier"))
-    {
-      multiplier = (float) config.getDouble("custom-mining.default-block-info.multiplier");
-    }
-    blockHardness *= multiplier;
     // 드롭 경험치
     float expToDrop = 0;
     // 채광 속도 처리
@@ -265,7 +258,7 @@ public class MiningManager
             if (!hasDwarvenGoldEffect)
             {
               blockTier = getVanillaBlockTier(Material.STONE);
-              blockHardness = getBlockHardness(Material.STONE) * multiplier;
+              blockHardness = getBlockHardness(Material.STONE);
               drops.clear();
               drops.add(new ItemStack(isSilkTouch ? Material.STONE : Material.COBBLESTONE));
               expToDrop = 0f;
@@ -299,7 +292,7 @@ public class MiningManager
             if (!hasDwarvenGoldEffect)
             {
               blockTier = getVanillaBlockTier(Material.STONE);
-              blockHardness = getBlockHardness(Material.STONE) * multiplier;
+              blockHardness = getBlockHardness(Material.STONE);
               drops.clear();
               drops.add(new ItemStack(isSilkTouch ? Material.STONE : Material.COBBLESTONE));
               expToDrop = 0f;
@@ -333,7 +326,7 @@ public class MiningManager
             if (!hasDwarvenGoldEffect)
             {
               blockTier = getVanillaBlockTier(Material.STONE);
-              blockHardness = getBlockHardness(Material.STONE) * multiplier;
+              blockHardness = getBlockHardness(Material.STONE);
               drops.clear();
               drops.add(new ItemStack(isSilkTouch ? Material.STONE : Material.COBBLESTONE));
               expToDrop = 0f;
@@ -368,7 +361,7 @@ public class MiningManager
             if (!hasDwarvenGoldEffect)
             {
               blockTier = getVanillaBlockTier(Material.STONE);
-              blockHardness = getBlockHardness(Material.STONE) * multiplier;
+              blockHardness = getBlockHardness(Material.STONE);
               drops.clear();
               drops.add(new ItemStack(isSilkTouch ? Material.STONE : Material.COBBLESTONE));
               expToDrop = 0f;
@@ -402,7 +395,7 @@ public class MiningManager
             if (!hasDwarvenGoldEffect)
             {
               blockTier = getVanillaBlockTier(Material.STONE);
-              blockHardness = getBlockHardness(Material.STONE) * multiplier;
+              blockHardness = getBlockHardness(Material.STONE);
               drops.clear();
               drops.add(new ItemStack(isSilkTouch ? Material.STONE : Material.COBBLESTONE));
               expToDrop = 0f;
@@ -436,7 +429,7 @@ public class MiningManager
             if (!hasDwarvenGoldEffect)
             {
               blockTier = getVanillaBlockTier(Material.STONE);
-              blockHardness = getBlockHardness(Material.STONE) * multiplier;
+              blockHardness = getBlockHardness(Material.STONE);
               drops.clear();
               drops.add(new ItemStack(isSilkTouch ? Material.STONE : Material.COBBLESTONE));
               expToDrop = 0f;
@@ -568,7 +561,7 @@ public class MiningManager
       if (blockDataType == Material.COBBLESTONE || blockDataType == Material.COBBLED_DEEPSLATE)
       {
         blockTier = getVanillaBlockTier(blockType);
-        blockHardness = getBlockHardness(blockDataType) * multiplier;
+        blockHardness = getBlockHardness(blockDataType);
         drops.clear();
         drops.add(new ItemStack(blockDataType));
         expToDrop = 0f;
@@ -580,7 +573,7 @@ public class MiningManager
           case STONE_SLAB, STONE_STAIRS ->
           {
             blockTier = getVanillaBlockTier(Material.STONE);
-            blockHardness = getBlockHardness(Material.STONE) * multiplier;
+            blockHardness = getBlockHardness(Material.STONE);
             drops.clear();
             drops.add(new ItemStack(isSilkTouch ? Material.STONE : Material.COBBLESTONE));
             expToDrop = 0f;
@@ -588,7 +581,7 @@ public class MiningManager
           case COBBLESTONE_SLAB, COBBLESTONE_STAIRS ->
           {
             blockTier = getVanillaBlockTier(Material.COBBLESTONE);
-            blockHardness = getBlockHardness(Material.COBBLESTONE) * multiplier;
+            blockHardness = getBlockHardness(Material.COBBLESTONE);
             drops.clear();
             drops.add(new ItemStack(Material.COBBLESTONE));
             expToDrop = 0f;
@@ -911,7 +904,7 @@ public class MiningManager
     {
       if (blockTier == 0 && block.getDestroySpeed(itemStack, false) == 1f)
       {
-        float defaultSpeed = (float) config.getDouble("custom-mining.default-tool-info.default.speed");
+        float defaultSpeed = (float) Cucumbery.config.getDouble("custom-mining.default-tool-info.default.speed");
         if (miningSpeed > defaultSpeed)
         {
           miningSpeed = defaultSpeed;
@@ -1305,12 +1298,17 @@ public class MiningManager
 
   public static float getBlockHardness(@NotNull Material type)
   {
+    float multiplier = 100f;
     YamlConfiguration config = Cucumbery.config;
+    if (config.contains("custom-mining.default-block-info.multiplier"))
+    {
+      multiplier = (float) config.getDouble("custom-mining.default-block-info.multiplier");
+    }
     if (config.contains("custom-mining.default-block-info." + type + ".hardness"))
     {
-      return (float) config.getDouble("custom-mining.default-block-info." + type + ".hardness");
+      return (float) config.getDouble("custom-mining.default-block-info." + type + ".hardness") * multiplier;
     }
-    return type.getHardness();
+    return type.getHardness() * multiplier;
   }
 
   public static void quitCustomMining(@NotNull Player player)

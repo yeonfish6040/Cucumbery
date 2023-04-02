@@ -24,7 +24,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
@@ -44,13 +46,37 @@ public class BlockPlaceDataConfig extends ChunkConfig
   }
 
   /**
-   * 이거 5분마다 호출해야함 파일 IO임
+   * 이거 1분마다 호출해야함 파일 IO임
    */
   public static void saveAll()
   {
     MAP.forEach((s, blockPlaceDataConfig) -> blockPlaceDataConfig.saveConfig());
-    MAP.keySet().removeIf(s -> !MAP.get(s).getChunk().isLoaded());
+    List<String> keySet = new ArrayList<>(MAP.keySet());
+    if (!keySet.isEmpty())
+    {
+      Timer timer = new Timer();
+      TimerTask task = new TimerTask()
+      {
+        @Override
+        public void run()
+        {
+          if (keySet.isEmpty())
+          {
+            timer.cancel();
+            return;
+          }
+          if (MAP.containsKey(keySet.get(0)))
+          {
+            MAP.get(keySet.get(0)).saveConfig();
+            keySet.remove(0);
+          }
+        }
+      };
+      timer.schedule(task, 0, 50);
+      TIMERS.add(timer);
+    }
 
+    MAP.keySet().removeIf(s -> !MAP.get(s).getChunk().isLoaded());
   }
 
   public void save()
@@ -369,6 +395,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
                     1.0005f * scaleX,
                     1.0005f * scaleY,
                     1.0005f * scaleZ)),
+            // TODO: NO serializer for 4d packet yet
 //            new WrappedDataValue(12, Registry.get(Vector4f.class), new Vector4f(
 //                    leftRotationX, leftRotationY, leftRotationZ, leftRotationW
 //            )),
@@ -396,7 +423,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
       // TODO: WIP
       case "block" ->
       {
-        Material material;
+/*        Material material;
         try
         {
           material = Material.valueOf(value);
@@ -406,7 +433,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
           MessageUtil.sendWarn(Bukkit.getConsoleSender(), "잘못된 블록 데이터가 있습니다: " + value);
           material = Material.AIR;
         }
-        values.add(new WrappedDataValue(22, Registry.get(Integer.class), 35 + (1 << 0xC)));
+        values.add(new WrappedDataValue(22, Registry.get(Integer.class), 35 + (1 << 0xC)));*/
       }
       case "player_head", "player_heads" ->
       {
@@ -435,7 +462,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
         }
         if (itemDisplay != 0)
         {
-          // packet bug?? disabled temporaly
+          // TODO: packet bug?? disabled temporaly
 //          values.add(new WrappedDataValue(23, Registry.get(Integer.class), itemDisplay));
         }
       }
@@ -471,7 +498,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
         }
         if (itemDisplay != 0)
         {
-          // packet bug?? disabled temporaly
+          // TODO: packet bug?? disabled temporaly
 //          values.add(new WrappedDataValue(23, Registry.get(Integer.class), itemDisplay));
         }
       }
@@ -613,13 +640,11 @@ public class BlockPlaceDataConfig extends ChunkConfig
     {
       for (int z = -3; z <= 3; z++)
       {
-        if (Math.abs(x) <= 2 && Math.abs(z) <= 2)
-        {
-          nearbyChunks.add(currentWorld.getChunkAt(currentChunkX + x, currentChunkZ + z));
-        }
+        nearbyChunks.add(currentWorld.getChunkAt(currentChunkX + x, currentChunkZ + z));
       }
     }
     List<Chunk> map = CHUNK_MAP.getOrDefault(uuid, new ArrayList<>());
+    List<Location> locations = new ArrayList<>();
     for (Chunk chunk : nearbyChunks)
     {
       if (map.contains(chunk))
@@ -637,15 +662,37 @@ public class BlockPlaceDataConfig extends ChunkConfig
           Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
           if (location != null)
           {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () -> spawnItemDisplay(player, location), 0);
+            locations.add(location);
           }
         }
       }
     }
+    if (!locations.isEmpty())
+    {
+      Timer timer = new Timer();
+      TimerTask task = new TimerTask()
+      {
+        @Override
+        public void run()
+        {
+          if (locations.isEmpty())
+          {
+            timer.cancel();
+            return;
+          }
+          spawnItemDisplay(player, locations.get(0));
+          locations.remove(0);
+        }
+      };
+      timer.schedule(task, 0, 20);
+      TIMERS.add(timer);
+    }
     CHUNK_MAP.put(uuid, map);
   }
 
-  public static void hide(@NotNull Player player, @NotNull Location currentLocation)
+  public static final List<Timer> TIMERS = new ArrayList<>();
+
+/*  public static void hide(@NotNull Player player, @NotNull Location currentLocation)
   {
     UUID uuid = player.getUniqueId();
     List<Chunk> map = CHUNK_MAP.getOrDefault(uuid, new ArrayList<>());
@@ -686,13 +733,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
       }
     }
     CHUNK_MAP.put(uuid, map);
-  }
-
-  public static void calculateDisplay(@NotNull Player player, @NotNull Location currentLocation)
-  {
-    display(player, currentLocation);
-    hide(player, currentLocation);
-  }
+  }*/
 
   public static void onPlayerMove(PlayerMoveEvent event)
   {
@@ -706,11 +747,120 @@ public class BlockPlaceDataConfig extends ChunkConfig
     {
       return;
     }
-    calculateDisplay(event.getPlayer(), to);
+    display(event.getPlayer(), to);
+  }
+
+  public static void onPlayerChangedWorld(PlayerChangedWorldEvent event)
+  {
+    Player player = event.getPlayer();
+    UUID uuid = player.getUniqueId();
+    CHUNK_MAP.remove(uuid);
+  }
+
+  public static void onPlayerTeleport(PlayerTeleportEvent event)
+  {
+    Player player = event.getPlayer();
+    Location from = event.getFrom(), to = event.getTo();
+    if (!from.getWorld().getName().equals(to.getWorld().getName()))
+    {
+      return;
+    }
+    int viewDistance = Bukkit.getViewDistance();
+    if (from.distance(to) > viewDistance * 16)
+    {
+      Chunk fromChunk = from.getChunk();
+      int chunkX = fromChunk.getX(), chunkZ = fromChunk.getZ();
+      List<Location> locations = new ArrayList<>();
+      for (int i = -viewDistance; i <= chunkX + viewDistance; i++)
+      {
+        for (int j = -viewDistance; j <= chunkZ + viewDistance; j++)
+        {
+          Chunk chunk = from.getWorld().getChunkAt(i, j);
+          BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
+          YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
+          ConfigurationSection root = cfg.getRoot();
+          if (root != null)
+          {
+            for (String key : root.getKeys(false))
+            {
+              Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
+              if (location != null)
+              {
+                locations.add(location);
+              }
+            }
+          }
+        }
+      }
+      if (!locations.isEmpty())
+      {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask()
+        {
+          @Override
+          public void run()
+          {
+            if (locations.isEmpty())
+            {
+              timer.cancel();
+              return;
+            }
+            despawnItemDisplay(player, locations.get(0));
+            locations.remove(0);
+          }
+        };
+        timer.schedule(task, 0, 5);
+        TIMERS.add(timer);
+      }
+    }
   }
 
   public static void onPlayerChunkUnload(PlayerChunkUnloadEvent event)
   {
-
+    if (true)
+    {
+      return;
+    }
+    Player player = event.getPlayer();
+    Chunk chunk = event.getChunk();
+    UUID uuid = player.getUniqueId();
+    BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(chunk);
+    YamlConfiguration cfg = blockPlaceDataConfig.getConfig();
+    ConfigurationSection root = cfg.getRoot();
+    List<Location> locations = new ArrayList<>();
+    if (root != null)
+    {
+      for (String key : root.getKeys(false))
+      {
+        Location location = ChunkConfig.stringToLocation(player.getWorld(), key);
+        if (location != null)
+        {
+          locations.add(location);
+        }
+      }
+    }
+    List<Chunk> chunks = CHUNK_MAP.get(uuid);
+    chunks.remove(chunk);
+    CHUNK_MAP.put(uuid, chunks);
+    if (!locations.isEmpty())
+    {
+      Timer timer = new Timer();
+      TimerTask task = new TimerTask()
+      {
+        @Override
+        public void run()
+        {
+          if (locations.isEmpty())
+          {
+            timer.cancel();
+            return;
+          }
+          despawnItemDisplay(player, locations.get(0));
+          locations.remove(0);
+        }
+      };
+      timer.schedule(task, 0, 5);
+      TIMERS.add(timer);
+    }
   }
 }

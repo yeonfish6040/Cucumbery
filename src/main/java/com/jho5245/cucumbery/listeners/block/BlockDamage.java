@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.listeners.block;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
@@ -40,7 +41,10 @@ public class BlockDamage implements Listener
       }
       if (!(block.getType() == Material.FIRE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE)))
       {
-        event.setCancelled(true);
+        if (!Cucumbery.using_mcMMO)
+        {
+          event.setCancelled(true);
+        }
       }
       if (!Variable.customMiningCooldown.containsKey(location) || Variable.customMiningExtraBlocks.containsKey(location))
       {

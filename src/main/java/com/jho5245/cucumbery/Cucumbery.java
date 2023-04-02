@@ -109,6 +109,7 @@ import org.maxgamer.quickshop.api.shop.Shop;
 
 import java.io.File;
 import java.util.List;
+import java.util.Timer;
 import java.util.UUID;
 
 public class Cucumbery extends JavaPlugin
@@ -356,6 +357,7 @@ public class Cucumbery extends JavaPlugin
           e.printStackTrace();
         }
       });
+      BlockPlaceDataConfig.TIMERS.forEach(Timer::cancel);
     }
     for (UUID uuid : Variable.customEffectBossBarMap.keySet())
     {
@@ -781,8 +783,10 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerEvent(new BlockPhysics());
     Initializer.registerEvent(new BlockPlace());
     Initializer.registerEvent(new BlockPreDispense());
+    Initializer.registerEvent(new CustomBlockBreak());
     Initializer.registerEvent(new EntityBlockForm());
     Initializer.registerEvent(new NotePlay());
+    Initializer.registerEvent(new PreCustomBlockBreak());
     Initializer.registerEvent(new TNTPrime());
 
     // listener.block.piston

@@ -1346,6 +1346,10 @@ public class MessageUtil
       word = word.replaceAll("[+()<>\\[\\]∞.#@&%!?\"'\\\\$_,*~\\-]", "");
       word = word.replace("ㄹ", "갈");
       word = word.replace("'", "").replace("\"", "");
+      if (word.length() == 1)
+      {
+        word = word.toUpperCase();
+      }
       char c;
       boolean b = true;
       String test = KoreanUtils.format("%s는", word);

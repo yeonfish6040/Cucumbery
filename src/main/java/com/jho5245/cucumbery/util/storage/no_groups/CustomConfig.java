@@ -383,6 +383,8 @@ public class CustomConfig
 
     SHOW_DEATH_SELF_MESSAGE("자신의-데스-메시지-표시", true),
     SHOW_DEATH_PVP_MESSAGE("데스-메시지-PVP-표시", true),
+
+    SHOW_DEATH_LOCATION_ON_CHAT("사망-시-죽은-위치-채팅창에-표시", false),
     ;
 
     private final String key;

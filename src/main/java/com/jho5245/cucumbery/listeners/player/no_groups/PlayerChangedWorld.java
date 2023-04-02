@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.listeners.player.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningScheduler;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.PlaceHolderUtil;
@@ -29,6 +30,10 @@ public class PlayerChangedWorld implements Listener
     Player player = event.getPlayer();
     UUID uuid = player.getUniqueId();
     Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+    if (Cucumbery.using_ProtocolLib)
+    {
+      BlockPlaceDataConfig.onPlayerChangedWorld(event);
+    }
     if (Cucumbery.config.getBoolean("world-change.enabled"))
     {
       Location location = player.getLocation();

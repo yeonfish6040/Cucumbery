@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
@@ -35,6 +36,10 @@ public class PlayerQuit implements Listener
     String name = player.getName();
     FileConfiguration cfg = Cucumbery.config;
     Component displayName = SenderComponentUtil.senderComponent(player);
+    if (Cucumbery.using_ProtocolLib)
+    {
+      BlockPlaceDataConfig.CHUNK_MAP.clear();
+    }
     Location location = player.getLocation();
     List<String> noTellrawWorlds = cfg.getStringList("no-tellraw-feature-on-quit-worlds"), noActionbarWorlds = cfg.getStringList("no-actionbar-feature-on-quit-worlds");
     boolean enabledTellraw = cfg.getBoolean("use-tellraw-feature-on-quit") && !Method.configContainsLocation(location, noTellrawWorlds);
@@ -68,12 +73,12 @@ public class PlayerQuit implements Listener
     }
 
     String quitMessage = switch (event.getReason())
-    {
-      default -> "multiplayer.player.left";
-      case KICKED -> player.isBanned() ? "%s이(가) 서버에서 정지당했습니다" : "%s이(가) 서버에서 강퇴당했습니다";
-      case TIMED_OUT -> "%s이(가) 시간이 초과되어 서버에서 강퇴당했습니다";
-      case ERRONEOUS_STATE -> "%s이(가) 오류나서 터졌습니다";
-    };
+            {
+              default -> "multiplayer.player.left";
+              case KICKED -> player.isBanned() ? "%s이(가) 서버에서 정지당했습니다" : "%s이(가) 서버에서 강퇴당했습니다";
+              case TIMED_OUT -> "%s이(가) 시간이 초과되어 서버에서 강퇴당했습니다";
+              case ERRONEOUS_STATE -> "%s이(가) 오류나서 터졌습니다";
+            };
 
     if (enabledTellraw && !isSpectator && !outsider)
     {

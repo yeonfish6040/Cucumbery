@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -69,27 +70,31 @@ public abstract class ChunkConfig
 
   public void saveConfig()
   {
-    if (customConfig == null)
+    Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
     {
-      this.customConfig = CustomConfig.getCustomConfig(getFileDirectory());
-      String str = cfg.saveToString();
-      cfg = customConfig.getConfig();
-      try
+      if (customConfig == null)
       {
-        cfg.loadFromString(str);
+        this.customConfig = CustomConfig.getCustomConfig(getFileDirectory());
+        String str = cfg.saveToString();
+        cfg = customConfig.getConfig();
+        try
+        {
+          cfg.loadFromString(str);
+        }
+        catch (InvalidConfigurationException e)
+        {
+          e.printStackTrace();
+        }
       }
-      catch (InvalidConfigurationException e)
+      if (cfg.getRoot() == null || cfg.getRoot().getKeys(false).isEmpty())
       {
-        e.printStackTrace();
+        customConfig.delete();
+        return;
       }
-    }
-    if (cfg.getRoot() == null || cfg.getRoot().getKeys(false).isEmpty())
-    {
-      customConfig.delete();
-      return;
-    }
-    customConfig.saveConfig();
+      customConfig.saveConfig();
+    }, 0L);
   }
+
   public static String locationToString(@NotNull Location location)
   {
     return location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();

@@ -10,7 +10,9 @@ import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.*;
+import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
+import com.jho5245.cucumbery.util.no_groups.MessageUtil;
+import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.*;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
@@ -181,7 +183,10 @@ public class BlockBreak implements Listener
             && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS) && blockType.getHardness() == 0f
             && BlockPlaceDataConfig.getItem(location) == null))
     {
-      event.setCancelled(true);
+      if (!Cucumbery.using_mcMMO)
+      {
+        event.setCancelled(true);
+      }
       return;
     }
 

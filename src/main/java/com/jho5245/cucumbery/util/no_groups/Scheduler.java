@@ -136,8 +136,11 @@ public class Scheduler
         Initializer.saveItemUsageData();
         Initializer.saveItemStashData();
         CustomEffectManager.save();
-        BlockPlaceDataConfig.saveAll();
       }, 1200L, 20L * 60L * 5L);
+      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      {
+        BlockPlaceDataConfig.saveAll();
+      }, 1200L, 20L * 30L);
       reinforceChancetime();
       Bukkit.getScheduler().runTaskTimer(cucumbery, () ->
       {

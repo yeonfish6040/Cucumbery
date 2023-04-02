@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -93,5 +94,10 @@ public class PlayerDeath implements Listener
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> player.spigot().respawn(), 0L);
     }
     MiningManager.quitCustomMining(player);
+    if (UserData.SHOW_DEATH_LOCATION_ON_CHAT.getBoolean(player))
+    {
+      Location location = player.getLocation();
+      MessageUtil.info(player, "죽은 위치 : %s", location);
+    }
   }
 }

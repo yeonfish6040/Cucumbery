@@ -33,7 +33,8 @@ public class JosaFormatter
   private final ArrayList<Pair<String, String>> readingRules = new ArrayList<>(Arrays.asList(
           new Pair<>("아이폰", "iPhone"),
           new Pair<>("갤럭시", "Galaxy"),
-          new Pair<>("넘버", "number")
+          new Pair<>("넘버", "number"),
+          new Pair<>("ppap", "PPAP")
   ));
   // 종성(받침) 검사 필터. 순서대로 동작함.
   private ArrayList<JongSungDetector> jongSungDetectors = new ArrayList<>(Arrays.asList(
