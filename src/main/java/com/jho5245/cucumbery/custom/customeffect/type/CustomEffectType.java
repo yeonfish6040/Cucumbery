@@ -1063,7 +1063,7 @@ public class CustomEffectType implements Translatable, EnumHideable
   @Override
   public boolean equals(Object o)
   {
-    return this == o || o instanceof CustomEffectType effectType && this.id.equals(effectType.id);
+    return this == o || o instanceof CustomEffectType effectType && this.namespacedKey.equals(effectType.namespacedKey);
   }
 
   @NotNull

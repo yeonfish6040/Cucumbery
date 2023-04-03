@@ -109,7 +109,7 @@ public class Constant
   public static final DecimalFormat Sosu2rawFormat = new DecimalFormat("###0.##");
   public static final DecimalFormat Jeongsu = new DecimalFormat("#,##0");
   public static final DecimalFormat JeongsuFloor = new DecimalFormat("#,##0");
-  public static final DecimalFormat JeongsuRawFloor = new DecimalFormat("####");
+  public static final DecimalFormat JeongsuRawFloor = new DecimalFormat("###0");
   public static final DecimalFormat Sosu1 = new DecimalFormat("#,##0.#");
   public static final DecimalFormat Sosu1Force = new DecimalFormat("#,##0.0");
   public static final DecimalFormat Sosu1ForceFloor = new DecimalFormat("#,##0.0");

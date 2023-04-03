@@ -1,5 +1,7 @@
 package com.jho5245.cucumbery.events.block;
 
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -7,6 +9,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.BlockEvent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Called when {@link MiningManager#getMiningInfo(Player, Location)} is invoked, to indicate that {@link Player} is about to start mining.
+ */
 public class PreCustomBlockBreakEvent extends BlockEvent implements Cancellable
 {
   boolean cancel;

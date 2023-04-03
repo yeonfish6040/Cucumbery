@@ -73,9 +73,9 @@ public class MiningManager
   /**
    * Gets the result of mining of a {@link Player}.
    *
-   * @param player        The player to get mining result.
-   * @param blockLocation Location of currently mining.
-   * @return Player's mining result or null if current block is on cooldown(bedrock)
+   * @param player The player to get mining result.
+   * @param blockLocation Location of the block that player is currently mining.
+   * @return Player's mining result or null if current block is on cooldown(bedrock), or player cannot mine(protection by 3rd party plugins)
    */
   @Nullable
   public static MiningResult getMiningInfo(@NotNull Player player, @NotNull Location blockLocation)
@@ -955,6 +955,10 @@ public class MiningManager
         try
         {
           value = Float.parseFloat(PlaceHolderUtil.evalString("{eval:" + formula + "}"));
+          if (Float.isNaN(value) || Float.isInfinite(value))
+          {
+            throw new NumberFormatException();
+          }
         }
         catch (NumberFormatException e)
         {

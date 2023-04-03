@@ -584,7 +584,8 @@ public class MiningScheduler
         }
         // 블록 드롭 처리(염력 인챈트나 효과가 있으면 인벤토리에 지급 혹은 블록 위치에 아이템 떨굼
         {
-          if (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
+          boolean hasTelekinesis = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS);
+          if (hasTelekinesis)
           {
             AddItemUtil.addItem(player, drops);
           }
@@ -598,22 +599,19 @@ public class MiningScheduler
           if (mode3 && block.getState() instanceof BlockInventoryHolder inventoryHolder && !(inventoryHolder instanceof ShulkerBox))
           {
             Inventory inventory = inventoryHolder.getInventory();
-            if (inventory instanceof DoubleChestInventory doubleChestInventory)
+            if (inventory instanceof DoubleChestInventory doubleChestInventory && block.getBlockData() instanceof Chest chest)
             {
-              if (block.getBlockData() instanceof Chest chest)
+              switch (chest.getType())
               {
-                switch (chest.getType())
-                {
-                  case LEFT -> inventory = doubleChestInventory.getRightSide();
-                  case RIGHT -> inventory = doubleChestInventory.getLeftSide();
-                }
+                case LEFT -> inventory = doubleChestInventory.getRightSide();
+                case RIGHT -> inventory = doubleChestInventory.getLeftSide();
               }
             }
             for (ItemStack content : inventory.getContents())
             {
               if (ItemStackUtil.itemExists(content))
               {
-                if (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.getEnchantLevel(CustomEnchant.TELEKINESIS) > 0 || CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS))
+                if (hasTelekinesis)
                 {
                   AddItemUtil.addItem(player, content);
                 }
@@ -661,7 +659,6 @@ public class MiningScheduler
               }
               BlockPlaceDataConfig.removeData(location);
               Variable.fakeBlocks.remove(location);
-
 //              Scheduler.fakeBlocksAsync(null, location, true); commented since 2022.11.08 due to no reason for calling it
             }
             else
@@ -921,22 +918,4 @@ public class MiningScheduler
       }
     }
   }
-
-//  private static void quitMining(@NotNull Player player)
-//  {
-//    UUID uuid = player.getUniqueId();
-//    Location location = player.getEyeLocation();
-//    if (!MiningScheduler.blockBreakKey.containsKey(uuid))
-//    {
-//      int random;
-//      do
-//      {
-//        random = (int) (Math.random() * Integer.MAX_VALUE);
-//      } while (MiningScheduler.blockBreakKey.containsValue(random));
-//      MiningScheduler.blockBreakKey.put(uuid, random);
-//    }
-//    Location location2 = new Location(location.getWorld(), 0, 0, 0);
-//    player.getWorld().getPlayers().forEach(p -> p.sendBlockDamage(location2, 0f, blockBreakKey.get(uuid)));
-//    CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS);
-//  }
 }

@@ -2,7 +2,6 @@ package com.jho5245.cucumbery.util.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class ChunkConfig
 {
@@ -70,29 +71,36 @@ public abstract class ChunkConfig
 
   public void saveConfig()
   {
-    Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
+    Timer timer = new Timer();
+    TimerTask timerTask = new TimerTask()
     {
-      if (customConfig == null)
+      @Override
+      public void run()
       {
-        this.customConfig = CustomConfig.getCustomConfig(getFileDirectory());
-        String str = cfg.saveToString();
-        cfg = customConfig.getConfig();
-        try
+        if (customConfig == null)
         {
-          cfg.loadFromString(str);
+          customConfig = CustomConfig.getCustomConfig(getFileDirectory());
+          String str = cfg.saveToString();
+          cfg = customConfig.getConfig();
+          try
+          {
+            cfg.loadFromString(str);
+          }
+          catch (InvalidConfigurationException e)
+          {
+            e.printStackTrace();
+          }
         }
-        catch (InvalidConfigurationException e)
+        if (cfg.getRoot() == null || cfg.getRoot().getKeys(false).isEmpty())
         {
-          e.printStackTrace();
+          customConfig.delete();
+          return;
         }
+        customConfig.saveConfig();
+        timer.cancel();
       }
-      if (cfg.getRoot() == null || cfg.getRoot().getKeys(false).isEmpty())
-      {
-        customConfig.delete();
-        return;
-      }
-      customConfig.saveConfig();
-    }, 0L);
+    };
+    timer.schedule(timerTask, 0L);
   }
 
   public static String locationToString(@NotNull Location location)

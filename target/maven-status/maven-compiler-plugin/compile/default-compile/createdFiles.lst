@@ -273,6 +273,7 @@ com\jho5245\cucumbery\listeners\player\item\PlayerAttemptPickupItem$1.class
 com\jho5245\cucumbery\util\itemlore\ItemLoreUtil$1.class
 com\jho5245\cucumbery\commands\brigadier\CommandSearchChestItem.class
 com\jho5245\cucumbery\deathmessages\Condition.class
+com\jho5245\cucumbery\listeners\block\PreCustomBlockBreakMcMMO.class
 com\jho5245\cucumbery\listeners\entity\no_groups\TameableDeathMessage.class
 com\jho5245\cucumbery\listeners\block\BlockIgnite.class
 com\jho5245\cucumbery\util\itemlore\TropicalFishLore$1.class
@@ -319,6 +320,7 @@ com\jho5245\cucumbery\commands\no_groups\CommandTrashCan.class
 com\jho5245\cucumbery\listeners\enchantment\PrepareItemEnchant.class
 com\jho5245\cucumbery\listeners\entity\no_groups\ExperienceOrbMerge.class
 com\jho5245\cucumbery\listeners\inventory\PrepareSmithing.class
+com\jho5245\cucumbery\util\no_groups\ChunkConfig$1.class
 com\jho5245\cucumbery\listeners\inventory\InventoryMoveItem.class
 com\jho5245\cucumbery\util\itemlore\ItemLore2Restriction.class
 com\jho5245\cucumbery\util\no_groups\CommandArgumentUtil$LocationTooltip.class
