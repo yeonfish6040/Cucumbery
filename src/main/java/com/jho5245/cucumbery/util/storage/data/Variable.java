@@ -272,4 +272,5 @@ public class Variable
   public static HashMap<Location, BukkitTask> customMiningMode2BlockDataTask = new HashMap<>();
 
   public static HashMap<UUID, String> entityShootBowConsumableMap = new HashMap<>();
+  public static final HashMap<UUID, Double> DAMAGE_SPREAD_MAP = new HashMap<>();
 }

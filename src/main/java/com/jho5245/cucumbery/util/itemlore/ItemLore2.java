@@ -145,7 +145,7 @@ public class ItemLore2
     // 모루 사용 횟수 설명
     ItemLore2Anvil.setItemLore(item, type, itemMeta, lore);
     // 커스텀 채광 - 채광 등급/속도/행운 설명
-    ItemLore2CustomMining.setItemLore(item, type, customMaterial, lore, nbtItem, hideFlags, viewer, params);
+    ItemLore2CustomMiningAndCustomMaterial.setItemLore(item, type, customMaterial, lore, nbtItem, hideFlags, viewer, params);
     // 인챈트된 아이템/마법이 부여된 책 설명 추가
     ItemLore2Enchant.setItemLore(item, type, itemMeta, lore, viewer, hideEnchant, eventAccessMode);
     // Custom Material일 경우애만 추가할 아이템 설명
@@ -154,7 +154,7 @@ public class ItemLore2
       ItemLore2CustomMaterial.setItemLore(viewer, customMaterial, item, itemMeta, lore);
     }
     // Attribute 설명
-    ItemLore2Attribute.setItemLore(type, itemMeta, lore, hideAttributes);
+    ItemLore2Attribute.setItemLore(type, customMaterial, item, itemMeta, lore, hideAttributes);
     // 음식 추가 상태 효과
     NBTCompound foodTag = NBTAPI.getCompound(itemTag, CucumberyTag.FOOD_KEY);
     ItemLore2Food.setItemLore(item, type, lore, foodTag, viewer, hideStatusEffects);

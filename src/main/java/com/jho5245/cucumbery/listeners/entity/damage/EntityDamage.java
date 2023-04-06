@@ -8,9 +8,12 @@ import com.jho5245.cucumbery.custom.DamageManager;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.children.group.DoubleCustomEffect;
+import com.jho5245.cucumbery.custom.customeffect.children.group.DoubleCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeRune;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
+import com.jho5245.cucumbery.util.itemlore.ItemLore2Attribute;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -91,6 +94,66 @@ public class EntityDamage implements Listener
       event.setCancelled(true);
       return;
     }
+    // 피해 발산 효과
+    {
+      if (entity instanceof Player player && Cucumbery.config.getBoolean("use-damage-spread-feature"))
+      {
+        int damageSpreadLevel = 0;
+        EntityEquipment equipment = player.getEquipment();
+        ItemStack helmet = equipment.getHelmet(), chestplate = equipment.getChestplate(), leggings = equipment.getLeggings(), boots = equipment.getBoots();
+        if (helmet != null)
+        {
+          damageSpreadLevel += ItemLore2Attribute.getDamageSpread(helmet);
+        }
+        if (chestplate != null)
+        {
+          damageSpreadLevel += ItemLore2Attribute.getDamageSpread(chestplate);
+        }
+        if (leggings != null)
+        {
+          damageSpreadLevel += ItemLore2Attribute.getDamageSpread(leggings);
+        }
+        if (boots != null)
+        {
+          damageSpreadLevel += ItemLore2Attribute.getDamageSpread(boots);
+        }
+        if (damageSpreadLevel > 0)
+        {
+          double damage = event.getDamage();
+          double accumulatedDamage = 0.01 * Math.sqrt(10 * damageSpreadLevel) * damage;
+          CustomEffect customEffect = CustomEffectManager.getEffectNullable(player, CustomEffectType.DAMAGE_SPREAD);
+          if (customEffect instanceof DoubleCustomEffect doubleCustomEffect)
+          {
+            accumulatedDamage += doubleCustomEffect.getDouble();
+          }
+          double maxDamage = damageSpreadLevel * 0.4;
+          if (accumulatedDamage > maxDamage)
+          {
+            accumulatedDamage = maxDamage;
+          }
+          DoubleCustomEffectImple doubleCustomEffect = new DoubleCustomEffectImple(CustomEffectType.DAMAGE_SPREAD, accumulatedDamage);
+          CustomEffectManager.addEffect(player, doubleCustomEffect);
+        }
+      }
+      if (event instanceof EntityDamageByEntityEvent damageByEntityEvent)
+      {
+        Entity damager = damageByEntityEvent.getDamager();
+        UUID damagerUUID = damager.getUniqueId();
+        if (damager instanceof Player player && CustomEffectManager.hasEffect(player, CustomEffectType.DAMAGE_SPREAD))
+        {
+          if (CustomEffectManager.getEffect(player, CustomEffectType.DAMAGE_SPREAD) instanceof DoubleCustomEffect doubleCustomEffect)
+          {
+            event.setDamage(event.getDamage() + doubleCustomEffect.getDouble());
+          }
+          CustomEffectManager.removeEffect(player, CustomEffectType.DAMAGE_SPREAD);
+        }
+        if (damager instanceof Projectile && Variable.DAMAGE_SPREAD_MAP.containsKey(damagerUUID))
+        {
+          event.setDamage(event.getDamage() + Variable.DAMAGE_SPREAD_MAP.remove(damagerUUID));
+        }
+      }
+    }
+
     // config에서 설정된 갑옷 거치대 폭발 피해 무시
     this.cancelEntityDamage(event);
     if (!event.isCancelled())

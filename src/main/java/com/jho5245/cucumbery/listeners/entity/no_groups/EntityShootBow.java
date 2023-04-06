@@ -1,7 +1,9 @@
 package com.jho5245.cucumbery.listeners.entity.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.children.group.DoubleCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -93,6 +95,17 @@ public class EntityShootBow implements Listener
       return;
     }
     Entity projectile = event.getProjectile();
+    // 피해 발산 효과
+    if (livingEntity instanceof Player player && CustomEffectManager.hasEffect(player, CustomEffectType.DAMAGE_SPREAD))
+    {
+      CustomEffect customEffect = CustomEffectManager.getEffect(player, CustomEffectType.DAMAGE_SPREAD);
+      if (customEffect instanceof DoubleCustomEffect doubleCustomEffect)
+      {
+        double bonusDamage = doubleCustomEffect.getDouble();
+        Variable.DAMAGE_SPREAD_MAP.put(projectile.getUniqueId(), bonusDamage);
+      }
+      CustomEffectManager.removeEffect(player, CustomEffectType.DAMAGE_SPREAD);
+    }
     if (ItemStackUtil.itemExists(bow))
     {
       bow = bow.clone();

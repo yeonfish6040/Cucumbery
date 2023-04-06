@@ -19,6 +19,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum CustomMaterial implements Translatable
 {
+  NAUTILITE_HELMET(Material.NETHERITE_HELMET, "&i노틸라이트 투구", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  NAUTILITE_CHESTPLATE(Material.NETHERITE_CHESTPLATE, "&i노틸라이트 흉갑", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  NAUTILITE_LEGGINGS(Material.NETHERITE_LEGGINGS, "&i노틸라이트 레깅스", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
+  NAUTILITE_BOOTS(Material.NETHERITE_BOOTS, "&i노틸라이트 부츠", Rarity.UNIQUE, CreativeCategory.COMBAT.translationKey()),
   REDSTONE_BLOCK_INSTA_BREAK(Material.REDSTONE_BLOCK, "&i즉시 부서지는 레드스톤 블록", Rarity.RARE, CreativeCategory.REDSTONE.translationKey()),
   WNYNYA_ORE(Material.PLAYER_HEAD, "rgb200,100,255;완YEE 광석", Rarity.RARE, "itemGroup.natural"),
   AMBER(Material.ORANGE_DYE, "&ikey:item.cucumbery.amber|호박", Rarity.UNIQUE),

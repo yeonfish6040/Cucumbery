@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 41
+config-version: 42
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -849,3 +849,6 @@ custom-mining:
   # 성급함 포션 효과 공식
   # %mining_speed%가 채광 속도를 뜻함
   haste: '0.2*%mining_speed%*%level%'
+
+# 피해 발산 기능 사용
+use-damage-spread-feature: true

@@ -1,24 +1,30 @@
 package com.jho5245.cucumbery.util.itemlore;
 
 import com.google.common.collect.Multimap;
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class ItemLore2Attribute
 {
-  protected static void setItemLore(@NotNull Material type, @NotNull ItemMeta itemMeta, @NotNull List<Component> lore, boolean hideAttributes)
+  protected static void setItemLore(@NotNull Material type, @Nullable CustomMaterial customMaterial, @NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta, @NotNull List<Component> originalLore, boolean hideAttributes)
   {
+    List<Component> lore = new ArrayList<>();
     if (!Constant.DEFAULT_MODIFIER_ITEMS.contains(type) && !itemMeta.hasAttributeModifiers())
     {
       itemMeta.removeItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -178,7 +184,6 @@ public class ItemLore2Attribute
               lore.add(mainHand);
               lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", attackSpeed, "-1"));
             }
-            case DIAMOND_HOE, NETHERITE_HOE -> lore.remove(lore.size() - 1);
             case WOODEN_SWORD ->
             {
               lore.add(mainHand);
@@ -353,5 +358,40 @@ public class ItemLore2Attribute
         }
       }
     }
+    if (Cucumbery.config.getBoolean("use-damage-spread-feature"))
+    {
+      int damageSpread = getDamageSpread(itemStack);
+      if (damageSpread > 0)
+      {
+        lore.add(ComponentUtil.translate("rgb255,142,82;%s : %s", "피해 발산", "+" + damageSpread));
+      }
+    }
+    if (!lore.isEmpty())
+    {
+      originalLore.addAll(lore);
+    }
+  }
+
+  public static int getDamageSpread(@NotNull ItemStack itemStack)
+  {
+    int damageSpread = 0;
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+    if (customMaterial == null)
+    {
+      switch (itemStack.getType())
+      {
+        case CHAINMAIL_CHESTPLATE, CHAINMAIL_LEGGINGS, NETHERITE_HELMET, NETHERITE_CHESTPLATE, NETHERITE_LEGGINGS, NETHERITE_BOOTS -> damageSpread = 1;
+      }
+    }
+    else
+    {
+      switch (customMaterial)
+      {
+        case MITHRIL_HELMET, MITHRIL_BOOTS, COBALT_HELMET, COBALT_BOOTS -> damageSpread = 1;
+        case COBALT_CHESTPLATE, COBALT_LEGGINGS, TITANIUM_HELMET, TITANIUM_CHESTPLATE, TITANIUM_LEGGINGS, TITANIUM_BOOTS -> damageSpread = 2;
+        case NAUTILITE_HELMET, NAUTILITE_CHESTPLATE, NAUTILITE_LEGGINGS, NAUTILITE_BOOTS -> damageSpread = 3;
+      }
+    }
+    return damageSpread;
   }
 }

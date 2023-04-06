@@ -26,6 +26,7 @@ import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
@@ -690,42 +691,28 @@ public class ItemStackUtil
   public static ItemStack getItemStackFromBlock(@NotNull Block block)
   {
     Material type = block.getType();
-    Material newType = type;
-    if (type == Material.AIR || !type.isItem())
+    BlockData blockData = block.getBlockData();
+    Material placedBlockType = blockData.getPlacementMaterial();
+    if (!placedBlockType.isAir())
     {
-      switch (type)
-      {
-        default -> newType = Material.BARRIER;
-        case WATER, WATER_CAULDRON -> newType = Material.WATER_BUCKET;
-        case FIRE, SOUL_FIRE -> newType = Material.FLINT_AND_STEEL;
-        case LAVA, LAVA_CAULDRON -> newType = Material.LAVA_BUCKET;
-        case CAVE_VINES_PLANT -> newType = Material.CAVE_VINES;
-        case WEEPING_VINES_PLANT -> newType = Material.WEEPING_VINES;
-        case TWISTING_VINES_PLANT -> newType = Material.TWISTING_VINES;
-        case POWDER_SNOW -> newType = Material.POWDER_SNOW_BUCKET;
-        case SWEET_BERRY_BUSH -> newType = Material.SWEET_BERRIES;
-        case PLAYER_WALL_HEAD -> newType = Material.PLAYER_HEAD;
-      }
+      type = placedBlockType;
     }
 
-    ItemStack itemStack = new ItemStack(newType);
+    ItemStack itemStack = new ItemStack(type.isAir() || !type.isItem() ? Material.BARRIER : type);
     ItemMeta itemMeta = itemStack.getItemMeta();
     if (itemMeta == null)
     {
       return itemStack;
     }
-    if (type != newType)
+    if (type.isAir() || !type.isItem())
     {
-      if (type == Material.AIR)
-      {
-        itemMeta.displayName(ComponentUtil.translate("벽").color(Constant.THE_COLOR).decoration(TextDecoration.ITALIC, State.FALSE));
-      }
-      else
-      {
-        itemMeta.displayName(ItemNameUtil.itemName(type));
-      }
-      itemStack.setItemMeta(itemMeta);
+      itemMeta.displayName(ComponentUtil.translate("벽").color(Constant.THE_COLOR).decoration(TextDecoration.ITALIC, State.FALSE));
     }
+    else
+    {
+      itemMeta.displayName(ItemNameUtil.itemName(type));
+    }
+    itemStack.setItemMeta(itemMeta);
     if (itemMeta instanceof BlockStateMeta blockStateMeta)
     {
       BlockState blockState = block.getState();
@@ -757,7 +744,8 @@ public class ItemStackUtil
     {
       lore.add(ComponentUtil.create2(Constant.SEPARATOR));
     }
-    lore.add(ComponentUtil.translate("&f좌표 : %s", LocationComponent.locationComponent(location)));
+    lore.set(0, Component.translatable(" "));
+    lore.add(ComponentUtil.translate("&f좌표 : %s", location));
     itemMeta.lore(lore);
     itemStack.setItemMeta(itemMeta);
     return itemStack;
@@ -1115,7 +1103,7 @@ public class ItemStackUtil
    * <p>
    * <p>
    * <p>
-   *   아이템 예시
+   * 아이템 예시
    * <p>
    * stone = {@link Material#STONE}
    * <p>
@@ -1138,7 +1126,7 @@ public class ItemStackUtil
    * <p>
    * <p>
    * <p>
-   *   아이템 예시
+   * 아이템 예시
    * <p>
    * stone = {@link Material#STONE}
    * <p>

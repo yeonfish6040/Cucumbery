@@ -67,6 +67,7 @@ com\jho5245\cucumbery\listeners\player\bucket\PlayerBucketEntity.class
 com\jho5245\cucumbery\util\no_groups\PlaceHolderUtil$1.class
 com\jho5245\cucumbery\commands\brigadier\base\ArgumentUtil$1.class
 com\jho5245\cucumbery\custom\customeffect\children\group\StringCustomEffect.class
+com\jho5245\cucumbery\util\itemlore\ItemLore2CustomMiningAndCustomMaterial.class
 com\jho5245\cucumbery\listeners\block\BlockDamage.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerJump.class
 com\jho5245\cucumbery\listeners\block\CustomBlockBreak.class
@@ -139,7 +140,6 @@ com\jho5245\cucumbery\commands\brigadier\CommandEffect2.class
 com\jho5245\cucumbery\deathmessages\ConditionChecker.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerLecternPageChange.class
 com\jho5245\cucumbery\listeners\inventory\PrepareItemCraft.class
-com\jho5245\cucumbery\util\itemlore\ItemLore2CustomMining.class
 com\jho5245\cucumbery\commands\sound\CommandPlaySound.class
 com\jho5245\cucumbery\listeners\player\item\PlayerItemDamage.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerToggleSprint.class
@@ -179,6 +179,7 @@ com\jho5245\cucumbery\util\itemlore\ItemLore2Meta$1.class
 com\jho5245\cucumbery\listeners\UnknownCommand.class
 com\jho5245\cucumbery\listeners\block\BlockDispenseArmor.class
 com\jho5245\cucumbery\util\storage\component\util\sendercomponent\EntityComponentUtil.class
+com\jho5245\cucumbery\custom\customeffect\children\group\DoubleCustomEffectImple.class
 com\jho5245\cucumbery\listeners\entity\damage\EntityDamageByEntity$1.class
 com\jho5245\cucumbery\commands\addon\CommandQuickShopAddon$1.class
 com\jho5245\cucumbery\util\no_groups\TestCommand.class
@@ -535,6 +536,7 @@ com\jho5245\cucumbery\util\rpg\GetStat.class
 com\jho5245\cucumbery\util\itemlore\ItemLoreEnchantRarity.class
 com\jho5245\cucumbery\custom\customeffect\type\CustomEffectType.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerChangedWorld$ConditionType.class
+com\jho5245\cucumbery\custom\customeffect\children\group\DoubleCustomEffect.class
 com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantDullTouch.class
 com\jho5245\cucumbery\events\DeathMessageEvent.class
 com\jho5245\cucumbery\util\storage\data\Constant.class

@@ -198,6 +198,7 @@ public class EntityDamageByEntity implements Listener
         }
       }
     }
+
     if (damager instanceof Player player)
     {
       UUID uuid = player.getUniqueId();

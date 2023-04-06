@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemLore2CustomMining
+public class ItemLore2CustomMiningAndCustomMaterial
 {
   protected static void setItemLore(@NotNull ItemStack item, @NotNull Material type,
                                     @Nullable CustomMaterial customMaterial, @NotNull List<Component> lore,

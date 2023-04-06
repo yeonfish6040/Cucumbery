@@ -127,7 +127,6 @@ public class CustomEffect
     return getDescription(null, false);
   }
 
-
   @NotNull
   public Component getDescription(boolean excludeProperty)
   {
@@ -320,6 +319,16 @@ public class CustomEffect
         description = description.append(Component.text("\n"));
         description = description.append(Component.text("\n"));
         description = description.append(ComponentUtil.translate("&7저장된 위치 : %s", location));
+      }
+    }
+    if (this instanceof DoubleCustomEffect doubleCustomEffect)
+    {
+      double data = doubleCustomEffect.getDouble();
+      if (effectType == CustomEffectType.DAMAGE_SPREAD)
+      {
+        description = description.append(Component.text("\n"));
+        description = description.append(Component.text("\n"));
+        description = description.append(ComponentUtil.translate("&7누적된 피해량 : %s", data));
       }
     }
     if (this instanceof StringCustomEffect stringCustomEffect)

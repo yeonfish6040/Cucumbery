@@ -285,6 +285,8 @@ public class CustomEffectType implements Translatable, EnumHideable
 
   CUSTOM_MATERIAL_TNT_DONUT = new CustomEffectType("custom_material_tnt_donut", "", builder().hidden().defaultDuration(-1).skipEvent()),
 
+  DAMAGE_SPREAD = new CustomEffectType("damage_spread", "피해 발산", builder().hidden().defaultDuration(100).skipEvent().removeOnQuit().nonBuffFreezable()),
+
   /**/ NOTHING = new CustomEffectType("nothing", "아무것도 아님"),
 
   /**/ TEST = new CustomEffectType(new NamespacedKey("test", "test"), "key:effect.cucumbery.test|테스트뭐", builder());
@@ -294,6 +296,8 @@ public class CustomEffectType implements Translatable, EnumHideable
   public static void register()
   {
     register(AWKWARD, THICK, BACKWARDS_CHAT, MUNDANE, UNCRAFTABLE,
+
+            DAMAGE_SPREAD,
 
             BANE_OF_ARTHROPODS, SHARPNESS, SMITE, MAESTRO, CUSTOM_MATERIAL_TNT_DONUT,
 
@@ -1096,7 +1100,7 @@ public class CustomEffectType implements Translatable, EnumHideable
   }
 
   /**
-   * Gets the shorten translation key or normal {@link CustomEffectType#translationKey()} if not defined.
+   * Gets the shortened translation key or normal {@link CustomEffectType#translationKey()} if not defined.
    *
    * @return the translation key
    */
@@ -1111,7 +1115,7 @@ public class CustomEffectType implements Translatable, EnumHideable
   }
 
   /**
-   * @return true if this
+   * @return true if this {@link CustomEffect} is keep on {@link  PlayerDeathEvent#getPlayer()} death and the {@link Player} has {@link CustomEffectType#BUFF_FREEZE} effect.
    */
   public boolean isBuffFreezable()
   {
@@ -1135,7 +1139,7 @@ public class CustomEffectType implements Translatable, EnumHideable
   }
 
   /**
-   * @return true if the {@link CustomEffect} is keep on {@link PlayerQuitEvent#getPlayer()} death
+   * @return true if the {@link CustomEffect} is keep on {@link PlayerQuitEvent#getPlayer()} quit.
    */
   public boolean isKeepOnQuit()
   {
@@ -1190,10 +1194,6 @@ public class CustomEffectType implements Translatable, EnumHideable
   {
     return isToggle;
   }
-
-  /**
-   * @return 이 <code>enum</code>은 TabComplete 할 때 목록에 표시되지 않습니다. 하지만 여전히 명령어로 사용할 수는 있습니다.
-   */
   @Override
   public boolean isHiddenEnum()
   {
