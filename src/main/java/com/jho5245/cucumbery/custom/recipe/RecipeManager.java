@@ -22,23 +22,23 @@ public class RecipeManager
 
   public static void registerRecipe()
   {
-    register(new FurnaceRecipe(of("tungsten_ingot_from_furnace"), CustomMaterial.TUNGSTEN_INGOT.create(false), new ExactChoice(CustomMaterial.TUNGSTEN_ORE.create()), 0.7f, 200));
-    register(new BlastingRecipe(of("tungsten_ingot_from_blast_furnace"), CustomMaterial.TUNGSTEN_INGOT.create(false), new ExactChoice(CustomMaterial.TUNGSTEN_ORE.create()), 0.7f, 100));
+    register(new FurnaceRecipe(of("tungsten_ingot_from_furnace"), CustomMaterial.TUNGSTEN_INGOT.create(false), new ExactChoice(CustomMaterial.TUNGSTEN_ORE.create(false)), 0.7f, 200));
+    register(new BlastingRecipe(of("tungsten_ingot_from_blast_furnace"), CustomMaterial.TUNGSTEN_INGOT.create(false), new ExactChoice(CustomMaterial.TUNGSTEN_ORE.create(false)), 0.7f, 100));
 
-    register(new FurnaceRecipe(of("cobalt_ingot_from_furnace"), CustomMaterial.COBALT_INGOT.create(false), new ExactChoice(CustomMaterial.COBALT_ORE.create()), 1f, 400));
-    register(new BlastingRecipe(of("cobalt_ingot_from_blast_furnace"), CustomMaterial.COBALT_INGOT.create(false), new ExactChoice(CustomMaterial.COBALT_ORE.create()), 1f, 200));
+    register(new FurnaceRecipe(of("cobalt_ingot_from_furnace"), CustomMaterial.COBALT_INGOT.create(false), new ExactChoice(CustomMaterial.COBALT_ORE.create(false)), 1f, 400));
+    register(new BlastingRecipe(of("cobalt_ingot_from_blast_furnace"), CustomMaterial.COBALT_INGOT.create(false), new ExactChoice(CustomMaterial.COBALT_ORE.create(false)), 1f, 200));
 
-    register(new FurnaceRecipe(of("titanium_ingot_from_furnace"), CustomMaterial.TITANIUM_INGOT.create(false), new ExactChoice(CustomMaterial.TITANIUM_ORE.create()), 1f, 400));
-    register(new BlastingRecipe(of("titanium_ingot_from_blast_furnace"), CustomMaterial.TITANIUM_INGOT.create(false), new ExactChoice(CustomMaterial.TITANIUM_ORE.create()), 1f, 200));
+    register(new FurnaceRecipe(of("titanium_ingot_from_furnace"), CustomMaterial.TITANIUM_INGOT.create(false), new ExactChoice(CustomMaterial.TITANIUM_ORE.create(false)), 1f, 400));
+    register(new BlastingRecipe(of("titanium_ingot_from_blast_furnace"), CustomMaterial.TITANIUM_INGOT.create(false), new ExactChoice(CustomMaterial.TITANIUM_ORE.create(false)), 1f, 200));
 
-    register(new FurnaceRecipe(of("shroomite_ingot_from_furnace"), CustomMaterial.SHROOMITE_INGOT.create(false), new ExactChoice(CustomMaterial.SHROOMITE_ORE.create()), 1f, 400));
-    register(new BlastingRecipe(of("shroomite_ingot_from_blast_furnace"), CustomMaterial.SHROOMITE_INGOT.create(false), new ExactChoice(CustomMaterial.SHROOMITE_ORE.create()), 1f, 200));
+    register(new FurnaceRecipe(of("shroomite_ingot_from_furnace"), CustomMaterial.SHROOMITE_INGOT.create(false), new ExactChoice(CustomMaterial.SHROOMITE_ORE.create(false)), 1f, 400));
+    register(new BlastingRecipe(of("shroomite_ingot_from_blast_furnace"), CustomMaterial.SHROOMITE_INGOT.create(false), new ExactChoice(CustomMaterial.SHROOMITE_ORE.create(false)), 1f, 200));
 
-    register(new FurnaceRecipe(of("cucumberite_ingot_from_furnace"), CustomMaterial.CUCUMBERITE_INGOT.create(false), new ExactChoice(CustomMaterial.CUCUMBERITE_ORE.create()), 1f, 400));
-    register(new BlastingRecipe(of("cucumberite_ingot_from_blast_furnace"), CustomMaterial.CUCUMBERITE_INGOT.create(false), new ExactChoice(CustomMaterial.CUCUMBERITE_ORE.create()), 1f, 200));
+    register(new FurnaceRecipe(of("cucumberite_ingot_from_furnace"), CustomMaterial.CUCUMBERITE_INGOT.create(false), new ExactChoice(CustomMaterial.CUCUMBERITE_ORE.create(false)), 1f, 400));
+    register(new BlastingRecipe(of("cucumberite_ingot_from_blast_furnace"), CustomMaterial.CUCUMBERITE_INGOT.create(false), new ExactChoice(CustomMaterial.CUCUMBERITE_ORE.create(false)), 1f, 200));
 
-    register(new FurnaceRecipe(of("tnt_from_furnace"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create()), 2f, 100));
-    register(new BlastingRecipe(of("tnt_from_blast_furnace"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create()), 2f, 50));
+    register(new FurnaceRecipe(of("tnt_from_furnace"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create(false)), 2f, 100));
+    register(new BlastingRecipe(of("tnt_from_blast_furnace"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create(false)), 2f, 50));
   }
 
   @NotNull
