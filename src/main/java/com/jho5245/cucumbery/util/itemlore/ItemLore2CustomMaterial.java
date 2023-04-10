@@ -198,7 +198,19 @@ public class ItemLore2CustomMaterial
       {
         lore.add(Component.empty());
         lore.add(ComponentUtil.translate("&7모루에서 드릴과 함께 사용하여"));
+        lore.add(ComponentUtil.translate("&7드릴의 연료를 100 충전할 수 있다"));
+      }
+      case MEDIUM_DRILL_FUEL ->
+      {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7모루에서 드릴과 함께 사용하여"));
         lore.add(ComponentUtil.translate("&7드릴의 연료를 1000 충전할 수 있다"));
+      }
+      case LARGE_DRILL_FUEL ->
+      {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7모루에서 드릴과 함께 사용하여"));
+        lore.add(ComponentUtil.translate("&7드릴의 연료를 10000 충전할 수 있다"));
       }
       case SPYGLASS_TELEPORT ->
       {

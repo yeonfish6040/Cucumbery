@@ -2,15 +2,12 @@ package com.jho5245.cucumbery.util.no_groups;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
-import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -68,19 +65,19 @@ public class TestCommand implements CucumberyCommandExecutor
 //      });
       if (sender instanceof Player player)
       {
-        ItemStack itemStack = player.getInventory().getItemInMainHand();
-        Location location = CommandArgumentUtil.location(player, args[0], true, true);
-        switch (args[1])
-        {
-          case "spawn" -> {
-            BlockPlaceDataConfig.spawnItemDisplay(location);
-            MessageUtil.broadcastDebug(location + " 위치에 블록 표시함");
-          }
-          case "despawn" -> {
-            BlockPlaceDataConfig.despawnItemDisplay(location);
-            MessageUtil.broadcastDebug(location + " 위치에 블록 숨김");
-          }
-        }
+//        ItemStack itemStack = player.getInventory().getItemInMainHand();
+//        Location location = CommandArgumentUtil.location(player, args[0], true, true);
+//        switch (args[1])
+//        {
+//          case "spawn" -> {
+//            BlockPlaceDataConfig.spawnItemDisplay(location);
+//            MessageUtil.broadcastDebug(location + " 위치에 블록 표시함");
+//          }
+//          case "despawn" -> {
+//            BlockPlaceDataConfig.despawnItemDisplay(location);
+//            MessageUtil.broadcastDebug(location + " 위치에 블록 숨김");
+//          }
+//        }
 //        String url = args[1];
 //        int entityId = Bukkit.getUnsafe().nextEntityId();
 //        MessageUtil.broadcastDebug("id:" + entityId);
@@ -266,32 +263,32 @@ public class TestCommand implements CucumberyCommandExecutor
           }
         }*/
       }
-      if (args.length >= 2)
-      {
-        switch (args[0])
-        {
-          case "entities" ->
-          {
-            List<Entity> entities = SelectorUtil.getEntities(sender, args[1], true);
-            MessageUtil.sendMessage(sender, entities != null ? entities : "null");
-          }
-          case "entity" ->
-          {
-            Entity entity = SelectorUtil.getEntity(sender, args[1], true);
-            MessageUtil.sendMessage(sender, entity != null ? entity : "null");
-          }
-          case "players" ->
-          {
-            List<Player> players = SelectorUtil.getPlayers(sender, args[1], true);
-            MessageUtil.sendMessage(sender, players != null ? players : "null");
-          }
-          case "player" ->
-          {
-            Player p = SelectorUtil.getPlayer(sender, args[1], true);
-            MessageUtil.sendMessage(sender, p != null ? p : "null");
-          }
-        }
-      }
+//      if (args.length >= 2)
+//      {
+//        switch (args[0])
+//        {
+//          case "entities" ->
+//          {
+//            List<Entity> entities = SelectorUtil.getEntities(sender, args[1], true);
+//            MessageUtil.sendMessage(sender, entities != null ? entities : "null");
+//          }
+//          case "entity" ->
+//          {
+//            Entity entity = SelectorUtil.getEntity(sender, args[1], true);
+//            MessageUtil.sendMessage(sender, entity != null ? entity : "null");
+//          }
+//          case "players" ->
+//          {
+//            List<Player> players = SelectorUtil.getPlayers(sender, args[1], true);
+//            MessageUtil.sendMessage(sender, players != null ? players : "null");
+//          }
+//          case "player" ->
+//          {
+//            Player p = SelectorUtil.getPlayer(sender, args[1], true);
+//            MessageUtil.sendMessage(sender, p != null ? p : "null");
+//          }
+//        }
+//      }
     }
     catch (Exception e)
     {

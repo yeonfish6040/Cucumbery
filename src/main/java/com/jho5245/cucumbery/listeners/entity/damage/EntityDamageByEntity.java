@@ -15,6 +15,7 @@ import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderC
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
@@ -29,6 +30,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -198,7 +200,6 @@ public class EntityDamageByEntity implements Listener
         }
       }
     }
-
     if (damager instanceof Player player)
     {
       UUID uuid = player.getUniqueId();
@@ -247,6 +248,38 @@ public class EntityDamageByEntity implements Listener
             Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.playerHurtEntityAlertCooldown.remove(uuid), 100L);
           }
           return;
+        }
+      }
+    }
+    // 커스텀 인챈트
+    if (CustomEnchant.isEnabled())
+    {
+      // Cleaving, 방패 가시
+      if (victim instanceof Player player && player.isBlocking())
+      {
+        if (damager instanceof LivingEntity livingEntity)
+        {
+          EntityEquipment equipment = livingEntity.getEquipment();
+          if (equipment != null)
+          {
+            ItemStack weapon = equipment.getItemInMainHand();
+            if (weapon.hasItemMeta() && weapon.getItemMeta().hasEnchant(CustomEnchant.CLEAVING))
+            {
+              int level = weapon.getItemMeta().getEnchantLevel(CustomEnchant.CLEAVING);
+              player.setCooldown(Material.SHIELD, level * 10 + player.getCooldown(Material.SHIELD));
+            }
+          }
+          ItemStack victimShield = ItemStackUtil.getPlayerUsingItem(player, Material.SHIELD);
+          if (ItemStackUtil.itemExists(victimShield) && victimShield.hasItemMeta() && victimShield.getItemMeta().hasEnchant(Enchantment.THORNS))
+          {
+            int level = victimShield.getItemMeta().getEnchantLevel(Enchantment.THORNS);
+            int chance = level * 15;
+            double damage = level <= 10 ? Math.random() * 3 + 1 : level - 10;
+            if (Math.random() * 100d < chance)
+            {
+              livingEntity.damage(damage, player);
+            }
+          }
         }
       }
     }

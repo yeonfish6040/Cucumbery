@@ -102,13 +102,13 @@ public class ItemLore2Enchant
             {
               level = 1;
             }
-            enchantLore.addAll(ItemLoreUtil.enchantTMIDescription(viewer, itemMeta, type, enchantment, level, viewer == null || UserData.SHOW_ENCHANTMENT_TMI_DESCRIPTION.getBoolean(viewer)));
+            enchantLore.addAll(ItemLoreUtil.enchantTMIDescription(viewer, item, itemMeta, type, enchantment, level, viewer == null || UserData.SHOW_ENCHANTMENT_TMI_DESCRIPTION.getBoolean(viewer)));
           }
         }
         if (!enchantLore.isEmpty())
         {
           lore.add(Component.empty());
-          if (hideEnchant && eventAccessMode)
+          if (hideEnchant)
           {
             lore.add(ComponentUtil.translate("&b관리자 권한으로 숨겨진 마법을 참조합니다"));
           }
@@ -140,7 +140,7 @@ public class ItemLore2Enchant
             {
               level = 1;
             }
-            lore.addAll(ItemLoreUtil.enchantTMIDescription(viewer, itemMeta, type, enchant, level, viewer == null || UserData.SHOW_ENCHANTMENT_TMI_DESCRIPTION.getBoolean(viewer)));
+            lore.addAll(ItemLoreUtil.enchantTMIDescription(viewer, item, itemMeta, type, enchant, level, viewer == null || UserData.SHOW_ENCHANTMENT_TMI_DESCRIPTION.getBoolean(viewer)));
           }
         }
         ItemLoreEnchantRarity.enchantedBookRarity(item, lore, type, (EnchantmentStorageMeta) itemMeta);

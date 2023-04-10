@@ -352,9 +352,8 @@ public class Cucumbery extends JavaPlugin
           Location location1 = new Location(Bukkit.getWorld(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
           BlockPlaceDataConfig.despawnItemDisplay(location1);
         }
-        catch (Exception e)
+        catch (Exception ignored)
         {
-          e.printStackTrace();
         }
       });
       BlockPlaceDataConfig.TIMERS.forEach(Timer::cancel);

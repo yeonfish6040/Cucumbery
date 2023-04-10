@@ -553,7 +553,7 @@ public class ItemLoreCustomItem
           }
           if (!nbtItem.hasTag("uuid"))
           {
-            nbtItem.setString("uuid", UUID_1.toString());
+            nbtItem.setString("uuid", UUID.randomUUID().toString());
           }
         }
         case TITANIUM_DRILL_R366 ->
@@ -568,7 +568,7 @@ public class ItemLoreCustomItem
           }
           if (!nbtItem.hasTag("uuid"))
           {
-            nbtItem.setString("uuid", UUID_1.toString());
+            nbtItem.setString("uuid", UUID.randomUUID().toString());
           }
         }
         case TITANIUM_DRILL_R466 ->
@@ -583,7 +583,7 @@ public class ItemLoreCustomItem
           }
           if (!nbtItem.hasTag("uuid"))
           {
-            nbtItem.setString("uuid", UUID_1.toString());
+            nbtItem.setString("uuid", UUID.randomUUID().toString());
           }
         }
         case TITANIUM_DRILL_R566 ->
@@ -598,7 +598,7 @@ public class ItemLoreCustomItem
           }
           if (!nbtItem.hasTag("uuid"))
           {
-            nbtItem.setString("uuid", UUID_1.toString());
+            nbtItem.setString("uuid", UUID.randomUUID().toString());
           }
         }
         case MINDAS_DRILL ->
@@ -613,7 +613,7 @@ public class ItemLoreCustomItem
           }
           if (!nbtItem.hasTag("uuid"))
           {
-            nbtItem.setString("uuid", UUID_1.toString());
+            nbtItem.setString("uuid", UUID.randomUUID().toString());
           }
         }
         case FLINT_SHOVEL ->

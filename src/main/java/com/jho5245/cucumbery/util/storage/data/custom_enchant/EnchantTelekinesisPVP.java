@@ -2,7 +2,7 @@ package com.jho5245.cucumbery.util.storage.data.custom_enchant;
 
 import org.jetbrains.annotations.NotNull;
 
-public class EnchantTelekinesisPVP extends CustomEnchant
+public class EnchantTelekinesisPVP extends EnchantTelekinesis
 {
   public EnchantTelekinesisPVP(@NotNull String name)
   {

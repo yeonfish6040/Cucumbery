@@ -25,6 +25,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Consumer;
@@ -64,7 +65,6 @@ public class EntityDeath implements Listener
     {
       event.setCancelled(true);
     }
-
     if (entity instanceof Player player)
     {
       if (UserData.SPECTATOR_MODE.getBoolean(player))
@@ -77,14 +77,44 @@ public class EntityDeath implements Listener
         event.setCancelled(true);
       }
     }
-
     if (Variable.deathMessages.getBoolean("death-messages.enable"))
     {
       DeathManager.manageDeathMessages(event);
     }
-
+    this.closeCall(event);
+    if (event.isCancelled())
+    {
+      return;
+    }
     this.telekinesis(event);
     this.combo(event);
+  }
+
+  /**
+   * 커스텀 인챈트 {@link CustomEnchant#CLOSE_CALL}
+   */
+  private void closeCall(EntityDeathEvent event)
+  {
+    if (!CustomEnchant.isEnabled())
+    {
+      return;
+    }
+    LivingEntity livingEntity = event.getEntity();
+    EntityEquipment equipment = livingEntity.getEquipment();
+    if (equipment != null)
+    {
+      ItemStack chestplate = equipment.getChestplate();
+      if (ItemStackUtil.itemExists(chestplate) && chestplate.hasItemMeta() && chestplate.getItemMeta().hasEnchant(CustomEnchant.CLOSE_CALL))
+      {
+        int level = chestplate.getItemMeta().getEnchantLevel(CustomEnchant.CLOSE_CALL);
+        if (Math.random() * 100d < level)
+        {
+          event.setCancelled(true);
+          livingEntity.playEffect(EntityEffect.TOTEM_RESURRECT);
+          MessageUtil.info(livingEntity, ComponentUtil.translate("%s 효과로 인해 생존하였습니다", CustomEnchant.CLOSE_CALL));
+        }
+      }
+    }
   }
 
   private void telekinesis(EntityDeathEvent event)

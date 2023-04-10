@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.util.storage.data.custom_enchant;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.touch.*;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate.CustomEnchantUltimate;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate.EnchantCloseCall;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate.EnchantHighRiskHighReturn;
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
@@ -106,7 +107,16 @@ public abstract class CustomEnchant extends EnchantmentWrapper
    */
   public static Enchantment IDIOT_SHOOTER;
 
+  public static Enchantment CLEAVING;
+
+  // Ulitmate Enchants
   public static Enchantment HIGH_RISK_HIGH_RETURN;
+
+  /**
+   * 구사 일생
+   * <p>Grants chances not to die upon death.
+   */
+  public static Enchantment CLOSE_CALL;
 
   private static final Map<NamespacedKey, Enchantment> byKey = new HashMap<>();
   private static final Map<String, Enchantment> byName = new HashMap<>();
@@ -138,7 +148,13 @@ public abstract class CustomEnchant extends EnchantmentWrapper
 
     IDIOT_SHOOTER = registerEnchant(new EnchantIdiotShooter("idiot_shooter"));
 
+    CLEAVING = registerEnchant(new EnchantCleaving("cleaving"));
+
+    // Ulitmate Enchants
+
     HIGH_RISK_HIGH_RETURN = registerEnchant(new EnchantHighRiskHighReturn("high_risk_high_return"));
+
+    CLOSE_CALL = registerEnchant(new EnchantCloseCall("close_call"));
   }
 
   private static CustomEnchant registerEnchant(@NotNull CustomEnchant enchant)
@@ -180,7 +196,7 @@ public abstract class CustomEnchant extends EnchantmentWrapper
   }
 
   @Override
-  public boolean canEnchantItem(@NotNull ItemStack item)
+  public boolean canEnchantItem(@NotNull ItemStack itemStack)
   {
     return true;
   }

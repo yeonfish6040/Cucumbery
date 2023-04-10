@@ -275,6 +275,10 @@ public class CustomEffectScheduler
       }
       player.sendPlayerListFooter(ComponentUtil.stripEvent(component));
     }
+  }
+
+  public static void displayGUI(@NotNull Player player)
+  {
     InventoryView inventoryView = player.getOpenInventory();
     Component title = inventoryView.title();
     if (GUIManager.isGUITitle(title) && title instanceof TranslatableComponent translatableComponent && translatableComponent.args().get(1) instanceof TextComponent textComponent && textComponent.content().equals(Constant.POTION_EFFECTS))

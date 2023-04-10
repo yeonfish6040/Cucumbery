@@ -170,6 +170,7 @@ public class Scheduler
   {
     Bukkit.getOnlinePlayers().forEach(player ->
     {
+      CustomEffectScheduler.displayGUI(player);
       MiningScheduler.customMiningPre(player);
       MiningScheduler.customMining(player);
       if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))

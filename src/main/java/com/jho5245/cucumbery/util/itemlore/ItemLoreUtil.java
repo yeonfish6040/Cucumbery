@@ -237,7 +237,7 @@ public class ItemLoreUtil
    * @return 설명
    */
   @NotNull
-  public static List<Component> enchantTMIDescription(@Nullable Player player, @NotNull ItemMeta itemMeta, @NotNull Material material, @NotNull Enchantment enchant, int enchantLevel, boolean tmi)
+  public static List<Component> enchantTMIDescription(@Nullable Player player, @NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta, @NotNull Material material, @NotNull Enchantment enchant, int enchantLevel, boolean tmi)
   {
     boolean customMiningMode = player != null && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE);
     List<Component> lore = new ArrayList<>();
@@ -425,31 +425,38 @@ public class ItemLoreUtil
         String junk = "&810%&7 ➜ &a";
         switch (enchantLevel)
         {
-          case 0 -> {
+          case 0 ->
+          {
             treasure += "5%";
             junk += "10%";
           }
-          case 1 -> {
+          case 1 ->
+          {
             treasure += "7.1%";
             junk += "8.05%";
           }
-          case 2 -> {
+          case 2 ->
+          {
             treasure += "9.2%";
             junk += "6.1%";
           }
-          case 3 -> {
+          case 3 ->
+          {
             treasure += "11.3%";
             junk += "4.15%";
           }
-          case 4 -> {
+          case 4 ->
+          {
             treasure += "13.4%";
             junk += "2.2%";
           }
-          case 5 -> {
+          case 5 ->
+          {
             treasure += "15.5%";
             junk += "0.25%";
           }
-          default -> {
+          default ->
+          {
             if (enchantLevel <= 45)
             {
               treasure += Constant.Sosu1.format(2.1 * enchantLevel + 5.0) + "%";
@@ -570,8 +577,15 @@ public class ItemLoreUtil
         int chance = Math.min(enchantLevel * 15, 100);
         int damage = (enchantLevel <= 10 ? -1 : enchantLevel - 10);
         String damageStr = (damage == -1 ? "1~4" : (enchantLevel - 10) + "");
-        String msg = "&7자신을 공격한 대상에게 %s 확률로 %s의 대미지를 입힘";
-        lore.add(ComponentUtil.translate(msg, "&e" + chance + "%", "&a" + damageStr));
+        if (material == Material.SHIELD)
+        {
+          lore.add(ComponentUtil.translate("&7방패로 보호 중일 때 자신을 공격한 대상에게"));
+          lore.add(ComponentUtil.translate("&7%s 확률로 %s의 대미지를 입힘(단, 발사체는 제외)", "&e" + chance + "%", "&a" + damageStr));
+        }
+        else
+        {
+          lore.add(ComponentUtil.translate("&7자신을 공격한 대상에게 %s 확률로 %s의 대미지를 입힘", "&e" + chance + "%", "&a" + damageStr));
+        }
       }
       if (enchant.equals(Enchantment.VANISHING_CURSE))
       {
@@ -724,6 +738,15 @@ public class ItemLoreUtil
       {
         lore.add(ComponentUtil.translate("&7대미지가 500% 증가하는 대신 받는 피해도 500% 증가합니다"));
       }
+      if (enchant.equals(CustomEnchant.CLEAVING) && (compat || CustomEnchant.CLEAVING.canEnchantItem(itemStack)))
+      {
+        lore.add(ComponentUtil.translate("&7도끼의 대미지가 %s 증가하고 상대방 공격 시", "&a" + (enchantLevel + 1)));
+        lore.add(ComponentUtil.translate("&7상대방의 방패 사용 불가 시간 %s 증가", ComponentUtil.translate("&a%s초", Constant.Sosu2.format(enchantLevel * 0.5))));
+      }
+      if (enchant.equals(CustomEnchant.CLOSE_CALL) && (compat || CustomEnchant.CLOSE_CALL.canEnchantItem(itemStack)))
+      {
+        lore.add(ComponentUtil.translate("&7사망에 이르는 피해를 입을 시 %s 확률로 생존함", "&a" + enchantLevel + "%"));
+      }
     }
     return lore;
   }
@@ -773,20 +796,13 @@ public class ItemLoreUtil
     ItemLoreUtil.setItemRarityValue(lore, +30);
     switch (fireworkEffect.getType())
     {
-      case BALL_LARGE:
-        ItemLoreUtil.setItemRarityValue(lore, +20);
-        break;
-      case BURST:
-        ItemLoreUtil.setItemRarityValue(lore, +30);
-        break;
-      case CREEPER:
-        ItemLoreUtil.setItemRarityValue(lore, +100);
-        break;
-      case STAR:
-        ItemLoreUtil.setItemRarityValue(lore, +15);
-        break;
-      default:
-        break;
+      case BALL_LARGE -> ItemLoreUtil.setItemRarityValue(lore, +20);
+      case BURST -> ItemLoreUtil.setItemRarityValue(lore, +30);
+      case CREEPER -> ItemLoreUtil.setItemRarityValue(lore, +100);
+      case STAR -> ItemLoreUtil.setItemRarityValue(lore, +15);
+      default ->
+      {
+      }
     }
     addColors(lore, ComponentUtil.translate("&a폭죽 색상 : %s"), fireworkEffect.getColors());
     addColors(lore, ComponentUtil.translate("&6사라지는 효과 색상 : "), fireworkEffect.getFadeColors());
@@ -802,7 +818,7 @@ public class ItemLoreUtil
 
   private static void addColors(@NotNull List<Component> lore, @NotNull TranslatableComponent prefix, @NotNull List<Color> colors)
   {
-    if (colors.size() == 0)
+    if (colors.isEmpty())
     {
       return;
     }

@@ -13,6 +13,7 @@ import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import org.bukkit.Bukkit;
@@ -251,6 +252,12 @@ public class DamageManager
               {
                 damageMultiplier += 5d;
               }
+              ItemStack mainHand = equipment.getItemInMainHand();
+              if (CustomEnchant.isEnabled() && ItemStackUtil.itemExists(mainHand) && mainHand.hasItemMeta() && mainHand.getItemMeta().hasEnchant(CustomEnchant.CLEAVING))
+              {
+                int level = mainHand.getItemMeta().getEnchantLevel(CustomEnchant.CLEAVING);
+                damage += level + 1;
+              }
             }
           }
         }
@@ -414,9 +421,8 @@ public class DamageManager
   {
     AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
     final double originalDamage = attributeInstance != null ? attributeInstance.getValue() : 1d;
-    double damage = originalDamage;
     double bonusDamage = 0d;
     double damageMultiplier = 1d, finalDamageMultiplier = 1d;
-    return new CombatInfo(originalDamage, damage, bonusDamage, damageMultiplier, finalDamageMultiplier);
+    return new CombatInfo(originalDamage, originalDamage, bonusDamage, damageMultiplier, finalDamageMultiplier);
   }
 }

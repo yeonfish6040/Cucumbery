@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +21,7 @@ import java.util.List;
 
 public class ItemLore2Attribute
 {
-  protected static void setItemLore(@NotNull Material type, @Nullable CustomMaterial customMaterial, @NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta, @NotNull List<Component> originalLore, boolean hideAttributes)
+  protected static void setItemLore(@NotNull Material type, @NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta, @NotNull List<Component> originalLore, boolean hideAttributes)
   {
     List<Component> lore = new ArrayList<>();
     if (!Constant.DEFAULT_MODIFIER_ITEMS.contains(type) && !itemMeta.hasAttributeModifiers())
@@ -43,7 +42,6 @@ public class ItemLore2Attribute
             {
               continue;
             }
-            lore.add(Component.empty());
             switch (slot)
             {
               case HAND -> lore.add(Constant.ITEM_MODIFIERS_MAINHAND);
@@ -88,7 +86,6 @@ public class ItemLore2Attribute
           Component armor = ComponentUtil.translate("attribute.name.generic.armor");
           Component armorToughness = ComponentUtil.translate("attribute.name.generic.armor_toughness");
           Component knockbackResistance = ComponentUtil.translate("attribute.name.generic.knockback_resistance");
-          lore.add(Component.empty());
           switch (type)
           {
             case WOODEN_AXE ->
@@ -368,6 +365,7 @@ public class ItemLore2Attribute
     }
     if (!lore.isEmpty())
     {
+      originalLore.add(Component.empty());
       originalLore.addAll(lore);
     }
   }

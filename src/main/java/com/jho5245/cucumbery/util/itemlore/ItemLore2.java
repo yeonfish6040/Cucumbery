@@ -154,7 +154,7 @@ public class ItemLore2
       ItemLore2CustomMaterial.setItemLore(viewer, customMaterial, item, itemMeta, lore);
     }
     // Attribute 설명
-    ItemLore2Attribute.setItemLore(type, customMaterial, item, itemMeta, lore, hideAttributes);
+    ItemLore2Attribute.setItemLore(type, item, itemMeta, lore, hideAttributes);
     // 음식 추가 상태 효과
     NBTCompound foodTag = NBTAPI.getCompound(itemTag, CucumberyTag.FOOD_KEY);
     ItemLore2Food.setItemLore(item, type, lore, foodTag, viewer, hideStatusEffects);

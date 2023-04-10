@@ -185,6 +185,7 @@ com\jho5245\cucumbery\commands\addon\CommandQuickShopAddon$1.class
 com\jho5245\cucumbery\util\no_groups\TestCommand.class
 com\jho5245\cucumbery\listeners\block\BlockPhysics$1.class
 com\jho5245\cucumbery\util\no_groups\Method2.class
+com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantCleaving.class
 com\jho5245\cucumbery\commands\no_groups\CommandUserData.class
 com\jho5245\cucumbery\listeners\entity\no_groups\EntityDeath.class
 com\jho5245\cucumbery\custom\customeffect\children\group\UUIDCustomEffectImple.class
@@ -383,7 +384,6 @@ com\jho5245\cucumbery\listeners\inventory\InventoryOpen.class
 com\jho5245\cucumbery\listeners\server\ServerListPing.class
 com\jho5245\cucumbery\commands\brigadier\CommandDamage.class
 com\jho5245\cucumbery\events\entity\EntityCustomEffectPreRemoveEvent.class
-com\jho5245\cucumbery\util\storage\data\custom_enchant\ultimate\EnchantHighRiskHighReturn$1.class
 com\jho5245\cucumbery\util\nbt\CucumberyTag.class
 com\jho5245\cucumbery\util\storage\data\Variable.class
 com\jho5245\cucumbery\custom\customeffect\type\CustomEffectTypeCooldown.class
@@ -510,6 +510,7 @@ com\jho5245\cucumbery\util\storage\data\Constant$ExtraTag.class
 com\jho5245\cucumbery\custom\customeffect\children\group\PlayerCustomEffect.class
 com\jho5245\cucumbery\custom\customeffect\TypeBuilder.class
 com\jho5245\cucumbery\listeners\entity\customeffect\EntityCustomEffectPreRemove.class
+com\jho5245\cucumbery\util\storage\data\custom_enchant\ultimate\EnchantCloseCall.class
 com\jho5245\cucumbery\util\blockplacedata\BlockPlaceDataConfig.class
 com\jho5245\cucumbery\util\itemeditor\JsonComponent.class
 com\jho5245\cucumbery\custom\customeffect\children\group\LocationVelocityCustomEffect.class

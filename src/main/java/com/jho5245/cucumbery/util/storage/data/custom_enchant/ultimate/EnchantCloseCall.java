@@ -2,14 +2,12 @@ package com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate;
 
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
-import org.bukkit.Material;
-import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class EnchantHighRiskHighReturn extends CustomEnchantUltimate
+public class EnchantCloseCall extends CustomEnchantUltimate
 {
-  public EnchantHighRiskHighReturn(@NotNull String name)
+  public EnchantCloseCall(@NotNull String name)
   {
     super(name);
   }
@@ -17,24 +15,23 @@ public class EnchantHighRiskHighReturn extends CustomEnchantUltimate
   @Override
   public @NotNull String translationKey()
   {
-    return "하이 리스크 하이 리턴";
-  }
-
-  @Override
-  @NotNull
-  public EnchantmentTarget getItemTarget() {
-    return EnchantmentTarget.ARMOR_TORSO;
+    return "구사 일생";
   }
 
   @Override
   public boolean canEnchantItem(@NotNull ItemStack itemStack)
   {
     CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
-    if (customMaterial == null)
+    if (customMaterial != null)
     {
-      Material type = itemStack.getType();
-      return type == Material.ENCHANTED_BOOK || Constant.ARMORS.contains(type);
+      return customMaterial.toString().endsWith("_CHESTPLATE");
     }
-    return false;
+    return Constant.CHESTPLATES.contains(itemStack.getType());
+  }
+
+  @Override
+  public int getMaxLevel()
+  {
+    return 5;
   }
 }

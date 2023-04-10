@@ -1,13 +1,13 @@
 package com.jho5245.cucumbery.util.storage.data.custom_enchant;
 
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
-import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class EnchantAssassinationBow extends CustomEnchant
+public class EnchantCleaving extends CustomEnchant
 {
-  public EnchantAssassinationBow(@NotNull String name)
+  public EnchantCleaving(@NotNull String name)
   {
     super(name);
   }
@@ -15,7 +15,7 @@ public class EnchantAssassinationBow extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "암살(활)";
+    return "갈리치기";
   }
 
   @Override
@@ -24,8 +24,14 @@ public class EnchantAssassinationBow extends CustomEnchant
     CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
     if (customMaterial != null)
     {
-      return customMaterial.toString().startsWith("BOW");
+      return customMaterial.toString().endsWith("_AXE");
     }
-    return itemStack.getType() == Material.BOW;
+    return Tag.ITEMS_AXES.isTagged(itemStack.getType());
+  }
+
+  @Override
+  public int getMaxLevel()
+  {
+    return 3;
   }
 }
