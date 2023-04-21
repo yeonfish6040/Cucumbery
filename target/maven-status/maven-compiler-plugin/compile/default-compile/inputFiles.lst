@@ -337,11 +337,13 @@ G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\jav
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantFranticLuckOfTheSea.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\data\Constant.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\brigadier\CommandKill2.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\no_groups\CommandEnchant.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\brigadier\CommandConsoleSudo2.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\custom\custommerchant\MerchantManager.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\custom\customeffect\children\group\LocationVelocityCustomEffect.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\server\ServerCommand.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\itemlore\ItemLore2.java
+G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantDefenseChance.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\Cucumbery.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\commands\no_groups\CommandRespawn.java
 G:\ETC\IntelliJ IDEA Community Edition 2022.2.1\workspace\Cucumbery\src\main\java\com\jho5245\cucumbery\listeners\entity\item\ItemSpawn.java

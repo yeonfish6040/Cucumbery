@@ -93,51 +93,45 @@ public class Scheduler
       {
         // 틱 단위로 무한 반복하는 애들
         tickSchedulesAsync();
-        // 서버 라디오
-        serverRadio();
-        // sendBossBar
-        BossBarMessage.tick();
-        // 플러그인 실행 시간
-        Cucumbery.runTime++;
       }, 0L, 1L);
-      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
       {
         // 플레이어 인벤토리의 아이템(손에 들고 있는 아이템 제외) 플레이어가 열고 있는 인벤토리 아이템 루프
-        playerExpireItem();
+        playerExpireItemAsync();
       }, 0L, 10L);
-      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
       {
         // 관전 중인 개체의 거리가 멀어졌을 때 관전 위치 갱신
-        spectateUpdater();
+        spectateUpdaterAsync();
         // 인벤토리가 가득 찼을때 타이틀 알림
-        inventoryFullNotify();
+        inventoryFullNotifyAsync();
         // 아이템 보관함 gui 업데이트
-        stashGUI();
+        stashGUIAsync();
         // 레시피 메뉴 업데이트
-        updateCustomRecipeGUI();
+        updateCustomRecipeGUIAsync();
         // 이름표 - 트래커
-        nameTagTracker();
+        nameTagTrackerAsync();
       }, 20L, 20L);
-      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
       {
-        expireItemAvailableTime();
+        expireItemAvailableTimeAsync();
       }, 400L, 400L);
-      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
       {
-        starCatchPenalty();
+        starCatchPenaltyAsync();
       }, 20L * 60L * 10L, 20L * 60L * 10L);
-      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
       {
-        playerExpireHandItem();
+        playerExpireHandItemAsync();
       }, 1200L, 1200L);
-      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
       {
         Initializer.saveUserData();
         Initializer.saveItemUsageData();
         Initializer.saveItemStashData();
         CustomEffectManager.save();
       }, 1200L, 20L * 60L * 5L);
-      Bukkit.getServer().getScheduler().runTaskTimer(cucumbery, () ->
+      Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(cucumbery, () ->
       {
         BlockPlaceDataConfig.saveAll();
       }, 1200L, 20L * 30L);
@@ -160,14 +154,21 @@ public class Scheduler
 
   private static void tickSchedulesAsync()
   {
-    entityTick();
-    playerTick();
-    damageIndicator();
-    MiningScheduler.customMiningTicks();
+    playerTickAsync();
+    damageIndicatorAsync();
+    // 서버 라디오
+    serverRadioTickAsync();
+    // sendBossBar
+    BossBarMessage.tickAsync();
+    // 플러그인 실행 시간
+    Cucumbery.runTime++;
+    MiningScheduler.customMiningTickAsync();
   }
 
   private static void tickSchedules()
   {
+    playerTick();
+    entityTick();
     Bukkit.getOnlinePlayers().forEach(player ->
     {
       CustomEffectScheduler.displayGUI(player);
@@ -181,7 +182,7 @@ public class Scheduler
     });
   }
 
-  private static void nameTagTracker()
+  private static void nameTagTrackerAsync()
   {
     for (Player player : Bukkit.getOnlinePlayers())
     {
@@ -245,7 +246,7 @@ public class Scheduler
     }
   }
 
-  private static void damageIndicator()
+  private static void damageIndicatorAsync()
   {
     synchronized (Variable.lastDamageMillis.keySet())
     {
@@ -292,7 +293,7 @@ public class Scheduler
       {
         for (UUID uuid : CustomEffectManager.effectMap.keySet())
         {
-          Entity entity = Method2.getEntityAsync(uuid);
+          Entity entity = Bukkit.getEntity(uuid);
           if (entity != null)
           {
             CustomEffectScheduler.tick(entity);
@@ -301,8 +302,7 @@ public class Scheduler
             CustomEffectScheduler.trueInvisibility(entity);
             CustomEffectScheduler.axolotlsGrace(entity);
             CustomEffectScheduler.stop(entity);
-            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                    CustomEffectScheduler.vanillaEffect(entity), 0L);
+            CustomEffectScheduler.vanillaEffect(entity);
             mountLoop(entity);
           }
         }
@@ -325,7 +325,7 @@ public class Scheduler
 //    }
   }
 
-  private static void playerTick()
+  private static void playerTickAsync()
   {
     for (Player player : Bukkit.getOnlinePlayers())
     {
@@ -338,40 +338,39 @@ public class Scheduler
       {
         itemLore(player);
       }
-      // 관전 제한 루프 (관전 권한이 없을 때 관전 취소)
-      spectateLoop(player);
+      // 명령 블록 명령어 미리 보기
+      commandBlockPreviewAsync(player);
+      worldEditPositionParticleAsync(player);
+      CustomEffectScheduler.display(player);
+      CustomEffectScheduler.fly(player);
+      CustomEffectScheduler.rune(player);
+      CustomEffectScheduler.masterOfFishing(player);
+      CustomEffectScheduler.gliding(player);
+      CustomEffectScheduler.fancySpotlight(player);
+      CustomEffectScheduler.darknessTerror(player);
+      CustomEffectScheduler.serverRadio(player);
+      CustomEffectScheduler.trollInventoryProperty(player);
+      CustomEffectScheduler.starCatch(player);
+    }
+  }
+
+  private static void playerTick()
+  {
+    for (Player player : Bukkit.getOnlinePlayers())
+    {
+      CustomEffectScheduler.spreadAndVariation(player);
+      customArmor(player);
       // 장착 불가 갑옷 사용 제한
       if (!Cucumbery.config.getBoolean("disable-item-usage-restriction"))
       {
         armorEquipRestriction(player);
       }
-      // 명령 블록 명령어 미리 보기
-      commandBlockPreview(player);
-      worldEditPositionParticle(player);
-      CustomEffectScheduler.display(player);
-      CustomEffectScheduler.fly(player);
-      CustomEffectScheduler.rune(player);
+      // 관전 제한 루프 (관전 권한이 없을 때 관전 취소)
+      spectateLoop(player);
       CustomEffectScheduler.gaesans(player);
-      CustomEffectScheduler.masterOfFishing(player);
-      CustomEffectScheduler.dynamicLight(player);
-      CustomEffectScheduler.gliding(player);
-      try
-      {
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                CustomEffectScheduler.spreadAndVariation(player), 0L);
-      }
-      catch (IllegalPluginAccessException ignored)
-      {
-
-      }
-      CustomEffectScheduler.fancySpotlight(player);
       CustomEffectScheduler.newbieShield(player);
-      CustomEffectScheduler.darknessTerror(player);
-      CustomEffectScheduler.serverRadio(player);
-      CustomEffectScheduler.trollInventoryProperty(player);
+      CustomEffectScheduler.dynamicLight(player);
       CustomEffectScheduler.townShield(player);
-      CustomEffectScheduler.starCatch(player);
-      customArmor(player);
     }
   }
 
@@ -387,13 +386,11 @@ public class Scheduler
             leggings == CustomMaterial.FROG_LEGGINGS &&
             boots == CustomMaterial.FROG_BOOTS)
     {
-      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 2, 3, false, false, false)), 0L);
+      player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 2, 3, false, false, false));
     }
     if (helmet == CustomMaterial.MINER_HELMET || helmet == CustomMaterial.MINDAS_HELMET)
     {
-      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Cucumbery.using_ProtocolLib ? 2 : 4, 0, false, false, false)), 0L);
+      player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Cucumbery.using_ProtocolLib ? 2 : 4, 0, false, false, false));
     }
     if (helmet == CustomMaterial.MINER_HELMET &&
             chestplate == CustomMaterial.MINER_CHESTPLATE &&
@@ -404,8 +401,7 @@ public class Scheduler
       {
         CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.MINER_ARMOR_SET_EFFECT);
       }
-      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Cucumbery.using_ProtocolLib ? 4 : 11, 0, false, false, false)), 0L);
+      player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Cucumbery.using_ProtocolLib ? 4 : 11, 0, false, false, false));
     }
     else if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.MINER_ARMOR_SET_EFFECT))
     {
@@ -415,7 +411,7 @@ public class Scheduler
     {
       player.getWorld().getPlayers().forEach(p ->
       {
-        ItemStack itemStack = playerInventory.getHelmet().clone();
+        ItemStack itemStack = Objects.requireNonNull(playerInventory.getHelmet()).clone();
         org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta();
         int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
         itemStack.setType(Material.LEATHER_HELMET);
@@ -441,7 +437,7 @@ public class Scheduler
     {
       player.getWorld().getPlayers().forEach(p ->
       {
-        ItemStack itemStack = playerInventory.getChestplate().clone();
+        ItemStack itemStack = Objects.requireNonNull(playerInventory.getChestplate()).clone();
         org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta();
         int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
         itemStack.setType(Material.LEATHER_CHESTPLATE);
@@ -467,7 +463,7 @@ public class Scheduler
     {
       player.getWorld().getPlayers().forEach(p ->
       {
-        ItemStack itemStack = playerInventory.getLeggings().clone();
+        ItemStack itemStack = Objects.requireNonNull(playerInventory.getLeggings()).clone();
         org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta();
         int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
         itemStack.setType(Material.LEATHER_LEGGINGS);
@@ -493,7 +489,7 @@ public class Scheduler
     {
       player.getWorld().getPlayers().forEach(p ->
       {
-        ItemStack itemStack = playerInventory.getBoots().clone();
+        ItemStack itemStack = Objects.requireNonNull(playerInventory.getBoots()).clone();
         org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) itemStack.getItemMeta();
         int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
         itemStack.setType(Material.LEATHER_BOOTS);
@@ -517,7 +513,7 @@ public class Scheduler
     }
   }
 
-  private static void starCatchPenalty()
+  private static void starCatchPenaltyAsync()
   {
     for (UUID uuid : Variable.starCatchPenalty.keySet())
     {
@@ -526,7 +522,7 @@ public class Scheduler
     }
   }
 
-  private static void worldEditPositionParticle(@NotNull Player player)
+  private static void worldEditPositionParticleAsync(@NotNull Player player)
   {
     if (!Cucumbery.using_WorldEdit)
     {
@@ -633,7 +629,7 @@ public class Scheduler
 
   final static private int SONG_TITLE_MAX_LENGTH = 24;
 
-  private static void serverRadio()
+  private static void serverRadioTickAsync()
   {
     if (!Cucumbery.using_NoteBlockAPI || CommandSong.radioSongPlayer == null || CommandSong.song == null)
     {
@@ -1065,7 +1061,7 @@ public class Scheduler
     }
   }
 
-  private static void stashGUI()
+  private static void stashGUIAsync()
   {
     for (Player player : Bukkit.getOnlinePlayers())
     {
@@ -1082,7 +1078,7 @@ public class Scheduler
     }
   }
 
-  private static void inventoryFullNotify()
+  private static void inventoryFullNotifyAsync()
   {
     for (Player player : Bukkit.getOnlinePlayers())
     {
@@ -1151,7 +1147,7 @@ public class Scheduler
   /**
    * 플레이어가 손에 들고 있는 아이템은 기간제 설명 업데이트 주기를 20초로 합니다.
    */
-  private static void playerExpireHandItem()
+  private static void playerExpireHandItemAsync()
   {
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {
@@ -1188,9 +1184,8 @@ public class Scheduler
   /**
    * 플레이어의 인벤토리에 있는 아이템(손에 들고 있는 아이템 제외)의 기간제 설명 업데이트 주기를 1초로 합니다. 만약 GUI가 아닌 인벤토리(일반 상자, 화로, 발사기, 공급기 등)가 열린 상태라면 해당 인벤토리에 있는 아이템 설명도 1초마다 업데이트 합니다.
    */
-  private static void playerExpireItem()
+  private static void playerExpireItemAsync()
   {
-    Outter:
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {
       if (player.getGameMode() == GameMode.SPECTATOR)
@@ -1216,7 +1211,6 @@ public class Scheduler
           Method.updateInventory(player, item);
         }
       }
-
       Inventory openInventoryTop = player.getOpenInventory().getTopInventory();
       if (openInventoryTop.getLocation() != null)
       {
@@ -1226,10 +1220,6 @@ public class Scheduler
           String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
           if (expireDate != null)
           {
-            if (UserData.EVENT_EXCEPTION_ACCESS.getBoolean(player.getUniqueId()))
-            {
-              continue Outter;
-            }
             Method.updateInventory(player, item);
           }
         }
@@ -1237,7 +1227,7 @@ public class Scheduler
     }
   }
 
-  private static void commandBlockPreview(@NotNull Player player)
+  private static void commandBlockPreviewAsync(@NotNull Player player)
   {
     if (player.getGameMode() == GameMode.SPECTATOR)
     {
@@ -1282,7 +1272,7 @@ public class Scheduler
   /**
    * 1초마다 플레이어의 레시피 화면을 업데이트 합니다.
    */
-  private static void updateCustomRecipeGUI()
+  private static void updateCustomRecipeGUIAsync()
   {
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {
@@ -1531,60 +1521,60 @@ public class Scheduler
   /**
    * 아이템 유효기간 만료 체크를 5초마다 합니다. 만약 기간이 지난 아이템이 존재하면 삭제합니다. 인벤토리를 열고 있는 상태라면 인벤토리에 있는 아이템도 모두 체크합니다.
    */
-  private static void expireItemAvailableTime() // 아이템 유효 기간
+  private static void expireItemAvailableTimeAsync() // 아이템 유효 기간
   {
-    for (World world : Bukkit.getServer().getWorlds())
+/*    for (World world : Bukkit.getServer().getWorlds())
     {
-      for (Entity entity : world.getEntities())
+      for (Chunk chunk : world.getLoadedChunks())
       {
-        EntityType type = entity.getType();
-        if (type == EntityType.DROPPED_ITEM)
+        for (Entity entity : chunk.getEntities())
         {
-          Item itemEntity = (Item) entity;
-          ItemStack item = itemEntity.getItemStack();
-          String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
-          if (expireDate != null && Method.isTimeUp(item, expireDate))
+          EntityType type = entity.getType();
+          if (type == EntityType.DROPPED_ITEM)
           {
-            ItemLore.setItemLore(item);
-            Location location = itemEntity.getLocation();
-            Collection<Entity> nearByEntites = world.getNearbyEntities(location, 10D, 10D, 10D);
-            for (Entity nearByEntity : nearByEntites)
+            Item itemEntity = (Item) entity;
+            ItemStack item = itemEntity.getItemStack();
+            String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
+            if (expireDate != null && Method.isTimeUp(item, expireDate))
             {
-              if (nearByEntity instanceof Player player)
+              ItemLore.setItemLore(item);
+              Location location = itemEntity.getLocation();
+              Collection<Entity> nearByEntites = world.getNearbyEntities(location, 10D, 10D, 10D);
+              for (Entity nearByEntity : nearByEntites)
               {
-                MessageUtil.info(player, ComponentUtil.translate("근처에 떨어져 있는 아이템 [%s](%s)의 유효 기간이 지나서 아이템이 제거되었습니다", item, location));
+                if (nearByEntity instanceof Player player)
+                {
+                  MessageUtil.info(player, ComponentUtil.translate("근처에 떨어져 있는 아이템 [%s](%s)의 유효 기간이 지나서 아이템이 제거되었습니다", item, location));
+                }
               }
+              item.setAmount(0);
+              entity.remove();
             }
-            item.setAmount(0);
-            entity.remove();
           }
-        }
-        if (type == EntityType.ITEM_FRAME)
-        {
-          ItemFrame itemFrame = (ItemFrame) entity;
-          ItemStack item = itemFrame.getItem();
-          String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
-          if (expireDate != null && Method.isTimeUp(item, expireDate))
+          if (type == EntityType.ITEM_FRAME)
           {
-            ItemLore.setItemLore(item);
-            Location location = itemFrame.getLocation();
-            Collection<Entity> nearByEntites = world.getNearbyEntities(location, 10D, 10D, 10D);
-            for (Entity nearByEntity : nearByEntites)
+            ItemFrame itemFrame = (ItemFrame) entity;
+            ItemStack item = itemFrame.getItem();
+            String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
+            if (expireDate != null && Method.isTimeUp(item, expireDate))
             {
-              if (nearByEntity instanceof Player player)
+              ItemLore.setItemLore(item);
+              Location location = itemFrame.getLocation();
+              Collection<Entity> nearByEntites = world.getNearbyEntities(location, 10D, 10D, 10D);
+              for (Entity nearByEntity : nearByEntites)
               {
-                MessageUtil.info(player, ComponentUtil.translate("근처에 있는 아이템 액자(%s)에 설치되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
+                if (nearByEntity instanceof Player player)
+                {
+                  MessageUtil.info(player, ComponentUtil.translate("근처에 있는 아이템 액자(%s)에 설치되어 있는 아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", location, item));
+                }
               }
+              itemFrame.setItem(null);
             }
-            itemFrame.setItem(null);
           }
-        }
-        if (type == EntityType.ARMOR_STAND)
-        {
-          ArmorStand armorStand = (ArmorStand) entity;
-          EntityEquipment entityEquipment = armorStand.getEquipment();
-          if (entityEquipment != null)
+          if (type == EntityType.ARMOR_STAND)
           {
+            ArmorStand armorStand = (ArmorStand) entity;
+            EntityEquipment entityEquipment = armorStand.getEquipment();
             ItemStack item = entityEquipment.getHelmet();
             Location location = armorStand.getLocation();
             Collection<Entity> nearByEntites = world.getNearbyEntities(location, 10D, 10D, 10D);
@@ -1678,7 +1668,7 @@ public class Scheduler
           }
         }
       }
-    }
+    }*/
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {
       if (player.getGameMode() == GameMode.SPECTATOR)
@@ -1829,7 +1819,7 @@ public class Scheduler
           customEffect.setAmplifier(ample);
           CustomEffect finalCustomEffect = customEffect;
           Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-          CustomEffectManager.addEffect(player, finalCustomEffect, true), 0L);
+                  CustomEffectManager.addEffect(player, finalCustomEffect, true), 0L);
         }
       }
       if (spectatorTarget instanceof Player target)
@@ -1864,7 +1854,7 @@ public class Scheduler
     }
   }
 
-  private static void spectateUpdater()
+  private static void spectateUpdaterAsync()
   {
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {

@@ -181,7 +181,7 @@ public class EntityComponentUtil
       {
         hover = hover
                 .append(Component.text("\n"))
-                .append(ComponentUtil.translate("접속 횟수 : %s회", Constant.THE_COLOR_HEX + player.getStatistic(Statistic.LEAVE_GAME) + 1));
+                .append(ComponentUtil.translate("접속 횟수 : %s회", Constant.THE_COLOR_HEX + (player.getStatistic(Statistic.LEAVE_GAME) + 1)));
       }
       if (tmiMode || Cucumbery.config.getBoolean("use-hover-event-for-entities.player-play-time"))
       {

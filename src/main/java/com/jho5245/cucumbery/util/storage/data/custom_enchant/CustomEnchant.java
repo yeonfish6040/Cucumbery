@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util.storage.data.custom_enchant;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.touch.*;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate.CustomEnchantUltimate;
@@ -11,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.EntityCategory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public abstract class CustomEnchant extends EnchantmentWrapper
+public abstract class CustomEnchant extends Enchantment
 {
   /**
    * A decorative enchant for glowing items.
@@ -107,7 +107,21 @@ public abstract class CustomEnchant extends EnchantmentWrapper
    */
   public static Enchantment IDIOT_SHOOTER;
 
+  /**
+   * 1+(1*레벨) 추가대미지,
+   * 1레벨 오를때마다 상대의 방패 피격시 상대의 방패사용불가 0.5초씩 추가
+   */
   public static Enchantment CLEAVING;
+
+  /**
+   * 플레이어의 손에 방패가 있을 때 다른 몹이나 플레이어가 피격 시
+   * 막고있지 않을 때 (6*레벨)% 확률로 막아지고(해당 공격에 대해 무적)
+   * 방패의 내구도가 ((들어온 대미지/6)*레벨) 만큼 깎인다.
+   * (1 이하의 데미지는 내구도 깎지 않음, 소수점은 정수로 반올림)
+   * (특징: 레벨이 높아질수록 막을 확률은 높아지지만 이 효과로 막았을때 내구도가 더 많이 깎임)
+   * (내구성 인챈트와 같이 인챈트 불가)
+   */
+  public static Enchantment DEFENSE_CHANCE;
 
   // Ulitmate Enchants
   public static Enchantment HIGH_RISK_HIGH_RETURN;
@@ -150,6 +164,8 @@ public abstract class CustomEnchant extends EnchantmentWrapper
 
     CLEAVING = registerEnchant(new EnchantCleaving("cleaving"));
 
+    DEFENSE_CHANCE = registerEnchant(new EnchantDefenseChance("defense_chance"));
+
     // Ulitmate Enchants
 
     HIGH_RISK_HIGH_RETURN = registerEnchant(new EnchantHighRiskHighReturn("high_risk_high_return"));
@@ -170,9 +186,14 @@ public abstract class CustomEnchant extends EnchantmentWrapper
     return GLOW != null;
   }
 
+  public CustomEnchant(@NotNull NamespacedKey namespacedKey)
+  {
+    super(namespacedKey);
+  }
+
   public CustomEnchant(@NotNull String name)
   {
-    super(name);
+    super(Objects.requireNonNull(NamespacedKey.fromString(name, Cucumbery.getPlugin())));
   }
 
   @Override
@@ -230,12 +251,21 @@ public abstract class CustomEnchant extends EnchantmentWrapper
   @NotNull
   public Component displayName(int level)
   {
-    return ComponentUtil.translate("%s %s", translationKey(), level);
+    return ComponentUtil.translate("%s %s", ComponentUtil.translate(translationKey()), level);
   }
 
   @Override
   @NotNull
   public abstract String translationKey();
+
+  @NotNull
+  public String translationKeyFallback()
+  {
+    String key = translationKey();
+    if (key.startsWith("key:"))
+      return key.split("\\|")[1];
+    return key;
+  }
 
   @Override
   public boolean isTradeable()

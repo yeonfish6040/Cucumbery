@@ -262,7 +262,15 @@ public class CustomEffectManager
         if (effect.getType().doesCallEvent())
         {
           EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect, reason);
-          Cucumbery.getPlugin().getPluginManager().callEvent(event);
+          try
+          {
+            Cucumbery.getPlugin().getPluginManager().callEvent(event);
+          }
+          catch (Throwable e)
+          {
+            MessageUtil.consoleSendMessage("removeEffect 비동기 호출됨 1");
+            e.printStackTrace();
+          }
           if (event.isCancelled())
           {
             return false;
@@ -281,7 +289,15 @@ public class CustomEffectManager
         if (effect.getType().doesCallEvent())
         {
           EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect, reason);
-          Cucumbery.getPlugin().getPluginManager().callEvent(event);
+          try
+          {
+            Cucumbery.getPlugin().getPluginManager().callEvent(event);
+          }
+          catch (Throwable e)
+          {
+            MessageUtil.consoleSendMessage("removeEffect 비동기 호출됨 2");
+            e.printStackTrace();
+          }
         }
       }
     }
@@ -308,7 +324,15 @@ public class CustomEffectManager
         if (effect.getType().doesCallEvent())
         {
           EntityCustomEffectPreRemoveEvent event = new EntityCustomEffectPreRemoveEvent(entity, effect, reason);
-          Bukkit.getPluginManager().callEvent(event);
+          try
+          {
+            Bukkit.getPluginManager().callEvent(event);
+          }
+          catch (Throwable e)
+          {
+            MessageUtil.consoleSendMessage("removeEffect 비동기 호출됨 3");
+            e.printStackTrace();
+          }
           if (event.isCancelled())
           {
             return false;
@@ -327,7 +351,15 @@ public class CustomEffectManager
         if (effect.getType().doesCallEvent())
         {
           EntityCustomEffectRemoveEvent event = new EntityCustomEffectRemoveEvent(entity, effect, reason);
-          Bukkit.getPluginManager().callEvent(event);
+          try
+          {
+            Bukkit.getPluginManager().callEvent(event);
+          }
+          catch (Throwable e)
+          {
+            MessageUtil.consoleSendMessage("removeEffect 비동기 호출됨 4");
+            e.printStackTrace();
+          }
         }
       }
     }

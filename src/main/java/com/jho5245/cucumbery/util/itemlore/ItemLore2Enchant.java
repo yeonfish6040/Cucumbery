@@ -1,6 +1,5 @@
 package com.jho5245.cucumbery.util.itemlore;
 
-import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
@@ -21,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class ItemLore2Enchant
         List<Component> enchantLore = new ArrayList<>();
         Map<Enchantment, Integer> enchants = itemMeta.getEnchants();
         int size = enchants.size();
-        if (size > 10 && Cucumbery.config.getInt("max-item-lore-width") > 20)
+        if (size >= 8)
         {
           StringBuilder key = new StringBuilder("&7");
           List<Component> args = new ArrayList<>();
@@ -63,7 +63,7 @@ public class ItemLore2Enchant
             }
             else
             {
-              component = ComponentUtil.translate("%s %s").args(ComponentUtil.translate(enchantment.translationKey()), level <= 10 ? ComponentUtil.translate("enchantment.level." + level) : Component.text(level));
+              component = ComponentUtil.translate("%s %s", ComponentUtil.translate(enchantment.translationKey()), ComponentUtil.translate("enchantment.level." + level).fallback(level + ""));
             }
             component = component.color(enchantment.isCursed() ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
             if (enchantment instanceof CustomEnchant customEnchant && customEnchant.isUltimate())
@@ -71,7 +71,7 @@ public class ItemLore2Enchant
               component = component.color(NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.BOLD, State.TRUE);
             }
             args.add(component);
-            if (args.size() == 5)
+            if (args.size() == 2)
             {
               key = new StringBuilder(key.substring(0, key.length() - 2));
               enchantLore.add(ComponentUtil.translate(key.toString(), args));
@@ -122,16 +122,18 @@ public class ItemLore2Enchant
 
     if (type == Material.ENCHANTED_BOOK)
     {
-      if (((EnchantmentStorageMeta) itemMeta).hasStoredEnchants())
+      EnchantmentStorageMeta storageMeta = (EnchantmentStorageMeta) itemMeta;
+      if (storageMeta.hasStoredEnchants())
       {
         itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
-        lore.add(Component.empty());
-        lore.add(ComponentUtil.translate(Constant.ITEM_LORE_STORED_ENCHANT));
-        for (Enchantment enchant : Enchantment.values())
+        List<Component> enchantLore = new ArrayList<>();
+        Map<Enchantment, Integer> map = new HashMap<>(storageMeta.getStoredEnchants());
+        map.keySet().removeIf(enchantment -> enchantment.equals(CustomEnchant.GLOW));
+        for (Enchantment enchantment : map.keySet())
         {
-          if (((EnchantmentStorageMeta) itemMeta).hasStoredEnchant(enchant))
+          if (map.size() < 8)
           {
-            int level = ((EnchantmentStorageMeta) itemMeta).getStoredEnchantLevel(enchant);
+            int level = storageMeta.getStoredEnchantLevel(enchantment);
             if (level > 255)
             {
               level = 255;
@@ -140,10 +142,20 @@ public class ItemLore2Enchant
             {
               level = 1;
             }
-            lore.addAll(ItemLoreUtil.enchantTMIDescription(viewer, item, itemMeta, type, enchant, level, viewer == null || UserData.SHOW_ENCHANTMENT_TMI_DESCRIPTION.getBoolean(viewer)));
+            enchantLore.addAll(ItemLoreUtil.enchantTMIDescription(viewer, item, itemMeta, type, enchantment, level, viewer == null || UserData.SHOW_ENCHANTMENT_TMI_DESCRIPTION.getBoolean(viewer)));
+          }
+          else
+          {
+
           }
         }
-        ItemLoreEnchantRarity.enchantedBookRarity(item, lore, type, (EnchantmentStorageMeta) itemMeta);
+        if (!enchantLore.isEmpty())
+        {
+          lore.add(Component.empty());
+          lore.add(ComponentUtil.translate(Constant.ITEM_LORE_STORED_ENCHANT));
+          lore.addAll(enchantLore);
+        }
+        ItemLoreEnchantRarity.enchantedBookRarity(item, lore, type, storageMeta);
       }
       else
       {

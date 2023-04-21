@@ -94,13 +94,14 @@ public abstract class ChunkConfig
         if (cfg.getRoot() == null || cfg.getRoot().getKeys(false).isEmpty())
         {
           customConfig.delete();
+          timer.cancel();
           return;
         }
         customConfig.saveConfig();
         timer.cancel();
       }
     };
-    timer.schedule(timerTask, 0L);
+    timer.schedule(timerTask, 1L);
   }
 
   public static String locationToString(@NotNull Location location)

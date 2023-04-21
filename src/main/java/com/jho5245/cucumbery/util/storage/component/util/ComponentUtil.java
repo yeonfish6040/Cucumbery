@@ -16,6 +16,7 @@ import com.jho5245.cucumbery.util.storage.component.ItemStackComponent;
 import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.sendercomponent.SenderComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.*;
+import com.jho5245.cucumbery.util.storage.data.custom_enchant.ultimate.CustomEnchantUltimate;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
@@ -36,6 +37,7 @@ import net.kyori.adventure.translation.Translatable;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -505,7 +507,6 @@ public class ComponentUtil
           NamespacedKey namespacedKey = advancement.getKey();
           if (player == null || player.hasPermission("asdf"))
           {
-
             String suggest = "/advancement grant @s only " + namespacedKey.namespace() + ":" + namespacedKey.value();
             concat = concat.clickEvent(ClickEvent.suggestCommand(suggest));
           }
@@ -538,6 +539,36 @@ public class ComponentUtil
         int size = team.getSize();
         String name = team.getName();
         component = component.append(Component.empty().append(prefix).append(displayName).append(suffix).hoverEvent(Component.text(name).append(Component.text("\n").append(ComponentUtil.translate("구성원 %s명", size)))));
+      }
+      else if (object instanceof Enchantment enchantment)
+      {
+        Component concat = ComponentUtil.translate(enchantment.translationKey());
+        if (enchantment.isCursed())
+        {
+          concat = concat.color(NamedTextColor.RED);
+        }
+        else if (enchantment instanceof CustomEnchantUltimate)
+        {
+          concat = concat.color(NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.BOLD, State.TRUE);
+        }
+        else
+        {
+          concat = concat.color(TextColor.color(154, 84, 255));
+        }
+        Component hover = ComponentUtil.translate(enchantment.translationKey());
+        NamespacedKey namespacedKey = enchantment.getKey();
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("키 : %s", Constant.THE_COLOR_HEX + namespacedKey.toString()));
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("최대 레벨 : %s", Constant.THE_COLOR_HEX + enchantment.getMaxLevel()));
+        if (player != null && player.hasPermission("asdf"))
+        {
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("&7클릭하여 손에 들고 있는 아이템에 해당 마법 부여"));
+          concat = concat.clickEvent(ClickEvent.suggestCommand("/cenchant " + namespacedKey));
+        }
+        concat = concat.hoverEvent(hover);
+        component = component.append(concat);
       }
       else if (object instanceof Translatable translatable)
       {

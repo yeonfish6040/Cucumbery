@@ -759,6 +759,7 @@ public class Cucumbery extends JavaPlugin
     Initializer.registerCommand("shakevillagerhead", new CommandShakeVillagerHead());
     Initializer.registerCommand("setrotation", new CommandSetRotation());
     Initializer.registerCommand("lookat", new CommandLookAt());
+    Initializer.registerCommand("cenchant", new CommandEnchant());
   }
 
   private void registerEvents()

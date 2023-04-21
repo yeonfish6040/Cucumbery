@@ -32,6 +32,7 @@ import org.bukkit.entity.FishHook.HookState;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.InventoryView.Property;
+import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -150,8 +151,15 @@ public class CustomEffectScheduler
       {
         if (Variable.customEffectBossBarMap.containsKey(uuid))
         {
-          player.hideBossBar(Variable.customEffectBossBarMap.get(uuid));
-          Variable.customEffectBossBarMap.remove(uuid);
+          // 메모리 트롤링?
+          try
+          {
+            player.hideBossBar(Variable.customEffectBossBarMap.remove(uuid));
+          }
+          catch (NullPointerException ignored)
+          {
+
+          }
         }
       }
     }
@@ -358,8 +366,7 @@ public class CustomEffectScheduler
   {
     if (CustomEffectManager.hasEffect(player, CustomEffectType.GAESANS) && player.isSneaking() && ((Entity) player).isOnGround())
     {
-      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2, 0, false, false, false)), 0L);
+              player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 2, 0, false, false, false));
     }
   }
 
@@ -383,8 +390,7 @@ public class CustomEffectScheduler
       Material mainHand = inventory.getItemInMainHand().getType(), offHand = inventory.getItemInOffHand().getType();
       if (Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(mainHand) || Constant.OPTIFINE_DYNAMIC_LIGHT_ITEMS.contains(offHand))
       {
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 4, 0, false, false, false)), 0L);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 4, 0, false, false, false));
       }
     }
   }
@@ -673,8 +679,7 @@ public class CustomEffectScheduler
   {
     if (CustomEffectManager.hasEffect(player, CustomEffectType.TOWN_SHIELD))
     {
-      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2, 0, true, false, false)), 0L);
+      player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 2, 0, true, false, false));
     }
   }
 
@@ -929,7 +934,14 @@ public class CustomEffectScheduler
     {
       if (!darknessTerrorTimer2.contains(player.getUniqueId()))
       {
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> darknessTerrorTimer.add(player.getUniqueId()), 40L);
+        try
+        {
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> darknessTerrorTimer.add(player.getUniqueId()), 40L);
+        }
+        catch (IllegalPluginAccessException ignored)
+        {
+
+        }
       }
       darknessTerrorTimer2.add(player.getUniqueId());
       return;

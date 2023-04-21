@@ -46,7 +46,7 @@ public class BossBarMessage
     }
   }
 
-  public static void tick()
+  public static void tickAsync()
   {
     Variable.sendBossBarMap.keySet().removeIf(uuid -> Variable.sendBossBarMap.get(uuid).isEmpty());
     for (UUID uuid : Variable.sendBossBarMap.keySet())

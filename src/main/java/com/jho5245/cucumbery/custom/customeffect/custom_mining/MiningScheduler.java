@@ -129,7 +129,7 @@ public class MiningScheduler
     });
   }
 
-  public static void customMiningTicks()
+  public static void customMiningTickAsync()
   {
     HashMap<Location, Long> map = Variable.customMiningCooldown;
     for (Location location : new ArrayList<>(map.keySet()))

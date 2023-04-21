@@ -147,6 +147,8 @@ public enum Permission
 
   CMD_LOOK_AT(C + "lookat"),
 
+  CMD_ENCHANT(C + "enchant"),
+
   OTHER_EVAL("eval"),
   OTHER_PLACEHOLDER("placeholder"),
   ;

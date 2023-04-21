@@ -18,6 +18,7 @@ public class ExplodeEventManager
   {
     for (Block block : blockList)
     {
+      int blockTier = MiningManager.getVanillaBlockTier(block.getType());
       Location location = block.getLocation();
       ItemStack itemStack = BlockPlaceDataConfig.getItem(location);
       if (ItemStackUtil.itemExists(itemStack))
@@ -29,7 +30,7 @@ public class ExplodeEventManager
         }
         removeList.add(block);
         NBTItem nbtItem = new NBTItem(itemStack);
-        int blockTier = nbtItem.hasTag(MiningManager.BLOCK_TIER) && nbtItem.getType(MiningManager.BLOCK_TIER) == NBTType.NBTTagInt ? nbtItem.getInteger(MiningManager.BLOCK_TIER) : MiningManager.getVanillaBlockTier(block.getType());
+        blockTier = nbtItem.hasTag(MiningManager.BLOCK_TIER) && nbtItem.getType(MiningManager.BLOCK_TIER) == NBTType.NBTTagInt ? nbtItem.getInteger(MiningManager.BLOCK_TIER) : blockTier;
         if (blockTier > explodePower)
         {
           removeListButNoBreak.add(block);
@@ -42,6 +43,11 @@ public class ExplodeEventManager
           }
           BlockPlaceDataConfig.removeData(location);
         }
+      }
+      else if (blockTier > explodePower)
+      {
+        removeList.add(block);
+        removeListButNoBreak.add(block);
       }
     }
   }

@@ -20,6 +20,7 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -279,6 +280,60 @@ public class EntityDamageByEntity implements Listener
             {
               livingEntity.damage(damage, player);
             }
+          }
+        }
+      }
+      // 우연한 방어
+      if (victim instanceof Player player && !player.isBlocking())
+      {
+        ItemStack victimShield = ItemStackUtil.getPlayerUsingItem(player, Material.SHIELD);
+        if (ItemStackUtil.itemExists(victimShield) && victimShield.hasItemMeta() && victimShield.getItemMeta().hasEnchant(CustomEnchant.DEFENSE_CHANCE))
+        {
+          int level = victimShield.getItemMeta().getEnchantLevel(CustomEnchant.DEFENSE_CHANCE);
+          double damage = event.getFinalDamage();
+          if (damage > 1)
+          {
+            int durabilityLoss = (int) Math.round(damage / 6 * level);
+            if (durabilityLoss > 0)
+            {
+              boolean breaking = false;
+              NBTCompound duraTag = NBTAPI.getCompound(NBTAPI.getMainCompound(victimShield), CucumberyTag.CUSTOM_DURABILITY_KEY);
+              if (duraTag == null)
+              {
+                org.bukkit.inventory.meta.Damageable itemMeta = (org.bukkit.inventory.meta.Damageable) victimShield.getItemMeta();
+                itemMeta.setDamage(itemMeta.getDamage() + durabilityLoss);
+                victimShield.setItemMeta(itemMeta);
+                if (itemMeta.getDamage() >= victimShield.getType().getMaxDurability())
+                {
+                  breaking = true;
+                }
+              }
+              else
+              {
+                duraTag = new NBTItem(victimShield,  true).getCompound(CucumberyTag.KEY_MAIN).getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
+                long curDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
+                duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, curDura - durabilityLoss);
+                breaking = curDura - durabilityLoss <= 0;
+              }
+              if (breaking)
+              {
+                if (UserData.SHOW_ITEM_BREAK_TITLE.getBoolean(player) && Cucumbery.config.getBoolean("send-title-on-item-break"))
+                {
+                  if (!Method.configContainsLocation(player.getLocation(), Cucumbery.getPlugin().getConfig().getStringList("no-send-title-on-item-break-worlds")))
+                  {
+                    MessageUtil.sendTitle(player, ComponentUtil.translate("&c장비 파괴됨!"),
+                            ComponentUtil.translate("rg255,204;인벤토리 아이템 중 %s이(가) 파괴되었습니다", victimShield), 5, 100, 15);
+                  }
+                }
+                victimShield.setAmount(victimShield.getAmount() - 1);
+              }
+            }
+          }
+          if (Math.random() * 100d < level * 6)
+          {
+            MessageUtil.broadcastDebug("피해 가드함");
+            event.setCancelled(true);
+            return;
           }
         }
       }

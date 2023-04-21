@@ -390,6 +390,10 @@ commands:
   lookat:
     description: 개체의 바라보는 위치/개체를 설정합니다
     usage: /<command> <개체> <대상 위치> [명령어 출력 숨김 여부]
+  cenchant:
+    description: 아이템에 마법을 부여하거나 제거합니다
+    usage: /<command> <마법> [레벨]
+    aliases: [enchant]
 
 permissions:
   cucumbery.error.hide:

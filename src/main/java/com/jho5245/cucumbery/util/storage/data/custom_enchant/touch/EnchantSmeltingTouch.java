@@ -3,8 +3,6 @@ package com.jho5245.cucumbery.util.storage.data.custom_enchant.touch;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -21,7 +19,7 @@ public class EnchantSmeltingTouch extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "제련의 손길";
+    return "key:enchantment.cucumbery.smelting_touch|제련의 손길";
   }
 
   @Override
@@ -32,17 +30,16 @@ public class EnchantSmeltingTouch extends CustomEnchant
   }
 
   @Override
-  public boolean canEnchantItem(@NotNull ItemStack item)
+  public boolean canEnchantItem(@NotNull ItemStack itemStack)
   {
-    String id = ItemStackUtil.itemExists(item) ? new NBTItem(item).getString("id") + "" : "";
-    if (id.equals(""))
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+    if (customMaterial == null)
     {
-      Material type = item.getType();
+      Material type = itemStack.getType();
       return type == Material.ENCHANTED_BOOK || Constant.TOOLS.contains(type) || Constant.SWORDS.contains(type);
     }
     try
     {
-      CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
       return switch (customMaterial)
               {
                 case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566, MINDAS_DRILL -> true;

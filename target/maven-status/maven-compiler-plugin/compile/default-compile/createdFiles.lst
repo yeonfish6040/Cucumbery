@@ -175,6 +175,7 @@ com\jho5245\cucumbery\commands\reinforce\CommandReinforceConstantsAndUtils.class
 com\jho5245\cucumbery\listeners\entity\no_groups\EntityPickupItem.class
 com\jho5245\cucumbery\util\itemlore\ItemLore2CanPlaceAndDestroys.class
 com\jho5245\cucumbery\listeners\block\BlockDamageAbort.class
+com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantDefenseChance.class
 com\jho5245\cucumbery\util\itemlore\ItemLore2Meta$1.class
 com\jho5245\cucumbery\listeners\UnknownCommand.class
 com\jho5245\cucumbery\listeners\block\BlockDispenseArmor.class
@@ -306,6 +307,7 @@ com\jho5245\cucumbery\commands\msg\CommandSendMessage.class
 com\jho5245\cucumbery\commands\no_groups\CommandRespawn.class
 com\jho5245\cucumbery\listeners\entity\customeffect\EntityCustomEffectPostApply.class
 com\jho5245\cucumbery\listeners\player\item\PlayerAttemptPickupItem.class
+com\jho5245\cucumbery\commands\no_groups\CommandEnchant.class
 com\jho5245\cucumbery\commands\no_groups\CommandSplash.class
 com\jho5245\cucumbery\listeners\addon\quickshop\ShopDelete.class
 com\jho5245\cucumbery\commands\no_groups\CommandSetAggro.class

@@ -1246,7 +1246,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "long은 %s 초과여야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(min), Constant.Sosu15.format(value));
+        sendError(sender, "key:argument.long.low.exclusive|long은 %s 초과여야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(min), Constant.Sosu15.format(value));
       }
       return false;
     }
@@ -1262,7 +1262,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "long은 %s 미만이어야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
+        sendError(sender, "key:argument.long.big.exclusive|long은 %s 미만이어야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
       }
       return false;
     }
@@ -1298,7 +1298,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "double은 %s 초과여야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(min), Constant.Sosu15.format(value));
+        sendError(sender, "key:argument.double.low.exclusive|double은 %s 초과여야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(min), Constant.Sosu15.format(value));
       }
       return false;
     }
@@ -1314,7 +1314,7 @@ public class MessageUtil
     {
       if (notice)
       {
-        sendError(sender, "double은 %s 미만이어야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
+        sendError(sender, "key:argument.double.big.exclusive|double은 %s 미만이어야 하는데, %s이(가) 있습니다", Constant.Sosu15.format(max), Constant.Sosu15.format(value));
       }
       return false;
     }
