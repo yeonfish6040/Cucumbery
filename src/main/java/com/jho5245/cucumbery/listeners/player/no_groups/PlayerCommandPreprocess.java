@@ -76,6 +76,10 @@ public class PlayerCommandPreprocess implements Listener
       }
       return;
     }
+
+    boolean playSound = Cucumbery.config.getBoolean("play-sound-on-command") && !Method.configContainsLocation(player.getLocation(), Cucumbery.config.getStringList("no-play-sound-on-command-worlds")) &&
+            UserData.LISTEN_COMMAND.getBoolean(player.getUniqueId());
+
     String message = event.getMessage();
     String[] split = message.split(" ");
     String label = split[0];
@@ -89,10 +93,7 @@ public class PlayerCommandPreprocess implements Listener
         player.sendMessage(ComponentUtil.translate("command.unknown.command", NamedTextColor.RED));
         player.sendMessage(Component.empty().append(Component.text(label, NamedTextColor.RED).decoration(TextDecoration.UNDERLINED, State.TRUE))
                 .append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE)));
-        if (UserData.LISTEN_COMMAND.getBoolean(player.getUniqueId()))
-        {
-          SoundPlay.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS);
-        }
+        this.playSoundOnPerformCommand(event, playSound);
         return;
       }
     }
@@ -132,7 +133,7 @@ public class PlayerCommandPreprocess implements Listener
       if (!itemName.equals(split[1]))
       {
         Bukkit.dispatchCommand(player, "cgive @s " + itemName);
-        this.playSoundOnPerformCommand(event);
+        this.playSoundOnPerformCommand(event, playSound);
         return;
       }
     }
@@ -189,13 +190,13 @@ public class PlayerCommandPreprocess implements Listener
       event.setCancelled(true);
       return;
     }
-    this.playSoundOnPerformCommand(event);
+    this.playSoundOnPerformCommand(event, playSound);
   }
 
-  private void playSoundOnPerformCommand(PlayerCommandPreprocessEvent event)
+  private void playSoundOnPerformCommand(PlayerCommandPreprocessEvent event, boolean playSound)
   {
     Player player = event.getPlayer();
-    if (UserData.LISTEN_COMMAND.getBoolean(player.getUniqueId()))
+    if (playSound)
     {
       SoundPlay.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS);
     }

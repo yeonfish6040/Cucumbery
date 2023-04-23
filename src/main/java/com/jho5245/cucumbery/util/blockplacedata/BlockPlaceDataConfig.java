@@ -50,7 +50,10 @@ public class BlockPlaceDataConfig extends ChunkConfig
    */
   public static void saveAll()
   {
-    MAP.forEach((s, blockPlaceDataConfig) -> blockPlaceDataConfig.saveConfig());
+    for (String s : MAP.keySet())
+    {
+      MAP.get(s).saveConfig();
+    }
     List<String> keySet = new ArrayList<>(MAP.keySet());
     if (!keySet.isEmpty())
     {

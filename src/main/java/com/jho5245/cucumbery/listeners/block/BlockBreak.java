@@ -42,6 +42,7 @@ import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.maxgamer.quickshop.QuickShop;
 
 import java.util.*;
 
@@ -185,7 +186,16 @@ public class BlockBreak implements Listener
     {
       if (!Cucumbery.using_mcMMO)
       {
-        event.setCancelled(true);
+        boolean bypassQuickShop = Cucumbery.using_QuickShop;
+        if (bypassQuickShop)
+        {
+          List<String> blockTypes = QuickShop.getInstance().getConfig().getStringList("shop-blocks");
+          bypassQuickShop = blockTypes.contains(blockType.toString());
+        }
+        if (!bypassQuickShop)
+        {
+          event.setCancelled(true);
+        }
       }
       return;
     }

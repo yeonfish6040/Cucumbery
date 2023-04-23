@@ -194,7 +194,7 @@ public class CommandEnchant implements CucumberyCommandExecutor
       List<Completion> list2 = new ArrayList<>();
       list2.add(Completion.completion("0"));
       String enchString = args[0];
-      if (!enchString.contains(":"))
+      if (!enchString.contains(":") && enchString.length() <= 2)
       {
         enchString = "minecraft:" + enchString;
       }

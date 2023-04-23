@@ -73,7 +73,7 @@ public class GUIManager
             Arrays.asList("&7상대방과 자신이 채팅을 할때 소리를 듣습니다", "&e해당 기능을 사용하지 않아도", "&e일부 유저(관리자 등)의 채팅 소리는 들릴 수 있습니다", "", "&6현재 설정 : &a채팅 소리를 듣습니다", "", "&c클릭하면 소리를 끕니다"), "&b채팅 소리 듣기",
             Arrays.asList("&7상대방과 자신이 채팅을 할때 소리를 듣습니다", "&e해당 기능을 사용하지 않아도", "&e일부 유저(관리자 등)의 채팅 소리는 들릴 수 있습니다", "", "&6현재 설정 : &c채팅 소리를 듣지 않습니다", "", "&a클릭하면 소리를 켭니다")));
     inv.setItem(4, CreateItemStack
-            .toggleItem(UserData.LISTEN_COMMAND.getBoolean(player.getUniqueId()), "&b명령어 소리 듣기", Arrays.asList("&7명령어를 입력할 때 소리를 듣습니다", "", "&6현재 설정 : &a명령어 입력 소리를 듣습니다", "", "&c클릭하면 소리를 끕니다"),
+            .toggleItem(UserData.LISTEN_COMMAND.getBoolean(player.getUniqueId()), "&b명령어 소리 듣기", Arrays.asList("&7명령어를 입력할 때 소리를 듣습니다", "&e특정 상황에서는 해당 기능을 켜도 소리가 들리지 않을 수 있습니다", "", "&6현재 설정 : &a명령어 입력 소리를 듣습니다", "", "&c클릭하면 소리를 끕니다"),
                     "&b명령어 소리 듣기", Arrays.asList("&7명령어를 입력할 때 소리를 듣습니다", "", "&6현재 설정 : &c명령어 입력 소리를 듣지 않습니다", "", "&a클릭하면 소리를 켭니다")));
     inv.setItem(5, CreateItemStack.toggleItem(UserData.LISTEN_GLOBAL.getBoolean(player.getUniqueId()), "&b서버 라디오 사용",
             Arrays.asList("&7서버에서 전체 플레이어에게 재생되는 소리를 듣습니다", "&e해당 기능을 사용하지 않아도", "&e일부 라디오 소리는 들릴 수 있습니다", "", "&6현재 설정 : &a서버 라디오를 사용합니다", "", "&c클릭하면 서버 라디오를 사용하지 않습니다"), "&b서버 라디오 사용",

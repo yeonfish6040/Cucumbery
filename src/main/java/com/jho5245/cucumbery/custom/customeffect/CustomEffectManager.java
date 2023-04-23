@@ -12,6 +12,7 @@ import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveR
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil.TimeFormatType;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
@@ -542,7 +543,7 @@ public class CustomEffectManager
     }
     effectMap.keySet().removeIf(uuid ->
     {
-      Entity entity = Bukkit.getEntity(uuid);
+      Entity entity = Method2.getEntityAsync(uuid);
       OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
       boolean isPlayer = offlinePlayer.hasPlayedBefore() || offlinePlayer.getStatistic(Statistic.PLAY_ONE_MINUTE) > 0;
       return effectMap.get(uuid).isEmpty() || (!isPlayer && entity == null);
@@ -551,11 +552,15 @@ public class CustomEffectManager
 
   public static void save(@NotNull UUID uuid)
   {
+    if (!effectMap.containsKey(uuid))
+    {
+      return;
+    }
     List<CustomEffect> customEffects = effectMap.get(uuid);
     //MessageUtil.broadcastDebug("trying to save:" + uuid + ", effect size:" + customEffects.size());
     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
     boolean isPlayer = offlinePlayer.hasPlayedBefore() || offlinePlayer.getStatistic(Statistic.PLAY_ONE_MINUTE) > 0;
-    Entity entity = Bukkit.getEntity(uuid);
+    Entity entity = Method2.getEntityAsync(uuid);
     String entityType = entity != null ? entity.getType().toString().toLowerCase() : "unknown";
     if (customEffects.isEmpty() || (!isPlayer && entity == null))
     {

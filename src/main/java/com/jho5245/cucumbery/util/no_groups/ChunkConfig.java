@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -102,6 +103,7 @@ public abstract class ChunkConfig
       }
     };
     timer.schedule(timerTask, 1L);
+    BlockPlaceDataConfig.TIMERS.add(timer);
   }
 
   public static String locationToString(@NotNull Location location)
