@@ -312,9 +312,9 @@ public class BlockPlace implements Listener
         }
         BlockPlaceDataConfig.setItem(location, item);
         BlockPlaceDataConfig.spawnItemDisplay(location);
-        if (nbtItem.hasTag("material") && nbtItem.hasTag("displays"))
+        if (nbtItem.hasTag("change_material") && nbtItem.hasTag("displays"))
         {
-          String materialString = nbtItem.hasTag("material") && nbtItem.getType("material") == NBTType.NBTTagString ? nbtItem.getString("material") : "";
+          String materialString = nbtItem.hasTag("change_material") && nbtItem.getType("change_material") == NBTType.NBTTagString ? nbtItem.getString("change_material") : "";
           Material material = Method2.valueOf(materialString, Material.class);
           block.setType(material != null ? material : Material.WHITE_STAINED_GLASS);
         }

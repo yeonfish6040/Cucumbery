@@ -264,7 +264,7 @@ public class ItemLoreCustomItem
       {
         case WNYNYA_ORE ->
         {
-          nbtItem.setString("material", Material.GRAY_STAINED_GLASS.toString());
+          nbtItem.setString("change_material", Material.GRAY_STAINED_GLASS.toString());
           nbtItem.setInteger("BlockTier", 2);
           nbtItem.setFloat("BlockHardness", 500f);
           nbtItem.setString("BreakSound", Sound.BLOCK_STONE_BREAK.toString());
