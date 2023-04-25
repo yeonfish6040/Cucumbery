@@ -346,14 +346,16 @@ public class Cucumbery extends JavaPlugin
     {
       BlockPlaceDataConfig.ITEM_DISPLAY_MAP.keySet().forEach(location ->
       {
-        String[] split = location.split("_");
+        String[] split = location.split("\\|");
         try
         {
           Location location1 = new Location(Bukkit.getWorld(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]), Integer.parseInt(split[3]));
           BlockPlaceDataConfig.despawnItemDisplay(location1);
         }
-        catch (Exception ignored)
+        catch (Exception e)
         {
+          System.out.println("왜 : " + location);
+          e.printStackTrace();
         }
       });
       BlockPlaceDataConfig.TIMERS.forEach(Timer::cancel);

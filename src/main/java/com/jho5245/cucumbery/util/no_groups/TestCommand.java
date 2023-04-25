@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.no_groups;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -66,18 +67,18 @@ public class TestCommand implements CucumberyCommandExecutor
       if (sender instanceof Player player)
       {
 //        ItemStack itemStack = player.getInventory().getItemInMainHand();
-//        Location location = CommandArgumentUtil.location(player, args[0], true, true);
-//        switch (args[1])
-//        {
-//          case "spawn" -> {
-//            BlockPlaceDataConfig.spawnItemDisplay(location);
-//            MessageUtil.broadcastDebug(location + " 위치에 블록 표시함");
-//          }
-//          case "despawn" -> {
-//            BlockPlaceDataConfig.despawnItemDisplay(location);
-//            MessageUtil.broadcastDebug(location + " 위치에 블록 숨김");
-//          }
-//        }
+        Location location = CommandArgumentUtil.location(player, args[0], true, true);
+        switch (args[1])
+        {
+          case "spawn" -> {
+            BlockPlaceDataConfig.spawnItemDisplay(location);
+            MessageUtil.broadcastDebug(location + " 위치에 블록 표시함");
+          }
+          case "despawn" -> {
+            BlockPlaceDataConfig.despawnItemDisplay(location);
+            MessageUtil.broadcastDebug(location + " 위치에 블록 숨김");
+          }
+        }
 //        String url = args[1];
 //        int entityId = Bukkit.getUnsafe().nextEntityId();
 //        MessageUtil.broadcastDebug("id:" + entityId);

@@ -588,7 +588,7 @@ public class MiningManager
         }
       }
       // 시밤 서버 탐험 월드 커스텀 광물
-      if (Bukkit.getPluginManager().getPlugin("CBomb-Explore") != null && player.getWorld().getName().equals("world"))
+      if (false && Bukkit.getPluginManager().getPlugin("CBomb-Explore") != null && player.getWorld().getName().equals("world"))
       {
         int y = blockLocation.getBlockY();
         switch (blockType)

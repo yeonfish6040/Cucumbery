@@ -55,7 +55,7 @@ public abstract class ChunkConfig
   public String getKey()
   {
     int x = chunk.getX(), z = chunk.getZ();
-    return x + "_" + z;
+    return chunk.getWorld().getName() + "/" + x + "_" + z;
   }
 
   @NotNull
@@ -127,6 +127,6 @@ public abstract class ChunkConfig
   @NotNull
   public static String getKey(@NotNull Chunk chunk)
   {
-    return chunk.getX() + "_" + chunk.getZ();
+    return chunk.getWorld().getName() + "/" + chunk.getX() + "_" + chunk.getZ();
   }
 }

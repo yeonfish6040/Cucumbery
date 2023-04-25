@@ -41,7 +41,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
 
   protected BlockPlaceDataConfig(@NotNull Chunk chunk, boolean createNew)
   {
-    super(chunk, "block-place-data/" + chunk.getWorld().getName(), createNew);
+    super(chunk, "block-place-data", createNew);
     MAP.put(getKey(), this);
   }
 
@@ -51,7 +51,8 @@ public class BlockPlaceDataConfig extends ChunkConfig
   public static void saveAll()
   {
     List<String> keySet = new ArrayList<>(MAP.keySet());
-    if (!keySet.isEmpty())
+    keySet.forEach(s -> MAP.get(s).save());
+/*    if (!keySet.isEmpty())
     {
       Timer timer = new Timer();
       TimerTask task = new TimerTask()
@@ -77,18 +78,14 @@ public class BlockPlaceDataConfig extends ChunkConfig
       };
       timer.schedule(task, 0, 50);
       TIMERS.add(timer);
-    }
-
+    }*/
     MAP.keySet().removeIf(s -> !MAP.get(s).getChunk().isLoaded());
   }
 
   public void save()
   {
-    Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
-    {
-      saveConfig();
-      MAP.remove(getKey());
-    }, 0L);
+    saveConfig();
+    MAP.remove(getKey());
   }
 
   public static void save(@NotNull Chunk chunk)
@@ -368,7 +365,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
 
 
     int entityId = Method.random(1, Integer.MAX_VALUE);
-    String key = location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
+    String key = location.getWorld().getName() + "|" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ();
     Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(key, new HashSet<>());
     integerSet.add(entityId);
     ITEM_DISPLAY_MAP.put(key, integerSet);
@@ -612,7 +609,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
     }
     try
     {
-      Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ(), new HashSet<>());
+      Set<Integer> integerSet = ITEM_DISPLAY_MAP.getOrDefault(location.getWorld().getName() + "|" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ(), new HashSet<>());
       for (int id : integerSet)
       {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
