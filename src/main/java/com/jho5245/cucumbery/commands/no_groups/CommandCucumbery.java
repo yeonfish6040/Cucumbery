@@ -73,7 +73,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         BlockPlaceDataConfig.saveAll();
         Initializer.saveItemUsageData();
         Initializer.saveItemStashData();
-        CustomEffectManager.save();
+        CustomEffectManager.saveAll();
         Initializer.loadCustomConfigs();
         Initializer.loadPlayersConfig();
 

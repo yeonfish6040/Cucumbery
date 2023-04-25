@@ -860,3 +860,6 @@ custom-mining:
 
 # 피해 발산 기능 사용
 use-damage-spread-feature: true
+
+# 랙걸려서 일단 만드는 임시 옵션. 스케줄러 다 꺼버리기. 반드시 서버를 재시작해야 적용됨!
+disable-lagggggg: false

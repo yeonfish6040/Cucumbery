@@ -311,7 +311,7 @@ public class Cucumbery extends JavaPlugin
     BlockPlaceDataConfig.saveAll();
     Initializer.saveItemUsageData();
     Initializer.saveItemStashData();
-    CustomEffectManager.save();
+    CustomEffectManager.saveAll();
     Initializer.loadBrigadierTabListConfig();
     if (Cucumbery.using_NoteBlockAPI)
     {

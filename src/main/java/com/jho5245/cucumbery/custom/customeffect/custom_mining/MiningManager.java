@@ -68,12 +68,12 @@ public class MiningManager
           BREAK_SOUND_VOLUME = "BreakSoundVolume",
           BREAK_SOUND_PITCH = "BreakSoundPitch",
 
-          BREAK_PARTICLE = "BreakParticle";
+  BREAK_PARTICLE = "BreakParticle";
 
   /**
    * Gets the result of mining of a {@link Player}.
    *
-   * @param player The player to get mining result.
+   * @param player        The player to get mining result.
    * @param blockLocation Location of the block that player is currently mining.
    * @return Player's mining result or null if current block is on cooldown(bedrock), or player cannot mine(protection by 3rd party plugins)
    */
@@ -129,8 +129,7 @@ public class MiningManager
       return null;
     }
     PreCustomBlockBreakEvent preCustomBlockBreakEvent = new PreCustomBlockBreakEvent(block, player);
-    Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-            Bukkit.getPluginManager().callEvent(preCustomBlockBreakEvent), 0L);
+    Bukkit.getPluginManager().callEvent(preCustomBlockBreakEvent);
     if (preCustomBlockBreakEvent.isCancelled())
     {
       return null;
@@ -585,6 +584,132 @@ public class MiningManager
             drops.clear();
             drops.add(new ItemStack(Material.COBBLESTONE));
             expToDrop = 0f;
+          }
+        }
+      }
+      // 시밤 서버 탐험 월드 커스텀 광물
+      if (Bukkit.getPluginManager().getPlugin("CBomb-Explore") != null && player.getWorld().getName().equals("world"))
+      {
+        int y = blockLocation.getBlockY();
+        switch (blockType)
+        {
+          case SMOOTH_SANDSTONE, END_STONE, END_STONE_BRICKS ->
+          {
+            if (y <= 256 && y >= -64)
+            {
+              blockTier = 3;
+              blockHardness = 300f;
+              drops.clear();
+              drops.add(CustomMaterial.PLATINUM_ORE.create());
+              expToDrop = 0f;
+            }
+          }
+          case LIGHT_GRAY_WOOL, LIGHT_GRAY_CONCRETE, LIGHT_GRAY_TERRACOTTA ->
+          {
+            if (y <= 112 && y >= -16)
+            {
+              blockTier = 2;
+              blockHardness = 300f;
+              drops.clear();
+              drops.add(CustomMaterial.TIN_ORE.create());
+              expToDrop = 0f;
+            }
+          }
+          case CYAN_TERRACOTTA, GRAY_WOOL, GRAY_CONCRETE ->
+          {
+            if (y <= 32 && y >= -32)
+            {
+              blockTier = 3;
+              blockHardness = 300f;
+              drops.clear();
+              drops.add(CustomMaterial.LEAD_ORE.create());
+              expToDrop = 0f;
+            }
+          }
+          case DEAD_FIRE_CORAL_BLOCK ->
+          {
+            if (y <= 60 && y >= 10)
+            {
+              blockTier = 3;
+              blockHardness = 300f;
+              drops.clear();
+              drops.add(CustomMaterial.PLASTIC_DEBRIS.create());
+              expToDrop = (float) (Math.random() * 2 + 1);
+            }
+          }
+          case LAPIS_BLOCK, BLUE_WOOL, BLUE_CONCRETE ->
+          {
+            if (y <= 384 && y >= -24)
+            {
+              blockTier = 5;
+              blockHardness = 300f;
+              drops.clear();
+              drops.add(CustomMaterial.COBALT_ORE.create());
+              expToDrop = 0;
+            }
+          }
+          case CYAN_WOOL, CYAN_CONCRETE, WARPED_WART_BLOCK ->
+          {
+            if (y <= 40 && y >= -110)
+            {
+              blockTier = 6;
+              blockHardness = 3500f;
+              drops.clear();
+              drops.add(CustomMaterial.MITHRIL_ORE.create());
+              expToDrop = (float) (Math.random() * 3 + 2);
+            }
+          }
+          case PRISMARINE, PRISMARINE_BRICKS, DARK_PRISMARINE ->
+          {
+            if (y <= 0 && y >= -128)
+            {
+              blockTier = 8;
+              blockHardness = 5500f;
+              drops.clear();
+              drops.add(CustomMaterial.TUNGSTEN_ORE.create());
+              expToDrop = 0;
+            }
+          }
+          case POLISHED_ANDESITE, SMOOTH_STONE, GRAY_GLAZED_TERRACOTTA ->
+          {
+            if (y <= -64 && y >= -164)
+            {
+              blockTier = 8;
+              blockHardness = 7000f;
+              drops.clear();
+              drops.add(CustomMaterial.TITANIUM_ORE.create());
+              expToDrop = 0;
+            }
+          }
+          case WHITE_WOOL, POLISHED_DIORITE, PINK_TERRACOTTA ->
+          {
+            if (y <= 45 && y >= -10)
+            {
+              blockTier = 9;
+              blockHardness = 7500f;
+              drops.clear();
+              drops.add(CustomMaterial.NAUTILITE_ORE.create());
+              expToDrop = (float) (Math.random() * 4 + 3);
+            }
+          }
+          case STRIPPED_MANGROVE_WOOD, MANGROVE_PLANKS, RED_TERRACOTTA ->
+          {
+            if (y <= 10 && y >= 3)
+            {
+              blockTier = 4;
+              blockHardness = 11000f;
+              drops.clear();
+              drops.add(CustomMaterial.SHROOMITE_ORE.create());
+              expToDrop = (float) (Math.random() * 2 + 10);
+            }
+          }
+          case GREEN_GLAZED_TERRACOTTA, GREEN_WOOL, GREEN_TERRACOTTA ->
+          {
+            blockTier = 4;
+            blockHardness = 13500f;
+            drops.clear();
+            drops.add(CustomMaterial.CUCUMBERITE_ORE.create());
+            expToDrop = (float) (Math.random() * 50 + 2);
           }
         }
       }

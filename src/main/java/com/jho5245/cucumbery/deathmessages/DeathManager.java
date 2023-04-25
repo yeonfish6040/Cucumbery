@@ -780,9 +780,11 @@ public class DeathManager
     }
     Location location = entity.getLocation();
     boolean success = entity instanceof Player;
-    if (entity.customName() != null)
+    Component customName = entity.customName();
+    if (customName != null)
     {
-      success = success || entity.getVehicle() != null || entity instanceof Endermite || !location.getNearbyPlayers(500d).isEmpty();
+      // 개체 이름에 색상이 있는 경우에는 죽어도 데스 메시지를 띄우지 않음
+      success = success || customName.color() == null && (entity.getVehicle() != null || entity instanceof Endermite || !location.getNearbyPlayers(500d).isEmpty());
     }
     if (entity instanceof Tameable tameable)
     {

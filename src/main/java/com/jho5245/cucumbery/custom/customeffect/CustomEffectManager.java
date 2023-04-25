@@ -534,7 +534,7 @@ public class CustomEffectManager
     }
   }
 
-  public static void save()
+  public static void saveAll()
   {
     //MessageUtil.broadcastDebug("keysize" + effectMap.size());
     for (UUID uuid : effectMap.keySet())
@@ -552,10 +552,6 @@ public class CustomEffectManager
 
   public static void save(@NotNull UUID uuid)
   {
-    if (!effectMap.containsKey(uuid))
-    {
-      return;
-    }
     List<CustomEffect> customEffects = effectMap.get(uuid);
     //MessageUtil.broadcastDebug("trying to save:" + uuid + ", effect size:" + customEffects.size());
     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);

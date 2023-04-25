@@ -50,10 +50,6 @@ public class BlockPlaceDataConfig extends ChunkConfig
    */
   public static void saveAll()
   {
-    for (String s : MAP.keySet())
-    {
-      MAP.get(s).saveConfig();
-    }
     List<String> keySet = new ArrayList<>(MAP.keySet());
     if (!keySet.isEmpty())
     {
@@ -70,7 +66,11 @@ public class BlockPlaceDataConfig extends ChunkConfig
           }
           if (MAP.containsKey(keySet.get(0)))
           {
-            MAP.get(keySet.get(0)).saveConfig();
+            BlockPlaceDataConfig cfg = MAP.get(keySet.get(0));
+            if (cfg != null)
+            {
+              cfg.saveConfig();
+            }
             keySet.remove(0);
           }
         }

@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +45,6 @@ public class CustomConfig
         boolean success2 = file.createNewFile();
         if (!success2)
         {
-          System.out.println("Error1.1");
         }
       }
       catch (Exception e)
@@ -215,7 +215,7 @@ public class CustomConfig
       this.config = new YamlConfiguration();
       this.config.load(this.file);
     }
-    catch (InvalidConfigurationException e)
+    catch (InvalidConfigurationException | FileNotFoundException e)
     {
       if (!this.file.getName().endsWith(".log"))
       {
