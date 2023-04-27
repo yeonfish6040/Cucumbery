@@ -194,6 +194,7 @@ com\jho5245\cucumbery\custom\customeffect\children\group\UUIDCustomEffectImple.c
 com\jho5245\cucumbery\listeners\entity\customeffect\EntityCustomEffectRemove.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerRespawn.class
 com\jho5245\cucumbery\util\addons\Songs.class
+com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantDelicate.class
 com\jho5245\cucumbery\util\storage\no_groups\BlockDataInfo$1.class
 com\jho5245\cucumbery\util\no_groups\Scheduler.class
 com\jho5245\cucumbery\listeners\block\BlockDestroy.class

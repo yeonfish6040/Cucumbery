@@ -128,6 +128,11 @@ public class MiningManager
     {
       return null;
     }
+    // 우아한 손길 - 덜 자란 블록 파괴 방지(코코아 콩만 해당) 2023.04.27
+    if (CustomEnchant.isEnabled() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchant(CustomEnchant.DELICATE) && block.getBlockData() instanceof Ageable ageable && ageable.getAge() != ageable.getMaximumAge())
+    {
+      return null;
+    }
     PreCustomBlockBreakEvent preCustomBlockBreakEvent = new PreCustomBlockBreakEvent(block, player);
     Bukkit.getPluginManager().callEvent(preCustomBlockBreakEvent);
     if (preCustomBlockBreakEvent.isCancelled())
