@@ -13,7 +13,7 @@ public class EnchantDullTouch extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "둔한 손길";
+    return "key:enchantment.cucumbery.dull_touch|둔한 손길";
   }
 
   @Override

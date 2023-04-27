@@ -15,7 +15,7 @@ public class EnchantAssassination extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "암살";
+    return "key:enchantment.cucumbery.assassination|암살";
   }
 
   @Override

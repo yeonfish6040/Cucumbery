@@ -15,7 +15,7 @@ public class EnchantDefenseChance extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "우연한 방어";
+    return "key:enchantment.cucumbery.defense_chance|우연한 방어";
   }
 
   @Override

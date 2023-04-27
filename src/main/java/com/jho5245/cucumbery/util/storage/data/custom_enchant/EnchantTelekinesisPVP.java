@@ -12,6 +12,6 @@ public class EnchantTelekinesisPVP extends EnchantTelekinesis
   @Override
   public @NotNull String translationKey()
   {
-    return "염력(PvP)";
+    return "key:enchantment.cucumbery.telekinesis_pvp|염력(PvP)";
   }
 }

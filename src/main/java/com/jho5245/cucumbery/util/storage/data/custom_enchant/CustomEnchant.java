@@ -138,6 +138,11 @@ public abstract class CustomEnchant extends Enchantment
    */
   public static Enchantment DELICATE;
 
+  /**
+   * 신발을 신고 경작지 위에서 점프해도 경작지가 파괴되지 않음
+   */
+  public static Enchantment FARMERS_GRACE;
+
   // Ulitmate Enchants
   public static Enchantment HIGH_RISK_HIGH_RETURN;
 
@@ -186,6 +191,8 @@ public abstract class CustomEnchant extends Enchantment
     SUNDER = registerEnchant(new EnchantSunder("sunder"));
 
     DELICATE = registerEnchant(new EnchantDelicate("delicate"));
+
+    FARMERS_GRACE = registerEnchant(new EnchantFarmersGrace("farmers_grace"));
 
 
 

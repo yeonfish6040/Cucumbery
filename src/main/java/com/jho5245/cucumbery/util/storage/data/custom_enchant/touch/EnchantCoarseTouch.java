@@ -13,7 +13,7 @@ public class EnchantCoarseTouch extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "거친 손길";
+    return "key:enchantment.cucumbery.coarse_touch|거친 손길";
   }
 
   @Override

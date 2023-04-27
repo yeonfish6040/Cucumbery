@@ -15,7 +15,7 @@ public class EnchantTelekinesis extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "염력";
+    return "key:enchantment.cucumbery.telekinesis|염력";
   }
 
   @Override

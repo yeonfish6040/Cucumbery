@@ -409,6 +409,10 @@ public class ItemLoreUtil
             }
           }
         }
+        if (enchant.equals(CustomEnchant.FARMERS_GRACE) && (isEnchantedBook || CustomEnchant.FARMERS_GRACE.canEnchantItem(itemStack)))
+        {
+          lore.add(ComponentUtil.translate("&7경작지에 착지해도 흙으로 바뀌지 않음"));
+        }
         if (enchant.equals(Enchantment.FIRE_ASPECT))
         {
           String msg = "&7공격받은 개체에게 %s간 화염 부여";

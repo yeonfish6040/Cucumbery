@@ -15,7 +15,7 @@ public class EnchantSunder extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "파쇄";
+    return "key:enchantment.cucumbery.sunder|작물 파쇄";
   }
 
   @Override

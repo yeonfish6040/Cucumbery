@@ -13,7 +13,7 @@ public class EnchantUnskilledTouch extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "서투른 손길";
+    return "key:enchantment.cucumbery.unskilled_touch|서투른 손길";
   }
 
   @Override

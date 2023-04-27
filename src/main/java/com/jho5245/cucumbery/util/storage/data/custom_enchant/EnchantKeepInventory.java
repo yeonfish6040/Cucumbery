@@ -12,6 +12,6 @@ public class EnchantKeepInventory extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "보존";
+    return "key:enchantment.cucumbery.keep_inventory|인벤토리 보존";
   }
 }

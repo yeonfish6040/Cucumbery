@@ -13,6 +13,6 @@ public class EnchantColdTouch extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "차가운 손길";
+    return "key:enchantment.cucumbery.cold_touch|차가운 손길";
   }
 }

@@ -14,7 +14,7 @@ public class EnchantIdiotShooter extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "똥손";
+    return "key:enchantment.cucumbery.idiot_shooter|똥손";
   }
 
   @Override

@@ -1200,6 +1200,14 @@ public class PlayerInteract implements Listener
           event.setCancelled(true);
           return;
         }
+        // 농부의 우아함 인챈트(신발)
+        ItemStack boots = player.getInventory().getBoots();
+        if (boots != null && CustomEnchant.isEnabled() && boots.hasItemMeta() && boots.getItemMeta().hasEnchant(CustomEnchant.FARMERS_GRACE))
+        {
+          event.setUseInteractedBlock(Event.Result.DENY);
+          event.setCancelled(true);
+          return;
+        }
         if ((Cucumbery.config.getBoolean("block-player-trample-soil") && !Method.configContainsLocation(block.getLocation(),
                 Cucumbery.config.getStringList("no-block-player-trample-soil-worlds"))) ||
                 UserData.TRAMPLE_SOIL_FORCE.getBoolean(uuid))

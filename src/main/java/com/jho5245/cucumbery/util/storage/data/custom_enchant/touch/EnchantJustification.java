@@ -13,6 +13,6 @@ public class EnchantJustification extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "칭의";
+    return "key:enchantment.cucumbery.justification|칭의";
   }
 }

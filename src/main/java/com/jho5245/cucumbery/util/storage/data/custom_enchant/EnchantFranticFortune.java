@@ -12,6 +12,6 @@ public class EnchantFranticFortune extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "광기의 행운";
+    return "key:enchantment.cucumbery.frantic_fortune|광기의 행운";
   }
 }

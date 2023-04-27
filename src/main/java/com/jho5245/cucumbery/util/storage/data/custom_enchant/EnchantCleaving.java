@@ -15,7 +15,7 @@ public class EnchantCleaving extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "갈리치기";
+    return "key:enchantment.cucumbery.cleaving|갈리치기";
   }
 
   @Override

@@ -15,7 +15,7 @@ public class EnchantDelicate extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "정교한 손길";
+    return "key:enchantment.cucumbery.delicate|정교한 손길";
   }
 
   @Override

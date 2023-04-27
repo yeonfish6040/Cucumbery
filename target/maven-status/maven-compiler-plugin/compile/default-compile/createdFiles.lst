@@ -122,6 +122,7 @@ com\jho5245\cucumbery\commands\no_groups\CommandItemStorage.class
 com\jho5245\cucumbery\custom\customeffect\type\CustomEffectTypeGSit.class
 com\jho5245\cucumbery\listeners\player\no_groups\PlayerFish$1.class
 com\jho5245\cucumbery\listeners\block\BlockBreak$1.class
+com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantFarmersGrace.class
 com\jho5245\cucumbery\listeners\player\item\PlayerSwapHandItems.class
 com\jho5245\cucumbery\util\storage\no_groups\RecipeChecker.class
 com\jho5245\cucumbery\util\itemlore\ItemLore2Meta2.class

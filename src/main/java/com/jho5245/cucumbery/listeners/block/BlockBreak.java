@@ -239,14 +239,15 @@ public class BlockBreak implements Listener
 
     float farmingFortune = 1f;
 
+    // 수확 인챈트로 인한 드롭율 증가. 단, 자라지 않은 작물은 해당 없음
     int harvestingLevel = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.HARVESTING) ? itemMeta.getEnchantLevel(CustomEnchant.HARVESTING) : 0;
-    if (harvestingLevel > 0)
+    if (harvestingLevel > 0 && (!(block.getBlockData() instanceof Ageable ageable) || ageable.getAge() == ageable.getMaximumAge()))
     {
       farmingFortune += harvestingLevel * 0.15;
     }
 
     // 커스텀 채광 모드에서는 즉시 부서지는 작물(밀, 당근 등. 호박, 코코아 콩 등은 제외)을 캘 때 행운 대신 전용 인챈트 사용
-    if (farmingFortune > 1f && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE) && Tag.CROPS.isTagged(block.getType()) && block.getType().getHardness() == 0f)
+    if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE) && Tag.CROPS.isTagged(block.getType()) && block.getType().getHardness() == 0f)
     {
       switch (block.getType())
       {

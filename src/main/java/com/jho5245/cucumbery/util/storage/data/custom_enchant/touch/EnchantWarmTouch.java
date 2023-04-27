@@ -13,6 +13,6 @@ public class EnchantWarmTouch extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "따뜻한 손길";
+    return "key:enchantment.cucumbery.warm_touch|따뜻한 손길";
   }
 }

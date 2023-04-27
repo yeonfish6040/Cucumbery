@@ -13,7 +13,7 @@ public class EnchantVanishingTouch extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "소실의 손길";
+    return "key:enchantment.cucumbery.vanishing_touch|소실의 손길";
   }
 
   @Override

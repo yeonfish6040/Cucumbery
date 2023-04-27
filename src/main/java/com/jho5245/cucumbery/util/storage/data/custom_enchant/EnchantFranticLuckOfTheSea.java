@@ -12,6 +12,6 @@ public class EnchantFranticLuckOfTheSea extends CustomEnchant
   @Override
   public @NotNull String translationKey()
   {
-    return "광기의 바다의 행운";
+    return "key:enchantment.cucumbery.frantic_luck_of_the_sea|광기의 바다의 행운";
   }
 }
