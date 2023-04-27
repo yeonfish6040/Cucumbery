@@ -27,6 +27,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -196,6 +197,15 @@ public class BlockBreak implements Listener
         }
       }
       return;
+    }
+
+    if (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.DELICATE))
+    {
+      if (blockType == Material.PUMPKIN_STEM || blockType == Material.MELON_STEM || block.getBlockData() instanceof Ageable ageable && ageable.getAge() != ageable.getMaximumAge())
+      {
+        event.setCancelled(true);
+        return;
+      }
     }
 
     Variable.customMiningCooldown.remove(location);

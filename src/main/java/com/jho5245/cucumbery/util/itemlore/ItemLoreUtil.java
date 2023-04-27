@@ -351,6 +351,10 @@ public class ItemLoreUtil
           lore.add(ComponentUtil.translate("&7해당 피해를 방어하고 방패의 내구도가 피해량의 %s만큼 감소", "&a1/" + Constant.Sosu2.format(6d / enchantLevel)));
           lore.add(ComponentUtil.translate("&7단, 피해량이 1 이하일 경우 내구도가 깎이지 않음"));
         }
+        if (enchant.equals(CustomEnchant.DELICATE) && (isEnchantedBook || CustomEnchant.DELICATE.canEnchantItem(itemStack)))
+        {
+          lore.add(ComponentUtil.translate("&7덜 자란 작물과 호박, 수박 줄기를 실수로 부수지 않게 해줌"));
+        }
         if (enchant.equals(Enchantment.DEPTH_STRIDER))
         {
           int level = Math.min(enchantLevel, 3);

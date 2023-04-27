@@ -133,6 +133,11 @@ public abstract class CustomEnchant extends Enchantment
    */
   public static Enchantment SUNDER;
 
+  /**
+   * 도끼, 괭이가 자라지 않은 작물과 수박, 호박의 줄기를 부수지 않도록 함
+   */
+  public static Enchantment DELICATE;
+
   // Ulitmate Enchants
   public static Enchantment HIGH_RISK_HIGH_RETURN;
 
@@ -179,6 +184,10 @@ public abstract class CustomEnchant extends Enchantment
     HARVESTING = registerEnchant(new EnchantHarvesting("harvesting"));
 
     SUNDER = registerEnchant(new EnchantSunder("sunder"));
+
+    DELICATE = registerEnchant(new EnchantDelicate("delicate"));
+
+
 
     // Ulitmate Enchants
 

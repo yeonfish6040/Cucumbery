@@ -160,7 +160,7 @@ public class CommandEnchant implements CucumberyCommandExecutor
         itemMeta.addEnchant(enchantment, level, true);
         if (!enchantment.canEnchantItem(itemStack))
         {
-          MessageUtil.sendWarn(player, "일반적인 상황에서는 %s 마법은 %s에 부여할 수 없거나 적용해도 정상적으로 기능하지 않습니다!", enchantment, itemStack);
+          MessageUtil.sendWarn(player, "일반적인 상황에서는 %s 마법은 %s에 부여할 수 없거나 부여해도 정상적으로 기능하지 않습니다!", enchantment, itemStack);
         }
         MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "%s에 %s %s 마법을 " + (change ? "변경" : "추가") + "했습니다", itemStack, enchantment, level);
       }
