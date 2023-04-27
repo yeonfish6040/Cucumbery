@@ -180,9 +180,7 @@ public class BlockBreak implements Listener
     }
 
     if (player.getGameMode() != GameMode.CREATIVE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE)
-            && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE) && blockType == Material.FIRE)
-            && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS) && blockType.getHardness() == 0f
-            && BlockPlaceDataConfig.getItem(location) == null))
+            && !(CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE) && (blockType == Material.FIRE || blockType.getHardness() == 0f)))
     {
       if (!Cucumbery.using_mcMMO)
       {
@@ -226,7 +224,45 @@ public class BlockBreak implements Listener
             isSmeltingTouch = CustomEnchant.isEnabled() && (itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
                     CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH),
             isSilkTouch = CustomEffectManager.hasEffect(player, CustomEffectType.SILK_TOUCH);
+
     List<ItemStack> drops = new ArrayList<>(block.getDrops(itemStack, player));
+
+    float farmingFortune = 1f;
+
+    int harvestingLevel = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.HARVESTING) ? itemMeta.getEnchantLevel(CustomEnchant.HARVESTING) : 0;
+    if (harvestingLevel > 0)
+    {
+      farmingFortune += harvestingLevel * 0.15;
+    }
+
+    // 커스텀 채광 모드에서는 즉시 부서지는 작물(밀, 당근 등. 호박, 코코아 콩 등은 제외)을 캘 때 행운 대신 전용 인챈트 사용
+    if (farmingFortune > 1f && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE) && Tag.CROPS.isTagged(block.getType()) && block.getType().getHardness() == 0f)
+    {
+      switch (block.getType())
+      {
+        case WHEAT, CARROTS, POTATOES, SUGAR_CANE, BEETROOTS, NETHER_WART, SWEET_BERRY_BUSH, RED_MUSHROOM, BROWN_MUSHROOM ->
+        {
+          ItemStack clone = itemStack.clone();
+          ItemMeta cloneMeta = clone.getItemMeta();
+          cloneMeta.removeEnchant(Enchantment.LOOT_BONUS_BLOCKS);
+          clone.setItemMeta(cloneMeta);
+          int intSide = (int) farmingFortune;
+          float floatSide = farmingFortune - intSide;
+          if (Math.random() < floatSide)
+          {
+            intSide++;
+          }
+          if (intSide > 0)
+          {
+            modified = true;
+            drops = new ArrayList<>(block.getDrops(clone, player));
+            int finalIntSide = intSide;
+            drops.forEach(i -> i.setAmount(i.getAmount() * finalIntSide));
+          }
+        }
+      }
+    }
+
     if (isSilkTouch)
     {
       ItemStack silk = new ItemStack(ItemStackUtil.itemExists(itemStack) ? itemStack.getType() : Material.STONE);
@@ -236,6 +272,7 @@ public class BlockBreak implements Listener
       drops = new ArrayList<>(block.getDrops(silk, player));
       modified = true;
     }
+
     String toolId = (ItemStackUtil.itemExists(itemStack) ? new NBTItem(itemStack).getString("id") : "") + "",
             blockId = (!drops.isEmpty() && ItemStackUtil.itemExists(drops.get(0)) ? new NBTItem(drops.get(0)).getString("id") : "") + "";
     if (CustomMaterial.FLINT_SHOVEL.toString().equalsIgnoreCase(toolId) && blockId.equals("") && blockType == Material.GRAVEL)

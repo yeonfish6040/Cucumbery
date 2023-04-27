@@ -123,6 +123,16 @@ public abstract class CustomEnchant extends Enchantment
    */
   public static Enchantment DEFENSE_CHANCE;
 
+  /**
+   * 괭이의 농업 행운 증가 - 작물 드롭율 증가
+   */
+  public static Enchantment HARVESTING;
+
+  /**
+   * 도끼의 농업 행운 증가 - 작물 드롭율 증가
+   */
+  public static Enchantment SUNDER;
+
   // Ulitmate Enchants
   public static Enchantment HIGH_RISK_HIGH_RETURN;
 
@@ -165,6 +175,10 @@ public abstract class CustomEnchant extends Enchantment
     CLEAVING = registerEnchant(new EnchantCleaving("cleaving"));
 
     DEFENSE_CHANCE = registerEnchant(new EnchantDefenseChance("defense_chance"));
+
+    HARVESTING = registerEnchant(new EnchantHarvesting("harvesting"));
+
+    SUNDER = registerEnchant(new EnchantSunder("sunder"));
 
     // Ulitmate Enchants
 

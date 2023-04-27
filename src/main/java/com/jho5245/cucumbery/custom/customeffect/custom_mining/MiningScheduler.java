@@ -283,14 +283,6 @@ public class MiningScheduler
     {
       player.addScoreboardTag(miner1Tag);
       player.addScoreboardTag(miner3Tag);
-      if (!CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS))
-      {
-        CustomEffectManager.addEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS);
-      }
-    }
-    else if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS))
-    {
-      CustomEffectManager.removeEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS);
     }
     if (Cucumbery.config.getBoolean("custom-mining.enable-by-tag"))
     {

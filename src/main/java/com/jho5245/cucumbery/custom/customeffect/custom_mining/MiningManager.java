@@ -192,7 +192,7 @@ public class MiningManager
     // 블록 리젠 속도 (틱)
     int regenCooldown = Math.max(0, Cucumbery.config.getInt("custom-mining.default-ore-regen-in-ticks"));
     // 드롭율 배수
-    float miningFortune = 1f;
+    float miningFortune = 1f, farmingFortune = 1f, foragingFortune = 1f;
     // 아이템의 드롭율 태그
     {
       if (ItemStackUtil.itemExists(itemStack))
@@ -1071,7 +1071,7 @@ public class MiningManager
 
     // 채광 행운 처리
     {
-      int enchantFortuneLevel = itemStack.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
+      int enchantFortuneLevel = itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchants() ? itemStack.getItemMeta().getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS) : 0;
       // 바닐라 채광이 아니거나 효율의 영향을 받을 경우에만 속도 증가
       if (enchantFortuneLevel > 0)
       {
@@ -1136,6 +1136,19 @@ public class MiningManager
       {
         miningFortune += 1f;
       }
+      int enchantHarvestingLevel = CustomEnchant.isEnabled() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchants() ? itemStack.getItemMeta().getEnchantLevel(CustomEnchant.HARVESTING) : 0;
+      if (enchantHarvestingLevel > 0)
+      {
+        farmingFortune += enchantHarvestingLevel * 0.125;
+      }
+      else
+      {
+        int enchantSunderLevel = CustomEnchant.isEnabled() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchants() ? itemStack.getItemMeta().getEnchantLevel(CustomEnchant.SUNDER) : 0;
+        if (enchantSunderLevel > 0)
+        {
+          farmingFortune += enchantSunderLevel * 0.125;
+        }
+      }
     }
 
     // 커스텀 이펙트 처리
@@ -1190,7 +1203,7 @@ public class MiningManager
         switch (customMaterial)
         {
           case MITHRIL_ORE, MITHRIL_INGOT, TITANIUM_ORE, TITANIUM_INGOT, AMBER, JADE, MORGANITE, RUBY, TOPAZ, SHROOMITE_ORE, SHROOMITE_INGOT, TUNGSTEN_INGOT, TUNGSTEN_ORE, COBALT_INGOT, COBALT_ORE,
-                  CUCUMBERITE_INGOT, CUCUMBERITE_ORE ->
+                  CUCUMBERITE_INGOT, CUCUMBERITE_ORE, LEAD_ORE, NAUTILITE_ORE, PLATINUM_ORE, TIN_ORE, PLASTIC_DEBRIS, BRONZE_INGOT, LEAD_INGOT, NAUTILITE_INGOT, PLATINUM_INGOT, TIN_INGOT ->
           {
           }
           default ->
@@ -1206,24 +1219,29 @@ public class MiningManager
       {
         switch (material)
         {
-          case AMETHYST_SHARD, APPLE, BAKED_POTATO, BEEF, BEETROOT, BIRCH_LOG, BLAZE_ROD, BONE, CARROT,
-                  CHICKEN, CHORUS_FRUIT, COAL, COD, COOKED_BEEF,
+          case AMETHYST_SHARD, BEEF, BLAZE_ROD, BONE,
+                  CHICKEN, COAL, COD, COOKED_BEEF,
                   COOKED_CHICKEN, COOKED_COD, COOKED_MUTTON, COOKED_PORKCHOP, COOKED_RABBIT, COOKED_SALMON, COPPER_INGOT, RAW_COPPER,
                   DIAMOND, EMERALD, ENDER_PEARL, FEATHER, FLINT, GLOW_INK_SAC, GOLD_INGOT, RAW_GOLD,
-                  GREEN_DYE, GUNPOWDER, INK_SAC, IRON_INGOT, RAW_IRON, KELP, LAPIS_LAZULI, LEATHER, MAGMA_CREAM,
-                  MUTTON, NETHERITE_INGOT, NETHER_WART, OCHRE_FROGLIGHT, PHANTOM_MEMBRANE, PORKCHOP, POTATO,
+                  GUNPOWDER, INK_SAC, IRON_INGOT, RAW_IRON, LAPIS_LAZULI, LEATHER, MAGMA_CREAM,
+                  MUTTON, NETHERITE_INGOT, PHANTOM_MEMBRANE, PORKCHOP,
                   PUFFERFISH, QUARTZ, RABBIT, RABBIT_FOOT, RABBIT_HIDE, REDSTONE, ROTTEN_FLESH, SALMON, SCUTE,
-                  SLIME_BALL, SNOWBALL, SPIDER_EYE, SUGAR, TROPICAL_FISH, VERDANT_FROGLIGHT, WHEAT, WHEAT_SEEDS ->
+                  SLIME_BALL, SNOWBALL, SPIDER_EYE, TROPICAL_FISH ->
           {
-            if (blockType != Material.CACTUS && block.getBlockData() instanceof Ageable ageable && ageable.getAge() != ageable.getMaximumAge())
-            {
-              miningFortune = 1f;
-            }
             if (blockType == Material.REDSTONE_WIRE)
             {
               miningFortune = 1f;
             }
           }
+          case CACTUS, CHORUS_FRUIT, GREEN_DYE, KELP, MELON_SLICE, PUMPKIN, COCOA_BEANS ->
+          {
+            miningFortune = farmingFortune;
+            if (blockType != Material.CACTUS && block.getBlockData() instanceof Ageable ageable && ageable.getAge() != ageable.getMaximumAge())
+            {
+              miningFortune = 1f;
+            }
+          }
+          case ACACIA_LOG, BIRCH_LOG, JUNGLE_LOG, DARK_OAK_LOG, MANGROVE_LOG, OAK_LOG, SPRUCE_LOG, CHERRY_LOG, CRIMSON_STEM, WARPED_STEM -> miningFortune = foragingFortune;
           default -> miningFortune = 1f;
         }
       }

@@ -5,7 +5,6 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
-import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,19 +31,20 @@ public class BlockDamage implements Listener
     }
     Block block = event.getBlock();
     Location location = block.getLocation();
-    Material blockType = block.getType();
     if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
     {
-      if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS) && blockType.getHardness() == 0f && BlockPlaceDataConfig.getItem(location) == null)
+      boolean instaBreak = block.getType().getHardness() == 0f;
+      if (block.getType() == Material.FIRE || instaBreak)
       {
-        return;
-      }
-      if (!(block.getType() == Material.FIRE && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE)))
-      {
-        if (!Cucumbery.using_mcMMO)
+        if (!CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE))
         {
           event.setCancelled(true);
         }
+        return;
+      }
+      if (!Cucumbery.using_mcMMO)
+      {
+        event.setCancelled(true);
       }
       if (!Variable.customMiningCooldown.containsKey(location) || Variable.customMiningExtraBlocks.containsKey(location))
       {

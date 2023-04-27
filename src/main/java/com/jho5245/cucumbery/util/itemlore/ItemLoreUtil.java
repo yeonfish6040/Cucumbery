@@ -433,6 +433,14 @@ public class ItemLoreUtil
         {
           lore.add(CustomEffectType.IDIOT_SHOOTER.getDescription().color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, State.FALSE));
         }
+        if (enchant.equals(CustomEnchant.HARVESTING) && (isEnchantedBook || CustomEnchant.HARVESTING.canEnchantItem(itemStack)))
+        {
+          lore.add(ComponentUtil.translate("&7농업 행운 %s 증가", "&a" + Constant.Sosu2.format(12.5 * enchantLevel)));
+        }
+        if (enchant.equals(CustomEnchant.SUNDER) && (isEnchantedBook || CustomEnchant.SUNDER.canEnchantItem(itemStack)))
+        {
+          lore.add(ComponentUtil.translate("&7농업 행운 %s 증가", "&a" + Constant.Sosu2.format(12.5 * enchantLevel)));
+        }
         if (enchant.equals(Enchantment.IMPALING) && (isEnchantedBook || material == Material.TRIDENT))
         {
           String msg = "&7수상 개체에게 가하는 대미지 %s 증가";

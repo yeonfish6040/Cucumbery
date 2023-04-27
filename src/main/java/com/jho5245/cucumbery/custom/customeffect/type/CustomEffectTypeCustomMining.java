@@ -16,9 +16,6 @@ public class CustomEffectTypeCustomMining extends CustomEffectType
           CUSTOM_MINING_SPEED_MODE = new CustomEffectType("custom_mining_speed_mode", "채광 모드", builder().hidden().defaultDuration(-1).keepOnDeath()),
           CUSTOM_MINING_SPEED_MODE_2 = new CustomEffectType("custom_mining_speed_mode_2", "채광 모드 2", builder().defaultDisplayType(DisplayType.NONE).defaultDuration(-1).keepOnDeath().skipEvent()),
           CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE = new CustomEffectType("custom_mining_speed_mode_2_no_restore", "채광 모드 2 (복구 없음)", builder().defaultDisplayType(DisplayType.NONE).defaultDuration(-1).keepOnDeath().skipEvent()),
-
-  CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS = new CustomEffectType("custom_mining_speed_mode_2_no_restore_ignore_insta_blocks", "채광 모드 2 (복구 없음, 즉시 파괴 블록 무시)",
-          builder().defaultDisplayType(DisplayType.NONE).defaultDuration(-1).keepOnDeath().description("%s 효과가 있는 상태에서는 즉시 파괴되는 블록을 부술 땐 채광 모드를 무시합니다", CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE).skipEvent()),
           CUSTOM_MINING_SPEED_MODE_PREDEFINED_CUSTOM_ORE_DWARVEN_GOLDS = new CustomEffectType("custom_mining_speed_mode_predefined_custom_ore_dwarven_golds", "채광 모드 커스텀 광물 - 드워프 금괴", builder().defaultDisplayType(DisplayType.NONE).defaultDuration(2).keepOnDeath().skipEvent()),
           CUSTOM_MINING_SPEED_MODE_PREDEFINED_CUSTOM_ORE_TUNGSTENS = new CustomEffectType("custom_mining_speed_mode_predefined_custom_ore_tungstens", "채광 모드 커스텀 광물 - 텅스텐", builder().defaultDisplayType(DisplayType.NONE).defaultDuration(2).keepOnDeath().skipEvent()),
           CUSTOM_MINING_SPEED_MODE_PREDEFINED_CUSTOM_ORE_COBALTS = new CustomEffectType("custom_mining_speed_mode_predefined_custom_ore_cobalts", "채광 모드 커스텀 광물 - 코발트", builder().defaultDisplayType(DisplayType.NONE).defaultDuration(2).keepOnDeath().skipEvent()),
@@ -63,7 +60,7 @@ public class CustomEffectTypeCustomMining extends CustomEffectType
   protected static void registerEffect()
   {
     register(
-            CUSTOM_MINING_SPEED_MODE, CUSTOM_MINING_SPEED_MODE_2, CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE, CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE_IGNORE_INSTA_BLOCKS,
+            CUSTOM_MINING_SPEED_MODE, CUSTOM_MINING_SPEED_MODE_2, CUSTOM_MINING_SPEED_MODE_2_NO_RESTORE,
             CUSTOM_MINING_SPEED_MODE_PROGRESS, CUSTOM_MINING_SPEED_MODE_ADJUST_VANILLA_SPEED,
 
             CUSTOM_MINING_SPEED_MODE_PREDEFINED_CUSTOM_ORE_DWARVEN_GOLDS,

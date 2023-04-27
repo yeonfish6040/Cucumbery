@@ -36,7 +36,6 @@ com\jho5245\cucumbery\listeners\entity\item\ItemMerge.class
 com\jho5245\cucumbery\commands\reinforce\CommandReinforce$ItemType.class
 com\jho5245\cucumbery\util\plugin_support\QuickShopSupport.class
 com\jho5245\cucumbery\commands\teleport\CommandLookAt.class
-com\jho5245\cucumbery\util\blockplacedata\BlockPlaceDataConfig$4.class
 com\jho5245\cucumbery\util\storage\component\util\ComponentUtil$1.class
 com\jho5245\cucumbery\util\storage\data\Prefix.class
 com\jho5245\cucumbery\commands\no_groups\CommandCall.class
@@ -52,6 +51,7 @@ com\jho5245\cucumbery\listeners\entity\no_groups\EntityJump.class
 com\jho5245\cucumbery\util\itemlore\ItemLore2.class
 com\jho5245\cucumbery\commands\brigadier\CommandConsoleSudo2.class
 com\jho5245\cucumbery\listeners\inventory\PrepareAnvil.class
+com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantHarvesting.class
 com\jho5245\cucumbery\listeners\block\BlockPreDispense.class
 com\jho5245\cucumbery\util\rpg\Level.class
 com\jho5245\cucumbery\deathmessages\DeathManager.class
@@ -107,6 +107,7 @@ com\jho5245\cucumbery\util\josautil\JosaFormatter$EnglishNumberJongSungDetector$
 com\jho5245\cucumbery\util\storage\data\EnumHideable.class
 com\jho5245\cucumbery\custom\customeffect\custom_mining\MiningResult.class
 com\jho5245\cucumbery\commands\debug\CommandHowIs.class
+com\jho5245\cucumbery\util\storage\data\custom_enchant\EnchantSunder.class
 com\jho5245\cucumbery\listeners\server\ServerCommand.class
 com\jho5245\cucumbery\listeners\player\item\PlayerItemBreak.class
 com\jho5245\cucumbery\commands\debug\CommandCalcDistance.class
