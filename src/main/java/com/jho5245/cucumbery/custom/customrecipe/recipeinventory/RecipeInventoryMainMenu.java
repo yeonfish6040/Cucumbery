@@ -47,7 +47,7 @@ public class RecipeInventoryMainMenu
     int categoryAmount = Variable.customRecipes.size();
     if (categoryAmount == 0)
     {
-      MessageUtil.sendError(player, "제작된 커스텀 레시피가 하나도 없습니다");
+      MessageUtil.sendError(player, "제작 가능한 커스텀 레시피가 하나도 없습니다");
       String openInventoryTitle = player.getOpenInventory().getTitle();
       if (openInventoryTitle.startsWith(Constant.CANCEL_STRING))
       {

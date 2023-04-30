@@ -1144,7 +1144,7 @@ public class Scheduler
         {
           continue;
         }
-        Method.updateInventory(player, mainHand);
+        ItemStackUtil.updateInventory(player, mainHand);
       }
       ItemStack offHand = playerInventory.getItemInOffHand();
       itemTag = NBTAPI.getMainCompound(offHand);
@@ -1155,7 +1155,7 @@ public class Scheduler
         {
           continue;
         }
-        Method.updateInventory(player, offHand);
+        ItemStackUtil.updateInventory(player, offHand);
       }
     }
   }
@@ -1187,7 +1187,7 @@ public class Scheduler
         String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
         if (expireDate != null && (i != 40 || !ItemStackUtil.itemExists(playerInventory.getItemInOffHand())))
         {
-          Method.updateInventory(player, item);
+          ItemStackUtil.updateInventory(player, item);
         }
       }
       Inventory openInventoryTop = player.getOpenInventory().getTopInventory();
@@ -1199,7 +1199,7 @@ public class Scheduler
           String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
           if (expireDate != null)
           {
-            Method.updateInventory(player, item);
+            ItemStackUtil.updateInventory(player, item);
           }
         }
       }

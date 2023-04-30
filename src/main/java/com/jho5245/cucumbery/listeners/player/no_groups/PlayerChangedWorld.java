@@ -10,6 +10,7 @@ import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -29,7 +30,7 @@ public class PlayerChangedWorld implements Listener
   {
     Player player = event.getPlayer();
     UUID uuid = player.getUniqueId();
-    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+    Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
     if (Cucumbery.using_ProtocolLib)
     {
       BlockPlaceDataConfig.onPlayerChangedWorld(event);

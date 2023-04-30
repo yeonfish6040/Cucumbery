@@ -72,6 +72,7 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
@@ -87,6 +88,7 @@ import dev.jorel.commandapi.CommandAPIConfig;
 import dev.jorel.commandapi.Converter;
 import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
+import net.coreprotect.CoreProtect;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -114,7 +116,7 @@ import java.util.UUID;
 
 public class Cucumbery extends JavaPlugin
 {
-  public static final int CONFIG_VERSION = 43, DEATH_MESSAGES_CONFIG_VERSION = 12, LANG_CONFIG_VERSION = 6;
+  public static final int CONFIG_VERSION = 45, DEATH_MESSAGES_CONFIG_VERSION = 12, LANG_CONFIG_VERSION = 6;
   //  private static final ExecutorService brigadierService = Executors.newFixedThreadPool(1);
   public static YamlConfiguration config;
   /**
@@ -134,6 +136,8 @@ public class Cucumbery extends JavaPlugin
   public static boolean using_GSit;
   public static boolean using_UltimateTimber;
   public static boolean using_Residence;
+
+  public static boolean using_CoreProtect;
   /**
    * MythicMobs API
    */
@@ -280,7 +284,7 @@ public class Cucumbery extends JavaPlugin
     }
     for (Player player : Bukkit.getServer().getOnlinePlayers())
     {
-      Method.updateInventory(player);
+      ItemStackUtil.updateInventory(player);
       if (using_ProtocolLib)
       {
         Bukkit.getScheduler().runTaskLaterAsynchronously(cucumbery, () -> BlockPlaceDataConfig.display(player, player.getLocation()), 0L);
@@ -516,6 +520,8 @@ public class Cucumbery extends JavaPlugin
     Cucumbery.using_GSit = Cucumbery.config.getBoolean("use-hook-plugins.GSit") && this.pluginManager.getPlugin("GSit") instanceof GSitMain;
     Cucumbery.using_UltimateTimber = Cucumbery.config.getBoolean("use-hook-plugins.UltimateTimber") && this.pluginManager.getPlugin("UltimateTimber") instanceof UltimateTimber;
     Cucumbery.using_Residence = Cucumbery.config.getBoolean("use-hook-plugins.Residence");
+    Cucumbery.using_CoreProtect = Cucumbery.config.getBoolean("use-hook-plugins.CoreProtect") && this.pluginManager.getPlugin("CoreProtect") instanceof CoreProtect;
+
     if (using_Residence)
     {
       Plugin plugin = pluginManager.getPlugin("Residence");
@@ -587,6 +593,10 @@ public class Cucumbery extends JavaPlugin
       {
         MessageUtil.consoleSendMessage(Prefix.INFO, "Residence 플러그인을 연동했습니다");
       }
+      if (using_CoreProtect)
+      {
+        MessageUtil.consoleSendMessage(Prefix.INFO, "CoreProtect 플러그인을 연동했습니다");
+      }
     }
     if (using_QuickShop)
     {
@@ -621,6 +631,13 @@ public class Cucumbery extends JavaPlugin
       catch (Throwable throwable)
       {
         throwable.printStackTrace();
+      }
+    }
+    if (using_CoreProtect)
+    {
+      if (!CoreProtect.getInstance().isEnabled() || CoreProtect.getInstance().getAPI().APIVersion() < 9)
+      {
+        getLogger().warning("CoreProtect가 연동되었으나 플러그인이 비활성화되어 있거나 CoreProtect의 API 버전이 낮습니다. 예기치 못한 오류가 발생할 수 있습니다.");
       }
     }
   }

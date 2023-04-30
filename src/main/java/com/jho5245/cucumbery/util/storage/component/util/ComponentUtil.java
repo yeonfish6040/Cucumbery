@@ -7,6 +7,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.VanillaEffectDescription;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.itemlore.ItemLoreUtil;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil.ConsonantType;
@@ -556,6 +557,19 @@ public class ComponentUtil
           concat = concat.color(TextColor.color(154, 84, 255));
         }
         Component hover = ComponentUtil.translate(enchantment.translationKey());
+        ItemStack template = new ItemStack(Material.ENCHANTED_BOOK);
+        List<Component> description = ItemLoreUtil.enchantTMIDescription(player, template, template.getItemMeta(), template.getType(), enchantment, enchantment.getMaxLevel(), true);
+        if (description.size() >= 2)
+        {
+          for (int i = 1; i < description.size(); i++)
+          {
+            hover = hover.append(Component.text("\n"));
+            hover = hover.append(description.get(i));
+          }
+          hover = hover.append(Component.text("\n"));
+          hover = hover.append(ComponentUtil.translate("&8&o해당 설명은 %s레벨 기준입니다", enchantment.getMaxLevel()));
+        }
+        hover = hover.append(Component.text("\n"));
         NamespacedKey namespacedKey = enchantment.getKey();
         hover = hover.append(Component.text("\n"));
         hover = hover.append(ComponentUtil.translate("키 : %s", Constant.THE_COLOR_HEX + namespacedKey.toString()));

@@ -89,12 +89,12 @@ public class CommandCustomFix implements CucumberyCommandExecutor
       duraMeta.setDamage(0);
       item.setItemMeta(duraMeta);
       player.getInventory().setItemInMainHand(item);
-      Method.updateInventory(player);
+      ItemStackUtil.updateInventory(player);
       return true;
     }
     duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, maxDura);
     player.getInventory().setItemInMainHand(nbtItem.getItem());
-    Method.updateInventory(player);
+    ItemStackUtil.updateInventory(player);
     if (!(args.length == 1 && args[0].equals("true")))
     {
       MessageUtil.sendMessage(player, Prefix.INFO_CUSTOM_FIX, fixMessage);

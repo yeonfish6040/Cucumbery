@@ -19,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum CustomMaterial implements Translatable
 {
+  CUSTOM_CRAFTING_TABLE(Material.CRAFTING_TABLE, "&ikey:block.cucumbery.custom_crafting_table|커스텀 제작대", Rarity.RARE, "itemGroup.functional"),
+  CUSTOM_CRAFTING_TABLE_PORTABLE(Material.CRAFTING_TABLE, "&ikey:block.cucumbery.custom_crafting_table_portable|휴대용 커스텀 제작대", Rarity.RARE, CreativeCategory.TOOLS),
   AMBER(Material.ORANGE_DYE, "&ikey:item.cucumbery.amber|호박", Rarity.UNIQUE),
   ARROW_CRIT(Material.ARROW, "&ikey:item.cucumbery.arrow_crit|치명적인 화살", Rarity.RARE, CreativeCategory.COMBAT),
   ARROW_EXPLOSIVE(Material.ARROW, "&ikey:item.cucumbery.arrow_explosive|폭발성 화살", Rarity.RARE, CreativeCategory.COMBAT),

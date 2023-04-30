@@ -17,7 +17,7 @@ public class EnchantHighRiskHighReturn extends CustomEnchantUltimate
   @Override
   public @NotNull String translationKey()
   {
-    return "하이 리스크 하이 리턴";
+    return "key:enchantment.cucumbery.high_risk_high_return|하이 리스크 하이 리턴";
   }
 
   @Override

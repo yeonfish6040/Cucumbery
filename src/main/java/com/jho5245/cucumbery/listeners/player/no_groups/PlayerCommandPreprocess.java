@@ -105,13 +105,13 @@ public class PlayerCommandPreprocess implements Listener
         {
           case "i", "ei", "eitem", "essentials:i", "essentials:ei", "essentials:eitem", "enchant", "enchantment", "essentials:enchant", "essentials:enchantment", "ie", "itemedit", "itemedit:ie", "itemedit:itemedit" ->
                   Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                                  Method.updateInventory(player),
+                                  ItemStackUtil.updateInventory(player),
                           0L);
           case "minecraft:item", "item" -> Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
           {
             for (Player online : Bukkit.getServer().getOnlinePlayers())
             {
-              Method.updateInventory(online);
+              ItemStackUtil.updateInventory(online);
             }
           }, 0L);
         }

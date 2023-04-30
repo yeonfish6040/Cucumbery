@@ -16,6 +16,7 @@ import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import dev.geco.gsit.api.GSitAPI;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
@@ -117,7 +118,7 @@ public class EntityCustomEffectPostApply implements Listener
                     customEffectType == CustomEffectType.CURSE_OF_CREATIVITY_PLACE
     ))
     {
-      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 2L);
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 2L);
     }
 
     if (entity instanceof Player player && customEffectType == CustomEffectTypeRune.RUNE_DESTRUCTION)

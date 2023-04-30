@@ -5,7 +5,6 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
 import com.jho5245.cucumbery.util.storage.data.Permission;
@@ -103,7 +102,7 @@ public class PlayerInteractAtEntity implements Listener
     }
     if (entity.getType() == EntityType.ARMOR_STAND)
     {
-      Method.updateInventory(player);
+      ItemStackUtil.updateInventory(player);
     }
   }
 }

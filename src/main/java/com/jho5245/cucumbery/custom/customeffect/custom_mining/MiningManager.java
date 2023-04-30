@@ -901,7 +901,7 @@ public class MiningManager
         {
           int enchantDigSpeedLevel = itemStack.getEnchantmentLevel(Enchantment.DIG_SPEED);
           // 바닐라 채광이 아니거나 효율의 영향을 받을 경우에만 속도 증가
-          if (enchantDigSpeedLevel > 0 && (blockTier > 0 || ignoreVanillaModification || block.getDestroySpeed(itemStack, true) > block.getDestroySpeed(itemStack, false)))
+          if (enchantDigSpeedLevel > 0 && toolMatches(itemStack, blockTier, block, drops))
           {
             String formula = Cucumbery.config.getString("custom-mining.efficiency", "50*(1+%level%^2)").replace("%level%", enchantDigSpeedLevel + "");
             double value = 0d;
@@ -1032,7 +1032,7 @@ public class MiningManager
 
     // 바닐라 채광 속도 처리
     {
-      if (blockTier == 0 && block.getDestroySpeed(itemStack, false) == 1f)
+      if (!toolMatches(itemStack, blockTier, block, drops))
       {
         float defaultSpeed = (float) Cucumbery.config.getDouble("custom-mining.default-tool-info.default.speed");
         if (miningSpeed > defaultSpeed)
@@ -1306,6 +1306,56 @@ public class MiningManager
     }
 
     return new MiningResult(canMine, toolSpeed, miningSpeed, miningSpeedBeforeHaste, blockHardness, miningFortune, expToDrop, toolTier, blockTier, regenCooldown, drop, breakSound, breakCustomSound, breakSoundVolume, breakSoundPitch, breakParticle);
+  }
+
+  public static boolean toolMatches(@NotNull ItemStack tool, int blockTier, Block block, @NotNull List<ItemStack> drops)
+  {
+    NBTItem nbtItem = drops.isEmpty() ? null : new NBTItem(drops.get(0));
+    String matchTools = nbtItem != null && nbtItem.hasTag("MatchTools") ? nbtItem.getString("MatchTools") : null;
+    boolean toDefaultSpeed = false;
+    if (matchTools != null)
+    {
+      CustomMaterial customMaterial = CustomMaterial.itemStackOf(tool);
+      switch (matchTools)
+      {
+        case "AXE" ->
+        {
+          toDefaultSpeed = !Tag.ITEMS_AXES.isTagged(tool.getType());
+          toDefaultSpeed = toDefaultSpeed || (customMaterial != null && !customMaterial.toString().endsWith("_AXE"));
+        }
+        case "PICKAXE" ->
+        {
+          toDefaultSpeed = !Tag.ITEMS_PICKAXES.isTagged(tool.getType());
+          toDefaultSpeed = toDefaultSpeed || (customMaterial != null && !customMaterial.toString().endsWith("_PICKAXE"));
+        }
+        case "SHOVEL" ->
+        {
+          toDefaultSpeed = !Tag.ITEMS_SHOVELS.isTagged(tool.getType());
+          toDefaultSpeed = toDefaultSpeed || (customMaterial != null && !customMaterial.toString().endsWith("_SHOVEL"));
+        }
+        case "SWORD" ->
+        {
+          toDefaultSpeed = !Tag.ITEMS_SWORDS.isTagged(tool.getType());
+          toDefaultSpeed = toDefaultSpeed || (customMaterial != null && !customMaterial.toString().endsWith("_SWORD"));
+        }
+        case "HOE" ->
+        {
+          toDefaultSpeed = !Tag.ITEMS_HOES.isTagged(tool.getType());
+          toDefaultSpeed = toDefaultSpeed || (customMaterial != null && !customMaterial.toString().endsWith("_HOE"));
+        }
+        case "DRILL" -> toDefaultSpeed = customMaterial != null && !customMaterial.toString().endsWith("_DRILL");
+        case "MINING_TOOL" ->
+        {
+          toDefaultSpeed = !Tag.ITEMS_PICKAXES.isTagged(tool.getType());
+          toDefaultSpeed = toDefaultSpeed || (customMaterial != null && !customMaterial.toString().endsWith("_PICKAXE") && !customMaterial.toString().endsWith("_DRILL"));
+        }
+      }
+    }
+    if (matchTools == null && blockTier == 0 && block.getDestroySpeed(tool, false) == 1f)
+    {
+      toDefaultSpeed = true;
+    }
+    return !toDefaultSpeed;
   }
 
   public static float miningExp(@NotNull Material blockType)

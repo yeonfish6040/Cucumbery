@@ -23,17 +23,13 @@ public class EntityMove implements Listener
     {
       return;
     }
-    Entity entity = event.getEntity();
     this.customEffect(event);
     if (event.isCancelled())
     {
       return;
     }
     this.entityLandOnGround(event);
-    if (DeathManager.deathMessageApplicable(entity))
-    {
-      this.getLastTrampledBlock(event);
-    }
+    this.getLastTrampledBlock(event);
   }
 
   private void customEffect(EntityMoveEvent event)
@@ -54,8 +50,19 @@ public class EntityMove implements Listener
 
   private void getLastTrampledBlock(EntityMoveEvent event)
   {
-    LivingEntity livingEntity = event.getEntity();
-    LastTrampledBlockManager.lastTrampledBlock(livingEntity, event.hasChangedBlock());
+    // 아니 데스메시지 클래스 왜 자꾸 초기화 못함
+    try
+    {
+      LivingEntity livingEntity = event.getEntity();
+      if (DeathManager.deathMessageApplicable(livingEntity))
+      {
+        LastTrampledBlockManager.lastTrampledBlock(livingEntity, event.hasChangedBlock());
+      }
+    }
+    catch (Throwable ignored)
+    {
+
+    }
   }
 
   private void entityLandOnGround(EntityMoveEvent event)

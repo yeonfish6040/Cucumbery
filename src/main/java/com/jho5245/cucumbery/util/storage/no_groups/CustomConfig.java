@@ -558,7 +558,7 @@ public class CustomConfig
       {
         switch (this)
         {
-          case DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE, EVENT_EXCEPTION_ACCESS, SHOW_ENCHANTMENT_TMI_DESCRIPTION, USE_HELPFUL_LORE_FEATURE -> Method.updateInventory(player);
+          case DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE, EVENT_EXCEPTION_ACCESS, SHOW_ENCHANTMENT_TMI_DESCRIPTION, USE_HELPFUL_LORE_FEATURE -> ItemStackUtil.updateInventory(player);
           case ENTITY_AGGRO, SPECTATOR_MODE ->
           {
             if (!UserData.ENTITY_AGGRO.getBoolean(uuid) || UserData.SPECTATOR_MODE.getBoolean(uuid))

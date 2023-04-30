@@ -2,9 +2,9 @@ package com.jho5245.cucumbery.listeners.entity.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffectImple;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeRune;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
@@ -19,7 +19,6 @@ import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -60,10 +59,9 @@ public class EntityPickupItem implements Listener
         event.setCancelled(true);
         return;
       }
-      String id = new NBTItem(itemStack).getString("id") + "";
-      try
+      CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+      if (customMaterial != null)
       {
-        CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
         switch (customMaterial)
         {
           case RUNE_DESTRUCTION, RUNE_EARTHQUAKE ->
@@ -128,10 +126,6 @@ public class EntityPickupItem implements Listener
             return;
           }
         }
-      }
-      catch (Exception ignored)
-      {
-
       }
     }
     if (CustomEffectManager.hasEffect(entity, CustomEffectType.CURSE_OF_PICKUP))

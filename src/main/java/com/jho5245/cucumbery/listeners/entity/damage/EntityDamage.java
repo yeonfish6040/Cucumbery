@@ -27,7 +27,6 @@ import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import net.kyori.adventure.text.Component;
@@ -423,21 +422,13 @@ public class EntityDamage implements Listener
     }
     Item itemEntity = (Item) event.getEntity();
     ItemStack item = itemEntity.getItemStack();
-    NBTItem nbtItem = new NBTItem(item);
     boolean affectedByPlugin = false;
-    try
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(item);
+    if (customMaterial == CustomMaterial.DOEHAERIM_BABO || customMaterial == CustomMaterial.BAMIL_PABO)
     {
-      CustomMaterial customMaterial = CustomMaterial.valueOf(nbtItem.getString("id").toUpperCase());
-      if (customMaterial == CustomMaterial.DOEHAERIM_BABO || customMaterial == CustomMaterial.BAMIL_PABO)
-      {
-        event.setCancelled(true);
-        affectedByPlugin = true;
-        itemEntity.setInvulnerable(true);
-      }
-    }
-    catch (Exception ignored)
-    {
-
+      event.setCancelled(true);
+      affectedByPlugin = true;
+      itemEntity.setInvulnerable(true);
     }
     NBTList<String> extraTags = NBTAPI.getStringList(NBTAPI.getMainCompound(item), CucumberyTag.EXTRA_TAGS_KEY);
     if (extraTags != null && !extraTags.isEmpty())

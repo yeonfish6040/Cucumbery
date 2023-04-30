@@ -11,7 +11,9 @@ import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCooldown;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeRune;
+import com.jho5245.cucumbery.custom.customrecipe.recipeinventory.RecipeInventoryMainMenu;
 import com.jho5245.cucumbery.listeners.block.NotePlay;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
@@ -137,19 +139,15 @@ public class PlayerInteract implements Listener
           {
             CustomEffectManager.removeEffect(player, CustomEffectTypeRune.RUNE_USING);
             CustomEffectManager.addEffect(player, CustomEffectTypeRune.RUNE_COOLDOWN);
-            String id = new NBTItem(item.getItemStack()).getString("id") + "";
-            try
+            CustomEffectManager.addEffect(player, CustomEffectTypeRune.RUNE_EXPERIENCE);
+            CustomMaterial customMaterial = CustomMaterial.itemStackOf(item.getItemStack());
+            if (customMaterial != null)
             {
-              CustomEffectManager.addEffect(player, CustomEffectTypeRune.RUNE_EXPERIENCE);
-              CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
               switch (customMaterial)
               {
                 case RUNE_DESTRUCTION -> CustomEffectManager.addEffect(player, CustomEffectTypeRune.RUNE_DESTRUCTION);
                 case RUNE_EARTHQUAKE -> CustomEffectManager.addEffect(player, CustomEffectTypeRune.RUNE_EARTHQUAKE);
               }
-            }
-            catch (Exception ignored)
-            {
             }
             item.getPassengers().forEach(Entity::remove);
             item.remove();
@@ -384,7 +382,7 @@ public class PlayerInteract implements Listener
 
         if (itemType == Material.BUNDLE)
         {
-          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+          Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
         }
 
         // 손에 아이템 있음 - 허공 우클릭
@@ -604,7 +602,7 @@ public class PlayerInteract implements Listener
               }
               if (Method.usingLoreFeature(player))
               {
-                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
               }
             }
           }
@@ -622,7 +620,7 @@ public class PlayerInteract implements Listener
               }
               if (Method.usingLoreFeature(player))
               {
-                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
               }
             }
           }
@@ -635,7 +633,7 @@ public class PlayerInteract implements Listener
               {
                 if (item.getAmount() == 1 && player.getGameMode() != GameMode.CREATIVE)
                 {
-                  Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+                  Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
                 }
                 else
                 {
@@ -774,7 +772,7 @@ public class PlayerInteract implements Listener
         {
           if (Method.usingLoreFeature(player))
           {
-            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
           }
         }
 
@@ -940,7 +938,6 @@ public class PlayerInteract implements Listener
             break;
         }
 
-        NBTItem nbtItem = new NBTItem(item);
         try
         {
           switch (customMaterial)
@@ -995,6 +992,21 @@ public class PlayerInteract implements Listener
               event.setCancelled(true);
               SoundPlay.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS);
               player.openInventory(player.getEnderChest());
+              return;
+            }
+            case CUSTOM_CRAFTING_TABLE_PORTABLE ->
+            {
+              event.setCancelled(true);
+              if (Variable.customRecipes.isEmpty())
+              {
+                MessageUtil.sendError(player, "제작 가능한 커스텀 레시피가 하나도 없습니다.");
+                return;
+              }
+              if (UserData.LISTEN_CONTAINER.getBoolean(player))
+              {
+                SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, SoundCategory.PLAYERS, 1F, 2F);
+              }
+              RecipeInventoryMainMenu.openRecipeInventory(player, 1, true);
               return;
             }
             case SPYGLASS_TELEPORT ->
@@ -1060,7 +1072,7 @@ public class PlayerInteract implements Listener
         {
           if (Method.usingLoreFeature(player))
           {
-            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
           }
         }
       }
@@ -1173,6 +1185,35 @@ public class PlayerInteract implements Listener
             }
           }
         }
+        // 커스텀 제작대 우클릭
+        ItemStack customCraftingTable = BlockPlaceDataConfig.getItem(block.getLocation());
+        if (CustomMaterial.itemStackOf(customCraftingTable) == CustomMaterial.CUSTOM_CRAFTING_TABLE)
+        {
+          if (player.isSneaking())
+          {
+            return;
+          }
+          event.setCancelled(true);
+          if (event.getHand() != EquipmentSlot.HAND)
+          {
+            return;
+          }
+          if (Variable.customRecipes.isEmpty())
+          {
+            MessageUtil.sendError(player, "제작 가능한 커스텀 레시피가 하나도 없습니다.");
+            return;
+          }
+          if (UserData.LISTEN_CONTAINER.getBoolean(player))
+          {
+            SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, SoundCategory.PLAYERS, 1F, 2F);
+          }
+          if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
+          {
+            player.swingMainHand();
+          }
+          RecipeInventoryMainMenu.openRecipeInventory(player, 1, true);
+          return;
+        }
       }
     }
 
@@ -1183,7 +1224,7 @@ public class PlayerInteract implements Listener
       {
         if (Method.usingLoreFeature(player))
         {
-          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+          Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
         }
       }
     }
@@ -2004,7 +2045,7 @@ public class PlayerInteract implements Listener
           default:
             break;
         }
-        Method.updateInventory(player);
+        ItemStackUtil.updateInventory(player);
       }
       catch (Exception e)
       {
@@ -2059,6 +2100,6 @@ public class PlayerInteract implements Listener
         }
       }
     }
-    Method.updateInventory(player);
+    ItemStackUtil.updateInventory(player);
   }
 }

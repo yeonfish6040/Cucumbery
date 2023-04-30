@@ -57,6 +57,23 @@ public class ItemLore
       ItemLore.removeItemLore(itemStack);
       return itemStack;
     }
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    Component displayName = itemMeta.displayName();
+    // config 설정 - 아이템에 이름이 있을 경우 아이템 설명 업데이트 안함(모루로 수정한 아이템은 제외)
+    if (!Cucumbery.config.getBoolean("use-helpful-lore-feature-with-named-items") && displayName != null)
+    {
+      if (displayName.color() != null
+              || displayName.decoration(TextDecoration.ITALIC) != State.NOT_SET
+              || displayName.decoration(TextDecoration.BOLD) != State.NOT_SET
+              || displayName.decoration(TextDecoration.OBFUSCATED) != State.NOT_SET
+              || displayName.decoration(TextDecoration.STRIKETHROUGH) != State.NOT_SET
+              || displayName.decoration(TextDecoration.UNDERLINED) != State.NOT_SET
+      )
+      {
+        ItemLore.removeItemLore(itemStack);
+        return itemStack;
+      }
+    }
     Material type = itemStack.getType();
     NBTItem nbtItem = new NBTItem(itemStack, true);
     nbtItem.removeKey("CustomMiningUpdater");
@@ -75,12 +92,14 @@ public class ItemLore
     if (customMaterial != null)
     {
       ItemLoreCustomItem.itemLore(itemStack, nbtItem, customMaterial);
+      itemMeta = itemStack.getItemMeta();
     }
     if (!customType.equals(""))
     {
       ItemLoreCustomItem.itemLore(itemStack, nbtItem, customType);
+      itemMeta = itemStack.getItemMeta();
     }
-    boolean hasOnlyNbtTagLore = ItemLoreUtil.hasOnlyNbtTagLore(itemStack) || new NBTItem(itemStack).hasKey("NBTCopied") && new NBTItem(itemStack).getBoolean("NBTCopied");
+    boolean hasOnlyNbtTagLore = ItemLoreUtil.hasOnlyNbtTagLore(itemStack) || new NBTItem(itemStack).hasTag("NBTCopied") && new NBTItem(itemStack).getBoolean("NBTCopied");
     NBTCompoundList potionsTag = NBTAPI.getCompoundList(itemTagReadOnly, CucumberyTag.CUSTOM_EFFECTS);
     if (Cucumbery.config.getBoolean("use-no-effect-potions-weirdly") && itemStack.getItemMeta() instanceof PotionMeta potionMeta && potionsTag == null)
     {
@@ -127,7 +146,6 @@ public class ItemLore
 
     // 아이템의 등급
     Rarity rarity = ItemCategory.getItemRarirty(type);
-    ItemMeta itemMeta = itemStack.getItemMeta();
     TranslatableComponent itemGroup;
     CreativeCategory itemCategoryType = type.getCreativeCategory();
     if (itemCategoryType == null)
@@ -207,7 +225,6 @@ public class ItemLore
     {
       if (customMaterial != null)
       {
-        Component displayName = itemMeta.displayName();
         if (displayName != null && displayName.color() == null && displayName.decoration(TextDecoration.ITALIC) == State.NOT_SET)
         {
           defaultLore.add(Component.empty());
@@ -220,12 +237,12 @@ public class ItemLore
         ConfigurationSection section = Variable.customItemsConfig.getConfigurationSection(id);
         if (section != null)
         {
-          String displayName = section.getString("display-name");
-          if (displayName == null)
+          String configDisplayName = section.getString("display-name");
+          if (configDisplayName == null)
           {
             throw new NullPointerException("display name cannot be null! CustomItem.yml - " + id);
           }
-          Component component = ComponentUtil.create(MessageUtil.n2s(displayName)), itemDisplayName = itemMeta.displayName();
+          Component component = ComponentUtil.create(MessageUtil.n2s(configDisplayName)), itemDisplayName = itemMeta.displayName();
           if (itemDisplayName != null && itemDisplayName.color() == null && itemDisplayName.decoration(TextDecoration.ITALIC) == State.NOT_SET)
           {
             defaultLore.add(Component.empty());

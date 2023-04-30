@@ -84,7 +84,7 @@ public class InventoryClose implements Listener
             SoundPlay.playSound(player, Sound.BLOCK_SHULKER_BOX_CLOSE, SoundCategory.BLOCKS);
             // 휴대용 셜커 상자의 설명 업데이트
             Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-            Method.updateInventory(player), 0L);
+            ItemStackUtil.updateInventory(player), 0L);
             return;
           }
         }
@@ -96,7 +96,7 @@ public class InventoryClose implements Listener
         {
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
           {
-            Method.updateInventory(player);
+            ItemStackUtil.updateInventory(player);
             player.updateInventory();
           }, 0L);
         }
@@ -318,7 +318,7 @@ public class InventoryClose implements Listener
           String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
           if (expireDate != null)
           {
-            Method.updateInventory(player, item);
+            ItemStackUtil.updateInventory(player, item);
             if (Method.isTimeUp(item, expireDate))
             {
               MessageUtil.info(player, ComponentUtil.translate("아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", item));

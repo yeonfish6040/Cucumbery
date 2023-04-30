@@ -113,7 +113,7 @@ public class ItemLoreCustomItem
       {
         switch (customMaterial)
         {
-          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT, WNYNYA_ORE, REDSTONE_BLOCK_INSTA_BREAK ->
+          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT, WNYNYA_ORE, REDSTONE_BLOCK_INSTA_BREAK, CUSTOM_CRAFTING_TABLE ->
           {
             if (!NBTAPI.arrayContainsValue(extraTags, ExtraTag.PRESERVE_BLOCK_NBT))
             {
@@ -282,6 +282,29 @@ public class ItemLoreCustomItem
             urls.add("ff176fd84f05c0b78a85d744fdae5279e3d818489394c215d357cd3b7a1a9757");
             urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzZiYWQ1MGZlOTc1N2VkZDJjZTI4MjNiM2FmMjZkMWY1OWM5ZDdlYTMxMjM4YWFjOTIzNzRmYWRhMjQ5NGVjMSJ9fX0=");
             urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWEyNjQzNjQ3YzNmMjZmOTRjNjJkZDJhZTIwY2ZkMjRiYTNmODIzNmY4NGQ2NTYzNzczZmY1ZThhNjQ3MDhjMSJ9fX0=");
+          }
+        }
+        case CUSTOM_CRAFTING_TABLE ->
+        {
+          nbtItem.setString("change_material", Material.BROWN_STAINED_GLASS.toString());
+          nbtItem.setFloat("BlockHardness", MiningManager.getBlockHardness(Material.CRAFTING_TABLE) * 1.5f);
+          nbtItem.setString("BreakSound", Sound.BLOCK_WOOD_BREAK.toString());
+          nbtItem.setString("BreakParticle", "block:crafting_table[]");
+          nbtItem.setString("MatchTools", "AXE");
+          NBTCompound nbtCompound = nbtItem.addCompound("displays");
+          nbtCompound.setString("type", "player_heads");
+          NBTList<String> urls = nbtCompound.getStringList("value");
+          if (urls.isEmpty())
+          {
+            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+
+            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
           }
         }
         case TEST_PICKAXE ->

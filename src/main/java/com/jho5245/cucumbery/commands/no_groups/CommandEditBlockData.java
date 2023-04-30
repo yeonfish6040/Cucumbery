@@ -90,7 +90,7 @@ public class CommandEditBlockData implements CommandExecutor, TabCompleter
         }
         NBTAPI.removeKey(blockStateTag, key);
         playerInventory.setItemInMainHand(nbtItem.getItem());
-        Method.updateInventory(player);
+        ItemStackUtil.updateInventory(player);
         MessageUtil.info(sender, ComponentUtil.translate("%s에서 %s 속성을 제거했습니다", item, Constant.THE_COLOR_HEX + key));
         return true;
       }
@@ -100,7 +100,7 @@ public class CommandEditBlockData implements CommandExecutor, TabCompleter
       }
       blockStateTag.setString(key, args[1]);
       playerInventory.setItemInMainHand(nbtItem.getItem());
-      Method.updateInventory(player);
+      ItemStackUtil.updateInventory(player);
       MessageUtil.info(sender, ComponentUtil.translate("%s에서 %s 속성의 값을 %s(으)로 설정했습니다", item, Constant.THE_COLOR_HEX + key, Constant.THE_COLOR_HEX + args[1]));
     }
     else

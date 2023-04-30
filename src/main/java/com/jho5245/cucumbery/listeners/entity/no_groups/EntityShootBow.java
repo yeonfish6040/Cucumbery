@@ -9,7 +9,6 @@ import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -122,7 +121,7 @@ public class EntityShootBow implements Listener
         if (livingEntity instanceof Player player)
         {
           Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                  Method.updateInventory(player), 0L);
+                  ItemStackUtil.updateInventory(player), 0L);
         }
       }
     }

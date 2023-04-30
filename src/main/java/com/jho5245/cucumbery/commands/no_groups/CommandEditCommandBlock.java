@@ -67,7 +67,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
             blockStateMeta.setBlockState(commandBlock);
             item.setItemMeta(blockStateMeta);
             playerInventory.setItemInMainHand(item);
-            Method.updateInventory(player);
+            ItemStackUtil.updateInventory(player);
             MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 이름을 rg255,204;" + name + "&r" + MessageUtil.getFinalConsonant(name,
                     MessageUtil.ConsonantType.으로) + " 설정했습니다");
           }
@@ -79,7 +79,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
             blockStateMeta.setBlockState(commandBlock);
             item.setItemMeta(blockStateMeta);
             playerInventory.setItemInMainHand(item);
-            Method.updateInventory(player);
+            ItemStackUtil.updateInventory(player);
             MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 명령어를 rg255,204;" + command + "&r" + MessageUtil.getFinalConsonant(command,
                     MessageUtil.ConsonantType.으로) + " 설정했습니다");
           }
@@ -101,7 +101,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
             }
             blockEntityTag.setBoolean("auto", input);
             playerInventory.setItemInMainHand(nbtItem.getItem());
-            Method.updateInventory(player);
+            ItemStackUtil.updateInventory(player);
             MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 항상 활성화 태그를 rg255,204;" + input + "&r(으)로 설정했습니다");
           }
           case "conditional" -> {
@@ -122,7 +122,7 @@ public class CommandEditCommandBlock implements CommandExecutor, TabCompleter
             }
             blockStateTag.setString("conditional", input + "");
             playerInventory.setItemInMainHand(nbtItem.getItem());
-            Method.updateInventory(player);
+            ItemStackUtil.updateInventory(player);
             MessageUtil.info(player, "주로 사용하는 손에 들고 있는 rg255,204;" + ItemNameUtil.itemName(item) + "&r의 조건적 태그를 rg255,204;" + input + "&r(으)로 설정했습니다");
           }
           default -> {

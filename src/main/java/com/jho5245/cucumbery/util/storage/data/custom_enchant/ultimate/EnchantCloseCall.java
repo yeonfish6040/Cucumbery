@@ -15,7 +15,7 @@ public class EnchantCloseCall extends CustomEnchantUltimate
   @Override
   public @NotNull String translationKey()
   {
-    return "구사 일생";
+    return "key:enchantment.cucumbery.close_call|구사 일생";
   }
 
   @Override

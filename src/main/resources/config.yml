@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 43
+config-version: 45
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -85,6 +85,8 @@ use-hook-plugins:
   UltimateTimber: true
   # 커스텀 채광 모드에서 블록을 캘 수 없는 곳을 레지던스로 제한하기 위함
   Residence: true
+  # 커스텀 채광 모드에서 블록을 캤을 시에 코어 프로텍트에 블록 파괴 기록 저장
+  CoreProtect: true
 
 # 알 수 없는 명령어 사용 시 뜰 메시지 굳검버리화 해버리기
 use-custom-unknown-command-message: true
@@ -176,6 +178,10 @@ use-helpful-lore-feature: true
 no-use-helpful-lore-feature-worlds:
   - world_1
   - world_2
+
+# 이름이 있는 아이템(모루로 수정한 아이템 제외)도 아이템 설명이 변경되게 할 것인가?
+# 해당 기능을 사용하지 않을 경우 일부 아이템의 설명이 정상적으로 갱신되지 않을 수 있습니다.
+use-helpful-lore-feature-with-named-items: true
 
 # 마법 부여의 TMI 설명 기능을 사용할 것인가? (use-helpful-lore-feature 값이 true여야 작동) - boolean
 use-tmi-enchantment-lore-feature: true

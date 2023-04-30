@@ -1380,7 +1380,7 @@ public class InventoryClick implements Listener
                 {
                   cursor = nbtItem.getItem();
                   event.setCursor(cursor);
-                  Method.updateInventory(player);
+                  ItemStackUtil.updateInventory(player);
                 }
               }
               catch (Exception e)
@@ -1432,7 +1432,7 @@ public class InventoryClick implements Listener
             }
             cursor = nbtItem.getItem();
             event.setCursor(cursor);
-            Method.updateInventory(player);
+            ItemStackUtil.updateInventory(player);
           }
           catch (Exception ignored)
           {
@@ -1508,7 +1508,7 @@ public class InventoryClick implements Listener
       ItemStack currentItem = event.getCurrentItem(), cursorItem = event.getCursor();
       if (ItemStackUtil.itemExists(currentItem) && currentItem.getType() == Material.BUNDLE || ItemStackUtil.itemExists(cursorItem) && cursorItem.getType() == Material.BUNDLE)
       {
-        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
       }
     }
 
@@ -1516,7 +1516,7 @@ public class InventoryClick implements Listener
     if (event.getInventory().getType() == InventoryType.CARTOGRAPHY) // 지도 제작대를 이용한 뒤 결과 아이템 설명 업데이트
     {
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              Method.updateInventory(player), 0L);
+              ItemStackUtil.updateInventory(player), 0L);
     }
     if (event.getInventory().getType() == InventoryType.GRINDSTONE)
     {

@@ -71,7 +71,7 @@ public class CommandSetItemMeta implements CommandExecutor, TabCompleter
           itemMeta.displayName(null);
           item.setItemMeta(itemMeta);
           inventory.setItemInMainHand(item);
-          Method.updateInventory(player);
+          ItemStackUtil.updateInventory(player);
           if (!silent)
           {
             MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, ComponentUtil.translate("주로 사용하는 손에 들고 있는 아이템의 이름을 제거했습니다").hoverEvent(item.asHoverEvent()));
@@ -93,7 +93,7 @@ public class CommandSetItemMeta implements CommandExecutor, TabCompleter
             item.setItemMeta(itemMeta);
           }
           inventory.setItemInMainHand(item);
-          Method.updateInventory(player);
+          ItemStackUtil.updateInventory(player);
           if (!silent)
           {
             Component itemName = ItemNameUtil.itemName(item, Constant.THE_COLOR);
@@ -528,7 +528,7 @@ public class CommandSetItemMeta implements CommandExecutor, TabCompleter
         ((Repairable) itemMeta).setRepairCost((int) Math.pow(2, repairCost) - 1);
         item.setItemMeta(itemMeta);
         inventory.setItemInMainHand(item);
-        Method.updateInventory(player);
+        ItemStackUtil.updateInventory(player);
         if (!MessageUtil.isBoolean(sender, args, 2, true))
         {
           return true;

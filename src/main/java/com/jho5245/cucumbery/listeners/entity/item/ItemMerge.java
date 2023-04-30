@@ -36,36 +36,30 @@ public class ItemMerge implements Listener
       return;
     }
     NBTItem nbtItem1 = new NBTItem(item1), nbtItem2 = new NBTItem(item2);
-    String id1 = nbtItem1.getString("id") + "", id2 = nbtItem2.getString("id") + "";
-    try
+
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(item1);
+    if (customMaterial != null)
     {
-      CustomMaterial customMaterial = CustomMaterial.valueOf(id1.toUpperCase());
       switch (customMaterial)
       {
-        case CORE_GEMSTONE, CORE_GEMSTONE_EXPERIENCE, CORE_GEMSTONE_MIRROR, CORE_GEMSTONE_MITRA, CUTE_SUGAR, RUNE_DESTRUCTION -> {
+        case CORE_GEMSTONE, CORE_GEMSTONE_EXPERIENCE, CORE_GEMSTONE_MIRROR, CORE_GEMSTONE_MITRA, CUTE_SUGAR, RUNE_DESTRUCTION ->
+        {
           event.setCancelled(true);
           return;
         }
       }
     }
-    catch (Exception ignored)
+    customMaterial = CustomMaterial.itemStackOf(item2);
+    if (customMaterial != null)
     {
-
-    }
-    try
-    {
-      CustomMaterial customMaterial = CustomMaterial.valueOf(id2.toUpperCase());
       switch (customMaterial)
       {
-        case CORE_GEMSTONE, CORE_GEMSTONE_EXPERIENCE, CORE_GEMSTONE_MIRROR, CORE_GEMSTONE_MITRA, CUTE_SUGAR, RUNE_DESTRUCTION -> {
+        case CORE_GEMSTONE, CORE_GEMSTONE_EXPERIENCE, CORE_GEMSTONE_MIRROR, CORE_GEMSTONE_MITRA, CUTE_SUGAR, RUNE_DESTRUCTION ->
+        {
           event.setCancelled(true);
           return;
         }
       }
-    }
-    catch (Exception ignored)
-    {
-
     }
     Method.updateItem(target, item1.getAmount());
   }

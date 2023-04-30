@@ -14,7 +14,6 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -81,10 +80,9 @@ public class PlayerAttemptPickupItem implements Listener
       ItemLore.removeItemLore(itemStack);
     }
     item.setItemStack(itemStack);
-    String id = new NBTItem(itemStack).getString("id") + "";
-    try
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+    if (customMaterial != null)
     {
-      CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
       switch (customMaterial)
       {
         case RUNE_DESTRUCTION, RUNE_EARTHQUAKE ->
@@ -92,10 +90,6 @@ public class PlayerAttemptPickupItem implements Listener
           return;
         }
       }
-    }
-    catch (Exception ignored)
-    {
-
     }
     int amount = itemStack.getAmount() - event.getRemaining();
     if (amount > 0)

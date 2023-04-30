@@ -394,6 +394,18 @@ public class ItemLore2CustomMaterial
         lore.add(ComponentUtil.translate("&7설치 즉시 파괴됩니다! 짧은 레드스톤"));
         lore.add(ComponentUtil.translate("&7신호가 필요한 곳에 사용하세요!"));
       }
+      case CUSTOM_CRAFTING_TABLE -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7야생에서 일반적으로 얻을 수 없는"));
+        lore.add(ComponentUtil.translate("&7아이템을 제작할 수 있다."));
+      }
+      case CUSTOM_CRAFTING_TABLE_PORTABLE -> {
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&7야생에서 일반적으로 얻을 수 없는"));
+        lore.add(ComponentUtil.translate("&7아이템을 제작할 수 있다."));
+        lore.add(Component.empty());
+        lore.add(ComponentUtil.translate("&6능력 : %s %s", ComponentUtil.translate("&a커스텀 제작대 열기"), ComponentUtil.translate("&e&l우클릭")));
+      }
     }
     switch (customMaterial)
     {

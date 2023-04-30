@@ -12,7 +12,6 @@ import com.google.common.collect.Lists;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
@@ -50,7 +49,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.help.HelpTopic;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -180,100 +178,6 @@ public class Method extends SoundPlay
             ((hour != 0) ? ((year != 0 || day != 0) ? " " : "") + hour + "시간" : "") +
             ((min != 0) ? ((year != 0 || day != 0 || hour != 0) ? " " : "") + min + "분" : "") +
             ((sec != 0) ? ((year != 0 || day != 0 || hour != 0 || min != 0) ? " " : "") + displaySec + "초" : "");
-  }
-
-  /**
-   * 플레이어의 인벤토리에 있는 모든 아이템의 설명을 새로고침합니다.
-   *
-   * @param player 인벤토리에 있는 모든 아이템의 설명을 업데이트할 플레이어
-   */
-  public static void updateInventory(@NotNull Player player)
-  {
-    updateInventory(player, false);
-  }
-
-  /**
-   * 플레이어의 인벤토리에 있는 모든 아이템의 설명을 새로고침합니다.
-   *
-   * @param player 인벤토리에 있는 모든 아이템의 설명을 업데이트할 플레이어
-   */
-  public static void updateInventory(@NotNull Player player, boolean callAPI)
-  {
-    InventoryView openInventory = player.getOpenInventory();
-    String title = openInventory.getTitle();
-    if (!title.contains(Constant.SERVER_SETTINGS) && (title.contains(Constant.CANCEL_STRING) || title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI)))
-    {
-      return;
-    }
-    Inventory inventory = player.getInventory();
-    boolean useLore = usingLoreFeature(player);
-    if (useLore)
-    {
-      for (int i = 0; i < inventory.getSize(); i++)
-      {
-        ItemStack item = inventory.getItem(i);
-        if (item == null)
-        {
-          continue;
-        }
-        ItemLore.setItemLore(item, new ItemLoreView(player));
-      }
-      inventory = openInventory.getTopInventory();
-      for (int i = 0; i < inventory.getSize(); i++)
-      {
-        ItemStack item = inventory.getItem(i);
-        if (item == null)
-        {
-          continue;
-        }
-        ItemLore.setItemLore(item, new ItemLoreView(player));
-      }
-      player.setItemOnCursor(ItemLore.setItemLore(player.getItemOnCursor(), new ItemLoreView(player)));
-    }
-    else
-    {
-      inventory = player.getInventory();
-      for (int i = 0; i < inventory.getSize(); i++)
-      {
-        ItemStack itemStack = inventory.getItem(i);
-        if (itemStack != null)
-        {
-          ItemLore.removeItemLore(itemStack);
-        }
-      }
-      inventory = openInventory.getTopInventory();
-      for (int i = 0; i < inventory.getSize(); i++)
-      {
-        ItemStack itemStack = inventory.getItem(i);
-        if (itemStack != null)
-        {
-          ItemLore.removeItemLore(itemStack);
-        }
-      }
-      player.setItemOnCursor(ItemLore.removeItemLore(player.getItemOnCursor()));
-    }
-    if (callAPI)
-    {
-      player.updateInventory();
-    }
-  }
-
-  /**
-   * 플레이어의 인벤토리에 있는 아이템의 설명을 새로고침합니다.
-   *
-   * @param player 인벤토리에 있는 아이템의 설명을 업데이트할 플레이어
-   * @param item   설명을 새로고침할 아이템
-   */
-  public static void updateInventory(@NotNull Player player, @NotNull ItemStack item)
-  {
-    if (usingLoreFeature(player))
-    {
-      ItemLore.setItemLore(item, new ItemLoreView(player));
-    }
-    else
-    {
-      ItemLore.removeItemLore(item);
-    }
   }
 
   /**

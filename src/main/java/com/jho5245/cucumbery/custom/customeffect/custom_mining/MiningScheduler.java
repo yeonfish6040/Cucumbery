@@ -12,7 +12,6 @@ import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.no_groups.TPSMeter;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
@@ -350,7 +349,7 @@ public class MiningScheduler
       if (ItemStackUtil.itemExists(itemStack))
       {
         NBTItem nbtItem = new NBTItem(itemStack);
-        CustomMaterial customMaterial = Method2.valueOf(nbtItem.getString("id") + "", CustomMaterial.class);
+        CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
         if (customMaterial != null)
         {
           switch (customMaterial)

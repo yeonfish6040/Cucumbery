@@ -7,7 +7,6 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.ItemSerializer;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -69,7 +68,7 @@ public class PlayerInteractEntity implements Listener
             MessageUtil.info(player, "%s을(를) 트래킹합니다", entity);
             NBTItem nbtItem = new NBTItem(item, true);
             nbtItem.setString("Tracking", entity.getUniqueId().toString());
-            Method.updateInventory(player, item);
+            ItemStackUtil.updateInventory(player, item);
           }
         }
       }
@@ -164,7 +163,7 @@ public class PlayerInteractEntity implements Listener
     }
     if ((entityType == EntityType.MUSHROOM_COW) && material == Material.BOWL)
     {
-      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
     }
 
     if (entityType == EntityType.COW || entityType == EntityType.MUSHROOM_COW && material == Material.BUCKET)
@@ -182,7 +181,7 @@ public class PlayerInteractEntity implements Listener
         }
         return;
       }
-      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+      Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
     }
   }
 }

@@ -9,7 +9,6 @@ import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,10 +34,9 @@ public class ItemSpawn implements Listener
               Method.updateItem(entity), 0L);
     }
     ItemStack itemStack = entity.getItemStack();
-    NBTItem nbtItem = new NBTItem(itemStack);
-    try
+    CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+    if (customMaterial != null)
     {
-      CustomMaterial customMaterial = CustomMaterial.valueOf(nbtItem.getString("id").toUpperCase());
       switch (customMaterial)
       {
         case DOEHAERIM_BABO, BAMIL_PABO, CUTE_SUGAR -> entity.setGravity(false);
@@ -56,10 +54,6 @@ public class ItemSpawn implements Listener
           entity.setWillAge(false);
         }
       }
-    }
-    catch (Exception ignored)
-    {
-
     }
   }
 }

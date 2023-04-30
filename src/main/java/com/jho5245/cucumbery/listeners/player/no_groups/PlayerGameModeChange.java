@@ -1,7 +1,7 @@
 package com.jho5245.cucumbery.listeners.player.no_groups;
 
 import com.jho5245.cucumbery.Cucumbery;
-import com.jho5245.cucumbery.util.no_groups.Method;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +14,6 @@ public class PlayerGameModeChange implements Listener
   public void onPlayerGameModeChange(PlayerGameModeChangeEvent event)
   {
     Player player = event.getPlayer();
-    Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 2L);
+    Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 2L);
   }
 }

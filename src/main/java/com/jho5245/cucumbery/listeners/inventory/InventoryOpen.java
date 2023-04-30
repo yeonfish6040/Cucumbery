@@ -33,6 +33,7 @@ public class InventoryOpen implements Listener
 {
   public static HashMap<Location, UUID> mcMMOBrewingStandMap = new HashMap<>();
 
+  @SuppressWarnings("deprecation")
   @EventHandler
   public void onInventoryOpen(InventoryOpenEvent event)
   {
@@ -71,38 +72,42 @@ public class InventoryOpen implements Listener
       }
       String title = event.getView().getTitle();
       Inventory inventory = event.getInventory();
-      Location location = inventory.getLocation();
-      if (location == null)
+      final Location location = inventory.getLocation();
+      if (inventory.getType() == InventoryType.BEACON)
       {
-        Block targetBlock = player.getTargetBlockExact(6);
-        if (targetBlock != null)
+        Location targetLocation = location;
+        if (targetLocation == null)
         {
-          location = targetBlock.getLocation();
-        }
-      }
-      if (inventory.getType() == InventoryType.BEACON && location != null)
-      {
-        BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(location.getChunk());
-        if (blockPlaceDataConfig != null)
-        {
-          ItemStack itemStack = blockPlaceDataConfig.getItemStack(location);
-          if (ItemStackUtil.itemExists(itemStack) && itemStack.getType() == Material.BEACON && NBTAPI.isRestricted(player, itemStack, RestrictionType.NO_BLOCK_BEACON))
+          Block targetBlock = player.getTargetBlockExact(6);
+          if (targetBlock != null)
           {
-            event.setCancelled(true);
-            if (!Variable.inventoryOpenAlertCooldown.contains(uuid))
+            targetLocation = targetBlock.getLocation();
+          }
+        }
+        if (targetLocation != null)
+        {
+          BlockPlaceDataConfig blockPlaceDataConfig = BlockPlaceDataConfig.getInstance(targetLocation.getChunk());
+          if (blockPlaceDataConfig != null)
+          {
+            ItemStack itemStack = blockPlaceDataConfig.getItemStack(targetLocation);
+            if (ItemStackUtil.itemExists(itemStack) && itemStack.getType() == Material.BEACON && NBTAPI.isRestricted(player, itemStack, RestrictionType.NO_BLOCK_BEACON))
             {
-              Variable.inventoryOpenAlertCooldown.add(uuid);
-              MessageUtil.sendTitle(player, "&c사용 불가!", "사용할 수 없는 신호기입니다", 5, 80, 15);
-              SoundPlay.playSound(player, Constant.ERROR_SOUND);
-              Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.inventoryOpenAlertCooldown.remove(uuid), 100L);
+              event.setCancelled(true);
+              if (!Variable.inventoryOpenAlertCooldown.contains(uuid))
+              {
+                Variable.inventoryOpenAlertCooldown.add(uuid);
+                MessageUtil.sendTitle(player, "&c사용 불가!", "사용할 수 없는 신호기입니다", 5, 80, 15);
+                SoundPlay.playSound(player, Constant.ERROR_SOUND);
+                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Variable.inventoryOpenAlertCooldown.remove(uuid), 100L);
+              }
+              return;
             }
-            return;
           }
         }
       }
       if (inventory.getType() == InventoryType.BREWING)
       {
-        Method.updateInventory(player);
+        ItemStackUtil.updateInventory(player);
       }
 
       // gui cache
@@ -130,7 +135,10 @@ public class InventoryOpen implements Listener
         mcMMOBrewingStandMap.put(inventory.getLocation(), uuid);
       }
       // Openinv로 인벤토리가 열린 경우가 아니고 이미 다른 사람이 인벤토리를 연 상태가 아닐 때
-      if (inventory.getViewers().size() <= 1 && (location != null || inventory.getType() != InventoryType.CHEST) && !title.contains(Constant.CANCEL_STRING) && !title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI))
+      if (inventory.getViewers().size() <= 1 && location != null &&
+              (inventory.getType() == InventoryType.CHEST && (inventory.getSize() == 27 || inventory.getSize() == 54) ||
+                      inventory.getType() != InventoryType.CHEST && inventory.getSize() != 27 && inventory.getSize() != 54)
+              && !title.contains(Constant.CANCEL_STRING) && !title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI))
       {
         if (Method.usingLoreFeature(player))
         {
@@ -304,7 +312,7 @@ public class InventoryOpen implements Listener
           String expireDate = NBTAPI.getString(NBTAPI.getMainCompound(item), CucumberyTag.EXPIRE_DATE_KEY);
           if (expireDate != null)
           {
-            Method.updateInventory(player, item);
+            ItemStackUtil.updateInventory(player, item);
             if (Method.isTimeUp(item, expireDate))
             {
               MessageUtil.info(player, "아이템 %s의 유효 기간이 지나서 아이템이 제거되었습니다", item);

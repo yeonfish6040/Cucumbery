@@ -35,7 +35,7 @@ public class PlayerRecipeBookClick implements Listener
       }
       event.setRecipe(event.getRecipe());
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-              Method.updateInventory(player), 0L);
+              ItemStackUtil.updateInventory(player), 0L);
     }
   }
 }

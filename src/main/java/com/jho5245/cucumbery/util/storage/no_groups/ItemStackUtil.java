@@ -10,7 +10,6 @@ import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.no_groups.Method2;
-import com.jho5245.cucumbery.util.storage.component.LocationComponent;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ItemNameUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
@@ -486,13 +485,14 @@ public class ItemStackUtil
     ItemStack[] contents = inv.getStorageContents();
     for (ItemStack iStack : contents)
     {
+      int maxStackSize = item.getMaxStackSize();
       if (!itemExists(iStack))
       {
-        space += item.getMaxStackSize();
+        space += maxStackSize;
       }
       else if (itemEquals(item, iStack, ignoreDurability))
       {
-        space += item.getMaxStackSize() - iStack.getAmount();
+        space += Math.max(0, maxStackSize - iStack.getAmount());
       }
     }
     if (space < 0)
@@ -523,8 +523,7 @@ public class ItemStackUtil
    */
   public static int countSpace(@NotNull Player player, @NotNull ItemStack itemStack)
   {
-    itemStack = ItemLore.setItemLore(itemStack.clone(), ItemLoreView.of(player));
-    return countSpace(player.getInventory(), itemStack);
+    return countSpace(player.getInventory(), ItemLore.setItemLore(itemStack.clone(), ItemLoreView.of(player)));
   }
 
   /**
@@ -565,10 +564,9 @@ public class ItemStackUtil
       if (ItemStackUtil.itemExists(drop))
       {
         NBTItem nbtItem = new NBTItem(drop, true);
-        String id = nbtItem.getString("id") + "";
-        try
+        CustomMaterial customMaterial = CustomMaterial.itemStackOf(drop);
+        if (customMaterial != null)
         {
-          CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
           CustomMaterial smeltedItem = customMaterial.getSmeltedItem();
           if (smeltedItem != null)
           {
@@ -579,10 +577,6 @@ public class ItemStackUtil
           {
             drop = new ItemStack(smeltedItemVanilla, drop.getAmount());
           }
-        }
-        catch (Exception ignored)
-        {
-
         }
       }
       if (player != null)
@@ -958,13 +952,13 @@ public class ItemStackUtil
       String id = nbtContainer.getString("id") + "";
       if (!id.equals(""))
       {
-        try
+        CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
+        if (customMaterial != null)
         {
-          CustomMaterial customMaterial = CustomMaterial.valueOf(id.toUpperCase());
           itemStack = customMaterial.create();
           display = customMaterial.getDisplayName();
         }
-        catch (Exception e)
+        else
         {
           ItemStack i = new ItemStack(Material.STONE);
           NBTItem nbtItem = new NBTItem(i, true);
@@ -1268,6 +1262,100 @@ public class ItemStackUtil
     playerProfile.setProperty(new ProfileProperty("textures", base64Data));
     skullMeta.setPlayerProfile(playerProfile);
     return skullMeta;
+  }
+
+  /**
+   * 플레이어의 인벤토리에 있는 모든 아이템의 설명을 새로고침합니다.
+   *
+   * @param player 인벤토리에 있는 모든 아이템의 설명을 업데이트할 플레이어
+   */
+  public static void updateInventory(@NotNull Player player)
+  {
+    updateInventory(player, false);
+  }
+
+  /**
+   * 플레이어의 인벤토리에 있는 모든 아이템의 설명을 새로고침합니다.
+   *
+   * @param player 인벤토리에 있는 모든 아이템의 설명을 업데이트할 플레이어
+   */
+  public static void updateInventory(@NotNull Player player, boolean callAPI)
+  {
+    InventoryView openInventory = player.getOpenInventory();
+    String title = openInventory.getTitle();
+    if (!title.contains(Constant.SERVER_SETTINGS) && (title.contains(Constant.CANCEL_STRING) || title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI)))
+    {
+      return;
+    }
+    Inventory inventory = player.getInventory();
+    boolean useLore = Method.usingLoreFeature(player);
+    if (useLore)
+    {
+      for (int i = 0; i < inventory.getSize(); i++)
+      {
+        ItemStack item = inventory.getItem(i);
+        if (item == null)
+        {
+          continue;
+        }
+        ItemLore.setItemLore(item, new ItemLoreView(player));
+      }
+      inventory = openInventory.getTopInventory();
+      for (int i = 0; i < inventory.getSize(); i++)
+      {
+        ItemStack item = inventory.getItem(i);
+        if (item == null)
+        {
+          continue;
+        }
+        ItemLore.setItemLore(item, new ItemLoreView(player));
+      }
+      player.setItemOnCursor(ItemLore.setItemLore(player.getItemOnCursor(), new ItemLoreView(player)));
+    }
+    else
+    {
+      inventory = player.getInventory();
+      for (int i = 0; i < inventory.getSize(); i++)
+      {
+        ItemStack itemStack = inventory.getItem(i);
+        if (itemStack != null)
+        {
+          ItemLore.removeItemLore(itemStack);
+        }
+      }
+      inventory = openInventory.getTopInventory();
+      for (int i = 0; i < inventory.getSize(); i++)
+      {
+        ItemStack itemStack = inventory.getItem(i);
+        if (itemStack != null)
+        {
+          ItemLore.removeItemLore(itemStack);
+        }
+      }
+      player.setItemOnCursor(ItemLore.removeItemLore(player.getItemOnCursor()));
+    }
+    if (callAPI)
+    {
+      player.updateInventory();
+    }
+  }
+
+  /**
+   * 플레이어의 인벤토리에 있는 아이템의 설명을 새로고침합니다.
+   *
+   * @param player 인벤토리에 있는 아이템의 설명을 업데이트할 플레이어
+   * @param item   설명을 새로고침할 아이템
+   */
+  public static void updateInventory(@NotNull Player player, @NotNull ItemStack item)
+  {
+    if (Method.usingLoreFeature(player))
+    {
+      ItemLore.setItemLore(item, new ItemLoreView(player));
+    }
+    else
+    {
+      ItemLore.removeItemLore(item);
+    }
   }
 }
 

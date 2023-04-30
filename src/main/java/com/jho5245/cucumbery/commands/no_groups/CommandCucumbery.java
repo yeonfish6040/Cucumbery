@@ -15,6 +15,7 @@ import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.data.custom_enchant.CustomEnchant;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.no_groups.PluginLoader;
 import com.jho5245.cucumbery.util.storage.no_groups.RecipeChecker;
 import com.jho5245.cucumbery.util.storage.no_groups.Updater;
@@ -96,7 +97,7 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         RecipeChecker.setRecipes();
         for (Player player : Bukkit.getOnlinePlayers())
         {
-          Method.updateInventory(player);
+          ItemStackUtil.updateInventory(player);
         }
         try
         {

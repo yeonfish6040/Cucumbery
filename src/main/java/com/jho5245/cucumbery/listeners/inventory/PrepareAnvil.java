@@ -6,7 +6,6 @@ import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.Method2;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.Constant.RestrictionType;
@@ -258,9 +257,8 @@ public class PrepareAnvil implements Listener
     boolean customDuraFix = false;
     if (ItemStackUtil.itemExists(firstItem) && ItemStackUtil.itemExists(secondItem))
     {
-      NBTItem firstNBTItem = new NBTItem(firstItem), secondNBTItem = new NBTItem(secondItem);
-      CustomMaterial firstCustomMaterial = Method2.valueOf(firstNBTItem.getString("id") + "", CustomMaterial.class),
-              secondCustomMaterial = Method2.valueOf(secondNBTItem.getString("id") + "", CustomMaterial.class);
+      CustomMaterial firstCustomMaterial = CustomMaterial.itemStackOf(firstItem),
+              secondCustomMaterial = CustomMaterial.itemStackOf(secondItem);
       if (firstCustomMaterial != null && secondCustomMaterial != null)
       {
         switch (firstCustomMaterial)

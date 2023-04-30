@@ -172,11 +172,11 @@ public class PlayerItemConsume implements Listener
                 {
                   inv.addItem(newItem);
                 }
-                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> Method.updateInventory(player), 0L);
+                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () -> ItemStackUtil.updateInventory(player), 0L);
               }
             }
           }
-          Method.updateInventory(player);
+          ItemStackUtil.updateInventory(player);
         }, 0L);
       }
     }

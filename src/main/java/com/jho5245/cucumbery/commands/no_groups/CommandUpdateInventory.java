@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.util.no_groups.SelectorUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,7 @@ public class CommandUpdateInventory implements CommandExecutor, TabCompleter
       boolean hideOutput = args.length == 2 && args[1].equals("true");
       for (Player player : players)
       {
-        Method.updateInventory(player);
+        ItemStackUtil.updateInventory(player);
         if (!sender.equals(player) && !hideOutput)
         {
           MessageUtil.info(player, ComponentUtil.translate("%s이(가) 당신의 인벤토리를 업데이트 했습니다", sender));

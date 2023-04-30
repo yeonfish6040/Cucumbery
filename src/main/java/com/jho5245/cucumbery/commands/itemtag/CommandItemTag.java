@@ -150,7 +150,7 @@ public class CommandItemTag implements CommandExecutor
                       boolean b = Boolean.parseBoolean(input);
                       nbtItem.setBoolean(key, b);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input += "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -166,7 +166,7 @@ public class CommandItemTag implements CommandExecutor
                       }
                       nbtItem.setByte(key, (byte) i);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -189,7 +189,7 @@ public class CommandItemTag implements CommandExecutor
                       }
                       nbtItem.setByteArray(key, byteArray);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = Arrays.toString(byteArray) + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -205,7 +205,7 @@ public class CommandItemTag implements CommandExecutor
                       }
                       nbtItem.setShort(key, (short) i);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -217,7 +217,7 @@ public class CommandItemTag implements CommandExecutor
                       i = Integer.parseInt(input);
                       nbtItem.setInteger(key, i);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = i + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -236,7 +236,7 @@ public class CommandItemTag implements CommandExecutor
                       }
                       nbtItem.setIntArray(key, intArray);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = Arrays.toString(intArray) + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -254,7 +254,7 @@ public class CommandItemTag implements CommandExecutor
                         nbtIntegerList.add(k);
                       }
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = nbtIntegerList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -266,7 +266,7 @@ public class CommandItemTag implements CommandExecutor
                       long l = Long.parseLong(input);
                       nbtItem.setLong(key, l);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = l + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -284,7 +284,7 @@ public class CommandItemTag implements CommandExecutor
                         nbtLongList.add(k);
                       }
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = nbtLongList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -300,7 +300,7 @@ public class CommandItemTag implements CommandExecutor
                       }
                       nbtItem.setFloat(key, (float) d);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = d + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -322,7 +322,7 @@ public class CommandItemTag implements CommandExecutor
                         nbtFloatList.add((float) k);
                       }
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = nbtFloatList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -334,7 +334,7 @@ public class CommandItemTag implements CommandExecutor
                       d = Double.parseDouble(input);
                       nbtItem.setDouble(key, d);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = d + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -352,7 +352,7 @@ public class CommandItemTag implements CommandExecutor
                         nbtDoubleList.add(k);
                       }
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = nbtDoubleList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -365,7 +365,7 @@ public class CommandItemTag implements CommandExecutor
                       UUID uuid = UUID.fromString(input);
                       nbtItem.setUUID(key, uuid);
                       playerInventory.setItemInMainHand(nbtItem.getItem());
-                      Method.updateInventory(player);
+                      ItemStackUtil.updateInventory(player);
                       input = uuid + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                       MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                       break;
@@ -376,7 +376,7 @@ public class CommandItemTag implements CommandExecutor
                   String input = MessageUtil.listToString(" ", 4, args.length, args);
                   nbtItem.setString(key, input);
                   playerInventory.setItemInMainHand(nbtItem.getItem());
-                  Method.updateInventory(player);
+                  ItemStackUtil.updateInventory(player);
                   input += "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                   MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                 }
@@ -388,7 +388,7 @@ public class CommandItemTag implements CommandExecutor
                   nbtStringList.clear();
                   nbtStringList.addAll(Arrays.asList(split));
                   playerInventory.setItemInMainHand(nbtItem.getItem());
-                  Method.updateInventory(player);
+                  ItemStackUtil.updateInventory(player);
                   input = nbtStringList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                   MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                 }
@@ -402,7 +402,7 @@ public class CommandItemTag implements CommandExecutor
                     NBTCompound nbtCompound = nbtItem.addCompound(key);
                     nbtCompound.mergeCompound(nbtContainer);
                     playerInventory.setItemInMainHand(nbtItem.getItem());
-                    Method.updateInventory(player);
+                    ItemStackUtil.updateInventory(player);
                     input = nbtContainer + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                     MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                   }
@@ -432,7 +432,7 @@ public class CommandItemTag implements CommandExecutor
                     }
                   }
                   playerInventory.setItemInMainHand(nbtItem.getItem());
-                  Method.updateInventory(player);
+                  ItemStackUtil.updateInventory(player);
                   input = nbtCompoundList + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로);
                   MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그의 rg255,204;" + type + "&r 값을 rg255,204;" + input + " 설정했습니다");
                 }
@@ -483,7 +483,7 @@ public class CommandItemTag implements CommandExecutor
                 if (success)
                 {
                   playerInventory.setItemInMainHand(nbtItem.getItem());
-                  Method.updateInventory(player);
+                  ItemStackUtil.updateInventory(player);
                   if (!hideOutput)
                   {
                     MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그를 제거했습니다");
@@ -501,7 +501,7 @@ public class CommandItemTag implements CommandExecutor
               }
               NBTAPI.removeKey(nbtItem, key);
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               if (!hideOutput)
               {
                 MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + key + "&r 태그를 제거했습니다");
@@ -515,7 +515,7 @@ public class CommandItemTag implements CommandExecutor
                 NBTContainer nbtContainer = new NBTContainer("{" + input + "}");
                 nbtItem.mergeCompound(nbtContainer);
                 playerInventory.setItemInMainHand(nbtItem.getItem());
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 if (!hideOutput)
                 {
                   MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에 %s 태그 값을 병합했습니다", Constant.THE_COLOR_HEX + input);
@@ -610,7 +610,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + restrictType.toString() + "&r(rg255,204;" + restrictType.getRawTag() + "&r) 태그 값을 추가했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
             }
             case "modify" ->
             {
@@ -659,7 +659,7 @@ public class CommandItemTag implements CommandExecutor
                       MessageUtil.sendMessage(
                               player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 rg255,204;" + restrictType.toString() + "&r(rg255,204;" + restrictType.getRawTag() + "&r) 태그의 HideFromLore 태그 값을 rg255,204;" + bool + "&r으로 수정했습니다");
                     }
-                    Method.updateInventory(player);
+                    ItemStackUtil.updateInventory(player);
                   }
                   else
                   {
@@ -706,7 +706,7 @@ public class CommandItemTag implements CommandExecutor
                                       "&r) 태그의 Permission 태그 값을 rg255,204;" +
                                       (permission.equals("--remove") ? ("&r삭제했습니다") : (permission + "&r으로 수정했습니다")));
                     }
-                    Method.updateInventory(player);
+                    ItemStackUtil.updateInventory(player);
                   }
                   else
                   {
@@ -751,7 +751,7 @@ public class CommandItemTag implements CommandExecutor
                 {
                   MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에서 rg255,204;" + restrictType.toString() + "&r(rg255,204;" + restrictType.getRawTag() + "&r) 태그 값을 제거했습니다");
                 }
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
               }
               else
               {
@@ -817,7 +817,7 @@ public class CommandItemTag implements CommandExecutor
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + customLoresTag.size() + "번째&r 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : (Constant.THE_COLOR_HEX + inputLore + "&r" + MessageUtil.getFinalConsonant(
                         MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 추가했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               break;
             case "remove":
               if (args.length > 3)
@@ -890,7 +890,7 @@ public class CommandItemTag implements CommandExecutor
                     MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 rg255,204;" + (line + 1) + "번째 줄&r의 커스텀 설명을 제거했습니다");
                   }
                 }
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
               }
               else
               {
@@ -941,7 +941,7 @@ public class CommandItemTag implements CommandExecutor
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + inputLoreLine + "번째&r 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : (Constant.THE_COLOR_HEX + inputLore + "&r" + MessageUtil.getFinalConsonant(
                         MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 들여썼습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               break;
             case "set":
               if (args.length < 4)
@@ -984,7 +984,7 @@ public class CommandItemTag implements CommandExecutor
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + inputLoreLine + "번째&r 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : (Constant.THE_COLOR_HEX + inputLore + "&r" + MessageUtil.getFinalConsonant(
                         MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 설정했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               break;
             default:
               MessageUtil.wrongArg(sender, 2, args);
@@ -1046,7 +1046,7 @@ public class CommandItemTag implements CommandExecutor
                         player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + aboveCustomLoresTag.size() + "번째&r 상단 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : (Constant.THE_COLOR_HEX + inputLore + "&r" + MessageUtil.getFinalConsonant(
                                 MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 추가했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               break;
             case "remove":
               if (args.length > 3)
@@ -1119,7 +1119,7 @@ public class CommandItemTag implements CommandExecutor
                     MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 rg255,204;" + (line + 1) + "번째 줄&r의 상단 커스텀 설명을 제거했습니다");
                   }
                 }
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
               }
               else
               {
@@ -1174,7 +1174,7 @@ public class CommandItemTag implements CommandExecutor
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + inputLoreLine + "번째&r 상단 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : (Constant.THE_COLOR_HEX + inputLore + "&r" + MessageUtil.getFinalConsonant(
                         MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 들여썼습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               break;
             case "set":
               if (args.length < 4)
@@ -1216,7 +1216,7 @@ public class CommandItemTag implements CommandExecutor
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + inputLoreLine + "번째&r 상단 커스텀 설명의 줄에 " + (isEmptyLore ? "공백" : (Constant.THE_COLOR_HEX + inputLore + "&r" + MessageUtil.getFinalConsonant(
                         MessageUtil.stripColor(inputLore), ConsonantType.이라) + "는")) + " 설명을 설정했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               break;
             default:
               MessageUtil.wrongArg(sender, 2, args);
@@ -1282,7 +1282,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 " + (extraTagType == ExtraTag.PORTABLE_SHULKER_BOX ? "셜커 상자" : "아이템") + "에 " + extraTagType.getDisplay() + " 태그 값을 추가했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               break;
             case "remove":
               try
@@ -1320,7 +1320,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 " + (extraTagType == ExtraTag.PORTABLE_SHULKER_BOX ? "셜커 상자" : "아이템") + "에서 " + extraTagType.getDisplay() + " 태그 값을 제거했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               break;
             default:
               MessageUtil.wrongArg(sender, 2, args);
@@ -1391,7 +1391,7 @@ public class CommandItemTag implements CommandExecutor
                   duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 0L);
                 }
                 playerInventory.setItemInMainHand(nbtItem.getItem());
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 if (!hideOutput)
                 {
                   MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 커스텀 내구도를 제거했습니다");
@@ -1411,7 +1411,7 @@ public class CommandItemTag implements CommandExecutor
               duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, maxDura);
               duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, chance);
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               if (!hideOutput)
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 커스텀 내구도의 현재 내구도를 rg255,204;" + curDura + "&r, 최대 내구도를 rg255,204;" + maxDura + "&r으로 설정했습니다");
@@ -1456,7 +1456,7 @@ public class CommandItemTag implements CommandExecutor
                   duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, chanceNotToConsumeDura);
                 }
                 playerInventory.setItemInMainHand(nbtItem.getItem());
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 if (!hideOutput)
                 {
                   MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 내구도 감소 무효 확률 태그 값을 제거했습니다");
@@ -1483,7 +1483,7 @@ public class CommandItemTag implements CommandExecutor
               duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, chanceNotToConsumeDura);
 
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               if (!hideOutput)
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 내구도 감소 무효 확률 태그 값을 rg255,204;" + Constant.Sosu15.format(chanceNotToConsumeDura) + "%&r로 설정했습니다");
@@ -1507,7 +1507,7 @@ public class CommandItemTag implements CommandExecutor
             }
             NBTAPI.removeKey(itemTag, CucumberyTag.CUSTOM_ITEM_TYPE_KEY);
             playerInventory.setItemInMainHand(nbtItem.getItem());
-            Method.updateInventory(player);
+            ItemStackUtil.updateInventory(player);
             MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 사용자 지정 아이템 종류 태그 값을 제거했습니다");
           }
           else
@@ -1519,7 +1519,7 @@ public class CommandItemTag implements CommandExecutor
             String customItemType = MessageUtil.listToString(" ", 1, args.length, args);
             itemTag.setString(CucumberyTag.CUSTOM_ITEM_TYPE_KEY, customItemType);
             playerInventory.setItemInMainHand(nbtItem.getItem());
-            Method.updateInventory(player);
+            ItemStackUtil.updateInventory(player);
             if (!hideOutput)
             {
               MessageUtil.sendMessage(
@@ -1685,7 +1685,7 @@ public class CommandItemTag implements CommandExecutor
                   MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 설명 숨김(rg255,204;" + hideFlagType + "&r(rg255,204;" + hideFlagType.getDisplay() + "&r)) 태그 값을 추가했습니다");
                 }
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
             }
             case "remove" ->
             {
@@ -1793,7 +1793,7 @@ public class CommandItemTag implements CommandExecutor
                   MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에서 설명 숨김(rg255,204;" + hideFlagType + "&r(rg255,204;" + hideFlagType.getDisplay() + "&r)) 태그 값을 제거했습니다");
                 }
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
             }
             default ->
             {
@@ -1835,7 +1835,7 @@ public class CommandItemTag implements CommandExecutor
                 {
                   MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 커스텀 희귀도 기본값 태그 값을 제거했습니다");
                 }
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 return true;
               }
               Rarity rarity;
@@ -1863,7 +1863,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 커스텀 희귀도 기본값 태그 값을 rg255,204;" + rarity + "&r으로 설정했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
             }
             case "set" ->
             {
@@ -1880,7 +1880,7 @@ public class CommandItemTag implements CommandExecutor
                 {
                   MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 커스텀 희귀도 태그 값을 제거했습니다");
                 }
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 return true;
               }
               Rarity rarity;
@@ -1908,7 +1908,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 커스텀 희귀도 태그 값을 rg255,204;" + rarity + "&r으로 설정했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
             }
             case "value" ->
             {
@@ -1934,7 +1934,7 @@ public class CommandItemTag implements CommandExecutor
                 {
                   MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 커스텀 희귀도 수치 태그 값을 제거했습니다");
                 }
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 return true;
               }
               if (itemTag == null)
@@ -1951,7 +1951,7 @@ public class CommandItemTag implements CommandExecutor
               {
                 MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 커스텀 희귀도 수치 태그 값을 rg255,204;" + rarityValue + "&r으로 설정했습니다");
               }
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
             }
             default ->
             {
@@ -2339,7 +2339,7 @@ public class CommandItemTag implements CommandExecutor
                                     MessageUtil.getFinalConsonant(inputCommand, ConsonantType.으로) +
                                     " 설정했습니다");
                   }
-                  Method.updateInventory(player);
+                  ItemStackUtil.updateInventory(player);
                   break;
                 default:
                   MessageUtil.wrongArg(sender, 4, args);
@@ -2390,7 +2390,7 @@ public class CommandItemTag implements CommandExecutor
                   }
                   cooldownTag.setString(CucumberyTag.TAG_KEY, inputTag);
                   playerInventory.setItemInMainHand(nbtItem.getItem());
-                  Method.updateInventory(player);
+                  ItemStackUtil.updateInventory(player);
                   if (!hideOutput)
                   {
                     MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템의 " + itemUsageType.getDisplay() + " 대기 시간 태그의 값을 rg255,204;" + inputTag + "&r" + MessageUtil.getFinalConsonant(inputTag, ConsonantType.으로) + " 설정했습니다");
@@ -2456,7 +2456,7 @@ public class CommandItemTag implements CommandExecutor
                     NBTAPI.removeKey(usageTypeTag, CucumberyTag.COOLDOWN_KEY);
                   }
                   playerInventory.setItemInMainHand(nbtItem.getItem());
-                  Method.updateInventory(player);
+                  ItemStackUtil.updateInventory(player);
                   String inputTimeString = Method.timeFormatMilli(inputTime, 3);
                   if (!hideOutput)
                   {
@@ -2576,7 +2576,7 @@ public class CommandItemTag implements CommandExecutor
                     MessageUtil.getFinalConsonant(inputDate, ConsonantType.으로) +
                     " 설정했습니다")));
           }
-          Method.updateInventory(player);
+          ItemStackUtil.updateInventory(player);
         }
         case "tnt" ->
         {
@@ -2813,7 +2813,7 @@ public class CommandItemTag implements CommandExecutor
                     {
                       MessageUtil.info(player, "주로 사용하는 손에 들고 있는 아이템의 커스텀 아이템 태그를 제거했습니다");
                     }
-                    Method.updateInventory(player);
+                    ItemStackUtil.updateInventory(player);
                     return true;
                   }
                   switch (id)
@@ -3191,7 +3191,7 @@ public class CommandItemTag implements CommandExecutor
 
                 NBTAPI.removeKey(foodTag, CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY);
                 playerInventory.setItemInMainHand(nbtItem.getItem());
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 섭취 시 상태 효과 미적용 여부 태그를 제거했습니다");
                 return true;
               }
@@ -3210,7 +3210,7 @@ public class CommandItemTag implements CommandExecutor
               }
               foodTag.setBoolean(CucumberyTag.FOOD_DISABLE_STATUS_EFFECT_KEY, true);
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에 섭취 시 상태 효과 미적용 여부 태그를 추가했습니다");
             }
             case "food-level" ->
@@ -3236,7 +3236,7 @@ public class CommandItemTag implements CommandExecutor
                 }
                 NBTAPI.removeKey(foodTag, CucumberyTag.FOOD_LEVEL_KEY);
                 playerInventory.setItemInMainHand(nbtItem.getItem());
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 음식 포인트 태그를 제거했습니다");
                 return true;
               }
@@ -3264,7 +3264,7 @@ public class CommandItemTag implements CommandExecutor
               }
               foodTag.setInteger(CucumberyTag.FOOD_LEVEL_KEY, input);
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템의 음식 포인트 태그 값을 rg255,204;" + input + "&r으로 설정했습니다");
             }
             case "saturation" ->
@@ -3290,7 +3290,7 @@ public class CommandItemTag implements CommandExecutor
                 }
                 NBTAPI.removeKey(foodTag, CucumberyTag.SATURATION_KEY);
                 playerInventory.setItemInMainHand(nbtItem.getItem());
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 포화도 태그를 제거했습니다");
                 return true;
               }
@@ -3318,7 +3318,7 @@ public class CommandItemTag implements CommandExecutor
               }
               foodTag.setDouble(CucumberyTag.SATURATION_KEY, input);
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템의 포화도 태그 값을 rg255,204;" + Constant.Sosu15.format(input) + "&r으로 설정했습니다");
             }
             case "nourishment" ->
@@ -3338,7 +3338,7 @@ public class CommandItemTag implements CommandExecutor
                 }
                 NBTAPI.removeKey(foodTag, CucumberyTag.NOURISHMENT_KEY);
                 playerInventory.setItemInMainHand(nbtItem.getItem());
-                Method.updateInventory(player);
+                ItemStackUtil.updateInventory(player);
                 MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템에서 든든함 태그를 제거했습니다");
                 return true;
               }
@@ -3353,7 +3353,7 @@ public class CommandItemTag implements CommandExecutor
               }
               foodTag.setString(CucumberyTag.NOURISHMENT_KEY, input);
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               MessageUtil.info(sender, "주로 사용하는 손에 들고 있는 아이템의 든든함 태그 값을 rg255,204;" + input + "&r" + MessageUtil.getFinalConsonant(input, ConsonantType.으로) + " 설정했습니다");
             }
             default ->
@@ -3450,7 +3450,7 @@ public class CommandItemTag implements CommandExecutor
 
               MessageUtil.info(player, "tag ", input, " added");
               player.getInventory().setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
 
 
             }
@@ -3485,7 +3485,7 @@ public class CommandItemTag implements CommandExecutor
               }
               MessageUtil.info(player, "tag ", input, " removed");
               player.getInventory().setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
             }
           }
         }
@@ -3583,7 +3583,7 @@ public class CommandItemTag implements CommandExecutor
               }
               potionListTag.remove(line - 1);
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               MessageUtil.info(sender, ComponentUtil.translate("%s에 있는 %s번째 효과(%s)를 제거했습니다 (남은 효과 개수 : %s개)", item, line, customEffect != null ? customEffect : ComponentUtil.translate("&c잘못된 효과입니다!"), potionListTag.size()));
             }
             case "set" ->
@@ -3693,7 +3693,7 @@ public class CommandItemTag implements CommandExecutor
               nbtCompound.setString(CucumberyTag.CUSTOM_EFFECTS_DISPLAY_TYPE, displayType.toString());
               potionListTag.addCompound(nbtCompound);
               playerInventory.setItemInMainHand(nbtItem.getItem());
-              Method.updateInventory(player);
+              ItemStackUtil.updateInventory(player);
               MessageUtil.info(sender, ComponentUtil.translate("%s에 %s 효과를 추가했습니다 (총 %s개 효과 보유)", nbtItem.getItem(), new CustomEffect(customEffectType, duration, amplifier, displayType), potionListTag.size()));
             }
           }
