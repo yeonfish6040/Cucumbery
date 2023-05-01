@@ -18,6 +18,8 @@ import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.format.TextDecoration.State;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -30,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ItemLore2
 {
@@ -328,7 +331,10 @@ public class ItemLore2
     {
       try
       {
-        ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.valueOf(customRarityFinal).getRarityValue(), false);
+        if (!customRarityFinal.startsWith("_"))
+        {
+          ItemLoreUtil.setItemRarityValue(lore, ItemCategory.Rarity.valueOf(customRarityFinal).getRarityValue(), false);
+        }
       }
       catch (Exception ignored)
       {
@@ -402,8 +408,41 @@ public class ItemLore2
     // 추가 설명으로 인한 아이템의 등급 수치 변경
     long rarity2 = ItemLoreUtil.getItemRarityValue(lore);
     Rarity rarity = Rarity.getRarityFromValue(rarity2);
+    if (customMaterial != null && customMaterial.getRarity().toString().startsWith("_"))
+    {
+      rarity = customMaterial.getRarity();
+    }
+    if (ItemCategory.getItemRarirty(type).toString().startsWith("_"))
+    {
+      rarity = ItemCategory.getItemRarirty(type);
+    }
+    if (customRarityFinal != null && customRarityFinal.startsWith("_"))
+    {
+      try
+      {
+        rarity = Rarity.valueOf(customRarityFinal);
+      }
+      catch (Exception ignored)
+      {
+
+      }
+    }
+    boolean rarityUpgraded = (nbtItem.hasTag("RarityUpgraded") && nbtItem.getType("RarityUpgraded") == NBTType.NBTTagByte && Objects.equals(nbtItem.getBoolean("RarityUpgraded"), true));
+    if (rarityUpgraded)
+    {
+      rarity = rarity.tierUp();
+    }
     String rarityDisplay = rarity.getDisplay();
     Component rarityComponent = ComponentUtil.translate(rarityDisplay);
+    if (rarityUpgraded)
+    {
+      rarityComponent = ComponentUtil.translate("A %s A",
+              rarityComponent.decoration(TextDecoration.OBFUSCATED, State.FALSE))
+              .decoration(TextDecoration.OBFUSCATED, State.TRUE)
+              .decoration(TextDecoration.BOLD, rarityComponent.decoration(TextDecoration.BOLD))
+              .color(rarityComponent.color()
+              );
+    }
     Component itemRarityComponent = ComponentUtil.translate("&7아이템 등급 : %s", rarityComponent);
     lore.set(2, itemRarityComponent);
     itemMeta.lore(lore);

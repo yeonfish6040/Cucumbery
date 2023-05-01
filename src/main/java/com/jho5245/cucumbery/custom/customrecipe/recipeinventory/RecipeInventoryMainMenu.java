@@ -106,8 +106,6 @@ public class RecipeInventoryMainMenu
 
       // buttons
 
-      menu.setItem(44, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b메인 메뉴로", false));
-
       if (maxPage == 1)
       {
         menu.setItem(39, deco1);

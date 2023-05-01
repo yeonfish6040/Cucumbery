@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.commands.no_groups;
 
+import com.destroystokyo.paper.ClientOption;
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
 import com.jho5245.cucumbery.util.no_groups.*;
 
@@ -15,6 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.MainHand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -129,6 +131,18 @@ public class CommandSwingArm implements CucumberyCommandExecutor
                 mob.swingOffHand();
               }
             }
+            else if (livingEntity instanceof Player player)
+            {
+              MainHand mainHand = player.getClientOption(ClientOption.MAIN_HAND);
+              if (mainHand == MainHand.RIGHT)
+              {
+                player.swingOffHand();
+              }
+              else
+              {
+                player.swingMainHand();
+              }
+            }
             else
             {
               livingEntity.swingOffHand();
@@ -145,6 +159,18 @@ public class CommandSwingArm implements CucumberyCommandExecutor
               else
               {
                 mob.swingMainHand();
+              }
+            }
+            else if (livingEntity instanceof Player player)
+            {
+              MainHand mainHand = player.getClientOption(ClientOption.MAIN_HAND);
+              if (mainHand == MainHand.RIGHT)
+              {
+                player.swingMainHand();
+              }
+              else
+              {
+                player.swingOffHand();
               }
             }
             else

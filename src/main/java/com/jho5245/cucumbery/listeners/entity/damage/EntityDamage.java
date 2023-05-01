@@ -16,10 +16,7 @@ import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.
 import com.jho5245.cucumbery.util.itemlore.ItemLore2Attribute;
 import com.jho5245.cucumbery.util.nbt.CucumberyTag;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.MessageUtil;
-import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.no_groups.MythicMobManager;
-import com.jho5245.cucumbery.util.no_groups.NumberHangulConverter;
+import com.jho5245.cucumbery.util.no_groups.*;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
@@ -617,10 +614,12 @@ public class EntityDamage implements Listener
     location.setX(boundingBox.getCenterX());
     location.setY(boundingBox.getMaxY() + offset);
     location.setZ(boundingBox.getCenterZ());
+
+    float sizeModifier = (float) Math.max(1f, (boundingBox.getMaxY() - boundingBox.getMinY()) / 1.5f);
     Component finalDisplay = display;
     if (Cucumbery.using_ProtocolLib)
     {
-      DamageIndicatorProtocolLib.displayDamage(viewSelf, entity, location, finalDisplay);
+      DamageIndicatorProtocolLib.displayDamage(viewSelf, entity, location, finalDisplay, sizeModifier);
     }
     else
     {
@@ -639,7 +638,7 @@ public class EntityDamage implements Listener
         textDisplay.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
         textDisplay.setTextOpacity((byte) -2);
         Transformation transformation = textDisplay.getTransformation();
-        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.2f, 0f), transformation.getLeftRotation(), new Vector3f(1.2f, 1.2f, 1.2f), transformation.getRightRotation());
+        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.2f * sizeModifier, 0f), transformation.getLeftRotation(), new Vector3f(1.2f * sizeModifier, 1.2f * sizeModifier, 1.2f * sizeModifier), transformation.getRightRotation());
         textDisplay.setTransformation(newTransformation);
         textDisplay.addScoreboardTag("damage_indicator");
         if (!viewSelf)
@@ -658,7 +657,7 @@ public class EntityDamage implements Listener
         textDisplay.setInterpolationDelay(-1);
         textDisplay.setInterpolationDuration(10);
         Transformation transformation = textDisplay.getTransformation();
-        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.4f, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
+        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.4f * sizeModifier, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
         textDisplay.setTransformation(newTransformation);
       }, 2L);
 
@@ -668,7 +667,7 @@ public class EntityDamage implements Listener
         textDisplay.setInterpolationDuration(10);
         textDisplay.setTextOpacity((byte) 5);
         Transformation transformation = textDisplay.getTransformation();
-        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.6f, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
+        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.6f * sizeModifier, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
         textDisplay.setTransformation(newTransformation);
       }, 12L);
       CustomEffectManager.addEffect(textDisplay, CustomEffectType.DAMAGE_INDICATOR);

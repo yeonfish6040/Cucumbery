@@ -1186,33 +1186,52 @@ public class PlayerInteract implements Listener
           }
         }
         // 커스텀 제작대 우클릭
-        ItemStack customCraftingTable = BlockPlaceDataConfig.getItem(block.getLocation());
-        if (CustomMaterial.itemStackOf(customCraftingTable) == CustomMaterial.CUSTOM_CRAFTING_TABLE)
+        ItemStack clickedBlcokPlacedItemStack = BlockPlaceDataConfig.getItem(block.getLocation());
+        CustomMaterial clickedBlockPlacedItemStackMaterial = CustomMaterial.itemStackOf(clickedBlcokPlacedItemStack);
+        if (clickedBlockPlacedItemStackMaterial != null)
         {
-          if (player.isSneaking())
+          switch (clickedBlockPlacedItemStackMaterial)
           {
-            return;
+            case CUSTOM_CRAFTING_TABLE -> {
+              if (player.isSneaking())
+              {
+                return;
+              }
+              event.setCancelled(true);
+              if (event.getHand() != EquipmentSlot.HAND)
+              {
+                return;
+              }
+              if (Variable.customRecipes.isEmpty())
+              {
+                MessageUtil.sendError(player, "제작 가능한 커스텀 레시피가 하나도 없습니다.");
+                return;
+              }
+              if (UserData.LISTEN_CONTAINER.getBoolean(player))
+              {
+                SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, SoundCategory.PLAYERS, 1F, 2F);
+              }
+              if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
+              {
+                player.swingMainHand();
+              }
+              RecipeInventoryMainMenu.openRecipeInventory(player, 1, true);
+              return;
+            }
+            case I_WONT_LET_YOU_GO_BLOCK -> {
+              event.setCancelled(true);
+              if (event.getHand() != EquipmentSlot.HAND)
+              {
+                return;
+              }
+              if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
+              {
+                player.swingMainHand();
+              }
+              player.playSound(player.getLocation(), "custom_i_wont_let_you_go", SoundCategory.BLOCKS, 1f, 1f);
+              return;
+            }
           }
-          event.setCancelled(true);
-          if (event.getHand() != EquipmentSlot.HAND)
-          {
-            return;
-          }
-          if (Variable.customRecipes.isEmpty())
-          {
-            MessageUtil.sendError(player, "제작 가능한 커스텀 레시피가 하나도 없습니다.");
-            return;
-          }
-          if (UserData.LISTEN_CONTAINER.getBoolean(player))
-          {
-            SoundPlay.playSound(player, Sound.ENTITY_HORSE_ARMOR, SoundCategory.PLAYERS, 1F, 2F);
-          }
-          if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
-          {
-            player.swingMainHand();
-          }
-          RecipeInventoryMainMenu.openRecipeInventory(player, 1, true);
-          return;
         }
       }
     }

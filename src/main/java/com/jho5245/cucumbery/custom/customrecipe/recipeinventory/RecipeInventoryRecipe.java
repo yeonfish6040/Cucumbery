@@ -176,7 +176,7 @@ public class RecipeInventoryRecipe
 
         // button
 
-        menu.setItem(45, CreateItemStack.create(Material.BIRCH_BOAT, 1, "&b메인 메뉴로", false));
+        menu.setItem(45, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b레시피 목록 메뉴로", false));
 
         menu.setItem(53, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b레시피 목록 메뉴로", false));
 

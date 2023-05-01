@@ -2338,10 +2338,6 @@ public class InventoryClick implements Listener
         {
           player.openInventory(lastInventory);
         }
-        if (slot == 44)
-        {
-          GUIManager.openGUI(player, GUIType.MAIN_MENU);
-        }
         int page = Integer.parseInt(invName.split(Method.format("page:", "§"))[1].replace("§", ""));
         if (slot == 39 && type == Material.SPRUCE_BOAT)
         {
@@ -2373,16 +2369,12 @@ public class InventoryClick implements Listener
       }
       else if (invName.contains(Constant.CUSTOM_RECIPE_MENU))
       {
-        if (slot == 36)
-        {
-          GUIManager.openGUI(player, GUIType.MAIN_MENU);
-        }
         String categorySplitter = Method.format("category:", "§");
         String mainSplitter = Method.format("mainpage:", "§");
         int page = Integer.parseInt(invName.split(Method.format("page:", "§"))[1].split(Method.format("category:", "§"))[0].replace("§", ""));
         String category = invName.split(categorySplitter)[1].split(mainSplitter)[0].replace("§", "");
         int mainPage = Integer.parseInt(invName.split(mainSplitter)[1].replace("§", ""));
-        if (slot == 44)
+        if (slot == 36 || slot == 44)
         {
           RecipeInventoryMainMenu.openRecipeInventory(player, mainPage, true);
         }
@@ -2540,17 +2532,13 @@ public class InventoryClick implements Listener
 //          MessageUtil.sendWarn(player, "좀 천천히 누르삼!");
           return;
         }
-        if (slot == 45)
-        {
-          GUIManager.openGUI(player, GUIType.MAIN_MENU);
-        }
         String category = invName.split(Method.format("category:", "§"))[1].split(Constant.CUSTOM_RECIPE_CRAFTING_MENU)[0].replace("§", "");
         String mainSplitter = Method.format("mainpage:", "§");
         String splitter = Method.format("categorypage:", "§");
         String recipe = invName.split(Method.format("recipe:", "§"))[1].split(mainSplitter)[0].replace("§", "");
         int mainPage = Integer.parseInt(invName.split(mainSplitter)[1].split(splitter)[0].replace("§", ""));
         int categoryPage = Integer.parseInt(invName.split(splitter)[1].replace("§", ""));
-        if (slot == 53)
+        if (slot == 45 || slot == 53)
         {
           RecipeInventoryMainMenu.openRecipeInventory(player, mainPage, true);
         }

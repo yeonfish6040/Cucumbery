@@ -254,9 +254,12 @@ public class BlockBreak implements Listener
         case WHEAT, CARROTS, POTATOES, SUGAR_CANE, BEETROOTS, NETHER_WART, SWEET_BERRY_BUSH, RED_MUSHROOM, BROWN_MUSHROOM ->
         {
           ItemStack clone = itemStack.clone();
-          ItemMeta cloneMeta = clone.getItemMeta();
-          cloneMeta.removeEnchant(Enchantment.LOOT_BONUS_BLOCKS);
-          clone.setItemMeta(cloneMeta);
+          if (clone.hasItemMeta())
+          {
+            ItemMeta cloneMeta = clone.getItemMeta();
+            cloneMeta.removeEnchant(Enchantment.LOOT_BONUS_BLOCKS);
+            clone.setItemMeta(cloneMeta);
+          }
           int intSide = (int) farmingFortune;
           float floatSide = farmingFortune - intSide;
           if (Math.random() < floatSide)

@@ -158,7 +158,7 @@ public class RecipeInventoryCategory
         menu.setItem(43, deco1);
         // buttons
 
-        menu.setItem(36, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b메인 메뉴로", false));
+        menu.setItem(36, CreateItemStack.create(Material.BIRCH_BOAT, 1, "§b레시피 목록 메뉴로", false));
 
         if (maxPage == 1)
         {

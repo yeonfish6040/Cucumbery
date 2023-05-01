@@ -28,7 +28,7 @@ import java.util.UUID;
 
 public class DamageIndicatorProtocolLib
 {
-  protected static void displayDamage(boolean viewSelf, @NotNull Entity entity, @NotNull Location location, @NotNull Component finalDisplay)
+  protected static void displayDamage(boolean viewSelf, @NotNull Entity entity, @NotNull Location location, @NotNull Component finalDisplay, float sizeModifier)
   {
     int entityId = Method.random(1, Integer.MAX_VALUE);
     ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
@@ -91,8 +91,8 @@ public class DamageIndicatorProtocolLib
       StructureModifier<List<WrappedDataValue>> watchableAccessor = edit.getDataValueCollectionModifier();
       WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromJson(ComponentUtil.serializeAsJson(finalDisplay));
       List<WrappedDataValue> values = Lists.newArrayList(
-              new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.2f, 0f)),
-              new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(1.2f, 1.2f, 1.2f)),
+              new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.2f * sizeModifier, 0f)),
+              new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(1.2f * sizeModifier, 1.2f * sizeModifier, 1.2f * sizeModifier)),
               new WrappedDataValue(14, Registry.get(Byte.class), (byte) 3),
               new WrappedDataValue(15, Registry.get(Integer.class), (15 << 4 | 15 << 20)),
               new WrappedDataValue(16, Registry.get(Float.class), 2f),
@@ -113,7 +113,7 @@ public class DamageIndicatorProtocolLib
         List<WrappedDataValue> values2 = Lists.newArrayList(
                 new WrappedDataValue(8, Registry.get(Integer.class), -1),
                 new WrappedDataValue(9, Registry.get(Integer.class), 10),
-                new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.4f, 0f))
+                new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.4f * sizeModifier, 0f))
         );
         watchableAccessor2.write(0, values2);
         edit2.getIntegers().write(0, entityId);
@@ -127,7 +127,7 @@ public class DamageIndicatorProtocolLib
         List<WrappedDataValue> values2 = Lists.newArrayList(
                 new WrappedDataValue(8, Registry.get(Integer.class), -1),
                 new WrappedDataValue(9, Registry.get(Integer.class), 10),
-                new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.6f, 0f)),
+                new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.6f * sizeModifier, 0f)),
                 new WrappedDataValue(25, Registry.get(Byte.class), (byte) 5)
         );
         watchableAccessor2.write(0, values2);

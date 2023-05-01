@@ -239,8 +239,7 @@ public class ItemCategory
                       AXOLOTL_BUCKET,
                       SPYGLASS,
                       SCULK_SENSOR,
-                      SCULK_CATALYST
-                      -> Rarity.RARE;
+                      SCULK_CATALYST -> Rarity.RARE;
               case PURPUR_SLAB,
                       PURPUR_BLOCK,
                       PURPUR_PILLAR,
@@ -291,8 +290,7 @@ public class ItemCategory
                       RABBIT_FOOT,
                       PHANTOM_MEMBRANE,
                       DEEPSLATE_EMERALD_ORE,
-                      DEEPSLATE_DIAMOND_ORE
-                      -> Rarity.EPIC;
+                      DEEPSLATE_DIAMOND_ORE -> Rarity.EPIC;
               case SPONGE,
                       WET_SPONGE,
                       WITHER_ROSE,
@@ -391,8 +389,7 @@ public class ItemCategory
                       GOAT_SPAWN_EGG,
                       MUSIC_DISC_OTHERSIDE,
                       GOAT_HORN,
-                      ECHO_SHARD
-                      -> Rarity.ELITE;
+                      ECHO_SHARD -> Rarity.ELITE;
               case BEDROCK,
                       NETHERITE_BLOCK,
                       ANCIENT_DEBRIS,
@@ -442,7 +439,6 @@ public class ItemCategory
                       NETHERITE_LEGGINGS,
                       NETHERITE_BOOTS,
                       TOTEM_OF_UNDYING,
-                      BARRIER,
                       SPAWNER,
                       BUDDING_AMETHYST,
                       REINFORCED_DEEPSLATE,
@@ -451,12 +447,12 @@ public class ItemCategory
                       VERDANT_FROGLIGHT,
                       RECOVERY_COMPASS,
                       DISC_FRAGMENT_5,
-                      MUSIC_DISC_5
-                      -> Rarity.UNIQUE;
+                      MUSIC_DISC_5 -> Rarity.UNIQUE;
               case DRAGON_HEAD,
                       ELYTRA,
                       BEACON,
-                      DRAGON_EGG,
+                      DRAGON_EGG -> Rarity.EXCELLENT;
+              case BARRIER,
                       COMMAND_BLOCK,
                       CHAIN_COMMAND_BLOCK,
                       REPEATING_COMMAND_BLOCK,
@@ -465,9 +461,10 @@ public class ItemCategory
                       STRUCTURE_BLOCK,
                       STRUCTURE_VOID,
                       JIGSAW,
-                      LIGHT-> Rarity.EXCELLENT;
-              case SCULK_SHRIEKER
-                      -> Rarity.JUNK;
+                      LIGHT,
+                      ENDER_DRAGON_SPAWN_EGG,
+                      WITHER_SPAWN_EGG -> Rarity._ADMIN;
+              case SCULK_SHRIEKER -> Rarity.JUNK;
               default -> Rarity.NORMAL;
             };
   }
@@ -510,7 +507,18 @@ public class ItemCategory
             , Cucumbery.config.getString("item-rarity-value.legendary.name")),
     ARTIFACT(7
             , Cucumbery.config.getLong("item-rarity-value.artifact.value")
-            , Cucumbery.config.getString("item-rarity-value.artifact.name"));
+            , Cucumbery.config.getString("item-rarity-value.artifact.name")),
+
+    _COMMON(10, 0, "&f&lCOMMON"),
+    _UNCOMMON(11, 0, "&a&lUNCOMMON"),
+    _RARE(12, 0, "&9&lRARE"),
+    _EPIC(13, 0, "&5&lEPIC"),
+    _LEGENDARY(14, 0, "&6&lLEGENDARY"),
+    _MYTHIC(15, 0, "&d&lMYTHIC"),
+    _DIVINE(16, 0, "&b&lDIVINE"),
+    _SPECIAL(17, 0, "&c&lSPECIAL"),
+    _VERY_SPECIAL(18, 0, "&c&lVERY SPECIAL"),
+    _ADMIN(999, 0, "&4[관리자]");;
 
     private final int rarityNumber;
 
@@ -588,6 +596,19 @@ public class ItemCategory
       }
     }
 
+    public Rarity tierUp()
+    {
+      int number = rarityNumber + 1;
+      for (Rarity rarity : Rarity.values())
+      {
+        if (rarity.rarityNumber == number)
+        {
+          return rarity;
+        }
+      }
+      return this;
+    }
+
     public String colorString()
     {
       return switch (this)
@@ -601,6 +622,15 @@ public class ItemCategory
                 case EXCELLENT -> "rgb157,81,245;";
                 case LEGENDARY -> "rg225,255;";
                 case ARTIFACT -> "rgb244,73,120;";
+                case _COMMON -> "&f";
+                case _UNCOMMON -> "&a";
+                case _RARE -> "&9";
+                case _EPIC -> "&5";
+                case _LEGENDARY -> "&6";
+                case _MYTHIC -> "&d";
+                case _DIVINE -> "&b";
+                case _SPECIAL, _VERY_SPECIAL -> "&c";
+                case _ADMIN -> "&4";
               };
     }
   }

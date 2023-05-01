@@ -109,11 +109,30 @@ public class ItemLoreCustomItem
           restrictionTag.addCompound(nbtCompound);
         }
       }
+      if (displayMaterial == Material.PLAYER_HEAD)
+      {
+        switch (customMaterial)
+        {
+          default -> {
+            if (!NBTAPI.isRestricted(itemStack, RestrictionType.NO_EQUIP))
+            {
+              nbtCompound.setString(CucumberyTag.VALUE_KEY, RestrictionType.NO_EQUIP.toString());
+              nbtCompound.setBoolean(CucumberyTag.ITEM_USAGE_RESTRICTIONS_HIDE_FROM_LORE_KEY, true);
+              restrictionTag.addCompound(nbtCompound);
+            }
+          }
+          case DOEHAERIM_BABO, BAMIL_PABO -> {
+
+          }
+        }
+      }
       if (ItemStackUtil.isPlacable(displayMaterial))
       {
         switch (customMaterial)
         {
-          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE, BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT, WNYNYA_ORE, REDSTONE_BLOCK_INSTA_BREAK, CUSTOM_CRAFTING_TABLE ->
+          case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE,
+                  BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT, WNYNYA_ORE, REDSTONE_BLOCK_INSTA_BREAK,
+                  CUSTOM_CRAFTING_TABLE, BLUE_NUMBER_BLOCK, I_WONT_LET_YOU_GO_BLOCK ->
           {
             if (!NBTAPI.arrayContainsValue(extraTags, ExtraTag.PRESERVE_BLOCK_NBT))
             {
@@ -212,15 +231,6 @@ public class ItemLoreCustomItem
       }
       switch (customMaterial)
       {
-        case WNYNYA_ORE ->
-        {
-          if (!NBTAPI.isRestricted(itemStack, RestrictionType.NO_EQUIP))
-          {
-            nbtCompound.setString(CucumberyTag.VALUE_KEY, RestrictionType.NO_EQUIP.toString());
-            nbtCompound.setBoolean(CucumberyTag.ITEM_USAGE_RESTRICTIONS_HIDE_FROM_LORE_KEY, true);
-            restrictionTag.addCompound(nbtCompound);
-          }
-        }
         case TODWOT_PICKAXE ->
         {
           if (!NBTAPI.isRestricted(itemStack, RestrictionType.NO_ANVIL_ENCHANTED_BOOK_ENCHANT))
@@ -272,21 +282,21 @@ public class ItemLoreCustomItem
           NBTCompound nbtCompound = nbtItem.addCompound("displays");
           nbtCompound.setString("type", "player_heads");
           NBTList<String> urls = nbtCompound.getStringList("value");
-          if (urls.isEmpty())
+          urls.clear();
           {
-            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjg5MmRmNjUxY2M3YWExYjJhMjliMGRiZGE0OWNlNGZhYWU5ZmQ0OTI5MjYxMjc1MWFhOTk3ZWJmMGRjM2RhYyJ9fX0=");
-            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2ViMWNhNmYzNGQwNGEyYmY3Mzc5NTk0YTRjNjFhNDhmMGIyMDUzOTQ3YjM2NmNjMTQ5NDcwODZmMzA5ZjMxNSJ9fX0=");
-            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmIwOWE3ZjliOWRmNDJjZjg4MWE3MWQyM2JiOTI5MzhlMzJiYTY4ZTFlOGRhNWEyMjY3OGVjOGEwMjQ0OTdjMiJ9fX0=");
-            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc3MWQ1OGJjZDYwYTU2YWMwYmJmMzA2YWNiOGVlZjM5OTMwOGQxZWU5ZjBiYzQ0NGI5MWNkOGNmYTU0Mzk3In19fQ==");
-            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDg4YWM5NGEyMTk3NWJlYTllMmU0M2VmNjcwNTY2YjA0NjI5MTY0ZjE3MWYyYTA0MWU0NzYyNzBlMGU2YTVlZCJ9fX0=");
+            urls.add("b892df651cc7aa1b2a29b0dbda49ce4faae9fd49292612751aa997ebf0dc3dac");
+            urls.add("7eb1ca6f34d04a2bf7379594a4c61a48f0b2053947b366cc14947086f309f315");
+            urls.add("6b09a7f9b9df42cf881a71d23bb92938e32ba68e1e8da5a22678ec8a024497c2");
+            urls.add("2771d58bcd60a56ac0bbf306acb8eef399308d1ee9f0bc444b91cd8cfa54397");
+            urls.add("d88ac94a21975bea9e2e43ef670566b04629164f171f2a041e476270e0e6a5ed");
             urls.add("ff176fd84f05c0b78a85d744fdae5279e3d818489394c215d357cd3b7a1a9757");
-            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzZiYWQ1MGZlOTc1N2VkZDJjZTI4MjNiM2FmMjZkMWY1OWM5ZDdlYTMxMjM4YWFjOTIzNzRmYWRhMjQ5NGVjMSJ9fX0=");
-            urls.add("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWEyNjQzNjQ3YzNmMjZmOTRjNjJkZDJhZTIwY2ZkMjRiYTNmODIzNmY4NGQ2NTYzNzczZmY1ZThhNjQ3MDhjMSJ9fX0=");
+            urls.add("76bad50fe9757edd2ce2823b3af26d1f59c9d7ea31238aac92374fada2494ec1");
+            urls.add("1a2643647c3f26f94c62dd2ae20cfd24ba3f8236f84d6563773ff5e8a64708c1");
           }
         }
         case CUSTOM_CRAFTING_TABLE ->
         {
-          nbtItem.setString("change_material", Material.BROWN_STAINED_GLASS.toString());
+          nbtItem.setString("change_material", Material.CYAN_STAINED_GLASS.toString());
           nbtItem.setFloat("BlockHardness", MiningManager.getBlockHardness(Material.CRAFTING_TABLE) * 1.5f);
           nbtItem.setString("BreakSound", Sound.BLOCK_WOOD_BREAK.toString());
           nbtItem.setString("BreakParticle", "block:crafting_table[]");
@@ -294,17 +304,60 @@ public class ItemLoreCustomItem
           NBTCompound nbtCompound = nbtItem.addCompound("displays");
           nbtCompound.setString("type", "player_heads");
           NBTList<String> urls = nbtCompound.getStringList("value");
-          if (urls.isEmpty())
+          urls.clear();
           {
-            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-
-            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-            urls.add("4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+            urls.add("f7d74d5c72a7119d53e050a21756ec723f6660f3ad7c35794702025dc151cd9b");
+            urls.add("e3485d7a84b628fc42b216e1bc1dc46a36674dd99a69e1c5ff1a451597e54382");
+            urls.add("311592233e82d30240c06765b54565f054fc95d1d2003d54ba8affa7a7dcdba1");
+            urls.add("d2cd87ffc98407333910d35ae4c88e6546e1bcd749246e91ddbe4858fd8027f1");
+            urls.add("37b1588bf10797d1ee806960a1b1640f89f51d874d39a2f8531436e1ecb7e891");
+            urls.add("dcaa590be32a4e867baf14eda6f90fcffdc89aaf12bdc95f27dfe87d9ea3b2e1");
+            urls.add("a0ec4fde0b18686d54ae89ff33b19be335ddb7dc9abea8c41e8deebb5792bfaf");
+            urls.add("8922865ba09c632c3987557826f6f41ffab28ac52c59d7d34482ed88a28c070f");
+          }
+        }
+        case BLUE_NUMBER_BLOCK ->
+        {
+          nbtItem.setString("change_material", Material.BLUE_STAINED_GLASS.toString());
+          nbtItem.setString("BreakParticle", "block:blue_concrete[]");
+          nbtItem.setInteger("BlockTier", 1);
+          nbtItem.setFloat("BlockHardness", 1000f);
+          nbtItem.setString("BreakSound", Sound.BLOCK_STONE_BREAK.toString());
+          NBTCompound nbtCompound = nbtItem.addCompound("displays");
+          nbtCompound.setString("type", "player_heads");
+          NBTList<String> urls = nbtCompound.getStringList("value");
+          urls.clear();
+          {
+            urls.add("2be97ce60d48e290280fb4d353ddeaae9579ef4b931dc0360a3f3af549f2f3b9");
+            urls.add("80e3e6c8db57074e04149778f0ef0b3d5a304c38bf71161cb83a2268541c772a");
+            urls.add("a6782535a73e6ae00503de896ce516ff690ab98e51edefcb1cf241dd4b8740fb");
+            urls.add("2ed972f0262708e8d4fb553828a3a1ee5e9e532edd29724d7fe39a6bc7753fb");
+            urls.add("f3c3fc814133b878a04df25f5310575bb041d507640cb8171efa836296b2d96b");
+            urls.add("963f0dcb3e50be5570ea3c3a3e7e419e434ae08d980450aa32d919262e5e9dfa");
+            urls.add("840fbfecfb7a1b2cbbe5137c8549324679d7e8bb09a4fb42433daaf2baee4af1");
+            urls.add("275430d2235b9015d8ab7d45774f474c203558b6771646985a1e0b3c58e001dd");
+          }
+        }
+        case I_WONT_LET_YOU_GO_BLOCK ->
+        {
+          nbtItem.setString("change_material", Material.ORANGE_STAINED_GLASS.toString());
+          nbtItem.setString("BreakParticle", "block:orange_concrete[]");
+          nbtItem.setFloat("BlockHardness", 100f);
+          nbtItem.setString("BreakSound", "custom_i_wont_let_you_go");
+          nbtItem.setFloat("BreakSoundPitch", 1f);
+          NBTCompound nbtCompound = nbtItem.addCompound("displays");
+          nbtCompound.setString("type", "player_heads");
+          NBTList<String> urls = nbtCompound.getStringList("value");
+          urls.clear();
+          {
+            urls.add("be70633bdac7400250e66db44cb62b84047ec868ab0d491bcba87fb0462a102");
+            urls.add("94906b0af0213ab0df9ef40c601081a656474d28bc219e122308f9c7fa0a6c81");
+            urls.add("a1daa2d84a59ddebdfc7810d0880fc3a35ed62ad252ce2f9378413e77312378b");
+            urls.add("f69bf74d568371d8f7e6ef58b916d3ca39f0d355c57c0d2c6572dec56e808b5c");
+            urls.add("951aa50ad117bef22f37e16bb643b83dca01c167ba848f03ee1889bc149c4651");
+            urls.add("bb692fb4576fb86c64dc34451c1b32593dda586b7a2ce5ca5227aed5de0e73b7");
+            urls.add("d8effc2d7d13cc97ca1751098efe705d091b137a2e01f04c07780bad16a062dc");
+            urls.add("75a6c86c8b652ab5ed8cd107eb6a7bf1e66f8b3a354ed31dd44d0bcbb32bcbe9");
           }
         }
         case TEST_PICKAXE ->
@@ -690,12 +743,6 @@ public class ItemLoreCustomItem
         case TNT_SUPERIOR ->
         {
           nbtItem.setFloat("ExplodePower", 10f);
-          NBTCompound nbtCompound = nbtItem.addCompound("displays");
-          nbtCompound.setString("type", "item");
-          nbtCompound.setString("value", "tnt");
-          NBTCompound brightness = nbtCompound.addCompound("brightness");
-          brightness.setInteger("sky", 15);
-          brightness.setInteger("block", 15);
         }
         case TNT_DRAIN ->
         {
@@ -1125,14 +1172,18 @@ public class ItemLoreCustomItem
       {
         switch (customMaterial)
         {
-          case ENCHANTED_TITANIUM -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/3dcc0ec9873f4f8d407ba0a0f983e257787772eaf8784e226a61c7f727ac9e26");
-          case MITHRIL_REFINED -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/35a7663300619bb6a156d76351ac05f7b3cafeac31e2ff04c55cc9f236327832");
-          case TITANIUM_REFINED -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/704baabf7ef854825aae1992e4a75ff7286ed1654d8f1a08952e7b8669cf692d");
-          case PORTABLE_CRAFTING_TABLE -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
-          case PORTABLE_ENDER_CHEST -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067");
-          case FROG_HELMET -> ItemStackUtil.setTexture(skullMeta, "https://textures.minecraft.net/texture/5710f6f91fafea57278df853131b775f2c2d324a6274bee40d776b16cb5d60b6");
-          case MINDAS_HELMET -> ItemStackUtil.setTexture(skullMeta, "http://textures.minecraft.net/texture/316fc913e6ab9b6911003de60c797bad3fbeb80eb73d51afb6928de9c9eedac3");
-          case WNYNYA_ORE -> ItemStackUtil.setTexture(skullMeta, "http://textures.minecraft.net/texture/3fff5379e980aca266d7d1a3a4939ecafd42e2028d436ffa41ae96b076937d09");
+          case ENCHANTED_TITANIUM -> ItemStackUtil.setTexture(skullMeta, "3dcc0ec9873f4f8d407ba0a0f983e257787772eaf8784e226a61c7f727ac9e26");
+          case MITHRIL_REFINED -> ItemStackUtil.setTexture(skullMeta, "35a7663300619bb6a156d76351ac05f7b3cafeac31e2ff04c55cc9f236327832");
+          case TITANIUM_REFINED -> ItemStackUtil.setTexture(skullMeta, "704baabf7ef854825aae1992e4a75ff7286ed1654d8f1a08952e7b8669cf692d");
+          case PORTABLE_CRAFTING_TABLE -> ItemStackUtil.setTexture(skullMeta, "4c36045208f9b5ddcf8c4433e424b1ca17b94f6b96202fb1e5270ee8d53881b1");
+          case PORTABLE_ENDER_CHEST -> ItemStackUtil.setTexture(skullMeta, "a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067");
+          case FROG_HELMET -> ItemStackUtil.setTexture(skullMeta, "5710f6f91fafea57278df853131b775f2c2d324a6274bee40d776b16cb5d60b6");
+          case MINDAS_HELMET -> ItemStackUtil.setTexture(skullMeta, "316fc913e6ab9b6911003de60c797bad3fbeb80eb73d51afb6928de9c9eedac3");
+          case WNYNYA_ORE -> ItemStackUtil.setTexture(skullMeta, "3fff5379e980aca266d7d1a3a4939ecafd42e2028d436ffa41ae96b076937d09");
+          case CUSTOM_CRAFTING_TABLE -> ItemStackUtil.setTexture(skullMeta, "80a4334f6a61e40c0c63deb665fa7b581e6eb259f7a3207ced7a1ff8bdc8a9f9");
+          case TIGHTLY_TIED_HAY_BLOCK -> ItemStackUtil.setTexture(skullMeta, "f7c33cd0c14ba830da149907f7a6aae835b6a35aea01e0ce073fb3c59cc46326");
+          case BLUE_NUMBER_BLOCK -> ItemStackUtil.setTexture(skullMeta, "786eddd98d12a9b3768919e22c258c2833b3347b5b15e1a8b9669abde8652a6c");
+          case I_WONT_LET_YOU_GO_BLOCK -> ItemStackUtil.setTexture(skullMeta, "4e68ed81ce08c1b5006ae041dc91c7b59fe1f698c2e575c60c7e5b25d6434484");
         }
       }
     }

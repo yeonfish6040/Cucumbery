@@ -19,8 +19,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum CustomMaterial implements Translatable
 {
-  CUSTOM_CRAFTING_TABLE(Material.CRAFTING_TABLE, "&ikey:block.cucumbery.custom_crafting_table|커스텀 제작대", Rarity.RARE, "itemGroup.functional"),
-  CUSTOM_CRAFTING_TABLE_PORTABLE(Material.CRAFTING_TABLE, "&ikey:block.cucumbery.custom_crafting_table_portable|휴대용 커스텀 제작대", Rarity.RARE, CreativeCategory.TOOLS),
+  I_WONT_LET_YOU_GO_BLOCK(Material.PLAYER_HEAD, "&ikey:block.cucumbery.i_wont_let_you_go_block|워어 아워 래 유 블록", Rarity.RARE, "key:" + CreativeCategory.DECORATIONS + "|치장 아이템"),
+  BLUE_NUMBER_BLOCK(Material.PLAYER_HEAD, "&ikey:block.cucumbery.blue_number_block|파란 숫자 블록", Rarity._ADMIN, "key:" + CreativeCategory.DECORATIONS + "|치장 아이템"),
+  TIGHTLY_TIED_HAY_BLOCK(Material.PLAYER_HEAD, "&ikey:item.cucumbery.tightly_tied_hay_block|꽉 묶은 건초 더미", Rarity.ELITE),
   AMBER(Material.ORANGE_DYE, "&ikey:item.cucumbery.amber|호박", Rarity.UNIQUE),
   ARROW_CRIT(Material.ARROW, "&ikey:item.cucumbery.arrow_crit|치명적인 화살", Rarity.RARE, CreativeCategory.COMBAT),
   ARROW_EXPLOSIVE(Material.ARROW, "&ikey:item.cucumbery.arrow_explosive|폭발성 화살", Rarity.RARE, CreativeCategory.COMBAT),
@@ -29,47 +30,47 @@ public enum CustomMaterial implements Translatable
   ARROW_INFINITE(Material.ARROW, "&ikey:item.cucumbery.arrow_infinite|무한의 화살", Rarity.ELITE, CreativeCategory.COMBAT),
   ARROW_MOUNT(Material.ARROW, "&ikey:item.cucumbery.arrow_mount|라이딩 화살", Rarity.RARE, CreativeCategory.COMBAT),
   ARROW_MOUNT_DISPOSAL(Material.ARROW, "&ikey:item.cucumbery.arrow_mount_disposal|라이딩 화살 (1회용)", Rarity.RARE, CreativeCategory.COMBAT),
-
   ARROW_MOUNT_INFINITE(Material.ARROW, "&ikey:item.cucumbery.arrow_mount_infinite|라이딩 화살 (무제한)", Rarity.RARE, CreativeCategory.COMBAT),
   BAD_APPLE(Material.APPLE, "&ikey:item.cucumbery.bad_apple|나쁜 사과", "itemGroup.foodAndDrink"),
+
   BAD_APPLE_EXPIRE_1D(Material.APPLE, "&ikey:item.cucumbery.bad_apple|나쁜 사과", "itemGroup.foodAndDrink"),
   BAD_APPLE_EXPIRE_1D_UNTRADEABLE(Material.APPLE, "&ikey:item.cucumbery.bad_apple|나쁜 사과", "itemGroup.foodAndDrink"),
   BAD_APPLE_EXPIRE_7D(Material.APPLE, "&ikey:item.cucumbery.bad_apple|나쁜 사과", "itemGroup.foodAndDrink"),
-
   BAD_APPLE_EXPIRE_7D_UNTRADEABLE(Material.APPLE, "&ikey:item.cucumbery.bad_apple_expire_7d_untradeable|나쁜 사과", "itemGroup.foodAndDrink"),
   BAD_APPLE_UNTRADEABLE(Material.APPLE, "&ikey:item.cucumbery.bad_apple_untradeable|나쁜 사과", "itemGroup.foodAndDrink"),
+
   BAMIL_PABO(Material.PLAYER_HEAD, "&ikey:block.cucumbery.bamil_pabo|머밀의 바리", Rarity.ARTIFACT, "itemGroup.functional"),
   BEACON_DECORATIVE(Material.BEACON, "&ikey:block.cucumbery.beacon_decorative|장식용 신호기", Rarity.EPIC, "itemGroup.functional"),
   BEACON_HAT(Material.BEACON, "&ikey:item.cucumbery.beacon_hat|신호기 모자", Rarity.EPIC, "key:" + CreativeCategory.DECORATIONS + "|치장 아이템"),
-
   BEACON_HAT_EXPIRE_1D(Material.BEACON, "&ikey:item.cucumbery.beacon_hat|신호기 모자", Rarity.EPIC, "key:" + CreativeCategory.DECORATIONS + "|치장 아이템"),
   BEACON_HAT_EXPIRE_1D_UNTRADEABLE(Material.BEACON, "&ikey:item.cucumbery.beacon_hat|신호기 모자", Rarity.EPIC, "key:" + CreativeCategory.DECORATIONS + "|치장 아이템"),
+
   BEACON_HAT_EXPIRE_7D(Material.BEACON, "&ikey:item.cucumbery.beacon_hat|신호기 모자", Rarity.EPIC, "key:" + CreativeCategory.DECORATIONS + "|치장 아이템"),
   BEACON_HAT_EXPIRE_7D_UNTRADEABLE(Material.BEACON, "&ikey:item.cucumbery.beacon_hat|신호기 모자", Rarity.EPIC, "key:" + CreativeCategory.DECORATIONS + "|치장 아이템"),
   BEACON_HAT_UNTRADEABLE(Material.BEACON, "&ikey:item.cucumbery.beacon_hat|신호기 모자", Rarity.EPIC, "key:" + CreativeCategory.DECORATIONS + "|치장 아이템"),
-
   BOO(Material.SCUTE, "&bkey:item.cucumbery.boo|부우"),
   BOO_HUNGRY(Material.SCUTE, "&bkey:item.cucumbery.boo_hungry|배고프부우.."),
+
   BOW_CRIT(Material.BOW, "&ikey:item.cucumbery.bow_crit|치명적인 활", Rarity.RARE, CreativeCategory.COMBAT),
   BOW_ENDER_PEARL(Material.BOW, "&ikey:item.cucumbery.bow_ender_pearl|엔더 진주 활", Rarity.RARE, CreativeCategory.COMBAT),
   BOW_EXPLOSIVE(Material.BOW, "&ikey:item.cucumbery.bow_explosive|폭발성 활", Rarity.RARE, CreativeCategory.COMBAT),
-
   BOW_EXPLOSIVE_DESTRUCTION(Material.BOW, "&ikey:item.cucumbery.bow_explosive_destruction|파괴형 폭발성 활", Rarity.RARE, CreativeCategory.COMBAT),
   BOW_FLAME(Material.BOW, "&ikey:item.cucumbery.bow_flame|화염 활", Rarity.RARE, CreativeCategory.COMBAT),
+
   BOW_INFINITE(Material.BOW, "&ikey:item.cucumbery.bow_infinite|무한의 활", Rarity.ELITE, CreativeCategory.COMBAT),
   BOW_MOUNT(Material.BOW, "&ikey:item.cucumbery.bow_mount|라이딩 활", Rarity.RARE, CreativeCategory.COMBAT),
   BREAD_DIRTY(Material.BREAD, "&ikey:item.cucumbery.bread_dirty|더러운 빵", Rarity.JUNK, "itemGroup.foodAndDrink"),
-
   BRONZE_AXE(Material.GOLDEN_AXE, "&ikey:item.cucumbery.bronze_axe|청동 도끼", CreativeCategory.TOOLS),
   BRONZE_HOE(Material.GOLDEN_HOE, "&ikey:item.cucumbery.bronze_hoe|청동 괭이", CreativeCategory.TOOLS),
+
   BRONZE_INGOT(Material.BRICK, "&ikey:item.cucumbery.bronze_ingot|청동 주괴"),
   BRONZE_PICKAXE(Material.GOLDEN_PICKAXE, "&ikey:item.cucumbery.bronze_pickaxe|청동 곡괭이", CreativeCategory.TOOLS),
   BRONZE_SHOVEL(Material.GOLDEN_SHOVEL, "&ikey:item.cucumbery.bronze_shovel|청동 삽", CreativeCategory.TOOLS),
   BRONZE_SWORD(Material.GOLDEN_SWORD, "&ikey:item.cucumbery.bronze_sword|청동 검", CreativeCategory.COMBAT),
-
-  CEMENTED_CARBIDE_INGOT(Material.IRON_INGOT, "&ikey:item.cucumbery.cemented_carbide_ingot|초경합금 주괴", Rarity.UNIQUE),
   CEMENTED_CARBIDE_AXE(Material.STONE_AXE, "&ikey:item.cucumbery.cemented_carbide_axe|초경합금 도끼", Rarity.UNIQUE, CreativeCategory.TOOLS),
   CEMENTED_CARBIDE_HOE(Material.STONE_HOE, "&ikey:item.cucumbery.cemented_carbide_hoe|초경합금 괭이", Rarity.UNIQUE, CreativeCategory.TOOLS),
+
+  CEMENTED_CARBIDE_INGOT(Material.IRON_INGOT, "&ikey:item.cucumbery.cemented_carbide_ingot|초경합금 주괴", Rarity.UNIQUE),
   CEMENTED_CARBIDE_PICKAXE(Material.STONE_PICKAXE, "&ikey:item.cucumbery.cemented_carbide_pickaxe|초경합금 곡괭이", Rarity.UNIQUE, CreativeCategory.TOOLS),
   CEMENTED_CARBIDE_SHOVEL(Material.STONE_SHOVEL, "&ikey:item.cucumbery.cemented_carbide_shovel|초경합금 삽", Rarity.UNIQUE, CreativeCategory.TOOLS),
   CEMENTED_CARBIDE_SWORD(Material.STONE_SWORD, "&ikey:item.cucumbery.cemented_carbide_sword|초경합금 검", Rarity.UNIQUE, CreativeCategory.COMBAT),
@@ -99,6 +100,8 @@ public enum CustomMaterial implements Translatable
   CORE_GEMSTONE_MITRA(Material.PRISMARINE_CRYSTALS, "&6key:item.cucumbery.core_gemstone_mitra|미트라의 코어 젬스톤", Rarity.EPIC, "key:itemGroup.misc|기타 아이템"),
   CUCUMBERITE_INGOT(Material.EMERALD, "&ikey:item.cucumbery.cucumberite_ingot|오이스터늄 주괴"),
   CUCUMBERITE_ORE(Material.SCUTE, "&ikey:item.cucumbery.cucumberite_ore|오이스터늄 원석"),
+  CUSTOM_CRAFTING_TABLE(Material.PLAYER_HEAD, "&ikey:block.cucumbery.custom_crafting_table|커스텀 제작대", Rarity.RARE, "itemGroup.functional"),
+  CUSTOM_CRAFTING_TABLE_PORTABLE(Material.CRAFTING_TABLE, "&ikey:block.cucumbery.custom_crafting_table_portable|휴대용 커스텀 제작대", Rarity.RARE, CreativeCategory.TOOLS),
   CUTE_SUGAR(Material.SUGAR, "&akey:item.cucumbery.cute_sugar|커여운 슦가", Rarity.EPIC, "key:itemGroup.sugar|슈가"),
   CUTE_SUGAR_HUNGRY(Material.SUGAR, "&akey:item.cucumbery.cute_sugar_hungry|배고푼 커여운 슦가", Rarity.EPIC, "key:itemGroup.sugar|슈가"),
   DIAMOND_BLOCK_DECORATIVE(Material.DIAMOND_BLOCK, "&ikey:item.cucumbery.diamond_block_decorative|장식용 다이아몬드 블록", Rarity.NORMAL, CreativeCategory.BUILDING_BLOCKS),
@@ -175,7 +178,7 @@ public enum CustomMaterial implements Translatable
 
   ENCHANTED_GREEN_DYE(Material.GREEN_DYE, "&ikey:item.cucumbery.enchanted_green_dye|마법이 부여된 초록색 염료", Rarity.EPIC),
   ENCHANTED_GUNPOWDER(Material.GUNPOWDER, "&ikey:item.cucumbery.enchanted_gunpowder|마법이 부여된 화약", Rarity.RARE),
-  ENCHANTED_HAY_BLCOK(Material.HAY_BLOCK, "&ikey:item.cucumbery.enchanted_hay_blcok|마법이 부여된 건초 더미", Rarity.EPIC),
+  ENCHANTED_HAY_BLOCK(Material.HAY_BLOCK, "&ikey:item.cucumbery.enchanted_hay_block|마법이 부여된 건초 더미", Rarity.EPIC),
   ENCHANTED_ICE(Material.ICE, "&ikey:item.cucumbery.enchanted_ice|마법이 부여된 얼음", Rarity.RARE),
   ENCHANTED_INK_SAC(Material.INK_SAC, "&ikey:item.cucumbery.enchanted_ink_sac|마법이 부여된 먹물 주머니", Rarity.RARE),
   ENCHANTED_IRON_BLOCK(Material.IRON_BLOCK, "&ikey:item.cucumbery.enchanted_iron_block|마법이 부여된 철 블록", Rarity.EPIC),
@@ -345,7 +348,7 @@ public enum CustomMaterial implements Translatable
 
   SPYGLASS_TELEPORT(Material.SPYGLASS, "&ikey:item.cucumbery.spyglass_teleport|텔레포트 망원경", Rarity.ELITE, "key:itemGroup.magical_tools|마법 도구"),
   STONK(Material.GOLDEN_PICKAXE, "&ikey:item.cucumbery.stonk|채굴기", Rarity.EPIC, CreativeCategory.TOOLS),
-  TEST_PICKAXE(Material.IRON_PICKAXE, "&ikey:item.cucumbery.test_pickaxe|테스트 곡괭이", Rarity.ARTIFACT, CreativeCategory.TOOLS),
+  TEST_PICKAXE(Material.IRON_PICKAXE, "&ikey:item.cucumbery.test_pickaxe|테스트 곡괭이", Rarity._ADMIN, CreativeCategory.TOOLS),
   THE_MUSIC(Material.MUSIC_DISC_5, "&ikey:item.cucumbery.the_music|'그' 노래", Rarity.EPIC),
   TIN_AXE(Material.GOLDEN_AXE, "&ikey:item.cucumbery.tin_axe|주석 도끼", CreativeCategory.TOOLS),
   TIN_HOE(Material.GOLDEN_HOE, "&ikey:item.cucumbery.tin_hoe|주석 괭이", CreativeCategory.TOOLS),
@@ -373,12 +376,11 @@ public enum CustomMaterial implements Translatable
   TITANIUM_SHOVEL(Material.IRON_SHOVEL, "&ikey:item.cucumbery.titanium_shovel|티타늄 삽", Rarity.UNIQUE, CreativeCategory.TOOLS),
 
   TITANIUM_SWORD(Material.IRON_SWORD, "&ikey:item.cucumbery.titanium_sword|티타늄 검", Rarity.UNIQUE, CreativeCategory.TOOLS),
-  TNT_COMBAT(Material.TNT, "&ikey:block.cucumbery.tnt_combat|전투용 tnt", Rarity.RARE, CreativeCategory.REDSTONE),
-
-  TNT_DONUT(Material.TNT, "&ikey:block.cucumbery.tnt_donut|도넛 tnt", Rarity.EPIC, CreativeCategory.REDSTONE),
-  TNT_DRAIN(Material.TNT, "&ikey:block.cucumbery.tnt_drain|탈수 tnt", Rarity.RARE, CreativeCategory.REDSTONE),
-  TNT_I_WONT_LET_YOU_GO(Material.TNT, "&ikey:block.cucumbery.tnt_i_wont_let_you_go|워어 아워 래 유 tnt", Rarity.RARE, CreativeCategory.REDSTONE),
-  TNT_SUPERIOR(Material.TNT, "&ikey:block.cucumbery.tnt_superior|강력한 tnt", Rarity.EPIC, CreativeCategory.REDSTONE),
+  TNT_COMBAT(Material.TNT, "&ikey:block.cucumbery.tnt_combat|전투용 TNT", Rarity.RARE, CreativeCategory.REDSTONE),
+  TNT_DONUT(Material.TNT, "&ikey:block.cucumbery.tnt_donut|도넛 TNT", Rarity.EPIC, CreativeCategory.REDSTONE),
+  TNT_DRAIN(Material.TNT, "&ikey:block.cucumbery.tnt_drain|탈수 TNT", Rarity.RARE, CreativeCategory.REDSTONE),
+  TNT_I_WONT_LET_YOU_GO(Material.TNT, "&ikey:block.cucumbery.tnt_i_wont_let_you_go|워어 아워 래 유 TNT", Rarity.RARE, CreativeCategory.REDSTONE),
+  TNT_SUPERIOR(Material.TNT, "&ikey:block.cucumbery.tnt_superior|강력한 TNT", Rarity.EPIC, CreativeCategory.REDSTONE),
   TODWOT_PICKAXE(Material.WOODEN_PICKAXE, "&ikey:item.cucumbery.todwot_pickaxe|섕쟀 곡괭이", Rarity.ARTIFACT, CreativeCategory.TOOLS),
   TOMATO(Material.APPLE, "&ikey:item.cucumbery.tomato|토마토", "itemGroup.foodAndDrink"),
   TOPAZ(Material.YELLOW_DYE, "&ikey:item.cucumbery.topaz|황옥 원석", Rarity.UNIQUE),
@@ -466,8 +468,8 @@ public enum CustomMaterial implements Translatable
   {
     this(displayMaterial, ComponentUtil.translate(displayName.startsWith("&R") ? rarity.colorString() + displayName.substring(2) : displayName), rarity, category);
   }
-  
-  CustomMaterial(Material displayMaterial, String displayName, Rarity rarity, CreativeCategory  category)
+
+  CustomMaterial(Material displayMaterial, String displayName, Rarity rarity, CreativeCategory category)
   {
     this(displayMaterial, ComponentUtil.translate(displayName.startsWith("&R") ? rarity.colorString() + displayName.substring(2) : displayName), rarity, category);
   }
