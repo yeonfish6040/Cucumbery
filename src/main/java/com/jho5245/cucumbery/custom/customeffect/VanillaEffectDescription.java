@@ -208,7 +208,7 @@ public class VanillaEffectDescription
       if (hasCustomMining)
       {
         Block block = viewer.getTargetBlockExact(5);
-        MiningResult miningResult = MiningManager.getMiningInfo(viewer, block != null ? block.getLocation() : viewer.getLocation().add(0, -1, 0));
+        MiningResult miningResult = MiningManager.getMiningInfo(viewer, block != null ? block.getLocation() : viewer.getLocation().add(0, -1, 0), true);
         String formula = Cucumbery.config.getString("custom-mining.haste", "0.2*%mining_speed%*%level%")
                 .replace("%level%", (amplifier + 1) + "").replace("%mining_speed%", (miningResult != null ? miningResult.miningSpeedBeforeHaste() : 50) + "");
         float value = 0f;

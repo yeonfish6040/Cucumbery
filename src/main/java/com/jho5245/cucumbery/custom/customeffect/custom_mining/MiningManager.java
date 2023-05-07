@@ -80,6 +80,20 @@ public class MiningManager
   @Nullable
   public static MiningResult getMiningInfo(@NotNull Player player, @NotNull Location blockLocation)
   {
+    return getMiningInfo(player, blockLocation, false);
+  }
+
+  /**
+   * Gets the result of mining of a {@link Player}.
+   *
+   * @param player        The player to get mining result.
+   * @param blockLocation Location of the block that player is currently mining.
+   * @param sync          to call event synchronously.
+   * @return Player's mining result or null if current block is on cooldown(bedrock), or player cannot mine(protection by 3rd party plugins)
+   */
+  @Nullable
+  public static MiningResult getMiningInfo(@NotNull Player player, @NotNull Location blockLocation, boolean sync)
+  {
     if (Variable.customMiningCooldown.containsKey(blockLocation) && !Variable.customMiningExtraBlocks.containsKey(blockLocation))
     {
       return null;
@@ -134,7 +148,10 @@ public class MiningManager
       return null;
     }
     PreCustomBlockBreakEvent preCustomBlockBreakEvent = new PreCustomBlockBreakEvent(block, player);
-    Bukkit.getPluginManager().callEvent(preCustomBlockBreakEvent);
+    if (!sync)
+    {
+      Bukkit.getPluginManager().callEvent(preCustomBlockBreakEvent);
+    }
     if (preCustomBlockBreakEvent.isCancelled())
     {
       return null;

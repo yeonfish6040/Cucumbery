@@ -635,9 +635,9 @@ public class Cucumbery extends JavaPlugin
     }
     if (using_CoreProtect)
     {
-      if (!CoreProtect.getInstance().isEnabled() || CoreProtect.getInstance().getAPI().APIVersion() < 9)
+      if (CoreProtect.getInstance() == null || !CoreProtect.getInstance().isEnabled() || CoreProtect.getInstance().getAPI().APIVersion() < 9)
       {
-        getLogger().warning("CoreProtect가 연동되었으나 플러그인이 비활성화되어 있거나 CoreProtect의 API 버전이 낮습니다. 예기치 못한 오류가 발생할 수 있습니다.");
+        getLogger().warning("CoreProtect가 연동되었으나 망했거나 플러그인이 비활성화되어 있거나 CoreProtect의 API 버전이 낮습니다. 예기치 못한 오류가 발생할 수 있습니다.");
       }
     }
   }
