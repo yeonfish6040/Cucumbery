@@ -6,7 +6,7 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.deathmessages.DeathManager;
-import com.jho5245.cucumbery.util.itemlore.ItemLore;
+import com.jho5245.cucumbery.util.additemmanager.AddItemUtil;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -33,7 +33,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class EntityDeath implements Listener
@@ -162,7 +161,7 @@ public class EntityDeath implements Listener
     {
       drops.clear();
     }
-    boolean hasUnskilledTouch = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchants() &&  itemMeta.hasEnchant(CustomEnchant.UNSKILLED_TOUCH);
+    boolean hasUnskilledTouch = CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchants() && itemMeta.hasEnchant(CustomEnchant.UNSKILLED_TOUCH);
     if (hasUnskilledTouch)
     {
       event.setDroppedExp(0);
@@ -170,12 +169,12 @@ public class EntityDeath implements Listener
     boolean isTelekinesis = (entityIsPlayer && CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.TELEKINESIS_PVP) ||
             (!entityIsPlayer && (
                     (CustomEnchant.isEnabled() && itemMeta != null && (itemMeta.hasEnchant(CustomEnchant.TELEKINESIS))) ||
-                    CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS)
+                            CustomEffectManager.hasEffect(player, CustomEffectType.TELEKINESIS)
             )));
     boolean isSmeltingTouch = Cucumbery.config.getBoolean("use-smelting-touch-on-entities") && (
-                    (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
+            (CustomEnchant.isEnabled() && itemMeta != null && itemMeta.hasEnchant(CustomEnchant.SMELTING_TOUCH)) ||
                     CustomEffectManager.hasEffect(player, CustomEffectType.SMELTING_TOUCH)
-            );
+    );
 
     if (isTelekinesis || isSmeltingTouch)
     {
@@ -188,30 +187,11 @@ public class EntityDeath implements Listener
         {
           dropsClone = ItemStackUtil.getSmeltedResult(player, dropsClone, expOutput);
         }
-        String worldName = player.getLocation().getWorld().getName();
-        boolean setItemLore = UserData.USE_HELPFUL_LORE_FEATURE.getBoolean(player.getUniqueId())
-                && Cucumbery.config.getBoolean("use-helpful-lore-feature")
-                && !Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(worldName);
         for (ItemStack dropClone : dropsClone)
         {
           if (isTelekinesis)
           {
-            if (setItemLore)
-            {
-              ItemLore.setItemLore(dropClone);
-            }
-            else
-            {
-              ItemLore.removeItemLore(dropClone);
-            }
-            HashMap<Integer, ItemStack> lostDrops = player.getInventory().addItem(dropClone);
-            if (!lostDrops.isEmpty())
-            {
-              for (int j = 0; j < lostDrops.size(); j++)
-              {
-                entity.getWorld().dropItemNaturally(entity.getLocation(), lostDrops.get(j));
-              }
-            }
+            AddItemUtil.addItem(player, dropClone);
           }
           else
           {
@@ -242,7 +222,8 @@ public class EntityDeath implements Listener
       {
         sec = -0.001 * (stack + 1) + 10;
       }
-      else {
+      else
+      {
         sec = 29700d / (stack + 1) - 2.9;
       }
       if (sec < 0.2)
@@ -254,7 +235,8 @@ public class EntityDeath implements Listener
       if ((stack + 1) % 10 == 0)
       {
         int finalStack = stack;
-        @Nullable Consumer<Entity> consumer = (e) -> {
+        @Nullable Consumer<Entity> consumer = (e) ->
+        {
           ExperienceOrb experienceOrb = (ExperienceOrb) e;
           experienceOrb.setExperience(finalStack + 1);
           experienceOrb.customName(ComponentUtil.translate("콤보 구슬", NamedTextColor.YELLOW));

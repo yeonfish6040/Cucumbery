@@ -1,7 +1,6 @@
 package com.jho5245.cucumbery.commands.no_groups;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent.Completion;
-import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.no_groups.*;
@@ -129,14 +128,7 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
               clone = new ItemStack(type);
             }
             player.getInventory().setItemInMainHand(clone);
-            if (Cucumbery.config.getBoolean("use-helpful-lore-feature"))
-            {
-              String worldName = player.getLocation().getWorld().getName();
-              if (!Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(worldName))
-              {
-                ItemLore.setItemLore(player.getInventory().getItemInMainHand());
-              }
-            }
+            ItemLore.setItemLore(player.getInventory().getItemInMainHand());
             if (!ItemStackUtil.itemExists(player.getInventory().getItemInMainHand()))
             {
               player.getInventory().setItemInMainHand(item);
@@ -376,10 +368,11 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
     }
     switch (args[0])
     {
-      case "amount" -> {
+      case "amount" ->
+      {
         if (length == 2)
         {
-          return CommandTabUtil.tabCompleterIntegerRadius(args, 0,127, "<개수>");
+          return CommandTabUtil.tabCompleterIntegerRadius(args, 0, 127, "<개수>");
         }
         if (length == 3)
         {
@@ -390,10 +383,11 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
           return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
-      case "durability" -> {
+      case "durability" ->
+      {
         if (length == 2)
         {
-          return CommandTabUtil.tabCompleterIntegerRadius(args, 0,32767, "<내구도>");
+          return CommandTabUtil.tabCompleterIntegerRadius(args, 0, 32767, "<내구도>");
         }
         if (length == 3)
         {
@@ -404,7 +398,8 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
           return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
-      case "material" -> {
+      case "material" ->
+      {
         if (length == 2)
         {
           return CommandTabUtil.tabCompleterList(args, Material.values(), "<아이템>", material -> !material.isItem() || material.isAir());
@@ -418,7 +413,8 @@ public class CommandSetData implements CommandExecutor, AsyncTabCompleter
           return CommandTabUtil.tabCompleterBoolean(args, "[명령어 출력 숨김 여부]");
         }
       }
-      case "skull" -> {
+      case "skull" ->
+      {
         if (length == 2)
         {
           return CommandTabUtil.tabCompleterList(args, "<url>", true);

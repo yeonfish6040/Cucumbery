@@ -1229,7 +1229,7 @@ public class ItemStackUtil
     return ComponentUtil.translate("");
   }
 
-  public static SkullMeta setTexture(@NotNull SkullMeta skullMeta, @NotNull String url)
+  public static void setTexture(@NotNull SkullMeta skullMeta, @NotNull String url)
   {
     if (url.startsWith("https://textures.minecraft.net/texture/"))
     {
@@ -1261,7 +1261,6 @@ public class ItemStackUtil
     PlayerProfile playerProfile = Bukkit.createProfile(UUID.fromString("0-0-0-0-0"), null);
     playerProfile.setProperty(new ProfileProperty("textures", base64Data));
     skullMeta.setPlayerProfile(playerProfile);
-    return skullMeta;
   }
 
   /**
@@ -1288,52 +1287,26 @@ public class ItemStackUtil
       return;
     }
     Inventory inventory = player.getInventory();
-    boolean useLore = Method.usingLoreFeature(player);
-    if (useLore)
+    for (int i = 0; i < inventory.getSize(); i++)
     {
-      for (int i = 0; i < inventory.getSize(); i++)
+      ItemStack item = inventory.getItem(i);
+      if (item == null)
       {
-        ItemStack item = inventory.getItem(i);
-        if (item == null)
-        {
-          continue;
-        }
-        ItemLore.setItemLore(item, new ItemLoreView(player));
+        continue;
       }
-      inventory = openInventory.getTopInventory();
-      for (int i = 0; i < inventory.getSize(); i++)
-      {
-        ItemStack item = inventory.getItem(i);
-        if (item == null)
-        {
-          continue;
-        }
-        ItemLore.setItemLore(item, new ItemLoreView(player));
-      }
-      player.setItemOnCursor(ItemLore.setItemLore(player.getItemOnCursor(), new ItemLoreView(player)));
+      ItemLore.setItemLore(item, new ItemLoreView(player));
     }
-    else
+    inventory = openInventory.getTopInventory();
+    for (int i = 0; i < inventory.getSize(); i++)
     {
-      inventory = player.getInventory();
-      for (int i = 0; i < inventory.getSize(); i++)
+      ItemStack item = inventory.getItem(i);
+      if (item == null)
       {
-        ItemStack itemStack = inventory.getItem(i);
-        if (itemStack != null)
-        {
-          ItemLore.removeItemLore(itemStack);
-        }
+        continue;
       }
-      inventory = openInventory.getTopInventory();
-      for (int i = 0; i < inventory.getSize(); i++)
-      {
-        ItemStack itemStack = inventory.getItem(i);
-        if (itemStack != null)
-        {
-          ItemLore.removeItemLore(itemStack);
-        }
-      }
-      player.setItemOnCursor(ItemLore.removeItemLore(player.getItemOnCursor()));
+      ItemLore.setItemLore(item, new ItemLoreView(player));
     }
+    player.setItemOnCursor(ItemLore.setItemLore(player.getItemOnCursor(), new ItemLoreView(player)));
     if (callAPI)
     {
       player.updateInventory();
@@ -1348,14 +1321,7 @@ public class ItemStackUtil
    */
   public static void updateInventory(@NotNull Player player, @NotNull ItemStack item)
   {
-    if (Method.usingLoreFeature(player))
-    {
-      ItemLore.setItemLore(item, new ItemLoreView(player));
-    }
-    else
-    {
-      ItemLore.removeItemLore(item);
-    }
+    ItemLore.setItemLore(item, new ItemLoreView(player));
   }
 }
 

@@ -6,7 +6,6 @@ import com.jho5245.cucumbery.util.itemlore.ItemLoreView;
 import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,11 +30,6 @@ public class FurnaceSmelt implements Listener
   private void itemLore(FurnaceSmeltEvent event, ItemStack result)
   {
     if (!Cucumbery.config.getBoolean("use-helpful-lore-feature"))
-    {
-      return;
-    }
-    World world = event.getBlock().getLocation().getWorld();
-    if (Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(world.getName()))
     {
       return;
     }

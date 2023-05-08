@@ -31,7 +31,7 @@ import java.util.*;
 
 public class InventoryOpen implements Listener
 {
-  public static HashMap<Location, UUID> mcMMOBrewingStandMap = new HashMap<>();
+  public static HashMap<String, UUID> mcMMOBrewingStandMap = new HashMap<>();
 
   @SuppressWarnings("deprecation")
   @EventHandler
@@ -132,7 +132,7 @@ public class InventoryOpen implements Listener
       }
       if (Cucumbery.using_mcMMO && viewType == InventoryType.BREWING && inventory.getLocation() != null)
       {
-        mcMMOBrewingStandMap.put(inventory.getLocation(), uuid);
+        mcMMOBrewingStandMap.put(inventory.getLocation().toString(), uuid);
       }
       // Openinv로 인벤토리가 열린 경우가 아니고 이미 다른 사람이 인벤토리를 연 상태가 아닐 때
       if (inventory.getViewers().size() <= 1 && location != null &&

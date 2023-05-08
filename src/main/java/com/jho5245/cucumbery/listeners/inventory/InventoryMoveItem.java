@@ -66,7 +66,7 @@ public class InventoryMoveItem implements Listener
     {
       Inventory dest = event.getDestination();
       String worldName = Objects.requireNonNull(dest.getLocation()).getWorld().getName();
-      if (Cucumbery.config.getBoolean("use-helpful-lore-feature") && !Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(worldName))
+      if (Cucumbery.config.getBoolean("use-helpful-lore-feature"))
       {
         if (!ItemStackUtil.hasLore(item))
           ItemLore.setItemLore(item);

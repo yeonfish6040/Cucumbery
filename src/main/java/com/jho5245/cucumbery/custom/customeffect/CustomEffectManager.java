@@ -688,6 +688,7 @@ public class CustomEffectManager
           catch (Exception e)
           {
             MessageUtil.consoleSendMessage(Prefix.INFO_WARN, "유효하지 않은 효과입니다: %s", s);
+            MessageUtil.consoleSendMessage(Prefix.INFO, "다음 파일 참조: %s", Cucumbery.getPlugin().getDataFolder() + "/data/CustomEffects/" + (Bukkit.getOfflinePlayer(uuid).hasPlayedBefore() ? "" : "non-players/") + uuid + ".yml");
             continue;
           }
           DisplayType displayType;

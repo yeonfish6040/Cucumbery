@@ -32,7 +32,7 @@
 # 이상으로 설정 파일 기본 설명은 끝입니다. 나머지는 해당 설정 상단의 설명을 참조하여 설정을 편집하면 됩니다.
 
 # 콘픽 버전. 버전업 시에만 변경하기 바람
-config-version: 45
+config-version: 46
 
 # 자동 업데이트 기능 설정
 auto-updater:
@@ -173,11 +173,6 @@ item-rarity-value:
 
 # 아이템에 아무런 설명이 없으면 게임 플레이에 도움을 주는 설명을 자동으로 아이템에 붙일 것인가? - boolean
 use-helpful-lore-feature: true
-
-# 해당 기능을 사용하지 않을 위치 (단, 일부 상황에서는 해당 월드 전체에서 적용) - List<String>
-no-use-helpful-lore-feature-worlds:
-  - world_1
-  - world_2
 
 # 이름이 있는 아이템(모루로 수정한 아이템 제외)도 아이템 설명이 변경되게 할 것인가?
 # 해당 기능을 사용하지 않을 경우 일부 아이템의 설명이 정상적으로 갱신되지 않을 수 있습니다.

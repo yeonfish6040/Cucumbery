@@ -52,7 +52,7 @@ public class ItemLore
     }
     NBTCompound itemTagReadOnly = NBTAPI.getMainCompound(itemStack);
     NBTList<String> extraTagsReadOnly = NBTAPI.getStringList(itemTagReadOnly, CucumberyTag.EXTRA_TAGS_KEY);
-    if (NBTAPI.arrayContainsValue(extraTagsReadOnly, ExtraTag.NO_TMI_LORE.toString()))
+    if (!Cucumbery.config.getBoolean("use-helpful-lore-feature") || NBTAPI.arrayContainsValue(extraTagsReadOnly, ExtraTag.NO_TMI_LORE.toString()))
     {
       ItemLore.removeItemLore(itemStack);
       return itemStack;

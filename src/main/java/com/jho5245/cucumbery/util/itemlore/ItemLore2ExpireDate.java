@@ -33,7 +33,7 @@ public class ItemLore2ExpireDate
       Calendar calendar = Calendar.getInstance();
       calendar.add(Calendar.HOUR_OF_DAY, Cucumbery.config.getInt("adjust-time-difference-value"));
       long expireMills = Method.getTimeDifference(calendar, expireDate);
-      if (expireDate.contains("시"))
+      if (!relative && expireDate.contains("시"))
       {
         try
         {

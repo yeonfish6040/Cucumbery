@@ -1442,56 +1442,51 @@ public class Scheduler
       return;
     }
     World world = player.getLocation().getWorld();
-    if (!Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(world.getName()))
+
+    if (player.getOpenInventory().getType() == InventoryType.CARTOGRAPHY)
     {
-      if (UserData.USE_HELPFUL_LORE_FEATURE.getBoolean(player.getUniqueId()))
+      ItemStack item = player.getOpenInventory().getTopInventory().getItem(2);
+      if (item != null)
       {
-        if (player.getOpenInventory().getType() == InventoryType.CARTOGRAPHY)
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                ItemLore.setItemLore(item, new ItemLoreView(player)), 0L);
+      }
+      // 지도 제작대에서 지도 결과물 아이템 실시간 반영
+    }
+    if (player.getOpenInventory().getType() == InventoryType.STONECUTTER)
+    {
+      ItemStack item = player.getOpenInventory().getTopInventory().getItem(1);
+      if (item != null)
+      {
+        Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+                ItemLore.setItemLore(item, new ItemLoreView(player)), 0L);
+      }
+      // 석재 절단기에서 석재 결과물 아이템 실시간 반영
+    }
+    ItemStack mainHand = player.getInventory().getItemInMainHand(), offHand = player.getInventory().getItemInOffHand();
+    if (ItemStackUtil.itemExists(mainHand))
+    {
+      ItemMeta itemMeta = mainHand.getItemMeta();
+      Material type = mainHand.getType();
+      if (type == Material.WRITABLE_BOOK)
+      {
+        // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
+        if (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS))
         {
-          ItemStack item = player.getOpenInventory().getTopInventory().getItem(2);
-          if (item != null)
-          {
-            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                    ItemLore.setItemLore(item, new ItemLoreView(player)), 0L);
-          }
-          // 지도 제작대에서 지도 결과물 아이템 실시간 반영
+          ItemLore.setItemLore(mainHand, new ItemLoreView(player));
         }
-        if (player.getOpenInventory().getType() == InventoryType.STONECUTTER)
+      }
+    }
+    if (ItemStackUtil.itemExists(offHand))
+    {
+      ItemMeta itemMeta = offHand.getItemMeta();
+      Material type = offHand.getType();
+      if (type == Material.WRITABLE_BOOK)
+      {
+        // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
+        if (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS))
         {
-          ItemStack item = player.getOpenInventory().getTopInventory().getItem(1);
-          if (item != null)
-          {
-            Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
-                    ItemLore.setItemLore(item, new ItemLoreView(player)), 0L);
-          }
-          // 석재 절단기에서 석재 결과물 아이템 실시간 반영
-        }
-        ItemStack mainHand = player.getInventory().getItemInMainHand(), offHand = player.getInventory().getItemInOffHand();
-        if (ItemStackUtil.itemExists(mainHand))
-        {
-          ItemMeta itemMeta = mainHand.getItemMeta();
-          Material type = mainHand.getType();
-          if (type == Material.WRITABLE_BOOK)
-          {
-            // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
-            if (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS))
-            {
-              ItemLore.setItemLore(mainHand, new ItemLoreView(player));
-            }
-          }
-        }
-        if (ItemStackUtil.itemExists(offHand))
-        {
-          ItemMeta itemMeta = offHand.getItemMeta();
-          Material type = offHand.getType();
-          if (type == Material.WRITABLE_BOOK)
-          {
-            // 야생에서는 불가능. 명령어로 강제로 책의 서명을 없앨때만 생기는 현상
-            if (itemMeta.hasItemFlag(ItemFlag.HIDE_ITEM_SPECIFICS))
-            {
-              ItemLore.setItemLore(offHand, new ItemLoreView(player));
-            }
-          }
+          ItemLore.setItemLore(offHand, new ItemLoreView(player));
         }
       }
     }

@@ -220,16 +220,9 @@ public class Initializer
     }
   }
 
-  public static void loadCustomConfigs()
+  public static void loadCustomRecipes()
   {
-    loadDeathMessagesConfig();
-    loadLang();
-    loadCustomItems();
-    loadCustomEffects();
     Variable.customRecipes.clear();
-    Variable.craftingTime.clear();
-    Variable.craftsLog.clear();
-    Variable.lastCraftsLog.clear();
     File recipesFolder = new File(getPlugin().getDataFolder() + "/data/CustomRecipe");
     if (recipesFolder.exists())
     {
@@ -303,6 +296,19 @@ public class Initializer
         }
       }
     }
+  }
+
+  public static void loadCustomConfigs()
+  {
+    loadDeathMessagesConfig();
+    loadLang();
+    loadCustomItems();
+    loadCustomEffects();
+    loadCustomRecipes();
+    Variable.craftingTime.clear();
+    Variable.craftsLog.clear();
+    Variable.lastCraftsLog.clear();
+
     Variable.commandPacks.clear();
     File commandPacksFolder = new File(getPlugin().getDataFolder() + "/data/CommandPacks");
     if (commandPacksFolder.exists())

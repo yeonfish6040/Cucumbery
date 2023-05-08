@@ -34,7 +34,8 @@ public class ItemLore2Enchant
       if (!hideEnchant || eventAccessMode)
       {
         List<Component> enchantLore = new ArrayList<>();
-        Map<Enchantment, Integer> enchants = itemMeta.getEnchants();
+        Map<Enchantment, Integer> enchants = new HashMap<>(itemMeta.getEnchants());
+        enchants.keySet().removeIf(enchantment -> enchantment.equals(CustomEnchant.GLOW));
         int size = enchants.size();
         if (size >= 8)
         {
@@ -43,10 +44,6 @@ public class ItemLore2Enchant
           for (Enchantment enchantment : enchants.keySet())
           {
             key.append("%s, ");
-            if (enchantment.equals(CustomEnchant.GLOW))
-            {
-              continue;
-            }
             int level = itemMeta.getEnchantLevel(enchantment);
             if (level > 255)
             {
@@ -127,11 +124,57 @@ public class ItemLore2Enchant
       {
         itemMeta.addItemFlags(ItemFlag.HIDE_ITEM_SPECIFICS);
         List<Component> enchantLore = new ArrayList<>();
-        Map<Enchantment, Integer> map = new HashMap<>(storageMeta.getStoredEnchants());
-        map.keySet().removeIf(enchantment -> enchantment.equals(CustomEnchant.GLOW));
-        for (Enchantment enchantment : map.keySet())
+        Map<Enchantment, Integer> enchants = new HashMap<>(storageMeta.getStoredEnchants());
+        enchants.keySet().removeIf(enchantment -> enchantment.equals(CustomEnchant.GLOW));
+        int size = enchants.size();
+        if (size >= 8)
         {
-          if (map.size() < 8)
+          StringBuilder key = new StringBuilder("&7");
+          List<Component> args = new ArrayList<>();
+          for (Enchantment enchantment : enchants.keySet())
+          {
+            key.append("%s, ");
+            int level = storageMeta.getStoredEnchantLevel(enchantment);
+            if (level > 255)
+            {
+              level = 255;
+            }
+            if (level <= 0)
+            {
+              level = 1;
+            }
+            Component component;
+            if (enchantment.getMaxLevel() == 1)
+            {
+              component = ComponentUtil.translate(enchantment.translationKey());
+            }
+            else
+            {
+              component = ComponentUtil.translate("%s %s", ComponentUtil.translate(enchantment.translationKey()), ComponentUtil.translate("enchantment.level." + level).fallback(level + ""));
+            }
+            component = component.color(enchantment.isCursed() ? TextColor.color(255, 85, 85) : TextColor.color(154, 84, 255));
+            if (enchantment instanceof CustomEnchant customEnchant && customEnchant.isUltimate())
+            {
+              component = component.color(NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.BOLD, State.TRUE);
+            }
+            args.add(component);
+            if (args.size() == 2)
+            {
+              key = new StringBuilder(key.substring(0, key.length() - 2));
+              enchantLore.add(ComponentUtil.translate(key.toString(), args));
+              key = new StringBuilder("&7");
+              args = new ArrayList<>();
+            }
+          }
+          if (!args.isEmpty())
+          {
+            key = new StringBuilder(key.substring(0, key.length() - 2));
+            enchantLore.add(ComponentUtil.translate(key.toString(), args));
+          }
+        }
+        else
+        {
+          for (Enchantment enchantment : enchants.keySet())
           {
             int level = storageMeta.getStoredEnchantLevel(enchantment);
             if (level > 255)
@@ -143,10 +186,6 @@ public class ItemLore2Enchant
               level = 1;
             }
             enchantLore.addAll(ItemLoreUtil.enchantTMIDescription(viewer, item, itemMeta, type, enchantment, level, viewer == null || UserData.SHOW_ENCHANTMENT_TMI_DESCRIPTION.getBoolean(viewer)));
-          }
-          else
-          {
-
           }
         }
         if (!enchantLore.isEmpty())

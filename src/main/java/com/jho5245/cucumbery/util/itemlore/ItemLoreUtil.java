@@ -2,6 +2,7 @@ package com.jho5245.cucumbery.util.itemlore;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.custom_mining.MiningManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
@@ -348,7 +349,7 @@ public class ItemLoreUtil
         if (enchant.equals(CustomEnchant.DEFENSE_CHANCE) && (isEnchantedBook || CustomEnchant.DEFENSE_CHANCE.canEnchantItem(itemStack)))
         {
           lore.add(ComponentUtil.translate("&7방패를 들고 있을 때 가드를 하지 않는 도중 피격 시 %s 확률로", "&a" + (enchantLevel * 6) + "%"));
-          lore.add(ComponentUtil.translate("&7해당 피해를 방어하고 방패의 내구도가 피해량의 %s만큼 감소", "&a1/" + Constant.Sosu2.format(6d / enchantLevel)));
+          lore.add(ComponentUtil.translate("&7해당 피해를 방어하고 방패의 내구도가 피해량의 %s만큼 감소", "&a" + Constant.Sosu2.format(1d / (6d / enchantLevel))));
           lore.add(ComponentUtil.translate("&7단, 피해량이 1 이하일 경우 내구도가 깎이지 않음"));
         }
         if (enchant.equals(CustomEnchant.DELICATE) && (isEnchantedBook || CustomEnchant.DELICATE.canEnchantItem(itemStack)))
@@ -375,7 +376,27 @@ public class ItemLoreUtil
             {
               MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.efficiency의 값이 잘못 지정되어 있습니다!");
             }
-            String msg = "&7채광 속도 %s 증가";
+            String prefix = "채광";
+            if (MiningManager.getToolTier(itemStack) == 0)
+            {
+              if (Constant.AXES.contains(material))
+              {
+                prefix = "벌목";
+              }
+              if (Constant.HOES.contains(material))
+              {
+                prefix = "재배";
+              }
+              if (Constant.SHOVELS.contains(material))
+              {
+                prefix = "굴착";
+              }
+              if (Constant.SWORDS.contains(material) || material == Material.TRIDENT || isEnchantedBook)
+              {
+                prefix = "블록 파괴";
+              }
+            }
+            String msg = "&7" + prefix + " 속도 %s 증가";
             lore.add(ComponentUtil.translate(msg, "&a" + Constant.Jeongsu.format(value)));
           }
           else

@@ -1,12 +1,11 @@
 package com.jho5245.cucumbery.commands.no_groups;
 
-import com.jho5245.cucumbery.Cucumbery;
+import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
-import com.jho5245.cucumbery.util.itemlore.ItemLore;
-import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import com.jho5245.cucumbery.util.storage.data.Permission;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -21,10 +20,10 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
 {
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
-		if (!Method.hasPermission(sender, Permission.CMD_SETDATA, true))
-		{
-			return true;
-		}
+    if (!Method.hasPermission(sender, Permission.CMD_SETDATA, true))
+    {
+      return true;
+    }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
       return !(sender instanceof BlockCommandSender);
@@ -55,7 +54,8 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
       {
         switch (args[1].toUpperCase())
         {
-          case "ALL" -> {
+          case "ALL" ->
+          {
             meta.addItemFlags(ItemFlag.values());
             item.setItemMeta(meta);
             player.getInventory().setItemInMainHand(item);
@@ -71,7 +71,8 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
           case "HIDE_DYE" -> meta.addItemFlags(ItemFlag.HIDE_DYE);
           case "HIDE_ARMOR_TRIM" -> meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
           case "내구성" -> meta.setUnbreakable(true);
-          default -> {
+          default ->
+          {
             MessageUtil.wrongArg(sender, 2, args);
             MessageUtil.commandInfo(sender, label, usage);
             return true;
@@ -80,20 +81,14 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
         MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + args[1] + "&r 플래그를 추가했습니다");
         item.setItemMeta(meta);
         player.getInventory().setItemInMainHand(item);
-        if (Cucumbery.config.getBoolean("use-helpful-lore-feature"))
-        {
-          String worldName = player.getLocation().getWorld().getName();
-          if (!Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(worldName))
-          {
-            ItemLore.setItemLore(player.getInventory().getItemInMainHand());
-          }
-        }
+        ItemLore.setItemLore(player.getInventory().getItemInMainHand());
       }
       else if (args[0].equalsIgnoreCase("remove"))
       {
         switch (args[1].toUpperCase())
         {
-          case "ALL" -> {
+          case "ALL" ->
+          {
             meta.removeItemFlags(ItemFlag.values());
             item.setItemMeta(meta);
             player.getInventory().setItemInMainHand(item);
@@ -109,7 +104,8 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
           case "HIDE_DYE" -> meta.removeItemFlags(ItemFlag.HIDE_DYE);
           case "HIDE_ARMOR_TRIM" -> meta.removeItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
           case "내구성" -> meta.setUnbreakable(false);
-          default -> {
+          default ->
+          {
             MessageUtil.wrongArg(sender, 2, args);
             MessageUtil.commandInfo(sender, label, usage);
             return true;
@@ -118,14 +114,7 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
         MessageUtil.sendMessage(player, Prefix.INFO_SETDATA, "주로 사용하는 손에 들고 있는 아이템에 rg255,204;" + args[1] + "&r 플래그를 제거했습니다");
         item.setItemMeta(meta);
         player.getInventory().setItemInMainHand(item);
-        if (Cucumbery.config.getBoolean("use-helpful-lore-feature"))
-        {
-          String worldName = player.getLocation().getWorld().getName();
-          if (!Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(worldName))
-          {
-            ItemLore.setItemLore(player.getInventory().getItemInMainHand());
-          }
-        }
+        ItemLore.setItemLore(player.getInventory().getItemInMainHand());
       }
       else
       {
@@ -134,16 +123,20 @@ public class CommandItemFlag implements CommandExecutor, TabCompleter
       }
     }
     else
+
     {
       MessageUtil.longArg(sender, 2, args);
       MessageUtil.commandInfo(sender, label, usage);
     }
     return true;
   }
+
   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args)
   {
     if (!(sender instanceof Player player))
+    {
       return Collections.emptyList();
+    }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(true, args), true))
     {
       return Collections.singletonList(args[0]);

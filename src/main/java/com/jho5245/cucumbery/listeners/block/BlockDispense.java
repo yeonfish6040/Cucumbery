@@ -6,7 +6,6 @@ import com.jho5245.cucumbery.custom.customeffect.children.group.LongCustomEffect
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.nbt.NBTAPI;
-import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -100,26 +99,19 @@ public class BlockDispense implements Listener
       switch (item.getType())
       {
         case BUCKET, COD_BUCKET, SALMON_BUCKET, LAVA_BUCKET, WATER_BUCKET, PUFFERFISH_BUCKET, TROPICAL_FISH_BUCKET ->
+                Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
         {
-          boolean usefulLore = Cucumbery.config.getBoolean("use-helpful-lore-feature")
-                  && !Method.configContainsLocation(block.getLocation(), Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds"));
-          if (usefulLore)
+          Dispenser dispenser = (Dispenser) block.getState();
+          Inventory inv = dispenser.getInventory();
+          for (int i = 0; i < inv.getSize(); i++)
           {
-            Bukkit.getServer().getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+            ItemStack invItem = inv.getItem(i);
+            if (ItemStackUtil.itemExists(invItem))
             {
-              Dispenser dispenser = (Dispenser) block.getState();
-              Inventory inv = dispenser.getInventory();
-              for (int i = 0; i < inv.getSize(); i++)
-              {
-                ItemStack invItem = inv.getItem(i);
-                if (ItemStackUtil.itemExists(invItem))
-                {
-                  ItemLore.setItemLore(invItem);
-                }
-              }
-            }, 0L);
+              ItemLore.setItemLore(invItem);
+            }
           }
-        }
+        }, 0L);
         default ->
         {
         }

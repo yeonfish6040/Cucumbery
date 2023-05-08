@@ -376,7 +376,6 @@ public class CustomConfig
     TRAMPLE_SOIL_ALERT("경작지-파괴-금지-타이틀-띄움", true),
     TRAMPLE_SOIL_FORCE("경작지-파괴-무조건-금지", false),
     TRAMPLE_SOIL_NO_ALERT_FORCE("경작지-파괴-금지-무조건-띄우지-않음", false),
-    USE_HELPFUL_LORE_FEATURE("아이템-설명-기능-사용", true),
     USE_QUICK_COMMAND_BLOCK("빠른-명령-블록-사용", false),
     UUID("UUID", "플레이어-UUID"),
     SHOW_DEATH_MESSAGE("데스-메시지-표시", true),
@@ -558,7 +557,7 @@ public class CustomConfig
       {
         switch (this)
         {
-          case DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE, EVENT_EXCEPTION_ACCESS, SHOW_ENCHANTMENT_TMI_DESCRIPTION, USE_HELPFUL_LORE_FEATURE -> ItemStackUtil.updateInventory(player);
+          case DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE, EVENT_EXCEPTION_ACCESS, SHOW_ENCHANTMENT_TMI_DESCRIPTION -> ItemStackUtil.updateInventory(player);
           case ENTITY_AGGRO, SPECTATOR_MODE ->
           {
             if (!UserData.ENTITY_AGGRO.getBoolean(uuid) || UserData.SPECTATOR_MODE.getBoolean(uuid))

@@ -11,7 +11,6 @@ import com.jho5245.cucumbery.util.storage.no_groups.ItemStackUtil;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -114,11 +113,6 @@ public class FurnaceBurn implements Listener
       }
     }
     if (!Cucumbery.config.getBoolean("use-helpful-lore-feature"))
-    {
-      return;
-    }
-    World world = event.getBlock().getLocation().getWorld();
-    if (Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds").contains(world.getName()))
     {
       return;
     }

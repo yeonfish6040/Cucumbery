@@ -1812,20 +1812,12 @@ public class Method extends SoundPlay
    */
   public static boolean usingLoreFeature(@NotNull Player player)
   {
-    UUID uuid = player.getUniqueId();
-    boolean playerUsing = UserData.USE_HELPFUL_LORE_FEATURE.getBoolean(uuid);
-    boolean usefulLore = Cucumbery.config.getBoolean("use-helpful-lore-feature");
-    boolean usefulLoreCreative = player.getGameMode() != GameMode.CREATIVE || !UserData.DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE.getBoolean(uuid);
-    boolean mcMMOBrewingCompatible = Cucumbery.using_mcMMO && player.getOpenInventory().getType() == InventoryType.BREWING;
-    List<String> worldList = Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds");
-    return playerUsing && usefulLoreCreative && !mcMMOBrewingCompatible && usefulLore && !worldList.contains(player.getLocation().getWorld().getName());
+    return true;
   }
 
   public static boolean usingLoreFeature(@NotNull Location location)
   {
-    boolean usefulLore = Cucumbery.config.getBoolean("use-helpful-lore-feature");
-    List<String> worldList = Cucumbery.config.getStringList("no-use-helpful-lore-feature-worlds");
-    return usefulLore && !Method.configContainsLocation(location, worldList);
+    return true;
   }
 
   /**

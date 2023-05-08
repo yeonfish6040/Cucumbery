@@ -77,7 +77,6 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         CustomEffectManager.saveAll();
         Initializer.loadCustomConfigs();
         Initializer.loadPlayersConfig();
-
         if (Cucumbery.using_QuickShop)
         {
           Variable.shops.clear();
@@ -121,11 +120,83 @@ public class CommandCucumbery implements CucumberyCommandExecutor
         Constant.ERROR_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.error-sound.volume");
         MessageUtil.info(sender, "모든 콘픽 파일을 리로드했습니다");
       }
+      case "reload-configs" ->
+      {
+        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reload-configs 명령어 사용", sender));
+        Cucumbery.getPlugin().registerConfig();
+        Cucumbery.getPlugin().reloadConfig();
+        Cucumbery.config = (YamlConfiguration) Cucumbery.getPlugin().getConfig();
+        try
+        {
+          Constant.WARNING_SOUND = Sound.valueOf(Cucumbery.config.getString("sound-const.warning-sound.sound"));
+        }
+        catch (Exception e)
+        {
+          Constant.WARNING_SOUND = Sound.ENTITY_ENDERMAN_TELEPORT;
+        }
+        try
+        {
+          Constant.ERROR_SOUND = Sound.valueOf(Cucumbery.config.getString("sound-const.error-sound.sound"));
+        }
+        catch (Exception e)
+        {
+          Constant.ERROR_SOUND = Sound.BLOCK_ANVIL_LAND;
+        }
+        Constant.WARNING_SOUND_PITCH = Cucumbery.config.getDouble("sound-const.warning-sound.pitch");
+        Constant.WARNING_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.warning-sound.volume");
+        Constant.ERROR_SOUND_PITCH = Cucumbery.config.getDouble("sound-const.error-sound.pitch");
+        Constant.ERROR_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.error-sound.volume");
+        Initializer.loadLang();
+        Initializer.loadDeathMessagesConfig();
+        Initializer.loadCustomItems();
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+          ItemStackUtil.updateInventory(player);
+        }
+        MessageUtil.info(sender, "config.yml 파일을 리로드했습니다");
+      }
+      case "reload-config" ->
+      {
+        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reload-config 명령어 사용", sender));
+        Cucumbery.getPlugin().registerConfig();
+        Cucumbery.getPlugin().reloadConfig();
+        Cucumbery.config = (YamlConfiguration) Cucumbery.getPlugin().getConfig();
+        try
+        {
+          Constant.WARNING_SOUND = Sound.valueOf(Cucumbery.config.getString("sound-const.warning-sound.sound"));
+        }
+        catch (Exception e)
+        {
+          Constant.WARNING_SOUND = Sound.ENTITY_ENDERMAN_TELEPORT;
+        }
+        try
+        {
+          Constant.ERROR_SOUND = Sound.valueOf(Cucumbery.config.getString("sound-const.error-sound.sound"));
+        }
+        catch (Exception e)
+        {
+          Constant.ERROR_SOUND = Sound.BLOCK_ANVIL_LAND;
+        }
+        Constant.WARNING_SOUND_PITCH = Cucumbery.config.getDouble("sound-const.warning-sound.pitch");
+        Constant.WARNING_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.warning-sound.volume");
+        Constant.ERROR_SOUND_PITCH = Cucumbery.config.getDouble("sound-const.error-sound.pitch");
+        Constant.ERROR_SOUND_VOLUME = Cucumbery.config.getDouble("sound-const.error-sound.volume");
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+          ItemStackUtil.updateInventory(player);
+        }
+        MessageUtil.info(sender, "config.yml 파일을 리로드했습니다");
+      }
       case "reload-data" ->
       {
         MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reload-data 명령어 사용", sender));
         Bukkit.reloadData();
         MessageUtil.info(sender, "서버 데이터 파일을 리로드했습니다");
+      }
+      case "reload-custom-recipes" -> {
+        MessageUtil.broadcastDebug(ComponentUtil.translate("%s이(가) /cucumbery reload-custom-recipes 명령어 사용", sender));
+        Initializer.loadCustomRecipes();
+        MessageUtil.info(sender, "특수 조합법 파일을 리로드했습니다");
       }
       case "reload-plugin" ->
       {
@@ -366,7 +437,8 @@ public class CommandCucumbery implements CucumberyCommandExecutor
     if (length == 1)
     {
       return CommandTabUtil.tabCompleterList(args, "<인수>", false,
-              "reload", "reload-data", "reload-plugin", "reload-custom-enchants", "version", "update", "update-quickshop-item", "update-customrecipe-item", "purge-user-data-files", "reset-custom-mining-cooldowns");
+              "reload", "reload-data", "reload-plugin", "reload-custom-enchants", "version", "update", "update-quickshop-item", "update-customrecipe-item", "purge-user-data-files", "reset-custom-mining-cooldowns",
+      "reload-configs", "reload-config", "reload-custom-recipes");
     }
     if (length == 2)
     {
