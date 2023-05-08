@@ -62,13 +62,7 @@ public class ItemLore
     // config 설정 - 아이템에 이름이 있을 경우 아이템 설명 업데이트 안함(모루로 수정한 아이템은 제외)
     if (!Cucumbery.config.getBoolean("use-helpful-lore-feature-with-named-items") && displayName != null)
     {
-      if (displayName.color() != null
-              || displayName.decoration(TextDecoration.ITALIC) != State.NOT_SET
-              || displayName.decoration(TextDecoration.BOLD) != State.NOT_SET
-              || displayName.decoration(TextDecoration.OBFUSCATED) != State.NOT_SET
-              || displayName.decoration(TextDecoration.STRIKETHROUGH) != State.NOT_SET
-              || displayName.decoration(TextDecoration.UNDERLINED) != State.NOT_SET
-      )
+      if (displayName.color() != null || displayName.decoration(TextDecoration.ITALIC) != State.NOT_SET || displayName.decoration(TextDecoration.BOLD) != State.NOT_SET || displayName.decoration(TextDecoration.OBFUSCATED) != State.NOT_SET || displayName.decoration(TextDecoration.STRIKETHROUGH) != State.NOT_SET || displayName.decoration(TextDecoration.UNDERLINED) != State.NOT_SET)
       {
         ItemLore.removeItemLore(itemStack);
         return itemStack;
@@ -77,7 +71,7 @@ public class ItemLore
     Material type = itemStack.getType();
     NBTItem nbtItem = new NBTItem(itemStack, true);
     nbtItem.removeKey("CustomMiningUpdater");
-    String customType = nbtItem.getString("id") + "";
+    String customType = nbtItem.getString("id");
     CustomMaterial customMaterial = CustomMaterial.itemStackOf(itemStack);
     {
       try
@@ -105,13 +99,13 @@ public class ItemLore
     {
       PotionType potionType = potionMeta.getBasePotionData().getType();
       CustomEffectType customEffectType = switch (potionType)
-              {
-                case AWKWARD -> CustomEffectType.AWKWARD;
-                case MUNDANE -> CustomEffectType.MUNDANE;
-                case THICK -> CustomEffectType.THICK;
-                case UNCRAFTABLE -> CustomEffectType.UNCRAFTABLE;
-                default -> null;
-              };
+      {
+        case AWKWARD -> CustomEffectType.AWKWARD;
+        case MUNDANE -> CustomEffectType.MUNDANE;
+        case THICK -> CustomEffectType.THICK;
+        case UNCRAFTABLE -> CustomEffectType.UNCRAFTABLE;
+        default -> null;
+      };
       if (customEffectType != null)
       {
         NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
@@ -151,12 +145,12 @@ public class ItemLore
     if (itemCategoryType == null)
     {
       itemGroup = switch (type)
-              {
-                case SUSPICIOUS_STEW -> ComponentUtil.translate(CreativeCategory.FOOD.translationKey());
-                case ENCHANTED_BOOK -> ComponentUtil.translate(Material.ENCHANTED_BOOK.translationKey());
-                case WRITTEN_BOOK -> ComponentUtil.translate(CreativeCategory.MISC.translationKey());
-                default -> ComponentUtil.translate("치트");
-              };
+      {
+        case SUSPICIOUS_STEW -> ComponentUtil.translate(CreativeCategory.FOOD.translationKey());
+        case ENCHANTED_BOOK -> ComponentUtil.translate(Material.ENCHANTED_BOOK.translationKey());
+        case WRITTEN_BOOK -> ComponentUtil.translate(CreativeCategory.MISC.translationKey());
+        default -> ComponentUtil.translate("치트");
+      };
     }
     else
     {
@@ -283,17 +277,17 @@ public class ItemLore
         int totalLength = serial.length();
         for (char c : serial.toCharArray())
         {
-          String s = c + "";
-          s += (c + "").repeat(3);
+          String s = String.valueOf(c);
+          s += (String.valueOf(c)).repeat(3);
           totalLength += 3;
-          if ((c + "").matches("[A-Za-z0-9\" _-]") && c != 'i')
+          if ((String.valueOf(c)).matches("[A-Za-z0-9\" _-]") && c != 'i')
           {
-            s += (c + "").repeat(7);
+            s += (String.valueOf(c)).repeat(7);
             totalLength += 7;
           }
-          if ((c + "").matches("[ㄱ-ㅎㅏ-ㅣ가-힣]"))
+          if ((String.valueOf(c)).matches("[ㄱ-ㅎㅏ-ㅣ가-힣]"))
           {
-            s += (c + "").repeat(12);
+            s += (String.valueOf(c)).repeat(12);
             totalLength += 12;
           }
           list.add(s);

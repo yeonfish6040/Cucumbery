@@ -675,7 +675,7 @@ public class CustomEffectManager
         try
         {
           CustomEffectType customEffectType;
-          String s = root.getString(typeString + ".type") + "";
+          String s = root.getString(typeString + ".type", "");
           try
           {
             s = s.toLowerCase();
@@ -812,10 +812,6 @@ public class CustomEffectManager
           e.printStackTrace();
         }
       }
-//      if (effectMap.containsKey(uuid))
-//      {
-////        MessageUtil.sendWarn(Bukkit.getConsoleSender(), "커스텀 이펙트 데이터를 불러오는 도중 이미 존재하는 데이터가 있습니다! UUID : %s", uuid.toString());
-//      }
       effectMap.put(uuid, customEffects);
     }
   }
