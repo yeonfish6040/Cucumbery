@@ -33,6 +33,10 @@ public class BlockDamage implements Listener
     Location location = block.getLocation();
     if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
     {
+      if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS))
+      {
+        return;
+      }
       boolean instaBreak = block.getType().getHardness() == 0f;
       if (block.getType() == Material.FIRE || instaBreak)
       {
@@ -48,7 +52,7 @@ public class BlockDamage implements Listener
       }
       if (!Variable.customMiningCooldown.containsKey(location) || Variable.customMiningExtraBlocks.containsKey(location))
       {
-        CustomEffectManager.addEffect(player, new LocationCustomEffectImple(CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS, block.getLocation()));
+        CustomEffectManager.addEffect(player, new LocationCustomEffectImple(CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS, location));
       }
     }
   }

@@ -1,6 +1,6 @@
 package com.jho5245.cucumbery.listeners.block;
 
-import com.destroystokyo.paper.event.block.TNTPrimeEvent;
+
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
 import com.jho5245.cucumbery.util.no_groups.Method;
@@ -14,6 +14,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.TNTPrimeEvent;
+import org.bukkit.event.block.TNTPrimeEvent.PrimeCause;
 import org.bukkit.util.Vector;
 
 public class TNTPrime implements Listener
@@ -39,9 +41,9 @@ public class TNTPrime implements Listener
       {
         return;
       }
-      TNTPrimeEvent.PrimeReason primeReason = event.getReason();
+      PrimeCause primeReason = event.getCause();
       event.setCancelled(true);
-      Entity entity = event.getPrimerEntity();
+      Entity entity = event.getPrimingEntity();
       block.setType(Material.AIR);
       TNTPrimed tnt = block.getLocation().getWorld().spawn(block.getLocation().add(0.5D, 0D, 0.5D), TNTPrimed.class);
       tnt.setVelocity(new Vector(Cucumbery.config.getDouble("static-tnt-velocity.x"), Cucumbery.config.getDouble("static-tnt-velocity.y"), Cucumbery.config.getDouble("static-tnt-velocity.z")));
@@ -49,7 +51,7 @@ public class TNTPrime implements Listener
       {
         tnt.setSource(livingEntity);
       }
-      if (primeReason == TNTPrimeEvent.PrimeReason.EXPLOSION)
+      if (primeReason == PrimeCause.EXPLOSION)
       {
         tnt.setFuseTicks(Method.random(10, 30));
       }

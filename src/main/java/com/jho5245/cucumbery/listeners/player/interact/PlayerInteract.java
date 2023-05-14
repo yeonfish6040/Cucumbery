@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.commands.debug.CommandWhatIs;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.children.group.PlayerCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.children.group.StringCustomEffectImple;
@@ -1294,6 +1295,40 @@ public class PlayerInteract implements Listener
 
     this.noteBlock(event, itemExists);
     this.customItem(event, itemExists);
+    this.customMining(event);
+  }
+
+  int count = 0;
+
+  private void customMining(PlayerInteractEvent event)
+  {
+    if (true)
+      return;
+    Player player = event.getPlayer();
+    Block block = event.getClickedBlock();
+    Action action = event.getAction();
+    MessageUtil.broadcastDebug("action:" + action);
+    MessageUtil.broadcastDebug("block:", block != null ? block.getType() : "null");
+    if (block == null && action == Action.LEFT_CLICK_AIR)
+    {
+      block = player.getTargetBlockExact(4);
+      if (block != null)
+      {
+        action = Action.LEFT_CLICK_BLOCK;
+      }
+    }
+    if (action == Action.LEFT_CLICK_BLOCK && block != null && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+    {
+      MessageUtil.broadcastDebug("here");
+      Location location = block.getLocation();
+      if (!Variable.customMiningCooldown.containsKey(location) || Variable.customMiningExtraBlocks.containsKey(location))
+      {
+        MessageUtil.broadcastDebug("here2");
+        CustomEffectManager.addEffect(player, new LocationCustomEffectImple(CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS, location));
+        count++;
+      }
+    }
+    MessageUtil.broadcastDebug("-------------------count:" + count);
   }
 
   private boolean itemUsage(PlayerInteractEvent event, Player player, ItemStack item, boolean mainHand, boolean rightClick, boolean isSneaking)

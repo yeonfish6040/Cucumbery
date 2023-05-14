@@ -1,6 +1,7 @@
 package com.jho5245.cucumbery.util.addons;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.PacketType.Play.Client;
 import com.comphenix.protocol.PacketType.Play.Server;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
@@ -9,9 +10,11 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.EnumWrappers.PlayerDigType;
 import com.comphenix.protocol.wrappers.WrappedParticle;
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
+import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
@@ -34,7 +37,7 @@ import java.lang.reflect.Constructor;
 
 public class ProtocolLibManager
 {
-//  private static final List<Item> items = new ArrayList<>();
+  //  private static final List<Item> items = new ArrayList<>();
 //  private static final List<BukkitTask> tasks = new ArrayList<>();
   public static void manage()
   {
@@ -266,6 +269,50 @@ public class ProtocolLibManager
               if (Variable.fakeBlocks.get(location).getMaterial() != Material.AIR && type == Material.AIR)
               {
                 event.setCancelled(true);
+              }
+            }
+          }
+        }
+      }
+    });
+
+    protocolManager.addPacketListener(new PacketAdapter(Cucumbery.getPlugin(), ListenerPriority.NORMAL, Client.BLOCK_DIG)
+    {
+      @Override
+      public void onPacketReceiving(PacketEvent event)
+      {
+        if (!Cucumbery.using_ProtocolLib)
+        {
+          return;
+        }
+        PacketContainer packet = event.getPacket();
+        Player player = event.getPlayer();
+        if (player.isSneaking() && CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
+        {
+          PlayerDigType playerDigType = packet.getPlayerDigTypes().read(0);
+          if (playerDigType == PlayerDigType.START_DESTROY_BLOCK)
+          {
+            if (CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_CREATIVITY) || CustomEffectManager.hasEffect(player, CustomEffectType.CURSE_OF_CREATIVITY_BREAK))
+            {
+              event.setCancelled(true);
+              return;
+            }
+            int[] pos = getBlockPositionOf(packet.getModifier().read(0));
+            Location location = new Location(player.getWorld(), pos[0], pos[1], pos[2]);
+            if (!Variable.customMiningCooldown.containsKey(location) || Variable.customMiningExtraBlocks.containsKey(location))
+            {
+              // 가끔 hasEffect가 true인데 getEffect가 null을 반환함 왜?
+              try
+              {
+                CustomEffectManager.addEffect(player, new LocationCustomEffectImple(CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS, location));
+              }
+              catch (IllegalStateException ignored)
+              {
+
+              }
+              catch (Throwable t)
+              {
+                t.printStackTrace();
               }
             }
           }
