@@ -531,6 +531,7 @@ com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantWarmTouch.cl
 com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantVanishingTouch.class
 com\jho5245\cucumbery\util\storage\data\custom_enchant\touch\EnchantSmeltingTouch.class
 com\jho5245\cucumbery\listeners\inventory\PrepareAnvil$1.class
+com\jho5245\cucumbery\util\addons\ProtocolLibManager$4.class
 com\jho5245\cucumbery\util\no_groups\ColorUtil$ColorPattern.class
 com\jho5245\cucumbery\util\itemlore\ItemLore2BlockState$1.class
 com\jho5245\cucumbery\listeners\entity\no_groups\ProjectileHit.class

@@ -331,7 +331,7 @@ public class ItemStackUtil
 
   public static boolean itemExists(ItemStack item) // 아이템이 존재하는지 아닌지 판별
   {
-    return (item != null && item.getType() != Material.AIR);
+    return (item != null && item.getType() != Material.AIR) && item.getAmount() > 0;
   }
 
   public static boolean hasItemMeta(ItemStack item)

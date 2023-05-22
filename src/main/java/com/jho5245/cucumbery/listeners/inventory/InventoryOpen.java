@@ -136,10 +136,7 @@ public class InventoryOpen implements Listener
     {
       mcMMOBrewingStandMap.put(inventory.getLocation().toString(), uuid);
     }
-    if (inventory.getViewers().size() <= 1 && location != null &&
-            (inventory.getType() == InventoryType.CHEST && (inventory.getSize() == 27 || inventory.getSize() == 54) ||
-                    inventory.getType() != InventoryType.CHEST)
-            && !title.contains(Constant.CANCEL_STRING) && !title.contains(Constant.CUSTOM_RECIPE_CREATE_GUI))
+    if (inventory.getViewers().size() <= 1 && location != null)
     {
       for (int i = 0; i < inventory.getSize(); i++)
       {

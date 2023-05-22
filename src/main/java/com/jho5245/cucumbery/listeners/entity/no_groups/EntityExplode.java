@@ -259,7 +259,7 @@ public class EntityExplode implements Listener
       return;
     }
     List<String> keyList = config.getStringList("creeper-protection-coords");
-    if (keyList.size() == 0)
+    if (keyList.isEmpty())
     {
       return;
     }
@@ -322,7 +322,7 @@ public class EntityExplode implements Listener
       return;
     }
     List<String> keyList = config.getStringList("end-crystal-protection-coords");
-    if (keyList.size() == 0)
+    if (keyList.isEmpty())
     {
       return;
     }
@@ -386,7 +386,7 @@ public class EntityExplode implements Listener
       return;
     }
     List<String> keyList = config.getStringList("fireball-protection-coords");
-    if (keyList.size() == 0)
+    if (keyList.isEmpty())
     {
       return;
     }
@@ -450,7 +450,7 @@ public class EntityExplode implements Listener
       return;
     }
     List<String> keyList = config.getStringList("wither-skull-protection-coords");
-    if (keyList.size() == 0)
+    if (keyList.isEmpty())
     {
       return;
     }
