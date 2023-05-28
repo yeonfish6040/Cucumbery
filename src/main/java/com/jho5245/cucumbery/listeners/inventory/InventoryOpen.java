@@ -136,7 +136,8 @@ public class InventoryOpen implements Listener
     {
       mcMMOBrewingStandMap.put(inventory.getLocation().toString(), uuid);
     }
-    if (inventory.getViewers().size() <= 1 && location != null)
+    // 인벤토리가 좌표가 있는 설치된 블록이거나 휴대용 셜커 상자일 경우 아이템 설명 업데이트
+    if (inventory.getViewers().size() <= 1 && location != null || location == null && inventory.getType() == InventoryType.SHULKER_BOX)
     {
       for (int i = 0; i < inventory.getSize(); i++)
       {
