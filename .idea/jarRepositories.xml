@@ -37,6 +37,11 @@
       <option name="url" value="https://api.wany.io/amethy/repository/maven" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="public" />
+      <option name="name" value="public" />
+      <option name="url" value="https://repo.songoda.com/repository/public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="papermc" />
       <option name="name" value="papermc" />
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
@@ -62,14 +67,19 @@
       <option name="url" value="https://repo.codemc.io/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="localrepository" />
-      <option name="name" value="localrepository" />
-      <option name="url" value="file://G:\ETC\intellij_workspace\Cucumbery/lib" />
+      <option name="id" value="public" />
+      <option name="name" value="public" />
+      <option name="url" value="https://mvnrepository.com/artifact/com.songoda/ultimatetimber" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="enginehub-maven" />
       <option name="name" value="enginehub-maven" />
       <option name="url" value="https://maven.enginehub.org/repo/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="localrepository" />
+      <option name="name" value="localrepository" />
+      <option name="url" value="file://G:\ETC\intellij_workspace\Cucumbery/lib" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="dmulloy2-repo" />
@@ -90,6 +100,11 @@
       <option name="id" value="playpro-repo" />
       <option name="name" value="playpro-repo" />
       <option name="url" value="https://maven.playpro.com" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="localrepository" />
+      <option name="name" value="localrepository" />
+      <option name="url" value="file://C:\Users\yeonf\IdeaProjects\Cucumbery/lib" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="nexus" />

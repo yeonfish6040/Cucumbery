@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="UltimateTimber">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../UltimateTimber" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../UltimateTimber/UltimateTimber/Core/src" />
+      <root url="file://$PROJECT_DIR$/../UltimateTimber/UltimateTimber/Plugin/src" />
+    </SOURCES>
+  </library>
+</component>
