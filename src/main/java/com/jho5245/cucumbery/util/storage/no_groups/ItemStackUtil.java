@@ -1042,6 +1042,11 @@ public class ItemStackUtil
               display = ComponentUtil.translate("아무 염료");
               itemStack.setType(getAnimatedMaterial(Constant.DYES));
             }
+            else if (vanillaTags.getBoolean("minecraft:coals"))
+            {
+              display = ComponentUtil.translate("석탄 또는 숯");
+              itemStack.setType(getAnimatedMaterial(Tag.ITEMS_COALS.getValues()));
+            }
             else if (vanillaTags.getBoolean("minecraft:shulker_boxes"))
             {
               display = ComponentUtil.translate(containerEmpty ? "아이템이 들어있지 않은 아무 셜커 상자" : "아무 셜커 상자");
