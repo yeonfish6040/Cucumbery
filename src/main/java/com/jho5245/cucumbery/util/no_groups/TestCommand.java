@@ -37,7 +37,7 @@ public class TestCommand implements CucumberyCommandExecutor
 		{
 			switch (args[0])
 			{
-				case "explode" -> {
+				case "explode2" -> {
 					Player player = (Player) sender;
 					ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 					PacketContainer fakeExplosion = new PacketContainer(PacketType.Play.Server.EXPLOSION);
