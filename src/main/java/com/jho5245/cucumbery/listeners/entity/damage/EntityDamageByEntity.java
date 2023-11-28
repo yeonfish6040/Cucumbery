@@ -312,8 +312,8 @@ public class EntityDamageByEntity implements Listener
               {
                 duraTag = new NBTItem(victimShield,  true).getCompound(CucumberyTag.KEY_MAIN).getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
                 long curDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
-                duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, curDura - durabilityLoss);
-                breaking = curDura - durabilityLoss <= 0;
+                duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, curDura + durabilityLoss);
+                breaking = curDura + durabilityLoss >= duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
               }
               if (breaking)
               {

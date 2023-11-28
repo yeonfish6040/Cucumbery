@@ -656,14 +656,14 @@ public class CommandTabUtil
       suggestion = key.toString();
       returnKey = Completion.completion(suggestion, ComponentUtil.translate(suggestion.substring(1, suggestion.length() - 1)));
     }
-    if (!ignoreEmpty && tabArg.equals("") && list.isEmpty() || ignoreEmpty && list.isEmpty())
+    if (!ignoreEmpty && tabArg.isEmpty() && list.isEmpty() || ignoreEmpty && list.isEmpty())
     {
       return Collections.singletonList(returnKey);
     }
     list = new ArrayList<>(list);
-    list.removeIf(e -> e == null || e.equals("") || (e instanceof Completion completion && completion.suggestion().equals("")));
+    list.removeIf(e -> e == null || e.equals("") || (e instanceof Completion completion && completion.suggestion().isEmpty()));
     int length = tabArg.length();
-    if (!tabArg.equals(""))
+    if (!tabArg.isEmpty())
     {
       if (length == 1 && tabArg.charAt(0) >= '가' && tabArg.charAt(0) <= '힣')
       {
@@ -698,31 +698,16 @@ public class CommandTabUtil
           return Collections.singletonList(returnKey);
         }
       }
-      if (returnValue.isEmpty() && !(key instanceof Completion completion ? completion.suggestion() : key.toString()).equals("") && !ignoreEmpty)
+      if (returnValue.isEmpty() && !(key instanceof Completion completion ? completion.suggestion() : key.toString()).isEmpty() && !ignoreEmpty)
       {
         String key2 = (key instanceof Completion completion ? completion.suggestion() :
                 key.toString()).replace("<", "").replace(">", "").replace("[", "").replace("]", "");
-        String msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
-        if (key2.contains("개체"))
-        {
-          msg = "개체를 찾을 수 없습니다 (%s)";
-        }
-        if (key2.contains("플레이어") || key2.contains("관전자"))
-        {
-          msg = "플레이어를 찾을 수 없습니다 (%s)";
-        }
-        switch (key2)
-        {
-          case "아이템" -> msg = "argument.item.id.invalid";
-          case "블록" -> msg = "argument.block.id.invalid";
-          case "인수" -> msg = "명령어에 잘못된 인수가 있습니다: %s";
-          case "개체 유형" -> msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
-        }
+        String msg = getErrorMessage(key2);
         return errorMessage(msg, tabArg, ComponentUtil.translate(key2));
       }
       returnValue = sort(returnValue);
-      if ((ignoreEmpty && returnValue.isEmpty()) || (!(key instanceof Completion completion ? completion.suggestion() : key.toString())
-              .equals("") && returnValue.size() == 1 && returnValue.get(0).suggestion().equalsIgnoreCase(tabArg)))
+      if ((ignoreEmpty && returnValue.isEmpty()) || (!(key instanceof Completion completion ? completion.suggestion() : key.toString()).isEmpty()
+					&& returnValue.size() == 1 && returnValue.get(0).suggestion().equalsIgnoreCase(tabArg)))
       {
         return Collections.singletonList(returnKey);
       }
@@ -734,6 +719,28 @@ public class CommandTabUtil
       completions.add(o instanceof Completion completion ? completion : Completion.completion(o.toString()));
     }
     return sort(completions);
+  }
+
+  @NotNull
+  private static String getErrorMessage(String key2)
+  {
+    String msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
+    if (key2.contains("개체"))
+    {
+      msg = "개체를 찾을 수 없습니다 (%s)";
+    }
+    if (key2.contains("플레이어") || key2.contains("관전자"))
+    {
+      msg = "플레이어를 찾을 수 없습니다 (%s)";
+    }
+    switch (key2)
+    {
+      case "아이템" -> msg = "argument.item.id.invalid";
+      case "블록" -> msg = "argument.block.id.invalid";
+      case "인수" -> msg = "명령어에 잘못된 인수가 있습니다: %s";
+      case "개체 유형" -> msg = "'%s'은(는) 잘못되거나 알 수 없는 %s입니다";
+    }
+    return msg;
   }
 
   @NotNull
@@ -751,12 +758,24 @@ public class CommandTabUtil
   @NotNull
   public static <T extends Enum<T>> List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Enum<T>[] array, @NotNull Object key)
   {
-    return tabCompleterList(args, array, key, null);
+    return tabCompleterList(args, array, key, false);
+  }
+
+  @NotNull
+  public static <T extends Enum<T>> List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Enum<T>[] array, @NotNull Object key, boolean ignoreEmpty)
+  {
+    return tabCompleterList(args, array, key, ignoreEmpty, null);
+  }
+
+  @NotNull
+  public static <T extends Enum<T>> List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Enum<T>[] array, @NotNull Object key, @Nullable Predicate<T> exclude)
+  {
+    return tabCompleterList(args, array, key, false, exclude);
   }
 
   @NotNull
   @SuppressWarnings("unchecked")
-  public static <T extends Enum<T>> List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Enum<T>[] array, @NotNull Object key, @Nullable Predicate<T> exclude)
+  public static <T extends Enum<T>> List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Enum<T>[] array, @NotNull Object key, boolean ignoreEmpty, @Nullable Predicate<T> exclude)
   {
     List<Object> list = new ArrayList<>();
     String arg = args[args.length - 1];
@@ -788,6 +807,10 @@ public class CommandTabUtil
           {
             hover = ComponentUtil.translate(userData.getKey().replace("-", " "));
           }
+          else if (e instanceof Sound sound)
+          {
+            hover = ComponentUtil.translate("key:subtitles." + sound.key().value() + "|" + sound.key().value());
+          }
           else if (e instanceof Translatable translatable)
           {
             hover = ComponentUtil.translate(translatable.translationKey());
@@ -796,7 +819,7 @@ public class CommandTabUtil
         }
       }
     }
-    return tabCompleterList(args, list, key);
+    return tabCompleterList(args, list, key, ignoreEmpty);
   }
 
   @NotNull
@@ -826,7 +849,7 @@ public class CommandTabUtil
         args[args.length - 1] = "cucumbery:" + args[args.length - 1];
       }*/
       String lastArg = args[args.length - 1];
-      if (k instanceof NamespacedKey && !lastArg.equals("") && lastArg.length() <= 2)
+      if (k instanceof NamespacedKey && !lastArg.isEmpty() && lastArg.length() <= 2)
       {
         args[args.length - 1] = "cucumbery:" + lastArg;
       }
@@ -844,6 +867,18 @@ public class CommandTabUtil
   public static List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Object key, boolean ignoreEmpty, @NotNull Object... list)
   {
     return tabCompleterList(args, Arrays.asList(list), key, ignoreEmpty);
+  }
+
+  @NotNull
+  public static List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Object key, @NotNull List<String> list)
+  {
+    return tabCompleterList(args, list, key, false);
+  }
+
+  @NotNull
+  public static List<Completion> tabCompleterList(@NotNull String[] args, @NotNull Object key, boolean ignoreEmpty, @NotNull List<String> list)
+  {
+    return tabCompleterList(args, list, key, ignoreEmpty);
   }
 
   @NotNull

@@ -89,7 +89,7 @@ public class ItemLore2
         itemTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN);
       }
       duraTag = itemTag.addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
-      duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, defaultConfigDura);
+      duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 0L);
       duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, defaultConfigDura);
       itemMeta = nbtItem.getItem().getItemMeta();
     }

@@ -1,5 +1,6 @@
 package com.jho5245.cucumbery.util.storage.no_groups;
 
+import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.itemlore.ItemLore;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import org.bukkit.Bukkit;
@@ -25,37 +26,6 @@ public class RecipeChecker
       {
         Recipe recipe = recipeIterator.next();
         recipes.add(recipe);
-//        if (recipe instanceof ShapedRecipe shapedRecipe)
-//        {
-//          Map<Character, RecipeChoice> itemStackMap = shapedRecipe.getChoiceMap();
-//          String keyValue = shapedRecipe.getKey().getKey();
-//          ShapedRecipe newShapedRecipe = new ShapedRecipe(NamespacedKey.fromString("cucumbery:" + keyValue), recipe.getResult());
-//          for (char c : itemStackMap.keySet())
-//          {
-//            RecipeChoice recipeChoice = itemStackMap.get(c);
-//            if (recipeChoice instanceof MaterialChoice materialChoice)
-//            {
-//              List<Material> materials = materialChoice.getChoices();
-//              List<ItemStack> itemStacks = new ArrayList<>();
-//              for (Material material : materials)
-//              {
-//                itemStacks.add(ItemStackUtil.loredItemStack(material));
-//              }
-//              recipeChoice = new RecipeChoice.ExactChoice(itemStacks);
-//            }
-//            if (recipeChoice instanceof ExactChoice exactChoice)
-//            {
-//              List<ItemStack> itemStacks = new ArrayList<>(exactChoice.getChoices());
-//              for (int i = 0; i < itemStacks.size(); i++)
-//              {
-//                itemStacks.set(i, ItemLore.setItemLore(itemStacks.get(i)));
-//              }
-//              recipeChoice = new RecipeChoice.ExactChoice(itemStacks);
-//            }
-//            newShapedRecipe.setIngredient(c, recipeChoice);
-//          }
-//          recipes.add(newShapedRecipe);
-//        }
       }
       catch (Exception ignored)
       {
@@ -72,41 +42,20 @@ public class RecipeChecker
     {
       return true;
     }
-    switch (type)
-    {
-      case ACACIA_WOOD:
-      case BIRCH_WOOD:
-      case DARK_OAK_WOOD:
-      case JUNGLE_WOOD:
-      case OAK_WOOD:
-      case SPRUCE_WOOD:
-      case STRIPPED_ACACIA_WOOD:
-      case STRIPPED_BIRCH_WOOD:
-      case STRIPPED_JUNGLE_WOOD:
-      case STRIPPED_OAK_WOOD:
-      case STRIPPED_SPRUCE_WOOD:
-      case STRIPPED_DARK_OAK_WOOD:
-      case LEATHER_HORSE_ARMOR:
-      case WHITE_BANNER:
-      case ORANGE_BANNER:
-      case MAGENTA_BANNER:
-      case LIGHT_BLUE_BANNER:
-      case YELLOW_BANNER:
-      case LIME_BANNER:
-      case PINK_BANNER:
-      case GRAY_BANNER:
-      case LIGHT_GRAY_BANNER:
-      case CYAN_BANNER:
-      case PURPLE_BANNER:
-      case BLUE_BANNER:
-      case BROWN_BANNER:
-      case GREEN_BANNER:
-      case RED_BANNER:
-      case BLACK_BANNER:
-        return true;
-      default:
-        break;
-    }
+		switch (type)
+		{
+			case ACACIA_WOOD, BIRCH_WOOD, DARK_OAK_WOOD, JUNGLE_WOOD, OAK_WOOD, SPRUCE_WOOD, STRIPPED_ACACIA_WOOD,
+          STRIPPED_BIRCH_WOOD, STRIPPED_JUNGLE_WOOD, STRIPPED_OAK_WOOD, STRIPPED_SPRUCE_WOOD, STRIPPED_DARK_OAK_WOOD,
+          LEATHER_HORSE_ARMOR, WHITE_BANNER, ORANGE_BANNER, MAGENTA_BANNER, LIGHT_BLUE_BANNER, YELLOW_BANNER, LIME_BANNER,
+          PINK_BANNER, GRAY_BANNER, LIGHT_GRAY_BANNER, CYAN_BANNER, PURPLE_BANNER, BLUE_BANNER, BROWN_BANNER, GREEN_BANNER,
+          RED_BANNER, BLACK_BANNER ->
+			{
+				return true;
+			}
+			default ->
+			{
+			}
+		}
     try
     {
       for (Recipe recipe : recipes)
@@ -138,7 +87,7 @@ public class RecipeChecker
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+      Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
       return false;
     }
     return false;
@@ -147,61 +96,23 @@ public class RecipeChecker
   public static boolean hasSmeltingRecipe(@NotNull ItemStack itemStack)
   {
     // Special Case
-    switch (itemStack.getType())
-    {
-      case IRON_AXE:
-      case IRON_BOOTS:
-      case IRON_CHESTPLATE:
-      case IRON_HELMET:
-      case IRON_HOE:
-      case IRON_HORSE_ARMOR:
-      case IRON_LEGGINGS:
-      case IRON_PICKAXE:
-      case IRON_SHOVEL:
-      case IRON_SWORD:
-      case CHAINMAIL_BOOTS:
-      case CHAINMAIL_CHESTPLATE:
-      case CHAINMAIL_HELMET:
-      case CHAINMAIL_LEGGINGS:
-      case GOLDEN_AXE:
-      case GOLDEN_BOOTS:
-      case GOLDEN_CHESTPLATE:
-      case GOLDEN_HELMET:
-      case GOLDEN_HOE:
-      case GOLDEN_HORSE_ARMOR:
-      case GOLDEN_LEGGINGS:
-      case GOLDEN_PICKAXE:
-      case GOLDEN_SHOVEL:
-      case GOLDEN_SWORD:
-      case ACACIA_LOG:
-      case BIRCH_LOG:
-      case DARK_OAK_LOG:
-      case JUNGLE_LOG:
-      case OAK_LOG:
-      case SPRUCE_LOG:
-      case STRIPPED_ACACIA_LOG:
-      case STRIPPED_BIRCH_LOG:
-      case STRIPPED_DARK_OAK_LOG:
-      case STRIPPED_JUNGLE_LOG:
-      case STRIPPED_OAK_LOG:
-      case STRIPPED_SPRUCE_LOG:
-      case ACACIA_WOOD:
-      case BIRCH_WOOD:
-      case DARK_OAK_WOOD:
-      case JUNGLE_WOOD:
-      case OAK_WOOD:
-      case SPRUCE_WOOD:
-      case STRIPPED_ACACIA_WOOD:
-      case STRIPPED_BIRCH_WOOD:
-      case STRIPPED_JUNGLE_WOOD:
-      case STRIPPED_OAK_WOOD:
-      case STRIPPED_SPRUCE_WOOD:
-      case STRIPPED_DARK_OAK_WOOD:
-      case NETHER_GOLD_ORE:
-        return true;
-      default:
-        break;
-    }
+		switch (itemStack.getType())
+		{
+			case IRON_AXE, IRON_BOOTS, IRON_CHESTPLATE, IRON_HELMET, IRON_HOE, IRON_HORSE_ARMOR,
+          IRON_LEGGINGS, IRON_PICKAXE, IRON_SHOVEL, IRON_SWORD, CHAINMAIL_BOOTS, CHAINMAIL_CHESTPLATE,
+          CHAINMAIL_HELMET, CHAINMAIL_LEGGINGS, GOLDEN_AXE, GOLDEN_BOOTS, GOLDEN_CHESTPLATE, GOLDEN_HELMET,
+          GOLDEN_HOE, GOLDEN_HORSE_ARMOR, GOLDEN_LEGGINGS, GOLDEN_PICKAXE, GOLDEN_SHOVEL, GOLDEN_SWORD, ACACIA_LOG,
+          BIRCH_LOG, DARK_OAK_LOG, JUNGLE_LOG, OAK_LOG, SPRUCE_LOG, STRIPPED_ACACIA_LOG, STRIPPED_BIRCH_LOG, STRIPPED_DARK_OAK_LOG,
+          STRIPPED_JUNGLE_LOG, STRIPPED_OAK_LOG, STRIPPED_SPRUCE_LOG, ACACIA_WOOD, BIRCH_WOOD, DARK_OAK_WOOD, JUNGLE_WOOD, OAK_WOOD,
+          SPRUCE_WOOD, STRIPPED_ACACIA_WOOD, STRIPPED_BIRCH_WOOD, STRIPPED_JUNGLE_WOOD, STRIPPED_OAK_WOOD, STRIPPED_SPRUCE_WOOD,
+          STRIPPED_DARK_OAK_WOOD, NETHER_GOLD_ORE ->
+			{
+				return true;
+			}
+			default ->
+			{
+			}
+		}
     try
     {
       Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
@@ -231,7 +142,7 @@ public class RecipeChecker
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
       return false;
     }
     return false;

@@ -128,7 +128,7 @@ Component a = ComponentUtil.create(Prefix.INFO, "만약 아이템 강화를 중�
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
         MessageUtil.broadcastDebug("오류");
         // DO NOTHING
       }

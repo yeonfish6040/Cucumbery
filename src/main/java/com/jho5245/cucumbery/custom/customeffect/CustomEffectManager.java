@@ -5,7 +5,6 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffect.DisplayType;
 import com.jho5245.cucumbery.custom.customeffect.children.group.*;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
-import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeMinecraft;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectAbstractApplyEvent.ApplyReason;
 import com.jho5245.cucumbery.events.entity.*;
 import com.jho5245.cucumbery.events.entity.EntityCustomEffectRemoveEvent.RemoveReason;
@@ -270,7 +269,7 @@ public class CustomEffectManager
           catch (Throwable e)
           {
             MessageUtil.consoleSendMessage("removeEffect 비동기 호출됨 1");
-            e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(            e.getMessage());
           }
           if (event.isCancelled())
           {
@@ -297,7 +296,7 @@ public class CustomEffectManager
           catch (Throwable e)
           {
             MessageUtil.consoleSendMessage("removeEffect 비동기 호출됨 2");
-            e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(            e.getMessage());
           }
         }
       }
@@ -332,7 +331,7 @@ public class CustomEffectManager
           catch (Throwable e)
           {
             MessageUtil.consoleSendMessage("removeEffect 비동기 호출됨 3");
-            e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(            e.getMessage());
           }
           if (event.isCancelled())
           {
@@ -359,7 +358,7 @@ public class CustomEffectManager
           catch (Throwable e)
           {
             MessageUtil.consoleSendMessage("removeEffect 비동기 호출됨 4");
-            e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(            e.getMessage());
           }
         }
       }
@@ -749,7 +748,7 @@ public class CustomEffectManager
               }
               catch (Exception e)
               {
-                e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(                e.getMessage());
               }
             }
           }
@@ -809,7 +808,7 @@ public class CustomEffectManager
         }
         catch (Exception e)
         {
-          e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(          e.getMessage());
         }
       }
       effectMap.put(uuid, customEffects);
@@ -827,43 +826,26 @@ public class CustomEffectManager
   public static List<PotionEffect> removeDisplay(@NotNull Player player, @NotNull Collection<PotionEffect> potionEffects)
   {
     potionEffects = new ArrayList<>(potionEffects);
-    potionEffects.removeIf(potionEffect -> (potionEffect.getDuration() > 0 && potionEffect.getDuration() <= 100) && !potionEffect.hasParticles() && !potionEffect.hasIcon());
+    // 커스텀 채광 효과
+    potionEffects.removeIf(potionEffect -> potionEffect.getDuration() < 3 && (potionEffect.getType().equals(PotionEffectType.SLOW_DIGGING) || potionEffect.getType().equals(PotionEffectType.FAST_DIGGING)));
     potionEffects.removeIf(potionEffect ->
             (CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT) || CustomEffectManager.hasEffect(player, CustomEffectType.FANCY_SPOTLIGHT_ACTIVATED)) &&
-                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && potionEffect.getAmplifier() == 0 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
-    potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.NAUSEA) &&
-                    potionEffect.getType().equals(PotionEffectType.CONFUSION) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 64 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
-    potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.REGENERATION) &&
-                    potionEffect.getType().equals(PotionEffectType.REGENERATION) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
-    potionEffects.removeIf(potionEffect ->
-            (CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON) || CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON_M)) &&
-                    potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
-    potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.BLINDNESS) &&
-                    potionEffect.getType().equals(PotionEffectType.BLINDNESS) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 22 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
-    potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.NIGHT_VISION) &&
-                    potionEffect.getType().equals(PotionEffectType.NIGHT_VISION) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 5 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
-    potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.POISON) &&
-                    potionEffect.getType().equals(PotionEffectType.POISON) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
-    potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.WITHER) &&
-                    potionEffect.getType().equals(PotionEffectType.WITHER) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 100 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
-    potionEffects.removeIf(potionEffect ->
-            CustomEffectManager.hasEffect(player, CustomEffectTypeMinecraft.DARKNESS) &&
-                    potionEffect.getType().equals(PotionEffectType.DARKNESS) && potionEffect.getDuration() > 0 && potionEffect.getDuration() < 62 && !potionEffect.hasParticles() && !potionEffect.hasIcon()
-    );
+                    potionEffect.getType().equals(PotionEffectType.REGENERATION));
+    List<PotionEffectType> removeList = new ArrayList<>();
+    for (CustomEffect customEffect : CustomEffectManager.getEffects(player))
+    {
+      CustomEffectType customEffectType = customEffect.getType();
+      if (customEffectType.getNamespacedKey().getNamespace().equals("minecraft"))
+      {
+        PotionEffectType potionEffectType = PotionEffectType.getByName(customEffectType.getNamespacedKey().getKey());
+        if (potionEffectType == null)
+        {
+          throw new NullPointerException("Invalid Potion Effect Type: " + customEffectType.getIdString());
+        }
+        removeList.add(potionEffectType);
+      }
+    }
+    potionEffects.removeIf(potionEffect -> removeList.contains(potionEffect.getType()));
     return new ArrayList<>(potionEffects);
   }
 

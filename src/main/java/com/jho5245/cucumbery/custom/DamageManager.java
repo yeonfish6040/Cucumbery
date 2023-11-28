@@ -208,12 +208,12 @@ public class DamageManager
             }
             if (CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.WA_SANS) && victim instanceof AbstractSkeleton)
             {
-              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.NEWBIE_SHIELD).getAmplifier();
+              int amplifier = CustomEffectManager.getEffect(damagerEntity, CustomEffectType.WA_SANS).getAmplifier();
               damageMultiplier += (amplifier + 1) * 0.1;
             }
             if (CustomEffectManager.hasEffect(victim, CustomEffectType.WA_SANS) && damagerEntity instanceof AbstractSkeleton)
             {
-              int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.NEWBIE_SHIELD).getAmplifier();
+              int amplifier = CustomEffectManager.getEffect(victim, CustomEffectType.WA_SANS).getAmplifier();
               finalDamageMultiplier *= 1 - 0.03 * (amplifier + 1);
             }
             if (CustomEffectManager.hasEffect(victim, CustomEffectType.COMBAT_MODE_RANGED) || CustomEffectManager.hasEffect(damagerEntity, CustomEffectType.COMBAT_MODE_MELEE))

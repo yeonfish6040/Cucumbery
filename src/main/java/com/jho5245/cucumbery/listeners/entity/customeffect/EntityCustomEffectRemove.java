@@ -27,12 +27,10 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
@@ -342,5 +340,135 @@ public class EntityCustomEffectRemove implements Listener
 
       }
     }
+
+    if (customEffectType.getNamespacedKey().getNamespace().equals("minecraft") && entity instanceof LivingEntity livingEntity)
+    {
+      PotionEffectType potionEffectType = PotionEffectType.getByName(customEffectType.getNamespacedKey().getKey());
+      if (potionEffectType == null)
+      {
+        throw new NullPointerException("Invalid Potion Effect Type: " + customEffectType.getIdString());
+      }
+      livingEntity.removePotionEffect(potionEffectType);
+    }
+/*
+    if (entity instanceof LivingEntity livingEntity)
+    {
+      if (customEffectType == CustomEffectTypeMinecraft.SPEED)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SPEED);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.HASTE)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.FAST_DIGGING);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.MINING_FATIGUE)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.STRENGTH)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.INSTANT_HEALTH)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.HEAL);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.INSTANT_DAMAGE)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.HARM);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.JUMP_BOOST)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.JUMP);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+      if (customEffectType == CustomEffectTypeMinecraft.SLOWNESS)
+      {
+        livingEntity.removePotionEffect(PotionEffectType.SLOW);
+      }
+    }*/
   }
 }

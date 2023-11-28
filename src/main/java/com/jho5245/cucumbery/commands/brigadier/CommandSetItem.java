@@ -19,15 +19,15 @@ import java.util.List;
 	private final List<Argument<?>> argument = new ArrayList<>();
 
 	{
-		argument.add(new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
-		argument.add( new MultiLiteralArgument("mainhand", "offhand", "helmet", "chestplate", "leggings", "boots"));
+		argument.add(new EntitySelectorArgument.ManyEntities("개체"));
+		argument.add( new MultiLiteralArgument("args", List.of("mainhand", "offhand", "helmet", "chestplate", "leggings", "boots")));
 	}
 
 	private final List<Argument<?>> argument2 = new ArrayList<>();
 
 	{
-		argument2.add( new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES));
-		argument2.add( new MultiLiteralArgument("mainhand", "offhand", "helmet", "chestplate", "leggings", "boots"));
+		argument2.add( new EntitySelectorArgument.ManyEntities("개체"));
+		argument2.add( new MultiLiteralArgument("args", List.of("mainhand", "offhand", "helmet", "chestplate", "leggings", "boots")));
 		argument2.add(new BooleanArgument("강제로 변경"));
 	}
 
@@ -41,7 +41,7 @@ import java.util.List;
 			{
 				item = new ItemStack(Material.AIR);
 			}
-			for (Entity entity : (Collection<Entity>) args[0])
+			for (Entity entity : (Collection<Entity>) args.get(0))
 			{
 				if (entity instanceof LivingEntity)
 				{
@@ -49,7 +49,7 @@ import java.util.List;
 					EntityEquipment equipment = livingEntity.getEquipment();
 					try
 					{
-						switch ((String) args[1])
+						switch ((String) args.get(1))
 						{
 							case "mainhand":
 								if (!ItemStackUtil.itemExists(equipment.getItemInMainHand()))
@@ -96,8 +96,8 @@ import java.util.List;
 			{
 				item = new ItemStack(Material.AIR);
 			}
-			boolean force = (boolean) args[2];
-			for (Entity entity : (Collection<Entity>) args[0])
+			boolean force = (boolean) args.get(2);
+			for (Entity entity : (Collection<Entity>) args.get(0))
 			{
 				if (entity instanceof LivingEntity)
 				{
@@ -105,7 +105,7 @@ import java.util.List;
 					EntityEquipment equipment = livingEntity.getEquipment();
 					try
 					{
-						switch ((String) args[1])
+						switch ((String) args.get(1))
 						{
 							case "mainhand":
 								if (force || !ItemStackUtil.itemExists(equipment.getItemInMainHand()))

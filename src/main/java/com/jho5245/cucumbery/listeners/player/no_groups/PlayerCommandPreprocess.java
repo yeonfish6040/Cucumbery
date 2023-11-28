@@ -92,7 +92,7 @@ public class PlayerCommandPreprocess implements Listener
         // 알 수 없는 명령어 처리
         player.sendMessage(ComponentUtil.translate("command.unknown.command", NamedTextColor.RED));
         player.sendMessage(Component.empty().append(Component.text(label, NamedTextColor.RED).decoration(TextDecoration.UNDERLINED, State.TRUE))
-                .append(ComponentUtil.translate("command.context.here", NamedTextColor.RED).decoration(TextDecoration.ITALIC, State.TRUE)));
+                .append(ComponentUtil.translate("&ccommand.context.here").decoration(TextDecoration.ITALIC, State.TRUE)));
         this.playSoundOnPerformCommand(event, playSound);
         return;
       }

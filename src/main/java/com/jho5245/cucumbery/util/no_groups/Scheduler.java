@@ -395,7 +395,7 @@ public class Scheduler
         int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
         itemStack.setType(Material.LEATHER_HELMET);
         int newMaxDamage = itemStack.getType().getMaxDurability();
-        damage *= 1d * newMaxDamage / maxDamage;
+        damage *= (int) (1d * newMaxDamage / maxDamage);
         damageable.setDamage(damage);
         itemStack.setItemMeta(damageable);
         LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
@@ -421,7 +421,7 @@ public class Scheduler
         int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
         itemStack.setType(Material.LEATHER_CHESTPLATE);
         int newMaxDamage = itemStack.getType().getMaxDurability();
-        damage *= 1d * newMaxDamage / maxDamage;
+        damage *= (int) (1d * newMaxDamage / maxDamage);
         damageable.setDamage(damage);
         itemStack.setItemMeta(damageable);
         LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
@@ -447,7 +447,7 @@ public class Scheduler
         int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
         itemStack.setType(Material.LEATHER_LEGGINGS);
         int newMaxDamage = itemStack.getType().getMaxDurability();
-        damage *= 1d * newMaxDamage / maxDamage;
+        damage *= (int) (1d * newMaxDamage / maxDamage);
         damageable.setDamage(damage);
         itemStack.setItemMeta(damageable);
         LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
@@ -473,7 +473,7 @@ public class Scheduler
         int damage = damageable.getDamage(), maxDamage = itemStack.getType().getMaxDurability();
         itemStack.setType(Material.LEATHER_BOOTS);
         int newMaxDamage = itemStack.getType().getMaxDurability();
-        damage *= 1d * newMaxDamage / maxDamage;
+        damage *= (int) (1d * newMaxDamage / maxDamage);
         damageable.setDamage(damage);
         itemStack.setItemMeta(damageable);
         LeatherArmorMeta leatherArmorMeta = (LeatherArmorMeta) itemStack.getItemMeta();
@@ -1729,7 +1729,7 @@ public class Scheduler
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
     }
     try
     {
@@ -1750,7 +1750,7 @@ public class Scheduler
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
     }
   }
 

@@ -34,7 +34,7 @@ public class CommandRepeat2 extends CommandBase
   }
 
   final private  List<Argument<?>> arguments = Arrays.asList(new IntegerArgument("반복 횟수", 1, 10000), new IntegerArgument("딜레이", 0, 20 * 60 * 60),
-          new GreedyStringArgument("명령어").replaceSuggestions(cmd -> commands));
+          new GreedyStringArgument("명령어"));
 
   public void registerCommand(String command, String permission, String... aliases)
   {
@@ -51,9 +51,9 @@ public class CommandRepeat2 extends CommandBase
       {
         commandSender = sender.getCaller();
       }
-      int repeat = (int) args[0];
-      int delay = (int) args[1];
-      String commandString = (String) args[2];
+      int repeat = (int) args.get(0);
+      int delay = (int) args.get(1);
+      String commandString = (String) args.get(2);
       final String originalCommandString = commandString;
       if (delay == 0)
       {

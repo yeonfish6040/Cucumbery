@@ -87,7 +87,7 @@ public class EntityComponentUtil
         }
         catch (Exception e)
         {
-          e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(          e.getMessage());
         }
       }
     }
@@ -158,7 +158,7 @@ public class EntityComponentUtil
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
       }
     }
     UUID uuid = entity.getUniqueId();
@@ -716,6 +716,30 @@ public class EntityComponentUtil
     }
     if (entity instanceof Item item)
     {
+      hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.translate("HP : %s", Constant.THE_COLOR_HEX + item.getHealth()));
+      hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.translate("PickupDelay : %s", Constant.THE_COLOR_HEX + item.getPickupDelay()));
+      hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.translate("isUnlimitedLifeTime : %s", Constant.THE_COLOR_HEX + item.isUnlimitedLifetime()));
+      hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.translate("canMobPickup : %s", Constant.THE_COLOR_HEX + item.canMobPickup()));
+      hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.translate("canPlayerPickup : %s", Constant.THE_COLOR_HEX + item.canPlayerPickup()));
+      hover = hover.append(Component.text("\n"));
+      hover = hover.append(ComponentUtil.translate("willAge : %s", Constant.THE_COLOR_HEX + item.willAge()));
+      UUID owner = item.getOwner(), thrower = item.getThrower();
+      if (owner != null)
+      {
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("소유자 : %s", SenderComponentUtil.senderComponent(owner, defaultColor, true)));
+      }      
+      if (thrower != null)
+      {
+        hover = hover.append(Component.text("\n"));
+        hover = hover.append(ComponentUtil.translate("버린 개체 : %s", SenderComponentUtil.senderComponent(thrower, defaultColor, true)));
+      }
+      hover = hover.append(Component.text("\n"));
       ItemStack itemStack = item.getItemStack();
       List<Component> lore = ItemStackUtil.getItemInfoAsComponents(itemStack, ComponentUtil.translate("rg255,204;[아이템]"), true);
       for (Component lor : lore)

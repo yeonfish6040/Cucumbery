@@ -20,8 +20,8 @@ public class CommandData2 extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(MANY_ENTITIES, NBT_CONTAINER);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
             {
-              Collection<Entity> entities = (Collection<Entity>) args[0];
-              NBTContainer nbtContainer = (NBTContainer) args[1];
+              Collection<Entity> entities = (Collection<Entity>) args.get(0);
+              NBTContainer nbtContainer = (NBTContainer) args.get(1);
               for (Entity entity : entities)
               {
                 NBTEntity nbtEntity = new NBTEntity(entity);

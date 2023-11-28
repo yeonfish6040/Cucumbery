@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class CommandSong implements CucumberyCommandExecutor
@@ -145,7 +146,7 @@ public class CommandSong implements CucumberyCommandExecutor
             }
             boolean random = fileName.startsWith("--random");
             String contain = random && fileName.startsWith("--random/") ? fileName.substring("--random/".length()) : "";
-            List<String> list = new ArrayList<>(Songs.list);
+            List<String> list = new ArrayList<>(Variable.songFiles);
             if (!contain.equals(""))
             {
               list.removeIf(s -> !s.toLowerCase().replace(" ", "").contains(contain.toLowerCase()));
@@ -279,7 +280,7 @@ public class CommandSong implements CucumberyCommandExecutor
             catch (Exception e)
             {
               MessageUtil.sendError(sender, "오류 뭐");
-              e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(              e.getMessage());
             }
             return true;
           }
@@ -674,7 +675,7 @@ public class CommandSong implements CucumberyCommandExecutor
             }
             boolean random = fileName.startsWith("--random");
             String contain = random && fileName.startsWith("--random/") ? fileName.substring("--random/".length()) : "";
-            List<String> list = new ArrayList<>(Songs.list);
+            List<String> list = new ArrayList<>(Variable.songFiles);
             if (!contain.equals(""))
             {
               list.removeIf(s -> !s.toLowerCase().replace(" ", "").contains(contain.toLowerCase()));
@@ -778,7 +779,7 @@ public class CommandSong implements CucumberyCommandExecutor
             catch (Exception e)
             {
               MessageUtil.sendError(sender, "오류 뭐");
-              e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(              e.getMessage());
             }
             return true;
           }
@@ -962,7 +963,7 @@ public class CommandSong implements CucumberyCommandExecutor
             }
             boolean random = fileName.startsWith("--random");
             String contain = random && fileName.startsWith("--random/") ? fileName.substring("--random/".length()) : "";
-            List<String> list = new ArrayList<>(Songs.list);
+            List<String> list = new ArrayList<>(Variable.songFiles);
             if (!contain.equals(""))
             {
               list.removeIf(s -> !s.toLowerCase().replace(" ", "").contains(contain.toLowerCase()));
@@ -977,28 +978,7 @@ public class CommandSong implements CucumberyCommandExecutor
             }
             try
             {
-              File songFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/songs/" + fileName);
-              if (force || !songFile.exists())
-              {
-                List<String> songs = Songs.list;
-                if (songs.contains(fileName.substring(0, fileName.length() - 4)))
-                {
-                  try
-                  {
-                    songFile = Songs.download(fileName, force);
-                  }
-                  catch (Exception e)
-                  {
-                    MessageUtil.noArg(sender, Prefix.NO_FILE, fileName);
-                    return true;
-                  }
-                }
-                else
-                {
-                  MessageUtil.noArg(sender, Prefix.NO_FILE, fileName);
-                  return true;
-                }
-              }
+              File songFile = Songs.download(fileName, force);
               if (!songFile.exists())
               {
                 MessageUtil.noArg(sender, Prefix.NO_FILE, fileName);
@@ -1041,10 +1021,16 @@ public class CommandSong implements CucumberyCommandExecutor
               CommandSong.playerRadio.put(uuid, playerRadio);
               CommandSong.playerSong.put(uuid, playerSong);
             }
+            catch (IOException e)
+            {
+              MessageUtil.noArg(sender, Prefix.NO_FILE, fileName);
+              return true;
+            }
             catch (Exception e)
             {
               MessageUtil.sendError(sender, "오류 뭐");
-              e.printStackTrace();
+              MessageUtil.info(sender, e.getMessage());
+              MessageUtil.info(sender, e.getStackTrace()[0]);
             }
           }
           case "stop" ->
@@ -1092,7 +1078,7 @@ public class CommandSong implements CucumberyCommandExecutor
             catch (Exception e)
             {
               MessageUtil.sendError(sender, "노래의 재생을 멈추는 도중에 알 수 없는 오류가 발생했습니다");
-              e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(              e.getMessage());
             }
           }
           case "info" ->

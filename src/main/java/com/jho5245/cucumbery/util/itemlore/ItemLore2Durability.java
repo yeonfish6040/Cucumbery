@@ -67,23 +67,7 @@ public class ItemLore2Durability
 
           if (maxDurability != 0)
           {
-            int originMaxDura = type.getMaxDurability();
-            double originItemDuraDouble = (originMaxDura * ((maxDurability - currentDurability) * 1d / maxDurability));
-            if (originItemDuraDouble > 0d && originItemDuraDouble < 1d)
-            {
-              originItemDuraDouble = 1d;
-            }
-            if (type == Material.ELYTRA)
-            {
-              if (currentDurability == 1)
-              {
-                originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 1;
-              }
-              else if (currentDurability > 1 && originItemDuraDouble > 430)
-              {
-                originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 2;
-              }
-            }
+            double originItemDuraDouble = getOriginItemDuraDouble(type, maxDurability, currentDurability);
             Damageable damageable = (Damageable) itemMeta;
             damageable.setDamage((int) originItemDuraDouble);
             item.setItemMeta(damageable);
@@ -93,7 +77,7 @@ public class ItemLore2Durability
         if (maxDurability == 0 && Constant.DURABLE_ITEMS.contains(type))
         {
           maxDurability = type.getMaxDurability();
-          currentDurability = maxDurability - ((Damageable) item.getItemMeta()).getDamage();
+          currentDurability = ((Damageable) item.getItemMeta()).getDamage();
         }
 
         if (maxDurability != 0 || Constant.DURABLE_ITEMS.contains(type))
@@ -101,9 +85,9 @@ public class ItemLore2Durability
           if (!hideDurability)
           {
             lore.add(Component.empty());
-            String color = Method2.getPercentageColor(currentDurability, maxDurability);
+            String color = Method2.getPercentageColor(maxDurability - currentDurability, maxDurability);
             lore.add(ComponentUtil.translate("rg255,204;" + (isDrill ? "연료" : "내구도") + " : %s",
-                    ComponentUtil.translate("&7%s / %s", color + Constant.Jeongsu.format(currentDurability), "g255;" + Constant.Jeongsu.format(maxDurability))));
+                    ComponentUtil.translate("&7%s / %s", color + Constant.Jeongsu.format(maxDurability - currentDurability), "g255;" + Constant.Jeongsu.format(maxDurability))));
           }
         }
 
@@ -116,7 +100,7 @@ public class ItemLore2Durability
         {
           dura += 9;
         }
-        double ratio = 1d * currentDurability / maxDurability;
+        double ratio = 1d * (maxDurability - currentDurability) / maxDurability;
         // 내구도로 인한 아이템 등급 수치 감소에서는 내구도가 꽉 찼을 때 비율이 0으로 되게 함
         ItemLoreUtil.setItemRarityValue(lore, (long) (ItemLoreUtil.getItemRarityValue(lore) * 0.01 + maxDurability * 0.05));
         long duraNegative = (long) ((1 + ItemLoreUtil.getItemRarityValue(lore) / 10000) * Math.pow(1.055 - (dura / 1000d), (100 - ratio * 100)) - 1);
@@ -146,5 +130,27 @@ public class ItemLore2Durability
         }
       }
     }
+  }
+
+  private static double getOriginItemDuraDouble(@NotNull Material type, long maxDurability, long currentDurability)
+  {
+    int originMaxDura = type.getMaxDurability();
+    double originItemDuraDouble = (originMaxDura * ((currentDurability) * 1d / maxDurability));
+    if (originItemDuraDouble > 0d && originItemDuraDouble < 1d)
+    {
+      originItemDuraDouble = 1d;
+    }
+    if (type == Material.ELYTRA)
+    {
+      if (currentDurability == 1)
+      {
+        originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 1;
+      }
+      else if (currentDurability > 1 && originItemDuraDouble > 430)
+      {
+        originItemDuraDouble = Material.ELYTRA.getMaxDurability() - 2;
+      }
+    }
+    return originItemDuraDouble;
   }
 }

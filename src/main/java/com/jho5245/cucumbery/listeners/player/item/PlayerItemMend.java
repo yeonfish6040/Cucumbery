@@ -33,10 +33,10 @@ public class PlayerItemMend implements Listener
       long curDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
       if (maxDura != 0)
       {
-        curDura += event.getRepairAmount();
-        if (curDura > maxDura)
+        curDura -= event.getRepairAmount();
+        if (curDura < 0)
         {
-          curDura = maxDura;
+          curDura = 0;
         }
         duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, curDura);
         duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, maxDura);

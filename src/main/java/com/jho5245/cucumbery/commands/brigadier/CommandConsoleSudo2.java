@@ -39,7 +39,7 @@ public class CommandConsoleSudo2 extends CommandBase
 		CommandAPICommand commandAPICommand = getCommandBase(command, permission, aliases);
 		commandAPICommand = commandAPICommand.withArguments(argument);
 		commandAPICommand = commandAPICommand.executesNative((sender, args) -> {
-			String cmd = (String) args[0];
+			String cmd = (String) args.get(0);
 			Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd);
 		});
 		commandAPICommand.register();

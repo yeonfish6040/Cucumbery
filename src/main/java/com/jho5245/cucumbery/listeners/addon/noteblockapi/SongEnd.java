@@ -6,6 +6,7 @@ import com.jho5245.cucumbery.util.addons.Songs;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Scheduler;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
+import com.jho5245.cucumbery.util.storage.data.Variable;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig.UserData;
 import com.xxmicloxx.NoteBlockAPI.event.SongEndEvent;
 import com.xxmicloxx.NoteBlockAPI.model.SoundCategory;
@@ -17,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SongEnd implements Listener
@@ -28,7 +30,7 @@ public class SongEnd implements Listener
     {
       Bukkit.getScheduler().runTaskLaterAsynchronously(Cucumbery.getPlugin(), () ->
       {
-        List<String> songs = Songs.list;
+        List<String> songs = new ArrayList<>(Variable.songFiles);
         if (songs.isEmpty())
         {
           return;

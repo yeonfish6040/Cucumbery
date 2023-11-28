@@ -217,15 +217,24 @@ public class BlockPlaceDataConfig extends ChunkConfig
 
   private static final float[][] offsets = {
           {0f, 0f, 0f},
-          {0.25f, 0.5f, 0.25f},
-          {0.25f, 0.5f, -0.25f},
-          {-0.25f, 0.5f, 0.25f},
           {-0.25f, 0.5f, -0.25f},
-          {0.25f, 0f, 0.25f},
-          {0.25f, 0f, -0.25f},
+          {-0.25f, 0.5f, 0.25f},
+          {0.25f, 0.5f, -0.25f},
+          {0.25f, 0.5f, 0.25f},
+          {-0.25f, 0f, -0.25f},
           {-0.25f, 0f, 0.25f},
-          {-0.25f, 0f, -0.25f}
+          {0.25f, 0f, -0.25f},
+          {0.25f, 0f, 0.25f}
   };
+
+/*  {0.25f, 0.5f, 0.25f},
+  {0.25f, 0.5f, -0.25f},
+  {-0.25f, 0.5f, 0.25f},
+  {-0.25f, 0.5f, -0.25f},
+  {0.25f, 0f, 0.25f},
+  {0.25f, 0f, -0.25f},
+  {-0.25f, 0f, 0.25f},
+  {-0.25f, 0f, -0.25f}*/
 
   private static void _spawnItemDisplay(@NotNull Collection<Player> players, @NotNull Location location, @NotNull NBTCompound nbtCompound)
   {
@@ -323,6 +332,9 @@ public class BlockPlaceDataConfig extends ChunkConfig
       scaleY *= 1.0005f;
       scaleZ *= 1.0005f;
     }
+
+    scaleX *= -1f;
+    scaleZ *= -1f;
 
     // TODO: NO serializer for 4d packet yet
 //    NBTList<Float> leftRotation = transformation.getFloatList("left_rotation");
@@ -423,7 +435,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
       // TODO: WIP
       case "block" ->
       {
-/*        Material material;
+        Material material;
         try
         {
           material = Material.valueOf(value);
@@ -433,7 +445,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
           MessageUtil.sendWarn(Bukkit.getConsoleSender(), "잘못된 블록 데이터가 있습니다: " + value);
           material = Material.AIR;
         }
-        values.add(new WrappedDataValue(22, Registry.get(Integer.class), 35 + (1 << 0xC)));*/
+        values.add(new WrappedDataValue(23, Registry.get(Integer.class), material.getId() + (1 << 0xC)));
       }
       case "player_head", "player_heads" ->
       {
@@ -443,7 +455,6 @@ public class BlockPlaceDataConfig extends ChunkConfig
         itemStack.setItemMeta(skullMeta);
         Object minecraftItemStack = MinecraftReflection.getMinecraftItemStack(itemStack);
         values.add(new WrappedDataValue(22, Registry.getItemStackSerializer(false), minecraftItemStack));
-
         int itemDisplay = 0;
         if (nbtItem.hasTag("item_display") && nbtItem.getType("item_display") == NBTType.NBTTagString)
         {
@@ -479,7 +490,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
           ItemLore.setItemLore(itemStack);
         }
         Object minecraftItemStack = MinecraftReflection.getMinecraftItemStack(itemStack);
-        values.add(new WrappedDataValue(22, Registry.getItemStackSerializer(false), minecraftItemStack));
+        values.add(new WrappedDataValue(23, Registry.getItemStackSerializer(false), minecraftItemStack));
         int itemDisplay = 0;
         if (nbtItem.hasTag("item_display") && nbtItem.getType("item_display") == NBTType.NBTTagString)
         {
@@ -499,7 +510,7 @@ public class BlockPlaceDataConfig extends ChunkConfig
         if (itemDisplay != 0)
         {
           // TODO: packet bug?? disabled temporaly
-//          values.add(new WrappedDataValue(23, Registry.get(Integer.class), itemDisplay));
+          values.add(new WrappedDataValue(24, Registry.get(Integer.class), itemDisplay));
         }
       }
       case "text" ->

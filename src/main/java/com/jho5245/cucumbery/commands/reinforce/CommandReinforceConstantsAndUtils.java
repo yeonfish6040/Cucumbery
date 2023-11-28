@@ -697,7 +697,7 @@ public class CommandReinforceConstantsAndUtils extends CommandReinforce
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
       }
       ItemLore.setItemLore(itemStack, new ItemLoreView(player));
       player.getInventory().setItemInMainHand(itemStack);

@@ -4,6 +4,7 @@ import com.jho5245.cucumbery.Cucumbery;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -79,18 +80,7 @@ public class Songs
       int responseCode = connection.getResponseCode();
       if (responseCode == HttpURLConnection.HTTP_OK)
       {
-        Reader inputReader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
-        BufferedReader streamReader = new BufferedReader(inputReader);
-        String streamLine;
-        StringBuilder content = new StringBuilder();
-        while ((streamLine = streamReader.readLine()) != null)
-        {
-          content.append(streamLine);
-        }
-        streamReader.close();
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(content.toString());
-        JSONArray array = (JSONArray) object.get("data");
+        JSONArray array = getJsonArray(connection);
         list.clear();
         for (Object o : array)
         {
@@ -109,6 +99,23 @@ public class Songs
     }
   }
 
+  private static JSONArray getJsonArray(HttpURLConnection connection) throws IOException, ParseException
+  {
+    Reader inputReader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
+    BufferedReader streamReader = new BufferedReader(inputReader);
+    String streamLine;
+    StringBuilder content = new StringBuilder();
+    while ((streamLine = streamReader.readLine()) != null)
+    {
+      content.append(streamLine);
+    }
+    streamReader.close();
+    JSONParser parser = new JSONParser();
+    JSONObject object = (JSONObject) parser.parse(content.toString());
+    JSONArray array = (JSONArray) object.get("data");
+    return array;
+  }
+
   public static String tranformStyle(String source)
   {
     char[] arr = source.toCharArray();
@@ -117,7 +124,7 @@ public class Songs
     {
       if (isSpecial(temp))
       {
-        sb.append(URLEncoder.encode("" + temp, StandardCharsets.UTF_8));
+        sb.append(URLEncoder.encode(String.valueOf(temp), StandardCharsets.UTF_8));
         continue;
       }
       sb.append(temp);

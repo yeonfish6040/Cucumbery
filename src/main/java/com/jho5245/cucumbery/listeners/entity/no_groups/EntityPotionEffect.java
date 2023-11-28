@@ -3,6 +3,7 @@ package com.jho5245.cucumbery.listeners.entity.no_groups;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffect;
 import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
+import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.data.Variable;
@@ -38,22 +39,28 @@ public class EntityPotionEffect implements Listener
     {
       int duration = potionEffect.getDuration();
       PotionEffectType effectType = potionEffect.getType();
-      if (cause == Cause.POTION_DRINK && effectType.equals(PotionEffectType.GLOWING) && duration == 0)
+      // 커스텀 채광 시스템으로 인한 성급함, 채굴 피로 효과 적용 여부
+      boolean isCustomMiningBaseEffect = duration == 2 && (effectType.equals(PotionEffectType.FAST_DIGGING) || effectType.equals(PotionEffectType.SLOW_DIGGING)) && CustomEffectManager.hasEffect(entity,
+          CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE);
+      if (!isCustomMiningBaseEffect)
       {
-        event.setCancelled(true);
-        return;
+        if (cause == Cause.POTION_DRINK && effectType.equals(PotionEffectType.GLOWING) && duration == 0)
+        {
+          event.setCancelled(true);
+          return;
+        }
+        HashMap<String, Integer> hashMap;
+        if (Variable.potionEffectApplyMap.containsKey(uuid))
+        {
+          hashMap = Variable.potionEffectApplyMap.get(uuid);
+        }
+        else
+        {
+          hashMap = new HashMap<>();
+        }
+        hashMap.put(effectType.translationKey(), duration);
+        Variable.potionEffectApplyMap.put(uuid, hashMap);
       }
-      HashMap<String, Integer> hashMap;
-      if (Variable.potionEffectApplyMap.containsKey(uuid))
-      {
-        hashMap = Variable.potionEffectApplyMap.get(uuid);
-      }
-      else
-      {
-        hashMap = new HashMap<>();
-      }
-      hashMap.put(effectType.translationKey(), duration);
-      Variable.potionEffectApplyMap.put(uuid, hashMap);
     }
     PotionEffectType effectType = event.getModifiedType();
 

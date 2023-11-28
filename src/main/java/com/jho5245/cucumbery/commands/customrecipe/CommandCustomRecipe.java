@@ -3323,21 +3323,21 @@ public class CommandCustomRecipe implements CommandExecutor
 
                     sectionString = "recipes." + args[3] + ".extra.statistics.general." + statisticString;
                     section = config.getConfigurationSection(sectionString);
-                    if (section != null && section.getKeys(false).size() == 0)
+                    if (section != null && section.getKeys(false).isEmpty())
                     {
                       config.set(sectionString, null);
                     }
 
                     sectionString = "recipes." + args[3] + ".extra.statistics.general";
                     section = config.getConfigurationSection(sectionString);
-                    if (section != null && section.getKeys(false).size() == 0)
+                    if (section != null && section.getKeys(false).isEmpty())
                     {
                       config.set(sectionString, null);
                     }
 
                     sectionString = "recipes." + args[3] + ".extra.statistics";
                     section = config.getConfigurationSection(sectionString);
-                    if (section != null && section.getKeys(false).size() == 0)
+                    if (section != null && section.getKeys(false).isEmpty())
                     {
                       config.set(sectionString, null);
                     }
@@ -3368,8 +3368,7 @@ public class CommandCustomRecipe implements CommandExecutor
                                       args[2] +
                                       "&r에 있는 레시피 rg255,204;" +
                                       args[3] +
-                                      "&r의 통계값 rg255,204;" +
-                                      statistic.toString() +
+                                      "&r의 통계값 rg255,204;" + statistic +
                                       "&r의 최대, 최소값 조건을 제거했습니다");
                     }
                     else
@@ -3783,12 +3782,11 @@ public class CommandCustomRecipe implements CommandExecutor
   public @NotNull List<Completion> completion(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @NotNull Location location)
   {
     int length = args.length;
-    switch (length)
-    {
-      case 1 -> {
-        return CommandTabUtil.tabCompleterList(args, "<인수>", false,Completion.completion("open", ComponentUtil.translate("레시피를 엽니다")), "create", "remove", "edit");
-      }
-    }
+		if (length == 1)
+		{
+			return CommandTabUtil.tabCompleterList(args, "<인수>", false, Completion.completion("open", ComponentUtil.translate("레시피를 엽니다")), "create", "remove",
+					"edit");
+		}
     return CommandTabUtil.ARGS_LONG;
   }
 }

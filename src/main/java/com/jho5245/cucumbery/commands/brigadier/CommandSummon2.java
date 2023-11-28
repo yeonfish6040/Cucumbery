@@ -92,7 +92,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list1_1);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], 1, null, null, false);
+        summon(sender, (EntityType) args.get(0), 1, null, null, false);
       });
       commandAPICommand.register();
 
@@ -100,7 +100,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list1_2);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], 1, null, null, (Boolean) args[1]);
+        summon(sender, (EntityType) args.get(0), 1, null, null, (Boolean) args.get(1));
       });
       commandAPICommand.register();
     }
@@ -110,7 +110,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list2_1);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], (Integer) args[1], null, null, false);
+        summon(sender, (EntityType) args.get(0), (Integer) args.get(1), null, null, false);
       });
       commandAPICommand.register();
 
@@ -119,7 +119,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
 
-        summon(sender, (EntityType) args[0], 1, (Location) args[1], null, false);
+        summon(sender, (EntityType) args.get(0), 1, (Location) args.get(1), null, false);
       });
       commandAPICommand.register();
 
@@ -127,7 +127,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list2_3);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], 1, null, (NBTContainer) args[1], false);
+        summon(sender, (EntityType) args.get(0), 1, null, (NBTContainer) args.get(1), false);
       });
       commandAPICommand.register();
 
@@ -135,7 +135,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list2_4);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], (Integer) args[1], null, null, (Boolean) args[2]);
+        summon(sender, (EntityType) args.get(0), (Integer) args.get(1), null, null, (Boolean) args.get(2));
       });
       commandAPICommand.register();
 
@@ -144,7 +144,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
 
-        summon(sender, (EntityType) args[0], 1, (Location) args[1], null,  (Boolean) args[2]);
+        summon(sender, (EntityType) args.get(0), 1, (Location) args.get(1), null,  (Boolean) args.get(2));
       });
       commandAPICommand.register();
 
@@ -152,7 +152,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list2_6);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], 1, null, (NBTContainer) args[1],  (Boolean) args[2]);
+        summon(sender, (EntityType) args.get(0), 1, null, (NBTContainer) args.get(1),  (Boolean) args.get(2));
       });
       commandAPICommand.register();
     }
@@ -162,7 +162,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list3_1);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], (Integer) args[1], (Location) args[2], null, false);
+        summon(sender, (EntityType) args.get(0), (Integer) args.get(1), (Location) args.get(2), null, false);
       });
       commandAPICommand.register();
 
@@ -170,7 +170,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list3_2);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], (Integer) args[1], null, (NBTContainer) args[2], false);
+        summon(sender, (EntityType) args.get(0), (Integer) args.get(1), null, (NBTContainer) args.get(2), false);
       });
       commandAPICommand.register();
 
@@ -178,7 +178,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list3_3);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], (Integer) args[1], (Location) args[2], null, (Boolean) args[3]);
+        summon(sender, (EntityType) args.get(0), (Integer) args.get(1), (Location) args.get(2), null, (Boolean) args.get(3));
       });
       commandAPICommand.register();
 
@@ -186,7 +186,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list3_4);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], (Integer) args[1], null, (NBTContainer) args[2], (Boolean) args[3]);
+        summon(sender, (EntityType) args.get(0), (Integer) args.get(1), null, (NBTContainer) args.get(2), (Boolean) args.get(3));
       });
       commandAPICommand.register();
     }
@@ -196,7 +196,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list4_1);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], 1, (Location) args[1], (NBTContainer) args[2], false);
+        summon(sender, (EntityType) args.get(0), 1, (Location) args.get(1), (NBTContainer) args.get(2), false);
       });
       commandAPICommand.register();
 
@@ -204,7 +204,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list4_2);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], 1, (Location) args[1], (NBTContainer) args[2], (Boolean) args[3]);
+        summon(sender, (EntityType) args.get(0), 1, (Location) args.get(1), (NBTContainer) args.get(2), (Boolean) args.get(3));
       });
       commandAPICommand.register();
     }
@@ -214,7 +214,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list5_1);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], (Integer) args[1], (Location) args[2], (NBTContainer) args[3], false);
+        summon(sender, (EntityType) args.get(0), (Integer) args.get(1), (Location) args.get(2), (NBTContainer) args.get(3), false);
       });
       commandAPICommand.register();
 
@@ -222,7 +222,7 @@ public class CommandSummon2 extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list5_2);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        summon(sender, (EntityType) args[0], (Integer) args[1], (Location) args[2], (NBTContainer) args[3], (Boolean) args[4]);
+        summon(sender, (EntityType) args.get(0), (Integer) args.get(1), (Location) args.get(2), (NBTContainer) args.get(3), (Boolean) args.get(4));
       });
       commandAPICommand.register();
     }

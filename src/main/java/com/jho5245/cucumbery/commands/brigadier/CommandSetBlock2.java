@@ -27,8 +27,8 @@ public class CommandSetBlock2 extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argumentList);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      BlockData blockData = (BlockData) args[1];
+      Location location = (Location) args.get(0);
+      BlockData blockData = (BlockData) args.get(1);
       Block block = location.getBlock();
       try
       {
@@ -45,9 +45,9 @@ public class CommandSetBlock2 extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argumentList2);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      BlockData blockData = (BlockData) args[1];
-      boolean preserveType = (boolean) args[2];
+      Location location = (Location) args.get(0);
+      BlockData blockData = (BlockData) args.get(1);
+      boolean preserveType = (boolean) args.get(2);
       Block block = location.getBlock();
       Material type = block.getType();
       String data = blockData.toString();
@@ -68,10 +68,10 @@ public class CommandSetBlock2 extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argumentList3);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      BlockData blockData = (BlockData) args[1];
-      boolean preserveType = (boolean) args[2];
-      boolean applyPhysics = (boolean) args[3];
+      Location location = (Location) args.get(0);
+      BlockData blockData = (BlockData) args.get(1);
+      boolean preserveType = (boolean) args.get(2);
+      boolean applyPhysics = (boolean) args.get(3);
       Block block = location.getBlock();
       Material type = block.getType();
       String data = blockData.toString();

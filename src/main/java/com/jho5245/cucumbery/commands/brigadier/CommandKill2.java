@@ -50,7 +50,7 @@ public class CommandKill2 extends CommandBase
       }
       else
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다");
+        throw CommandAPI.failWithString("개체를 찾을 수 없습니다");
       }
     }
     else
@@ -59,7 +59,7 @@ public class CommandKill2 extends CommandBase
       {
         if (commandSender instanceof BlockCommandSender)
         {
-          CommandAPI.fail("개체를 찾을 수 없습니다");
+          throw CommandAPI.failWithString("개체를 찾을 수 없습니다");
         }
         else
         {
@@ -128,7 +128,7 @@ public class CommandKill2 extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(arguments);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      kill(sender, (Collection<Entity>) args[0], false);
+      kill(sender, (Collection<Entity>) args.get(0), false);
     });
     commandAPICommand.register();
     /*
@@ -138,7 +138,7 @@ public class CommandKill2 extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(arguments2);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      kill(sender, (Collection<Entity>) args[0], (boolean) args[1]);
+      kill(sender, (Collection<Entity>) args.get(0), (boolean) args.get(1));
     });
     commandAPICommand.register();
   }

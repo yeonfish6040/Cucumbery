@@ -88,7 +88,7 @@ public class PluginLoader
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
       }
     }
 
@@ -135,13 +135,13 @@ public class PluginLoader
               }
               catch (Exception e)
               {
-                e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(                e.getMessage());
               }
             }
           }
           catch (Exception e)
           {
-            e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(            e.getMessage());
             if (e.getMessage().equalsIgnoreCase("zip file closed"))
             {
               entry.getValue().unregister(commandMap);
@@ -175,7 +175,7 @@ public class PluginLoader
       }
       catch (Exception ex)
       {
-        ex.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        ex.getMessage());
       }
       try
       {
@@ -183,7 +183,7 @@ public class PluginLoader
       }
       catch (Exception ex)
       {
-        ex.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        ex.getMessage());
       }
     }
     System.gc();
@@ -206,7 +206,7 @@ public class PluginLoader
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
     }
     if (plugin == null)
     {

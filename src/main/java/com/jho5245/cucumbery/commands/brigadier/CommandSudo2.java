@@ -7,7 +7,6 @@ import com.jho5245.cucumbery.util.storage.data.Prefix;
 import com.jho5245.cucumbery.util.storage.no_groups.CustomConfig;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.*;
-import dev.jorel.commandapi.arguments.EntitySelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -39,7 +38,7 @@ public class CommandSudo2 extends CommandBase
   final private List<Argument<?>> arguments = new ArrayList<>();
 
   {
-    arguments.add(new EntitySelectorArgument<>("플레이어", EntitySelector.MANY_PLAYERS));
+    arguments.add(new EntitySelectorArgument.ManyPlayers("플레이어"));
     arguments.add(new BooleanArgument("명령어 출력 숨김 여부"));
     arguments.add(new GreedyStringArgument("명령어").replaceSuggestions(ArgumentSuggestions.strings(commands)));
   }
@@ -55,9 +54,9 @@ public class CommandSudo2 extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(arguments);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Collection<Player> players = (Collection<Player>) args[0];
-      boolean hideOutput = (boolean) args[1];
-      String cmd = (String) args[2];
+      Collection<Player> players = (Collection<Player>) args.get(0);
+      boolean hideOutput = (boolean) args.get(1);
+      String cmd = (String) args.get(2);
       boolean asOp = cmd.startsWith("op:");
       if (asOp)
       {

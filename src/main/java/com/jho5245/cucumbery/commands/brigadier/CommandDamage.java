@@ -8,7 +8,6 @@ import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.*;
-import dev.jorel.commandapi.arguments.EntitySelector;
 import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
 import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
 import org.bukkit.command.BlockCommandSender;
@@ -31,8 +30,8 @@ public class CommandDamage extends CommandBase
 {
   final private DoubleArgument DAMAGE = new DoubleArgument("대미지", 0);
   final private IntegerArgument INVINCIBLE = new IntegerArgument("무적 시간(틱)", 0, 200);
-  final private MultiLiteralArgument NO_INVINCIBLE = new MultiLiteralArgument("-1");
-  final private EntitySelectorArgument DAMAGER = new EntitySelectorArgument("가해 개체", EntitySelector.ONE_ENTITY);
+  final private MultiLiteralArgument NO_INVINCIBLE = new MultiLiteralArgument("-1", List.of("-1"));
+  final private EntitySelectorArgument.OneEntity DAMAGER = new EntitySelectorArgument.OneEntity("가해 개체");
   final private List<Argument<?>> list01 = List.of(MANY_ENTITIES, DAMAGE);
   final private List<Argument<?>> list02 = List.of(MANY_ENTITIES, DAMAGE, HIDE_OUTPUT);
   final private List<Argument<?>> list03 = List.of(MANY_ENTITIES, DAMAGE, INVINCIBLE);
@@ -68,7 +67,7 @@ public class CommandDamage extends CommandBase
     {
       if (commandSender instanceof BlockCommandSender)
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다");
+        throw CommandAPI.failWithString("개체를 찾을 수 없습니다");
       }
       else if (!hideOutput)
       {
@@ -150,7 +149,7 @@ public class CommandDamage extends CommandBase
     }
     else if (successEntities.isEmpty() && commandSender instanceof BlockCommandSender)
     {
-      CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 피해를 줄 수 없는 상태입니다. " + failureReason);
+      throw CommandAPI.failWithString("조건에 맞는 개체를 찾을 수 없거나 피해를 줄 수 없는 상태입니다. " + failureReason);
     }
   }
 
@@ -162,7 +161,7 @@ public class CommandDamage extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list01);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        damage(sender, (Collection<Entity>) args[0], (double) args[1], false);
+        damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), false);
       });
       commandAPICommand.register();
 
@@ -170,7 +169,7 @@ public class CommandDamage extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list02);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        damage(sender, (Collection<Entity>) args[0], (double) args[1], (boolean) args[2]);
+        damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), (boolean) args.get(2));
       });
       commandAPICommand.register();
 
@@ -179,7 +178,7 @@ public class CommandDamage extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list03);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        damage(sender, (Collection<Entity>) args[0], (double) args[1], (int) args[2], false);
+        damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), (int) args.get(2), false);
       });
       commandAPICommand.register();
 
@@ -187,7 +186,7 @@ public class CommandDamage extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list04);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        damage(sender, (Collection<Entity>) args[0], (double) args[1], (int) args[2], (boolean) args[3]);
+        damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), (int) args.get(2), (boolean) args.get(3));
       });
       commandAPICommand.register();
 
@@ -196,7 +195,7 @@ public class CommandDamage extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list05);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        damage(sender, (Collection<Entity>) args[0], (double) args[1], -1, false);
+        damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), -1, false);
       });
       commandAPICommand.register();
 
@@ -204,7 +203,7 @@ public class CommandDamage extends CommandBase
       commandAPICommand = commandAPICommand.withArguments(list06);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        damage(sender, (Collection<Entity>) args[0], (double) args[1], -1, (boolean) args[3]);
+        damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), -1, (boolean) args.get(3));
       });
       commandAPICommand.register();
     }
@@ -213,7 +212,7 @@ public class CommandDamage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list07);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      damage(sender, (Collection<Entity>) args[0], (double) args[1], (Entity) args[2], false);
+      damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), (Entity) args.get(2), false);
     });
     commandAPICommand.register();
 
@@ -221,7 +220,7 @@ public class CommandDamage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list08);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      damage(sender, (Collection<Entity>) args[0], (double) args[1], (Entity) args[2], (boolean) args[3]);
+      damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), (Entity) args.get(2), (boolean) args.get(3));
     });
     commandAPICommand.register();
 
@@ -230,7 +229,7 @@ public class CommandDamage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list09);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      damage(sender, (Collection<Entity>) args[0], (double) args[1], (int) args[2], (Entity) args[3], false);
+      damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), (int) args.get(2), (Entity) args.get(3), false);
     });
     commandAPICommand.register();
 
@@ -238,7 +237,7 @@ public class CommandDamage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list10);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      damage(sender, (Collection<Entity>) args[0], (double) args[1], (int) args[2], (Entity) args[3], (boolean) args[4]);
+      damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), (int) args.get(2), (Entity) args.get(3), (boolean) args.get(4));
     });
     commandAPICommand.register();
 
@@ -247,7 +246,7 @@ public class CommandDamage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list11);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      damage(sender, (Collection<Entity>) args[0], (double) args[1], -1, (Entity) args[3], false);
+      damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), -1, (Entity) args.get(3), false);
     });
     commandAPICommand.register();
 
@@ -255,7 +254,7 @@ public class CommandDamage extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list12);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      damage(sender, (Collection<Entity>) args[0], (double) args[1], -1, (Entity) args[3], (boolean) args[4]);
+      damage(sender, (Collection<Entity>) args.get(0), (double) args.get(1), -1, (Entity) args.get(3), (boolean) args.get(4));
     });
     commandAPICommand.register();
   }

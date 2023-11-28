@@ -38,12 +38,11 @@ public class CommandQuickShopAddon implements CucumberyCommandExecutor
     }
     if (!MessageUtil.checkQuoteIsValidInArgs(sender, args = MessageUtil.wrapWithQuote(args)))
     {
-      System.out.println("오이");
       return !(sender instanceof BlockCommandSender);
     }
     if (!Cucumbery.using_QuickShop)
     {
-      MessageUtil.sendError(sender, "rg255,204;QuickShop &r플러그인을 사용하고 있지 않습니다");
+      MessageUtil.sendError(sender, "%s플러그인을 사용하고 있지 않습니다", Constant.THE_COLOR_HEX + "QuickShop");
       return true;
     }
     if (args.length < 5)
@@ -106,7 +105,7 @@ public class CommandQuickShopAddon implements CucumberyCommandExecutor
       Shop shop = QuickShop.getInstance().getShopManager().getShop(location);
       if (shop == null)
       {
-        MessageUtil.sendError(sender, world.getName() + " " + x + " " + y + " " + z + "에 있는 상점을 찾을 수 없습니다");
+        MessageUtil.sendError(sender, "%s에 있는 상점을 찾을 수 없습니다", location);
         return true;
       }
       switch (type)

@@ -413,6 +413,7 @@ public enum CustomMaterial implements Translatable
   WEATHER_FORECAST(Material.ENDER_EYE, "&ikey:item.cucumbery.weather_forecast|날씨를 알려주는 눈", Rarity.ELITE, CreativeCategory.TOOLS),
 
   WNYNYA_ORE(Material.PLAYER_HEAD, "rgb200,100,255;key:block.cucumbery.wnynya_ore|완YEE 광석", Rarity.RARE, "itemGroup.natural"),
+  SUS(Material.PLAYER_HEAD, "&ikey:block.cucumbery.sus|Amogus Gusensus sansus 광석", Rarity.EPIC, "itemGroup.natural"),
   ;
 
   private final Material displayMaterial;
@@ -501,6 +502,15 @@ public enum CustomMaterial implements Translatable
               case TODWOT_PICKAXE, IQ_CHOOK_CHUCK -> true;
               default -> false;
             };
+  }
+
+  public boolean isDrill()
+  {
+    return switch (this)
+    {
+      case TITANIUM_DRILL_R266, TITANIUM_DRILL_R366, TITANIUM_DRILL_R466, TITANIUM_DRILL_R566, MINDAS_DRILL -> true;
+      default -> false;
+    };
   }
 
   public boolean isUntradeable()

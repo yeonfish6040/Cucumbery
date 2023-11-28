@@ -91,16 +91,16 @@ public class DamageIndicatorProtocolLib
       StructureModifier<List<WrappedDataValue>> watchableAccessor = edit.getDataValueCollectionModifier();
       WrappedChatComponent wrappedChatComponent = WrappedChatComponent.fromJson(ComponentUtil.serializeAsJson(finalDisplay));
       List<WrappedDataValue> values = Lists.newArrayList(
-              new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.2f * sizeModifier, 0f)),
-              new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(1.2f * sizeModifier, 1.2f * sizeModifier, 1.2f * sizeModifier)),
-              new WrappedDataValue(14, Registry.get(Byte.class), (byte) 3),
-              new WrappedDataValue(15, Registry.get(Integer.class), (15 << 4 | 15 << 20)),
-              new WrappedDataValue(16, Registry.get(Float.class), 2f),
-              new WrappedDataValue(18, Registry.get(Float.class), 0f),
-              new WrappedDataValue(22, Registry.getChatComponentSerializer(), wrappedChatComponent.getHandle()),
-              new WrappedDataValue(24, Registry.get(Integer.class), 0),
-              new WrappedDataValue(25, Registry.get(Byte.class), (byte) -2),
-              new WrappedDataValue(26, Registry.get(Byte.class), (byte) 0x01)
+              new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(0f, 0.2f * sizeModifier, 0f)), // Translation
+              new WrappedDataValue(12, Registry.get(Vector3f.class), new Vector3f(1.2f * sizeModifier, 1.2f * sizeModifier, 1.2f * sizeModifier)), // Scale
+              new WrappedDataValue(15, Registry.get(Byte.class), (byte) 3), // Billboard
+              new WrappedDataValue(16, Registry.get(Integer.class), (15 << 4 | 15 << 20)), // Brightness override
+              new WrappedDataValue(17, Registry.get(Float.class), 2f), // view range
+              new WrappedDataValue(19, Registry.get(Float.class), 0f), // shadow strength
+              new WrappedDataValue(23, Registry.getChatComponentSerializer(), wrappedChatComponent.getHandle()), // text
+              new WrappedDataValue(25, Registry.get(Integer.class), 0), // background color
+              new WrappedDataValue(26, Registry.get(Byte.class), (byte) -1), // text opacity
+              new WrappedDataValue(27, Registry.get(Byte.class), (byte) 0x01) // shadow / see through / default bgcolor / alignment
       );
       watchableAccessor.write(0, values);
       edit.getIntegers().write(0, entityId);
@@ -111,9 +111,9 @@ public class DamageIndicatorProtocolLib
         PacketContainer edit2 = protocolManager.createPacket(Server.ENTITY_METADATA);
         StructureModifier<List<WrappedDataValue>> watchableAccessor2 = edit2.getDataValueCollectionModifier();
         List<WrappedDataValue> values2 = Lists.newArrayList(
-                new WrappedDataValue(8, Registry.get(Integer.class), -1),
-                new WrappedDataValue(9, Registry.get(Integer.class), 10),
-                new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.4f * sizeModifier, 0f))
+                new WrappedDataValue(8, Registry.get(Integer.class), -1), // interpolation delay
+                new WrappedDataValue(9, Registry.get(Integer.class), 10), // position/roation interpolation duration
+                new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(0f, 0.4f * sizeModifier, 0f)) // translation
         );
         watchableAccessor2.write(0, values2);
         edit2.getIntegers().write(0, entityId);
@@ -125,15 +125,42 @@ public class DamageIndicatorProtocolLib
         PacketContainer edit2 = protocolManager.createPacket(Server.ENTITY_METADATA);
         StructureModifier<List<WrappedDataValue>> watchableAccessor2 = edit2.getDataValueCollectionModifier();
         List<WrappedDataValue> values2 = Lists.newArrayList(
-                new WrappedDataValue(8, Registry.get(Integer.class), -1),
-                new WrappedDataValue(9, Registry.get(Integer.class), 10),
-                new WrappedDataValue(10, Registry.get(Vector3f.class), new Vector3f(0f, 0.6f * sizeModifier, 0f)),
-                new WrappedDataValue(25, Registry.get(Byte.class), (byte) 5)
+                new WrappedDataValue(8, Registry.get(Integer.class), -1), // interpolation delay
+                new WrappedDataValue(9, Registry.get(Integer.class), 5), // position/roation interpolation duration
+                new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(0f, 0.5f * sizeModifier, 0f)), // translation
+                new WrappedDataValue(26, Registry.get(Byte.class), (byte) -127) // text opacity
         );
         watchableAccessor2.write(0, values2);
         edit2.getIntegers().write(0, entityId);
         protocolManager.sendServerPacket(player, edit2);
       }, 12L);
+
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+      {
+        PacketContainer edit2 = protocolManager.createPacket(Server.ENTITY_METADATA);
+        StructureModifier<List<WrappedDataValue>> watchableAccessor2 = edit2.getDataValueCollectionModifier();
+        List<WrappedDataValue> values2 = Lists.newArrayList(
+                new WrappedDataValue(26, Registry.get(Byte.class), (byte) 127) // text opacity
+        );
+        watchableAccessor2.write(0, values2);
+        edit2.getIntegers().write(0, entityId);
+        protocolManager.sendServerPacket(player, edit2);
+      }, 15L);
+
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+      {
+        PacketContainer edit2 = protocolManager.createPacket(Server.ENTITY_METADATA);
+        StructureModifier<List<WrappedDataValue>> watchableAccessor2 = edit2.getDataValueCollectionModifier();
+        List<WrappedDataValue> values2 = Lists.newArrayList(
+                new WrappedDataValue(8, Registry.get(Integer.class), -1), // interpolation delay
+                new WrappedDataValue(9, Registry.get(Integer.class), 5), // position/roation interpolation duration
+                new WrappedDataValue(11, Registry.get(Vector3f.class), new Vector3f(0f, 0.6f * sizeModifier, 0f)), // translation
+                new WrappedDataValue(26, Registry.get(Byte.class), (byte) 5) // text opacity
+        );
+        watchableAccessor2.write(0, values2);
+        edit2.getIntegers().write(0, entityId);
+        protocolManager.sendServerPacket(player, edit2);
+      }, 16L);
 
 
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
@@ -141,7 +168,7 @@ public class DamageIndicatorProtocolLib
         PacketContainer remove = protocolManager.createPacket(Server.ENTITY_DESTROY);
         remove.getIntLists().write(0, List.of(entityId));
         protocolManager.sendServerPacket(player, remove);
-      }, 22L);
+      }, 23L);
     }
   }
 }

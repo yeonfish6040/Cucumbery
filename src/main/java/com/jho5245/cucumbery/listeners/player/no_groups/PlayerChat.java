@@ -61,7 +61,7 @@ public class PlayerChat implements Listener
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
       }
     }
     if (message.contains("[i]"))

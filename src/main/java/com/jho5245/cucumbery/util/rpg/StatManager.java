@@ -60,7 +60,7 @@ public class StatManager implements Listener
 		catch (IOException exception)
 		{
 			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생했습니다");
-			exception.printStackTrace();
+			Cucumbery.getPlugin().getLogger().warning(exception.getMessage());
 		}
 	}
 
@@ -70,7 +70,7 @@ public class StatManager implements Listener
 
 		File loc1 = new File(Cucumbery.getPlugin().getDataFolder() + "/data");
 		File loc2 = new File(Cucumbery.getPlugin().getDataFolder() + "/data/RPG");
-		File StatFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/RPG/" + player.getUniqueId().toString() + ".yml");
+		File StatFile = new File(Cucumbery.getPlugin().getDataFolder() + "/data/RPG/" + player.getUniqueId() + ".yml");
 
 		try
 		{
@@ -121,7 +121,7 @@ public class StatManager implements Listener
 		catch (IOException exception)
 		{
 			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생했습니다");
-			exception.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(			exception.getMessage());
 		}
 
 		return stat;
@@ -143,7 +143,7 @@ public class StatManager implements Listener
 		
 		catch (Exception e)
 		{
-			e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(			e.getMessage());
 			return 0;
 		}
 	}
@@ -200,7 +200,7 @@ public class StatManager implements Listener
 		catch (IOException exception)
 		{
 			MessageUtil.consoleSendMessage(Prefix.INFO_ERROR + "§e" + player.getUniqueId().toString() + "§e.yml&r 파일을 생성하는 도중 오류가 발생했습니다");
-			exception.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(			exception.getMessage());
 		}
 	}
 
