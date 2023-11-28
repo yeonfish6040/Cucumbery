@@ -23,16 +23,16 @@ public class CommandHealthPoint
   private final List<Argument<?>> arguments1 = new ArrayList<>();
 
   {
-    arguments1.add(new MultiLiteralArgument("set", "give", "take"));
-    arguments1.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
+    arguments1.add(new MultiLiteralArgument("args", List.of("set", "give", "take")));
+    arguments1.add(new EntitySelectorArgument.ManyEntities("개체"));
     arguments1.add(new DoubleArgument("값", 0, Double.MAX_VALUE));
   }
 
   private final List<Argument<?>> arguments2 = new ArrayList<>();
 
   {
-    arguments2.add(new MultiLiteralArgument("set", "give", "take"));
-    arguments2.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
+    arguments2.add(new MultiLiteralArgument("args", List.of("set", "give", "take")));
+    arguments2.add(new EntitySelectorArgument.ManyEntities("개체"));
     arguments2.add(new DoubleArgument("값", 0, Double.MAX_VALUE));
     arguments2.add(new BooleanArgument("경고 무시"));
   }
@@ -40,8 +40,8 @@ public class CommandHealthPoint
   private final List<Argument<?>> arguments3 = new ArrayList<>();
 
   {
-    arguments3.add(new MultiLiteralArgument("set", "give", "take"));
-    arguments3.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
+    arguments3.add(new MultiLiteralArgument("args", List.of("set", "give", "take")));
+    arguments3.add(new EntitySelectorArgument.ManyEntities("개체"));
     arguments3.add(new DoubleArgument("값", 0, Double.MAX_VALUE));
     arguments3.add(new BooleanArgument("경고 무시"));
     arguments3.add(new BooleanArgument("명령어 출력 숨김 여부"));
@@ -66,9 +66,9 @@ public class CommandHealthPoint
       {
         commandSender = sender.getCaller();
       }
-      String key = (String) args[0];
-      Collection<Entity> entities = (Collection<Entity>) args[1];
-      double value = (double) args[2];
+      String key = (String) args.get(0);
+      Collection<Entity> entities = (Collection<Entity>) args.get(1);
+      double value = (double) args.get(2);
       int successCount = 0;
 
       for (Entity entity : entities)
@@ -126,7 +126,7 @@ public class CommandHealthPoint
       }
       else
       {
-        throw CommandAPI.fail("조건에 맞는 개체를 찾을 수 없거나 해당 개체의 HP에 변화가 없습니다");
+        throw CommandAPI.failWithString("조건에 맞는 개체를 찾을 수 없거나 해당 개체의 HP에 변화가 없습니다");
       }
     });
     commandAPICommand.register();
@@ -148,16 +148,15 @@ public class CommandHealthPoint
       {
         commandSender = sender.getCaller();
       }
-      String key = (String) args[0];
-      Collection<Entity> entities = (Collection<Entity>) args[1];
-      double value = (double) args[2];
-      boolean force = (boolean) args[3];
+      String key = (String) args.get(0);
+      Collection<Entity> entities = (Collection<Entity>) args.get(1);
+      double value = (double) args.get(2);
+      boolean force = (boolean) args.get(3);
       int successCount = 0;
 
       if (!force && !MessageUtil.checkNumberSize(sender, value, 1, Double.MAX_VALUE, false))
       {
-        CommandAPI.fail("숫자는 1 이상이여야 하는데, " + value + "이/가 있습니다");
-        return;
+        throw CommandAPI.failWithString("숫자는 1 이상이여야 하는데, " + value + "이/가 있습니다");
       }
 
       for (Entity entity : entities)
@@ -267,7 +266,7 @@ public class CommandHealthPoint
       }
       else
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없습니다");
+        throw CommandAPI.failWithString("조건에 맞는 개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();
@@ -289,17 +288,16 @@ public class CommandHealthPoint
       {
         commandSender = sender.getCaller();
       }
-      String key = (String) args[0];
-      Collection<Entity> entities = (Collection<Entity>) args[1];
-      double value = (double) args[2];
-      boolean force = (boolean) args[3];
-      boolean hideOutput = (boolean) args[4];
+      String key = (String) args.get(0);
+      Collection<Entity> entities = (Collection<Entity>) args.get(1);
+      double value = (double) args.get(2);
+      boolean force = (boolean) args.get(3);
+      boolean hideOutput = (boolean) args.get(4);
       int successCount = 0;
 
       if (!force && !MessageUtil.checkNumberSize(sender, value, 1, Double.MAX_VALUE, false))
       {
-        CommandAPI.fail("숫자는 1 이상이여야 하는데, " + value + "이/가 있습니다");
-        return;
+        throw CommandAPI.failWithString("숫자는 1 이상이여야 하는데, " + value + "이/가 있습니다");
       }
 
       for (Entity entity : entities)
@@ -412,7 +410,7 @@ public class CommandHealthPoint
       }
       else
       {
-        CommandAPI.fail("조건에 맞는 개체를 찾을 수 없습니다");
+        throw CommandAPI.failWithString("조건에 맞는 개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();

@@ -16,7 +16,7 @@ public class CommandBreak extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(new LocationArgument("위치", LocationType.BLOCK_POSITION));
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
+      Location location = (Location) args.get(0);
       location.getBlock().setType(Material.AIR);
     });
     commandAPICommand.register();

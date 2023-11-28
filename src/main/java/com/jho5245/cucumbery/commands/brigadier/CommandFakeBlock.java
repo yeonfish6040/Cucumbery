@@ -15,6 +15,8 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class CommandFakeBlock extends CommandBase
 {
   /**
@@ -84,8 +86,8 @@ public class CommandFakeBlock extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(new LocationArgument("위치", LocationType.BLOCK_POSITION), new BlockStateArgument("블록"));
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      BlockData blockData = (BlockData) args[1];
+      Location location = (Location) args.get(0);
+      BlockData blockData = (BlockData) args.get(1);
       fakeBlock(location, blockData, false, false);
       MessageUtil.info(sender, "%s 위치에 %s 블록을 저장했습니다", location, blockData.getMaterial());
     });
@@ -98,9 +100,9 @@ public class CommandFakeBlock extends CommandBase
             new BlockStateArgument("블록"));
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      Location location2 = (Location) args[1];
-      BlockData blockData = (BlockData) args[2];
+      Location location = (Location) args.get(0);
+      Location location2 = (Location) args.get(1);
+      BlockData blockData = (BlockData) args.get(2);
       fakeBlock(location, location2, blockData, false, false);
     });
     commandAPICommand.register();
@@ -113,10 +115,10 @@ public class CommandFakeBlock extends CommandBase
             new BooleanArgument("이미 존재하면 무시 여부"));
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      Location location2 = (Location) args[1];
-      BlockData blockData = (BlockData) args[2];
-      boolean ignoreIfExists = (boolean) args[3];
+      Location location = (Location) args.get(0);
+      Location location2 = (Location) args.get(1);
+      BlockData blockData = (BlockData) args.get(2);
+      boolean ignoreIfExists = (boolean) args.get(3);
       fakeBlock(location, location2, blockData, ignoreIfExists, false);
     });
     commandAPICommand.register();
@@ -130,21 +132,21 @@ public class CommandFakeBlock extends CommandBase
             new BooleanArgument("공기 블록 무시 여부"));
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      Location location2 = (Location) args[1];
-      BlockData blockData = (BlockData) args[2];
-      boolean ignoreIfExists = (boolean) args[3];
-      boolean ignoreIfAir = (boolean) args[4];
+      Location location = (Location) args.get(0);
+      Location location2 = (Location) args.get(1);
+      BlockData blockData = (BlockData) args.get(2);
+      boolean ignoreIfExists = (boolean) args.get(3);
+      boolean ignoreIfAir = (boolean) args.get(4);
       fakeBlock(location, location2, blockData, ignoreIfExists, ignoreIfAir);
     });
     commandAPICommand.register();
 
     commandAPICommand = CommandBase.getCommandBase(command, permission, aliases);
-    commandAPICommand = commandAPICommand.withArguments(new LocationArgument("위치", LocationType.BLOCK_POSITION), new MultiLiteralArgument("--remove", "--query"));
+    commandAPICommand = commandAPICommand.withArguments(new LocationArgument("위치", LocationType.BLOCK_POSITION), new MultiLiteralArgument("args", List.of("--remove", "--query")));
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      switch ((String) args[1])
+      Location location = (Location) args.get(0);
+      switch ((String) args.get(1))
       {
         case "--remove" ->
         {
@@ -158,7 +160,7 @@ public class CommandFakeBlock extends CommandBase
             CommandSender commandSender = sender.getCallee();
             if (commandSender instanceof BlockCommandSender)
             {
-              throw CommandAPI.fail("해당 위치에 블록이 존재하지 않습니다");
+              throw CommandAPI.failWithString("해당 위치에 블록이 존재하지 않습니다");
             }
             else
             {
@@ -183,7 +185,7 @@ public class CommandFakeBlock extends CommandBase
     commandAPICommand.register();
 
     commandAPICommand = CommandBase.getCommandBase(command, permission, aliases);
-    commandAPICommand = commandAPICommand.withArguments(new MultiLiteralArgument("list"));
+    commandAPICommand = commandAPICommand.withArguments(new MultiLiteralArgument("list", List.of("list")));
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       MessageUtil.info(sender, "총 %s개의 블록 데이터가 있습니다", Variable.fakeBlocks.keySet().size());

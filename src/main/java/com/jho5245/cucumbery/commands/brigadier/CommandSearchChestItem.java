@@ -42,8 +42,8 @@ public class CommandSearchChestItem extends CommandBase
     CommandAPICommand commandAPICommand = CommandBase.getCommandBase(command, permission, aliases);
     commandAPICommand = commandAPICommand.withArguments(new FloatRangeArgument("범위"), new ItemStackPredicateArgument("아이템"));
     commandAPICommand = commandAPICommand.executesPlayer((player, args) -> {
-      FloatRange range = (FloatRange) args[0];
-      Predicate<ItemStack> predicate = (Predicate<ItemStack>) args[1];
+      FloatRange range = (FloatRange) args.get(0);
+      Predicate<ItemStack> predicate = (Predicate<ItemStack>) args.get(1);
       List<Location> locations = new ArrayList<>();
       for (Chunk chunk : player.getWorld().getLoadedChunks())
       {

@@ -310,6 +310,22 @@ public class BlockPlace implements Listener
             rotation.set(1, pitch);
           }
         }
+        if (nbtItem.hasTag("perspectiveGrid") && nbtItem.getType("perspectiveGrid") == NBTType.NBTTagByte && nbtItem.getBoolean("perspectiveGrid"))
+        {
+          float yaw = Math.round((player.getLocation().getYaw() - 180f) / 90f) * 90f;
+          float pitch = Math.round(-player.getLocation().getPitch() / 90f) * 90f;
+          NBTList<Float> rotation = nbtItem.addCompound("displays").getFloatList("rotation");
+          if (rotation.isEmpty())
+          {
+            rotation.add(yaw);
+            rotation.add(pitch);
+          }
+          else
+          {
+            rotation.set(0, yaw);
+            rotation.set(1, pitch);
+          }
+        }
         BlockPlaceDataConfig.setItem(location, item);
         BlockPlaceDataConfig.spawnItemDisplay(location);
         if (nbtItem.hasTag("change_material") && nbtItem.hasTag("displays"))

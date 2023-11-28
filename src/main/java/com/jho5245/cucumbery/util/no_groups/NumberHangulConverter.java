@@ -69,13 +69,13 @@ public class NumberHangulConverter
     {
       result.insert(0, "만");
     }
-    else if (!sbList[1].toString().equals(""))
+    else if (!sbList[1].toString().isEmpty())
     {
       result.insert(0, sbList[1] + "만");
     }
     for (int i = 2; i < 5; i++)
     {
-      if (!sbList[i].toString().equals(""))
+      if (!sbList[i].toString().isEmpty())
       {
         result.insert(0, sbList[i].toString() + LARGE_UNITS.charAt(i));
       }
@@ -104,7 +104,7 @@ public class NumberHangulConverter
   @NotNull
   public static String convert2(double input, boolean withColor, TextColor color)
   {
-    String c = withColor ? color.asHexString() + ";" : "";
+    String c = withColor && color != null ? color.asHexString() + ";" : "";
     if (input < 10000d)
     {
       return c + Constant.Sosu2Floor.format(input);

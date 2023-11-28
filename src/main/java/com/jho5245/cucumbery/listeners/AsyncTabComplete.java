@@ -8,7 +8,6 @@ import com.jho5245.cucumbery.util.no_groups.CommandArgumentUtil;
 import com.jho5245.cucumbery.util.no_groups.MessageUtil;
 import com.jho5245.cucumbery.util.no_groups.Method;
 import com.jho5245.cucumbery.util.storage.component.util.ComponentUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
@@ -33,7 +32,6 @@ public class AsyncTabComplete implements Listener
     CommandSender sender = event.getSender();
     String buffer = event.getBuffer();
     Location location = event.getLocation();
-    boolean isCommand = event.isCommand();
     if (buffer.length() < 1)
     {
       return;

@@ -175,7 +175,7 @@ public class CustomEffectType implements Translatable, EnumHideable
           DISAPPEAR = new CustomEffectType("disappear", "", HIDDEN),
           NO_BUFF_REMOVE = new CustomEffectType("no_buff_remove", "효과 제거 불능", NEGATIVE),
           NO_REGENERATION = new CustomEffectType("no_regeneration", "재생 불능", builder().negative().removeOnMilk()),
-          DAMAGE_INDICATOR = new CustomEffectType("damage_indicator", "", builder().hidden().defaultDuration(20)),
+          DAMAGE_INDICATOR = new CustomEffectType("damage_indicator", "", builder().hidden().defaultDuration(23)),
           FREEZING = new CustomEffectType("freezing", "얼음!", builder().negative()),
           NO_CUCUMBERY_ITEM_USAGE_ATTACK = new CustomEffectType("no_cucumbery_item_usage_attack", "", HIDDEN),
           GLIDING = new CustomEffectType("gliding", "", builder().hidden().skipEvent()),

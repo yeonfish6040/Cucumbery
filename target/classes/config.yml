@@ -55,6 +55,7 @@ console-messages:
   outdated-config: true
 
 # 플러그인 연동 기능 사용
+# 해당 기능은 /cucumbery reload-plugin 혹은 서버 리부트에만 적용됨!
 use-hook-plugins:
   # Cucumbery에서 돈 관련 기능 사용
   Vault-Economy: true

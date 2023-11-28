@@ -61,7 +61,7 @@ public class CommandCustomFix implements CucumberyCommandExecutor
     Damageable duraMeta = (Damageable) item.getItemMeta();
     long maxDura = duraTag != null ? duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY) : 0;
     long curDura = duraTag != null ? duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) : 0;
-    if (duraMeta.getDamage() <= 0 && (duraTag == null || curDura >= maxDura))
+    if (duraMeta.getDamage() <= 0 && (duraTag == null || curDura <= 0))
     {
       MessageUtil.sendError(player, "내구도가 가득 찬 아이템은 수리할 수 없습니다");
       return true;
@@ -92,7 +92,7 @@ public class CommandCustomFix implements CucumberyCommandExecutor
       ItemStackUtil.updateInventory(player);
       return true;
     }
-    duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, maxDura);
+    duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 0L);
     player.getInventory().setItemInMainHand(nbtItem.getItem());
     ItemStackUtil.updateInventory(player);
     if (!(args.length == 1 && args[0].equals("true")))

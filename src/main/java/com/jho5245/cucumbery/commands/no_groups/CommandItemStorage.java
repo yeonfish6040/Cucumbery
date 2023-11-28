@@ -173,7 +173,7 @@ public class CommandItemStorage implements CommandExecutor, TabCompleter
             }
             catch (IOException e)
             {
-              e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(              e.getMessage());
               return true;
             }
           }

@@ -272,12 +272,12 @@ public class RecipeInventoryCategory
               NBTCompound duraTag = itemTag.getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
               if (duraTag != null && duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
               {
-                long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) + bonusDurability;
-                duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, Math.min(cur, duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY)));
+                long cur = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY) - bonusDurability;
+                duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, Math.max(cur, 0));
               }
             }
           }
-          String setType = resultNBTItem.getString("SetType") + "";
+          String setType = resultNBTItem.getString("SetType");
           if (!setType.equals(""))
           {
             try

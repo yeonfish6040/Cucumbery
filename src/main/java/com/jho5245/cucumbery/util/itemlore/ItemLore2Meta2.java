@@ -108,40 +108,38 @@ public class ItemLore2Meta2
         }
 
       }
-    }
-
-    if (type == Material.EXPERIENCE_BOTTLE)
-    {
-      if (itemMeta instanceof BundleMeta bundleMeta)
-      {
-        List<ItemStack> noDrops = new ArrayList<>(), noTrades = new ArrayList<>();
-        for (ItemStack itemStack : bundleMeta.getItems())
+      case BUNDLE -> {
+        if (itemMeta instanceof BundleMeta bundleMeta)
         {
-          if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_DROP))
+          List<ItemStack> noDrops = new ArrayList<>(), noTrades = new ArrayList<>();
+          for (ItemStack itemStack : bundleMeta.getItems())
           {
-            noDrops.add(itemStack);
+            if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_DROP))
+            {
+              noDrops.add(itemStack);
+            }
+            if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_TRADE))
+            {
+              noTrades.add(itemStack);
+            }
           }
-          if (NBTAPI.isRestricted(itemStack, RestrictionType.NO_TRADE))
+          if (!noDrops.isEmpty())
           {
-            noTrades.add(itemStack);
+            lore.add(Component.empty());
+            lore.add(ComponentUtil.translate("&c%s에 버릴 수 없는 아이템이 들어있습니다!", ItemNameUtil.itemName(item, NamedTextColor.RED)));
+            for (ItemStack itemStack : noDrops)
+            {
+              lore.add(ItemStackComponent.itemStackComponent(itemStack, NamedTextColor.GRAY));
+            }
           }
-        }
-        if (!noDrops.isEmpty())
-        {
-          lore.add(Component.empty());
-          lore.add(ComponentUtil.translate("&c%s에 버릴 수 없는 아이템이 들어있습니다!", ItemNameUtil.itemName(item, NamedTextColor.RED)));
-          for (ItemStack itemStack : noDrops)
+          if (!noTrades.isEmpty())
           {
-            lore.add(ItemStackComponent.itemStackComponent(itemStack, NamedTextColor.GRAY));
-          }
-        }
-        if (!noTrades.isEmpty())
-        {
-          lore.add(Component.empty());
-          lore.add(ComponentUtil.translate("&c%s에 캐릭터 귀속 아이템이 들어있습니다!", ItemNameUtil.itemName(item, NamedTextColor.RED)));
-          for (ItemStack itemStack : noTrades)
-          {
-            lore.add(ItemStackComponent.itemStackComponent(itemStack, NamedTextColor.GRAY));
+            lore.add(Component.empty());
+            lore.add(ComponentUtil.translate("&c%s에 캐릭터 귀속 아이템이 들어있습니다!", ItemNameUtil.itemName(item, NamedTextColor.RED)));
+            for (ItemStack itemStack : noTrades)
+            {
+              lore.add(ItemStackComponent.itemStackComponent(itemStack, NamedTextColor.GRAY));
+            }
           }
         }
       }

@@ -60,26 +60,22 @@ public class FireworkExplode implements Listener
           }
           for (int i = 0; i < repeatCount; i++)
           {
-            location.getWorld().spawnEntity(location, EntityType.FIREWORK, SpawnReason.CUSTOM, entity -> {
-              Firework f = (Firework) entity;
-              f.setFireworkMeta(fireworkMeta);
-              f.setTicksToDetonate(Math.min(20, Math.max(5, lifeTime / 4)));
-              f.setVelocity(firework.getVelocity().add(new Vector(Math.random(), Math.random(), Math.random())));
-              f.getScoreboardTags().add("custom_material_firework_rocket_chain_clone");
-              f.setShooter(firework.getShooter());
-            });
+            Firework f = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK, SpawnReason.CUSTOM);
+            f.setFireworkMeta(fireworkMeta);
+            f.setTicksToDetonate(Math.min(20, Math.max(5, lifeTime / 4)));
+            f.setVelocity(firework.getVelocity().add(new Vector(Math.random(), Math.random(), Math.random())));
+            f.getScoreboardTags().add("custom_material_firework_rocket_chain_clone");
+            f.setShooter(firework.getShooter());
           }
         }
         case FIREWORK_ROCKET_REPEATING -> {
           if (firework.getTicksToDetonate() > 1)
           {
-            location.getWorld().spawnEntity(location, EntityType.FIREWORK, SpawnReason.CUSTOM, entity -> {
-              Firework f = (Firework) entity;
-              f.setFireworkMeta(fireworkMeta);
-              f.setTicksToDetonate(Math.min(10, detonateTime - 1));
-              f.setVelocity(firework.getLocation().getDirection());
-              f.setShooter(firework.getShooter());
-            });
+            Firework f = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK, SpawnReason.CUSTOM);
+            f.setFireworkMeta(fireworkMeta);
+            f.setTicksToDetonate(Math.min(10, detonateTime - 1));
+            f.setVelocity(firework.getLocation().getDirection());
+            f.setShooter(firework.getShooter());
           }
         }
       }

@@ -33,16 +33,16 @@ public class ExtraExecuteArgument
     {
       String worldName = worldNames.get(i);
       String display = Method.getWorldDisplayName(worldName);
-      this.worldNames[i] = !display.equals(worldName) ? StringTooltip.of(worldName, display) : StringTooltip.none(display);
+      this.worldNames[i] = !display.equals(worldName) ? StringTooltip.ofString(worldName, display) : StringTooltip.none(display);
     }
-    this.worldNames[this.worldNames.length - 1] = StringTooltip.of("__current__", "현재 월드");
+    this.worldNames[this.worldNames.length - 1] = StringTooltip.ofString("__current__", "현재 월드");
   }
 
   {
     weatherTypes = new StringTooltip[3];
-    weatherTypes[0] = StringTooltip.of("clear", "맑음");
-    weatherTypes[1] = StringTooltip.of("rain", "비");
-    weatherTypes[2] = StringTooltip.of("thunder", "폭풍우");
+    weatherTypes[0] = StringTooltip.ofString("clear", "맑음");
+    weatherTypes[1] = StringTooltip.ofString("rain", "비");
+    weatherTypes[2] = StringTooltip.ofString("thunder", "폭풍우");
   }
 
   private void registerRandom()
@@ -101,7 +101,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode hasPermission = Brigadier.fromLiteralArgument(new LiteralArgument("haspermission")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    Argument<Player> playerArgument = new EntitySelectorArgument("플레이어", EntitySelector.ONE_PLAYER);
+    Argument<Player> playerArgument = new EntitySelectorArgument.OnePlayer("플레이어");
     Argument<String> permissionArgument = new StringArgument("퍼미션 노드");
     arguments.add(playerArgument);
     arguments.add(permissionArgument);
@@ -124,7 +124,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode hasPermission = Brigadier.fromLiteralArgument(new LiteralArgument("haspermission")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    Argument<Player> playerArgument = new EntitySelectorArgument("플레이어", EntitySelector.ONE_PLAYER);
+    Argument<Player> playerArgument = new EntitySelectorArgument.OnePlayer("플레이어");
     Argument<String> permissionArgument = new StringArgument("퍼미션 노드");
     arguments.add(playerArgument);
     arguments.add(permissionArgument);
@@ -147,7 +147,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode isInWorld = Brigadier.fromLiteralArgument(new LiteralArgument("world")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    Argument<Entity> entityArgument = new EntitySelectorArgument("개체", EntitySelector.ONE_ENTITY);
+    Argument<Entity> entityArgument = new EntitySelectorArgument.OneEntity("개체");
     Argument<String> worldArgument = new StringArgument("월드").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(worldNames));
     arguments.add(entityArgument);
     arguments.add(worldArgument);
@@ -190,7 +190,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode isInWorld = Brigadier.fromLiteralArgument(new LiteralArgument("world")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    Argument<Entity> entityArgument = new EntitySelectorArgument("개체", EntitySelector.ONE_ENTITY);
+    Argument<Entity> entityArgument = new EntitySelectorArgument.OneEntity("개체");
     Argument<String> worldArgument = new StringArgument("월드").replaceSuggestions(ArgumentSuggestions.stringsWithTooltips(worldNames));
     arguments.add(entityArgument);
     arguments.add(worldArgument);
@@ -423,7 +423,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode moneyRadius = Brigadier.fromLiteralArgument(new LiteralArgument("money")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    Argument<Player> playerArgument = new EntitySelectorArgument("플레이어", EntitySelector.ONE_PLAYER);
+    Argument<Player> playerArgument = new EntitySelectorArgument.OnePlayer("플레이어");
     Argument<FloatRange> moneyArgument = new FloatRangeArgument("소지 금액");
     arguments.add(playerArgument);
     arguments.add(moneyArgument);
@@ -453,7 +453,7 @@ public class ExtraExecuteArgument
     LiteralCommandNode moneyRadius = Brigadier.fromLiteralArgument(new LiteralArgument("money")).build();
 
     List<Argument> arguments = new ArrayList<>();
-    Argument<Player> playerArgument = new EntitySelectorArgument("플레이어", EntitySelector.ONE_PLAYER);
+    Argument<Player> playerArgument = new EntitySelectorArgument.OnePlayer("플레이어");
     Argument<FloatRange> moneyArgument = new FloatRangeArgument("소지 금액");
     arguments.add(playerArgument);
     arguments.add(moneyArgument);

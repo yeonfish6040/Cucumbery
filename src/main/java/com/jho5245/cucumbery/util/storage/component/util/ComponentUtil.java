@@ -960,7 +960,7 @@ public class ComponentUtil
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
       }
     }
     return key;

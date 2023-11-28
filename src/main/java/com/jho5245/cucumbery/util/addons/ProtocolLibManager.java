@@ -312,7 +312,7 @@ public class ProtocolLibManager
               }
               catch (Throwable t)
               {
-                t.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(                t.getMessage());
               }
             }
           }
@@ -419,7 +419,7 @@ public class ProtocolLibManager
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
     }
     throw new IllegalStateException();
   }

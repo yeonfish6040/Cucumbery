@@ -8,7 +8,6 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.BooleanArgument;
-import dev.jorel.commandapi.arguments.EntitySelector;
 import dev.jorel.commandapi.arguments.EntitySelectorArgument;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -22,13 +21,13 @@ public class CommandUpdateItem extends CommandBase
   private final List<Argument<?>> argument = new ArrayList<>();
 
   {
-    argument.add(new EntitySelectorArgument("아이템", EntitySelector.MANY_ENTITIES));
+    argument.add(new EntitySelectorArgument.ManyEntities("아이템"));
   }
 
   private final List<Argument<?>> argument2 = new ArrayList<>();
 
   {
-    argument2.add(new EntitySelectorArgument("아이템", EntitySelector.MANY_ENTITIES));
+    argument2.add(new EntitySelectorArgument.ManyEntities("아이템"));
     argument2.add(new BooleanArgument("명령어 출력 숨김 여부"));
   }
 
@@ -39,7 +38,7 @@ public class CommandUpdateItem extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argument);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Collection<Entity> entities = (Collection<Entity>) args[0];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
       List<Entity> successEntities = new ArrayList<>();
       for (Entity entity : entities)
       {
@@ -56,7 +55,7 @@ public class CommandUpdateItem extends CommandBase
       }
       else
       {
-        CommandAPI.fail("아이템을 찾을 수 없습니다");
+        throw CommandAPI.failWithString("아이템을 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();
@@ -66,8 +65,8 @@ public class CommandUpdateItem extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(argument2);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Collection<Entity> entities = (Collection<Entity>) args[0];
-      boolean hideOutout = (boolean) args[1];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
+      boolean hideOutout = (boolean) args.get(1);
       List<Entity> successEntities = new ArrayList<>();
       for (Entity entity : entities)
       {
@@ -87,7 +86,7 @@ public class CommandUpdateItem extends CommandBase
       }
       else
       {
-        CommandAPI.fail("아이템을 찾을 수 없습니다");
+        throw CommandAPI.failWithString("아이템을 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();

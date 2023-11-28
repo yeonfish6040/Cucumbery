@@ -91,7 +91,7 @@ public class EntityResurrect implements Listener
           }
           catch (Exception e)
           {
-            e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(            e.getMessage());
             MessageUtil.broadcastDebug("오류");
             // DO NOTHING
           }

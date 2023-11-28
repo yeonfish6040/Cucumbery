@@ -101,15 +101,15 @@ public class CommandSellItem extends CommandBase
     CommandAPICommand commandAPICommand = getCommandBase(command, permission, aliases);
     commandAPICommand = commandAPICommand.withArguments(list1);
     commandAPICommand = commandAPICommand.executesNative((sender, args) -> {
-      sellItem((Player) args[0], (Predicate<ItemStack>) args[1], (double) args[2],0, 0, 0);
+      sellItem((Player) args.get(0), (Predicate<ItemStack>) args.get(1), (double) args.get(2),0, 0, 0);
     });
     commandAPICommand.register();
 
     commandAPICommand = getCommandBase(command, permission, aliases);
     commandAPICommand = commandAPICommand.withArguments(list2);
     commandAPICommand = commandAPICommand.executesNative((sender, args) -> {
-      IntegerRange integerRange = (IntegerRange) args[3];
-      sellItem((Player) args[0], (Predicate<ItemStack>) args[1], (double) args[2], integerRange.getLowerBound(), integerRange.getUpperBound(), 0);
+      IntegerRange integerRange = (IntegerRange) args.get(3);
+      sellItem((Player) args.get(0), (Predicate<ItemStack>) args.get(1), (double) args.get(2), integerRange.getLowerBound(), integerRange.getUpperBound(), 0);
     });
     commandAPICommand.register();
   }

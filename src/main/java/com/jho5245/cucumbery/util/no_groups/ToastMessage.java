@@ -56,7 +56,7 @@ public record ToastMessage(NamespacedKey id, Component title, ItemStack itemStac
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
     }
   }
 

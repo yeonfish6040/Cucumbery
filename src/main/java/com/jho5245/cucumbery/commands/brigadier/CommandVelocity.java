@@ -4,7 +4,6 @@ import com.jho5245.cucumbery.commands.brigadier.base.CommandBase;
 import com.jho5245.cucumbery.util.storage.data.Constant;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.*;
-import dev.jorel.commandapi.arguments.EntitySelector;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
@@ -18,30 +17,30 @@ public class CommandVelocity extends CommandBase
   private final List<Argument<?>> arguments = new ArrayList<>();
 
   {
-    arguments.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
+    arguments.add(new EntitySelectorArgument.ManyEntities("개체"));
     arguments.add(new LocationArgument("방향"));
   }
   private final List<Argument<?>> arguments2 = new ArrayList<>();
 
   {
-    arguments2.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
+    arguments2.add(new EntitySelectorArgument.ManyEntities("개체"));
     arguments2.add(new LocationArgument("방향"));
-    arguments2.add(new MultiLiteralArgument("absolute", "relative"));
+    arguments2.add(new MultiLiteralArgument("sans", List.of("absolute", "relative")));
   }
   private final List<Argument<?>> arguments3 = new ArrayList<>();
 
   {
-    arguments3.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
+    arguments3.add(new EntitySelectorArgument.ManyEntities("개체"));
     arguments3.add(new LocationArgument("방향"));
-    arguments3.add(new MultiLiteralArgument("absolute", "relative"));
+    arguments3.add(new MultiLiteralArgument("sans", List.of("absolute", "relative")));
     arguments3.add(new DoubleArgument("강도"));
   }
 
   private final List<Argument<?>> arguments4 = new ArrayList<>();
   {
-    arguments4.add(new EntitySelectorArgument<>("개체", EntitySelector.MANY_ENTITIES));
+    arguments4.add(new EntitySelectorArgument.ManyEntities("개체"));
     arguments4.add(new LocationArgument("방향"));
-    arguments4.add(new MultiLiteralArgument("absolute"));
+    arguments4.add(new MultiLiteralArgument("absolute", List.of("absolute")));
     arguments4.add(new DoubleArgument("x강도"));
     arguments4.add(new DoubleArgument("y강도"));
     arguments4.add(new DoubleArgument("z강도"));
@@ -54,8 +53,8 @@ public class CommandVelocity extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(arguments);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Collection<Entity> entities = (Collection<Entity>) args[0];
-      Location loc = (Location) args[1];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
+      Location loc = (Location) args.get(1);
       double x = loc.getX(), y = loc.getY(), z = loc.getZ();
       if (Constant.Sosu2.format(x).endsWith(".5"))
       {
@@ -117,9 +116,9 @@ public class CommandVelocity extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(arguments2);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Collection<Entity> entities = (Collection<Entity>) args[0];
-      Location loc = (Location) args[1];
-      String type = (String) args[2];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
+      Location loc = (Location) args.get(1);
+      String type = (String) args.get(2);
       double x = loc.getX(), y = loc.getY(), z = loc.getZ();
       switch (type)
       {
@@ -195,10 +194,10 @@ public class CommandVelocity extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(arguments3);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Collection<Entity> entities = (Collection<Entity>) args[0];
-      Location loc = (Location) args[1];
-      String type = (String) args[2];
-      double m = (double) args[3];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
+      Location loc = (Location) args.get(1);
+      String type = (String) args.get(2);
+      double m = (double) args.get(3);
       double x = loc.getX(), y = loc.getY(), z = loc.getZ();
       if ("absolute".equals(type))
       {
@@ -216,12 +215,12 @@ public class CommandVelocity extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(arguments4);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Collection<Entity> entities = (Collection<Entity>) args[0];
-      Location loc = (Location) args[1];
-      String type = (String) args[2];
-      double xM = (double) args[3];
-      double yM = (double) args[4];
-      double zM = (double) args[5];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
+      Location loc = (Location) args.get(1);
+      String type = (String) args.get(2);
+      double xM = (double) args.get(3);
+      double yM = (double) args.get(4);
+      double zM = (double) args.get(5);
       double x = loc.getX(), y = loc.getY(), z = loc.getZ();
       if ("absolute".equals(type))
       {

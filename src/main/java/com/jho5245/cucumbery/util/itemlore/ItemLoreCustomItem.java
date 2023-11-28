@@ -132,7 +132,7 @@ public class ItemLoreCustomItem
         {
           case DOEHAERIM_BABO, BAMIL_PABO, TNT_I_WONT_LET_YOU_GO, DIAMOND_BLOCK_DECORATIVE, NETHERITE_BLOCK_DECORATIVE,
                   BEACON_DECORATIVE, TNT_SUPERIOR, TNT_COMBAT, TNT_DRAIN, TNT_DONUT, WNYNYA_ORE, REDSTONE_BLOCK_INSTA_BREAK,
-                  CUSTOM_CRAFTING_TABLE, BLUE_NUMBER_BLOCK, I_WONT_LET_YOU_GO_BLOCK ->
+              CUSTOM_CRAFTING_TABLE, BLUE_NUMBER_BLOCK, I_WONT_LET_YOU_GO_BLOCK, SUS ->
           {
             if (!NBTAPI.arrayContainsValue(extraTags, ExtraTag.PRESERVE_BLOCK_NBT))
             {
@@ -294,6 +294,28 @@ public class ItemLoreCustomItem
             urls.add("1a2643647c3f26f94c62dd2ae20cfd24ba3f8236f84d6563773ff5e8a64708c1");
           }
         }
+        case SUS ->
+        {
+          nbtItem.setString("change_material", Material.LIGHT_GRAY_STAINED_GLASS.toString());
+          nbtItem.setFloat("BlockHardness", 195f);
+          nbtItem.setString("BreakSound", "custom_sus_broken");
+          nbtItem.setFloat("BreakSoundPitch", 1f);
+          nbtItem.setString("BreakParticle", "block:stone[]");
+          NBTCompound nbtCompound = nbtItem.addCompound("displays");
+          nbtCompound.setString("type", "player_heads");
+          NBTList<String> urls = nbtCompound.getStringList("value");
+          urls.clear();
+          {
+            urls.add("7ac2b6ecce29dd9502bcbc362ecd349be68022d2a00b909f04681af0f4aff899");
+            urls.add("499762ed8d0296e8e7ce233d7f0198d13de312e9ad374da8ca36b8f040b61822");
+            urls.add("36eccd778fd564bd6cf173eb56a740c63f677413f6fe9824b4899f1a21cc2400");
+            urls.add("ad17363c036e02d5144a662967eb527e4034e4af83268f8df24014dd1dbcec50");
+            urls.add("226236515285ea3a883afc622799662f234210d05e3f5bb9f57270bc29f668a7");
+            urls.add("63b4420a78de2fcb156109c7c09f408867511215a27530556fa6da2d6d2ec27f");
+            urls.add("3f4ce84233d2ec4183016970af19008528c3775fb98c8dc99cbc673574b70073");
+            urls.add("9d35cf4ca94602dae949c5abe537285824da28c02ba9ce5dd9b7f17aad981474");
+          }
+        }
         case CUSTOM_CRAFTING_TABLE ->
         {
           nbtItem.setString("change_material", Material.CYAN_STAINED_GLASS.toString());
@@ -366,10 +388,6 @@ public class ItemLoreCustomItem
           nbtItem.setInteger(MiningManager.TOOL_TIER, 10);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 12345678L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 12345678L);
-          }
         }
         case MUSHROOM_STEW_PICKAXE ->
         {
@@ -382,10 +400,6 @@ public class ItemLoreCustomItem
           nbtItem.setInteger(MiningManager.TOOL_TIER, 1);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 1000L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 1000L);
-          }
         }
         case COPPER_AXE, COPPER_HOE, COPPER_PICKAXE, COPPER_SHOVEL, COPPER_SWORD ->
         {
@@ -396,10 +410,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 76L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 76L);
-          }
         }
         case PLATINUM_AXE, PLATINUM_HOE, PLATINUM_PICKAXE, PLATINUM_SHOVEL, PLATINUM_SWORD ->
         {
@@ -410,10 +420,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 34L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 34L);
-          }
         }
         case TIN_AXE, TIN_HOE, TIN_PICKAXE, TIN_SHOVEL, TIN_SWORD ->
         {
@@ -424,10 +430,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 142L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 142L);
-          }
         }
         case LEAD_AXE, LEAD_HOE, LEAD_PICKAXE, LEAD_SHOVEL, LEAD_SWORD ->
         {
@@ -438,10 +440,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 176L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 176L);
-          }
         }
         case PLASTIC_AXE, PLASTIC_HOE, PLASTIC_PICKAXE, PLASTIC_SHOVEL, PLASTIC_SWORD ->
         {
@@ -452,10 +450,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 185L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 185L);
-          }
         }
         case BRONZE_AXE, BRONZE_HOE, BRONZE_PICKAXE, BRONZE_SHOVEL, BRONZE_SWORD ->
         {
@@ -466,10 +460,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 209L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 209L);
-          }
         }
         case CEMENTED_CARBIDE_AXE, CEMENTED_CARBIDE_HOE, CEMENTED_CARBIDE_PICKAXE, CEMENTED_CARBIDE_SHOVEL, CEMENTED_CARBIDE_SWORD ->
         {
@@ -480,10 +470,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 5876L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 5876L);
-          }
         }
         case NAUTILITE_AXE, NAUTILITE_HOE, NAUTILITE_PICKAXE, NAUTILITE_SHOVEL, NAUTILITE_SWORD ->
         {
@@ -494,10 +480,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 3413L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 3413L);
-          }
         }
         case TUNGSTEN_AXE, TUNGSTEN_HOE, TUNGSTEN_PICKAXE, TUNGSTEN_SHOVEL, TUNGSTEN_SWORD ->
         {
@@ -508,10 +490,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 2474L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 2474L);
-          }
         }
         case COBALT_AXE, COBALT_HOE, COBALT_PICKAXE, COBALT_SHOVEL, COBALT_SWORD ->
         {
@@ -522,10 +500,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 318L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 318L);
-          }
         }
         case MITHRIL_PICKAXE, MITHRIL_SWORD, MITHRIL_AXE, MITHRIL_HOE, MITHRIL_SHOVEL ->
         {
@@ -536,10 +510,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 1824L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 1824L);
-          }
         }
         case MITHRIL_PICKAXE_REFINED ->
         {
@@ -548,10 +518,6 @@ public class ItemLoreCustomItem
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 3800L);
           duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, 5d);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 3800L);
-          }
         }
         case TITANIUM_PICKAXE, TITANIUM_SWORD, TITANIUM_AXE, TITANIUM_HOE, TITANIUM_SHOVEL ->
         {
@@ -562,10 +528,6 @@ public class ItemLoreCustomItem
           }
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 3710L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 3710L);
-          }
         }
         case TITANIUM_PICKAXE_REFINED ->
         {
@@ -574,48 +536,28 @@ public class ItemLoreCustomItem
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 4500L);
           duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, 10d);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 4500L);
-          }
         }
         case SANS_HELMET, SANS_CHESTPLATE, SANS_LEGGINGS, SANS_BOOTS, RAINBOW_HELMET, RAINBOW_CHESTPLATE, RAINBOW_LEGGINGS, RAINBOW_BOOTS, SPIDER_BOOTS ->
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 500L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 500L);
-          }
         }
         case FROG_CHESTPLATE, FROG_LEGGINGS, FROG_BOOTS ->
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 400L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 400L);
-          }
         }
         case FROG_HELMET -> nbtItem.addCompound(CucumberyTag.KEY_MAIN).removeKey(CucumberyTag.CUSTOM_DURABILITY_KEY);
         case MINER_HELMET, MINER_CHESTPLATE, MINER_LEGGINGS, MINER_BOOTS ->
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 450L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 450L);
-          }
         }
         case MINDAS_CHESTPLATE, MINDAS_LEGGINGS, MINDAS_BOOTS ->
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 100000L);
           duraTag.setDouble(CucumberyTag.CUSTOM_DURABILITY_CHANCE_NOT_TO_CONSUME_DURABILITY, 50d);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 100000L);
-          }
         }
         case TITANIUM_DRILL_R266 ->
         {
@@ -623,10 +565,6 @@ public class ItemLoreCustomItem
           nbtItem.setInteger(MiningManager.TOOL_TIER, 7);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 5000L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 5000L);
-          }
           if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID.randomUUID().toString());
@@ -638,10 +576,6 @@ public class ItemLoreCustomItem
           nbtItem.setInteger(MiningManager.TOOL_TIER, 7);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 7000L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 7000L);
-          }
           if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID.randomUUID().toString());
@@ -653,10 +587,6 @@ public class ItemLoreCustomItem
           nbtItem.setInteger(MiningManager.TOOL_TIER, 8);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 9000L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 9000L);
-          }
           if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID.randomUUID().toString());
@@ -668,10 +598,6 @@ public class ItemLoreCustomItem
           nbtItem.setInteger(MiningManager.TOOL_TIER, 9);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 12000L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 12000L);
-          }
           if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID.randomUUID().toString());
@@ -683,10 +609,6 @@ public class ItemLoreCustomItem
           nbtItem.setInteger(MiningManager.TOOL_TIER, 10);
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 15000L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 15000L);
-          }
           if (!nbtItem.hasTag("uuid"))
           {
             nbtItem.setString("uuid", UUID.randomUUID().toString());
@@ -696,10 +618,6 @@ public class ItemLoreCustomItem
         {
           NBTCompound duraTag = nbtItem.addCompound(CucumberyTag.KEY_MAIN).addCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
           duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY, 600L);
-          if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
-          {
-            duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 600L);
-          }
         }
         case IQ_CHOOK_CHUCK ->
         {
@@ -755,6 +673,15 @@ public class ItemLoreCustomItem
           {
             nbtItem.setShort("Size", (short) 30);
           }
+        }
+      }
+      // 내구도 초기 설정
+      if (nbtItem.hasTag(CucumberyTag.KEY_MAIN) && nbtItem.getCompound(CucumberyTag.KEY_MAIN).hasTag(CucumberyTag.CUSTOM_DURABILITY_KEY))
+      {
+        NBTCompound duraTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN).getCompound(CucumberyTag.CUSTOM_DURABILITY_KEY);
+        if (!duraTag.hasTag(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY))
+        {
+          duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, 0L);
         }
       }
       if (nbtItem.getCompound(CucumberyTag.KEY_MAIN).getKeys().isEmpty())
@@ -1184,6 +1111,7 @@ public class ItemLoreCustomItem
           case TIGHTLY_TIED_HAY_BLOCK -> ItemStackUtil.setTexture(skullMeta, "f7c33cd0c14ba830da149907f7a6aae835b6a35aea01e0ce073fb3c59cc46326");
           case BLUE_NUMBER_BLOCK -> ItemStackUtil.setTexture(skullMeta, "786eddd98d12a9b3768919e22c258c2833b3347b5b15e1a8b9669abde8652a6c");
           case I_WONT_LET_YOU_GO_BLOCK -> ItemStackUtil.setTexture(skullMeta, "4e68ed81ce08c1b5006ae041dc91c7b59fe1f698c2e575c60c7e5b25d6434484");
+          case SUS -> ItemStackUtil.setTexture(skullMeta, "a68fc422a3bf7dba87bc2b03e68fb6c3de5b8428d91d20453e70cd14f110454f");
         }
       }
     }

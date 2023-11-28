@@ -39,7 +39,6 @@ public class CustomConfig
           boolean success = file.getParentFile().mkdirs();
           if (!success)
           {
-            System.out.println("Error1");
           }
         }
         boolean success2 = file.createNewFile();
@@ -49,7 +48,7 @@ public class CustomConfig
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
       }
     }
     this.load();
@@ -219,12 +218,12 @@ public class CustomConfig
     {
       if (!this.file.getName().endsWith(".log"))
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
       }
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
     }
   }
 
@@ -236,7 +235,7 @@ public class CustomConfig
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
     }
   }
 
@@ -256,7 +255,7 @@ public class CustomConfig
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(      e.getMessage());
     }
   }
 
@@ -283,7 +282,7 @@ public class CustomConfig
     COPY_NOTE_BLOCK_INSTRUMENT("픽블록으로-소리-블록-악기-복사", false),
     COPY_NOTE_BLOCK_PITCH("픽블록으로-소리-블록-음높이-복사", false),
     COPY_NOTE_BLOCK_VALUE_WHEN_SNEAKING("웅크리기-상태에서만-소리-블록-값-복사", true),
-    CUSTOM_MINING_COOLDOWN_DISPLAY_BLOCK("커스텀-채광-쿨타임-표시-블록", Material.BEDROCK),
+    CUSTOM_MINING_COOLDOWN_DISPLAY_BLOCK("커스텀-채광-쿨타임-표시-블록", Material.BEDROCK.toString()),
     DISABLE_COMMAND_BLOCK_BREAK_WHEN_SNEAKING("웅크린-상태에서-명령-블록-파괴-방지", false),
     DISABLE_HELPFUL_FEATURE_WHEN_CREATIVE("크리에이티브-모드에서-아이템-설명-기능-비활성화", false),
     DISABLE_ITEM_COOLDOWN("아이템-재사용-대기-시간-무시(바닐라-아이템-전용)", false),

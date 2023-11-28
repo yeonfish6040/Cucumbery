@@ -2,15 +2,16 @@ package com.jho5245.cucumbery.custom.recipe;
 
 import com.jho5245.cucumbery.Cucumbery;
 import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
+import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.BlastingRecipe;
-import org.bukkit.inventory.FurnaceRecipe;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -39,7 +40,31 @@ public class RecipeManager
 
     register(new FurnaceRecipe(of("tnt_from_furnace"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create(false)), 2f, 100));
     register(new BlastingRecipe(of("tnt_from_blast_furnace"), new ItemStack(Material.TNT), new ExactChoice(CustomMaterial.WNYNYA_ORE.create(false)), 2f, 50));
+
+    register(new PotionMix(of("test_jade_to_tnt"), new ItemStack(Material.TNT), INPUT_WATER_BOTTLE,
+        PotionMix.createPredicateChoice(itemStack -> isAdminOnline() && CustomMaterial.itemStackOf(itemStack) == CustomMaterial.JADE)));
+
+    register(new PotionMix(of("test_enchanted_jade_to_diamond"), new ItemStack(Material.STONE), INPUT_WATER_BOTTLE,
+        PotionMix.createPredicateChoice(itemStack -> isAdminOnline() && CustomMaterial.itemStackOf(itemStack) == CustomMaterial.JADE && itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchants())));
+
+    register(new PotionMix(of("test_enchanted_ruby_to_stone"), new ItemStack(Material.STONE), INPUT_WATER_BOTTLE,
+        PotionMix.createPredicateChoice(itemStack -> isAdminOnline() && CustomMaterial.itemStackOf(itemStack) == CustomMaterial.RUBY && itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchants())));
+
+    register(new PotionMix(of("test_amber_to_tnt"), new ItemStack(Material.TNT), INPUT_WATER_BOTTLE,
+        PotionMix.createPredicateChoice(itemStack -> isAdminOnline() && CustomMaterial.itemStackOf(itemStack) == CustomMaterial.AMBER && Bukkit.getOnlinePlayers().size() > 1)));
   }
+
+
+  private static boolean isAdminOnline()
+  {
+    return Bukkit.getPlayer("jho5245") != null;
+  }
+
+  private static final RecipeChoice INPUT_WATER_BOTTLE = PotionMix.createPredicateChoice(itemStack ->
+  {
+    ItemMeta itemMeta = itemStack.getItemMeta();
+    return itemMeta instanceof PotionMeta potionMeta && potionMeta.getBasePotionData().getType() == PotionType.WATER && potionMeta.getCustomEffects().isEmpty();
+  });
 
   @NotNull
   private static NamespacedKey of(@NotNull String s)
@@ -60,6 +85,13 @@ public class RecipeManager
       Bukkit.removeRecipe(keyed.getKey());
     }
     Bukkit.addRecipe(recipe);
+  }
+
+  private static void register(@NotNull PotionMix potionMix)
+  {
+    NamespacedKey namespacedKey = potionMix.getKey();
+    Bukkit.getPotionBrewer().removePotionMix(namespacedKey);
+    Bukkit.getPotionBrewer().addPotionMix(potionMix);
   }
 
   public static void unload()

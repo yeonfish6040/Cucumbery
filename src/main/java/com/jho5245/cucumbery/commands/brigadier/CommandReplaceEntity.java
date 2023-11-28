@@ -22,16 +22,16 @@ import java.util.List;
 public class CommandReplaceEntity extends CommandBase
 {
   private final List<Argument<?>> argumentList = Arrays.asList(
-          new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES),
+          new EntitySelectorArgument.ManyEntities("개체"),
           new EntityTypeArgument("개체 종류"));
 
   private final List<Argument<?>> argumentList2 = Arrays.asList(
-          new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES),
+          new EntitySelectorArgument.ManyEntities("개체"),
           new EntityTypeArgument("개체 종류"),
           new BooleanArgument("명령어 출력 숨김 여부"));
 
   private final List<Argument<?>> argumentList3 = Arrays.asList(
-          new EntitySelectorArgument("개체", EntitySelector.MANY_ENTITIES),
+          new EntitySelectorArgument.ManyEntities("개체"),
           new EntityTypeArgument("개체 종류"),
           new BooleanArgument("명령어 출력 숨김 여부"),
           new GreedyStringArgument("추가 nbt"));
@@ -44,10 +44,10 @@ public class CommandReplaceEntity extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      Collection<Entity> entities = (Collection<Entity>) args[0];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
       List<Entity> successEntities = new ArrayList<>();
       List<Entity> resultEntities = new ArrayList<>();
-      EntityType entityType = (EntityType) args[1];
+      EntityType entityType = (EntityType) args.get(1);
       for (Entity entity : entities)
       {
         if (entity instanceof Player)
@@ -76,7 +76,7 @@ public class CommandReplaceEntity extends CommandBase
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다");
+        throw CommandAPI.failWithString("개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();
@@ -86,11 +86,11 @@ public class CommandReplaceEntity extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      Collection<Entity> entities = (Collection<Entity>) args[0];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
       List<Entity> successEntities = new ArrayList<>();
       List<Entity> resultEntities = new ArrayList<>();
-      EntityType entityType = (EntityType) args[1];
-      boolean hideOutput = (boolean) args[2];
+      EntityType entityType = (EntityType) args.get(1);
+      boolean hideOutput = (boolean) args.get(2);
       for (Entity entity : entities)
       {
         if (entity instanceof Player)
@@ -122,7 +122,7 @@ public class CommandReplaceEntity extends CommandBase
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다");
+        throw CommandAPI.failWithString("개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();
@@ -132,18 +132,17 @@ public class CommandReplaceEntity extends CommandBase
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
       CommandSender commandSender = sender.getCallee();
-      Collection<Entity> entities = (Collection<Entity>) args[0];
-      EntityType entityType = (EntityType) args[1];
-      boolean hideOutput = (boolean) args[2];
+      Collection<Entity> entities = (Collection<Entity>) args.get(0);
+      EntityType entityType = (EntityType) args.get(1);
+      boolean hideOutput = (boolean) args.get(2);
       NBTContainer nbtContainer;
       try
       {
-        nbtContainer = new NBTContainer((String) args[3]);
+        nbtContainer = new NBTContainer((String) args.get(3));
       }
       catch (Exception e)
       {
-        CommandAPI.fail("잘못된 NBT입니다: " + args[3]);
-        return;
+        throw CommandAPI.failWithString("잘못된 NBT입니다: " + args.get(3));
       }
 
       List<Entity> successEntities = new ArrayList<>();
@@ -180,7 +179,7 @@ public class CommandReplaceEntity extends CommandBase
       }
       else if (!(sender.getCallee() instanceof Player))
       {
-        CommandAPI.fail("개체를 찾을 수 없습니다");
+        throw CommandAPI.failWithString("개체를 찾을 수 없습니다");
       }
     });
     commandAPICommand.register();

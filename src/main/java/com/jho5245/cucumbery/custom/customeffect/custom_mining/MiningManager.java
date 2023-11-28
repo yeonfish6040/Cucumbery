@@ -112,8 +112,8 @@ public class MiningManager
     // 아니 레지던스 왜 이상해
     if (Cucumbery.using_Residence)
     {
-      try
-      {
+     // try
+     // {
 //        Class<?> clazz = Class.forName("com.bekvon.bukkit.residence.Residence");
 //        Class<?> clazz2 = Class.forName("com.bekvon.bukkit.residence.protection.PlayerManager");
 //        Class<?> clazz3 = Class.forName("com.bekvon.bukkit.residence.containers.ResidencePlayer");
@@ -125,11 +125,11 @@ public class MiningManager
 //        {
 //          return null;
 //        }
-      }
-      catch (Exception e)
-      {
-        e.printStackTrace();
-      }
+    //  }
+     // catch (Exception e)
+     // {
+//Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
+    //  }
     }
     ItemStack itemStack = player.getInventory().getItemInMainHand().clone();
     if (NBTAPI.isRestricted(player, itemStack, RestrictionType.NO_BREAK))
@@ -610,7 +610,7 @@ public class MiningManager
         }
       }
       // 시밤 서버 탐험 월드 커스텀 광물
-      if (false && Bukkit.getPluginManager().getPlugin("CBomb-Explore") != null && player.getWorld().getName().equals("world"))
+      if (Bukkit.getPluginManager().getPlugin("CBomb-Explore") != null && player.getWorld().getName().equals("world"))
       {
         int y = blockLocation.getBlockY();
         switch (blockType)
@@ -874,9 +874,9 @@ public class MiningManager
       }
     }
     // 커스텀 아이템 id
-    String toolId = (ItemStackUtil.itemExists(itemStack) ? new NBTItem(itemStack).getString("id") : "") + "",
-            blockId = (!drops.isEmpty() && ItemStackUtil.itemExists(drops.get(0)) ? new NBTItem(drops.get(0)).getString("id") : "") + "";
-    if (CustomMaterial.FLINT_SHOVEL.toString().equalsIgnoreCase(toolId) && blockId.equals("") && blockType == Material.GRAVEL)
+    String toolId = ItemStackUtil.itemExists(itemStack) ? new NBTItem(itemStack).getString("id") : "",
+            blockId = !drops.isEmpty() && ItemStackUtil.itemExists(drops.get(0)) ? new NBTItem(drops.get(0)).getString("id") : "";
+    if (CustomMaterial.FLINT_SHOVEL.toString().equalsIgnoreCase(toolId) && blockId.isEmpty() && blockType == Material.GRAVEL)
     {
       drops.forEach(item ->
       {
@@ -900,7 +900,7 @@ public class MiningManager
     {
       for (double d : expList)
       {
-        expToDrop += d;
+        expToDrop += (float) d;
       }
       expToDrop += miningExp(blockType);
     }
@@ -934,7 +934,7 @@ public class MiningManager
             {
               MessageUtil.sendWarn(Bukkit.getConsoleSender(), "config.yml 파일에서 custom-mining.efficiency의 값이 잘못 지정되어 있습니다!");
             }
-            toolSpeed += value;
+            toolSpeed += (float) value;
           }
         }
         if (CustomMaterial.MITHRIL_PICKAXE_REFINED.toString().equalsIgnoreCase(toolId) && CustomMaterial.MITHRIL_ORE.toString().equalsIgnoreCase(blockId))
@@ -945,7 +945,7 @@ public class MiningManager
         {
           miningSpeed += 60f;
         }
-        if (CustomMaterial.STONK.toString().equalsIgnoreCase(toolId) && blockId.equals("") && (blockType == Material.STONE || blockType == Material.COBBLESTONE || blockType == Material.DEEPSLATE || blockType == Material.COBBLED_DEEPSLATE))
+        if (CustomMaterial.STONK.toString().equalsIgnoreCase(toolId) && blockId.isEmpty() && (blockType == Material.STONE || blockType == Material.COBBLESTONE || blockType == Material.DEEPSLATE || blockType == Material.COBBLED_DEEPSLATE))
         {
           miningSpeed += 10000f;
         }
@@ -1072,7 +1072,7 @@ public class MiningManager
         if (potionHasteLevel > 0)
         {
           String formula = Cucumbery.config.getString("custom-mining.haste", "0.2*%mining_speed%*%level%")
-                  .replace("%level%", potionHasteLevel + "").replace("%mining_speed%", Constant.Sosu2rawFormat.format(miningSpeed) + "");
+                  .replace("%level%", potionHasteLevel + "").replace("%mining_speed%", Constant.Sosu2rawFormat.format(miningSpeed));
           double value = 0d;
           try
           {
@@ -1116,15 +1116,15 @@ public class MiningManager
       CustomEffect miningFortuneEffect = CustomEffectManager.getEffectNullable(player, CustomEffectTypeCustomMining.MINING_FORTUNE);
       if (miningFortuneEffect != null)
       {
-        miningFortune += (miningFortuneEffect.getAmplifier() + 1) * 0.05;
+        miningFortune += (float) ((miningFortuneEffect.getAmplifier() + 1) * 0.05);
       }
       if (CustomMaterial.MITHRIL_PICKAXE.toString().equalsIgnoreCase(toolId) && CustomMaterial.MITHRIL_ORE.toString().equalsIgnoreCase(blockId))
       {
-        miningFortune += 0.15;
+        miningFortune += 0.15f;
       }
       if (CustomMaterial.TITANIUM_PICKAXE.toString().equalsIgnoreCase(toolId) && CustomMaterial.TITANIUM_ORE.toString().equalsIgnoreCase(blockId))
       {
-        miningFortune += 0.2;
+        miningFortune += 0.2f;
       }
       if (helmetType == CustomMaterial.MINER_HELMET)
       {
@@ -1161,14 +1161,14 @@ public class MiningManager
       int enchantHarvestingLevel = CustomEnchant.isEnabled() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchants() ? itemStack.getItemMeta().getEnchantLevel(CustomEnchant.HARVESTING) : 0;
       if (enchantHarvestingLevel > 0)
       {
-        farmingFortune += enchantHarvestingLevel * 0.125;
+        farmingFortune += enchantHarvestingLevel * 0.125f;
       }
       else
       {
         int enchantSunderLevel = CustomEnchant.isEnabled() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasEnchants() ? itemStack.getItemMeta().getEnchantLevel(CustomEnchant.SUNDER) : 0;
         if (enchantSunderLevel > 0)
         {
-          farmingFortune += enchantSunderLevel * 0.125;
+          farmingFortune += enchantSunderLevel * 0.125f;
         }
       }
     }
@@ -1315,6 +1315,12 @@ public class MiningManager
       miningSpeed = 0f;
     }
 
+    // SUS
+    if (!drop.isEmpty() && CustomMaterial.itemStackOf(drop.get(0)) == CustomMaterial.SUS)
+    {
+      miningSpeed = 50f;
+    }
+
     if (UserData.SHOW_PLUGIN_DEV_DEBUG_MESSAGE.getBoolean(player))
     {
       MessageUtil.sendActionBar(player, "IgnoreVanilla: %s, ToolSpeed: %s, MiningSpeed: %s, VanillaSpeed: %s, Hardness: %s, Fortune: %s, Progress: %s", ignoreVanillaModification + "", Constant.Sosu2.format(toolSpeed),
@@ -1327,7 +1333,8 @@ public class MiningManager
 
   public static boolean toolMatches(@NotNull ItemStack tool, int blockTier, Block block, @NotNull List<ItemStack> drops)
   {
-    NBTItem nbtItem = drops.isEmpty() ? null : new NBTItem(drops.get(0));
+    ItemStack drop = drops.isEmpty() ? null : drops.get(0);
+    NBTItem nbtItem = ItemStackUtil.itemExists(drop) ? new NBTItem(drop) : null;
     String matchTools = nbtItem != null && nbtItem.hasTag("MatchTools") ? nbtItem.getString("MatchTools") : null;
     boolean toDefaultSpeed = false;
     if (matchTools != null)
@@ -1380,27 +1387,27 @@ public class MiningManager
     float exp = 0f;
     if (Tag.COAL_ORES.isTagged(blockType))
     {
-      exp += Math.random() * 2;
+      exp += (float) (Math.random() * 2);
     }
     if (blockType == Material.NETHER_GOLD_ORE)
     {
-      exp += Math.random();
+      exp += (float) Math.random();
     }
     if (Tag.DIAMOND_ORES.isTagged(blockType) || Tag.EMERALD_ORES.isTagged(blockType))
     {
-      exp += Math.random() * 4 + 3;
+      exp += (float) (Math.random() * 4 + 3);
     }
     if (Tag.LAPIS_ORES.isTagged(blockType) || blockType == Material.NETHER_QUARTZ_ORE)
     {
-      exp += Math.random() * 3 + 2;
+      exp += (float) (Math.random() * 3 + 2);
     }
     if (Tag.REDSTONE_ORES.isTagged(blockType))
     {
-      exp += Math.random() * 4 + 1;
+      exp += (float) (Math.random() * 4 + 1);
     }
     if (blockType == Material.SPAWNER)
     {
-      exp += Math.random() * 28 + 15;
+      exp += (float) (Math.random() * 28 + 15);
     }
     if (blockType == Material.SCULK)
     {

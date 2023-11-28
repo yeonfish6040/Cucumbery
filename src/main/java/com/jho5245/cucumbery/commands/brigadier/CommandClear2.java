@@ -73,14 +73,14 @@ public class CommandClear2 extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list1);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      clear(sender, (Collection<Player>) args[0], (Predicate<ItemStack>) args[1], 2304);
+      clear(sender, (Collection<Player>) args.get(0), (Predicate<ItemStack>) args.get(1), 2304);
     });
     commandAPICommand.register();
     commandAPICommand = getCommandBase(command, permission, aliases);
     commandAPICommand = commandAPICommand.withArguments(list2);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      clear(sender, (Collection<Player>) args[0], (Predicate<ItemStack>) args[1], (Integer) args[2]);
+      clear(sender, (Collection<Player>) args.get(0), (Predicate<ItemStack>) args.get(1), (Integer) args.get(2));
     });
     commandAPICommand.register();
   }

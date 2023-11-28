@@ -1415,7 +1415,7 @@ public class CustomRecipeUtil
         }
         catch (Exception e)
         {
-          e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(          e.getMessage());
         }
       }
       passRequire = requireFound > 0;

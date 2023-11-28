@@ -334,7 +334,7 @@ public class ItemLore
         }
         catch (IndexOutOfBoundsException e)
         {
-          e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(          e.getMessage());
         }
       }
     }

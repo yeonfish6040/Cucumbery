@@ -5,7 +5,10 @@ import com.jho5245.cucumbery.custom.customeffect.CustomEffectManager;
 import com.jho5245.cucumbery.custom.customeffect.children.group.LocationCustomEffectImple;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectType;
 import com.jho5245.cucumbery.custom.customeffect.type.CustomEffectTypeCustomMining;
+import com.jho5245.cucumbery.util.blockplacedata.BlockPlaceDataConfig;
+import com.jho5245.cucumbery.util.storage.data.CustomMaterial;
 import com.jho5245.cucumbery.util.storage.data.Variable;
+import com.jho5245.cucumbery.util.storage.no_groups.SoundPlay;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,7 +33,7 @@ public class BlockDamage implements Listener
       return;
     }
     Block block = event.getBlock();
-    Location location = block.getLocation();
+    final Location location = block.getLocation();
     if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE))
     {
       if (CustomEffectManager.hasEffect(player, CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS))
@@ -52,6 +55,10 @@ public class BlockDamage implements Listener
       }
       if (!Variable.customMiningCooldown.containsKey(location) || Variable.customMiningExtraBlocks.containsKey(location))
       {
+        if (CustomMaterial.itemStackOf(BlockPlaceDataConfig.getItem(location)) == CustomMaterial.SUS)
+        {
+          SoundPlay.playSound(player, "custom_sus_breaking");
+        }
         CustomEffectManager.addEffect(player, new LocationCustomEffectImple(CustomEffectTypeCustomMining.CUSTOM_MINING_SPEED_MODE_PROGRESS, location));
       }
     }

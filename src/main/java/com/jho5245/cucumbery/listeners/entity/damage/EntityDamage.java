@@ -610,12 +610,11 @@ public class EntityDamage implements Listener
     double offset = Math.max(0, Variable.damageIndicatorStack.get(uuid) / 100d) - 0.5d;
     Location location = event.getEntity().getLocation();
     BoundingBox boundingBox = entity.getBoundingBox();
+    float sizeModifier = (float) Math.max(1f, (boundingBox.getMaxY() - boundingBox.getMinY()) / 1.5f);
     offset += (entity.getFireTicks() > 0 ? ((boundingBox.getMaxY() - boundingBox.getCenterY())) : 0);
     location.setX(boundingBox.getCenterX());
-    location.setY(boundingBox.getMaxY() + offset);
+    location.setY(boundingBox.getMaxY() + offset * sizeModifier);
     location.setZ(boundingBox.getCenterZ());
-
-    float sizeModifier = (float) Math.max(1f, (boundingBox.getMaxY() - boundingBox.getMinY()) / 1.5f);
     Component finalDisplay = display;
     if (Cucumbery.using_ProtocolLib)
     {
@@ -623,7 +622,6 @@ public class EntityDamage implements Listener
     }
     else
     {
-      @SuppressWarnings("all")
       Consumer<Entity> consumer = e ->
       {
         TextDisplay textDisplay = (TextDisplay) e;
@@ -636,7 +634,7 @@ public class EntityDamage implements Listener
         textDisplay.setShadowStrength(0);
         textDisplay.setBrightness(brightness);
         textDisplay.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
-        textDisplay.setTextOpacity((byte) -2);
+        textDisplay.setTextOpacity((byte) -1);
         Transformation transformation = textDisplay.getTransformation();
         Transformation newTransformation = new Transformation(new Vector3f(0f, 0.2f * sizeModifier, 0f), transformation.getLeftRotation(), new Vector3f(1.2f * sizeModifier, 1.2f * sizeModifier, 1.2f * sizeModifier), transformation.getRightRotation());
         textDisplay.setTransformation(newTransformation);
@@ -660,16 +658,28 @@ public class EntityDamage implements Listener
         Transformation newTransformation = new Transformation(new Vector3f(0f, 0.4f * sizeModifier, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
         textDisplay.setTransformation(newTransformation);
       }, 2L);
-
       Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
       {
         textDisplay.setInterpolationDelay(-1);
-        textDisplay.setInterpolationDuration(10);
+        textDisplay.setInterpolationDuration(5);
+        textDisplay.setTextOpacity((byte) -127);
+        Transformation transformation = textDisplay.getTransformation();
+        Transformation newTransformation = new Transformation(new Vector3f(0f, 0.5f * sizeModifier, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
+        textDisplay.setTransformation(newTransformation);
+      }, 12L);
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+      {
+        textDisplay.setTextOpacity((byte) 127);
+      }, 15L);
+      Bukkit.getScheduler().runTaskLater(Cucumbery.getPlugin(), () ->
+      {
+        textDisplay.setInterpolationDelay(-1);
+        textDisplay.setInterpolationDuration(5);
         textDisplay.setTextOpacity((byte) 5);
         Transformation transformation = textDisplay.getTransformation();
         Transformation newTransformation = new Transformation(new Vector3f(0f, 0.6f * sizeModifier, 0f), transformation.getLeftRotation(), transformation.getScale(), transformation.getRightRotation());
         textDisplay.setTransformation(newTransformation);
-      }, 12L);
+      }, 16L);
       CustomEffectManager.addEffect(textDisplay, CustomEffectType.DAMAGE_INDICATOR);
     }
   }

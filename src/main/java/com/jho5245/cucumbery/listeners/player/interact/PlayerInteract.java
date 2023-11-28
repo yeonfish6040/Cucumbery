@@ -1391,7 +1391,7 @@ public class PlayerInteract implements Listener
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(        e.getMessage());
         MessageUtil.broadcastDebug("오류");
         // DO NOTHING
       }
@@ -1700,7 +1700,7 @@ public class PlayerInteract implements Listener
         }
         catch (Exception e)
         {
-          e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(          e.getMessage());
           MessageUtil.broadcastDebug("오류");
         }
       }
@@ -1892,7 +1892,7 @@ public class PlayerInteract implements Listener
                   catch (Exception e)
                   {
                     MessageUtil.broadcastDebug("오류 발생");
-                    e.printStackTrace();
+Cucumbery.getPlugin().getLogger().warning(                    e.getMessage());
                   }
                 }
               }
@@ -2085,8 +2085,8 @@ public class PlayerInteract implements Listener
         NBTCompound itemTag = nbtItem.getCompound(CucumberyTag.KEY_MAIN);
         NBTCompound duraTag = NBTAPI.getCompound(itemTag, CucumberyTag.CUSTOM_DURABILITY_KEY);
         long curDura = duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY);
-        curDura -= damage;
-        breaking = curDura <= 0;
+        curDura += damage;
+        breaking = curDura >= duraTag.getLong(CucumberyTag.CUSTOM_DURABILITY_MAX_KEY);
         duraTag.setLong(CucumberyTag.CUSTOM_DURABILITY_CURRENT_KEY, curDura);
         switch (Objects.requireNonNull(event.getHand()))
         {

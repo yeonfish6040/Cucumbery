@@ -51,8 +51,8 @@ public class CommandVanillaTeleport extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list1);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      Rotation rotation = (Rotation) args[1];
+      Location location = (Location) args.get(0);
+      Rotation rotation = (Rotation) args.get(1);
       if (sender.getCallee() instanceof Entity entity)
       {
         teleport(entity, location, rotation, false);
@@ -64,11 +64,11 @@ public class CommandVanillaTeleport extends CommandBase
     commandAPICommand = commandAPICommand.withArguments(list2);
     commandAPICommand = commandAPICommand.executesNative((sender, args) ->
     {
-      Location location = (Location) args[0];
-      Rotation rotation = (Rotation) args[1];
+      Location location = (Location) args.get(0);
+      Rotation rotation = (Rotation) args.get(1);
       if (sender.getCallee() instanceof Entity entity)
       {
-        teleport(entity, location, rotation, (boolean) args[2]);
+        teleport(entity, location, rotation, (boolean) args.get(2));
       }
     });
     commandAPICommand.register();

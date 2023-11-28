@@ -39,7 +39,7 @@ public class CommandExplode extends CommandBase
 
   private final Argument LOCATION = ArgumentUtil.LOCATION;
   private final Argument POWER = new FloatArgument("폭발 강도", 0, 500);
-  private final Argument EXPLODE_PROPERTY = new MultiLiteralArgument("none", "fire-only", "break-only", "all");
+  private final Argument EXPLODE_PROPERTY = new MultiLiteralArgument("args", List.of("none", "fire-only", "break-only", "all"));
 
   private final List<Argument<?>> list01 = Arrays.asList(HIDE_OUTPUT);
   private final List<Argument<?>> list02 = Arrays.asList(POWER);
@@ -142,7 +142,7 @@ public class CommandExplode extends CommandBase
     }
     if (!world.createExplosion(location, power, setFire, breakBlocks, source))
     {
-      CommandAPI.fail("폭발을 일으킬 수 없습니다");
+      throw CommandAPI.failWithString("폭발을 일으킬 수 없습니다");
     }
   }
 
@@ -169,7 +169,7 @@ public class CommandExplode extends CommandBase
         Entity source = DEFAULT_ENTITY;
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[0];
+        boolean hideOutput = (boolean) args.get(0);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -179,7 +179,7 @@ public class CommandExplode extends CommandBase
       {
         Location location = getLocation(sender);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[0];
+        float power = (float) args.get(0);
         String property = DEFAULT_PROPERTY;
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
@@ -191,9 +191,9 @@ public class CommandExplode extends CommandBase
       {
         Location location = getLocation(sender);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[0];
+        float power = (float) args.get(0);
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[1];
+        boolean hideOutput = (boolean) args.get(1);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -203,8 +203,8 @@ public class CommandExplode extends CommandBase
       {
         Location location = getLocation(sender);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[0];
-        String property = (String) args[1];
+        float power = (float) args.get(0);
+        String property = (String) args.get(1);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -215,9 +215,9 @@ public class CommandExplode extends CommandBase
       {
         Location location = getLocation(sender);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[0];
-        String property = (String) args[1];
-        boolean hideOutput = (boolean) args[2];
+        float power = (float) args.get(0);
+        String property = (String) args.get(1);
+        boolean hideOutput = (boolean) args.get(2);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -228,7 +228,7 @@ public class CommandExplode extends CommandBase
         Location location = getLocation(sender);
         Entity source = DEFAULT_ENTITY;
         float power = DEFAULT_POWER;
-        String property = (String) args[0];
+        String property = (String) args.get(0);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -240,8 +240,8 @@ public class CommandExplode extends CommandBase
         Location location = getLocation(sender);
         Entity source = DEFAULT_ENTITY;
         float power = DEFAULT_POWER;
-        String property = (String) args[0];
-        boolean hideOutput = (boolean) args[1];
+        String property = (String) args.get(0);
+        boolean hideOutput = (boolean) args.get(1);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -251,8 +251,8 @@ public class CommandExplode extends CommandBase
       {
         Location location = getLocation(sender);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[1];
-        String property = (String) args[0];
+        float power = (float) args.get(1);
+        String property = (String) args.get(0);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -263,9 +263,9 @@ public class CommandExplode extends CommandBase
       {
         Location location = getLocation(sender);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[1];
-        String property = (String) args[0];
-        boolean hideOutput = (boolean) args[2];
+        float power = (float) args.get(1);
+        String property = (String) args.get(0);
+        boolean hideOutput = (boolean) args.get(2);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -276,7 +276,7 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
+        Entity source = (Entity) args.get(0);
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
@@ -288,10 +288,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
+        Entity source = (Entity) args.get(0);
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[1];
+        boolean hideOutput = (boolean) args.get(1);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -300,8 +300,8 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
-        float power = (float) args[1];
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(1);
         String property = DEFAULT_PROPERTY;
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
@@ -312,10 +312,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
-        float power = (float) args[1];
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(1);
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[2];
+        boolean hideOutput = (boolean) args.get(2);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -324,9 +324,9 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
-        float power = (float) args[1];
-        String property = (String) args[2];
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(1);
+        String property = (String) args.get(2);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -336,10 +336,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
-        float power = (float) args[1];
-        String property = (String) args[2];
-        boolean hideOutput = (boolean) args[3];
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(1);
+        String property = (String) args.get(2);
+        boolean hideOutput = (boolean) args.get(3);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -348,9 +348,9 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
+        Entity source = (Entity) args.get(0);
         float power = DEFAULT_POWER;
-        String property = (String) args[1];
+        String property = (String) args.get(1);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -360,10 +360,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
+        Entity source = (Entity) args.get(0);
         float power = DEFAULT_POWER;
-        String property = (String) args[1];
-        boolean hideOutput = (boolean) args[2];
+        String property = (String) args.get(1);
+        boolean hideOutput = (boolean) args.get(2);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -372,9 +372,9 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
-        float power = (float) args[2];
-        String property = (String) args[1];
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(2);
+        String property = (String) args.get(1);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -384,10 +384,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
         Location location = getLocation(sender);
-        Entity source = (Entity) args[0];
-        float power = (float) args[2];
-        String property = (String) args[1];
-        boolean hideOutput = (boolean) args[3];
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(2);
+        String property = (String) args.get(1);
+        boolean hideOutput = (boolean) args.get(3);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -397,7 +397,7 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list20);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
@@ -409,11 +409,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list21);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[1];
+        boolean hideOutput = (boolean) args.get(1);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -421,9 +421,9 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list22);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[1];
+        float power = (float) args.get(1);
         String property = DEFAULT_PROPERTY;
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
@@ -433,11 +433,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list23);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[1];
+        float power = (float) args.get(1);
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[2];
+        boolean hideOutput = (boolean) args.get(2);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -445,10 +445,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list24);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[1];
-        String property = (String) args[2];
+        float power = (float) args.get(1);
+        String property = (String) args.get(2);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -457,11 +457,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list25);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[1];
-        String property = (String) args[2];
-        boolean hideOutput = (boolean) args[3];
+        float power = (float) args.get(1);
+        String property = (String) args.get(2);
+        boolean hideOutput = (boolean) args.get(3);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -469,10 +469,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list26);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
         float power = DEFAULT_POWER;
-        String property = (String) args[1];
+        String property = (String) args.get(1);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -481,11 +481,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list27);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
         float power = DEFAULT_POWER;
-        String property = (String) args[1];
-        boolean hideOutput = (boolean) args[2];
+        String property = (String) args.get(1);
+        boolean hideOutput = (boolean) args.get(2);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -493,10 +493,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list28);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[2];
-        String property = (String) args[1];
+        float power = (float) args.get(2);
+        String property = (String) args.get(1);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -505,11 +505,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list29);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
+        Location location = (Location) args.get(0);
         Entity source = DEFAULT_ENTITY;
-        float power = (float) args[2];
-        String property = (String) args[1];
-        boolean hideOutput = (boolean) args[3];
+        float power = (float) args.get(2);
+        String property = (String) args.get(1);
+        boolean hideOutput = (boolean) args.get(3);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -519,8 +519,8 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list30);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
@@ -531,11 +531,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list31);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[2];
+        boolean hideOutput = (boolean) args.get(2);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -543,9 +543,9 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list32);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
-        float power = (float) args[2];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
+        float power = (float) args.get(2);
         String property = DEFAULT_PROPERTY;
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
@@ -555,11 +555,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list33);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
-        float power = (float) args[2];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
+        float power = (float) args.get(2);
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[3];
+        boolean hideOutput = (boolean) args.get(3);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -567,10 +567,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list34);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
-        float power = (float) args[2];
-        String property = (String) args[3];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
+        float power = (float) args.get(2);
+        String property = (String) args.get(3);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -579,11 +579,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list35);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
-        float power = (float) args[2];
-        String property = (String) args[3];
-        boolean hideOutput = (boolean) args[4];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
+        float power = (float) args.get(2);
+        String property = (String) args.get(3);
+        boolean hideOutput = (boolean) args.get(4);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -591,10 +591,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list36);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
         float power = DEFAULT_POWER;
-        String property = (String) args[2];
+        String property = (String) args.get(2);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -603,11 +603,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list37);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
         float power = DEFAULT_POWER;
-        String property = (String) args[2];
-        boolean hideOutput = (boolean) args[3];
+        String property = (String) args.get(2);
+        boolean hideOutput = (boolean) args.get(3);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -615,10 +615,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list38);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
-        float power = (float) args[2];
-        String property = (String) args[3];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
+        float power = (float) args.get(2);
+        String property = (String) args.get(3);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -627,11 +627,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list39);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[0];
-        Entity source = (Entity) args[1];
-        float power = (float) args[3];
-        String property = (String) args[2];
-        boolean hideOutput = (boolean) args[4];
+        Location location = (Location) args.get(0);
+        Entity source = (Entity) args.get(1);
+        float power = (float) args.get(3);
+        String property = (String) args.get(2);
+        boolean hideOutput = (boolean) args.get(4);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -641,8 +641,8 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list40);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
@@ -653,11 +653,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list41);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
         float power = DEFAULT_POWER;
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[2];
+        boolean hideOutput = (boolean) args.get(2);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -665,9 +665,9 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list42);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
-        float power = (float) args[2];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(2);
         String property = DEFAULT_PROPERTY;
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
@@ -677,11 +677,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list43);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
-        float power = (float) args[2];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(2);
         String property = DEFAULT_PROPERTY;
-        boolean hideOutput = (boolean) args[3];
+        boolean hideOutput = (boolean) args.get(3);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -689,10 +689,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list44);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
-        float power = (float) args[2];
-        String property = (String) args[3];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(2);
+        String property = (String) args.get(3);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -701,11 +701,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list45);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
-        float power = (float) args[2];
-        String property = (String) args[3];
-        boolean hideOutput = (boolean) args[4];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(2);
+        String property = (String) args.get(3);
+        boolean hideOutput = (boolean) args.get(4);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -713,10 +713,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list46);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
         float power = DEFAULT_POWER;
-        String property = (String) args[2];
+        String property = (String) args.get(2);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -725,11 +725,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list47);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
         float power = DEFAULT_POWER;
-        String property = (String) args[2];
-        boolean hideOutput = (boolean) args[3];
+        String property = (String) args.get(2);
+        boolean hideOutput = (boolean) args.get(3);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
@@ -737,10 +737,10 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list48);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
-        float power = (float) args[2];
-        String property = (String) args[3];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(2);
+        String property = (String) args.get(3);
         boolean hideOutput = DEFAULT_HIDE_OUTPUT;
         explode(sender, location, source, power, property, hideOutput);
       });
@@ -749,11 +749,11 @@ public class CommandExplode extends CommandBase
       commandAPICommand = getCommandBase(command, permission, aliases).withArguments(list49);
       commandAPICommand = commandAPICommand.executesNative((sender, args) ->
       {
-        Location location = (Location) args[1];
-        Entity source = (Entity) args[0];
-        float power = (float) args[3];
-        String property = (String) args[2];
-        boolean hideOutput = (boolean) args[4];
+        Location location = (Location) args.get(1);
+        Entity source = (Entity) args.get(0);
+        float power = (float) args.get(3);
+        String property = (String) args.get(2);
+        boolean hideOutput = (boolean) args.get(4);
         explode(sender, location, source, power, property, hideOutput);
       });
       commandAPICommand.register();
